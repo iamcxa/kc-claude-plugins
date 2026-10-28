@@ -1,0 +1,13 @@
+{
+  "missing-captain": [
+    "references/sd/workflow.md: WORKFLOW_BUDGET_STEPS[10] raises the budget by 178 and its 'captain' has no quoted words"
+  ],
+  "missing-loaded": [
+    "references/sd/workflow.md: WORKFLOW_BUDGET_STEPS[10] raises the budget by 178 and has no 'loaded' moment"
+  ],
+  "omitted-added-word": [
+    "references/sd/workflow.md: 5754 words exceeds the budget of 5753; move the added text out of the README, or add a raise step of 1 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS"
+  ],
+  "early-presentation-wording": "named one-sitting regression assertion failed (exit 1)",
+  "copy-partial-answer-to-all": "real consume advanced an unnamed task, triggering the per-task refusal assertion (exit 1)"
+}

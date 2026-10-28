@@ -1,0 +1,62 @@
+[
+  {
+    "task": "reused-worker-dispatch-leaves-a-record",
+    "commit": "5849d45c360adb7d62739c52da8b8397bd47926c",
+    "binding": "briefing:reused-worker-dispatch-leaves-a-record:backlog:attempt-1:revision-1",
+    "artifact": {
+      "id": "artifact:reused-worker-dispatch-leaves-a-record:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/df32480a31d03a4f51111b1953853f7ab84e3f4b/reused-worker-dispatch-leaves-a-record.md",
+      "rev": "sha256:499c8f2f26c2bbd2d2be83d8d7ae60b73079e6ac966ea70fbafa93fb7cf69335",
+      "mediaType": "text/markdown",
+      "summary": "Bite: kc-ops-inbox ops-metric-event-protocol (#727): reused-worker dispatches left no record, and the later misses all sat on that path. Ideation owes where the check runs."
+    }
+  },
+  {
+    "task": "paseo-codex-dispatch-practice",
+    "commit": "6758c2fbafc3eda2062941814dc91b761678799b",
+    "binding": "briefing:paseo-codex-dispatch-practice:backlog:attempt-1:revision-1",
+    "artifact": {
+      "id": "artifact:paseo-codex-dispatch-practice:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4e0288f1003e64738b8e17cdbe6c9d6c7dcbe8ee/paseo-codex-dispatch-practice.md",
+      "rev": "sha256:3aa4412f55c60ba37d24d177f7471795d48818e60b70ee91d28237f8facc8f82",
+      "mediaType": "text/markdown",
+      "summary": "Bite: batches 7 and 8: Paseo Codex workers could not reach the GitHub API or RoboRev, and relay's workers ran from the FO workspace with dozens of permission prompts. Ideation owes whether Paseo can set the worker's directory."
+    }
+  },
+  {
+    "task": "captain-ruling-sources-checked",
+    "commit": "c8d86655f95ff151501e2e7a8bfba94bba7d65d7",
+    "binding": "briefing:captain-ruling-sources-checked:backlog:attempt-1:revision-1",
+    "artifact": {
+      "id": "artifact:captain-ruling-sources-checked:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d3c676524c611bec083d28769fd2c694083eaa47/captain-ruling-sources-checked.md",
+      "rev": "sha256:b6590b749dcfe9f3a94a77cf9ec7fad575d2747c02cdef0b4b8b5573b54707e9",
+      "mediaType": "text/markdown",
+      "summary": "Bite: interview round 1: qnow recorded two relayed rulings as the Captain's. Ideation owes the check's scope and whether active tasks are backfilled; designed beside adr-required-statement."
+    }
+  },
+  {
+    "task": "batch-reaches-each-gate-together",
+    "commit": "90317ed9d2a8080095cc6be9c2df27274d5e65f7",
+    "binding": "briefing:batch-reaches-each-gate-together:backlog:attempt-1:revision-1",
+    "artifact": {
+      "id": "artifact:batch-reaches-each-gate-together:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/73074e68c0f5cf7283f958129cf4c4accd62cfa5/batch-reaches-each-gate-together.md",
+      "rev": "sha256:f46a86fa1852e1da5cfbb74619fcefa503cd36c855520f9dbffc658e711fc234",
+      "mediaType": "text/markdown",
+      "summary": "Bite: batch 7 put four separate merge asks to the Captain. Ideation owes how a batch is held at a gate and what the batch review owes; the multi-preview Review deck stays with the web and relay FOs."
+    }
+  },
+  {
+    "task": "fo-interviews-extension",
+    "commit": "dd2a31f961a4ac36d0eb2dbdd5ad6e3cf47f9138",
+    "binding": "briefing:fo-interviews-extension:backlog:attempt-1:revision-1",
+    "artifact": {
+      "id": "artifact:fo-interviews-extension:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/cfce27813848e841404e8ccd1f6da397e7c2511a/fo-interviews-extension.md",
+      "rev": "sha256:d860234ec66edd79e8a76824fde481adb0869f07b9c0cfe4f94d353219fd88ba",
+      "mediaType": "text/markdown",
+      "summary": "Bite: none as a failure; rounds 1 and 2 ran by hand (peers-round-1.md, round-2-batch7-texts.md) and found the relayed-ruling and Codex-dispatch gaps. Ideation owes cadence and the question set, which are the Captain's."
+    }
+  }
+]

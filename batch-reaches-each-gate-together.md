@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-28T07:28:06Z
 worktree: .worktrees/spacedock-ensign-batch-reaches-each-gate-together
+pr: iamcxa/kc-claude-plugins#744
 ---
 
 ## Scope
@@ -87,11 +88,12 @@ Asked: 「決定：五張全照建議（四張准並照上面刪減，一張暫�
 Supersedes: AC-1, AC-3
 Design:
 
+```markdown
 Then use Spacedock's existing per-task preparation, commit and presentation checks. Present all members in one sitting, each with its bound snapshot, recommendation, question and delivery conditions. List decisions once, discuss one at a time, and record each answer only against its named tasks. Revise/hold does not approve another task. Resume approved work through existing authority; stale evidence needs replacement bindings. A review pass or a batch answer grants no extra merge authority.
 ```
 <!-- batch-workflow-proposal:end -->
 
-### Proposed design-director pass
+**Proposed design-director pass**
 
 Add the following 97-word pass, add “batch advice from task files” to the skill and agent descriptions, and allow the table's `batch` input row to point to this exception. The extra description/table tokens must be recounted at implementation; no other pass gains task-file access.
 
@@ -102,6 +104,12 @@ Add the following 97-word pass, add “batch advice from task files” to the sk
 `Pass: batch` reads the caller's committed task files, their linked previews or screenshots, and applicable product ADRs. This pass is the exception to the task-file exclusion above. Review whether the screen slice delivers one coherent journey, where task designs contradict, and which decision or missing evidence changes the recommendation. Return one recommendation with task-specific findings, evidence links, limitations and the Captain decisions needed. Do not accept FO's suspicions as review inputs. Do not replace task design reviews, adjudicate their declines, approve a gate or operate a release walk. The existing pass-specific contracts remain unchanged.
 ```
 <!-- batch-director-proposal:end -->
+
+Superseded text:
+
+**AC-1 — Named cohort waits.** A fresh FO using the candidate instructions receives the four batch-7 tasks in their recorded availability order and accepted membership: zero ordinary decision requests after arrivals one, two and three, then one sitting listing four separately bound task questions. Reproduce from the pinned state/table above and save complete inputs/output, once on base and twice on candidate with the same model and no checklist naming the rule. Falsifier: early ask, silently omitted member, or grouping an unrelated ready task. Current evidence: historical records and counterfactual simulation only; fresh-model behavior unverified.
+
+**AC-3 — Unanchored optional reviewer and existing-role fit.** A requested process-batch pass calls chief-engineer; a requested screen-slice pass uses the new director batch contract with task files and artifact links; contested hard-to-reverse claims route to engineering-reviewer. Without a requested pass no extra reviewer gate appears. Capture prompt and actual role/model: no FO conclusions or suspicions injected, family differs from all batch workers; incompatible availability returns the choice. Removing the director task-file exception, injecting FO's suspicions, accepting same-family review without a grant, or giving the reviewer approval authority must fail the scenario. Current evidence: own role-contract gap inspected; new pass and scenario execution remain unverified. No new product-director role.
 
 ## Number guards
 
@@ -325,11 +333,7 @@ Recommended order: FO completes all batch-9 designs and resolves the director/bu
 
 ## Acceptance criteria
 
-**AC-1 — Named cohort waits.** A fresh FO using the candidate instructions receives the four batch-7 tasks in their recorded availability order and accepted membership: zero ordinary decision requests after arrivals one, two and three, then one sitting listing four separately bound task questions. Reproduce from the pinned state/table above and save complete inputs/output, once on base and twice on candidate with the same model and no checklist naming the rule. Falsifier: early ask, silently omitted member, or grouping an unrelated ready task. Current evidence: historical records and counterfactual simulation only; fresh-model behavior unverified.
-
 **AC-2 — Repairs, exceptions and recovery.** Scenario variants: an authorized repair continues while others wait; a permission-blocked member gets one bounded unblock/split question; an unrelated task follows its ordinary gate; mixed POC/Pilot routes and uncertain membership are not guessed; restart reconstructs accepted membership and only unresolved task resolutions; a partial approve/revise/hold response never approves the other rows. Falsifiers: recording a synthetic hold for waiting, hidden membership change, POC ideation, duplicate resolution, or treating silence as approval. Current evidence: design/prose/diagram review; behavior unverified.
-
-**AC-3 — Unanchored optional reviewer and existing-role fit.** A requested process-batch pass calls chief-engineer; a requested screen-slice pass uses the new director batch contract with task files and artifact links; contested hard-to-reverse claims route to engineering-reviewer. Without a requested pass no extra reviewer gate appears. Capture prompt and actual role/model: no FO conclusions or suspicions injected, family differs from all batch workers; incompatible availability returns the choice. Removing the director task-file exception, injecting FO's suspicions, accepting same-family review without a grant, or giving the reviewer approval authority must fail the scenario. Current evidence: own role-contract gap inspected; new pass and scenario execution remain unverified. No new product-director role.
 
 **AC-4 — One sitting, separate authority.** Exercise existing Spacedock gates in disposable repos: prepare/commit each current artifact, pass structured checks, present once with each binding, record mapped decisions, and resume after interruption. Demonstrate stale-head/binding refusal and separate per-task resolution/consume; delivery still requires every existing head/readiness/review check and the explicit merge clause. Falsifiers: question counted as answer, partial answer copied to unnamed tasks, stale approval consumed, or batch reviewer result used as merge authority. Current evidence: upstream contract and local historical per-task resolutions; candidate real-command replay unverified. Do not claim hosted Review or per-part response support.
 
@@ -338,6 +342,11 @@ Recommended order: FO completes all batch-9 designs and resolves the director/bu
 **AC-6 — Lifecycle cost and scope.** Re-run the embedded word measurement on the pinned base and exact implemented candidate, including every changed instruction path and unchanged fixture output. Account for 5576 → 5847 workflow words (+271) or a newly presented exact wording; carry the actual Captain quote in the budget step. Recount the new director discovery/table wording and conditional review inputs. Confirm worker `show-stage-def` output unchanged and POC still skips ideation. Run lint, test_sd_dispatch and test_poc_readme; no hidden helper-only decrease counts as a saving. Falsifiers: missing positive budget authorization, omitted newly loaded text, worker inlining the new section, or changing an existing script hint without updating its load/test evidence. Current evidence: five fixture runs exit 0 with measured design counts above; candidate lint/dispatch behavior unverified.
 
 **AC-7 — Integration and regression.** Compare base/candidate workflow and governed role passes, render the Mermaid and check actor/order/stop agreement; keep existing picture/decline/release-walk passes unchanged except the named batch exception. Confirm the final file list/ADR reservation against the latest sibling designs and open PRs; preserve unrelated changes and each task's state. Falsifiers: altered decline authority, a second membership/counter store, ledger `--sittings`, changed Spacedock gate command, unrequested provider writes, or unverified overlap presented as clear. Current evidence: diagram rendered, selected source/state/overlap reads completed; live PR reconciliation and implementation tests remain unverified.
+
+**AC-8 — Named batch live sitting (Amended by Captain, amendment 1).** Use batch 9's actual backlog and ideation sittings, not three fresh-model FO replays. Verify the joint quoted asks/answers and separate per-task briefing bindings/resolutions in committed state, with stage evidence committed before preparation. Report what is only FO-attested: the chat presentation is not committed, and FO says progress between sittings asked no decision. Retain batch 7's four exact heads/asks as a separate counterfactual, including the later #732 addition; a simulation is not production proof. Falsifiers: an omitted member, separate ordinary early asks in the available record, readiness prepared before sufficient committed evidence, or claiming timestamps alone prove one sitting.
+
+**AC-9 — Optional existing-role advice (Amended by Captain, amendment 1).** A requested complete process/package batch review uses chief-engineer; engineering-reviewer handles a contested hard-to-reverse technical claim. Give committed task files/artifact links without FO suspicions/conclusions, record reviewer/model/evidence, and use a family different from all workers or return the mismatch to the Captain. No requested review adds no routine gate; no director batch pass or product-director role is added, and existing role input contracts remain unchanged. Exercise scenario variants with captured prompt/actions; falsifiers are anchored inputs, a silently accepted family mismatch, invented director task-file access, or reviewer approval/merge authority.
+
 
 ## Stage Report: ideation
 
@@ -371,3 +380,42 @@ Recommended order: FO completes all batch-9 designs and resolves the director/bu
 ### Summary
 
 This second ideation report supersedes the earlier alignment hold without deleting it: the task now defines a named-batch readiness barrier, optional unanchored review, separate per-task decisions, lifecycle costs and seven falsifiable criteria. The recommendation needs one Captain decision on the +271-word workflow addition and small existing-director batch-input extension; no new product-director role, sitting counter, ledger change or Spacedock command is proposed. The four historical merge asks replay as one sitting in a policy simulation, the actual design check passes, and the diagram renders; fresh-agent behavior, current GitHub status and implementation remain unverified and are not claimed complete.
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/spacedock-ensign/reused-worker-dispatch-leaves-a-record (ea84b08d4c726e33460609b2247599afb2d54c2b) implementing the approved design and acceptance criteria in the task file; Captain amendment 1 applies (the director batch pass is cut, the restating fifth paragraph is cut, AC-1 and AC-3 are superseded and you write their replacements marked 'Amended by Captain, amendment 1'; AC-4 and AC-5 still require one sitting, so the kept wording must still say the batch is presented in one sitting); stacked on PR #743 (reused-worker-dispatch-leaves-a-record), which changes the same workflow.md and word-budget step, so recount on that base and write the PR text with base branch spacedock-ensign/reused-worker-dispatch-leaves-a-record; the workflow word raise is one joint raise of about 180 words with that task; this batch-9 sitting is the live replay for the replaced AC-1; only the files the design names
+  Five named code files implemented at e4bd4d06a1538ed166205609002e5eef1ebf0983, based on ea84b08d4c726e33460609b2247599afb2d54c2b and pushed without force/-u. Draft PR is delegated to FO; title/body: /tmp/impl-batch-reaches-each-gate-together-pr.md, base spacedock-ensign/reused-worker-dispatch-leaves-a-record. No version/CI changes.
+- DONE: ADR 0043 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  docs/adr/0043-a-named-batch-waits-for-its-next-gate-before-one-sitting.md quotes the task Scope and amendment 1 gate ask/answer; changes named-batch as-ready policy while retaining ADR 0028 records, no stored list/counter and existing authority.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Bounded scenario, real-command, historical and source mutations pass below; exhaustive native reviewer execution/falsifier coverage is not claimed. Optional reviewer dispatches are fresh-FO proposals, not actual chief-engineer/engineering-reviewer calls; FO owns evidence sufficiency.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since <base> --require 0043 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+  Lint, ADR 0043, number guards and design surfaces exit 0; comment ratio 0/68 (0.0% <= 5%). RoboRev exit 3: incomplete: the roborev daemon is not running. Push succeeded; PR text is written; FO owns Draft PR, RoboRev and hosted CI. CI cost per PR not measured; no triggers changed.
+- DONE: AC-2 — Repairs, exceptions and recovery.
+  implementation-evidence/fo-scenarios.md records eight fresh-FO scenario inputs/actions: authorized repairs continue, authority blockers ask one exception, unknown membership holds, incompatible stage graphs require an explicit split, POC skips ideation, and partial decisions remain separate; source/command controls reject silent omission, unrelated joining and bulk approval.
+- DONE: AC-4 — One sitting, separate authority.
+  test_sd_dispatch.py prepares/commits four disposable gates and maps approve/revise/hold/unanswered; consume refuses nonapprovals and a mutated stale resolution binding, then resumes only the restored approval without duplicate state. Bulk-approval mutation instead advances an unnamed task and fails that assertion; test_delivery_gate.py passes 113 cases including draft/head/question/review holds.
+- DONE: AC-5 — Batch-7 one-sitting proof.
+  implementation-evidence/batch-proof.json retains the four exact heads/asks and explicitly incorporates later #732 for this counterfactual: one four-task sitting; eager mutation produces four and fails the one-sitting assertion. Actual batch 9 replaces the withdrawn fresh-FO replay by amendment 1; neither timestamps nor this simulation prove production behavior.
+- DONE: AC-6 — Lifecycle cost and scope.
+  On stacked base: workflow 5605→5754 (+149); single joint step is +178 including the base share +29, with Captain quote/loaded moment. Startup 6810→6959; idle open 1089→1238; idle merged 1060→1209; archive 333→333; merge sitting 2635→2784; fixture stdout words 29/29/0/5/90 unchanged, no director-input cost.
+- DONE: AC-6 — Worker and budget falsifiers.
+  Real pilot show-stage-def output is byte-identical at 630/1365/1550 words; POC output is also invariant and skips ideation. Inlining controls expose Batch gates in both profiles; missing quote/loaded moment, omitted budget word and early-presentation wording fail their named checks. POC 8 tests and lint 45 tests pass; python3 -B used with empty separate cache prefixes/copies excluding caches.
+- DONE: AC-7 — Integration and regression.
+  Five-file diff only; role passes/descriptions, pr_watch, decision_ledger and upstream commands byte-unchanged from ea84b08. Mermaid rendered with local CLI after an approved browser launch and visually checked: all-members barrier, reviewer-before-binding, exception/split, stale-binding stop and separate outcomes agree. Tests use actual installed Spacedock CLI 0.27.2 with skill/mod package 0.27.3; no hosted behavior claimed.
+- DONE: AC-8 — Named batch live sitting (Amended by Captain, amendment 1).
+  implementation-evidence/batch-proof.json and backlog-bindings.json verify all five committed per-task briefing hashes, joint quoted asks/answers, sufficient final ideation reports before bound snapshots, and four approve/one hold at f763dd267/cdbd5e8f3/902af94aa/aebbf2adf/77f509f9a; omission and changed-artifact mutations fail. Full chat is uncommitted; no between-sitting decision asks is FO-attested, not independently observed.
+- SKIPPED: AC-9 — Optional existing-role advice (Amended by Captain, amendment 1): native reviewer execution.
+  Fresh-FO scenarios record the neutral chief-engineer prompt, role/model/family selection and refusal of anchored inputs, wrong-family substitution, unsupported director task-file access and reviewer approval authority; no live reviewer pass was requested/executed here. Existing role contracts remain unchanged; actual reviewer execution is unverified.
+- DONE: Follow-up implementation-1-message-1: batch-9 evidence, its limits, open-PR overlap and bounded scope.
+  Read committed follow-up; independently verified the named state bindings/rulings. FO read GitHub on 2026-10-28: only base #743 overlaps workflow/budget; #742 and parked #674 do not. This is FO/provider evidence, not my API verification; gh was not run. Draft PR/RoboRev/CI remain with FO.
+- DONE: Captain amendment 1 and task record structure.
+  Moved AC-1/AC-3 verbatim under Superseded text; fresh AC-8/AC-9 replacements are marked Amended by Captain, amendment 1. Added the missing opening fence and formatted the withdrawn director subsection as a label so fence-aware readers see the amendment, criteria and reports; Captain words/frontmatter unchanged.
+- DONE: Affected documents: docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md; docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md.
+  doc_impact.py ea84b08 HEAD: both unaffected — budget equality/quote obligations and Team/early-handback rule retained.
+- DONE: Affected documents: kc-dev-flow-2/README.md; kc-dev-flow-2/references/sd/adoption.md; kc-dev-flow-2/skills/maintain-flow/SKILL.md; learning.md.
+  doc_impact.py: all unaffected — existing commands, bounded harness claims, adoption/derivation, maintenance/replay duties and historical learning retained; full lifecycle differential applied.
+
+### Summary
+
+Implemented and pushed the amended named-batch rule and ADR 0043 at e4bd4d06a1538ed166205609002e5eef1ebf0983; local checks and bounded replay controls pass, with one joint 178-word budget raise. Code worktree is clean, all original task frontmatter is preserved, and four task evidence artifacts are saved under implementation-evidence; this report grants no gate or merge authority. FO must open the stacked Draft PR, run RoboRev, read CI and judge the explicitly unverified native reviewer coverage before treating all acceptance proof as green.

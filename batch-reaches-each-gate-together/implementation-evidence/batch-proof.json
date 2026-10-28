@@ -1,0 +1,159 @@
+{
+  "base": "ea84b08d4c726e33460609b2247599afb2d54c2b",
+  "state": "34c820b5db98d5da119a1b021ce6af45d616acdc",
+  "workflow_words": {
+    "base": 5605,
+    "candidate": 5754
+  },
+  "moments": {
+    "base": {
+      "startup": 6810,
+      "idle open": 1089,
+      "idle merged": 1060,
+      "after archive": 333,
+      "merge ask": 2635
+    },
+    "candidate": {
+      "startup": 6959,
+      "idle open": 1238,
+      "idle merged": 1209,
+      "after archive": 333,
+      "merge ask": 2784
+    }
+  },
+  "fixture_output_words": {
+    "startup": 29,
+    "idle open": 29,
+    "idle merged": 0,
+    "after archive": 5,
+    "merge ask": 90
+  },
+  "fixture_outputs": {
+    "startup": "fact: o/r#7 OPEN draft=False checks=pending\nnext: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-batch-reaches-each-gate-together/kc-dev-flow-2/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpel0bl0nd/watch.json wait` in the background, unless one is running.\nnext: when it exits, do the next: lines it prints.",
+    "idle open": "fact: o/r#7 OPEN draft=False checks=pending\nnext: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-batch-reaches-each-gate-together/kc-dev-flow-2/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpcm8y7hvt/watch.json wait` in the background, unless one is running.\nnext: when it exits, do the next: lines it prints.",
+    "idle merged": "",
+    "after archive": "next: run kc-dev-flow-2:learn for task-0.",
+    "merge ask": "next: 4 gates await the Captain at validation (task-0, task-1, task-2, task-3); unless already presented, present them in one message and record each with his one answer. Name the merge order and each shared file from Batch overlap.\nnext: before asking, list each open decision of these tasks once, from their decision sections and the map's open questions on their journey-story, with its home, a plain sentence, your recommendation and what gets worse; then ask one at a time; a decision that blocks no worker waits for the next sitting."
+  },
+  "batch7": {
+    "events": [
+      {
+        "task": "codex-reader-same-head-unresolved",
+        "at": "2026-10-27T00:37:37.190615Z",
+        "reason": "Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #728 at c2f3e313; accepts FO's recommendation",
+        "question": "Approve validation of codex-reader-same-head-unresolved and merge iamcxa/kc-claude-plugins#728 at head c2f3e313f4c04c243f5a49b4f72b876ff35b4d9b with `gh pr merge 728 --squash --match-head-commit c2f3e313f4c04c243f5a49b4f72b876ff35b4d9b`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time."
+      },
+      {
+        "task": "worker-knows-the-team-and-asks-early",
+        "at": "2026-10-27T04:12:16.620123Z",
+        "reason": "Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #729 at 981a4309; accepts FO's recommendation",
+        "question": "Approve validation of worker-knows-the-team-and-asks-early and merge iamcxa/kc-claude-plugins#729 at head 981a4309c4ac2abbccd7e5c6a0211682ca6c554c with `gh pr merge 729 --squash --match-head-commit 981a4309c4ac2abbccd7e5c6a0211682ca6c554c`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time."
+      },
+      {
+        "task": "codex-reader-resolved-mark-adr",
+        "at": "2026-10-27T04:45:02.664288Z",
+        "reason": "Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #732 at 24663871; accepts FO's recommendation",
+        "question": "Approve validation of codex-reader-resolved-mark-adr and merge iamcxa/kc-claude-plugins#732 at head 24663871a8863e15097fcfd2c41b9584f1c5a48f with `gh pr merge 732 --squash --match-head-commit 24663871a8863e15097fcfd2c41b9584f1c5a48f`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time."
+      },
+      {
+        "task": "peers-rules-name-each-host-binding",
+        "at": "2026-10-27T05:01:34.307296Z",
+        "reason": "Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #730 at f7516476; accepts FO's recommendation",
+        "question": "Approve validation of peers-rules-name-each-host-binding and merge iamcxa/kc-claude-plugins#730 at head f7516476989b59fb45e4e5cb520d41ed9bc563ce with `gh pr merge 730 --squash --match-head-commit f7516476989b59fb45e4e5cb520d41ed9bc563ce`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time."
+      }
+    ],
+    "sittings": [
+      [
+        "codex-reader-resolved-mark-adr",
+        "codex-reader-same-head-unresolved",
+        "peers-rules-name-each-host-binding",
+        "worker-knows-the-team-and-asks-early"
+      ]
+    ],
+    "later_addition": "#732 explicitly incorporated for this counterfactual"
+  },
+  "batch9": [
+    {
+      "task": "reused-worker-dispatch-leaves-a-record",
+      "commit": "f763dd267c0480a10a569a14120009f12d29fc20",
+      "decision": "approve",
+      "at": "2026-10-28T07:05:14.119423Z",
+      "briefing": "briefing:reused-worker-dispatch-leaves-a-record:ideation:attempt-1:revision-1",
+      "artifact": {
+        "id": "artifact:reused-worker-dispatch-leaves-a-record:ideation:attempt-1:revision-1:item-1",
+        "uri": "git-root://state/a21e0bfc3afd2992b38350ed0413a000a4225209/reused-worker-dispatch-leaves-a-record.md",
+        "rev": "sha256:2fcdf94e31959931223919854630a2e06d2a2ae06370d1f67e70f6f6d8615c1a",
+        "mediaType": "text/markdown",
+        "summary": "Design: a coverage check run by pr_watch.py tasks names a reused-worker follow-up dispatch with no record; replays #727 as caught. Chief-engineer: keep --coverage, cut --before-send."
+      }
+    },
+    {
+      "task": "batch-reaches-each-gate-together",
+      "commit": "cdbd5e8f36f3181bbd41d22135dc65b9909bdb38",
+      "decision": "approve",
+      "at": "2026-10-28T07:05:24.286961Z",
+      "briefing": "briefing:batch-reaches-each-gate-together:ideation:attempt-1:revision-1",
+      "artifact": {
+        "id": "artifact:batch-reaches-each-gate-together:ideation:attempt-1:revision-1:item-1",
+        "uri": "git-root://state/b0055d05af5d2e75828f408e846e6f18c789f112/batch-reaches-each-gate-together.md",
+        "rev": "sha256:2e5b1beaf6fb543380784fb8821f0efb68bdf75af39252a0116739ac1a0a3997",
+        "mediaType": "text/markdown",
+        "summary": "Design: a batch is held at each gate and presented in one sitting; batch reviewer by batch kind, given task files only. Chief-engineer: trim, cut the director batch pass, keep the ADR."
+      }
+    },
+    {
+      "task": "paseo-codex-dispatch-practice",
+      "commit": "902af94aa9c47dda8f76c4d65a49e7e62dde5043",
+      "decision": "approve",
+      "at": "2026-10-28T07:05:33.55118Z",
+      "briefing": "briefing:paseo-codex-dispatch-practice:ideation:attempt-1:revision-1",
+      "artifact": {
+        "id": "artifact:paseo-codex-dispatch-practice:ideation:attempt-1:revision-1:item-1",
+        "uri": "git-root://state/d48b5fbc8bf0d03d0938464a803947650a6a0c2f/paseo-codex-dispatch-practice.md",
+        "rev": "sha256:3666b4c8be7b74383d25cbc616d5cee406fcd1629fd23443bdd53d011bdd2e55",
+        "mediaType": "text/markdown",
+        "summary": "Design: paseo extension text for Codex workers via Paseo plus an ADR. Chief-engineer: no bitten workflow enables paseo; pair approval with enabling it here."
+      }
+    },
+    {
+      "task": "fo-interviews-extension",
+      "commit": "aebbf2adf5ba182df681d2d76e42e6ae22f159f0",
+      "decision": "approve",
+      "at": "2026-10-28T07:05:43.148729Z",
+      "briefing": "briefing:fo-interviews-extension:ideation:attempt-1:revision-1",
+      "artifact": {
+        "id": "artifact:fo-interviews-extension:ideation:attempt-1:revision-1:item-1",
+        "uri": "git-root://state/e971cf0a20dd9aa2fc80d360411d608e1fb66300/fo-interviews-extension.md",
+        "rev": "sha256:b557d7dff2770e1823128f03d5cb05996c62870e10d59b7a02ddc5bc2d282971",
+        "mediaType": "text/markdown",
+        "summary": "Design: an optional interview extension beside learn reproducing rounds 1 to 3. Chief-engineer: shrink; cadence and question set are the Captain's."
+      }
+    },
+    {
+      "task": "captain-ruling-sources-checked",
+      "commit": "77f509f9a29ac4cb2f9693220d2f780f79cf0516",
+      "decision": "hold",
+      "at": "2026-10-28T07:05:49.089787Z",
+      "briefing": "briefing:captain-ruling-sources-checked:ideation:attempt-1:revision-1",
+      "artifact": {
+        "id": "artifact:captain-ruling-sources-checked:ideation:attempt-1:revision-1:item-1",
+        "uri": "git-root://state/6057cff3d347f1e45472c0f647fa03110e22161a/captain-ruling-sources-checked.md",
+        "rev": "sha256:1411009da7c7256a41f4c4e92c7baaca3001d7a6bab5d65e62400bf589f53b37",
+        "mediaType": "text/markdown",
+        "summary": "Design: a design_surfaces.py check refusing relayed rulings via a declared Origin field. Chief-engineer: defer; stop condition fired."
+      }
+    }
+  ],
+  "mutations": {
+    "eager-policy": "assertion failed as intended",
+    "silent-member-removal": "assertion failed as intended",
+    "join-unrelated-ready-task": "assertion failed as intended",
+    "omitted-live-sitting-member": "assertion failed as intended",
+    "changed-bound-artifact": "assertion failed as intended"
+  },
+  "limits": [
+    "Chat presentation uncommitted; quoted joint ask/answer is committed.",
+    "FO attests no decisions were asked between sittings; not independently verified.",
+    "Counterfactual and scenario outputs do not prove hosted or production behavior."
+  ]
+}
