@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.33.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.32.1...kc-dev-flow-2-v0.33.0) (2026-10-28)
+
+
+### Features
+
+* **kc-dev-flow-2:** add optional operator feedback interviews ([#745](https://github.com/iamcxa/kc-claude-plugins/issues/745)) ([e9347c8](https://github.com/iamcxa/kc-claude-plugins/commit/e9347c8e511d4dbfee49d59dc7e486f376b4fa0c))
+* **kc-dev-flow-2:** hold named batches for one gate sitting ([#744](https://github.com/iamcxa/kc-claude-plugins/issues/744)) ([d1404c4](https://github.com/iamcxa/kc-claude-plugins/commit/d1404c422f80e89204f472859be692f7d35178e5))
+* **kc-dev-flow-2:** report missing dispatch coverage before gates ([#743](https://github.com/iamcxa/kc-claude-plugins/issues/743)) ([bfa5354](https://github.com/iamcxa/kc-claude-plugins/commit/bfa5354b40ba99e297e7cb2d3e70b41f7d0fece9))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** define Paseo Codex worker handoff ([#742](https://github.com/iamcxa/kc-claude-plugins/issues/742)) ([6bc82b5](https://github.com/iamcxa/kc-claude-plugins/commit/6bc82b501ede77f48d0ba19fa1f76e5569afa094))
+
 ## [0.32.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.32.0...kc-dev-flow-2-v0.32.1) (2026-10-27)
 
 
