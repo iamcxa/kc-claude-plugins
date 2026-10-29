@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_every_pinned_task_and_artifact_with_per_file_verdicts (test_design_surfaces.AmendmentCorpusTests.test_every_pinned_task_and_artifact_with_per_file_verdicts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/captain-amendment-validation-da5053fe/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2231, in test_every_pinned_task_and_artifact_with_per_file_verdicts
+    self.assertEqual(len(tasks), corpus["tasks"], "frozen export must not skip a task/fixture")
+AssertionError: 174 != 175 : frozen export must not skip a task/fixture
+
+----------------------------------------------------------------------
+Ran 1 test in 2.349s
+
+FAILED (failures=1)

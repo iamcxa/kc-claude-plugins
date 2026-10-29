@@ -1,0 +1,49 @@
+{
+  "instruction_words": {
+    "workflow": 5754,
+    "dev": 763,
+    "mod": 48,
+    "startup": 365,
+    "idle": 100,
+    "delivery": 461,
+    "extensions": 224,
+    "learn": 280,
+    "gate": 958,
+    "present": 675
+  },
+  "fixture_stdout": {
+    "open": {
+      "words": 29,
+      "lines": [
+        "fact: o/r#7 OPEN draft=False checks=green",
+        "next: run `python3 /private/tmp/captain-amendment-validation-da5053fe/kc-dev-flow-2/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpq_902hf7/watch.json wait` in the background, unless one is running.",
+        "next: when it exits, do the next: lines it prints."
+      ]
+    },
+    "merged": {
+      "words": 0,
+      "lines": []
+    },
+    "archive": {
+      "words": 5,
+      "lines": [
+        "next: run kc-dev-flow-2:learn for some-task."
+      ]
+    },
+    "sitting": {
+      "words": 90,
+      "lines": [
+        "next: 4 gates await the Captain at validation (t0, t1, t2, t3); unless already presented, present them in one message and record each with his one answer. Name the merge order and each shared file from Batch overlap.",
+        "next: before asking, list each open decision of these tasks once, from their decision sections and the map's open questions on their journey-story, with its home, a plain sentence, your recommendation and what gets worse; then ask one at a time; a decision that blocks no worker waits for the next sitting."
+      ]
+    }
+  },
+  "totals": {
+    "startup": 6959,
+    "idle_open": 862,
+    "idle_merged": 833,
+    "archive": 333,
+    "merge_ask": 2408
+  },
+  "startup_with_feedback": 7558
+}

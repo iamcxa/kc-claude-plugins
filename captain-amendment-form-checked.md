@@ -335,3 +335,31 @@ The revision keeps the structural parser fixes and assigns append-only enforceme
 ### Summary
 
 Implemented the approved shared structural parser and L3 append-only law in the eight named files, with local behavioral, historical, mutation and corpus proof at da5053febb546b2a7cf6ffe676b0d5a8b7e338a4. The branch is pushed and the PR text is prepared; FO must open the Draft PR, run exact-head RoboRev and read its CI before fresh validation. Published package adoption and an observed state-push run remain the boundary for hosted enforcement; this report changes no gate/frontmatter or delivery authority.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #749 head da5053fe against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at da5053febb546b2a7cf6ffe676b0d5a8b7e338a4; 320 tests, no skips, independent detached checkout; evidence and limit judgments: captain-amendment-form-checked/validation-1/README.md.
+- DONE: The revised design approved on 2026-10-29 (「進實作」): structural checks in kc-dev-flow-2/scripts/design_surfaces.py and append-only as a law in kc-dev-flow-2/scripts/laws_check.py; replay the batch-8 and batch-9 bites named in Scope from state history; PR #749 is the base of the stacked validation-rerun-waits-for-captain-ruling work; RoboRev evidence=roborev:1324 clean on da5053feb, run by FO
+  Eight approved files only; historical form and all three rewrite ranges replayed; shared parser/L3 reuse verified; sibling stack excluded. RoboRev and four passing hosted checks are FO-supplied exact-head evidence.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation-1/acceptance.sh has five exact steps; fresh bash --noprofile --norc exits 0, 8+12 controls OK, three historical exits 1, ADR exit 0/42 records; identical declared Codex package used; full commands/output in validation-1/README.md. Findings: none in all four disposition classes.
+- DONE: AC-1 — Observable wrong-section and prose entries are refused.
+  Full/event-matching dispatch replays refuse seed 169e815d, idle a7643195 and read-adr 95fe8ce1 with locations; single-field corrections remove the corresponding defect; first-section-only and substring-id mutants each fail by assertion.
+- DONE: AC-2 — The existing laws runner reports committed rewrites in their push range.
+  historical-laws.json: 95fe8ce1/16129ea4/34c820b5 each base 0 → candidate 1/L3; positive append/path and negative edit/delete/uncertain-history controls pass; tip-only, omitted-deletion, skipped-index and fence-stripped mutants fail.
+- DONE: AC-3 — Feedback Cycles and fences parse without false entries.
+  Actual e9bac6a6d Feedback Cycles and a9fca23f fence replays pass paired expectations; balanced examples/CRLF/punctuation/payload controls pass; generic-heading and fence-disabled mutants fail.
+- DONE: AC-4 — Callers, law documentation and CI boundaries agree.
+  Full/seed/dispatch pending-move controls, registry parity and real CLI ranges pass; omitted L2 classification and missing-evidence-green mutants fail; deployed pin remains 22219a3e4bc48a69a893bd757923e8c034d1ba6e, not activated for this candidate.
+- DONE: AC-5 — Every changed corpus verdict is explained within structural scope.
+  448 pinned task/fixture exports, 988 mode rows, 54 differences/32 files reviewed individually in corpus-review.json; no seed changes; deliberate corpus-count omission fails 174 != 175. Semantic omissions/initial quotation fidelity/missing rulings remain observer-owned.
+- DONE: AC-6 — Reading, release and evidence claims remain bounded.
+  reading.json repeats 6959/862/833/333/2408 and feedback 7558; actual L3 output 21/25/24 words; hidden instruction-growth mutant fails. Lint, ADR, comments 0/684, number guards, dispatch and diff checks pass; CI cost per PR remains unmeasured.
+- DONE: Affected-document dispositions, goal sufficiency and minimal necessity.
+  laws.md updated; ADR 0041 unaffected (seed unchanged); learning.md unaffected (existing practices applied). Actual bites and deletion/regression controls justify parser, dispatch/L2 and L3 changes; no new walker, lifecycle call, version or CI edit.
+
+### Summary
+
+PASSED for PR #749 at da5053febb546b2a7cf6ffe676b0d5a8b7e338a4 against all six accepted criteria; independent primary evidence and five-step acceptance output are committed under captain-amendment-form-checked/validation-1/. The candidate stays unchanged; no findings require repair or a new scope decision. Captain acceptance/delivery and published-pin adoption plus an observed hosted state-push run remain outside this local verdict; FO-supplied provider checks are kept distinct from rerun evidence.

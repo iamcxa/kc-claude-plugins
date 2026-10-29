@@ -1,0 +1,26 @@
+[
+  {
+    "name": "package",
+    "state": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+    "rev": "731a165dfdf02549a9d13b0624174351e8a6d7be",
+    "tasks": 174
+  },
+  {
+    "name": "relay",
+    "state": "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state",
+    "rev": "7fbde2c526769e0968d05fac858fc63b31c6274c",
+    "tasks": 97
+  },
+  {
+    "name": "web",
+    "state": "/Users/kent/conductor/workspaces/subspace-web/dev2-fo/docs/dev2/.spacedock-state",
+    "rev": "2c3a6dcbfb3a8e178d65151237a0c234351612c0",
+    "tasks": 42
+  },
+  {
+    "name": "qnow",
+    "state": "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state",
+    "rev": "934789a124e50dd45f37af59bb337573462739ea",
+    "tasks": 135
+  }
+]

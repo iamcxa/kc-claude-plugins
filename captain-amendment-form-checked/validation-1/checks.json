@@ -1,0 +1,81 @@
+{
+  "adr": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "5725d495bb83a17ec13616bb5421bf5ffdc71f70"
+    ],
+    "exit": 0,
+    "stdout": "42 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  "number-guards": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-amendment-form-checked.md"
+    ],
+    "exit": 0,
+    "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 5725d495bb83 head da5053febb54 merge-base 5725d495bb83\n",
+    "stderr": ""
+  },
+  "comments": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/comment_ratio.py",
+      "5725d495bb83a17ec13616bb5421bf5ffdc71f70",
+      "da5053febb546b2a7cf6ffe676b0d5a8b7e338a4",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "stdout": "code lines 684, comment lines 0, 0.0%\nmaximum 5% (package default) met\n",
+    "stderr": ""
+  },
+  "doc-impact": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/doc_impact.py",
+      "5725d495bb83a17ec13616bb5421bf5ffdc71f70",
+      "da5053febb546b2a7cf6ffe676b0d5a8b7e338a4"
+    ],
+    "exit": 0,
+    "stdout": "docs/adr/0041-seed-admission-enforces-required-fields.md\treview\tkc-dev-flow-2/scripts/design_surfaces.py\nkc-dev-flow-2/references/sd/laws.md\tupdated\tparse_amendments, payload_append_allowed\nlearning.md\treview\tkc-dev-flow-2/scripts/dispatch_records.py, kc-dev-flow-2/scripts/laws_check.py\n3 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n",
+    "stderr": ""
+  },
+  "diff-check": {
+    "command": [
+      "git",
+      "-C",
+      "/tmp/captain-amendment-validation-da5053fe",
+      "diff",
+      "--check",
+      "5725d495bb83a17ec13616bb5421bf5ffdc71f70",
+      "da5053febb546b2a7cf6ffe676b0d5a8b7e338a4"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "dispatch": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-amendment-form-checked"
+    ],
+    "exit": 0,
+    "stdout": "4 dispatch record(s) complete\n",
+    "stderr": ""
+  }
+}

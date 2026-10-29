@@ -1,0 +1,24 @@
+F
+======================================================================
+FAIL: test_declared_reading_manifest_and_fixture_stdout (test_design_surfaces.AmendmentHistoricalTests.test_declared_reading_manifest_and_fixture_stdout)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-reading-mutant-2wllsd2j/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2381, in test_declared_reading_manifest_and_fixture_stdout
+    self.assertEqual(list(totals.values()), [6959, 862, 833, 333, 2408])
+AssertionError: Lists differ: [6962, 862, 833, 333, 2408] != [6959, 862, 833, 333, 2408]
+
+First differing element 0:
+6962
+6959
+
+- [6962, 862, 833, 333, 2408]
+?    ^^
+
++ [6959, 862, 833, 333, 2408]
+?    ^^
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.382s
+
+FAILED (failures=1)

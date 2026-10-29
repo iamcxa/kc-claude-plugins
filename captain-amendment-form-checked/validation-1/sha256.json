@@ -1,0 +1,18 @@
+{
+  "README.md": "1c601da8e71b52d1e8700cb61e90d3baec8918c1a2124572d0d0d4899f7996c6",
+  "ac5-falsifier.log": "cc00b2cb8e26e6a0b41c828a2f88752f3adf9105ad452c5ef7ef4fc418706c9b",
+  "ac6-falsifier.log": "2b72f60f61820aea707272673917ddf52320e1909ff847fe56d31d9129460b7e",
+  "acceptance-output.txt": "46535f4a6d85a73deb31f6ae4be4170eb337eac84fa850403afe36767383022f",
+  "acceptance.sh": "ebd98a6bc9e4dafd7704ec77675fd6f72070b4ff1a5b2d81305ebbe66682a070",
+  "checks.json": "0391a12c795fb92c5fbf10f8430823c5404d5ddc4ebf3e4cde63ee976b908f42",
+  "corpora.json": "d3ad8a04d7064248ac2cc0c3cb7d8d3ee746859d0c45f745bdd2db3ef664974b",
+  "corpus-differences.json.gz": "d855b1af5e43c0796711736ccaacb55127f6672a752e49b4352e8cc5f9bbc93e",
+  "corpus-review.json": "de98830be9ccdcb9e4092ee789a0cbbfc9cbcc8d535e72ef664a6a933cb6c99b",
+  "corpus-verdicts.json.gz": "a3fb533ee7f4051e03d8e04eef3ce636fbdef5ba1eea2aa252a8fe84c4603243",
+  "design.log": "21abdec0ffecba569a9e72c0439de3366c716d57e1c75f0b9599f8447c7cb461",
+  "dispatch.log": "fca959771b37024d5f637c7177465c6b2b9694b448f6146e00f26b2b4405f744",
+  "historical-laws.json": "6b5754135346445505153136f2bb880535ca3095f2952d3847b9024b6b3268fd",
+  "laws.log": "22e65d5155936dc255155ca2457a78b41a94e229c074cd2968ffd63593f36258",
+  "mutations.json": "e008eeea87ba1447511cbca696857f3a5754ca4eb255380e762425d7e07cbf35",
+  "reading.json": "16ec5e5e244206bc618269b7239987b319db4166edcb4cf6409b7c67fd0381bc"
+}

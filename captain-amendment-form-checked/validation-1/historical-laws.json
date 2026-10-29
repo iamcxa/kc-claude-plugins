@@ -1,0 +1,59 @@
+[
+  {
+    "event": "95fe8ce1bd7ff58798634b733abb4115fecfe23d",
+    "base": {
+      "exit": 0,
+      "stdout": "L1 observer-before-sentinel: 0 events judged in 16cd53a64678..95fe8ce1bd7f, 0 violated\nL2 dispatch-record-complete: 0 events judged in 16cd53a64678..95fe8ce1bd7f, 0 violated\n",
+      "stderr": "",
+      "stdout_words": 18,
+      "amendment_diagnostic_words": 0,
+      "l3_words": 0
+    },
+    "candidate": {
+      "exit": 1,
+      "stdout": "L1 observer-before-sentinel: 0 events judged in 16cd53a64678..95fe8ce1bd7f, 0 violated\nL2 dispatch-record-complete: 0 events judged in 16cd53a64678..95fe8ce1bd7f, 0 violated\nL3 amendment-append-only: 1 events judged in 16cd53a64678..95fe8ce1bd7f, 1 violated\nviolation: L3 amendment-append-only old=read-adr-honors-adr-folder.md new=read-adr-honors-adr-folder.md amendment=1 commit=95fe8ce1bd7f metadata changed (old lines 198-202)\n",
+      "stderr": "",
+      "stdout_words": 39,
+      "amendment_diagnostic_words": 0,
+      "l3_words": 21
+    }
+  },
+  {
+    "event": "16129ea4c1a238dd885e9f08513ce3a52ad27f2d",
+    "base": {
+      "exit": 0,
+      "stdout": "L1 observer-before-sentinel: 0 events judged in 1e17be9a0734..16129ea4c1a2, 0 violated\nL2 dispatch-record-complete: 0 events judged in 1e17be9a0734..16129ea4c1a2, 0 violated\n",
+      "stderr": "",
+      "stdout_words": 18,
+      "amendment_diagnostic_words": 0,
+      "l3_words": 0
+    },
+    "candidate": {
+      "exit": 1,
+      "stdout": "L1 observer-before-sentinel: 0 events judged in 1e17be9a0734..16129ea4c1a2, 0 violated\nL2 dispatch-record-complete: 0 events judged in 1e17be9a0734..16129ea4c1a2, 0 violated\nL3 amendment-append-only: 1 events judged in 1e17be9a0734..16129ea4c1a2, 1 violated\nviolation: L3 amendment-append-only old=reused-worker-dispatch-leaves-a-record.md new=reused-worker-dispatch-leaves-a-record.md amendment=1 commit=16129ea4c1a2 Superseded text changed or invalid append (old lines 82-101)\n",
+      "stderr": "",
+      "stdout_words": 43,
+      "amendment_diagnostic_words": 0,
+      "l3_words": 25
+    }
+  },
+  {
+    "event": "34c820b5db98d5da119a1b021ce6af45d616acdc",
+    "base": {
+      "exit": 0,
+      "stdout": "L1 observer-before-sentinel: 0 events judged in 16129ea4c1a2..34c820b5db98, 0 violated\nL2 dispatch-record-complete: 0 events judged in 16129ea4c1a2..34c820b5db98, 0 violated\n",
+      "stderr": "",
+      "stdout_words": 18,
+      "amendment_diagnostic_words": 0,
+      "l3_words": 0
+    },
+    "candidate": {
+      "exit": 1,
+      "stdout": "L1 observer-before-sentinel: 0 events judged in 16129ea4c1a2..34c820b5db98, 0 violated\nL2 dispatch-record-complete: 0 events judged in 16129ea4c1a2..34c820b5db98, 0 violated\nL3 amendment-append-only: 1 events judged in 16129ea4c1a2..34c820b5db98, 1 violated\nviolation: L3 amendment-append-only old=fo-interviews-extension.md new=fo-interviews-extension.md amendment=1 commit=34c820b5db98 metadata changed before unmatched fence (old lines 301-346)\n",
+      "stderr": "",
+      "stdout_words": 42,
+      "amendment_diagnostic_words": 0,
+      "l3_words": 24
+    }
+  }
+]

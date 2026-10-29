@@ -1,0 +1,31 @@
+Preparing worktree (detached HEAD da5053feb)
+HEAD is now at da5053feb fix(kc-dev-flow-2): validate amendment records and detect committed rewrites
+da5053febb546b2a7cf6ffe676b0d5a8b7e338a4
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.050s
+
+OK
+............
+----------------------------------------------------------------------
+Ran 12 tests in 16.704s
+
+OK
+L1 observer-before-sentinel: 0 events judged in 16cd53a64678..95fe8ce1bd7f, 0 violated
+L2 dispatch-record-complete: 0 events judged in 16cd53a64678..95fe8ce1bd7f, 0 violated
+L3 amendment-append-only: 1 events judged in 16cd53a64678..95fe8ce1bd7f, 1 violated
+violation: L3 amendment-append-only old=read-adr-honors-adr-folder.md new=read-adr-honors-adr-folder.md amendment=1 commit=95fe8ce1bd7f metadata changed (old lines 198-202)
+exit=1
+L1 observer-before-sentinel: 0 events judged in 1e17be9a0734..16129ea4c1a2, 0 violated
+L2 dispatch-record-complete: 0 events judged in 1e17be9a0734..16129ea4c1a2, 0 violated
+L3 amendment-append-only: 1 events judged in 1e17be9a0734..16129ea4c1a2, 1 violated
+violation: L3 amendment-append-only old=reused-worker-dispatch-leaves-a-record.md new=reused-worker-dispatch-leaves-a-record.md amendment=1 commit=16129ea4c1a2 Superseded text changed or invalid append (old lines 82-101)
+exit=1
+L1 observer-before-sentinel: 0 events judged in 16129ea4c1a2..34c820b5db98, 0 violated
+L2 dispatch-record-complete: 0 events judged in 16129ea4c1a2..34c820b5db98, 0 violated
+L3 amendment-append-only: 1 events judged in 16129ea4c1a2..34c820b5db98, 1 violated
+violation: L3 amendment-append-only old=fo-interviews-extension.md new=fo-interviews-extension.md amendment=1 commit=34c820b5db98 metadata changed before unmatched fence (old lines 301-346)
+exit=1
+42 ADR file(s) checked, 0 legacy
+adr_lint exit=0
+PASS: acceptance complete; temporary checkout removed

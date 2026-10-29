@@ -1,0 +1,898 @@
+[
+  {
+    "corpus": "package",
+    "path": "_archive/fo-batch-sittings.md",
+    "evidence": [
+      {
+        "line": 100,
+        "header": "### Amendment 1 — 2026-10-20, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-3, AC-4, no replacement"
+        ]
+      },
+      {
+        "line": 109,
+        "header": "### Amendment 2 — 2026-10-20, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-7, no replacement"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        100,
+        "'### Amendment 1 — 2026-10-20, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        109,
+        "'### Amendment 2 — 2026-10-20, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "package",
+    "path": "_archive/fo-write-rules-checked.md",
+    "evidence": [
+      {
+        "line": 92,
+        "header": "### Amendment 2 — 2026-10-20, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-7, no replacement"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        92,
+        "'### Amendment 2 — 2026-10-20, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "package",
+    "path": "_archive/idle-hook-names-merged-tasks-without-learn.md",
+    "evidence": [
+      {
+        "line": 377,
+        "header": "### Amendment 1 — 2026-10-27, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: none (adds a criterion: a task learn holds as ineligible shows what the next idle pass prints for it)"
+        ]
+      },
+      {
+        "line": 382,
+        "header": "### Amendment 2 — 2026-10-28, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-8 as written (the implementation worker restates it: an archived task whose variant or profile learn rejects is skipped by the scan, with a parity test against learning.py's eligibility, in the three approved files and with no new record)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        377,
+        "'### Amendment 1 — 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        382,
+        "'### Amendment 2 — 2026-10-28, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "package",
+    "path": "_archive/kc-decision-log-cli.md",
+    "evidence": [
+      {
+        "line": 328,
+        "header": "### Amendment 3 — 2026-10-21, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-1, AC-3 (replacements come from the redone ideation)"
+        ]
+      },
+      {
+        "line": 342,
+        "header": "### Amendment 4 — 2026-10-21, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-2 (replacements come from the redone ideation)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        328,
+        "'### Amendment 3 — 2026-10-21, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        342,
+        "'### Amendment 4 — 2026-10-21, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "package",
+    "path": "_archive/peers-rules-name-each-host-binding.md",
+    "evidence": [
+      {
+        "line": 363,
+        "header": "### Amendment 1 — 2026-10-27, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-4 and the active-task migration clause of AC-5 (no replacement in this task: the structured Captain-source check and its backfill move to backlog task captain-ruling-sources-checked)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        363,
+        "'### Amendment 1 — 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "package",
+    "path": "_archive/read-adr-honors-adr-folder.md",
+    "evidence": [
+      {
+        "line": 222,
+        "header": "### Amendment 1 — 2026-10-27, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: the absolute-path conversion and the two-host, two-namespace design-director none evidence in AC-1, AC-2 and AC-3 (the implementation worker restates them for one host)"
+        ]
+      },
+      {
+        "line": 235,
+        "header": "### Amendment 2 — 2026-10-28, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-8's falsifier for an absolute path inside R on Claude (no replacement: accepted as a host limit with no added words)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        222,
+        "'### Amendment 1 — 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        235,
+        "'### Amendment 2 — 2026-10-28, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "package",
+    "path": "_archive/release-acceptance/index.md",
+    "evidence": [
+      {
+        "line": 361,
+        "header": "### Amendment 1",
+        "owner": "## Stage Report: implementation",
+        "supersedes": []
+      }
+    ],
+    "errors": [
+      [
+        361,
+        "amendment outside '## Captain amendments'"
+      ],
+      [
+        361,
+        "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"
+      ],
+      [
+        361,
+        "duplicate amendment number 1"
+      ],
+      [
+        361,
+        "'### Amendment 1' has no 'Captain:' line with his words (expected exactly one)"
+      ],
+      [
+        361,
+        "'### Amendment 1' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "package",
+    "path": "_archive/release-walk-picky-reviewers-and-director.md",
+    "evidence": [
+      {
+        "line": 335,
+        "header": "### Amendment 2 — 2026-10-23, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: the per-item escalation in `### Director pass 3 and per-item escalation (Captain D2)`, AC-8 and AC-14 (no replacement for the per-item conditions)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        335,
+        "'### Amendment 2 — 2026-10-23, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "package",
+    "path": "_archive/seed-check-requires-schema-fields.md",
+    "evidence": [
+      {
+        "line": 328,
+        "header": "### Amendment 1 — 2026-10-27, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-1, AC-3 and AC-4 as written (the implementation worker restates them for an optional stored id under id-style: slug, the three required body records, and new seeds only with replay counts reported)"
+        ]
+      },
+      {
+        "line": 344,
+        "header": "### Amendment 2 — 2026-10-28, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-2 and AC-5's remaining Scope requirement and existing-task replay clauses (no replacement: a new seed is any backlog task not yet admitted, and FO adds the three bounds to an older task before presenting its backlog gate)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        328,
+        "'### Amendment 1 — 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        344,
+        "'### Amendment 2 — 2026-10-28, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "package",
+    "path": "adr-required-statement.md",
+    "evidence": [
+      {
+        "line": 151,
+        "header": "### Amendment 1 — 2026-10-08, ideation gate",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-10 (its \"before that task's next dispatch\" backfill clause; FO corrected this field 2026-10-08 after validation Finding 1)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        151,
+        "'### Amendment 1 — 2026-10-08, ideation gate' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "package",
+    "path": "kc-decision-log-handoff-trial.md",
+    "evidence": [
+      {
+        "line": 84,
+        "header": "### Amendment 2 — 2026-10-21, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-1 (replacement written at this task's ideation: the Codex worker re-reads with the read-adr skill's git recipe and compares the digest)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        84,
+        "'### Amendment 2 — 2026-10-21, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/account-publish-ceiling.md",
+    "evidence": [
+      {
+        "line": 244,
+        "header": "### Amendment 5 (2026-10-20)",
+        "owner": "## Needs decision (none open)",
+        "supersedes": [
+          "Supersedes: AC-29."
+        ]
+      },
+      {
+        "line": 261,
+        "header": "### Amendment 4 (2026-10-20)",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-27."
+        ]
+      },
+      {
+        "line": 272,
+        "header": "### Amendment 3 (2026-10-19)",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-11, AC-13, AC-14, AC-15, AC-23, AC-24."
+        ]
+      },
+      {
+        "line": 298,
+        "header": "### Amendment 2 (2026-10-19)",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: Decision 10 (the Option C route `POST /api/operator/bound-ceiling`, `RELAY_OPERATOR_TOKEN`, the `workflow_dispatch` workflow and `scripts/raise-bound-ceiling`, `RELAY_CAPACITY_RAISE_URL`) and the acceptance criteria that test them. Criteria moved by the implementation worker: AC-9, AC-12, AC-16, AC-17, AC-19, AC-21, AC-22."
+        ]
+      },
+      {
+        "line": 320,
+        "header": "### Amendment 1 (2026-10-19)",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: the cap of 500 on the override and on `RELAY_BOUND_SITE_DAILY_BRIEFING_LIMIT` in Decisions 4 and 10, the ADR draft and AC-8, AC-10 and AC-18."
+        ]
+      }
+    ],
+    "errors": [
+      [
+        244,
+        "amendment outside '## Captain amendments'"
+      ],
+      [
+        244,
+        "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"
+      ],
+      [
+        261,
+        "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"
+      ],
+      [
+        272,
+        "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"
+      ],
+      [
+        298,
+        "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"
+      ],
+      [
+        320,
+        "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"
+      ],
+      [
+        298,
+        "'### Amendment 2 (2026-10-19)' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        320,
+        "'### Amendment 1 (2026-10-19)' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/close-race-copilot.md",
+    "evidence": [
+      {
+        "line": 277,
+        "header": "### Amendment 1 — 2026-10-12, chat at the ideation gate",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: the design's recommendation to accept the wider claimed-but-untold window."
+        ]
+      }
+    ],
+    "errors": [
+      [
+        277,
+        "'### Amendment 1 — 2026-10-12, chat at the ideation gate' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/decision-panel-host.md",
+    "evidence": [
+      {
+        "line": 299,
+        "header": "### Amendment 1 — 2026-10-10, chat at the ideation gate",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: the non-goal \"Any change to the server's accept rule or the stored Result shape\", for this one rule; ADR 0039's consequence that two Resolutions from one owner can both be stored and the agent applies first-wins."
+        ]
+      },
+      {
+        "line": 304,
+        "header": "### Amendment 2 — 2026-10-11, chat after the Captain's UAT on PR #325",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: amendment 1's \"Feedback-only submissions are unaffected\"."
+        ]
+      }
+    ],
+    "errors": [
+      [
+        299,
+        "'### Amendment 1 — 2026-10-10, chat at the ideation gate' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        304,
+        "'### Amendment 2 — 2026-10-11, chat after the Captain's UAT on PR #325' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/junk-share-edge-cost.md",
+    "evidence": [
+      {
+        "line": 104,
+        "header": "### Amendment 1 (2026-10-16)",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: the profile poc the Captain approved at the backlog gate (FO's proposal; this five-stage workflow does not accept poc)."
+        ]
+      }
+    ],
+    "errors": [
+      [
+        104,
+        "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"
+      ],
+      [
+        104,
+        "'### Amendment 1 (2026-10-16)' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/one-identity-entry.md",
+    "evidence": [
+      {
+        "line": 286,
+        "header": "### Amendment 1 — 2026-10-09, chat after the owner-decision-record UAT on PR #313",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: ADR 0035's \"a binding waits for a confirmed claim\", for the one path below only; the decision record owes a new ADR."
+        ]
+      }
+    ],
+    "errors": [
+      [
+        286,
+        "'### Amendment 1 — 2026-10-09, chat after the owner-decision-record UAT on PR #313' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/owner-link-leak-safe.md",
+    "evidence": [
+      {
+        "line": 94,
+        "header": "### Amendment 1 (2026-10-21, chat)",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: the Scope's candidate mechanisms."
+        ]
+      }
+    ],
+    "errors": [
+      [
+        94,
+        "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"
+      ],
+      [
+        94,
+        "'### Amendment 1 (2026-10-21, chat)' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/owner-sees-all-feedback-room.md",
+    "evidence": [
+      {
+        "line": 122,
+        "header": "### Amendment 1 — 2026-10-13, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: none. Relay sends no `author.for`; the Web amendment's \"the person the agent works for\" waits for `agent-bound-to-me`."
+        ]
+      },
+      {
+        "line": 340,
+        "header": "### Amendment 2 — 2026-10-13, chat at the ideation gate",
+        "owner": "## Stage Report: ideation",
+        "supersedes": [
+          "Supersedes: the single pull request."
+        ]
+      }
+    ],
+    "errors": [
+      [
+        340,
+        "amendment outside '## Captain amendments'"
+      ],
+      [
+        122,
+        "'### Amendment 1 — 2026-10-13, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        340,
+        "'### Amendment 2 — 2026-10-13, chat at the ideation gate' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/owner-sees-all-feedback.md",
+    "evidence": [
+      {
+        "line": 115,
+        "header": "### Amendment 1 — 2026-10-12, chat at the backlog gate",
+        "owner": "## Captain amendments",
+        "supersedes": []
+      }
+    ],
+    "errors": [
+      [
+        115,
+        "'### Amendment 1 — 2026-10-12, chat at the backlog gate' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/review-keyword-invocations.md",
+    "evidence": [
+      {
+        "line": 356,
+        "header": "### Amendment 1 — 2026-10-27, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-2, AC-5, AC-6, AC-7, AC-9, AC-13 (AC-13 no replacement: #852 says no new UI is needed)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        356,
+        "'### Amendment 1 — 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/review-ui-consistency-relay.md",
+    "evidence": [
+      {
+        "line": 276,
+        "header": "### Amendment 1 — 2026-10-12, chat at the ideation gate",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: the Scope item \"Stop sending `by` in `projectOwnAnnotation`\"; the task's planned single PR."
+        ]
+      }
+    ],
+    "errors": [
+      [
+        276,
+        "'### Amendment 1 — 2026-10-12, chat at the ideation gate' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/review-ui-dialogs-specs-both-shells.md",
+    "evidence": [
+      {
+        "line": 192,
+        "header": "### Amendment 1 — 2026-10-13, chat at the ideation gate",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: the Scope sentence \"the spec ... answers whichever discard prompt the Web draws\"."
+        ]
+      }
+    ],
+    "errors": [
+      [
+        192,
+        "'### Amendment 1 — 2026-10-13, chat at the ideation gate' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "_archive/spacedock-install-beta.md",
+    "evidence": [
+      {
+        "line": 380,
+        "header": "### Amendment 8 — 2026-10-21, chat in the subspace-web FO's session (relayed by the web FO; FO read it on that session's [User] line)",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: amendment 6's \"the Codex sequence installs Spacedock's own plugin only\"; amendment 7's one-step choice wording"
+        ]
+      },
+      {
+        "line": 398,
+        "header": "### Amendment 11 — 2026-10-21, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: amendment 3's stable-channel gate (\"stable installs no extension unless asked\"); the \"production pass before stable carries extensions\" plan; G2 leaves the before-stable list and becomes in scope"
+        ]
+      },
+      {
+        "line": 405,
+        "header": "### Amendment 12 — 2026-10-22, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: amendment 7's \"an argument that is not an existing file is a request to write the artifact first\", for the six reserved words"
+        ]
+      },
+      {
+        "line": 411,
+        "header": "### Amendment 13 — 2026-10-22, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: amendment 11's \"no Compass cask dependency until the formula exists\" (the formula now exists, Compass v1.4.0, 2026-10-22)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        380,
+        "'### Amendment 8 — 2026-10-21, chat in the subspace-web FO's session (relayed by the web FO; FO read it on that session's [User] line)' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        398,
+        "'### Amendment 11 — 2026-10-21, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        405,
+        "'### Amendment 12 — 2026-10-22, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        411,
+        "'### Amendment 13 — 2026-10-22, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "relay",
+    "path": "limit-telemetry-posthog.md",
+    "evidence": [
+      {
+        "line": 114,
+        "header": "### Amendment 2 — 2026-10-15, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-1, AC-2, AC-3, AC-6 (each names posthog-node or SDK behaviour; FO corrected this line on 2026-10-15 after the implementation listed them)"
+        ]
+      },
+      {
+        "line": 414,
+        "header": "### Amendment 2 criteria move (repair note)",
+        "owner": "## Stage Report: implementation (cycle 2)",
+        "supersedes": []
+      }
+    ],
+    "errors": [
+      [
+        414,
+        "amendment outside '## Captain amendments'"
+      ],
+      [
+        414,
+        "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"
+      ],
+      [
+        414,
+        "duplicate amendment number 2"
+      ],
+      [
+        114,
+        "'### Amendment 2 — 2026-10-15, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        414,
+        "'### Amendment 2 criteria move (repair note)' has no 'Captain:' line with his words (expected exactly one)"
+      ],
+      [
+        414,
+        "'### Amendment 2 criteria move (repair note)' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "web",
+    "path": "_archive/briefing-frame-and-controls.md",
+    "evidence": [
+      {
+        "line": 792,
+        "header": "### Amendment 1 (2026-10-24): Ctrl+C copies a highlighted selection",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: none; composer-keeps-its-selection keeps its own scope (the highlight's lifetime and what closes the composer)."
+        ]
+      }
+    ],
+    "errors": [
+      [
+        792,
+        "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"
+      ],
+      [
+        792,
+        "'### Amendment 1 (2026-10-24): Ctrl+C copies a highlighted selection' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "qnow",
+    "path": "_archive/accept-branch-invitation.md",
+    "evidence": [
+      {
+        "line": 186,
+        "header": "### Amendment 1 — 2026-10-08, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-13 (whole block; the next worker writes a replacement AC that keeps AC-13's non-placement content)"
+        ]
+      },
+      {
+        "line": 196,
+        "header": "### Amendment 2 — 2026-10-09, chat (R4 release review)",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-19 (its premise that the staff screen has no toolbar, false on next since PR #1258)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        186,
+        "'### Amendment 1 — 2026-10-08, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ],
+      [
+        196,
+        "'### Amendment 2 — 2026-10-09, chat (R4 release review)' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "qnow",
+    "path": "_archive/office-header-shows-phone.md",
+    "evidence": [
+      {
+        "line": 157,
+        "header": "### Amendment 1 — 2026-10-08, validation gate (revise)",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-1, AC-4 (their text sits verbatim under `### Superseded at validation revise 2026-10-08`; replaced by AC-9, AC-10, new AC-11)"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        157,
+        "'### Amendment 1 — 2026-10-08, validation gate (revise)' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "qnow",
+    "path": "_archive/qnow-migration-baseline.md",
+    "evidence": [
+      {
+        "line": 89,
+        "header": "### Amendment 1 — 2026-10-22, after the Slice 1 replay",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: the 0.1 start's assumption that the release's prerelease flag separates RC from stable."
+        ]
+      }
+    ],
+    "errors": [
+      [
+        89,
+        "'### Amendment 1 — 2026-10-22, after the Slice 1 replay' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "qnow",
+    "path": "_archive/staff-multi-branch.md",
+    "evidence": [
+      {
+        "line": 119,
+        "header": "### Amendment 1 — 2026-10-08, chat",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-3, AC-4, AC-8, AC-9, AC-10; the `joined`/`invitations` fixture clause and the second sentence about invitations — FO completed this field 2026-10-08 after validation F1; these belong to the invitation story this ruling moved"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        119,
+        "'### Amendment 1 — 2026-10-08, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "qnow",
+    "path": "_archive/vehicle-based-pricing.md",
+    "evidence": [
+      {
+        "line": 1397,
+        "header": "### Amendment 2 — 2026-10-13, gate",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-3's words 「, or a size」"
+        ]
+      }
+    ],
+    "errors": [
+      [
+        1397,
+        "'### Amendment 2 — 2026-10-13, gate' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "qnow",
+    "path": "branch-hours-generate-starts.md",
+    "evidence": [
+      {
+        "line": 522,
+        "header": "### Amendment 2 — 2026-10-29",
+        "owner": "## Captain amendments",
+        "supersedes": [
+          "Supersedes: AC-18 \"proposal only, not decided\""
+        ]
+      }
+    ],
+    "errors": [
+      [
+        522,
+        "'### Amendment 2 — 2026-10-29' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  },
+  {
+    "corpus": "qnow",
+    "path": "operator-secret-hardening.md",
+    "evidence": [
+      {
+        "line": 121,
+        "header": "### Amendment — AC-2 input interaction, 2026-10-26",
+        "owner": "## Acceptance criteria",
+        "supersedes": []
+      }
+    ],
+    "errors": [
+      [
+        121,
+        "amendment outside '## Captain amendments'"
+      ],
+      [
+        121,
+        "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"
+      ],
+      [
+        121,
+        "'### Amendment — AC-2 input interaction, 2026-10-26' has no 'Captain:' line with his words (expected exactly one)"
+      ],
+      [
+        121,
+        "'### Amendment — AC-2 input interaction, 2026-10-26' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"
+      ]
+    ]
+  }
+]
