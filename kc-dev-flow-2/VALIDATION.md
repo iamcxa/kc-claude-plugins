@@ -1,5 +1,56 @@
 # Validation scope
 
+## Delivery summary preflight, measured 2026-10-29
+
+Against source `5725d495bb83a17ec13616bb5421bf5ffdc71f70`, the optional
+`delivery_gate.py question --summary-file` branch checks summary round-count
+form and existing reviewer rules outside fences. Its ordinary checks still use
+question plus summary; omitted input keeps the released combined-text path.
+ADR 0044 records the scope and compatibility ruling.
+
+The operator-interview validation briefing 2, bound to state task revision
+`9948c3eb9aa0cb61959080da6f2776de9881fab4`, reproduces the location defect:
+synthetic ordinary clauses and review facts added only to its question pass the
+source legacy command, while the candidate's separate original summary exits 1.
+A synthetic complete summary exits 0; fenced fields, task-report fields and
+later-ask fields do not discharge summary omissions. These fixtures do not
+repair history or attest that its external-round count was zero.
+
+Legacy exit codes and stdout matched on 295 committed briefing/artifact pairs:
+60 Web at state `2c3a6dcbfb3a8e178d65151237a0c234351612c0` (all exit 1),
+103 package at `6aaca91fa884a3d49683bb1a0a9438ec7f713c53` (12 exit 0,
+48 exit 1, 43 exit 2), and 132 QNow at
+`8d09186345940d7b92369157d8e05007541a2825` (all exit 1). Package exit-2
+cases lack saved Copilot refusal output at the bound revision; no missing
+provider evidence was fabricated. Web's clause-only synthetic positive control
+passes both. Workflow configuration was read from the locally adopted README;
+this comparison does not reconstruct historical configuration. Relay state was
+unavailable locally.
+
+The delivery suite covers count forms, fences, declaration/outcome location,
+existing Copilot refusal/configuration policy, I/O failures and flat/folder
+split-root inputs. The POC README suite executes each route's extracted command
+in a fresh shell with a disposable prepare recorder: exits 1/2 stop it; exit 0
+forwards identical summary bytes. Cache-free Python mutation runs reject removed
+summary/count checks, combined outcome lookup, a mandatory argument, role-counter
+invocation, removed/legacy recipe, ignored exit, swapped summary and changed stage
+route. This is local recipe evidence, not a native Spacedock pre-prepare hook.
+
+Two independent counts reproduce workflow 5754 to 5781 (+27): startup 6959 to
+6986; idle open 862 to 889; idle merged 833 to 860; archive 333 unchanged;
+merge ask 2408 to 2435; ideation 3303 to 3330; clean delivery 3530 to 3560,
+including the three-word count line. Each worker's inlined workflow sections
+remain 1044 words. Actual clean output is 3 words; isolated location refusal
+output is 49 words versus the legacy diagnostic control's 3, and raw historical
+refusal is 146. No help, ADR or extension read is newly required at runtime.
+The task retains the exact corpus/replay recipe and budget approval; deliberately
+omitting a corpus read or substituting a fake approval fails its recount.
+
+No CI trigger changed; cost per PR was not measured. Native adoption, faithful
+FO use, truthful supplied facts, direct unchecked preparation and later summary
+substitution remain unproven or observer-owned. A local pass grants no approval,
+publication, merge or release authority.
+
 This file records the package's validation evidence and its limits.
 
 ## Field use, measured 2026-10-12
