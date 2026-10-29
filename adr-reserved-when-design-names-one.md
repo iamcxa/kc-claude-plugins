@@ -237,6 +237,11 @@ Captain: 「照建議改 AC-3」 (chat, 2026-10-29)
 Asked: 「決定：照建議改 AC-3（延到上線後第一次派實作時證明），還是先補真的證據再合併？」, with the recommendation 「把 AC-3 改成「上線後第一次真正派實作時，再證明工作者能正常啟動」。」
 Supersedes: none
 
+
+### Amendment 2 — 2026-10-29, validation gate (batch-10 delivery sitting)
+Captain: 「准合併」 (chat, 2026-10-29)
+Asked: 「決定：四張全照建議合併（疊的三張用一般合併），並確認上面兩件事？要改哪張直接說。」; gate question: Approve validation of adr-reserved-when-design-names-one and, after #750 merges, merge iamcxa/kc-claude-plugins#751 at head 58c9d0f26c78b4b038668b7170389512d8e727e0 with a merge commit, `gh pr merge 751 --merge --match-head-commit 58c9d0f26c78b4b038668b7170389512d8e727e0`, once GitHub retargets it to main? FO recommends approve; approving accepts that recommendation, and records Captain amendment 2 superseding AC-3 with no replacement (amendment 1 changed AC-3 but FO wrote Supersedes: none, so AC-3 still asked for native spawn proof; that proof is owed in batch10-after-release-obligations); it covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.
+Supersedes: AC-3 (no replacement: its native build-and-spawn proof is owed in batch10-after-release-obligations)
 ## Stage Report: ideation
 
 - FAILED: A design for refusing an implementation dispatch for a task whose approved design or ruling calls for an ADR until ## Number guards reserves an ADR number, in kc-dev-flow-2/scripts/dispatch_records.py (check_task_facts) beside the existing number checks; the #740 (seed-check-requires-schema-fields) and #728 (codex-reader-same-head-unresolved) records replayed as refused, and current tasks that reserved their numbers passing
