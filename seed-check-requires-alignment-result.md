@@ -34,6 +34,14 @@ gates:
                 id: briefing:seed-check-requires-alignment-result:ideation:attempt-1:revision-1
                 digest: sha256:62d2c3625fc5b0f44f341541cf7c2f9d3ca007aec4362b36fc21410fce19ebf1
                 room-ref: ./seed-check-requires-alignment-result/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:seed-check-requires-alignment-result:ideation:1
+                briefing: briefing:seed-check-requires-alignment-result:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-29T01:27:36.420412Z"
+                decision: hold
+                reason: The Captain 「照建議」 (chat, 2026-10-29), answering FO's joint batch-10 ideation sitting whose ask was 「決定：五張全照建議（一張擱著、四張照表改）；如果哪張要調整，直接說。」; accepts FO's recommendation to hold and build nothing (the check exists since 0.31.0; FO's scripts checked a /tmp copy).
 ---
 
 ## Scope
