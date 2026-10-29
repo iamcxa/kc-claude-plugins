@@ -28,6 +28,9 @@ for each `ADR: NNNN` or `Migration: NNNN` the task's `## Number guards` reserves
 `<file>:1: '## FO alignment' records alignment as needed with no 'Result:' line; ...` for an `ideation-<N>.md` whose task has an unfenced
 `Alignment: needed` line and no `Result: <text>` line, and `<file>:1: Captain amendment N <Captain|Asked> line holds a backslash-quote copied from JSON; ...`
 for a `\\"` on a `Captain:` or `Asked:` amendment line outside a `Superseded text:` block.
+--names refuses implementation records (including message continuations) for Pilot/Prod when the last unfenced
+`## Design` (also ` — title` or `: title`) contains `docs/adr/<placeholder>-title.md` and task_facts has no reserved ADR.
+Quoted/fenced paths and numbered citations do not signal this obligation; scope-copy checks stay first-record-only.
 A record whose task file is absent is not judged.
 --names also refuses a live validation rerun with open F-numbered Needs decision findings until a later
 committed native Captain validation resolution or Captain amendment exists (ADR 0045). It skips this predicate
@@ -189,6 +192,26 @@ def amendment_numbers(task_text):
     return [str(entry.number) for entry in parse_amendments(task_text.split("\n"))[0] if entry.number is not None]
 
 
+DESIGN_HEADING = re.compile(r"^## Design(?:[ \t]*| — .+|: .+)$")
+ADR_PLACEHOLDER = re.compile(r"(?<![\w/.-])docs/adr/<[^<>\r\n]+>-(?:<[^<>\r\n]+>|[^\s<>`|/])+\.md\b")
+IMPLEMENTATION_RECORD = re.compile(r"implementation-[1-9][0-9]*(?:-message-[1-9][0-9]*)?\.md")
+ADR_RESERVATION_ERROR = ("design ADR placeholder has no reserved ADR; reserve with number_guards.py, record ADR: NNNN "
+                         "under '## Number guards', copy it into scope notes, then rerun this check")
+
+
+def design_adr_placeholder(text):
+    design, inside = [], False
+    unquoted = "\n".join(line for line in text.split("\n") if not line.lstrip().startswith(">"))
+    for line in outside_fences(unquoted):
+        if line.startswith("## "):
+            inside = bool(DESIGN_HEADING.fullmatch(line))
+            if inside:
+                design = []
+        elif inside:
+            design.append(line)
+    return ADR_PLACEHOLDER.search("\n".join(design))
+
+
 def check_task_facts(files):
     found = False
     for file in files:
@@ -198,6 +221,9 @@ def check_task_facts(files):
         if path.parent.name != "dispatch" or not task.is_file():
             continue
         facts, lines = task_facts(task), []
+        if (IMPLEMENTATION_RECORD.fullmatch(path.name) and frontmatter(task).get("profile") in {"pilot", "prod"}
+                and not facts["adr"] and design_adr_placeholder(task.read_text())):
+            lines.append(f"{file}:1: {ADR_RESERVATION_ERROR}")
         if path.name == "implementation-1.md":
             notes = named_section(path.read_text(), "Scope notes")
             reserved = [("ADR", n) for n in sorted(facts["adr"])] + [("Migration", n) for n in sorted(facts["migration"])]

@@ -184,6 +184,7 @@ def l2_dispatch_record_complete(ctx):
             code, lines = run_check("dispatch_records.py", "--names", *files)
             for line in lines if code == 1 else []:
                 match = re.fullmatch(r"(.+\.md):(\d+): (bare package script name \S+|no 'Candidate: <40-hex head>' line|"
+                                     r"design ADR placeholder has no reserved ADR|"
                                      r"reserved line '[^']+' missing from scope notes|"
                                      r"Captain amendment \d+ named in no dispatch checklist|"
                                      r"Captain amendment form at [^:]+:\d+: .+|"
