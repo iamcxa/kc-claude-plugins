@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-rerun-waits-for-captain-ruling:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of validation-rerun-waits-for-captain-ruling to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that a validation rerun is refused while the previous validation's Needs decision finding has no Captain ruling; profile pilot (package checks, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:validation-rerun-waits-for-captain-ruling:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3f510e851d07ed7db66bbaaf340886ddd14d445e/validation-rerun-waits-for-captain-ruling.md",
+      "rev": "sha256:33a4a586b0e75927d5fe2f76b01445017aba9b20bad0e87846a8e629866cfb98",
+      "mediaType": "text/markdown",
+      "summary": "Bite: #742, validations 2 and 3 ran before the Captain ruled on validation-1's Needs decision (observer)."
+    }
+  ]
+}

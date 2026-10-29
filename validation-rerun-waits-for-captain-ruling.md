@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:validation-rerun-waits-for-captain-ruling:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:validation-rerun-waits-for-captain-ruling-backlog-1
+              briefing:
+                id: briefing:validation-rerun-waits-for-captain-ruling:backlog:attempt-1:revision-1
+                digest: sha256:d36a5fb64dd9282e0c42919ae7a096cf8361cf8472b62eb565afb3a79b070341
+                room-ref: ./validation-rerun-waits-for-captain-ruling/review/backlog/briefing-1
 ---
 
 ## Scope
