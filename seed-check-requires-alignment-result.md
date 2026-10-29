@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:seed-check-requires-alignment-result:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:seed-check-requires-alignment-result-ideation-1
+              briefing:
+                id: briefing:seed-check-requires-alignment-result:ideation:attempt-1:revision-1
+                digest: sha256:62d2c3625fc5b0f44f341541cf7c2f9d3ca007aec4362b36fc21410fce19ebf1
+                room-ref: ./seed-check-requires-alignment-result/review/ideation/briefing-1
 ---
 
 ## Scope

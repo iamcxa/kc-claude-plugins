@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:seed-check-requires-alignment-result:ideation:attempt-1:revision-1",
+  "question": "Hold seed-check-requires-alignment-result and build nothing? FO recommends hold; approving accepts that recommendation: dispatch_records.py --names has refused a missing Result: line since 0.31.0, the batch-9 misses passed only because FO's own scripts checked a copy of the record under /tmp, outside the task folder, where task facts are skipped (FO has fixed its scripts), and the proposed seed check would refuse six backlog seeds at the gate that produces their Result.",
+  "artifacts": [
+    {
+      "id": "artifact:seed-check-requires-alignment-result:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f624b3a628816b3f2e4a75c1a62938285fe8fa5c/seed-check-requires-alignment-result.md",
+      "rev": "sha256:59c4a352436d5e1704d1129c040eafeb6eefaa47e7b7c642a6dabbea6a112671",
+      "mediaType": "text/markdown",
+      "summary": "Chief-engineer (Claude, 2026-10-29): cut; 0.33.0 --names on the three batch-9 records in their task folders exits 1; the design misfires on live backlog seeds. FO confirmed the /tmp-copy cause (exit 0 on the copy, 1 in the folder)."
+    }
+  ]
+}
