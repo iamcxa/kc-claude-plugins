@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:captain-amendment-form-checked:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:captain-amendment-form-checked-ideation-1
+              briefing:
+                id: briefing:captain-amendment-form-checked:ideation:attempt-1:revision-1
+                digest: sha256:f4d3ef236d13d43605ee3406a227900d5fdb6f0ff568c96f62dde6a2506b0efe
+                room-ref: ./captain-amendment-form-checked/review/ideation/briefing-1
 ---
 
 ## Scope

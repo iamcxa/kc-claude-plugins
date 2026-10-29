@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:captain-amendment-form-checked:ideation:attempt-1:revision-1",
+  "question": "Revise captain-amendment-form-checked at ideation? FO recommends revise; approving accepts it and these asks: keep the structural checks (section ownership, Supersedes grammar, the Feedback Cycles false entry, fences) and drop the new history walker inside design_surfaces.py, making append-only a law in the existing laws_check.py that CI runs on the state branch, or show why the duplicate is needed. Batch ruling A, accepted by approving: a check covers the bites it can observe from structure, and the observer keeps the rest.",
+  "artifacts": [
+    {
+      "id": "artifact:captain-amendment-form-checked:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/defc7b4bbf36179e97ec9aff8001ed16c9609f81/captain-amendment-form-checked.md",
+      "rev": "sha256:10f91823d405ea3887be697aefefe9ca7f260b5a8e8e3fb5c491ea071139ed1d",
+      "mediaType": "text/markdown",
+      "summary": "Chief-engineer: structural half sound; behaviour 3 duplicates laws_check.py walk, which dev2-laws CI already runs out of FO's hands. Cost: a law reports after the push rather than holding the gate."
+    }
+  ]
+}
