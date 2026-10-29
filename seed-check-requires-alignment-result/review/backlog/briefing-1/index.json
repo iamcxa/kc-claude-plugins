@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:seed-check-requires-alignment-result:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of seed-check-requires-alignment-result to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that the seed check refuses a task whose FO alignment says needed and records no Result line; profile pilot (package checks, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:seed-check-requires-alignment-result:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/095690324268fcc8a0a956e23c52d6e92b9f1d85/seed-check-requires-alignment-result.md",
+      "rev": "sha256:8ae6734b8cf7639a1972419335294f5ca1f15d524f972daa5556d47829a190c8",
+      "mediaType": "text/markdown",
+      "summary": "Bite: batch 9, three ideation workers held on a missing Result: line; same miss 2026-10-23. design_surfaces.py check --seed passed all five seeds."
+    }
+  ]
+}

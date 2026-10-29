@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:seed-check-requires-alignment-result:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:seed-check-requires-alignment-result-backlog-1
+              briefing:
+                id: briefing:seed-check-requires-alignment-result:backlog:attempt-1:revision-1
+                digest: sha256:5d4115108b2cb576b3667fd0751a15cf449d66c12942dcde3b4a650a90551b85
+                room-ref: ./seed-check-requires-alignment-result/review/backlog/briefing-1
 ---
 
 ## Scope
