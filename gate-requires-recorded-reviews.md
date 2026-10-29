@@ -58,6 +58,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:gate-requires-recorded-reviews:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:gate-requires-recorded-reviews-validation-1
+              briefing:
+                id: briefing:gate-requires-recorded-reviews:validation:attempt-1:revision-1
+                digest: sha256:c4eb7c503a644dd8976bb61c075be2c981045fee9f8e4f67c8e65d5ea436396c
+                room-ref: ./gate-requires-recorded-reviews/review/validation/briefing-1
 started: 2026-10-29T03:51:36Z
 worktree: .worktrees/spacedock-ensign-gate-requires-recorded-reviews
 pr: iamcxa/kc-claude-plugins#748

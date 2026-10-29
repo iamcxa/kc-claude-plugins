@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gate-requires-recorded-reviews:validation:attempt-1:revision-1",
+  "question": "Approve validation of gate-requires-recorded-reviews and merge iamcxa/kc-claude-plugins#748 at head a2317cfc55e829163e3d7fcc386968eb3eea8cf1 with `gh pr merge 748 --squash --match-head-commit a2317cfc55e829163e3d7fcc386968eb3eea8cf1`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:gate-requires-recorded-reviews:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e94754826dc8c939daa32fe6aaef40c19990a61a/gate-requires-recorded-reviews.md",
+      "rev": "sha256:dc8c59dfa14db631261abaa0ee13a68b13a3313109da6592d464de60e21bde36",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: a delivery gate's bound summary must carry its external rounds and second-reviewer outcome; #745's omission replays as refused; 295 older delivery inputs keep their output; validation PASSED with six criteria and their falsifiers; ADR 0044 records it.\nNecessity: seven files (docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md, kc-dev-flow-2/VALIDATION.md, kc-dev-flow-2/references/sd/workflow.md, kc-dev-flow-2/scripts/delivery_gate.py, lint-skills.py, test_delivery_gate.py, test_poc_readme.py); +27 workflow words the Captain approved.\nExternal rounds: Codex 1 (code review completed with no findings, evidence=summary:6493571228@a2317cfc5). RoboRev clean on this head, run by FO (evidence=roborev:1323).\nSecond reviewer: copilot because the change sets what a delivery gate must carry before the merge ask (merge and review rules).\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5695844356\nCopilot retry: available when the Captain confirms quota is back."
+    }
+  ]
+}
