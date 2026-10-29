@@ -6,15 +6,15 @@ Model: gpt-6.1-sol (Codex via Paseo, thinking high; the Captain's interim dispat
 ## Checklist
 
 One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/spacedock-ensign/captain-amendment-form-checked (da5053febb546b2a7cf6ffe676b0d5a8b7e338a4) implementing the approved design and acceptance criteria in the task file; the revised design approved at the ideation gate on 2026-10-29 (「進實作」), with decision B and batch ruling A; stacked on PR #749 (captain-amendment-form-checked), whose amendment parser in kc-dev-flow-2/scripts/dispatch_records.py and kc-dev-flow-2/scripts/design_surfaces.py this task reuses, so write the PR text with base branch spacedock-ensign/captain-amendment-form-checked; only the files the design names
-ADR cannot records the ruling the design names, quoting the Captain's words from the task file and its gate records
+ADR 0045 records the ruling the design names, quoting the Captain's words from the task file and its gate records
 Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
-kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/adr_lint.py docs/adr --since <base> --require cannot exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/adr_lint.py docs/adr --since <base> --require 0045 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
 
 ## Scope notes
 
 Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0
 
-Number guards: ADR: cannot
+Number guards: ADR: 0045
 
 Profile: pilot. Approved design: ## Design and ## Acceptance criteria in the task file; ideation gate approved; the Captain's words are in the task's ideation gate record (read them there; this line does not restate them) and any ## Captain amendments. If a word-budget raise step is needed, quote the Captain's words from that gate record. If a change needs a file the design does not list, stop and return to FO.
 

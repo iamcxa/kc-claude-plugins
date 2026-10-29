@@ -236,7 +236,7 @@ Also read `captain-ruling-sources-checked`: its source-authentication concern re
 
 ## Number guards
 
-ADR: cannot
+ADR: 0045
 
 ## Stage Report: ideation
 
