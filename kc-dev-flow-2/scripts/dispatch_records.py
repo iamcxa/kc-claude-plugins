@@ -29,6 +29,9 @@ for each `ADR: NNNN` or `Migration: NNNN` the task's `## Number guards` reserves
 `Alignment: needed` line and no `Result: <text>` line, and `<file>:1: Captain amendment N <Captain|Asked> line holds a backslash-quote copied from JSON; ...`
 for a `\\"` on a `Captain:` or `Asked:` amendment line outside a `Superseded text:` block.
 A record whose task file is absent is not judged.
+--names also refuses a live validation rerun with open F-numbered Needs decision findings until a later
+committed native Captain validation resolution or Captain amendment exists (ADR 0045). It skips this predicate
+for non-git snapshots; missing or ambiguous required git history exits 2.
 --newest runs that scan on the file added by the latest commit that adds a file under <slug>/dispatch/, read as it
 is on disk: exit 0 when it is clean or the task has no record, 1 when a name is found, 2 when git cannot read the state.
 --coverage checks presence for a declared ideation, implementation or validation stage after an unfenced report:
@@ -42,8 +45,9 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from decision_ledger import split_task, gate_entries
 from delivery_gate import CANDIDATE, RECORD  # noqa: E402
-from design_surfaces import amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
+from design_surfaces import AMENDMENTS_HEADING, AMENDMENT_HEADER, amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
 from role_triggers import outside_fences  # noqa: E402
 from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
 
@@ -217,6 +221,172 @@ def check_task_facts(files):
     return 1 if found else 0
 
 
+
+VALIDATION_RECORD = re.compile(r"validation-[1-9][0-9]*(?:-message-[1-9][0-9]*)?\.md")
+VALIDATION_REPORT = re.compile(r"^## Stage Report: validation(?:[ \t]+[^\n]*)?$", re.M)
+DECISION_FINDING = re.compile(r"^[ \t]*[-*][ \t]+\*{0,2}(F[0-9]+)\*{0,2}[ \t]*[:(—–-]?[ \t]*Needs decision\b([^\n]*)", re.M)
+RECOVERY = ("For an older free-form ruling, verify its original question and reply, preserve them, and record it as a "
+            "native gate or Captain amendment before rerunning; if unavailable, hold for the Captain.")
+
+
+class RulingHistoryError(Exception):
+    pass
+
+
+def validation_reports(text):
+    _, body = split_task(text)
+    clean = "\n".join(outside_fences(body))
+    reports = []
+    for match in VALIDATION_REPORT.finditer(clean):
+        end = re.search(r"^## ", clean[match.end():], re.M)
+        reports.append(clean[match.start():match.end() + end.start() if end else len(clean)].rstrip("\n"))
+    return reports
+
+
+def open_decisions(report):
+    return list(dict.fromkeys(m[1] for m in DECISION_FINDING.finditer(report)
+                              if not re.match(r"[\s*,:;(—–-]*CLOSED\b", m[2], re.I)))
+
+
+def captain_records(text, slug):
+    fm, body = split_task(text)
+    entries = list(gate_entries(fm or []))
+    withdrawn = {e["attempt"] for e in entries if e["kind"] == "withdrawal"}
+    identities, supported = set(), set()
+    for entry in entries:
+        key = ("gate", entry["attempt"])
+        identities.add(key)
+        if (entry["kind"] == "resolution" and entry["stage"] == "validation"
+                and (entry["attempt"] or "").startswith(f"gate-attempt:{slug}-validation-")
+                and entry["attempt"] not in withdrawn and entry.get("by") == "person:captain"
+                and entry.get("at", "").strip() and entry.get("reason", "").strip()):
+            supported.add(key)
+    amendments, issues = parse_amendments(body.split("\n"))
+    if issues:
+        raise RulingHistoryError("ambiguous-amendments")
+    for entry in amendments:
+        key = ("amendment", entry.number)
+        identities.add(key)
+        if (AMENDMENTS_HEADING.match(entry.owner or "") and AMENDMENT_HEADER.fullmatch(entry.header)
+                and re.search(r"^Captain:[ \t]*\S", entry.prefix, re.M)):
+            supported.add(key)
+    return identities, supported
+
+
+def state_git_root(path):
+    for parent in path.resolve().parents:
+        if (parent / ".git").exists() or (parent / ".git").is_symlink():
+            return parent
+    return None
+
+
+def ruling_git(root, *args):
+    done = subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True)
+    if done.returncode:
+        raise RulingHistoryError("git-history-unreadable")
+    return done.stdout.strip("\n")
+
+
+def task_snapshot(root, revision, paths):
+    present = ruling_git(root, "ls-tree", "-r", "--name-only", revision, "--", *paths).splitlines()
+    if len(present) > 1:
+        raise RulingHistoryError("ambiguous-task-paths")
+    return ruling_git(root, "show", f"{revision}:{present[0]}") if present else None
+
+
+def later_captain_ruling(root, task, text, selected):
+    # see docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md
+    head = ruling_git(root, "rev-parse", "--verify", "HEAD")
+    if ruling_git(root, "rev-parse", "--is-shallow-repository") != "false":
+        raise RulingHistoryError("shallow-history")
+    slug = task.parent.name if task.name == "index.md" else task.stem
+    paths = [f"{prefix}{name}" for prefix in ("", "_archive/")
+             for name in (f"{slug}.md", f"{slug}/index.md")]
+    _, current = captain_records(text, slug)
+    pinned = task_snapshot(root, head, paths)
+    reports = validation_reports(pinned or "")
+    ordinal = len(selected) - 1
+    if len(reports) <= ordinal or reports[ordinal] != selected[-1]:
+        raise RulingHistoryError("uncommitted-report")
+    _, committed = captain_records(pinned, slug)
+    first, introduced, absent = {}, [], []
+    commits = ruling_git(root, "log", "--full-history", "--reverse", "--topo-order", "--format=%H",
+                         head, "--", *paths).splitlines()
+    for commit in commits:
+        snapshot = task_snapshot(root, commit, paths)
+        if snapshot is None:
+            absent.append(commit)
+            continue
+        reports = validation_reports(snapshot)
+        if len(reports) > ordinal:
+            if reports[ordinal] != selected[-1]:
+                raise RulingHistoryError("rewritten-report")
+            introduced.append(commit)
+        else:
+            absent.append(commit)
+        identities, _ = captain_records(snapshot, slug)
+        for key in identities:
+            first.setdefault(key, []).append(commit)
+    if not introduced:
+        raise RulingHistoryError("report-history-missing")
+
+    def ancestor(older, newer):
+        result = subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", older, newer],
+                                capture_output=True)
+        if result.returncode not in (0, 1):
+            raise RulingHistoryError("git-ancestry-unreadable")
+        return result.returncode == 0
+
+    origins = []
+    for commit in introduced:
+        if not any(ancestor(prior, commit) for prior in origins):
+            origins.append(commit)
+    if len(origins) != 1:
+        raise RulingHistoryError("ambiguous-report-origin")
+    report_commit = origins[0]
+    if any(ancestor(report_commit, commit) for commit in absent):
+        raise RulingHistoryError("discontinuous-report-history")
+    for key in current & committed:
+        appearances = first.get(key, [])
+        if appearances and all(c != report_commit and ancestor(report_commit, c) for c in appearances):
+            return report_commit, True
+    return report_commit, False
+
+
+def check_validation_rulings(files):
+    status, refused = 0, False
+    for file in files:
+        path = Path(file).resolve()
+        if path.parent.name != "dispatch" or not VALIDATION_RECORD.fullmatch(path.name):
+            continue
+        folder = path.parent.parent
+        task = next((p for p in (folder / "index.md", folder.parent / f"{folder.name}.md") if p.is_file()), None)
+        if task is None:
+            continue
+        root = state_git_root(path)
+        if root is None:
+            continue
+        try:
+            if state_git_root(task) != root:
+                raise RulingHistoryError("different-task-root")
+            text = task.read_text()
+            reports = validation_reports(text)
+            findings = open_decisions(reports[-1]) if reports else []
+            if not findings:
+                continue
+            commit, cleared = later_captain_ruling(root, task, text, reports)
+            if not cleared:
+                print(f"{file}:1: validation rerun needs a later Captain ruling for report {len(reports)} at {commit} "
+                      f"findings {','.join(findings)}; hold dispatch, record the ruling, then run this check again")
+                status, refused = max(status, 1), True
+        except (RulingHistoryError, OSError, ValueError) as error:
+            print(f"{file}:1: cannot verify validation ruling order: {error}; hold dispatch and report the missing history to FO")
+            status = 2
+    if refused:
+        print(RECOVERY)
+    return status
+
+
 def check_newest(state, slug, package):
     done = subprocess.run(["git", "-C", str(state), "log", "--diff-filter=A", "--no-renames", "--relative",
                            "--name-only", "--format=", "-n", "1", "--", f"{slug}/dispatch/"],
@@ -280,7 +450,7 @@ def check_coverage(args, readme):
 def main(argv=None, package=PACKAGE):
     args = sys.argv[1:] if argv is None else argv
     if args[:1] == ["--names"] and len(args) > 1:
-        return max(check_names(args[1:], package), check_candidates(args[1:]), check_task_facts(args[1:]))
+        return max(check_names(args[1:], package), check_candidates(args[1:]), check_task_facts(args[1:]), check_validation_rulings(args[1:]))
     if args[:1] == ["--newest"] and len(args) == 3:
         return check_newest(args[1], args[2], package)
     readme = None

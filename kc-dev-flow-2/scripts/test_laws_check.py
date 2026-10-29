@@ -301,6 +301,25 @@ class L1Test(Base):
 
 
 class L2Test(Base):
+    def test_live_ruling_predicate_is_skipped_by_real_historical_snapshot_caller(self):
+        repo = Repo(self.tmp / "l2-live-ruling")
+        before = repo.commit("base", keep="x")
+        body = "\n## Stage Report: validation\n\n- F1 Needs decision: Captain must choose.\n"
+        repo.commit("open decision", t=task(body=body))
+        repo.commit("validation record", **{"t__dispatch__validation-2": record(candidate=True)})
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 0, out)
+        self.assertRegex(out, r"L2 dispatch-record-complete: 1 events judged in [^\n]+, 0 violated")
+        self.assertNotIn("cannot judge", out)
+        self.assertNotIn("validation rerun", out)
+        self.assertNotIn("history-context", out)
+        before = git(repo.path, "rev-parse", "HEAD")
+        repo.commit("bare script", **{"t__dispatch__validation-3": record(candidate=True, checklist="- run observer_check.py")})
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 1, out)
+        self.assertIn("bare package script name observer_check.py", out)
+        self.assertNotIn("output this runner does not parse", out)
+
     def test_records_added_by_this_push_are_judged_by_part_and_earlier_ones_are_not(self):
         repo = Repo(self.tmp / "l2")
         repo.commit("base", keep="x")
