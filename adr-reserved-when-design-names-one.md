@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:adr-reserved-when-design-names-one:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:adr-reserved-when-design-names-one-backlog-1
+              briefing:
+                id: briefing:adr-reserved-when-design-names-one:backlog:attempt-1:revision-1
+                digest: sha256:54eb1a6854e50fa913931776a3125fcae222a0eeebabecd91f45c7e5bf00ff95
+                room-ref: ./adr-reserved-when-design-names-one/review/backlog/briefing-1
 ---
 
 ## Scope

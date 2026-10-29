@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-reserved-when-design-names-one:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of adr-reserved-when-design-names-one to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that an implementation dispatch for a task whose design calls for an ADR is refused until an ADR number is reserved in ## Number guards; profile pilot (package checks, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:adr-reserved-when-design-names-one:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9d57e435f9b09ccd97b14380efc73c43cfb03797/adr-reserved-when-design-names-one.md",
+      "rev": "sha256:9dd28ef5b4ea6e0fb0d98deeee89ee1b5e3c106be7d2ac47d6de2ab04c33894d",
+      "mediaType": "text/markdown",
+      "summary": "Bites: #740 (worker had to ask FO for the number) and #728 (ruling shipped without an ADR)."
+    }
+  ]
+}
