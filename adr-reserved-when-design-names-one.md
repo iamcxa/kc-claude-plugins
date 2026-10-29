@@ -60,6 +60,7 @@ gates:
                 state: consumed
 started: 2026-10-29T07:05:20Z
 worktree: .worktrees/spacedock-ensign-adr-reserved-when-design-names-one
+pr: iamcxa/kc-claude-plugins#751
 ---
 
 ## Scope
