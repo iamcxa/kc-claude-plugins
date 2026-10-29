@@ -58,6 +58,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:captain-amendment-form-checked:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:captain-amendment-form-checked-validation-1
+              briefing:
+                id: briefing:captain-amendment-form-checked:validation:attempt-1:revision-1
+                digest: sha256:451b675ae403320e88b9ada1ac51f875df08dff6406d0e41f93d19bc5564af45
+                room-ref: ./captain-amendment-form-checked/review/validation/briefing-1
 started: 2026-10-29T03:51:21Z
 worktree: .worktrees/spacedock-ensign-captain-amendment-form-checked
 pr: iamcxa/kc-claude-plugins#749

@@ -1,0 +1,22 @@
+{
+  "class": "never",
+  "head": "da5053febb546b2a7cf6ffe676b0d5a8b7e338a4",
+  "model": "not run",
+  "necessity": "eight files (kc-dev-flow-2/VALIDATION.md, kc-dev-flow-2/references/sd/laws.md, design_surfaces.py, dispatch_records.py, laws_check.py, test_design_surfaces.py, test_dispatch_records.py, test_laws_chec",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'kc-dev-flow-2/references/sd/laws.md'",
+    "point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/laws_check.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_laws_check.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#749",
+  "sufficiency": "amendment entries are refused when outside ## Captain amendments, with FO prose on the Supersedes line, a Feedback Cycles block parsed as an amendment, or an unclosed fence; append-only is law L3 in l",
+  "time": "2026-10-29T10:32:51Z",
+  "verdict": "ask"
+}

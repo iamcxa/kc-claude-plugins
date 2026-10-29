@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:captain-amendment-form-checked:validation:attempt-1:revision-1",
+  "question": "Approve validation of captain-amendment-form-checked and merge iamcxa/kc-claude-plugins#749 at head da5053febb546b2a7cf6ffe676b0d5a8b7e338a4 with a merge commit, `gh pr merge 749 --merge --match-head-commit da5053febb546b2a7cf6ffe676b0d5a8b7e338a4`, so the stacked #750 and #751 keep their validated heads? FO recommends approve; approving accepts that recommendation, the merge-commit method for this stack (the repository's usual squash would make #750 and #751 conflict, change their heads and need revalidation and a second ask), that batch 10's form rule supersedes the earlier partial-supersession ruling for qnow staff-multi-branch (#650 delivery gate), later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:captain-amendment-form-checked:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/46dc23866ebd834b33be9aab3606231fdc005ea7/captain-amendment-form-checked.md",
+      "rev": "sha256:06fd76bbc0117da7c2ba7fb47ca6353aa903980d0a27e99ed00d468b6e165b56",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: amendment entries are refused when outside ## Captain amendments, with FO prose on the Supersedes line, a Feedback Cycles block parsed as an amendment, or an unclosed fence; append-only is law L3 in laws_check.py; every replayed batch-8 and batch-9 bite is caught; validation PASSED with no findings (320 tests).\nNecessity: eight files (kc-dev-flow-2/VALIDATION.md, kc-dev-flow-2/references/sd/laws.md, design_surfaces.py, dispatch_records.py, laws_check.py, test_design_surfaces.py, test_dispatch_records.py, test_laws_check.py).\nExternal rounds: Codex 1 (review 5695880112: one P2, no P0 or P1). RoboRev clean on this head, run by FO (evidence=roborev:1324).\nFO declines: Codex P2, laws_check reports cannot judge for an unchanged amendment with an unclosed fence (L3 is inactive until the dev2-laws pin moves; fixed before the pin bump, recorded in batch10-after-release-obligations).\nSecond reviewer: copilot because the change sets how Captain amendments are recorded and checked (approval rules).\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5695846638\nCopilot retry: available when the Captain confirms quota is back."
+    }
+  ]
+}
