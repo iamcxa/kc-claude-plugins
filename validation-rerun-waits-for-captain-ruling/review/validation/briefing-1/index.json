@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-rerun-waits-for-captain-ruling:validation:attempt-1:revision-1",
+  "question": "Approve validation of validation-rerun-waits-for-captain-ruling and, after #749 merges, merge iamcxa/kc-claude-plugins#750 at head b8a66e826c7524fa944a7165296acba94b3f5e13 with a merge commit, `gh pr merge 750 --merge --match-head-commit b8a66e826c7524fa944a7165296acba94b3f5e13`, once GitHub retargets it to main? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:validation-rerun-waits-for-captain-ruling:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/839e7a127e21f965931b90b5d4216cc75333079b/validation-rerun-waits-for-captain-ruling.md",
+      "rev": "sha256:93c2cc146d11b5ecaa20e985f6d30cf13450113e2eba125ae5939dc9fb23fc20",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: a validation dispatch is refused while the newest validation report has a Needs decision finding with no later recorded Captain ruling; #742's validations 2 and 3 replay as refused; under Captain amendment 1, AC-3 is superseded by AC-7 (legacy records pass the new ruling predicate; the full CLI refusing them through #749's form check is correct); validation PASSED with eight falsifiers; ADR 0045 records it.\nNecessity: four files (docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md, kc-dev-flow-2/scripts/dispatch_records.py, test_dispatch_records.py, test_laws_check.py).\nExternal rounds: Codex 2 (the first stalled at 2026-10-29T10:01:48Z; FO re-requested once; round on this head: review 5696325365, one P2, no P0 or P1). RoboRev clean on this head, run by FO (evidence=roborev:1326).\nFO declines: Codex P2, historical task paths assume the state checkout is the Git root, so a workflow with state inline in trunk gets exit 2 (every adopter's README read 2026-10-29 sets state: .spacedock-state; recorded in batch10-after-release-obligations).\nSecond reviewer: copilot because the change holds a validation dispatch until the Captain rules (approval rules).\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5695849354\nCopilot retry: available when the Captain confirms quota is back."
+    }
+  ]
+}

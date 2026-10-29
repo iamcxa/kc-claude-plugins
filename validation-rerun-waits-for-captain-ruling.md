@@ -58,6 +58,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:validation-rerun-waits-for-captain-ruling:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:validation-rerun-waits-for-captain-ruling-validation-1
+              briefing:
+                id: briefing:validation-rerun-waits-for-captain-ruling:validation:attempt-1:revision-1
+                digest: sha256:0c7ad2666cef589369a7cf34c1411f02b805fdddbea96b0ecc5ec1c14905117f
+                room-ref: ./validation-rerun-waits-for-captain-ruling/review/validation/briefing-1
 started: 2026-10-29T06:41:09Z
 worktree: .worktrees/spacedock-ensign-validation-rerun-waits-for-captain-ruling
 pr: iamcxa/kc-claude-plugins#750
