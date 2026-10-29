@@ -3,7 +3,7 @@ title: A gate is prepared only when the role calls and review rounds the README 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
