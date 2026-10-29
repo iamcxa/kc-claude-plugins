@@ -34,6 +34,14 @@ gates:
                 id: briefing:captain-amendment-form-checked:ideation:attempt-1:revision-1
                 digest: sha256:f4d3ef236d13d43605ee3406a227900d5fdb6f0ff568c96f62dde6a2506b0efe
                 room-ref: ./captain-amendment-form-checked/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:captain-amendment-form-checked:ideation:1
+                briefing: briefing:captain-amendment-form-checked:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-29T01:27:39.794246Z"
+                decision: revise
+                reason: The Captain 「照建議」 (chat, 2026-10-29), answering FO's joint batch-10 ideation sitting whose ask was 「決定：五張全照建議（一張擱著、四張照表改）；如果哪張要調整，直接說。」; accepts the direction and FO's recommendation to revise with the asks named in the gate question, and batch ruling A (a check covers the bites it can observe from structure; the observer keeps the rest).
 ---
 
 ## Scope
