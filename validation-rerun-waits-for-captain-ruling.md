@@ -60,6 +60,7 @@ gates:
                 state: consumed
 started: 2026-10-29T06:41:09Z
 worktree: .worktrees/spacedock-ensign-validation-rerun-waits-for-captain-ruling
+pr: iamcxa/kc-claude-plugins#750
 ---
 
 ## Scope
