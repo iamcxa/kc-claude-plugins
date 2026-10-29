@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:validation-rerun-waits-for-captain-ruling:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:validation-rerun-waits-for-captain-ruling-ideation-1
+              briefing:
+                id: briefing:validation-rerun-waits-for-captain-ruling:ideation:attempt-1:revision-1
+                digest: sha256:bb2f5a28a812090c4c2108702f9688dc89c1fec7a2c7cc95e58441a94a7ae808
+                room-ref: ./validation-rerun-waits-for-captain-ruling/review/ideation/briefing-1
 ---
 
 ## Scope

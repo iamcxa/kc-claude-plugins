@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-rerun-waits-for-captain-ruling:ideation:attempt-1:revision-1",
+  "question": "Revise validation-rerun-waits-for-captain-ruling at ideation? FO recommends revise; approving accepts these asks and decision B: judge the 7 replayed records still unjudged so the false-hold count is known before the next gate; skip the check when the record is not inside a git state root; defer historical judging; and accept native gate records and Captain amendments as rulings, with a free-form ruling recorded when an older task is next touched. Batch ruling A, accepted by approving: a check covers the bites it can observe from structure, and the observer keeps the rest.",
+  "artifacts": [
+    {
+      "id": "artifact:validation-rerun-waits-for-captain-ruling:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/bcd97bab84ffc7a722d7b6dd02be033c5488f480/validation-rerun-waits-for-captain-ruling.md",
+      "rev": "sha256:87371cd9228389b5ca1f3da5ffb6904845a090140c389b20ce63da748c2bfdf8",
+      "mediaType": "text/markdown",
+      "summary": "Ideation held: catches #742 but refused 12 of 27 records (1 confirmed false hold, 7 unjudged). Chief-engineer: revise. Cost: tasks like merge-gatekeeper pause until their ruling is recorded."
+    }
+  ]
+}
