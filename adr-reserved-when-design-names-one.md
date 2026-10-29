@@ -47,6 +47,17 @@ gates:
                 id: briefing:adr-reserved-when-design-names-one:ideation:attempt-2:revision-1
                 digest: sha256:54fa2bc954c3729645b78886ac66be3efaa114dff9000a5b9dc24871c0cab832
                 room-ref: ./adr-reserved-when-design-names-one/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-reserved-when-design-names-one:ideation:2
+                briefing: briefing:adr-reserved-when-design-names-one:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-29T03:47:43.145419Z"
+                decision: approve
+                reason: The Captain 「進實作」 (chat, 2026-10-29), answering FO's joint batch-10 revised-ideation sitting of four gates whose ask was 「決定：四張全准進實作，含工作流文件多 27 字？要改哪張直接說。」; accepts FO's recommendation for this task as stated in the gate question, including the +27-word workflow raise for gate-requires-recorded-reviews.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
