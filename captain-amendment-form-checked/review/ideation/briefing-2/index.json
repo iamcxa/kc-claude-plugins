@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:captain-amendment-form-checked:ideation:attempt-2:revision-1",
+  "question": "Approve the revised ideation of captain-amendment-form-checked to enter implementation? FO recommends approve; approving accepts that recommendation: structural checks in design_surfaces.py (section ownership, Supersedes grammar, the Feedback Cycles false entry, fences) and append-only enforced as a law in the existing laws_check.py that dev2-laws CI runs.",
+  "artifacts": [
+    {
+      "id": "artifact:captain-amendment-form-checked:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/5e1109f816cece4a58f20dbe5a867bad5a7e5e17/captain-amendment-form-checked.md",
+      "rev": "sha256:adfba8ad19f4f515c1dc91c10f34753c80a9af5719efb1ccbb2c5b423b7a4ab9",
+      "mediaType": "text/markdown",
+      "summary": "Revised per the Captain's 「照建議」: no new history walker; normal-path reading unchanged; CI summary adds 18 to 27 planned words; CI cost per PR not measured."
+    }
+  ]
+}
