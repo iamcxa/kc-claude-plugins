@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:captain-amendment-form-checked:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:captain-amendment-form-checked-backlog-1
+              briefing:
+                id: briefing:captain-amendment-form-checked:backlog:attempt-1:revision-1
+                digest: sha256:0d28352a2e367af68e41b57cc25afc15c83855242cbd0ac6279f82e038ac2f01
+                room-ref: ./captain-amendment-form-checked/review/backlog/briefing-1
 ---
 
 ## Scope

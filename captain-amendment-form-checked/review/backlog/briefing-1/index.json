@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:captain-amendment-form-checked:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of captain-amendment-form-checked to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that a Captain amendment entry is refused when it sits outside ## Captain amendments, rewrites an earlier entry, or its Supersedes line carries FO prose; profile pilot (package checks, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:captain-amendment-form-checked:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9678144b4932a5e0cdf3b25ecabbe2641a3ae96c/captain-amendment-form-checked.md",
+      "rev": "sha256:0385ac1caa4eeb3b3a7b1ed8876c55a9568ca9a3353b1fa248069b36f0b00253",
+      "mediaType": "text/markdown",
+      "summary": "Bites: batch 8 (misplaced and rewritten entries) and batch 9 (FO edited appended entries; Design: quotes swept in kept bullets)."
+    }
+  ]
+}
