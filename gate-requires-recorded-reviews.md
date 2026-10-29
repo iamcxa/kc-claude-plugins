@@ -79,7 +79,7 @@ gates:
                 state: pending
 started: 2026-10-29T03:51:36Z
 worktree: .worktrees/spacedock-ensign-gate-requires-recorded-reviews
-pr: iamcxa/kc-claude-plugins#748
+pr: pr-merge:748
 ---
 
 ## Scope
