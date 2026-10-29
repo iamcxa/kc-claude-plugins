@@ -60,7 +60,7 @@ gates:
 
 ## Stop condition
 
-- The check refuses each bite in the replay and passes every current task file that follows the README.
+- Per the Captain's 2026-10-29 ideation-gate revise, the actual candidate check refuses the original #740 design-with-placeholder/no-reservation dispatch and accepts its correctly reserved recovery. #728 is removed from the required replay. Preserve valid reservations and unrelated baseline verdicts; stop and return to FO if this requires semantic ADR classification, a universal declaration, a new lifecycle hook or an adopter migration. Batch ruling A leaves unobservable intent and omitted obligations with the observer.
 
 ## FO alignment
 
@@ -71,105 +71,125 @@ Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-29 — batch-10 review before the joint ideation sitting: approve, revise or cut each task, the Captain's decisions, overlap and order
 
-## Ideation findings — held for one scope decision
+## PRFAQ
 
-The assigned positive replay cannot yet be promised: the two historical inputs have different missing facts. No product file, branch, implementation candidate, ADR number or sibling task was changed. Profile remains Pilot. This is a handback, not a completed design or a recommendation to present the ideation approval gate.
+**Proposition.** Before an implementation worker starts, FO's existing dispatch check will refuse a Pilot/Prod task whose current design explicitly lists an unnumbered `docs/adr/` deliverable but whose `## Number guards` reserves no ADR. FO reserves through the existing allocator, records the number, copies it into the dispatch, and reruns the existing check before building the worker prompt.
 
-### Chain and existing seam
+**Who benefits?** FO and the implementation worker: the worker no longer has to stop the #740-shaped assignment to request a number that the design already says it needs.
 
-1. Spacedock 0.27.3's own `skills/first-officer/references/fo-dispatch-core.md` owns build, spawn and state transitions; its dispatch sequence has no package ADR classifier. Its instructions require the worker spawn to be the next host action after a successful build. The package check must therefore remain before build, not be inserted between build and spawn. This is a documented procedural check, not an unskippable Spacedock interception.
-2. After successful `git fetch origin`, source is `5725d495bb83a17ec13616bb5421bf5ffdc71f70`, manifest 0.33.0. `dispatch_records.py`, `number_guards.py` and `laws_check.py` in the dispatched Codex 0.33.0 package are byte-identical to that source. `--names` invokes `check_task_facts`; `--newest` only invokes `check_names`, and the folder mode is a different completeness check. In `check_task_facts`, only `implementation-1.md` compares already-reserved ADR/Migration numbers with scope notes. An empty reservation set makes that comparison vacuously pass. `number_guards.task_facts` reads numeric lines under `## Number guards`; it does not identify an enduring ruling or an obligation to create a new ADR.
-3. Consumer: `laws_check.py:l2_dispatch_record_complete` explicitly parses the `--names` diagnostic vocabulary. Any added diagnostic needs its parser and tests changed in the same PR; otherwise an intended violation becomes an unjudgeable run. The existing laws snapshots must be judged at their recorded event, not silently against today's edited task.
-4. Siblings were read without edits or fetches. Relay local clone HEAD `a378b62f423d3510ecda60a80c2fdb132f78cf6e` and QNow local clone HEAD `278f79ca3eb03a8c1286817f542c4ec4b744bfed` have the same prose reservation obligation; QNow also names the pre-build `--names` command. Web local clone HEAD `1f8c4b25268dc05ac77be5cdf33148bd6806dba9` has only `docs/dev/README.md` in the inspected docs tree, a native Spacedock workflow without these dev2 checks. These are local snapshots, not claims about the latest hosted adopter state. No adopter workaround supplies the missing semantic classification.
+**Does this decide whether a ruling deserves an ADR?** No. Batch ruling A, accepted by the Captain on 2026-10-29, means the check covers observable structure and the observer keeps the remainder. #728, whose design named no new ADR, is explicitly removed from the required replay; an enduring ruling omitted from the design remains outside this check.
 
-This is a repair of the named `check_task_facts` seam, with an unresolved input contract, not a reason to build another checker. The source search covered the dispatch checker, number parser, caller and workflow; it does not prove what humans read in other sessions.
+**Is this a new mandatory field or native Spacedock lock?** No. It repairs `check_task_facts` in the existing pre-build `--names` command. Success stays silent; the procedural boundary still depends on FO running and honoring that command. No universal ADR yes/none declaration, semantic classifier, auto-reservation, new script, new hook or new CI trigger is introduced.
 
-### Historical replay actually run
+## Design
 
-The following state commits are the commits that added the first implementation record, before later reservations or reports repaired the visible task:
+This revision supersedes the earlier held design and resolves its sole scope question through the recorded ideation-gate revise. Authority: Captain 「照建議」, 2026-10-29, and `adr-reserved-when-design-names-one/review/ideation/briefing-1/index.json` question: refuse only a design naming a docs/adr placeholder without an ADR reservation; replay #740; drop #728. Earlier Stage Report bytes below are preserved. Profile remains Pilot, one package PR, `Surfaces: none`.
 
-| Case | State commit | Task SHA-256 | `--names` result |
-| --- | --- | --- | --- |
-| seed-check-requires-schema-fields, PR 740 | `09da6be7ad5aaf687ea3f80e9553f3efb525cc17` | `9cdb2a04175c91eb996fb8c314067cfd6fe5fe4636ef399b97fc0effa4288406` | exit 0, empty stdout, no reserved ADR |
-| codex-reader-same-head-unresolved, PR 728 | `4fb24769b7e81bc1e87b07ae4a461d402a8a72d4` | `93cb1bbbde35233789280b1272a302f17c69d32f80e2cac74882d9a915edd43d` | exit 0, empty stdout, no reserved ADR |
+### Chain, source and prior decisions
 
-Reproduce with the dispatched package: for each row use `git -C <state> show <commit>:<slug>.md` and `git -C <state> show <commit>:<slug>/dispatch/implementation-1.md` to materialize those two files in a temporary directory, preserving that relative layout; run `python3 -B <package>/scripts/dispatch_records.py --names <temporary>/<slug>/dispatch/implementation-1.md`. The two snapshots were exercised with `dispatch_records.main(['--names', record])`, the CLI's entry function, stdout captured and the return value inspected. No proposed refusal was implemented or passed off as an observed candidate result.
+1. **Spacedock first.** Read 0.27.3's own `skills/first-officer/references/fo-dispatch-core.md`: dispatch build owns assembly/state; successful build must be followed immediately by worker spawn. There is no package-specific ADR classifier there. Keep this check before build, with no operation inserted between build and spawn.
+2. **Package next.** `git fetch origin` succeeded; source is `5725d495bb83a17ec13616bb5421bf5ffdc71f70`, released manifest 0.33.0. Loaded Codex package `/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0`; its dispatch checker, number parser and laws checker byte-match source. `--names` calls `check_task_facts`; `--newest` calls only `check_names`; folder completeness and `--coverage` are separate paths. Only `implementation-1.md` currently compares existing reservations with scope notes, so an empty ADR set passes. `laws_check.py:l2_dispatch_record_complete` has a closed diagnostic grammar and must recognize the added error in the same change.
+3. **Adopters last, read-only.** Relay `/Users/kent/conductor/workspaces/subspace-relay/dhaka` at `5c75e36b5b220c44911c4575286d24bd973d53f6` retains the prose reservation rule. Web `/Users/kent/conductor/workspaces/subspace-web/dev2-fo` at `485195ec9b30833a3b55e937d7598041932d312e` also contains the pre-build `--names` call. This corrects the earlier report's different web checkout observation; neither is a hosted-state claim. QNow's earlier report recorded local `278f79ca3eb03a8c1286817f542c4ec4b744bfed` with the same rule and pre-build command; that checkout was not located for a fresh read in this revision, so QNow remains a prior local observation, not refreshed proof. No adopter-specific mechanism is used as the authority for Spacedock behavior.
+4. **Existing seam, not a replacement.** The exact #740 CLI replay below establishes the empty-set hole. Source searches covered the checker, allocator, workflow caller and historical consumer; native enforcement outside those paths is not claimed. Read Accepted ADRs 0002 (reservation ownership), 0017 (event-time history), 0020 (reading budget), 0025 (land or release a reservation), and 0027 (structured checks at the writer). The rejected phrase classifier in ADR 0027 stays rejected. State `Override:` records supplied no permission to revive it or the closed Captain-rulings ledger. This repairs existing obligations; no new ADR or number reservation is proposed for this task.
 
-PR 740's approved design explicitly lists `docs/adr/<FO-reserved-number>-seed-admission-enforces-required-fields.md` as a deliverable. PR 728's design lists only its Codex reader and test file as changed files. Its D1 resolves whether a GitHub resolved-thread mark clears a finding, cites existing ADRs 0004 and 0013 as precedents, but names no new ADR deliverable or reservation. Its later implementation report even says it skipped the ADR because D1 was settled at the gate. The enduring-ruling classification is a human conclusion; recognizing an `ADR` citation would confuse an existing precedent with a new deliverable.
+### Exact observable boundary
 
-Positive control run: current `_archive/batch-reaches-each-gate-together.md` reserves ADR 0043; `check_task_facts` across its three implementation records returns 0 with empty stdout. Current ops-inbox reserves 0040 but its old first record still carries an earlier number and is already refused. Current seed-check's original record is already refused after its later task reservation. Journey-server records already produce amendment diagnostics. These existing failures must remain visible in a base-versus-candidate comparison; they are not evidence that every currently reserved task is globally green.
+- Apply the new missing-reservation predicate only to `implementation-N.md` and `implementation-N-message-M.md`, for recorded Pilot/Prod tasks. Keep flat `<slug>.md` and folder `<slug>/index.md` lookup as today. Other record names/modes keep their existing behavior. POC retains its no-number rule and does not acquire this new refusal or an ideation requirement.
+- Read the current design as the last top-level `## Design` section, permitting a title suffix beginning ` — ` or `: `, including its level-three/four subsections until the next top-level heading. Headings inside fenced blocks are not section boundaries. A design written under another title, a report-only obligation or a free-form ruling is not structurally classified by this slice; the observer still reads it. This is a documented parser bound, not a new mandatory design heading for every task.
+- In that section, recognize an explicit path `docs/adr/<placeholder>-short-title.md`: `<placeholder>` is a nonempty single-line angle-bracket token; the title is nonempty and may itself contain a title placeholder. Support the existing `<FO-reserved-number>` and `<reserved number>` spellings, inline code, list items and table cells. Ignore fenced code blocks and blockquotes, including space-indented blockquotes. A numbered `docs/adr/0041-title.md` citation is not an unnumbered deliverable. Do not infer from the words ADR, ruling, approved, required, or none.
+- An explicit matching path in the current Design is the entire signal; prose around it is not interpreted for intent, approval or negation. Put withdrawn alternatives outside the current Design or in quoted/fenced historical material through the existing authorized correction route. Do not silently delete a Captain obligation or an old report to make the check pass. This boundary can miss unusual forms or flag a literal example left in active design prose; that limitation is visible, not disguised as semantic proof.
+- Refuse when this signal exists and the existing `number_guards.task_facts(task)['adr']` set is empty. Reuse the numeric parser and allocator; their existing grammar/collision limits remain. An unrelated migration number cannot satisfy it. A reserved ADR clears only this new predicate, not other existing checks.
+- Preserve the existing scope-notes comparison exactly, including its implementation-1.md boundary for ADR and Migration. FO still copies the reservation into every dispatch as the current README instructs, but this slice does not add a new missing-copy refusal on continuation records. A missing/corrected reservation produces no automatic file edit or allocation.
+- Emit one record-attributed line, preserving the established `<record>:<line>:` format. Proposed text: `record.md:1: design ADR placeholder has no reserved ADR; reserve with number_guards.py, record ADR: NNNN under '## Number guards', copy it into scope notes, then rerun this check`. Retain the matched task path/line in test evidence without adding a success banner. Existing scope-copy errors retain their existing vocabulary.
+- Teach the laws consumer that this diagnostic is an L2 dispatch violation, not an unparseable result. It reads the task and dispatch as of the event commit using its existing temporary snapshot, not today's repaired task. Inputs: event commit, task bytes, dispatch bytes and filename, parser version, and the existing workflow/extension inputs for the other checks. No all-history sweep, permanent-red promise, backfill or new law is added; current push-range behavior remains.
+- Releasing a number under ADR 0025 does not excuse a still-current placeholder obligation. If the Captain releases the deliverable, the authorized current design revision must remove that obligation while preserving prior reports/rulings. Numeric-path-only designs, obligations recorded only in feedback, authentication of Captain approval, and whether one reserved number is the correct decision remain outside this predicate.
 
-Provider access: `gh pr view 740 --repo iamcxa/kc-claude-plugins --json number,state,mergeCommit` succeeded: MERGED at `60896216d1c4ca842327e6a5beb2191a64993657`. No GitHub API access failure was observed. Historical task/dispatch facts above come from Git, not from this provider result.
+### Journey and stops
 
-### Rulings that constrain the proposal
+```mermaid
+flowchart TD
+    A[Captain approves design or revision] --> B[FO saves implementation record]
+    B --> C[FO runs existing names check before build]
+    C --> D{Current Design has ADR placeholder and no reservation?}
+    D -- Yes --> E[Refuse with repair message; no build or spawn]
+    E --> F[FO reserves ADR and records number in task and scope notes]
+    F --> C
+    D -- No --> G{Existing checks including ADR scope copy pass?}
+    G -- No --> H[FO repairs the named record or returns authority question]
+    H --> C
+    G -- Yes --> I[Spacedock builds dispatch]
+    I --> J[Immediate worker spawn]
+    J --> K[Worker implements; validation checks the reserved ADR]
+    K --> L[FO presents normal Captain gate]
+    M[Observer checks omitted ADR obligations and intent] -.-> L
+```
 
-Read Accepted ADRs 0002 (reservation ownership), 0025 (land or release a reservation), 0027 (structured FO-write checks) and 0020 (workflow word budget) at the pinned source. ADR 0027 records the Captain's rejection of the four-verb phrase check: matching words could not stop the error class. The state `Override:` search showed no authorization to substitute an arbitrary ADR prose classifier here.
+The POC/no-placeholder branch reaches the existing checks; it does not bypass them. FO cannot turn an authority question into a self-approved design change. Prose/diagram comparison checks actors, order, refusal/retry and approval boundary; rendering was not exercised in this revision, so no rendered-preview claim is made.
 
-The sibling `adr-required-statement` is explicitly closed by the Captain's 2026-10-20 ruling despite stale validation frontmatter. Its unshipped Captain-rulings ledger must not be imported as an available mechanism. `comment-check-reaches-delivery-gate` is also explicitly closed. `adr-silent-undo-probe` was moved to the POC workflow by amendment; its old copy is not an active implementation dependency.
+### Historical replay and current evidence
 
-## Unresolved decision for the Captain
+Original #740 state commit: `09da6be7ad5aaf687ea3f80e9553f3efb525cc17`. Export `seed-check-requires-schema-fields.md` and `seed-check-requires-schema-fields/dispatch/implementation-1.md` with `git -C <state> show <commit>:<path>` into the same relative temporary layout, then run `python3 -B <package>/scripts/dispatch_records.py --names <temp>/seed-check-requires-schema-fields/dispatch/implementation-1.md`.
 
-**May PR 728 remain an explicit uncovered counterexample rather than a required raw-record refusal in this bounded repair?** Recommendation: yes; keep the change about an explicitly declared new ADR obligation, and have FO return a narrowed replay criterion for approval before design resumes. That avoids inferring intent from arbitrary prose or silently adding a mandatory yes/none field to every implementation dispatch. What gets worse: a missed human classification like PR 728 can still escape; this repair would not solve that broader omission.
-
-If the required outcome remains refusal of both original inputs, the prerequisite is approval of a new structured ADR-disposition requirement at implementation dispatch, including its treatment of old legitimate no-ADR tasks, repeated dispatches and POC. Such a requirement may refuse both originals for a missing declaration, but it does not establish that a declared `none` is truthful. It changes the current promise to pass every task already following the README and must be designed and measured as that scope change. No such approval is inferred here, and no new field grammar is imposed by this report.
-
-## Design boundary pending that decision
-
-**Proposition:** the existing pre-build `dispatch_records.py --names` check should tell FO about a missing ADR reservation before a worker is spawned. FO then reserves using the existing command, records the number under `## Number guards`, copies it into the dispatch scope notes, reruns the check and uses the ordinary Spacedock build/spawn sequence.
-
-**Why not choose a regex now?** Existing-record citations, declined alternatives, historical reports, fenced examples, negative statements and superseded requirements are all possible false positives. A bounded structured declaration can be tested, but which declarations are required is the unresolved scope decision. No semantic classifier, automatic reservation, gate approval, history rewrite, backfill, new script or CI trigger is proposed.
-
-**Integration if resumed:** keep the refusal beside existing number checks in `check_task_facts`; explicitly cover resumed `implementation-N.md` and `implementation-N-message-M.md` records if an obligation arises after the first dispatch. Preserve existing numeric allocation/collision rules and migration behavior. Keep success silent and emit a path-and-line diagnostic with a repair action on failure. Update the laws consumer in the same change. A folder-mode, newest-mode or native Spacedock claim needs its own exercised call path; none is implied by a unit helper passing.
-
-No final PRFAQ/Mermaid gate artifact was produced because selecting the branch condition would decide the missing scope. The applicable ideation/ensign rule is to return unclear requirements to FO rather than guess.
+- Task SHA-256: `9cdb2a04175c91eb996fb8c314067cfd6fe5fe4636ef399b97fc0effa4288406`; record SHA-256: `5f80555583c521fc2f21cca8ea407d542335b8d371a8f34c934e8b1b40ae6c20`.
+- Observed released checker: exit 0, empty stdout. A disposable design-predicate experiment extracted `docs/adr/<FO-reserved-number>-seed-admission-enforces-required-fields.md` from Design and found no Number guards section, so the proposed decision is refuse. This is feasibility evidence, **not a candidate CLI refusal**; implementation must exercise that exact raw pair without adding intent to it.
+- Provider check succeeded: `gh pr view 740 --repo iamcxa/kc-claude-plugins --json number,state,mergeCommit` returned MERGED, `60896216d1c4ca842327e6a5beb2191a64993657`. No GitHub API failure occurred in this revision. Git supplies the replay bytes independently.
+- #728 is removed from the acceptance replay and remains a stated uncovered omission. The earlier report is historical evidence, not a promise to refuse it.
+- The previous ADR 0043 control and already-red renumbered/amendment records are retained as corpus inputs, not a claim that all current records are green. Candidate corpus comparison, continuation missing-reservation behavior and laws classification remain implementation/validation proof obligations.
 
 ### Words FO reads at each lifecycle moment
 
-| Moment | Before | After this held ideation | Candidate evidence still owed |
-| --- | --- | --- | --- |
-| Startup/resume | Current workflow and loaded mod passages | Identical; no package text changed | Count all added declaration instructions and any on-touch migration wording, not just workflow.md |
-| Before valid implementation dispatch | Task design, Number guards, saved record and existing checks | Identical | Actual candidate stdout and any required new statement |
-| Refused implementation dispatch | Both original replays print 0 diagnostic words | Still 0; no candidate exists | Exact diagnostic plus recovery instruction and reread passages |
-| Idle on an open PR | Existing watcher/mod passages and outputs | Identical | Verify no new poll/output is introduced |
-| Idle on a merged PR | Existing merged-state output and mod | Identical | Verify unchanged, or count changed lines |
-| After archive | Existing archive/learn passages and output | Identical | Verify unchanged, including diagnostic consumers |
-| Merge ask | Existing delivery instructions and printed verdict | Identical | Verify number-check and delivery messages remain unchanged |
+No workflow, mod, skill, extension, adoption wording or recurring output changes. Measured with `len(text.split())` against the pinned installed package and Spacedock 0.27.3, plus actual `test_pr_watch.TasksTests` output under its disposable GitHub/Spacedock stubs. These are bounded reading scenarios, not a live FO/GitHub execution. Proposed-after figures are design targets, not candidate measurements.
 
-This is a change inventory, not a completed numeric before/after candidate measurement. Absolute lifecycle totals and a candidate delta are deliberately unclaimed. On resume, count exact passages plus exercised outputs with `len(text.split())` on the same fixed scenarios and pinned base/candidate; include the failure/retry path. Any positive workflow-budget step requires the ADR 0020 ruling and its load moment. No CI change was made; cost per PR was not measured.
+| Moment | Measured before | Proposed after | Included executed output |
+| --- | ---: | ---: | --- |
+| startup, feedback extension unlisted | 6967 | 6967 | open PR with existing codex-error output, 37 words |
+| idle on that open PR | 870 | 870 | same 37 words |
+| idle on a merged PR, learn unlisted | 833 | 833 | 0 words |
+| after archive, learn listed | 333 | 333 | 5 words |
+| merge ask, four validation gates waiting | 2408 | 2408 | 90 words |
+| valid implementation dispatch | existing task/record and checks | same | new predicate adds 0 words |
+| #740 refusal, before recovery | 0 diagnostic words | 27 diagnostic words | proposed exact line above; base CLI was silent |
+| recovery reread after refusal | none from this predicate | 468 existing words plus 27-word diagnostic | FO steps: number guards; allocator output counted additionally at implementation |
+
+Reading manifest: startup = full workflow (5754) + dev skill (763) + package mod (48) + upstream pr-merge startup (365) + output (37). Each idle = package mod (48) + upstream pr-merge idle (100) + workflow Delivery authority and Extensions (685) + output. After archive = mod (48) + learn extension (280) + output (5). Merge ask = Delivery authority/Extensions (685) + upstream fo-gate-lifecycle and present-gate skills (1633) + output (90). Exact newline headings select sections, not frontmatter mentions. Count each component once per arm. Host/runtime context and variable task/review content are held constant outside this bounded comparison, not asserted to cost zero.
+
+Reproduce outputs by importing the shipped `test_pr_watch`, invoking `TasksTests.setUp`, and always `doCleanups`: use `readme('roborev, codex')`, `task('some-task', pr='o/r#7')`, then `tasks({'pr view 7': view('OPEN')})` or `view('MERGED')`; archive uses `readme('learn')`, `archive('some-task')`, merged view; merge ask uses four `gates((slug, 'validation', 'awaiting-captain'), ...)` rows a/b/c/d and `tasks({})`. These tests create only disposable repositories; no real repository config is written. Candidate repeats the same scenarios and includes every actual new diagnostic, allocator response and retry. No total reading reduction or workflow budget increase is claimed. CI files remain unchanged; cost per PR was not measured.
+
+### Unresolved decisions
+
+None for this revision. The Captain already accepted the narrow structural boundary and the #728 coverage loss. Recommend proceeding with that bounded design; what gets worse remains explicit: an omitted ADR obligation or an unrecognized design form can still escape, and an actual refusal adds recovery reading. If a real corpus case demands semantic classification, a universal new declaration, adoption migration or a native lock, stop and return that scope change to FO rather than widening this implementation.
 
 ### Batch overlap
 
-Minimum proposed runtime/test files, after the scope decision: `kc-dev-flow-2/scripts/dispatch_records.py`, `scripts/test_dispatch_records.py`, `scripts/laws_check.py`, `scripts/test_laws_check.py`. A new declaration contract would additionally affect `references/sd/workflow.md`, its budget in `scripts/lint-skills.py`, workflow/POC pins in `scripts/test_sd_dispatch.py`, and whichever existing authoring reference owns the declaration. Those conditional files are not approved scope. `number_guards.py` need not change for the established numeric reservation; any parser change needs a separately justified reason. No ADR number is assigned; a newly approved enduring rule would need an unnumbered ADR draft before FO reserves it, sharing `docs/adr/` with other tasks.
+Changed files proposed: `kc-dev-flow-2/scripts/dispatch_records.py` (predicate, its CLI contract), `scripts/test_dispatch_records.py` (raw replay, limits and positive controls), `scripts/laws_check.py` and `scripts/test_laws_check.py` (diagnostic classification/event snapshot), `VALIDATION.md` (evidence and remaining limits). All abbreviated paths in this paragraph are under `kc-dev-flow-2/`. No `number_guards.py`, workflow, mod, skill, CI, adopter README, ADR file, ADR index or number namespace change is proposed.
 
-| Named task | Same file/check or namespace |
+| Other task, plain meaning | Shared file/check; implementation consequence |
 | --- | --- |
-| seed-check-requires-alignment-result — require alignment result at seed | design_surfaces.py and tests only; its unchanged predicate is consumed by dispatch_records.py; rerun dispatch regressions |
-| captain-amendment-form-checked — validate amendment structure/history | Direct overlap in dispatch_records.py, its tests, laws_check.py and its tests; shared task parsing |
-| adr-reserved-when-design-names-one — this task | Files above; owns only this entity body/report in this dispatch |
-| validation-rerun-waits-for-captain-ruling — hold premature reruns | Direct overlap in all four runtime/test files, event snapshot handling; possible ADR namespace |
-| gate-requires-recorded-reviews — require review records before gate | Its recorded scope names delivery_gate.py, role_triggers.py and gate preparation; no established direct file overlap; recheck completed design |
-| adoption-asks-which-extensions — read dispatch-time extension list | dispatch_records.py, test_dispatch_records.py, test_laws_check.py; adjacent historical context and number_guards.frontmatter refactor |
-| adr-required-statement — old ADR ledger proposal | Closed; historical workflow/parser/ADR overlap only; do not revive its branch or reuse its ledger |
-| adr-silent-undo-probe — measure reversal of a ruling | Moved to POC; no runtime file overlap in the old task |
-| comment-check-reaches-delivery-gate — bind comment proof to delivery | Closed; its historical delivery/test/validation edits do not overlap the minimum four files |
-| journey-canvas-hosted-poc — hosted canvas experiment | kc-journey-map hosting scope; no dispatch-checker overlap established |
-| journey-server-host-pilot — private hosted journey server | kc-journey-map server/docs; no dispatch-checker overlap; shared ADR number namespace and real corpus control |
-| ops-inbox-r1-setup-and-isolation — isolate operations intake | kc-ops-inbox files; no dispatch-checker overlap; shared ADR namespace, existing renumbered historical record |
-| pr-review-lite-value-pilot — bounded review comparison | kc-pr-flow review runtime and journey documents; no dispatch-checker overlap established |
+| seed-check-requires-alignment-result — seed alignment presence | design_surfaces.py's existing predicate is consumed by dispatch_records.py; rerun dispatch tests, no direct proposed file overlap except any shared VALIDATION.md evidence |
+| captain-amendment-form-checked — amendment form and history | direct overlap in dispatch_records.py, test_dispatch_records.py, laws_check.py, test_laws_check.py and VALIDATION.md; integrate its shared parser first |
+| adr-reserved-when-design-names-one — this task | owns the five proposed files above in future implementation; only this entity body/report now |
+| validation-rerun-waits-for-captain-ruling — hold unresolved validation | direct dispatch checker/tests and laws consumer/tests overlap; preserve both diagnostic vocabularies |
+| gate-requires-recorded-reviews — gate review presence | delivery_gate.py/workflow path; no direct runtime overlap, check shared VALIDATION.md if its final plan edits it |
+| adoption-asks-which-extensions — event-time extension context | dispatch_records.py, test_dispatch_records.py, test_laws_check.py; preserve historical workflow resolution before this integration |
+| adr-required-statement — old ruling ledger | Captain closed it 2026-10-20 despite stale validation status; no active overlap/dependency, do not import ledger or occupied number |
+| adr-silent-undo-probe — ADR reversal experiment | moved to dev2-poc as adr-silent-undo-poc; old ideation copy is not dispatched; no shared proposed file |
+| comment-check-reaches-delivery-gate — comment evidence gate | Captain closed it 2026-10-20; no active dependency or shared proposed runtime |
+| journey-canvas-hosted-poc — hosted journey canvas | kc-journey-map files; no shared proposed file/check |
+| journey-server-host-pilot — private journey server | read folder task index.md, validation; kc-journey-map server/host and docs; no shared file, useful folder-task corpus input |
+| ops-inbox-r1-setup-and-isolation — isolated operations intake | kc-ops-inbox files; no shared file; its pre-renumber dispatch is an existing failure to preserve |
+| pr-review-lite-value-pilot — bounded review experiment | kc-pr-flow review runtime/journey artifacts; no shared proposed file/check |
 
-Recommended order: FO resolves the single scope/replay decision first; coordinate adoption's historical context and the amendment parser before serially integrating this task and validation-rerun. Rerun combined dispatch/laws tests after each rebase. Do not wait on the explicitly closed or unrelated product tasks; do not message or edit their sessions. Pilot boundary: no production obligations or implementation authority were added.
+Read-only sibling snapshot was taken during concurrent state work (tip observed `ceea17cae7c3a2bfb9180aa07ad0eceae6f7c365`); task-status statements describe local records, not current hosted PRs. Recommended order: adoption's event-time context, amendment parser integration, this repair, then validation-rerun on the rebased checker; run combined dispatch/laws checks after each. Seed and gate-review work may proceed independently subject to evidence-file conflicts; do not wait on closed or unrelated tasks. Pilot boundary: no production obligation or implementation authorization is added by this report.
 
 ## Acceptance criteria
 
-These are the proof obligations to settle when resuming; they do not amend the accepted Scope or Stop condition.
+**AC-1** — Raw #740 replay refuses and recovery succeeds. Export the exact task/dispatch pair and SHA-256 values above; released base must remain exit 0/empty and candidate `--names` must exit 1 with the new diagnostic. In a separately labelled recovery fixture, reserve via the existing allocator, write its ADR line under Number guards and in scope notes, then require the new refusal to disappear. Falsifiers: remove the predicate call, delete the ADR line, supply only Migration, or leave only a scope-note number; the missing-reservation case must still fail. Current evidence: actual base CLI and structural design experiment only; candidate/allocator recovery unverified.
 
-**AC-1 — Historical claims match original bytes.** Replay the two pinned task/dispatch pairs above with base and candidate, preserving layout and digests; print each exit and diagnostic. A modified fixture containing an added ADR-intent line must be labeled a normalized fixture, never an original replay. Falsifier: remove that added line or use the original PR 728 snapshot; a claimed raw-record refusal must still occur. Current evidence: both base runs return 0; candidate refusal is unverified and blocked by the scope decision.
+**AC-2** — Boundary and compatibility remain explicit. Exercise flat/folder tasks, first/repeated/message implementation records, Pilot/Prod and POC, the accepted placeholder spellings, lists/tables/inline code, fences and indented blockquotes, numbered citations, last Design versus superseded reports, no-placeholder tasks and authorized removal of the current obligation. Compare pinned committed task+dispatch corpora on base/candidate, listing each changed verdict and preserving pre-existing amendment/renumber failures. Existing correctly reserved tasks retain their baseline verdicts, including the existing first-record-only scope-copy check. Falsifiers: classify a historical/fenced ADR example, require a number for POC, let an unreserved placeholder on a continuation pass, or silently change folder/newest/coverage behavior. #728 is not a required refusal. Current evidence: source and sibling reads; candidate matrix/corpus unverified.
 
-**AC-2 — Existing valid reservations and unrelated tasks retain their verdicts.** At fixed state/adopter commits compare base/candidate exits and messages for every committed dispatch record and task, including archive and folder-form tasks, in the affected `--names` mode and the unaffected folder/newest/coverage modes. Explain each changed verdict; keep baseline amendment/renumbering failures distinct. Test missing, fenced, quoted, negative, existing-ADR-reference and later-required-ADR cases plus recorded release of an obligation. Falsifiers: cite an existing ADR to create a false refusal, delete a required reservation without refusal, or classify a later task edit as a historical violation. Current evidence: ADR 0043's three records pass check_task_facts; the broader candidate comparison is unverified.
+**AC-3** — Refusal reaches the existing caller and historical consumer. Run the actual candidate CLI before a disposable dispatch sequence; nonzero means zero build/spawn calls, and corrected input reaches the normal build/immediate-spawn sequence. Exercise laws L2 over the event commit: missing reservation is a violation, not Cannot; a later task repair must not change that earlier event snapshot's result within the same tested range. Include all verdict inputs listed in Design and preserve the existing before..after event policy. Falsifiers: disconnect check_task_facts, remove the diagnostic parser arm, read today's task instead of the event bytes, or test only a helper. Current evidence: actual base command and source wiring; candidate/native sequence and laws result unverified.
 
-**AC-3 — Refusal reaches the existing seam and consumer.** Exercise the actual `--names` command before a scratch dispatch build; show nonzero stops the procedural sequence and a correctly reserved/repeated line permits it. Feed the diagnostic through laws_check's event snapshot path and assert violation rather than Cannot, without changing `--newest` into an unannounced enforcement mode. Falsifiers: disconnect check_task_facts, remove consumer classification, or only test a helper without the CLI path. Current evidence: source/callers inspected; candidate/native behavior unverified.
-
-**AC-4 — Reading cost and retained instructions are explicit.** Measure the fixed lifecycle scenarios above on exact base/candidate text and exercised stdout with the same counting method, include every newly required declaration and retry, and check workflow budget equality and any Captain-backed increase. Falsifiers: move text into a mod/output and exclude it, count only workflow.md, or silently reopen the closed ledger proposal. Current evidence: no source wording changed; numeric candidate comparison unverified.
+**AC-4** — Reading cost and instruction ownership stay bounded. Repeat the fixed lifecycle recipes on exact base/candidate source and executed outputs, including the refusal, allocator output, existing Number guards reread and retry. Require normal-path counts unchanged, no added success/polling output and no workflow-budget change; explain every measured failure-path addition. Falsifiers: omit moved text or diagnostic consumer output, report only workflow.md's size, or silently add a universal ADR disposition field. Current evidence: base counts 6967/870/833/333/2408, actual fixture outputs and proposed 27-word error; candidate/recovery totals unverified. CI cost per PR was not measured; no CI change is in scope.
 
 ## Stage Report: ideation
 
@@ -196,3 +216,28 @@ These are the proof obligations to settle when resuming; they do not amend the a
 ### Summary
 
 Held: the assignment asks a structural check to reject an original record that never declares the new ADR obligation. FO must resolve the one scope/replay decision before the final design, numeric reading measurement and candidate refusal proof; this report does not authorize a new universal field, a prose classifier or revival of the closed ledger task. The original four checklist items are 2 DONE, 1 SKIPPED, 1 FAILED; current-stage evidence mappings are additional, not completion claims for future implementation.
+
+## Stage Report: ideation
+
+- DONE: Revise the design under the Captain's ideation-gate revise of 2026-10-29 (「照建議」; the asks are in the gate question): refuse only a design that names a docs/adr placeholder with no ADR reserved under ## Number guards; replay #740 as refused; drop the #728 replay; batch ruling A applies; update criteria and the stop condition to match
+  Current PRFAQ/Design, AC-1 through AC-4 and Stop condition implement the accepted narrow scope; exact #740 released CLI exits 0, design predicate identifies the missing reservation, and candidate CLI refusal remains explicitly owed at implementation; #728 is removed, not relabelled as caught.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (seed-check-requires-alignment-result, captain-amendment-form-checked, adr-reserved-when-design-names-one, validation-rerun-waits-for-captain-ruling, gate-requires-recorded-reviews) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  Five proposed files and all thirteen named tasks are mapped; order is adoption context, amendment parser, this repair, validation rerun; closed/moved tasks are not dependencies and no sibling was edited.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  Executed shipped watcher fixtures and counted the declared instruction corpus: base 6967/870/833/333/2408; proposed normal path equal, new error 27 words plus 468-word existing recovery reread; candidate/allocator totals remain future proof, no CI cost measured.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-1 through AC-4 bind original bytes, compatibility, the caller/laws seam and lifecycle reading; no unresolved decision remains after the recorded revise; missed semantic omissions and failure-path reading are explicit costs.
+- DONE: AC-1 current-stage evidence
+  Original #740 task/record digests and CLI exit/stdout reproduced; deleting the proposed predicate would leave that baseline acceptance unchanged, so actual candidate refusal/recovery must still be proved and is not claimed here.
+- DONE: AC-2 current-stage evidence
+  Number parser, supported record paths and sibling contracts read; matrix and frozen corpus comparison unverified until implementation; historical/fenced examples and POC refusal are named false-positive falsifiers.
+- DONE: AC-3 current-stage evidence
+  Pre-build caller, immediate-spawn ownership and L2 closed diagnostic grammar read; actual base CLI exercised; candidate sequence/laws proof unverified, with disconnect/parser-arm/event-time mutations specified.
+- DONE: AC-4 current-stage evidence
+  Fixed watcher scenarios executed under provider stubs and instruction counts recomputed; candidate rerun must catch any normal-path increase or omitted refusal/allocator/retry text.
+- DONE: Required design-surfaces invocation and state boundaries
+  Supplied 0.33.0 design_surfaces.py check exits 0, 'design surfaces presentable'; git diff --check passes; frontmatter, original report and sibling files preserved; no product implementation, ADR reservation or gate mutation performed.
+
+### Summary
+
+Cycle 2 supersedes the earlier held report: the Captain's narrowed structural design is complete, with PRFAQ/Mermaid, four criteria, updated stop condition, all named overlaps and measured baseline reading. Source remains origin/main 5725d495bb83a17ec13616bb5421bf5ffdc71f70 / package 0.33.0; GitHub #740 read succeeded, while QNow was not freshly relocated and diagram rendering was not exercised. Candidate refusal, full compatibility and native orchestration remain implementation/validation evidence, not design-stage passes; Pilot scope and Captain gate authority remain unchanged.
