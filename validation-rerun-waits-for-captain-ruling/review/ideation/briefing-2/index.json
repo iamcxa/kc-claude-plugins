@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-rerun-waits-for-captain-ruling:ideation:attempt-2:revision-1",
+  "question": "Approve the revised ideation of validation-rerun-waits-for-captain-ruling to enter implementation? FO recommends approve; approving accepts that recommendation and its measured cost: on the 27 replayed records it refuses 12, of which 2 are confirmed false holds (1 an actual rerun) that pause until a ruling is recorded when the task is next touched (decision B); it catches #742; records outside a git state root are skipped; historical judging is deferred.",
+  "artifacts": [
+    {
+      "id": "artifact:validation-rerun-waits-for-captain-ruling:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/95cc83cb36b825d4fee5854a55951e281fed6bc7/validation-rerun-waits-for-captain-ruling.md",
+      "rev": "sha256:cc36b9f6729acafe7344da01e969723a155232c0bdd7f97ade09593a1ec1e26a",
+      "mediaType": "text/markdown",
+      "summary": "Revised per the Captain's 「照建議」: all seven unjudged records judged; live-only scope; ADR number reserved at implementation."
+    }
+  ]
+}
