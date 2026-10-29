@@ -1,0 +1,7 @@
+{"mutation": "AC-1-remove-call", "exit": 1, "assertion_failure": true, "test": "LiveValidationRulingTests.test_fresh_followup_and_filename_one_hold_then_native_ruling_clears_without_input_edits"}
+{"mutation": "AC-2-filename-ordinal", "exit": 1, "assertion_failure": true, "test": "LiveValidationRulingTests.test_fresh_followup_and_filename_one_hold_then_native_ruling_clears_without_input_edits"}
+{"mutation": "AC-4-ignore-ancestry", "exit": 1, "assertion_failure": true, "test": "LiveValidationRulingTests.test_old_and_same_commit_rulings_do_not_clear"}
+{"mutation": "AC-5-cwd-root", "exit": 1, "assertion_failure": true, "test": "LiveValidationRulingTests.test_plain_copy_skips_only_new_predicate_independent_of_cwd"}
+{"mutation": "AC-6-no-recovery", "exit": 1, "assertion_failure": true, "test": "LiveValidationRulingTests.test_refusal_recovery_once_and_reading_cost"}
+{"mutation": "AC-7-gate-only", "exit": 1, "assertion_failure": true, "test": "LiveValidationRulingTests.test_freeform_then_on_touch_amendment_and_partial_supported_ruling"}
+{"mutation": "AC-7-relax-form", "exit": 1, "assertion_failure": true, "test": "SavedValidationRulingTests.test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations"}

@@ -1,0 +1,27 @@
+F
+======================================================================
+FAIL: test_freeform_then_on_touch_amendment_and_partial_supported_ruling (__main__.LiveValidationRulingTests.test_freeform_then_on_touch_amendment_and_partial_supported_ruling)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr750-mutation-check/kc-dev-flow-2/scripts/test_dispatch_records.py", line 834, in test_freeform_then_on_touch_amendment_and_partial_supported_ruling
+    self.assertEqual(self.cli(), (0, ""))
+AssertionError: Tuples differ: (1, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8n[434 chars].\n') != (0, '')
+
+First differing element 0:
+1
+0
+
++ (0, '')
+- (1,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpiawhamyu/state-1/task/dispatch/validation-2.md:1: '
+-  'validation rerun needs a later Captain ruling for report 1 at '
+-  '97e1677ef7a77415542b1cf8b76e1f938dba58fc findings F1; hold dispatch, record '
+-  'the ruling, then run this check again\n'
+-  'For an older free-form ruling, verify its original question and reply, '
+-  'preserve them, and record it as a native gate or Captain amendment before '
+-  'rerunning; if unavailable, hold for the Captain.\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.883s
+
+FAILED (failures=1)

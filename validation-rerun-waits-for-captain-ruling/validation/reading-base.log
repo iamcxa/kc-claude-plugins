@@ -1,0 +1,28 @@
+{
+  "parts": {
+    "workflow": 5754,
+    "dev": 763,
+    "mod": 48,
+    "paseo": 562,
+    "learn": 280,
+    "startup": 365,
+    "idle": 100,
+    "delivery": 461,
+    "extensions": 224,
+    "lifecycle": 958,
+    "present": 675
+  },
+  "outputs": {
+    "open": 29,
+    "merged": 0,
+    "archive": 5,
+    "four-gates": 90
+  },
+  "rows": {
+    "startup": 7521,
+    "idle/open": 1424,
+    "idle/merged": 1395,
+    "archive": 895,
+    "merge": 2970
+  }
+}

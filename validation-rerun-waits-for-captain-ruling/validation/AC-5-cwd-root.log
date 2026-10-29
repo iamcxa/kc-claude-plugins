@@ -1,0 +1,23 @@
+F
+======================================================================
+FAIL: test_plain_copy_skips_only_new_predicate_independent_of_cwd (__main__.LiveValidationRulingTests.test_plain_copy_skips_only_new_predicate_independent_of_cwd)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr750-mutation-check/kc-dev-flow-2/scripts/test_dispatch_records.py", line 977, in test_plain_copy_skips_only_new_predicate_independent_of_cwd
+    self.assertEqual(self.cli(copied, cwd=cwd), (0, ""))
+AssertionError: Tuples differ: (2, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8n[172 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdojfqaji/plain/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: different-task-root; hold dispatch '
+-  'and report the missing history to FO\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.270s
+
+FAILED (failures=1)

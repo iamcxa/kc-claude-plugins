@@ -1,0 +1,278 @@
+[
+  {
+    "task": "fo-interviews-extension",
+    "record": "validation-2.md",
+    "source": "66ade90793a47a716cb55425bc4fbb57c6b15fec",
+    "findings": [
+      "F1",
+      "F2"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "fo-interviews-extension",
+    "record": "validation-3.md",
+    "source": "ee195fef9685b7772d6c95d38d3b42283cde9f9e",
+    "findings": [
+      "F1"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "idle-hook-names-merged-tasks-without-learn",
+    "record": "validation-2.md",
+    "source": "58db1043408988c65a3998c28ec3792cf7c29aeb",
+    "findings": [
+      "F1"
+    ],
+    "exact_record_checked": true
+  },
+  {
+    "task": "merge-gatekeeper",
+    "record": "validation-2.md",
+    "source": "da4d899707f2c74faee906d030d40b547726be14",
+    "findings": [
+      "F4"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "paseo-codex-dispatch-practice",
+    "record": "validation-2.md",
+    "source": "60d765ac2ed6bda644cd3f94de0c58dae981a860",
+    "findings": [
+      "F1"
+    ],
+    "exact_record_checked": true
+  },
+  {
+    "task": "paseo-codex-dispatch-practice",
+    "record": "validation-2-message-1.md",
+    "source": "c9bf77a5e68d1809826044df316ec3d8904bced6",
+    "findings": [
+      "F1"
+    ],
+    "exact_record_checked": true
+  },
+  {
+    "task": "paseo-codex-dispatch-practice",
+    "record": "validation-4.md",
+    "source": "ef0ca5a2a6b1ea1fa975ff46872e2b396bd5a6bd",
+    "findings": [
+      "F1"
+    ],
+    "exact_record_checked": true
+  },
+  {
+    "task": "paseo-codex-dispatch-practice",
+    "record": "validation-3-message-1.md",
+    "source": "e5dd5a3e5e4caeb4100db7748399e3b9adcd34ac",
+    "findings": [
+      "F1"
+    ],
+    "exact_record_checked": true
+  },
+  {
+    "task": "paseo-codex-dispatch-practice",
+    "record": "validation-6.md",
+    "source": "28b366c0cf8bbf2dedc658543850de5a860834a8",
+    "findings": [
+      "F1"
+    ],
+    "exact_record_checked": true
+  },
+  {
+    "task": "paseo-codex-dispatch-practice",
+    "record": "validation-4-message-1.md",
+    "source": "034da3d06c015f9aba60256de9d557fb4944d05f",
+    "findings": [
+      "F1"
+    ],
+    "exact_record_checked": true
+  },
+  {
+    "task": "agent-review-identity",
+    "record": "validation-1.md",
+    "source": "7ea4bf019eb6a80223ca24c5a53047c0513566fb",
+    "findings": [
+      "F1"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "pair-once",
+    "record": "validation-2.md",
+    "source": "6cf9d342df3b094fa8e2a5685b072215ab016efc",
+    "findings": [
+      "F3",
+      "F4",
+      "F5",
+      "F6",
+      "F7",
+      "F8",
+      "F9",
+      "F10",
+      "F11",
+      "F12",
+      "F13",
+      "F14",
+      "F15"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "pair-once",
+    "record": "validation-3.md",
+    "source": "f342c2d6f11150fc8e3f66a3d4afa9395d20f84f",
+    "findings": [
+      "F21",
+      "F22",
+      "F23",
+      "F24",
+      "F25",
+      "F26",
+      "F27",
+      "F28",
+      "F30"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "pair-once",
+    "record": "validation-4.md",
+    "source": "3721da7a6dedad9b0b867f1a50657500bca8ede1",
+    "findings": [
+      "F4",
+      "F5",
+      "F6",
+      "F23",
+      "F24",
+      "F25",
+      "F30"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "review-keyword-invocations",
+    "record": "validation-2.md",
+    "source": "7fd5cab47dc8001f97f7dd6fc2f3200da4239375",
+    "findings": [
+      "F4"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "review-keyword-invocations",
+    "record": "validation-3.md",
+    "source": "f1a7b9e6fcb53d1457d89842f437fbd0c9eef18f",
+    "findings": [
+      "F4"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "rr-pairs-once",
+    "record": "validation-2.md",
+    "source": "74e8186403fa5a78670bbecc5155b93d3becf3ab",
+    "findings": [
+      "F3"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "rr-pairs-once",
+    "record": "validation-3.md",
+    "source": "2b3abe40173f1983eca960f27309369dd846bf63",
+    "findings": [
+      "F11"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "briefing-frame-and-controls",
+    "record": "validation-2.md",
+    "source": "bbbe9d936e967a47f96187d55a7a4c3615aa7d25",
+    "findings": [
+      "F6",
+      "F7"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "briefing-frame-and-controls",
+    "record": "validation-3.md",
+    "source": "000a71037df1b0f94215940bf66fdfcb4a7d610a",
+    "findings": [
+      "F6",
+      "F7"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "frame-reaches-window-bottom",
+    "record": "validation-2.md",
+    "source": "c9013a16b010c0930aba55908aca5b0fc0287b8c",
+    "findings": [
+      "F1"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "hidden-file-draws-diagrams",
+    "record": "validation-2.md",
+    "source": "2bf9fa6d60b66feb122b273f8fbe5c99460d7ac6",
+    "findings": [
+      "F2"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "review-page-reads-as-an-app",
+    "record": "validation-2.md",
+    "source": "acb050d79045cceedaab39d556699f9edce8b1d6",
+    "findings": [
+      "F6",
+      "F7"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "owner-picks-visited-branch",
+    "record": "validation-2.md",
+    "source": "7bd8ce86bb2db688acfcb46d139a1750a4649cae",
+    "findings": [
+      "F4"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "production-operations",
+    "record": "validation-4.md",
+    "source": "2c6b40ca75be22340ae7ebe1069b0275246a0169",
+    "findings": [
+      "F1"
+    ],
+    "exact_record_checked": false
+  },
+  {
+    "task": "branch-hours-generate-starts",
+    "record": "validation-2.md",
+    "source": "c6e1c85af83cf3c3770345a2d20f9d98b438dc43",
+    "findings": [
+      "F2",
+      "F3"
+    ],
+    "exact_record_checked": true
+  },
+  {
+    "task": "branch-hours-generate-starts",
+    "record": "validation-3.md",
+    "source": "80c45c4b886b161d29f7671f35690e84a787311d",
+    "findings": [
+      "F2",
+      "F3"
+    ],
+    "exact_record_checked": true
+  }
+]
+PASS: 27 pinned source finding sets and supplied exact dispatch texts match Git snapshots

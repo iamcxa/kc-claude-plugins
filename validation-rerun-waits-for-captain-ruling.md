@@ -388,3 +388,30 @@ Implemented the bounded live check and ADR 0045 at b8a66e826c7524fa944a7165296ac
 ### Summary
 
 This corrected implementation report supersedes the earlier implementation report. Captain amendment 1 settles the prior AC-3 finding: AC-7 requires predicate passes, correct full-CLI legacy refusals and supported-form full-CLI passes; candidate b8a66e826c7524fa944a7165296acba94b3f5e13 is unchanged. Publication, RoboRev and hosted CI retain their FO ownership and are not reverified by this state-only correction.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #750 head b8a66e82 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED b8a66e826c7524fa944a7165296acba94b3f5e13 against stacked base da5053febb546b2a7cf6ffe676b0d5a8b7e338a4; full commands, independent outputs, limits and necessity/sufficiency assessment: validation-rerun-waits-for-captain-ruling/validation/evidence.md.
+- DONE: Captain amendment 1 applies (AC-3 superseded by AC-7: the three legacy records pass the new ruling predicate, the full CLI refusing them through #749's form check is correct, supported-form controls pass); PR #750 is stacked on #749 (base spacedock-ensign/captain-amendment-form-checked at da5053feb), so judge the diff against that base; RoboRev evidence=roborev:1326 clean on b8a66e826, run by FO
+  AC-7 predicate/full-CLI/control results reproduced; AC-3 withdrawn and prior F1 settled. RoboRev roborev:1326 and five passing hosted checks are FO-supplied exact-head evidence, not independently queried or rerun here.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four exact steps and full observed output in validation/acceptance.md, executed by bash --noprofile --norc validation/acceptance.sh: exit 0, two live tests, two saved-case tests, 43 ADRs/0 legacy; ADR lint used the dispatched equivalent Codex 0.33.0 package with --since da5053febb546b2a7cf6ffe676b0d5a8b7e338a4 --require 0045, exit 0.
+- DONE: AC-1: fresh and follow-up validation records refuse without a later ruling, then pass without input mutation.
+  Real Git-backed CLI tests pass; removing the predicate call fails the before-ruling assertion (AC-1-remove-call.log).
+- DONE: AC-2: pinned incident event prefixes retain four refusals and two passes, independent of record filename ordinals.
+  SavedValidationRulingTests plus source-proof.log match the saved dispatches and source finding sets; substituting the fourth-validation prefix for the first fails the refusal/count assertions (prefix-mutation.log).
+- DONE: AC-4: ruling identity and strict ancestry, report moves, fences, CLOSED findings and unreadable history retain the specified outcomes.
+  Live CLI cases pass, including exit 2 for shallow/broken/rewritten/discontinuous/divergent history; ignoring ancestry fails old/same-commit ruling assertions (AC-4-ignore-ancestry.log).
+- DONE: AC-5: non-Git copies skip only the new predicate; existing checks and the historical snapshot caller remain effective.
+  Plain/Git fixtures from both cwd contexts and real test_laws_check.py caller pass; cwd-root mutation fails the plain-copy assertion (AC-5-cwd-root.log).
+- DONE: AC-6: command contracts, consumers, lifecycle reading cost and unchanged workflow/mod/law/CI surfaces.
+  Dispatch 80, laws 58, PR-watch 129, native test_sd_dispatch.py and lint pass; base/candidate counts 7521/1424/1395/895/2970, output 29/0/5/90, actual refusal/error 56/16; removing recovery fails the once-only/count assertion. CI cost per PR not measured; no CI change.
+- DONE: AC-7: supported native/amendment rulings, three exact legacy refusals, supported-form controls and on-touch recovery.
+  Legacy predicate 0/full CLI 1 and supported controls 0 reproduced; gate-only and relaxed-form mutations fail. Seven source adjudications retain two record-addition false holds, one actual rerun; partial supported reply remains an intentional structure-only pass.
+- DONE: Required guards, affected documents, bounded necessity and cleanup.
+  Number guards/design/dispatch/doc-impact/comment checks exit 0; six records complete, comments 1/1705 (0.1%, max 5%); ADR 0045 updated, learning.md unaffected by the proven non-Git consumer boundary. Both detached checkouts clean before removal; assigned branch remains clean at the candidate; no product/config/PR mutation or push.
+
+### Summary
+
+Recommend PASSED for b8a66e826c7524fa944a7165296acba94b3f5e13: every active criterion passes, eight independently executed mutations fail, and the four-step acceptance script passes unchanged in a fresh shell. No new Material, Deferred risk, Polish or Needs decision finding; the accepted structural/semantic, non-Git, legacy on-touch and historical-enforcement limits remain explicit, and the unchanged design diagram was inspected but not re-rendered. FO retains the acceptance-script replay, gate and delivery decision; local success is not merge, adoption, source authentication or worker-execution proof.

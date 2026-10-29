@@ -1,0 +1,29 @@
+FF
+======================================================================
+FAIL: test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations (__main__.SavedValidationRulingTests.test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations) (source='60d765ac2ed6bda644cd3f94de0c58dae981a860', task='paseo-codex-dispatch-practice', record='validation-2.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr750-mutation-check/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1051, in test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations
+    self.assertEqual(predicate.returncode, 0 if case["prototype"] == "PASS" else 1, predicate.stdout)
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations (__main__.SavedValidationRulingTests.test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr750-mutation-check/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1074, in test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations
+    self.assertEqual(counts, {0: 15, 1: 12})
+AssertionError: {0: 15, 1: 11} != {0: 15, 1: 12}
+- {0: 15, 1: 11}
+?             ^
+
++ {0: 15, 1: 12}
+?             ^
+
+
+----------------------------------------------------------------------
+Ran 1 test in 22.650s
+
+FAILED (failures=2)
+
+MUTATION EXIT: 1

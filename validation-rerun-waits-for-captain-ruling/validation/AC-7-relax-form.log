@@ -1,0 +1,43 @@
+FFFF
+======================================================================
+FAIL: test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations (__main__.SavedValidationRulingTests.test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations) (source='58db1043408988c65a3998c28ec3792cf7c29aeb', task='idle-hook-names-merged-tasks-without-learn', record='validation-2.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr750-mutation-check/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1055, in test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations (__main__.SavedValidationRulingTests.test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations) (source='c6e1c85af83cf3c3770345a2d20f9d98b438dc43', task='branch-hours-generate-starts', record='validation-2.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr750-mutation-check/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1059, in test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations
+    self.assertIn("Supersedes:", out)
+AssertionError: 'Supersedes:' not found in "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6ttvfnjw/state-27/branch-hours-generate-starts/dispatch/validation-2.md:1: Captain amendment 2 named in no dispatch checklist; write 'Captain amendment 2' in a checklist line of this record, then run this check again\n"
+
+======================================================================
+FAIL: test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations (__main__.SavedValidationRulingTests.test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations) (source='80c45c4b886b161d29f7671f35690e84a787311d', task='branch-hours-generate-starts', record='validation-3.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr750-mutation-check/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1059, in test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations
+    self.assertIn("Supersedes:", out)
+AssertionError: 'Supersedes:' not found in "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6ttvfnjw/state-28/branch-hours-generate-starts/dispatch/validation-3.md:11: bare package script name design_surfaces.py\n/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6ttvfnjw/state-28/branch-hours-generate-starts/dispatch/validation-3.md:1: Captain amendment 2 named in no dispatch checklist; write 'Captain amendment 2' in a checklist line of this record, then run this check again\n"
+
+======================================================================
+FAIL: test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations (__main__.SavedValidationRulingTests.test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr750-mutation-check/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1074, in test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations
+    self.assertEqual(counts, {0: 15, 1: 12})
+AssertionError: {0: 14, 1: 12} != {0: 15, 1: 12}
+- {0: 14, 1: 12}
+?      ^
+
++ {0: 15, 1: 12}
+?      ^
+
+
+----------------------------------------------------------------------
+Ran 1 test in 24.273s
+
+FAILED (failures=4)

@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_refusal_recovery_once_and_reading_cost (__main__.LiveValidationRulingTests.test_refusal_recovery_once_and_reading_cost)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr750-mutation-check/kc-dev-flow-2/scripts/test_dispatch_records.py", line 997, in test_refusal_recovery_once_and_reading_cost
+    self.assertEqual(out.count(records.RECOVERY), 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.481s
+
+FAILED (failures=1)
