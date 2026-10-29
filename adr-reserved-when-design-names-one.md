@@ -66,6 +66,17 @@ gates:
                 id: briefing:adr-reserved-when-design-names-one:validation:attempt-1:revision-1
                 digest: sha256:0078356e1bbfb139abb0884f44436b7899697e299208aba195f198095c1fc4a1
                 room-ref: ./adr-reserved-when-design-names-one/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-reserved-when-design-names-one:validation:1
+                briefing: briefing:adr-reserved-when-design-names-one:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-29T10:46:10.692155Z"
+                decision: approve
+                reason: The Captain 「准合併」 (chat, 2026-10-29), answering FO's joint batch-10 delivery sitting of four gates whose ask was 「決定：四張全照建議合併（疊的三張用一般合併），並確認上面兩件事？要改哪張直接說。」; accepts FO's recommendation for this task as stated in the gate question.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-29T07:05:20Z
 worktree: .worktrees/spacedock-ensign-adr-reserved-when-design-names-one
 pr: iamcxa/kc-claude-plugins#751
