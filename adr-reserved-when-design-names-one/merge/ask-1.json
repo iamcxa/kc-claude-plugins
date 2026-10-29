@@ -1,0 +1,25 @@
+{
+  "class": "never",
+  "head": "58c9d0f26c78b4b038668b7170389512d8e727e0",
+  "model": "not run",
+  "necessity": "five files (kc-dev-flow-2/VALIDATION.md, kc-dev-flow-2/scripts/dispatch_records.py, laws_check.py, test_dispatch_records.py, test_laws_check.py).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F2 Deferred risk: a future'",
+    "point: deferred: '- DONE: Second validation on the'",
+    "point: deferred: \"- F2 Deferred risk: FO's future\"",
+    "point: deferred: 'FO declines: Deferred risk F2, this'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 1 dated 2026-10-29'",
+    "point: amendment: 'Amendment 2 dated 2026-10-29'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/laws_check.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_laws_check.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#751",
+  "sufficiency": "an implementation dispatch is refused when the design names a docs/adr placeholder with no ADR reserved under ## Number guards; #740 replays as refused; validation-2 PASSED with 388 tests after the Ca",
+  "time": "2026-10-29T10:56:17Z",
+  "verdict": "ask"
+}
