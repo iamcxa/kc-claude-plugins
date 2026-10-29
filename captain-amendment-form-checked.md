@@ -90,6 +90,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-29 — batch-10 review before the joint ideation sitting: approve, revise or cut each task, the Captain's decisions, overlap and order
+Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-29 — batch-10 delivery review: merge, repair or hold each PR, merge order for the #749-#751 stack and #748, what validation missed, obligations owed after release
 
 ## Design
 
