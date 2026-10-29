@@ -12,6 +12,19 @@ status: backlog
 - Observed: not observed in any task (validation, 2026-10-26).
 - Bite: none yet; file only so the gap is not lost. Reopen when a task archives with a superseded criterion still declared.
 
+- Added 2026-10-29: the Captain 「那就a吧」 (chat) chose FO's batch-10 theme, whose row listed 「被取代的驗收條件漏抓」. Batch 9 showed no archived task with a superseded criterion still declared; engineering-reviewer found criteria carrying withdrawn content that were never listed under Supersedes (a different gap, under captain-amendment-form-checked).
+
+## Non-goals
+
+- Criteria never listed under Supersedes (captain-amendment-form-checked owns that).
+
+## Budget
+
+- One package PR inside `scripts/design_surfaces.py`; no new script.
+
+## Stop condition
+
+- A replayed task that archives with a superseded criterion still declared and no later dispatch is refused; return to the Captain if no real task shows the gap.
 ## FO alignment
 
 Alignment: needed before ideation; no bite yet.
