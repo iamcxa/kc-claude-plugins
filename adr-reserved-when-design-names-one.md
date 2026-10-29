@@ -15,6 +15,17 @@ gates:
                 id: briefing:adr-reserved-when-design-names-one:backlog:attempt-1:revision-1
                 digest: sha256:54eb1a6854e50fa913931776a3125fcae222a0eeebabecd91f45c7e5bf00ff95
                 room-ref: ./adr-reserved-when-design-names-one/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-reserved-when-design-names-one:backlog:1
+                briefing: briefing:adr-reserved-when-design-names-one:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-29T00:39:44.625775Z"
+                decision: approve
+                reason: The Captain 「同意這些內容」 (chat, 2026-10-29), answering FO's joint batch-10 backlog sitting of six gates whose ask was 「決定：六張全照建議（五張進設計，被取代條件那張先留在待辦）？要改哪張直接說。」; accepts FO's recommendation to enter ideation on the pilot profile.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
