@@ -378,3 +378,82 @@ Validator ran exactly the concatenated commands above with `bash --noprofile --n
 ### Summary
 
 REJECTED for head 58c9d0f26c78b4b038668b7170389512d8e727e0: the structural refusal, recovery, compatibility, history consumer and reading budget are independently reproduced, with 388 tests, twelve fault controls and the fresh-shell acceptance script passing. Goal sufficiency remains unproved at native worker startup; minimal necessity is satisfied by the five-file stacked diff, and no demonstrated code defect calls for repair. FO retains the host-evidence obligation, authorized treatment of this task's explanatory examples, validation disposition and Captain delivery decision; provider checks and RoboRev are explicitly supplied evidence.
+
+
+## Validation acceptance script — cycle 2, 2026-10-29
+
+No graphical surface changed. Run these four steps in order in one fresh `bash --noprofile --norc` shell; the named local code checkout, Git, Python 3 and installed Codex package 0.33.0 are required. These commands are unchanged from validation-1 and took under five minutes here. They cover the CLI boundary, allocator recovery, compatibility, eleven mutations, historical event classification and ADR lint; they do not prove native worker startup, hosted CI, release or delivery.
+
+1. Pin the candidate in a disposable clone.
+
+```bash
+set -euo pipefail
+ADR_ACCEPT=$(mktemp -d /tmp/adr-751-acceptance.XXXXXX)
+git clone --quiet --shared --no-checkout /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-adr-reserved-when-design-names-one "$ADR_ACCEPT"
+git -C "$ADR_ACCEPT" checkout --quiet --detach 58c9d0f26c78b4b038668b7170389512d8e727e0
+git -C "$ADR_ACCEPT" rev-parse HEAD
+cd "$ADR_ACCEPT/kc-dev-flow-2/scripts"
+```
+
+Expected and observed: `58c9d0f26c78b4b038668b7170389512d8e727e0`; exit 0.
+
+2. Exercise the accepted boundary and falsifiers.
+
+```bash
+python3 -B -m unittest test_dispatch_records.DesignAdrTests test_dispatch_records.DesignAdrMutationTests test_laws_check.L2Test.test_missing_design_adr_is_an_event_violation_even_after_later_repair -v
+cd "$ADR_ACCEPT"
+```
+
+Expected: eight tests `ok`, ending `OK`, exit 0. Observed: eight tests `ok`, `Ran 8 tests in 51.563s`, `OK`; fault controls succeed only when the mutated implementation fails its assertion.
+
+3. Check decision records against the stacked base.
+
+```bash
+python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/adr_lint.py docs/adr --since b8a66e826c7524fa944a7165296acba94b3f5e13
+cd /tmp
+```
+
+Expected and observed: `43 ADR file(s) checked, 0 legacy`; exit 0.
+
+4. Remove only this acceptance clone.
+
+```bash
+python3 -c 'import shutil,sys; shutil.rmtree(sys.argv[1]); print("Acceptance clone removed")' "$ADR_ACCEPT"
+```
+
+Expected and observed: `Acceptance clone removed`; exit 0.
+
+Executed exactly with `bash --noprofile --norc /tmp/validation-adr-751-cycle2/acceptance.sh`; combined exit 0. Full observed output: `/tmp/validation-adr-751-cycle2/acceptance.out`.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #751 head 58c9d0f2 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Cycle 2 recommends PASSED at unchanged 58c9d0f26c78b4b038668b7170389512d8e727e0 under Captain amendment 1; AC-1/2/4 stand on fresh reruns, and AC-3 passes its currently due proof with native startup deferred to the first real implementation dispatch after release. No product bytes changed.
+- DONE: Second validation on the same head after the Captain ruled on validation-1's F1 (Captain amendment 1, 2026-10-29: 「照建議改 AC-3」, moving AC-3's native build-and-spawn proof to the first real implementation dispatch after release; Supersedes: none): judge AC-3 under that timing, confirm the head is unchanged and the other criteria stand from validation-1, and keep F2 (the task's own explanatory placeholders) as a Deferred risk; RoboRev evidence=roborev:1327 clean on 58c9d0f26, run by FO
+  Amendment is committed at 2eddb51b0a5656fc4487d2dd2a3ce889da9a1c8f after validation-1; its Asked/Captain text settles timing, not proof of startup. Supersedes: none means no acceptance block was moved or rewritten. F1 is settled for this gate; F2 remains below. RoboRev and four green PR checks remain FO-supplied same-head evidence, not independently fetched.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four exact steps and fresh observations are above; combined exit 0. Equivalent installed Codex 0.33.0 command `python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/adr_lint.py docs/adr --since b8a66e826c7524fa944a7165296acba94b3f5e13` exits 0: 43 records, 0 legacy; no task ADR is reserved or newly named.
+- DONE: AC-1 — raw replay, allocator recovery and falsifiers
+  Original state Git bytes at 09da6be7ad5aaf687ea3f80e9553f3efb525cc17 equal both embedded literals and published digests; released checker is 0/empty, candidate adds the 27-word refusal and preserves the stacked-base line-293 error. Real allocator recovery removes only the new refusal; missing task ADR, scope-only and migration-only controls refuse; disconnecting/disabling the predicate fails the raw assertion.
+- DONE: AC-2 — supported matrix and pinned compatibility
+  Re-executed flat/folder, Pilot/Prod/POC, first/repeated/message, path/heading/list/table, quotes/fences, current Design and unchanged-mode controls; four pinned corpora total 564+296+249+138=1,247 records with the same sole explanatory-example diagnostic. POC inclusion, skipped continuation, quoted/fenced examples and first-Design mutations fail their controls; existing amendment/renumber errors are preserved.
+- DONE: AC-3 — presently due caller and historical-consumer proof
+  Actual candidate CLI refusal yields zero build calls; allocator prints ADR: 0001, corrected CLI is 0/empty and installed Spacedock builds the Codex envelope, followed by a spawn recorder. Historical rule L2 preserves flat/folder event violations after later repair and clears ranges after the event; removing its parser or reading HEAD task bytes fails the control.
+- SKIPPED: AC-3 — native build and immediate real worker startup at the first implementation dispatch after release
+  Not due at this gate under Captain amendment 1. The recorder is not a launched worker, and this validation dispatch does not satisfy the future proof; FO owns obtaining the real post-release build/start receipt. No claim that native startup has passed.
+- DONE: AC-4 — lifecycle cost and falsifier
+  Re-executed base/candidate totals equal 6967/870/833/333/2408 words; outputs remain 37/37/0/5/90 and workflow 5754. Failure recovery is 27 diagnostic + 690 existing reread (222+468) + 2 allocator + 0 retry = 719; a success-banner mutation fails the CLI reading assertion (exit 1). No budget, universal field or CI trigger change; CI cost per PR remains unmeasured.
+- DONE: Required local checks and document dispositions
+  Dispatch 87, laws 59, watcher 129 and delivery 113 pass (388); eleven shipped fault mutations plus the added success-banner mutation fail as intended. Repo lint, installed design_surfaces, five-record dispatch completeness, stacked-base number check, comment_ratio (583 code lines, 0 comments, 0.0% <= 5%), ADR lint and diff --check pass. Added docstrings were read; VALIDATION.md updated; ADR 0045 unaffected because ruling/history controls pass; learning.md unaffected because no learning-rule change is in scope.
+- DONE: Exact diff, base-sensitive limit and minimal necessity
+  Task delta remains five approved files against parent b8a66e826c7524fa944a7165296acba94b3f5e13; origin/main remains 5725d495bb83 and its cumulative diff includes the two prior stacked tasks. Default trunk number check still exits 1 for sibling ADR 0045, explicit task-parent check exits 0; this is unchanged from validation-1 and must be resolved in FO's stack landing/rebase checks, not by inventing a reservation for this task. Runtime predicate, consumer parser, tests and evidence documentation each support the accepted goal or a falsifier.
+- DONE: Evidence preservation and candidate cleanup
+  Fresh receipts are `/tmp/validation-adr-751-cycle2/{raw,corpus,reading,native}.{py,json}`, `checks.json`, suite outputs, `reading-falsifier.txt` and acceptance files. Detached candidate was verified clean at the named head then removed; acceptance clone removed. Existing task bytes, frontmatter and validation-1 are preserved as an exact prefix; no code/config/PR mutation or product push was performed.
+
+### Findings
+
+- F2 Deferred risk: FO's future implementation redispatch of this task can be refused by its active explanatory placeholder paths. Observable harm is a future blocked dispatch, not a demonstrated current blockage; protected boundary is captain-ruling[2026-10-29] requiring literal structural matching and preservation of approved obligations; trigger evidence is the same single changed corpus record, baseline 0 versus candidate 1. It becomes Material if it blocks a required current dispatch; FO retains authorized correction, without an invented ADR or silent design rewrite.
+
+### Summary
+
+Cycle 2 supersedes validation-1's gate recommendation with PASSED for unchanged head 58c9d0f26c78b4b038668b7170389512d8e727e0 under Captain amendment 1: all currently due acceptance evidence is reproduced, with 388 tests, twelve fault controls and the fresh-shell acceptance script passing. Native build/immediate real startup remains explicitly owed at the first implementation dispatch after release; F2, stack-aware pre-merge checks and the Captain's delivery decision remain with FO. This is a validation recommendation, not acceptance, merge, release or native startup proof.
