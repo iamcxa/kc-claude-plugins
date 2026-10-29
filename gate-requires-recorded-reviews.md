@@ -351,6 +351,10 @@ All below were read at source `5725d495bb83a17ec13616bb5421bf5ffdc71f70`, with A
 - `docs/adr/0027-fo-write-rules-are-checked-by-the-script-fo-runs-at-the-write.md` — sha256:`3c4a5010f86bf4dd03725c458700bfe571694dcafff45233fb38823b62ce412c`.
 - `docs/adr/0043-a-named-batch-waits-for-its-next-gate-before-one-sitting.md` — sha256:`6b43a90efa50404769627db45c012ce71b6ac5a97ef83c0320d047e026ed78ec`.
 
+## Number guards
+
+ADR: 0044
+
 ## Stage Report: ideation
 
 - DONE: A design for refusing gate preparation while a role call or review round the README requires is not recorded where it says (Reviewer: lines under ## FO alignment for role calls; external rounds and the second-reviewer outcome in the gate summary of a delivery gate), inside an existing check FO runs before gate prepare; the #744 (batch-reaches-each-gate-together) and #745 (fo-interviews-extension) archived records replayed as refused, and tasks that recorded their calls passing
