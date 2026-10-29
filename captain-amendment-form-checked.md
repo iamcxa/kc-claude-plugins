@@ -58,6 +58,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-29T03:51:21Z
+worktree: .worktrees/spacedock-ensign-captain-amendment-form-checked
 ---
 
 ## Scope
