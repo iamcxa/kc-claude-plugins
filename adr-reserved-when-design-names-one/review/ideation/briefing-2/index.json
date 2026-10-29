@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-reserved-when-design-names-one:ideation:attempt-2:revision-1",
+  "question": "Approve the revised ideation of adr-reserved-when-design-names-one to enter implementation? FO recommends approve; approving accepts that recommendation: refuse an implementation dispatch whose design names a docs/adr placeholder with no ADR reserved under ## Number guards; #740 replays as refused; #728 is out of scope.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-reserved-when-design-names-one:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/d3f33b36b58369dcc1113a1b2058f4ae5e2b5c7c/adr-reserved-when-design-names-one.md",
+      "rev": "sha256:7ce32f071ee05a353b8da1c5e83a42324cfa12071ca956533b64650604ea8132",
+      "mediaType": "text/markdown",
+      "summary": "Revised per the Captain's 「照建議」: normal-path reading unchanged; a refusal adds 27 words plus a reread of the existing recovery text."
+    }
+  ]
+}
