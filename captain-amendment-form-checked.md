@@ -3,7 +3,7 @@ title: A Captain amendment entry is refused when it sits outside ## Captain amen
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
