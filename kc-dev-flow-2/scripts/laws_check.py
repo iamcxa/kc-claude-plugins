@@ -165,6 +165,9 @@ def l2_dispatch_record_complete(ctx):
             code, task_text, _ = run("git", "-C", str(ctx.state), "show", f"{commit}:{folder}.md")
             if code == 0:
                 (Path(tmp) / f"{folder}.md").write_text(task_text)
+            code, index_text, _ = run("git", "-C", str(ctx.state), "show", f"{commit}:{folder}/index.md")
+            if code == 0:
+                (Path(tmp) / folder / "index.md").write_text(index_text)
             mine = {path.rsplit("/", 1)[1]: (path, commit) for path in paths}
             judged += len(mine)
             readme = ["--readme", str(ctx.readme)] if ctx.readme else []
@@ -183,6 +186,7 @@ def l2_dispatch_record_complete(ctx):
                 match = re.fullmatch(r"(.+\.md):(\d+): (bare package script name \S+|no 'Candidate: <40-hex head>' line|"
                                      r"reserved line '[^']+' missing from scope notes|"
                                      r"Captain amendment \d+ named in no dispatch checklist|"
+                                     r"Captain amendment form at [^:]+:\d+: .+|"
                                      r"'## FO alignment' records alignment as needed with no 'Result:' line|"
                                      r"Captain amendment \d+ (?:Captain|Asked) line holds a backslash-quote copied from JSON)(?:;.*)?", line)
                 if not match:
@@ -195,9 +199,129 @@ def l2_dispatch_record_complete(ctx):
     return judged, violations, None, len(hit)
 
 
+AMENDMENT_TASK = re.compile(r"^(?:_archive/)?(?:([^/]+)\.md|([^/]+)/index\.md)$")
+
+
+def amendment_slug(path):
+    match = AMENDMENT_TASK.fullmatch(path)
+    slug = (match[1] or match[2]) if match else None
+    return slug if slug != "README" else None
+
+
+def amendment_pairs(changes):
+    pairs, deleted, added = [], [], []
+    for status, old, new in changes:
+        if status == "D" and amendment_slug(old):
+            deleted.append(old)
+        elif status == "A" and amendment_slug(new):
+            added.append(new)
+        elif status in "MR" and amendment_slug(old):
+            pairs.append((old, new if amendment_slug(new) else None))
+        elif status == "R" and amendment_slug(new):
+            added.append(new)
+    for old in deleted:
+        matches = [new for new in added if amendment_slug(new) == amendment_slug(old)]
+        sources = [path for path in deleted if amendment_slug(path) == amendment_slug(old)]
+        if matches and (len(matches) != 1 or len(sources) != 1):
+            raise Cannot(f"ambiguous task correspondence: {old} -> {', '.join(matches)}")
+        new = matches[0] if matches else None
+        pairs.append((old, new))
+        if new:
+            added.remove(new)
+    return pairs + [(None, new) for new in added]
+
+
+def amendment_blob(ctx, rev, path):
+    from design_surfaces import parse_amendments
+    if path is None:
+        return []
+    blob = subprocess.run(["git", "-C", str(ctx.state), "show", f"{rev}:{path}"], capture_output=True)
+    if blob.returncode:
+        raise Cannot(f"git show {rev}:{path} failed: {blob.stderr.decode('utf-8', 'replace').strip()}")
+    try:
+        text = blob.stdout.decode("utf-8")
+    except UnicodeDecodeError as err:
+        raise Cannot(f"{rev}:{path}: unreadable UTF-8 blob: {err}") from err
+    entries, issues = parse_amendments(text.split("\n"))
+    ambiguous = [f"line {line}: {message}" for line, message in issues
+                 if any(word in message for word in ("duplicate", "malformed"))]
+    if ambiguous:
+        raise Cannot(f"{rev}:{path}: ambiguous protected spans: {'; '.join(ambiguous)}")
+    return entries
+
+
+def payload_append_allowed(old, new):
+    from design_surfaces import DECLARATION_LINE
+    if new == old:
+        return True
+    if new is None:
+        return False
+    if old is None:
+        marker = re.match(r"Superseded text:\r?\n", new)
+        if not marker:
+            return False
+        suffix = new[marker.end():]
+    else:
+        if not new.startswith(old + "\n"):
+            return False
+        suffix = new[len(old):]
+    first = next((line for line in suffix.split("\n") if line.strip()), "")
+    return bool(DECLARATION_LINE.match(first))
+
+
+def l3_amendment_append_only(ctx):
+    script("design_surfaces.py")
+    script("decision_ledger.py")
+    judged, violations, unavailable, hit = 0, [], [], set()
+    for commit, changes in ctx.commits:
+        try:
+            pairs = amendment_pairs(changes)
+        except Cannot as err:
+            unavailable.append(f"commit={commit[:12]} {err}")
+            continue
+        for old, new in pairs:
+            try:
+                before = amendment_blob(ctx, f"{commit}^", old)
+                after = amendment_blob(ctx, commit, new)
+            except Cannot as err:
+                unavailable.append(f"commit={commit[:12]} old={old} new={new} {err}")
+                continue
+            if not before:
+                continue
+            judged += 1
+            for index, entry in enumerate(before):
+                current = after[index] if index < len(after) else None
+                field = None
+                if current is None:
+                    field = "entry removed" if new else "task deleted"
+                elif entry.number != current.number:
+                    field = "number/order changed"
+                elif entry.header != current.header:
+                    field = "header changed"
+                elif entry.ambiguous_from is not None or current.ambiguous_from is not None:
+                    limit = min(n for n in (entry.ambiguous_from, current.ambiguous_from) if n is not None)
+                    if entry.raw.split("\n")[:limit] != current.raw.split("\n")[:limit]:
+                        field = "metadata changed before unmatched fence"
+                    else:
+                        unavailable.append(f"commit={commit[:12]} old={old} new={new} amendment={entry.number}: ambiguous protected spans at unmatched fence")
+                elif entry.metadata != current.metadata:
+                    field = "metadata changed"
+                elif not payload_append_allowed(entry.payload, current.payload):
+                    field = "Superseded text changed or invalid append"
+                if field:
+                    hit.add((commit, old, new))
+                    violations.append(f"violation: L3 amendment-append-only old={old} new={new or '(deleted)'} "
+                                      f"amendment={entry.number} commit={commit[:12]} {field} "
+                                      f"(old lines {entry.start + 1}-{entry.end})")
+    if unavailable:
+        raise Cannot("; ".join(unavailable) + ("\n" + "\n".join(violations) if violations else ""))
+    return judged, violations, None, len(hit)
+
+
 LAWS = {
     "L1": ("observer-before-sentinel", l1_observer_before_sentinel),
     "L2": ("dispatch-record-complete", l2_dispatch_record_complete),
+    "L3": ("amendment-append-only", l3_amendment_append_only),
 }
 
 

@@ -39,7 +39,6 @@ AC_HEADING = re.compile(rf"^{GO_SPACE}## Acceptance criteria{GO_SPACE}$", re.I)
 SECTION_END = re.compile(rf"^{GO_SPACE}## ")
 AC_DECLARATION = re.compile(r"\*\*(AC-[A-Za-z0-9]+)[^*\n]*\*\*")
 AMENDMENTS_HEADING = re.compile(rf"^{GO_SPACE}## Captain amendments{GO_SPACE}$", re.I)
-CAPTAIN_WORDS = re.compile(r"^Captain:[ \t]*\S", re.M)
 SUPERSEDES = re.compile(r"^Supersedes:(.*)$", re.M)
 AC_ID = re.compile(r"AC-[A-Za-z0-9]+")
 DECLARATION_LINE = re.compile(r"^[ \t]*(?:>[ \t]*)*(?:(?:[-*+]|\d+[.)])[ \t]+)?\*\*(AC-[A-Za-z0-9]+)[^*\n]*\*\*")
@@ -156,11 +155,10 @@ def alignment_owes_result(text):
 
 def escaped_amendment_lines(lines):
     found = []
-    for entry in amendment_entries(lines) or []:
-        title, moved = entry.split("\n", 1)[0].strip(), False
-        for line in entry.split("\n")[1:]:
-            moved = moved or line.startswith("Superseded text:")
-            if not moved and line.startswith(("Captain:", "Asked:")) and JSON_QUOTE.search(line):
+    for entry in parse_amendments(lines)[0]:
+        title = entry.header.strip()
+        for line in entry.prefix.split("\n"):
+            if line.startswith(("Captain:", "Asked:")) and JSON_QUOTE.search(line):
                 found.append((title, line.split(":", 1)[0]))
     return found
 
@@ -194,9 +192,111 @@ def declarations(lines):
     return [(found.group(1), line) for line in lines for found in [DECLARATION_LINE.match(line)] if found]
 
 
+AMENDMENT_START = re.compile(r"^\s*### Amendment\b", re.I)
+AMENDMENT_HEADER = re.compile(r"^\s*### Amendment ([0-9]+) — [0-9]{4}-[0-9]{2}-[0-9]{2}[^\r\n]*\r?$", re.I)
+AMENDMENT_FENCE = re.compile(r"^[ \t]*(`{3,}|~{3,})(.*)$")
+AMENDMENT_LEVEL = re.compile(r"^\s*(#{1,3})[ \t]+")
+SUPERSEDES_VALUE = re.compile(
+    r"(?:none|AC-[A-Za-z0-9]+(?:(?:[ \t]*,[ \t]*|[ \t]+)AC-[A-Za-z0-9]+)*"
+    r"(?:[ \t]*(?:,[ \t]*)?and[ \t]+AC-[A-Za-z0-9]+)?)"
+    r"\.?(?:[ \t]+\(no replacement:[ \t]*\S[^\r\n]*\))?")
+
+
+def protected_text(lines):
+    lines = list(lines)
+    while lines and not lines[-1].strip():
+        lines.pop()
+    return "\n".join(lines)
+
+
+class AmendmentRecord:
+    def __init__(self, lines, start, end, owner, visible):
+        self.start, self.end, self.owner = start, end, owner
+        self.ambiguous_from = None
+        self.raw = protected_text(lines[start:end])
+        self.header = lines[start]
+        match = re.match(r"^\s*### Amendment ([0-9]+)\b", self.header, re.I)
+        self.number = int(match[1]) if match else None
+        self.visible = [(i, line) for i, line in visible if start < i < end]
+        marker = next((i for i, line in self.visible if line.rstrip("\r") == "Superseded text:"), None)
+        self.metadata = protected_text(lines[start:marker if marker is not None else end])
+        self.payload = None if marker is None else protected_text(lines[marker:end])
+        self.prefix = "\n".join(line for i, line in self.visible if marker is None or i < marker)
+        self.moved = [line for i, line in self.visible if marker is not None and i > marker]
+
+
+def parse_amendments(lines):
+    """Return raw records and structural defects; fenced examples are not metadata."""
+    records, issues, visible, starts = [], [], [], []
+    owner, active, fence, sections = None, None, None, 0
+    for i, line in enumerate(lines):
+        marker = AMENDMENT_FENCE.match(line)
+        if fence:
+            if marker and marker[1][0] == fence[0][0] and len(marker[1]) >= len(fence[0]):
+                if not marker[2].strip():
+                    fence = None
+                elif fence[2] is not None:
+                    issues.append((fence[1] + 1, "unmatched amendment-region fence before another opening delimiter"))
+            continue
+        if marker:
+            fence = (marker[1], i, active, owner)
+            continue
+        visible.append((i, line))
+        heading = AMENDMENT_LEVEL.match(line)
+        if heading:
+            if active is not None:
+                starts[active][1] = i
+                active = None
+            if len(heading[1]) <= 2:
+                owner = line.strip()
+                if AMENDMENTS_HEADING.match(line):
+                    sections += 1
+                    if sections > 1:
+                        issues.append((i + 1, "duplicate '## Captain amendments' section"))
+            if AMENDMENT_START.match(line):
+                starts.append([i, len(lines), owner])
+                active = len(starts) - 1
+                if not AMENDMENTS_HEADING.match(owner or ""):
+                    issues.append((i + 1, "amendment outside '## Captain amendments'"))
+                if not AMENDMENT_HEADER.fullmatch(line):
+                    issues.append((i + 1, "malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'"))
+    if fence and (fence[2] is not None or AMENDMENTS_HEADING.match(fence[3] or "")):
+        issues.append((fence[1] + 1, "unmatched amendment-region fence"))
+    seen = set()
+    for start, end, owner in starts:
+        entry = AmendmentRecord(lines, start, end, owner, visible)
+        if fence and fence[2] is not None and start == starts[fence[2]][0]:
+            entry.ambiguous_from = fence[1] - start
+        records.append(entry)
+        if entry.number in seen:
+            issues.append((start + 1, f"duplicate amendment number {entry.number}"))
+        seen.add(entry.number)
+    return records, issues
+
+
+def supersedes_ids(value):
+    if not SUPERSEDES_VALUE.fullmatch(value.strip()):
+        return None
+    prefix = re.split(r"\(no replacement:", value, flags=re.I)[0]
+    ids = AC_ID.findall(prefix)
+    return set(ids) if len(ids) == len(set(ids)) else None
+
+
+def amendment_form(lines):
+    records, issues = parse_amendments(lines)
+    for entry in records:
+        captains = re.findall(r"^Captain:([^\n]*)$", entry.prefix, re.M)
+        values = SUPERSEDES.findall(entry.prefix)
+        if len(captains) != 1 or not captains[0].strip():
+            issues.append((entry.start + 1, f"'{entry.header.strip()}' has no 'Captain:' line with his words (expected exactly one)"))
+        if len(values) != 1 or supersedes_ids(values[0]) is None:
+            issues.append((entry.start + 1, f"'{entry.header.strip()}' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"))
+    return records, issues
+
+
 def amendment_entries(lines):
-    body = section(unfenced(lines), AMENDMENTS_HEADING)
-    return None if body is None else re.split(r"(?m)^(?=### )", "\n".join(body))[1:]
+    records, _ = parse_amendments(lines)
+    return [entry.raw for entry in records if AMENDMENTS_HEADING.match(entry.owner or "")]
 
 
 AMENDMENT_NAMED = re.compile(r"amendments?[ \t]+((?:\d+(?:[ \t]*(?:,[ \t]*(?:and|&)?|and|&|to|-)[ \t]*)?)+)", re.I)
@@ -213,28 +313,25 @@ def dispatched_amendments(folder, texts=None):
 
 
 def check_amendments(name, lines, declared, errors, dispatched=None):
-    entries = amendment_entries(lines)
-    if entries is None:
-        return
-    moved = [declarations(e.split("\n")[1:]) for e in entries]
+    entries, issues = amendment_form(lines)
+    errors.extend(f"{name}:{line}: Captain amendment form: {message}" for line, message in issues)
+    moved = [declarations(entry.moved) for entry in entries]
     live = declarations(section(lines, AC_HEADING) or [])
     for index, entry in enumerate(entries):
-        title = entry.split("\n", 1)[0].strip()
-        if not CAPTAIN_WORDS.search(entry):
-            errors.append(f"{name}: '{title}' has no 'Captain:' line with his words")
-        line = SUPERSEDES.search(entry)
-        value = line.group(1) if line else ""
+        title = entry.header.strip()
+        values = SUPERSEDES.findall(entry.prefix)
+        value = values[0] if len(values) == 1 else ""
+        named = supersedes_ids(value)
+        if named is None:
+            continue
         waiver = NO_REPLACEMENT.search(value)
-        named = set(AC_ID.findall(value[:waiver.start()] if waiver else value))
-        digits = re.search(r"\d+", title)
-        waits = dispatched is not None and int(digits.group() if digits else index + 1) not in dispatched
+        number = entry.number
+        waits = dispatched is not None and number not in dispatched
         for superseded in sorted(set() if waits else named & declared):
             errors.append(f"{name}: '{title}' supersedes {superseded} but it is still declared in '## Acceptance criteria'")
         held = {found for found, _ in moved[index]}
         if held - named:
             errors.append(f"{name}: '{title}' holds {', '.join(sorted(held - named))} but its 'Supersedes:' line does not name them")
-        digits = re.search(r"\d+", title)
-        number = digits.group() if digits else str(index + 1)
         marker = re.compile(rf"Amended by Captain, amendment {number}(?!\d)")
         others = [pair for i, pairs in enumerate(moved) if i != index for pair in pairs]
         if named and not waiver and not any(marker.search(text) for _, text in live + others):

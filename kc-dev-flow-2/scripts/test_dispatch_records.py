@@ -261,8 +261,8 @@ class DispatchRecordTests(unittest.TestCase):
 
 
 GUARDS = "\n## Number guards\n\nADR: 0020\nMigration: 0007\n"
-AMENDMENTS = ("\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\n\n"
-              "### Amendment 2 \u2014 2026-10-18, chat\nCaptain: y\n")
+AMENDMENTS = ("\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nSupersedes: none\n\n"
+              "### Amendment 2 \u2014 2026-10-18, chat\nCaptain: y\nSupersedes: none\n")
 NOTES_WITH_BOTH = COMPLETE.replace("Package root:", "ADR: 0020\nMigration: 0007\nPackage root:")
 
 
@@ -344,7 +344,7 @@ class TaskFactTests(unittest.TestCase):
     def test_an_amendment_list_with_an_oxford_comma_names_every_number(self):
         for phrase in ("Captain amendments 1, 2, and 3", "Captain amendments 1, 2 and 3", "Captain amendments 1 and 2", "Captain amendments 1, 2"):
             with self.subTest(phrase):
-                three = AMENDMENTS + "\n### Amendment 3 \u2014 2026-10-19\n"
+                three = AMENDMENTS + "\n### Amendment 3 \u2014 2026-10-19\nCaptain: z\nSupersedes: none\n"
                 rec = COMPLETE.replace("1. Independent", f"1. {phrase}. Independent")
                 code, out = self.run_names(three, {"implementation-1.md": rec})
                 expected = 0 if phrase.endswith("3") else 1
@@ -363,7 +363,7 @@ class TaskFactTests(unittest.TestCase):
                 self.assertEqual(code, 1)
         fenced = "\n## Captain amendments\n\n```\n### Amendment 1 \u2014 2026-10-17\n```\n"
         self.assertEqual(self.run_names(fenced, {"implementation-1.md": COMPLETE}), (0, []))
-        self.assertEqual(self.run_names("\n## Notes\n\n### Amendment 1 \u2014 2026-10-17\n", {"implementation-1.md": COMPLETE}), (0, []))
+        self.assertTrue(any("outside" in line for line in self.run_names("\n## Notes\n\n### Amendment 1 \u2014 2026-10-17\n", {"implementation-1.md": COMPLETE})[1]))
 
     def test_an_archived_task_folder_is_judged_beside_its_own_task_file(self):
         code, out = self.run_names(AMENDMENTS, {"implementation-1.md": COMPLETE}, folder="_archive/task")
@@ -398,7 +398,7 @@ class TaskFactTests(unittest.TestCase):
 
     def test_a_backslash_quote_on_an_amendment_line_is_refused_unless_it_sits_in_a_moved_criterion(self):
         named = COMPLETE.replace("1. Independent", "1. Captain amendment 1. Independent")
-        task = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nAsked: {asked}\n{tail}"
+        task = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nAsked: {asked}\nSupersedes: none\n{tail}"
         code, out = self.run_names(task.format(asked='he said \\"yes\\"', tail=""), {"implementation-1.md": named})
         self.assertEqual((code, [line.split(";")[0] for line in out]),
                          (1, ["task/dispatch/implementation-1.md:1: Captain amendment 1 Asked line holds a backslash-quote copied from JSON"]))
@@ -734,6 +734,21 @@ class CoverageTests(unittest.TestCase):
         before = {p.relative_to(self.root): p.read_bytes() for p in self.root.rglob("*") if p.is_file()}
         self.assertEqual(self.run_cli(extra=("--readme", str(self.readme)))[0], 1)
         self.assertEqual(before, {p.relative_to(self.root): p.read_bytes() for p in self.root.rglob("*") if p.is_file()})
+
+
+
+
+class AmendmentDispatchFormTests(unittest.TestCase):
+    run_names = TaskFactTests.run_names
+
+    def test_form_errors_have_record_and_task_locations_without_worker_move_checks(self):
+        text = "\n## Number guards\n### Amendment 1 — 2026-10-29\nCaptain: x\nSupersedes: AC-1 to AC-3\n"
+        code, out = self.run_names(text, {"implementation-1.md": COMPLETE})
+        self.assertEqual(code, 1)
+        self.assertTrue(any("implementation-1.md:1: Captain amendment form at task.md:" in line and "outside" in line for line in out), out)
+        valid = text.replace("## Number guards", "## Captain amendments").replace("AC-1 to AC-3", "AC-1, AC-2 and AC-3")
+        code, out = self.run_names(valid, {"implementation-1.md": COMPLETE.replace("1. Independent", "1. Captain amendment 1. Independent")})
+        self.assertEqual((code, out), (0, []))
 
 
 if __name__ == "__main__":
