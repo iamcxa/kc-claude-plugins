@@ -1,0 +1,72 @@
+title: kc-dev-flow-2
+description: A development workflow run by Spacedock.
+remote_theme: just-the-docs/just-the-docs@v0.12.0
+plugins:
+  - jekyll-remote-theme
+search_enabled: true
+enable_copy_code_button: true
+search:
+  heading_level: 3
+aux_links:
+  Source on GitHub: https://github.com/iamcxa/kc-claude-plugins/tree/main/kc-dev-flow-2
+
+defaults:
+  - scope: { path: "" }
+    values: { layout: default }
+  - scope: { path: "README.md" }
+    values: { title: "Home", nav_order: 1, permalink: / }
+  - scope: { path: "references/sd/adoption.md" }
+    values: { title: "Adopt", nav_order: 2, parent: "" }
+  - scope: { path: "references/sd/workflow.md" }
+    values: { title: "Workflow", nav_order: 3, parent: "" }
+  - scope: { path: "references/profiles" }
+    values: { parent: "Profiles" }
+  - scope: { path: "skills" }
+    values: { parent: "Skills" }
+  - scope: { path: "skills/ideation/principles.md" }
+    values: { parent: "Ideation", grand_parent: "Skills" }
+  - scope: { path: "skills/ideation/design-review.md" }
+    values: { parent: "Ideation", grand_parent: "Skills" }
+  - scope: { path: "skills/ideation/profiles" }
+    values: { parent: "Ideation", grand_parent: "Skills" }
+  - scope: { path: "skills/implementation/principles.md" }
+    values: { parent: "Implementation", grand_parent: "Skills" }
+  - scope: { path: "skills/implementation/profiles" }
+    values: { parent: "Implementation", grand_parent: "Skills" }
+  - scope: { path: "skills/validation/principles.md" }
+    values: { parent: "Validation", grand_parent: "Skills" }
+  - scope: { path: "skills/validation/profiles" }
+    values: { parent: "Validation", grand_parent: "Skills" }
+  - scope: { path: "skills/design-director/review-brief.md" }
+    values: { parent: "Design director", grand_parent: "Skills" }
+  - scope: { path: "skills/read-adr/prefix.md" }
+    values: { parent: "read-adr", grand_parent: "Skills" }
+  - scope: { path: "skills/read-adr/writing.md" }
+    values: { parent: "read-adr", grand_parent: "Skills" }
+  - scope: { path: "agents" }
+    values: { parent: "Agents" }
+  - scope: { path: "agents/chief-engineer.md" }
+    values: { title: "chief-engineer" }
+  - scope: { path: "agents/design-director.md" }
+    values: { title: "design-director" }
+  - scope: { path: "agents/engineering-reviewer.md" }
+    values: { title: "engineering-reviewer" }
+  - scope: { path: "agents/observer.md" }
+    values: { title: "observer" }
+  - scope: { path: "extensions" }
+    values: { parent: "Extensions" }
+  - scope: { path: "references" }
+    values: { parent: "References" }
+  - scope: { path: "references/adr-template.md" }
+    values: { title: "ADR template" }
+  - scope: { path: "references/sd/mods/kc-dev-flow-2.md" }
+    values: { title: "Spacedock mod hooks" }
+  - scope: { path: "VALIDATION.md" }
+    values: { parent: "References" }
+  - scope: { path: "CHANGELOG.md" }
+    values: { nav_order: 99 }
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
