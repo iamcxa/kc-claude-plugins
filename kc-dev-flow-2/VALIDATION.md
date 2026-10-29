@@ -196,3 +196,170 @@ remains inspectable. Provider responses and sends in these tests are explicitly
 simulated. No live GitHub PR, remote merge, hook or automatic startup was exercised.
 The same tests preserve immutable completed evaluation bytes while delivery state
 changes. The earlier skill-discovery evidence predates the new `learn` entry.
+
+
+## Amendment structure and push-range law
+
+Local implementation proof, 2026-10-29; source base
+`5725d495bb83a17ec13616bb5421bf5ffdc71f70` (0.33.0). The candidate changes the
+shared amendment parser, its full/dispatch callers, L2 output classification,
+and adds L3 to the existing laws registry. No workflow, skill, mod, CI trigger,
+package version or adopter configuration is changed. No new ADR is introduced:
+the append-only and event-range rules are already accepted in ADRs 0005/0017.
+
+The touched suites exercise structure, raw-byte transitions, event-time CLI
+replays and callers. Ten isolated source mutations, run with `python3 -B` and
+no copied caches, each make its behavioral test fail with an assertion (not an
+import/runtime crash): first-section-only scanning, substring id extraction,
+generic level-three entries, disabled fences, tip-only blobs, ignored deletions,
+skipped index tasks, stripped fenced metadata, missing L2 classification and
+missing-evidence-as-green. Full/seed/dispatch controls retain pending-worker
+semantics. Unknown subprocess output and unreadable/missing history are exit 2.
+Registry parity checks the L3 heading against the executable registry.
+
+Historical CLI replays export the event's complete tracked tree, including its
+records and referenced artifacts. Full check and dispatch `--names` refuse:
+
+| State event | Task | Specific form refusal |
+| --- | --- | --- |
+| `169e815d299e737722aa4ce3e9780620d7c27c8b` | seed-check-requires-schema-fields | Amendment 2 outside the section; Supersedes prose |
+| `a76431954dadf2a92092264ba6fabd1184393216` | idle-hook-names-merged-tasks-without-learn | Supersedes prose |
+| `95fe8ce1bd7ff58798634b733abb4115fecfe23d` | read-adr-honors-adr-folder | Supersedes prose |
+| `a9fca23f41f9063dbd090d9c8b2962f1a44d14c9` | batch-reaches-each-gate-together | Design fence encounters another opening delimiter before a close |
+
+Moving just the misplaced heading into a section removes its location defect;
+replacing just the malformed Supersedes values removes their grammar defects
+in both CLIs. Other defects may still refuse the task. The `e9bac6a6d` idle-hook
+snapshot has no invented Feedback Cycles amendment. Balanced backtick/tilde
+examples, quoted headings, CRLF, terminal punctuation and valid worker payloads
+have paired controls. An opening delimiter of the same type and sufficient length
+with an info string before a close is diagnosed in the amendment region; shorter
+nested delimiters remain literal fenced content.
+
+The existing state-workflow laws command was run locally on an isolated full-history
+state clone with explicit parent/event endpoints and the adopted README. Base exits
+0 on each of the following ranges; candidate exits 1 with the L3 protected-span
+violation independently of worker timing:
+
+| Parent-to-event range | Protected change |
+| --- | --- |
+| `95fe8ce1bd7ff58798634b733abb4115fecfe23d^..95fe8ce1bd7ff58798634b733abb4115fecfe23d` | Supersedes metadata |
+| `16129ea4c1a238dd885e9f08513ce3a52ad27f2d^..16129ea4c1a238dd885e9f08513ce3a52ad27f2d` | previously recorded payload |
+| `34c820b5db98d5da119a1b021ce6af45d616acdc^..34c820b5db98d5da119a1b021ce6af45d616acdc` | Design metadata before an unmatched fence |
+
+The three actual L3 outputs contain 21, 25 and 24 words respectively (each includes
+a nine-word summary); complete stdout contains 39, 43 and 42 words versus 18 on
+base. Per-file full/dispatch diagnostic word counts are retained in the JSON.
+
+Positive committed fixtures append entries/moved blocks and preserve bytes across
+archive, rename and flat/index moves, including delete/add correspondence without
+a Git rename. Negative fixtures edit metadata/fences/payload, extend metadata,
+remove/reorder/renumber entries or delete a task. Later repair/deletion in a range
+does not hide its earlier event. A subsequent clean range does not re-report it.
+Fixed-range L3 output survives working-copy/tip/archive/README changes. Ambiguous
+correspondence/spans, missing or truncated parents and unreadable blobs are not green.
+For unmatched fences only a change before the uncertain span is a definite violation.
+
+Frozen corpus exports include every tracked Markdown task/fixture declaring
+`variant: kc-dev-flow-2`, plus all tracked dependencies. The package's 174 includes
+`_archive/prod-security-review-gates/security/replay-c2/fixture-relay-prod-task.md`;
+there are 173 canonical task paths, not a skipped 174th task. Base and candidate full
+and seed CLIs run per file, plus dispatch `--names` for every relevant recorded folder.
+The corpus manifest asserts the expected count, so skipping a file fails the replay.
+Scope history is unavailable in these archive exports; its identical CLI note is
+retained in both verdicts. Event-history proof uses the separate full-history clone.
+
+| Corpus pin | Files | Full passes, base/candidate | Seed passes, base/candidate |
+| --- | ---: | ---: | ---: |
+| package `731a165dfdf02549a9d13b0624174351e8a6d7be` | 174 | 86/76 | 19/19 |
+| relay `7fbde2c526769e0968d05fac858fc63b31c6274c` | 97 | 67/55 | 9/9 |
+| web `2c3a6dcbfb3a8e178d65151237a0c234351612c0` | 42 | 11/11 | 6/6 |
+| qnow `934789a124e50dd45f37af59bb337573462739ea` | 135 | 47/43 | 0/0 |
+
+All 988 mode verdicts are retained in generated `corpus-verdicts.json`; all 54
+message/exit differences in `corpus-differences.json` cover the 32 files below.
+There are 26 full-pass-to-refusal changes, six dispatch-pass-to-refusal changes,
+and zero seed changes. Differences on already-refused tasks are retained too.
+The table groups each file's changed modes; diagnostic text in the JSON names
+its actual line/heading. Supersedes prose, bare amendment-labelled notes/proposals,
+misplaced records and malformed headings are structural violations; examples need
+fences and notes need non-amendment headings. No slug allowlist is used. Replacing
+a malformed Supersedes value may also remove an old move/replacement diagnostic
+because the new parser does not pretend prose is a valid id list.
+
+| Corpus and file | Changed modes | Structural explanation |
+| --- | --- | --- |
+| package `_archive/fo-batch-sittings.md` | full, dispatch | Supersedes grammar |
+| package `_archive/fo-write-rules-checked.md` | full, dispatch | Supersedes grammar |
+| package `_archive/idle-hook-names-merged-tasks-without-learn.md` | full, dispatch | Supersedes grammar |
+| package `_archive/kc-decision-log-cli.md` | full, dispatch | Supersedes grammar |
+| package `_archive/peers-rules-name-each-host-binding.md` | full, dispatch | Supersedes grammar |
+| package `_archive/read-adr-honors-adr-folder.md` | full, dispatch | Supersedes grammar |
+| package `_archive/release-acceptance/index.md` | full, dispatch | Captain field, Supersedes grammar, duplicate number, heading, placement |
+| package `_archive/release-walk-picky-reviewers-and-director.md` | full, dispatch | Supersedes grammar |
+| package `_archive/seed-check-requires-schema-fields.md` | full, dispatch | Supersedes grammar |
+| package `adr-required-statement.md` | full | Supersedes grammar |
+| package `kc-decision-log-handoff-trial.md` | full | Supersedes grammar |
+| relay `_archive/account-publish-ceiling.md` | full, dispatch | Supersedes grammar, heading, placement |
+| relay `_archive/close-race-copilot.md` | full | Supersedes grammar |
+| relay `_archive/decision-panel-host.md` | full | Supersedes grammar |
+| relay `_archive/junk-share-edge-cost.md` | full, dispatch | Supersedes grammar, heading |
+| relay `_archive/one-identity-entry.md` | full | Supersedes grammar |
+| relay `_archive/owner-link-leak-safe.md` | full, dispatch | Supersedes grammar, heading |
+| relay `_archive/owner-sees-all-feedback-room.md` | full, dispatch | Supersedes grammar, placement |
+| relay `_archive/owner-sees-all-feedback.md` | full, dispatch | Supersedes grammar |
+| relay `_archive/review-keyword-invocations.md` | full, dispatch | Supersedes grammar |
+| relay `_archive/review-ui-consistency-relay.md` | full | Supersedes grammar |
+| relay `_archive/review-ui-dialogs-specs-both-shells.md` | full | Supersedes grammar |
+| relay `_archive/spacedock-install-beta.md` | full, dispatch | Supersedes grammar |
+| relay `limit-telemetry-posthog.md` | full, dispatch | Captain field, Supersedes grammar, duplicate number, heading, placement |
+| web `_archive/briefing-frame-and-controls.md` | full, dispatch | Supersedes grammar, heading |
+| qnow `_archive/accept-branch-invitation.md` | full | Supersedes grammar |
+| qnow `_archive/office-header-shows-phone.md` | full | Supersedes grammar |
+| qnow `_archive/qnow-migration-baseline.md` | full, dispatch | Supersedes grammar |
+| qnow `_archive/staff-multi-branch.md` | full | Supersedes grammar |
+| qnow `_archive/vehicle-based-pricing.md` | full, dispatch | Supersedes grammar |
+| qnow `branch-hours-generate-starts.md` | full, dispatch | Supersedes grammar |
+| qnow `operator-secret-hardening.md` | full, dispatch | Captain field, Supersedes grammar, heading, placement |
+
+Reproduce from the complete source checkout (Python with tarfile's `data` extraction
+filter, Git, the declared Spacedock 0.27.3 package, and all four pinned state object
+sets required). Export base `kc-dev-flow-2` with `git archive` into an external
+scratch directory. Supply `DEV2_AMENDMENT_BASE` as its scripts directory;
+`DEV2_AMENDMENT_CORPORA` as a JSON array of `{name, state, rev, tasks}` rows using
+the four pins/counts above; `DEV2_AMENDMENT_STATE` as the package state repository;
+`DEV2_AMENDMENT_README` as its adopted workflow README; `DEV2_AMENDMENT_SPACEDOCK`
+as the declared Spacedock package root; and `DEV2_AMENDMENT_EVIDENCE` as an external
+output directory. Then run from the repository root:
+
+```sh
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_design_surfaces.py
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_dispatch_records.py
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_laws_check.py
+```
+
+Optional object-dependent replays report skips without those declared inputs;
+ordinary structural/event fixture tests and mutation controls run without them.
+Generated JSON retains per-file messages, historical law output, mutation assertion
+failures and actual reading output; it is evidence of this local run, not hosted CI.
+
+Reading was recounted using the design's manifest and `test_pr_watch.TasksTests`
+provider fixtures: workflow 5754, dev entry 763, package mod 48, upstream startup
+365, upstream idle 100, Delivery authority 461, Extensions 224, learn extension 280,
+gate lifecycle 958, present-gate 675 words. Fixture stdout contributes 29 open-PR,
+0 merged-PR, 5 archive and 90 four-gate-sitting words. Base/candidate lifecycle
+totals stay 6959 startup, 862 idle/open, 833 idle/merged, 333 after archive and 2408
+merge ask; startup with optional feedback stays 7558. No normal-path instruction
+is added. A no-event L3 summary is nine additional words when read, bringing the
+three-law summaries to 27; variable refusals/violations are retained and counted
+separately in generated evidence. Stubs do not prove real host execution.
+
+The inspected state CI package pin remains
+`22219a3e4bc48a69a893bd757923e8c034d1ba6e`. This candidate is not activated there.
+A published package pin adoption and an actual state-push run are still required
+for hosted enforcement. CI cost per PR is **not measured**; the existing state-push
+trigger is unchanged. GitHub API/PR CI is delegated to FO in this dispatch.
+L3 excludes merge commits themselves, prior pushes, rewritten history, uncommitted
+edits and never-recorded rulings. Missing rulings, initial quotation fidelity and
+criterion ids omitted by meaning remain observer-owned; no semantic refusal,
+automatic revert, permanent-red state or new pre-gate history call is claimed.

@@ -43,7 +43,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from delivery_gate import CANDIDATE, RECORD  # noqa: E402
-from design_surfaces import AMENDMENTS_HEADING, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, section, task_folder, unfenced  # noqa: E402
+from design_surfaces import amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
 from role_triggers import outside_fences  # noqa: E402
 from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
 
@@ -174,7 +174,6 @@ def check_candidates(files):
 
 
 NUMBER = re.compile(r"\d+")
-AMENDMENT_ENTRY = re.compile(r"(?m)^(?=### )")
 
 
 def named_section(text, heading):
@@ -183,10 +182,7 @@ def named_section(text, heading):
 
 
 def amendment_numbers(task_text):
-    body = section(unfenced(task_text.split("\n")), AMENDMENTS_HEADING)
-    entries = AMENDMENT_ENTRY.split("\n".join(body))[1:] if body else []
-    digits = [re.search(r"\d+", e.split("\n", 1)[0]) for e in entries]
-    return [d.group() if d else str(i + 1) for i, d in enumerate(digits)]
+    return [str(entry.number) for entry in parse_amendments(task_text.split("\n"))[0] if entry.number is not None]
 
 
 def check_task_facts(files):
@@ -205,6 +201,8 @@ def check_task_facts(files):
                       "'## Number guards' into this record's '## Scope notes', then run this check again"
                       for kind, n in reserved if not re.search(rf"(?m)^[ \t]*(?:[-*][ \t]+)?(?:Number guards:[ \t]*)?{kind}:[ \t]*0*{n}\b", notes)]
         text = task.read_text()
+        lines += [f"{file}:1: Captain amendment form at {task.name}:{line}: {message}; repair the task form, then run this check again"
+                  for line, message in amendment_form(text.split("\n"))[1]]
         if re.fullmatch(r"ideation-\d+\.md", path.name) and alignment_owes_result(text):
             lines.append(f"{file}:1: '## FO alignment' records alignment as needed with no 'Result:' line; record the Captain's alignment result as 'Result: <what he answered>' there, then run this check again")
         lines += [f"{file}:1: Captain amendment {NUMBER.search(title).group()} {key} line holds a backslash-quote copied from JSON; write his words as he said them, then run this check again"

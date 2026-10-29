@@ -51,7 +51,7 @@ class Repo:
 def sandbox(base, omit=(), override=None):
     pkg = Path(base) / "pkg"
     (pkg / "scripts").mkdir(parents=True)
-    for name in ("laws_check.py", "decision_ledger.py", "observer_check.py", "dispatch_records.py"):
+    for name in ("laws_check.py", "decision_ledger.py", "observer_check.py", "dispatch_records.py", "design_surfaces.py"):
         if name not in omit:
             shutil.copy(SCRIPTS / name, pkg / "scripts" / name)
     for name, text in (override or {}).items():
@@ -328,7 +328,7 @@ class L2Test(Base):
 
     def test_a_reserved_line_and_an_amendment_the_record_leaves_out_are_l2_violations_with_the_task_file_beside_them(self):
         guards = "\n## Number guards\n\nADR: 0020\n"
-        amended = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\n"
+        amended = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nSupersedes: none\n"
         repo = Repo(self.tmp / "l2-facts")
         before = repo.commit("base", keep="x")
         reserved = repo.commit("first record", t=task(body=guards), **{"t__dispatch__implementation-1": record()})
@@ -366,7 +366,7 @@ class L2Test(Base):
     def test_a_backslash_quote_on_a_design_or_continuation_line_is_no_l2_event_and_does_not_abort_the_runner(self):
         for line in ('Design: the \\"old\\" paragraph.\n', 'a continuation with \\"x\\"\n'):
             with self.subTest(line):
-                amended = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nAsked: y\n" + line
+                amended = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nSupersedes: none\nAsked: y\n" + line
                 repo = Repo(self.tmp / f"l2-other-{abs(hash(line))}")
                 before = repo.commit("base", keep="x")
                 repo.commit("record", t=task(body=amended), **{"t__dispatch__implementation-2": record(checklist="- Captain amendment 1: do it")})
@@ -600,6 +600,233 @@ class LaterHistoryTest(Base):
             git(copy, "add", "-A")
             git(copy, "commit", "-q", "-m", f"{name} every file")
             self.assertEqual(laws(copy, "--before", before, "--after", after, "--readme", self.learn), baseline, name)
+
+
+
+
+AMENDED = task(body="\n## Captain amendments\n\n### Amendment 1 — 2026-10-29, chat\nCaptain: words\nSupersedes: none\nDesign:\n````md\nold fenced text\n````\n")
+MOVED = "\nSuperseded text:\n\n**AC-1**: old outcome.\n"
+
+
+class L3Test(Base):
+    def history(self, body=AMENDED, name="t", label="l3"):
+        repo = Repo(self.tmp / label)
+        before = repo.commit("base", **{name: body})
+        return repo, before
+
+    def test_metadata_fences_payload_and_final_content_spaces_are_protected(self):
+        for n, (old, new, field) in enumerate((
+                (AMENDED, AMENDED.replace("Captain: words", "Captain: changed"), "metadata"),
+                (AMENDED, AMENDED.replace("2026-10-29", "2026-10-28"), "header"),
+                (AMENDED, AMENDED.replace("old fenced text", "new fenced text"), "metadata"),
+                (AMENDED + MOVED, AMENDED + MOVED.replace("old outcome", "new outcome"), "Superseded text"),
+                (AMENDED + "last  \n", AMENDED + "last\n", "metadata"))):
+            repo, before = self.history(old, label=f"edit-{n}")
+            event = repo.commit("rewrite", t=new)
+            code, out = self.judge(repo, before)
+            self.assertEqual(code, 1, out)
+            self.assertIn(f"amendment=1 commit={event[:12]} {field}", out)
+
+    def test_entry_and_structural_worker_appends_are_allowed_but_metadata_extensions_are_not(self):
+        repo, before = self.history()
+        repo.commit("separator blanks", t=AMENDED + "\n\n")
+        moved = repo.commit("worker", t=AMENDED + MOVED)
+        extra = MOVED.replace("AC-1", "AC-2")
+        appended = AMENDED + MOVED + "\n" + extra.split("Superseded text:\n", 1)[1]
+        repo.commit("worker second block", t=appended)
+        repo.commit("new entry", t=appended + "\n### Amendment 2 — 2026-10-30\nCaptain: two\nSupersedes: none\n")
+        self.assertEqual(self.judge(repo, before)[0], 0)
+        for n, text in enumerate((AMENDED + "Asked: new metadata\n", AMENDED + "\nSuperseded text:\nFO prose\n")):
+            bad, base = self.history(label=f"bad-append-{n}")
+            bad.commit("invalid append", t=text)
+            self.assertEqual(self.judge(bad, base)[0], 1)
+        self.assertNotEqual(before, moved)
+
+    def test_delete_renumber_reorder_and_remove_entry_are_reported(self):
+        two = AMENDED + "\n### Amendment 2 — 2026-10-30\nCaptain: two\nSupersedes: none\n"
+        prefix, first = two.split("### Amendment 1", 1)
+        one, second = first.split("### Amendment 2", 1)
+        swapped = prefix + "### Amendment 2" + second + "\n### Amendment 1" + one
+        for n, text in enumerate((swapped, AMENDED.replace("Amendment 1", "Amendment 8"),
+                                  two.split("### Amendment 1", 1)[0] + two.split("### Amendment 2", 1)[1],
+                                  task(), "\n## Captain amendments\n" + two.split("### Amendment 2", 1)[0].split("## Captain amendments", 1)[1])):
+            repo, before = self.history(two, label=f"remove-{n}")
+            repo.commit("rewrite", t=text)
+            self.assertEqual(self.judge(repo, before)[0], 1)
+        repo, before = self.history(label="deleted")
+        git(repo.path, "rm", "t.md")
+        git(repo.path, "commit", "-m", "delete")
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 1, out)
+        self.assertIn("old=t.md new=(deleted)", out)
+        self.assertIn("task deleted", out)
+
+    def test_layout_archive_and_git_rename_moves_preserve_bytes_and_changes_still_fail(self):
+        for n, dest in enumerate(("t/index.md", "_archive/t.md", "_archive/t/index.md", "other.md")):
+            repo, before = self.history(label=f"move-{n}")
+            target = repo.path / dest
+            target.parent.mkdir(parents=True, exist_ok=True)
+            git(repo.path, "mv", "t.md", dest)
+            git(repo.path, "commit", "-m", "move")
+            self.assertEqual(self.judge(repo, before)[0], 0)
+            target.write_text(AMENDED.replace("Captain: words", "Captain: changed"))
+            git(repo.path, "add", dest)
+            git(repo.path, "commit", "-m", "edit moved")
+            self.assertEqual(self.judge(repo, before)[0], 1)
+
+    def test_delete_add_layout_pair_without_git_rename_and_ambiguous_identity(self):
+        repo, before = self.history()
+        git(repo.path, "rm", "t.md")
+        repo.commit("convert", t__index=AMENDED + "\n## Notes\n" + "Unrelated new text.\n" * 100)
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 0, out)
+        self.assertIn("L3 amendment-append-only: 1 events judged", out)
+        repo.commit("edit index", t__index=AMENDED.replace("Captain: words", "Captain: changed"))
+        self.assertEqual(self.judge(repo, before)[0], 1)
+        ambiguous, base = self.history(label="ambiguous")
+        git(ambiguous.path, "rm", "t.md")
+        ambiguous.commit("ambiguous layout", t__index=AMENDED + "a" * 10000,
+                         _archive__t=AMENDED + "b" * 10000)
+        code, out = self.judge(ambiguous, base)
+        self.assertEqual(code, 2, out)
+        self.assertIn("L3 amendment-append-only: cannot judge", out)
+        self.assertIn("ambiguous task correspondence", out)
+        self.assertIn("L1 observer-before-sentinel:", out)
+
+    def test_working_copy_tip_readme_and_later_repair_do_not_change_fixed_range_result(self):
+        repo, before = self.history()
+        event = repo.commit("bad", t=AMENDED.replace("Captain: words", "Captain: changed"))
+        initial = self.judge(repo, before, event)
+        (repo.path / "t.md").write_text(AMENDED)
+        self.assertEqual(self.judge(repo, before, event), initial)
+        repaired = repo.commit("repair", t=AMENDED)
+        git(repo.path, "mv", "t.md", "archived.md")
+        git(repo.path, "commit", "-m", "rename")
+        self.plain.write_text("---\nextensions: []\n---\n")
+        self.assertEqual([s for s in self.judge(repo, before, event, readme=self.plain)[1].splitlines() if "L3" in s],
+                         [s for s in initial[1].splitlines() if "L3" in s])
+        self.assertEqual(self.judge(repo, before)[0], 1)
+        tip = git(repo.path, "rev-parse", "HEAD")
+        repo.commit("clean push", keep="new")
+        self.assertEqual(self.judge(repo, tip)[0], 0)
+        self.assertEqual(self.judge(repo, repaired)[0], 0)
+        (repo.path / "archived.md").write_text("working copy removed amendment")
+        self.assertEqual(self.judge(repo, tip)[0], 0)
+        (repo.path / "archived.md").write_text(AMENDED)
+        git(repo.path, "rm", "archived.md")
+        git(repo.path, "commit", "-m", "delete later in range")
+        self.assertEqual(self.judge(repo, before)[0], 1)
+        self.assertEqual(self.judge(repo, before, event), initial)
+
+    def test_invalid_supersedes_remains_extractable_and_unmatched_fence_is_bounded(self):
+        old = AMENDED.replace("Supersedes: none", "Supersedes: AC-1 to AC-3")
+        repo, before = self.history(old)
+        repo.commit("rewrite invalid metadata", t=old.replace("AC-1 to AC-3", "AC-1, AC-2 and AC-3"))
+        self.assertEqual(self.judge(repo, before)[0], 1)
+        broken = AMENDED.rsplit("````", 1)[0]
+        repo, before = self.history(broken, label="broken")
+        repo.commit("known prefix edited", t=broken.replace("Captain: words", "Captain: changed"))
+        self.assertEqual(self.judge(repo, before)[0], 1)
+        repo, before = self.history(broken, label="uncertain")
+        repo.commit("uncertain span", t=broken + "extra\n")
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 2, out)
+        self.assertIn("ambiguous protected spans", out)
+
+    def test_l2_classifies_new_forms_and_materializes_index_task(self):
+        for n, name in enumerate(("t", "t__index")):
+            repo = Repo(self.tmp / f"l2-form-{n}")
+            before = repo.commit("base", keep="x")
+            repo.commit("dispatch", **{name: AMENDED.replace("Supersedes: none", "Supersedes: summary AC-1"),
+                                       "t__dispatch__implementation-2": record(checklist="- Captain amendment 1")})
+            code, out = self.judge(repo, before)
+            self.assertEqual(code, 1, out)
+            self.assertIn("violation: L2", out)
+            self.assertRegex(out, r"Captain amendment form at (?:t|index)\.md:[0-9]+:")
+            self.assertNotIn("does not parse", out)
+
+    def test_missing_parent_object_is_not_a_green_law_and_other_results_print(self):
+        sys.path.insert(0, str(SCRIPTS))
+        import laws_check as lc
+        repo, before = self.history()
+        event = repo.commit("change", t=AMENDED + "\n")
+        ctx = lc.Context(repo.path, "fixed", [(event, [("M", "missing.md", "t.md")])], self.plain)
+        with self.assertRaisesRegex(lc.Cannot, "git show .* failed"):
+            lc.l3_amendment_append_only(ctx)
+
+    def test_crlf_worker_payload_append_preserves_raw_bytes(self):
+        initial = AMENDED.replace("\n", "\r\n")
+        repo, before = self.history(initial, label="crlf")
+        repo.commit("worker append", t=initial + MOVED.replace("\n", "\r\n"))
+        self.assertEqual(self.judge(repo, before)[0], 0)
+
+    def test_unreadable_blob_returns_law_specific_cannot_judge(self):
+        repo, before = self.history(label="invalid-utf8")
+        (repo.path / "t.md").write_bytes(AMENDED.encode() + b"\xff")
+        git(repo.path, "add", "t.md")
+        git(repo.path, "commit", "-m", "unreadable blob")
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 2, out)
+        self.assertIn("L3 amendment-append-only: cannot judge", out)
+        self.assertIn("unreadable UTF-8 blob", out)
+        self.assertIn("L1 observer-before-sentinel:", out)
+
+    def test_removing_the_law_or_l2_form_classification_breaks_event_controls(self):
+        repo, before = self.history()
+        repo.commit("rewrite", t=AMENDED.replace("old fenced text", "new fenced text"))
+        for label, old, new, expected in (
+                ("no-law", '    "L3": ("amendment-append-only", l3_amendment_append_only),', "", 0),
+                ("strip-fences", 'elif entry.metadata != current.metadata:',
+                 'elif entry.prefix != current.prefix:', 0)):
+            source = RUNNER.read_text()
+            self.assertIn(old, source)
+            runner = sandbox(self.tmp / label, override={"laws_check.py": source.replace(old, new)})
+            self.assertEqual(self.judge(repo, before, runner=runner)[0], expected)
+            self.assertEqual(self.judge(repo, before)[0], 1)
+
+
+class AmendmentMutationTests(Base):
+    def test_each_named_regression_fails_its_behavioral_test_with_caches_absent(self):
+        import json
+        cases = (
+            ("first-section-only", "design_surfaces.py", 'if not AMENDMENTS_HEADING.match(owner or ""):', 'if False:',
+             "test_design_surfaces.AmendmentStructureTests.test_section_ownership_duplicate_sections_numbers_and_malformed_headings"),
+            ("substring-ids", "design_surfaces.py", 'if not SUPERSEDES_VALUE.fullmatch(value.strip()):', 'if False:',
+             "test_design_surfaces.AmendmentStructureTests.test_whole_value_grammar_and_unique_ids"),
+            ("generic-headings", "design_surfaces.py", 'if AMENDMENT_START.match(line):', 'if line.startswith("### "):',
+             "test_design_surfaces.AmendmentStructureTests.test_feedback_and_fenced_examples_end_or_hide_entries"),
+            ("no-fences", "design_surfaces.py", 'marker = AMENDMENT_FENCE.match(line)', 'marker = None',
+             "test_design_surfaces.AmendmentStructureTests.test_mismatched_fences_and_moved_metadata_are_not_live"),
+            ("tip-only", "laws_check.py", 'str(ctx.state), "show", f"{rev}:{path}"', 'str(ctx.state), "show", f"HEAD:{path}"',
+             "test_laws_check.L3Test.test_working_copy_tip_readme_and_later_repair_do_not_change_fixed_range_result"),
+            ("ignore-deletion", "laws_check.py", 'if not before:', 'if not before or new is None:',
+             "test_laws_check.L3Test.test_delete_renumber_reorder_and_remove_entry_are_reported"),
+            ("skip-index", "laws_check.py", 'return slug if slug != "README" else None', 'return slug if slug != "README" and not path.endswith("/index.md") else None',
+             "test_laws_check.L3Test.test_layout_archive_and_git_rename_moves_preserve_bytes_and_changes_still_fail"),
+            ("strip-fenced-metadata", "laws_check.py", 'elif entry.metadata != current.metadata:', 'elif entry.prefix != current.prefix:',
+             "test_laws_check.L3Test.test_metadata_fences_payload_and_final_content_spaces_are_protected"),
+            ("unknown-l2-form", "laws_check.py", 'r"Captain amendment form at [^:]+:\\d+: .+|"', 'r"unrecognized-form|"',
+             "test_laws_check.L3Test.test_l2_classifies_new_forms_and_materializes_index_task"),
+            ("missing-evidence-green", "laws_check.py", 'if unavailable:', 'if False:',
+             "test_laws_check.L3Test.test_missing_parent_object_is_not_a_green_law_and_other_results_print"))
+        results = []
+        for label, file, old, new, target in cases:
+            with self.subTest(mutation=label):
+                dest = self.tmp / label / "scripts"
+                shutil.copytree(SCRIPTS, dest, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+                path = dest / file
+                source = path.read_text()
+                self.assertIn(old, source)
+                path.write_text(source.replace(old, new, 1))
+                self.assertEqual(list(dest.rglob("*.pyc")), [])
+                done = subprocess.run([sys.executable, "-B", "-m", "unittest", target], cwd=dest, capture_output=True, text=True,
+                                      env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1", **IDENTITY})
+                self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+                self.assertIn("FAIL:", done.stderr)
+                self.assertNotIn("ERROR:", done.stderr)
+                results.append({"mutation": label, "target": target, "exit": done.returncode, "output": done.stdout + done.stderr})
+        if os.environ.get("DEV2_AMENDMENT_EVIDENCE"):
+            Path(os.environ["DEV2_AMENDMENT_EVIDENCE"], "mutations.json").write_text(json.dumps(results, indent=2))
 
 
 if __name__ == "__main__":
