@@ -3,7 +3,7 @@ title: An implementation dispatch for a task whose design calls for an ADR is re
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
