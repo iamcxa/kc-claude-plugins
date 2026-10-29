@@ -210,6 +210,13 @@ Read-only sibling snapshot was taken during concurrent state work (tip observed 
 
 **AC-4** — Reading cost and instruction ownership stay bounded. Repeat the fixed lifecycle recipes on exact base/candidate source and executed outputs, including the refusal, allocator output, existing Number guards reread and retry. Require normal-path counts unchanged, no added success/polling output and no workflow-budget change; explain every measured failure-path addition. Falsifiers: omit moved text or diagnostic consumer output, report only workflow.md's size, or silently add a universal ADR disposition field. Current evidence: base counts 6967/870/833/333/2408, actual fixture outputs and proposed 27-word error; candidate/recovery totals unverified. CI cost per PR was not measured; no CI change is in scope.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-29, chat (batch-10 exception question)
+Captain: 「照建議改 AC-3」 (chat, 2026-10-29)
+Asked: 「決定：照建議改 AC-3（延到上線後第一次派實作時證明），還是先補真的證據再合併？」, with the recommendation 「把 AC-3 改成「上線後第一次真正派實作時，再證明工作者能正常啟動」。」
+Supersedes: none
+
 ## Stage Report: ideation
 
 - FAILED: A design for refusing an implementation dispatch for a task whose approved design or ruling calls for an ADR until ## Number guards reserves an ADR number, in kc-dev-flow-2/scripts/dispatch_records.py (check_task_facts) beside the existing number checks; the #740 (seed-check-requires-schema-fields) and #728 (codex-reader-same-head-unresolved) records replayed as refused, and current tasks that reserved their numbers passing
