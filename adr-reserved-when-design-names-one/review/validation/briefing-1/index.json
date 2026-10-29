@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-reserved-when-design-names-one:validation:attempt-1:revision-1",
+  "question": "Approve validation of adr-reserved-when-design-names-one and, after #750 merges, merge iamcxa/kc-claude-plugins#751 at head 58c9d0f26c78b4b038668b7170389512d8e727e0 with a merge commit, `gh pr merge 751 --merge --match-head-commit 58c9d0f26c78b4b038668b7170389512d8e727e0`, once GitHub retargets it to main? FO recommends approve; approving accepts that recommendation, and records Captain amendment 2 superseding AC-3 with no replacement (amendment 1 changed AC-3 but FO wrote Supersedes: none, so AC-3 still asked for native spawn proof; that proof is owed in batch10-after-release-obligations); it covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-reserved-when-design-names-one:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fc5b4381ca6741534fa12e297f64fe33fc62c816/adr-reserved-when-design-names-one.md",
+      "rev": "sha256:7180afa2304919781f49f242bcd6e069f236a941e0d6a4015bdebca20cd4b2ed",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: an implementation dispatch is refused when the design names a docs/adr placeholder with no ADR reserved under ## Number guards; #740 replays as refused; validation-2 PASSED with 388 tests after the Captain moved AC-3's native proof to the first real implementation dispatch after release.\nNecessity: five files (kc-dev-flow-2/VALIDATION.md, kc-dev-flow-2/scripts/dispatch_records.py, laws_check.py, test_dispatch_records.py, test_laws_check.py).\nExternal rounds: Codex 1 (code review completed with no findings, evidence=summary:6493584665@58c9d0f26). RoboRev clean on this head, run by FO (evidence=roborev:1327).\nFO declines: Deferred risk F2, this task's own explanatory ADR paths would block a future implementation dispatch of this task (no such dispatch is planned; recorded with the task).\nSecond reviewer: copilot because the change refuses implementation dispatches (approval rules).\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5695851373\nCopilot retry: available when the Captain confirms quota is back."
+    }
+  ]
+}

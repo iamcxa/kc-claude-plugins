@@ -58,6 +58,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:adr-reserved-when-design-names-one:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:adr-reserved-when-design-names-one-validation-1
+              briefing:
+                id: briefing:adr-reserved-when-design-names-one:validation:attempt-1:revision-1
+                digest: sha256:0078356e1bbfb139abb0884f44436b7899697e299208aba195f198095c1fc4a1
+                room-ref: ./adr-reserved-when-design-names-one/review/validation/briefing-1
 started: 2026-10-29T07:05:20Z
 worktree: .worktrees/spacedock-ensign-adr-reserved-when-design-names-one
 pr: iamcxa/kc-claude-plugins#751
