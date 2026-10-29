@@ -3,7 +3,7 @@ title: A validation rerun is refused while the previous validation's Needs decis
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -76,10 +76,13 @@ gates:
                 reason: The Captain 「准合併」 (chat, 2026-10-29), answering FO's joint batch-10 delivery sitting of four gates whose ask was 「決定：四張全照建議合併（疊的三張用一般合併），並確認上面兩件事？要改哪張直接說。」; accepts FO's recommendation for this task as stated in the gate question.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-29T06:41:09Z
 worktree: .worktrees/spacedock-ensign-validation-rerun-waits-for-captain-ruling
 pr: pr-merge:750
+verdict: PASSED
+completed: 2026-10-29T11:00:36Z
+archived: 2026-10-29T11:00:36Z
 ---
 
 ## Scope
