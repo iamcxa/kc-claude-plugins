@@ -14,6 +14,7 @@ status: backlog
 - Related: batch-reaches-each-gate-together (Review deck carrying previews), paseo-human-surfaces-visible-and-reachable (links reachable from the Captain's phone).
 
 - Added 2026-10-29: the subspace-web dev2 FO relayed the Captain's words from its session: 「有不少圖都看不到，且簡報內應該也要有圖連結，不然兩個有點分散，等於你可跟我說這些連結，但簡報內最好也要有」. As relayed, the rule he wants: a gate or test briefing published to Review carries its picture and preview URLs in the briefing text too (not clickable there), as well as in chat. Second bite from the same event: the preview server behind a tailnet URL had died, so the viewer page answered 200 while every picture was broken; checking one picture URL through the tunnel before handing it over would have caught it. Relayed words, not a ruling in this session.
+- Added 2026-10-29: the Captain (chat, this session): 「web fo 講的東西其實如果可以儘早做 sd review 的 static html 支援，那就可以做得更好」. Spacedock Review rendering a static HTML preview is relay's Release 2.1a (relay draft PR #430), not this package's; when it lands it may replace this task's chat-and-briefing link workaround.
 ## Non-goals
 
 - Changing Spacedock Review's rendering; publishing for FOs.
