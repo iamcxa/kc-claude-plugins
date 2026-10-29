@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gate-requires-recorded-reviews:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of gate-requires-recorded-reviews to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that a gate is prepared only when the role calls and review rounds the README requires are recorded where it says; profile pilot (package checks, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:gate-requires-recorded-reviews:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1cdfd197fb9c0e92dd0b0a7c6245f96266f027ae/gate-requires-recorded-reviews.md",
+      "rev": "sha256:e870ce3c155104b6b553795ee4b002af8dc9a78988eab99b72fbe2c6b5434e68",
+      "mediaType": "text/markdown",
+      "summary": "Bites: #744 (chief-engineer reviews not recorded as Reviewer: lines) and #745 (gate summary without review rounds and second reviewer)."
+    }
+  ]
+}
