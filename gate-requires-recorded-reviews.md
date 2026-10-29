@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:gate-requires-recorded-reviews:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:gate-requires-recorded-reviews-ideation-1
+              briefing:
+                id: briefing:gate-requires-recorded-reviews:ideation:attempt-1:revision-1
+                digest: sha256:f1c5bc962174b1d2372551484f42588c45dac82304d3d3629c066417dd3c5641
+                room-ref: ./gate-requires-recorded-reviews/review/ideation/briefing-1
 ---
 
 ## Scope

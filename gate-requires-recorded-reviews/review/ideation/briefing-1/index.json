@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gate-requires-recorded-reviews:ideation:attempt-1:revision-1",
+  "question": "Revise gate-requires-recorded-reviews at ideation and split it? FO recommends revise; approving accepts these asks and decision C: build only the #745 half (a delivery gate's bound summary carries its external rounds and second-reviewer outcome, reusing existing checks, without making --summary-file required for existing callers); drop the Role calls: attestation for #744 and re-measure the workflow word raise. Batch ruling A, accepted by approving: a check covers the bites it can observe from structure, and the observer keeps the rest.",
+  "artifacts": [
+    {
+      "id": "artifact:gate-requires-recorded-reviews:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3be2d02545f4ffe7d6cd0af36efe9eef03fd4baf/gate-requires-recorded-reviews.md",
+      "rev": "sha256:26b84becd3386d2e396bc16663ab8ebdb4890c0a3bae7c16cc69001c07834982",
+      "mediaType": "text/markdown",
+      "summary": "Chief-engineer: the #744 half rests on FO declaring its own counts (circular replay), and a required --summary-file breaks existing callers such as Web. Cost: #744-type unrecorded optional calls stay with the observer."
+    }
+  ]
+}
