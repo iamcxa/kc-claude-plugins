@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gate-requires-recorded-reviews:ideation:attempt-2:revision-1",
+  "question": "Approve the revised ideation of gate-requires-recorded-reviews to enter implementation, with a +27-word workflow raise? FO recommends approve; approving accepts that recommendation: a delivery gate's bound summary must carry its external rounds and second-reviewer outcome, reusing existing checks and keeping the summary input optional for existing callers; #745 replays as refused; the #744 role-call half is dropped (the observer keeps it); the workflow word budget rises by 27 words under ADR 0020.",
+  "artifacts": [
+    {
+      "id": "artifact:gate-requires-recorded-reviews:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/15e71bddc88077044b2fa53bb6fcec1767ef6dde/gate-requires-recorded-reviews.md",
+      "rev": "sha256:317873eb1a2f1b16da0c4e8fd98edfc4c1e586e67387568374593b4ddd4a7ebc",
+      "mediaType": "text/markdown",
+      "summary": "Revised per the Captain's decision C; 113 existing tests pass in the design probe; ADR number reserved at implementation."
+    }
+  ]
+}
