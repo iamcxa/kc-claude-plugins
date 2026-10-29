@@ -15,6 +15,17 @@ gates:
                 id: briefing:seed-check-requires-alignment-result:backlog:attempt-1:revision-1
                 digest: sha256:5d4115108b2cb576b3667fd0751a15cf449d66c12942dcde3b4a650a90551b85
                 room-ref: ./seed-check-requires-alignment-result/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:seed-check-requires-alignment-result:backlog:1
+                briefing: briefing:seed-check-requires-alignment-result:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-29T00:39:32.748401Z"
+                decision: approve
+                reason: The Captain 「同意這些內容」 (chat, 2026-10-29), answering FO's joint batch-10 backlog sitting of six gates whose ask was 「決定：六張全照建議（五張進設計，被取代條件那張先留在待辦）？要改哪張直接說。」; accepts FO's recommendation to enter ideation on the pilot profile.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
