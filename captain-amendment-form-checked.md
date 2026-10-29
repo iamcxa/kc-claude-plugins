@@ -79,7 +79,7 @@ gates:
                 state: pending
 started: 2026-10-29T03:51:21Z
 worktree: .worktrees/spacedock-ensign-captain-amendment-form-checked
-pr: iamcxa/kc-claude-plugins#749
+pr: pr-merge:749
 ---
 
 ## Scope
