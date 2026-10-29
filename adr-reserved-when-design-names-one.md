@@ -79,7 +79,7 @@ gates:
                 state: pending
 started: 2026-10-29T07:05:20Z
 worktree: .worktrees/spacedock-ensign-adr-reserved-when-design-names-one
-pr: iamcxa/kc-claude-plugins#751
+pr: pr-merge:751
 ---
 
 ## Scope
