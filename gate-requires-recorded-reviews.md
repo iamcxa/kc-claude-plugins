@@ -414,3 +414,37 @@ Designed the bounded existing-check repair and preserved reproducible historical
 ### Summary
 
 Revised the design to the delivery-summary half only, preserving optional-input compatibility and explicitly leaving unobservable role-call omissions with the observer. Reproducible summary/location controls and legacy baselines support the direction; implementation and native operation remain unverified, and the exact +27 workflow-word raise returns to the Captain through FO. GitHub access succeeded this revision; the earlier API-failure statement is historical, and the earlier report is retained unchanged.
+
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (5725d495bb83a17ec13616bb5421bf5ffdc71f70) implementing the approved design and acceptance criteria in the task file; the revised design approved at the ideation gate on 2026-10-29 (「進實作」), including the +27-word workflow raise under ADR 0020 (quote the Captain's words from that gate record in the budget step); only the delivery-summary half; the summary input stays optional for existing callers; only the files the design names
+  Code committed/pushed at a2317cfc55e829163e3d7fcc386968eb3eea8cf1 from fetched origin/main 5725d495bb83a17ec13616bb5421bf5ffdc71f70; FO owns Draft PR creation per dispatch, using /tmp/impl-gate-requires-recorded-reviews-pr.md.
+- DONE: ADR 0044 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md quotes both gate rulings/questions; the +27 budget step quotes 「進實作」 answering 「決定：四張全准進實作，含工作流文件多 27 字？要改哪張直接說。」.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  AC-1 through AC-6 exercised below at a2317cfc; /tmp/impl-gate-recorded-reviews retains exact replay inputs/stdout, measurement.json and cache-free mutation logs.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/adr_lint.py docs/adr --since <base> --require 0044 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+  Local lint/ADR/number checks exit 0, added-comment ratio 0.6% ≤ 5%; push succeeded without force/-u, PR text prepared. RoboRev exit 3: incomplete: the roborev daemon is not running; FO runs it and reads Draft PR head CI. CI cost per PR not measured; no CI file changed.
+- DONE: AC-1 — historical summary location replay
+  Bound task 9948c3eb9aa0cb61959080da6f2776de9881fab4 and archived briefing-2: diagnostic question-only facts pass base, candidate separate original summary exits 1; synthetic complete exits 0, fenced/task-report/later-ask facts refuse. Removing summary enforcement fails the suite.
+- DONE: AC-2 — existing reviewer policy and bounded counts
+  Delivery suite 119 passed; summary matrix covers counts/fences, reviewer/outcome/token, prod/db, configuration/I/O, saved Copilot refusal/retry and unsupported type cases. Count removal and combined-outcome mutations each make intended negatives pass and fail the suite.
+- DONE: AC-3 — legacy callers and saved input limits
+  Base/candidate exit+stdout identical on Web 60 (state 2c3a6dcb), package 103 (6aaca91f), QNow 132 (8d091863), plus passing clause-only Web control; 43 package exit-2 inputs lack saved Copilot refusal output at the bound revision. Relay state unavailable. Requiring --summary-file fails legacy tests; flat/folder split-root explicit-workflow fixtures pass.
+- DONE: AC-4 — preflight before prepare, unchanged summary
+  POC README suite 9 passed; fresh-shell extracted normal/derived commands stop recorder on exits 1/2 and forward identical summary bytes on 0; no-option legacy control passes. Removing recipe/option, ignoring exit and swapping summary each fail the recipe test; no native hook/use claimed.
+- DONE: AC-5 — measured reading and exact scope
+  Independent recounts: workflow 5754→5781 (+27); startup 6959→6986, idle open 862→889/merged 833→860, archive 333→333, merge 2408→2435, ideation 3303→3330, delivery 3530→3560; each worker inline corpus 1044 unchanged. Clean/location/raw-refusal outputs 3/49/146 words; no new runtime help/ADR/extension read. Hidden-read and false-approval mutations fail.
+- DONE: AC-6 — history, role rules and authority boundary
+  Exactly the seven approved code/doc files changed, including ADR 0044; role_triggers.py, stage routes, merge check, adopters, Spacedock, versions and CI unchanged. Role-counter and stage-route mutations fail; original task/frontmatter/reports preserved as an exact prefix. Native adoption/compliance remains separately observed.
+- DONE: Required local checks and surfaces
+  Repository lint-skills exits 0 (5781/5781 words); test_lint_skills 45, test_design_surfaces 191 and test_sd_dispatch (--sd-plugin-root Spacedock 0.27.3) passed; adr_lint --since base --require 0044, number_guards (base 5725d495bb83/head a2317cfc55e8), design_surfaces check and diff --check exit 0. Surfaces none.
+- DONE: Affected-document dispositions
+  doc_impact: ADR 0044 updated; ADR 0020 unaffected: budget arithmetic/quote rule retained; ADR 0037 unaffected: its +144 step unchanged; package README unaffected: existing lint and maintenance entry remains valid; maintain-flow skill unaffected: budget/replay policy retained; learning.md unaffected: consumer/corpus practices applied, no learning rule changed. VALIDATION.md and workflow recipe updated.
+- DONE: Goal/removal and mutation proof
+  Without the new branch, the historical diagnostic location gap passes; every added parser/test/recipe/budget/ADR/evidence surface maps to AC-1–AC-6. Ten isolated source mutations exited nonzero with python3 -B and fresh cache-free copies; no role policy, general framework or new script was added.
+
+### Summary
+
+Implemented the optional delivery-summary preflight and exact approved +27 workflow replacement at a2317cfc55e829163e3d7fcc386968eb3eea8cf1; local proof covers historical omission, reviewer rules, recipe stops, legacy compatibility and falsifiers. Branch push succeeded and PR text is ready; FO must open the Draft PR, run exact-head RoboRev and read CI before fresh validation. Review truth, faithful FO execution and separately authorized native adoption remain outside this local proof.
