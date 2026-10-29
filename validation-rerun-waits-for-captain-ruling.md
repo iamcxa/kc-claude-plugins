@@ -232,6 +232,10 @@ Also read `captain-ruling-sources-checked`: its source-authentication concern re
 
 **AC-6** Preserve command contracts and measured reading cost. Evidence: candidate dispatch/laws suites, relevant `test_pr_watch.py` consumers, `test_sd_dispatch.py` and package lint pass; recount every lifecycle row and actual refusal/error output; workflow/mod/law/CI diffs remain empty. Falsifiers: new clean output, routing the predicate through `--newest`, or omitting the recovery sentence changes the expected behavior/count. Current evidence: five lifecycle fixture counts rerun; diagnostic proposal counted; candidate checks future work.
 
+## Number guards
+
+ADR: cannot
+
 ## Stage Report: ideation
 
 - FAILED: A design for refusing a validation dispatch while the newest validation report lists a Needs decision finding with no Captain ruling recorded after it, in the check FO runs before each dispatch; the #742 sequence (paseo-codex-dispatch-practice validations 1 to 4, archived) replayed with validation-2 refused, and tasks whose reruns followed a ruling passing
