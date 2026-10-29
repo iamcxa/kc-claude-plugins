@@ -449,3 +449,50 @@ Revised the design to the delivery-summary half only, preserving optional-input 
 ### Summary
 
 Implemented the optional delivery-summary preflight and exact approved +27 workflow replacement at a2317cfc55e829163e3d7fcc386968eb3eea8cf1; local proof covers historical omission, reviewer rules, recipe stops, legacy compatibility and falsifiers. Branch push succeeded and PR text is ready; FO must open the Draft PR, run exact-head RoboRev and read CI before fresh validation. Review truth, faithful FO execution and separately authorized native adoption remain outside this local proof.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #748 head a2317cfc against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at a2317cfc55e829163e3d7fcc386968eb3eea8cf1 against base 5725d495bb83a17ec13616bb5421bf5ffdc71f70 in an independent detached checkout; original candidate clean, temporary checkout removed. Six criterion results below.
+- DONE: The revised design approved on 2026-10-29 (「進實作」) builds only the delivery-summary half with the summary input optional for existing callers, and a +27-word workflow raise; replay #745 (fo-interviews-extension, archived) as refused; RoboRev evidence=roborev:1323 clean on a2317cfc5, run by FO
+  Gate attempts 1/2, ADR 0044 and the budget quote agree; no role-call attestation added. FO supplied evidence=roborev:1323 and five passing CI checks for this head; those provider checks were not independently rerun.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four-step script below passed in /bin/bash --noprofile --norc; dispatch-authorized Codex 0.33.0 package used, every installed Python script verified byte-identical to base; adr_lint --since base --require 0044 exited 0 (43 records, 0 legacy).
+- DONE: AC-1 — archived omission and location falsifier
+  Re-extracted briefing-2 and task 9948c3eb9aa0cb61959080da6f2776de9881fab4: question-only diagnostic passes base (0), separate original summary refuses (1), synthetic complete passes (0); fenced/task-report/later-ask cases refuse (1). Removing summary enforcement makes SummaryTests fail (exit 1).
+- DONE: AC-2 — existing reviewer policy and count matrix
+  test_delivery_gate.py: 119 passed, including six SummaryTests for counts, fences, declaration/outcome location, reviewer/token/configuration/Prod/db rules, saved refusal/retry and I/O. Removing counts or mixing question outcomes causes failing assertions (both mutants exit 1).
+- DONE: AC-3 — legacy compatibility and explicit-workflow inputs
+  Base/candidate stdout, stderr and exits identical on Web 60 at 2c3a6dcb, package 103 at 6aaca91f, QNow 132 at 8d091863; synthetic clause-only Web positive passes both; flat/folder split-root fixtures pass. Mandatory-option mutation fails QuestionTests (1); 43 package exit-2 cases are identically missing saved Copilot output, not newly failing.
+- DONE: AC-4 — checked recipe before preparation
+  test_poc_readme.py: 9 passed; real extracted normal/derived commands stop a disposable prepare recorder on 1/2, forward identical bytes on 0 and preserve no-option control. Removed recipe, omitted option, ignored exit and swapped-summary mutations each fail (1); this is recipe proof, not native FO execution.
+- DONE: AC-5 — independently recounted reading and budget
+  Workflow 5754→5781; startup 6959→6986, idle open 862→889/merged 833→860, archive 333→333, merge 2408→2435, ideation 3303→3330, delivery 3530→3560; independent regex/section recount agrees. Actual clean/location/raw-refusal outputs 3/49/146 words; omitted Extensions read and fabricated Captain quote are detected.
+- DONE: AC-6 — scope, history and authority
+  Exact approved seven-file diff; role_triggers, merge checks, stage definitions, versions, CI and adopters unchanged; prior task body/reports preserved byte-for-byte. Role-counter and stage-route mutants fail (1); no product repair, PR mutation or native adoption performed.
+- DONE: Required checks and affected-document dispositions
+  lint-skills 5781/5781, test_lint_skills 45, test_design_surfaces 191, test_sd_dispatch with Spacedock 0.27.3, number_guards, dispatch_records (4), design_surfaces and diff --check passed; comment ratio 1/168=0.6% ≤5%, sole added comment is an ADR reference. doc_impact: ADR 0044 updated; ADR 0020 unaffected (budget rule retained), ADR 0037 unaffected (+144 step retained), README unaffected (maintenance entry retained), maintain-flow unaffected (budget/replay rules retained), learning.md unaffected (practices applied); workflow/VALIDATION updated.
+
+### Findings and limits
+
+No new Material, Deferred risk, Polish or Needs decision finding. Accepted limits remain: supplied facts are not authenticated; legacy callers retain their location gap; native adoption/faithful execution, diagram rendering and actual FO reading are unverified; local configuration is not historical configuration; Relay state unavailable; CI cost per PR unmeasured, no trigger change. Ten isolated source/recipe mutants used python3 -B and cache-free copies and all exited 1; two additional measurement/authority counterexamples were detected. Local replay/mutation/recount inputs and outputs: /tmp/validate-pr748 (temporary evidence, not a dependency of the script below); durable corpus extraction recipe and full pins remain in the design above.
+
+### Acceptance script — four steps
+
+No UI surface. Requires the existing clean task checkout and installed Codex 0.33.0 package named below; run all four steps in one fresh Bash shell. This checks local CLI/recipe behavior and the decision/budget record; it does not exercise a native gate, authenticate reviews or authorize delivery. Expected and observed: step 1 prints the clean candidate; step 2 six tests OK; step 3 nine tests OK (its deliberate next→main negative-fixture diff is expected); step 4 prints 5781/5781, 43 ADR records/0 legacy and adr_lint exit=0. Complete observed stdout/stderr is /tmp/validate-pr748/acceptance.log.
+
+```bash
+set -e
+# 1. Require the reviewed, clean candidate in its existing task checkout.
+cd '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-requires-recorded-reviews' && test "$(git rev-parse HEAD)" = a2317cfc55e829163e3d7fcc386968eb3eea8cf1 && git diff --quiet HEAD && printf 'candidate a2317cfc55e829163e3d7fcc386968eb3eea8cf1 clean\n'
+# 2. Exercise accepted and rejected summary/reviewer inputs.
+python3 -B kc-dev-flow-2/scripts/test_delivery_gate.py SummaryTests
+# 3. Exercise normal and derived workflow preparation with a disposable recorder.
+python3 -B kc-dev-flow-2/scripts/test_poc_readme.py
+# 4. Check the approved word count and decision record.
+python3 -B kc-dev-flow-2/scripts/lint-skills.py && python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0/scripts/adr_lint.py' docs/adr --since 5725d495bb83a17ec13616bb5421bf5ffdc71f70 --require 0044 && printf 'adr_lint exit=0\n'
+```
+
+### Summary
+
+PASSED PR #748 head a2317cfc55e829163e3d7fcc386968eb3eea8cf1 for the approved Pilot delivery-summary slice: the historical omission is refused, legacy behavior is preserved, and each acceptance criterion has independently rerun positive and falsifying evidence. The parser, recipe, regression tests, budget step, ADR and evidence document each serve the accepted outcome or its required proof; native compliance and the Captain's gate/delivery decision remain outside this verdict.
