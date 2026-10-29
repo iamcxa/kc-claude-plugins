@@ -34,6 +34,14 @@ gates:
                 id: briefing:adr-reserved-when-design-names-one:ideation:attempt-1:revision-1
                 digest: sha256:83190f738682111c3d9bc7c3f43d366e8560ac7c2faeda5f055a013ece56e218
                 room-ref: ./adr-reserved-when-design-names-one/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-reserved-when-design-names-one:ideation:1
+                briefing: briefing:adr-reserved-when-design-names-one:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-29T01:27:42.83882Z"
+                decision: revise
+                reason: The Captain 「照建議」 (chat, 2026-10-29), answering FO's joint batch-10 ideation sitting whose ask was 「決定：五張全照建議（一張擱著、四張照表改）；如果哪張要調整，直接說。」; accepts the direction and FO's recommendation to revise with the asks named in the gate question, and batch ruling A (a check covers the bites it can observe from structure; the observer keeps the rest).
 ---
 
 ## Scope
