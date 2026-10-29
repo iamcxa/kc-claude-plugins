@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-reserved-when-design-names-one:ideation:attempt-1:revision-1",
+  "question": "Revise adr-reserved-when-design-names-one at ideation to the narrow form? FO recommends revise; approving accepts it: refuse only a design that names a docs/adr placeholder with no ADR reserved under ## Number guards, replay #740 as refused, and drop the #728 replay, whose record never named an ADR. Batch ruling A, accepted by approving: a check covers the bites it can observe from structure, and the observer keeps the rest.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-reserved-when-design-names-one:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c2efe28fa234db47331aecec04ab887b11e72ac9/adr-reserved-when-design-names-one.md",
+      "rev": "sha256:9b606a47e9b847713a300562d5439657a16b53804c50cb8d4e4bfb77fefe6ea2",
+      "mediaType": "text/markdown",
+      "summary": "Chief-engineer: only #740 is reachable structurally; two live batch-10 designs already draft unnumbered ADRs. Cost: #728-class omissions stay uncaught."
+    }
+  ]
+}

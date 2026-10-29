@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:adr-reserved-when-design-names-one:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:adr-reserved-when-design-names-one-ideation-1
+              briefing:
+                id: briefing:adr-reserved-when-design-names-one:ideation:attempt-1:revision-1
+                digest: sha256:83190f738682111c3d9bc7c3f43d366e8560ac7c2faeda5f055a013ece56e218
+                room-ref: ./adr-reserved-when-design-names-one/review/ideation/briefing-1
 ---
 
 ## Scope
