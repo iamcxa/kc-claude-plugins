@@ -1,12 +1,12 @@
-name: dev2 docs
+name: docs site
 
 on:
   push:
     branches: [main]
     paths:
       - "kc-dev-flow-2/**"
-      - "site/dev2/**"
-      - ".github/workflows/dev2-docs.yml"
+      - "site/**"
+      - ".github/workflows/docs-site.yml"
   workflow_dispatch:
 
 permissions:
@@ -22,10 +22,10 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-      - run: site/dev2/stage.sh _dev2_site
+      - run: site/stage.sh _docs_site
       - uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697 # v1.0.13
         with:
-          source: ./_dev2_site
+          source: ./_docs_site
           destination: ./_site
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
 

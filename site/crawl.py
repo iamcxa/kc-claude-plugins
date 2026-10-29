@@ -1,3 +1,4 @@
+# usage: crawl.py <built-site> <plugin>...   lists built files, flags any outside the named plugins, and checks every link, image and anchor
 import sys,os,re
 from html.parser import HTMLParser
 site=sys.argv[1]; base='/kc-claude-plugins'
@@ -6,7 +7,8 @@ for r,_,fs in os.walk(site):
     for f in fs: files.append(os.path.relpath(os.path.join(r,f),site))
 files.sort()
 print("BUILT FILES:"); [print(" ",f) for f in files]
-internal=[f for f in files if not re.match(r'(index\.html|[A-Za-z_-]+\.html|404\.html|assets/|agents/|extensions/|references/|skills/|scripts/|\.claude-plugin/|\.codex-plugin/|README|CHANGELOG|VALIDATION|feed\.xml|redirects\.json|robots\.txt|sitemap\.xml)', f)]
+plugins=sys.argv[2:]
+internal=[f for f in files if not (f in ('index.html','404.html','feed.xml','redirects.json','robots.txt','sitemap.xml') or f.startswith('assets/') or f.split('/')[0] in plugins)]
 print("INTERNAL PATHS PRESENT:",internal or "none")
 import json
 sd=os.path.join(site,'assets/js/search-data.json')
