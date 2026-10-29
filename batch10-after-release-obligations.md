@@ -13,6 +13,7 @@ status: backlog
 - Known limit, not owed: #751 reads only some design headings (6 of 13 tasks with an ADR placeholder use one it reads).
 
 - Added 2026-10-29: Codex P2 on PR #749 (review 5695880112, kc-dev-flow-2/scripts/laws_check.py): an amendment with an unmatched fence makes laws_check report `cannot judge` (exit 2) even when its bytes are unchanged, so unrelated updates of that task fail the law indefinitely; accept byte-identical records before the unmatched-fence comparison. Fix before moving the dev2-laws pin, since L3 is inactive until then.
+- Added 2026-10-29: Codex P2 on PR #750 (review 5696325365, kc-dev-flow-2/scripts/dispatch_records.py): the new rerun check builds historical task paths from the Git root, so a workflow whose state is inline in trunk (supported by references/sd/adoption.md) gets exit 2 `uncommitted-report` on validation dispatch; include the state directory's repository-relative prefix. No current adopter is affected: every dev2 and dev2-poc README read on 2026-10-29 sets `state: .spacedock-state` (split root).
 ## Non-goals
 
 - New checks; widening #751's headings (a separate task if the Captain wants it).
