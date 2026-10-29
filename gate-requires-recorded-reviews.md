@@ -58,6 +58,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-29T03:51:36Z
+worktree: .worktrees/spacedock-ensign-gate-requires-recorded-reviews
 ---
 
 ## Scope
