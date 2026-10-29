@@ -3,7 +3,7 @@ title: A Captain amendment entry is refused when it sits outside ## Captain amen
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -57,7 +57,7 @@ gates:
                 reason: The Captain 「進實作」 (chat, 2026-10-29), answering FO's joint batch-10 revised-ideation sitting of four gates whose ask was 「決定：四張全准進實作，含工作流文件多 27 字？要改哪張直接說。」; accepts FO's recommendation for this task as stated in the gate question, including the +27-word workflow raise for gate-requires-recorded-reviews.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
