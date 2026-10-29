@@ -1042,7 +1042,7 @@ class SavedValidationRulingTests(unittest.TestCase):
                 self.commit("dispatch source " + case["dispatch_commit"])
                 original = (self.task.read_bytes(), self.record.read_bytes())
                 legacy = bool(case["amendments"] and not case["native"])
-                if legacy:
+                if "record_text" in case:
                     self.record.write_text(case["record_text"])
                 predicate = subprocess.run([sys.executable, "-B", "-c",
                     "import sys; sys.path.insert(0, sys.argv[1]); import dispatch_records as d; "
@@ -1283,7 +1283,50 @@ SAVED_RULING_CASES = [{'corpus': 'dev2',
           'bytes.\n',
   'native': [],
   'amendments': [],
-  'ruling_commit': None},
+  'ruling_commit': None,
+  'record_text': '# validation-2\n'
+                 '\n'
+                 'Dispatched: e57feb6eec956b74a1d4b29f26f1d0a7d1693785 (workflow checkout, kc-dev-flow-2 0.32.1 '
+                 'README); batch 9\n'
+                 'Candidate: 9a70a3350436fac9e51d0795b3b4299693f020f8\n'
+                 "Model: gpt-6-astra (Codex via Paseo, thinking high; the Captain's interim dispatch directive, chat "
+                 '2026-10-26: 「接下來派工結束後新的派工盡量用 sol / astra，推理等級可以比 claude 高一級」)\n'
+                 '\n'
+                 '## Checklist\n'
+                 '\n'
+                 'Independent verdict on PR #742 head 9a70a335 against every acceptance criterion in the task file, '
+                 're-running each evidence command and at least one falsifier per criterion yourself, and judging each '
+                 'limit the implementation report states\n'
+                 "Second validation on the same head after validation-1's F1 (missing native placement receipt): judge "
+                 "AC-2 and AC-6 from FO's native placement trial in the task folder, "
+                 'paseo-codex-dispatch-practice/validation-1/native-placement-trial.md with its two JSON receipts '
+                 '(success run with --new-workspace local --cwd placed the agent in the worktree; plain --cwd control '
+                 "from an agent caller inherited the caller's workspace); Captain amendment 1 applies; AC-3 and AC-4 "
+                 "evidence is FO's publication (push of 9a70a335, Draft PR #742 by FO, RoboRev evidence=roborev:1296 "
+                 "clean on 9a70a3350); validation-1's F2 is Polish\n"
+                 'A minimal acceptance script the Captain can run (three to six steps, exact commands, expected '
+                 'output), run by you exactly as written in a fresh bash shell, with its observed output; '
+                 '/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py '
+                 'docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified '
+                 "by the workflow's Review-finding disposition\n"
+                 '\n'
+                 '## Scope notes\n'
+                 '\n'
+                 'Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1\n'
+                 '\n'
+                 'Number guards: ADR: 0042\n'
+                 '\n'
+                 'Profile: pilot. Candidate: iamcxa/kc-claude-plugins PR #742, head '
+                 '9a70a3350436fac9e51d0795b3b4299693f020f8, base origin/main. This task; other PRs may be in flight '
+                 'and are not your candidate. Check the candidate out detached in a throwaway worktree and remove it '
+                 'after. Commit your stage report with `spacedock state commit paseo-codex-dispatch-practice '
+                 '--workflow-dir '
+                 '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2`. '
+                 'Never run `git remote set-url` or any `git config` write in a worktree of this repository. Do not '
+                 'push, comment on any PR, request reviews or mark ready.\n'
+                 '\n'
+                 "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered "
+                 'here).\n'},
  {'corpus': 'dev2',
   'tip': '731a165dfdf02549a9d13b0624174351e8a6d7be',
   'task': 'paseo-codex-dispatch-practice',
@@ -1302,7 +1345,42 @@ SAVED_RULING_CASES = [{'corpus': 'dev2',
           'bytes.\n',
   'native': [],
   'amendments': [],
-  'ruling_commit': None},
+  'ruling_commit': None,
+  'record_text': '# validation-2-message-1\n'
+                 '\n'
+                 'Dispatched: e57feb6eec956b74a1d4b29f26f1d0a7d1693785 (workflow checkout, kc-dev-flow-2 0.32.1 '
+                 'README); batch 9, follow-up message to the validation-2 worker (Paseo 850ab15c), answering its AC-6 '
+                 'trace question\n'
+                 'Candidate: 9a70a3350436fac9e51d0795b3b4299693f020f8\n'
+                 "Model: gpt-6-astra (Codex via Paseo, thinking high; the same worker as validation-2; the Captain's "
+                 'interim dispatch directive, chat 2026-10-26: 「接下來派工結束後新的派工盡量用 sol / astra，推理等級可以比 claude 高一級」)\n'
+                 '\n'
+                 '## Checklist\n'
+                 '\n'
+                 "Judge AC-6's build-to-spawn transport from your own dispatch as the only existing trace: `spacedock "
+                 'dispatch build` wrote '
+                 '/tmp/spacedock-dispatch/5c030106-8d82-4542-855e-1498b2563c69-spacedock-ensign-paseo-codex-dispatch-practice-validation.md '
+                 '(sha256 6d78f0c89090c8c0c2aaba3d88544456346027f21ba6bf609ae7dee4316ac106 at this message), and FO '
+                 'spawned you through Paseo MCP create_agent with provider codex/gpt-6-astra, settings modeId '
+                 'auto-review and thinkingOptionId high, and an initialPrompt that names that file plus three FO '
+                 "sentences (the Codex ensign skill path, the Codex package path, and FO's reading of PR #742's "
+                 'checks); read your own Paseo status and first activity to compare\n'
+                 'State its limits as found: that spawn was placed by the old practice (no workspace binding; your cwd '
+                 "is the FO workspace), FO's wrapper adds sentences around the generated pointer rather than passing "
+                 "it unchanged, and no trace uses the candidate's `--new-workspace local --cwd` route with a generated "
+                 'dispatch\n'
+                 'Return F1 as still open or closed on that evidence; FO creates no further test agents for this '
+                 'validation\n'
+                 '\n'
+                 '## Scope notes\n'
+                 '\n'
+                 'Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1\n'
+                 '\n'
+                 'Everything in validation-2 stands. Never run `git remote set-url` or any `git config` write in a '
+                 'worktree of this repository.\n'
+                 '\n'
+                 "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered "
+                 'here); through Paseo, your final reply is that message.\n'},
  {'corpus': 'dev2',
   'tip': '731a165dfdf02549a9d13b0624174351e8a6d7be',
   'task': 'paseo-codex-dispatch-practice',
@@ -1330,7 +1408,54 @@ SAVED_RULING_CASES = [{'corpus': 'dev2',
           'obligation; FO declines more trial agents in this validation, which does not waive an AC.\n',
   'native': [],
   'amendments': [],
-  'ruling_commit': None},
+  'ruling_commit': None,
+  'record_text': '# validation-4\n'
+                 '\n'
+                 'Dispatched: e57feb6eec956b74a1d4b29f26f1d0a7d1693785 (workflow checkout, kc-dev-flow-2 0.32.1 '
+                 'README); batch 9\n'
+                 'Candidate: 9a70a3350436fac9e51d0795b3b4299693f020f8\n'
+                 'Model: gpt-6-astra (Codex via Paseo, thinking high; spawned by FO through the candidate route: paseo '
+                 'agent run --new-workspace local --cwd <implementation worktree> with the generated prompt passed '
+                 "unchanged; the Captain's interim dispatch directive, chat 2026-10-26: 「接下來派工結束後新的派工盡量用 sol / "
+                 'astra，推理等級可以比 claude 高一級」)\n'
+                 '\n'
+                 '## Checklist\n'
+                 '\n'
+                 'Independent verdict on PR #742 head 9a70a335 against every acceptance criterion in the task file, '
+                 're-running each evidence command and at least one falsifier per criterion yourself, and judging each '
+                 'limit the implementation report states\n'
+                 "Third validation on the same head, for validation-2's open F1 (integrated build-to-spawn transport) "
+                 'only, plus a recheck that nothing else changed: you were spawned by FO through the candidate route, '
+                 '`paseo agent run --new-workspace local --cwd` at the implementation worktree, with the prompt '
+                 '`dispatch build` generated passed unchanged as the whole initial prompt; compare your own Paseo '
+                 'status and first activity with this record (provider, model, thinking, mode, cwd, workspace, prompt '
+                 "bytes) and with the assignment file's bytes; FO's create_agent workspaceId trial (agent ddf30e67) is "
+                 'in paseo-codex-dispatch-practice/validation-3/; PR #742 checks on this head were read by FO: '
+                 'adr-path-check, unit tests (python3), multi-profile route gate (live Spacedock), version parity and '
+                 'GitGuardian pass\n'
+                 'A minimal acceptance script the Captain can run (three to six steps, exact commands, expected '
+                 'output), run by you exactly as written in a fresh bash shell, with its observed output; '
+                 '/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py '
+                 'docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified '
+                 "by the workflow's Review-finding disposition\n"
+                 '\n'
+                 '## Scope notes\n'
+                 '\n'
+                 'Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1\n'
+                 '\n'
+                 'Number guards: ADR: 0042\n'
+                 '\n'
+                 'Profile: pilot. Candidate: iamcxa/kc-claude-plugins PR #742, head '
+                 '9a70a3350436fac9e51d0795b3b4299693f020f8, base origin/main. This task; other PRs may be in flight '
+                 'and are not your candidate. Check the candidate out detached in a throwaway worktree and remove it '
+                 'after. Commit your stage report with `spacedock state commit paseo-codex-dispatch-practice '
+                 '--workflow-dir '
+                 '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2`. '
+                 'Never run `git remote set-url` or any `git config` write in a worktree of this repository. Do not '
+                 'push, comment on any PR, request reviews or mark ready.\n'
+                 '\n'
+                 "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered "
+                 'here).\n'},
  {'corpus': 'dev2',
   'tip': '731a165dfdf02549a9d13b0624174351e8a6d7be',
   'task': 'paseo-codex-dispatch-practice',
@@ -1358,7 +1483,36 @@ SAVED_RULING_CASES = [{'corpus': 'dev2',
           'obligation; FO declines more trial agents in this validation, which does not waive an AC.\n',
   'native': [],
   'amendments': [],
-  'ruling_commit': None},
+  'ruling_commit': None,
+  'record_text': '# validation-3-message-1\n'
+                 '\n'
+                 'Dispatched: e57feb6eec956b74a1d4b29f26f1d0a7d1693785 (workflow checkout, kc-dev-flow-2 0.32.1 '
+                 'README); batch 9, follow-up message to the validation-3 worker (Paseo 1d987cbe), answering its '
+                 'request for the build and spawn commands\n'
+                 'Candidate: 9a70a3350436fac9e51d0795b3b4299693f020f8\n'
+                 "Model: gpt-6-astra (Codex via Paseo, thinking high; the same worker as validation-3; the Captain's "
+                 'interim dispatch directive, chat 2026-10-26: 「接下來派工結束後新的派工盡量用 sol / astra，推理等級可以比 claude 高一級」)\n'
+                 '\n'
+                 '## Checklist\n'
+                 '\n'
+                 "Read paseo-codex-dispatch-practice/validation-3/build-to-spawn-sequence.md: FO's four tool calls "
+                 'from the validate.py call (which runs `spacedock dispatch build`) to the `paseo agent run` spawn, '
+                 "verbatim and in order; do not read FO's session transcript, which holds unrelated conversation\n"
+                 'Judge AC-2\'s "no operation inserted between Spacedock build and immediate spawn" on it as found: FO '
+                 "inserted two operations (reading the create_agent trial's activity, then writing receipts and "
+                 'running `spacedock state commit`), about 28 seconds between build and spawn\n'
+                 "Judge AC-6's unchanged prompt and fields from your own status, first activity, generated-prompt.txt "
+                 'and the spawn command in call 4\n'
+                 '\n'
+                 '## Scope notes\n'
+                 '\n'
+                 'Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1\n'
+                 '\n'
+                 'Everything in validation-3 stands. Never run `git remote set-url` or any `git config` write in a '
+                 'worktree of this repository.\n'
+                 '\n'
+                 "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered "
+                 'here); through Paseo, your final reply is that message.\n'},
  {'corpus': 'dev2',
   'tip': '731a165dfdf02549a9d13b0624174351e8a6d7be',
   'task': 'paseo-codex-dispatch-practice',
@@ -1405,7 +1559,51 @@ SAVED_RULING_CASES = [{'corpus': 'dev2',
                         'steps the gate question names.',
               'decision': 'hold'}],
   'amendments': [],
-  'ruling_commit': 'd24235a4c'},
+  'ruling_commit': 'd24235a4c759f908770a7a93ee215b87c225c496',
+  'record_text': '# validation-6\n'
+                 '\n'
+                 'Dispatched: e57feb6eec956b74a1d4b29f26f1d0a7d1693785 (workflow checkout, kc-dev-flow-2 0.32.1 '
+                 'README); batch 9\n'
+                 'Candidate: 9a70a3350436fac9e51d0795b3b4299693f020f8\n'
+                 'Model: gpt-6-astra (Codex via Paseo, thinking high; FO builds this dispatch and spawns it in the '
+                 'same shell command, nothing between, through the candidate route: paseo agent run --new-workspace '
+                 "local --cwd <implementation worktree> with the generated prompt unchanged; the Captain's interim "
+                 'dispatch directive, chat 2026-10-26: 「接下來派工結束後新的派工盡量用 sol / astra，推理等級可以比 claude 高一級」)\n'
+                 '\n'
+                 '## Checklist\n'
+                 '\n'
+                 'Independent verdict on PR #742 head 9a70a335 against every acceptance criterion in the task file, '
+                 're-running each evidence command and at least one falsifier per criterion yourself, and judging each '
+                 'limit the implementation report states\n'
+                 "Fourth validation on the same head, for validation-3's F1 only (immediate-spawn order), under the "
+                 "Captain's validation-gate hold (「准」, 2026-10-28): FO ran this record's build (inside validate.py) "
+                 'and the spawn in one shell command with no other operation between; FO saves that exact command line '
+                 "and its timestamps to paseo-codex-dispatch-practice/validation-4/ after you start; judge AC-2's "
+                 "order and AC-6's unchanged prompt and fields from your own Paseo status and first activity and that "
+                 'receipt; recheck nothing else changed at the head\n'
+                 'A minimal acceptance script the Captain can run (three to six steps, exact commands, expected '
+                 'output), run by you exactly as written in a fresh bash shell, with its observed output; '
+                 '/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py '
+                 'docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified '
+                 "by the workflow's Review-finding disposition\n"
+                 '\n'
+                 '## Scope notes\n'
+                 '\n'
+                 'Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1\n'
+                 '\n'
+                 'Number guards: ADR: 0042\n'
+                 '\n'
+                 'Profile: pilot. Candidate: iamcxa/kc-claude-plugins PR #742, head '
+                 '9a70a3350436fac9e51d0795b3b4299693f020f8, base origin/main. This task; other PRs may be in flight '
+                 'and are not your candidate. Check the candidate out detached in a throwaway worktree and remove it '
+                 'after. Commit your stage report with `spacedock state commit paseo-codex-dispatch-practice '
+                 '--workflow-dir '
+                 '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2`. '
+                 'Never run `git remote set-url` or any `git config` write in a worktree of this repository. Do not '
+                 'push, comment on any PR, request reviews or mark ready.\n'
+                 '\n'
+                 "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered "
+                 'here).\n'},
  {'corpus': 'dev2',
   'tip': '731a165dfdf02549a9d13b0624174351e8a6d7be',
   'task': 'paseo-codex-dispatch-practice',
@@ -1452,7 +1650,36 @@ SAVED_RULING_CASES = [{'corpus': 'dev2',
                         'steps the gate question names.',
               'decision': 'hold'}],
   'amendments': [],
-  'ruling_commit': 'd24235a4c'},
+  'ruling_commit': 'd24235a4c759f908770a7a93ee215b87c225c496',
+  'record_text': '# validation-4-message-1\n'
+                 '\n'
+                 'Dispatched: e57feb6eec956b74a1d4b29f26f1d0a7d1693785 (workflow checkout, kc-dev-flow-2 0.32.1 '
+                 'README); batch 9, follow-up message to the validation-4 worker (Paseo b23132a3), answering its '
+                 'receipt-defect report\n'
+                 'Candidate: 9a70a3350436fac9e51d0795b3b4299693f020f8\n'
+                 "Model: gpt-6-astra (Codex via Paseo, thinking high; the same worker as validation-4; the Captain's "
+                 'interim dispatch directive, chat 2026-10-26: 「接下來派工結束後新的派工盡量用 sol / astra，推理等級可以比 claude 高一級」)\n'
+                 '\n'
+                 '## Checklist\n'
+                 '\n'
+                 'Read the appended "Correction, 2026-10-28 (FO)" section of '
+                 'paseo-codex-dispatch-practice/validation-4/build-and-spawn.md: the original build-and-spawn tool '
+                 'call (2026-10-28T14:42:10.210Z UTC) verbatim, with the wrong block kept above it\n'
+                 'Use the assignment file hash it states (sha256 '
+                 'aaf3881ac0baef72d55622205b7f5810e20f38a6693a98a0a12593dfc23ee512, modified 14:42:14.727Z), noting FO '
+                 'did not hash it at build time\n'
+                 "Judge AC-2's order and AC-6's fields on that receipt, your own Paseo status and first activity, and "
+                 'treat the receipt defect as found\n'
+                 '\n'
+                 '## Scope notes\n'
+                 '\n'
+                 'Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1\n'
+                 '\n'
+                 'Everything in validation-4 stands. Never run `git remote set-url` or any `git config` write in a '
+                 'worktree of this repository.\n'
+                 '\n'
+                 "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered "
+                 'here); through Paseo, your final reply is that message.\n'},
  {'corpus': 'relay',
   'tip': '7fbde2c526769e0968d05fac858fc63b31c6274c',
   'task': 'agent-review-identity',
