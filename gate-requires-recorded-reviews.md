@@ -47,6 +47,17 @@ gates:
                 id: briefing:gate-requires-recorded-reviews:ideation:attempt-2:revision-1
                 digest: sha256:d43b062f2dd2ad8d7801ff6c22f9dbb78619268c0262393002cc482b6ed85c27
                 room-ref: ./gate-requires-recorded-reviews/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:gate-requires-recorded-reviews:ideation:2
+                briefing: briefing:gate-requires-recorded-reviews:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-29T03:50:04.595439Z"
+                decision: approve
+                reason: The Captain 「進實作」 (chat, 2026-10-29), answering FO's joint batch-10 revised-ideation sitting of four gates whose ask was 「決定：四張全准進實作，含工作流文件多 27 字？要改哪張直接說。」; accepts FO's recommendation for this task as stated in the gate question, including the +27-word workflow raise for gate-requires-recorded-reviews.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
