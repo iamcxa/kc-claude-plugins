@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:superseded-criterion-without-dispatch-caught:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:superseded-criterion-without-dispatch-caught-backlog-1
+              briefing:
+                id: briefing:superseded-criterion-without-dispatch-caught:backlog:attempt-1:revision-1
+                digest: sha256:af1bb8385e43941ce189d271787971a948d3d80f20d8fa3b9058a2a80485edc1
+                room-ref: ./superseded-criterion-without-dispatch-caught/review/backlog/briefing-1
 ---
 
 ## Scope

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:superseded-criterion-without-dispatch-caught:backlog:attempt-1:revision-1",
+  "question": "Hold superseded-criterion-without-dispatch-caught in backlog until a real task archives with a superseded criterion still declared? FO recommends hold; approving accepts that recommendation: no ideation now, because batch 9 showed no case of this gap (the withdrawn-content criteria it showed belong to captain-amendment-form-checked).",
+  "artifacts": [
+    {
+      "id": "artifact:superseded-criterion-without-dispatch-caught:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/33e784b119f1da4167ba0be9544a0f62f55ef5c9/superseded-criterion-without-dispatch-caught.md",
+      "rev": "sha256:4c908841b2fa878090286e3b7e43e13258e1303553f7efb61250393facd1be51",
+      "mediaType": "text/markdown",
+      "summary": "No bite: filed from #724 validation F4 (Deferred risk); batch 9 showed no archived task with a superseded criterion still declared."
+    }
+  ]
+}
