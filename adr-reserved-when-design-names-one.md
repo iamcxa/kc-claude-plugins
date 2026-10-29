@@ -58,6 +58,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-29T07:05:20Z
+worktree: .worktrees/spacedock-ensign-adr-reserved-when-design-names-one
 ---
 
 ## Scope
