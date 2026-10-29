@@ -16,6 +16,7 @@ status: backlog
 
 - Added 2026-10-28: the subspace-web dev2 FO (Paseo 295b873d) relayed the Captain's preference from its session: 「之後預覽組合統一使用類似的 layout，這樣比較方便讀，請跟 dev2 fo 講一下」. The layout he saw that day on web task decided-review-shows-amber's spike (six options): a left menu listing today and each option with a one-line description, then screen (desktop, widths, phone, real page), theme and state, with combinations that have no picture disabled; the chosen picture on the right with today beside it by default (toggle); arrow keys up/down for option and left/right for state; on a phone the menu becomes a sticky top bar; generated from picture file names `<option>-<screen>-<theme>-<state>.png`, with the long measurement table one link away. Reference copy: spacedock-dev/subspace-web, branch spacedock-state/dev2, decided-review-shows-amber/preview/viewer/index.html (about 45 lines, one file, no dependencies). Relayed words, not a ruling in this session; it refines point (2) above (a left menu, not a top bar, on a wide screen).
 
+- Added 2026-10-29: the Captain (chat, this session): 「web fo 講的東西其實如果可以儘早做 sd review 的 static html 支援，那就可以做得更好」. Spacedock Review rendering a static HTML preview is relay's Release 2.1a (relay draft PR #430), not this package's; when it lands it may replace this task's chat-and-briefing link workaround.
 ## Non-goals
 
 - Spacedock Review publishing of the preview (relay's Release 2.1a); judging a design's content.
