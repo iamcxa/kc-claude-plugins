@@ -60,7 +60,7 @@ gates:
 
 ## Stop condition
 
-- Both bites replay as refused before gate preparation, and every current task that recorded its calls passes.
+- The opted-in existing delivery check refuses the #745 bound-summary omission before gate preparation, accepts complete summary fixtures, and preserves source verdicts/output for legacy calls without --summary-file. No #744 role-call attestation or refusal is required; unrecorded optional calls and truth of supplied review facts remain observer-owned under the Captain's 2026-10-29 decision C and batch ruling A. Complete the acceptance criteria below before claiming implementation acceptance; native adoption remains separately observed.
 
 ## FO alignment
 
@@ -72,238 +72,207 @@ Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-29 — batch-10 review befor
 
 ## Design
 
+### Revision authority and boundary
+
+This definition supersedes the first design and its AC-1 through AC-6; the earlier Stage Report remains an immutable historical report at the end. The first design is preserved in state commit `3be2d02545f4ffe7d6cd0af36efe9eef03fd4baf`. The Captain's ideation resolution on 2026-10-29 quotes 「照建議」 and accepts decision C in `gate-requires-recorded-reviews/review/ideation/briefing-1/index.json`: build only the #745 summary-location repair, drop the #744 `Role calls:` attestation, preserve existing callers, and remeasure the word increase. Batch ruling A means the check covers structurally observable omissions; the observer keeps what cannot be inferred from supplied records. The title and Scope retain the original problem provenance; they do not reintroduce the excluded half.
+
+Profile: Pilot, one bounded existing-check repair. No new production, hosted-service, credential, background-job or support obligation. This dispatch changes only this task body/report and disposable experiments; implementation and the next gate remain with the normal workflow.
+
 ### PRFAQ
 
-**Proposition.** Before preparing a non-initial gate, the First Officer (FO) will run the existing `delivery_gate.py question` check against the task, the proposed question and the exact proposed summary. A missing canonical role-call record, an owed role call, or missing delivery-review fields holds preparation. The Captain sees the review history in the place the README requires, before granting delivery authority.
+**Proposition.** Before preparing a delivery gate, the First Officer (FO) checks the exact proposed summary for its external-review round count and configured second-reviewer declaration/outcome, through the existing `delivery_gate.py question` command. Missing facts hold preparation instead of appearing only in a later merge ask. Existing callers that supply only combined question/summary text keep their current behavior.
 
-**Who benefits?** FO and the Captain of this bounded Pilot workflow. The observed failures are iamcxa/kc-claude-plugins#744 (two real chief-engineer calls kept outside `## FO alignment`) and #745 (delivery review facts absent from its bound summary). This is one package change to an existing checker, with no new executable, review service, background operation or adopter mutation.
+**Which failure is repaired?** Pull request #745, the operator-interview extension, reached validation attempt 2 with neither fact in its bound summary. The raw old question/summary already fails today's ordinary text checks for other omissions; a diagnostic copy with those ordinary fields supplied only in the question passes. The new test isolates the location defect: that copy must fail when the unchanged summary is supplied separately. This is not a claim that every old check accepted the raw historical gate.
 
-**Why is running role_triggers.py earlier insufficient?** At #744's delivery artifact commit `3dc8105cc2e03853c7a4da498389b56a2cb9f6e7`, that released checker exits 0: one amendment event has its engineering-reviewer call. The optional chief-engineer calls do not correspond to another counted trigger. At #745's artifact commit `9948c3eb9aa0cb61959080da6f2776de9881fab4`, it also exits 0: two amendment events are cleared. Preserve those trigger decisions; do not infer mandatory calls from English words in a side report.
+**What is deliberately excluded?** Pull request #744, the named-batch workflow change, had optional chief-engineer calls outside the required alignment section. No `Role calls:` line, call inventory, new role trigger, canonical-call census, question-to-role invocation or ideation-gate preflight is added. Role rules and their current enforcement remain unchanged. The observer keeps unrecorded optional activity; a summary parser cannot establish its occurrence.
 
-**How does the check know a call happened?** Proposed decision D1 requires one cumulative declaration in the proposed gate summary: `Role calls: chief-engineer=N; engineering-reviewer=N.` The integers count completed calls for this task through this gate, including a batch call that reviewed this member. They are FO's attestation, sourced from the review requests/results FO already has. The checker compares them with distinct valid `Reviewer: <agent> <model> <date> — <question>` records under `## FO alignment`, using the existing role parser. Existing dated waivers can clear owed events but are not completed calls. A declaration of two calls with zero canonical lines is refused. An omitted, duplicate, negative or malformed declaration is refused. An explicit false zero can still conceal an entirely unrecorded optional call; no local parser authenticates activity it never receives. The observer remains responsible for that truth boundary.
+**What exactly is checked?** When supplied, `--summary-file` identifies the proposed summary. Outside Markdown fences it needs one top-level `External rounds: N` line, where N is a nonnegative decimal integer; a trailing full stop or `; <detail>` / `. <detail>` is allowed. Empty, negative, fractional, nonnumeric and duplicate counts fail. Zero explicitly means no external delivery verdict has been read by this gate; it is neither a clean review nor proof of no unreported activity. Use the README's existing definition of a round, with no new review threshold or provider lookup.
 
-**Where do delivery facts go?** In the exact summary supplied to `gate prepare`, not only in the question, task report, another folder or a later merge ask. Require one `External rounds: N` line with a nonnegative integer and optional reviewer/evidence detail. Zero is an explicit claim that no external delivery verdict was read by this gate, not a clean review. Reuse the existing configured second-reviewer rules, outcomes, not-run reasons and Copilot saved-refusal checks on the summary alone. A workflow with no configured second reviewer owes no invented second-reviewer declaration. This neither selects reviewers nor judges findings, round truth or review quality. It does not count local self-review as an external verdict automatically.
+The same summary supplies the configured `Second reviewer: <name> because <trigger>` and a recognized outcome, or `Second reviewer: not triggered` when existing rules permit it. Reuse `reviewer_config`, `reviewer_problems` and `unstated_second_reviewers`: preserve prod/db contradiction checks, recognized `review:<id>` / `comment:<id>` outcomes, not-run reasons, Copilot saved-refusal quote/id and conditional-retry rules, and configuration-error/unsupported-type handling. `answer=review:<id>` remains not a review. An empty second-reviewer configuration owes no invented declaration; an explicitly named reviewer still needs an outcome. Human/semantic trigger judgment remains with FO. No decision about review truth, completeness, quality or whether a missing external round really occurred is automated.
 
-**What happens next?** On exit 1 FO records the missing calls or summary fields and reruns; on exit 2 FO resolves the unreadable state/configuration and reruns. Exit 0 permits the existing Spacedock preparation sequence; it grants no approval, merge, retry or publication authority. The checked summary must be passed unchanged. This is an FO-run preflight, not a hook preventing a direct unchecked `spacedock gate prepare` call. A changed summary requires another preflight; a stale open binding follows Spacedock withdrawal and reprepare.
+**How do old callers work?** `question <task> --text-file <combined-file>` without the new optional argument follows its current code path, with the same verdict/output and no round-count or location requirement. It does not prove where the eventual bound summary stores facts. This is the accepted compatibility limit, including Web's currently adopted invocation. The package workflow recipe opts into the new separate input; adopter refreshes use their own authorization. No adopter README is edited here.
+
+**What authorizes the next action?** Exit 1 means missing/malformed content; exit 2 means unreadable input/configuration or the existing unsupported configuration. Both hold preparation. Exit 0 permits FO to continue the existing Spacedock lifecycle using the checked summary unchanged, but grants no approval or merge authority. Changing the summary requires another check; changing an already open binding requires Spacedock withdrawal/reprepare. A direct unchecked `gate prepare`, a dishonest count, or supplying different bytes afterwards remains outside this local check, with the observer responsible for those facts.
 
 ```mermaid
 flowchart TD
-    FO[First Officer drafts question and summary] --> Check[Run delivery_gate.py question]
-    Check --> State[Read committed task and workflow rules]
-    State --> Roles[Compare declared calls with FO alignment and existing owed events]
-    Roles --> RoleOK{Role records complete?}
-    RoleOK -- No or unreadable --> Stop[Hold preparation and report missing record]
-    RoleOK -- Yes --> Delivery{Delivery gate?}
-    Delivery -- Yes --> Summary[Check external count and configured second reviewer in summary]
-    Summary --> SummaryOK{Summary complete?}
-    SummaryOK -- No or unreadable --> Stop
-    SummaryOK -- Yes --> Prepare[FO prepares gate with the checked summary]
-    Delivery -- No --> Prepare
-    Prepare --> Captain[Captain approves, revises or holds through Spacedock]
-    Stop --> Repair[FO corrects records within existing authority]
-    Repair --> Check
+    FO[First Officer drafts delivery question and summary] --> Input{Separate summary supplied?}
+    Input -- No: existing caller --> Legacy[Run unchanged combined-text checks]
+    Input -- Yes: updated workflow --> Facts[Check summary round count and existing reviewer rules]
+    Facts --> Text[Run ordinary checks on question plus summary]
+    Text --> Result{Exit zero?}
+    Legacy --> Result
+    Result -- No or unreadable --> Hold[Hold preparation; report concrete defect]
+    Hold --> Repair[FO corrects supplied material within authority]
+    Repair --> Input
+    Result -- Yes --> Prepare[FO prepares with the checked material]
+    Prepare --> Bound[Spacedock binds summary and artifact]
+    Bound --> Captain[Captain approves revises or holds]
 ```
 
-Prose/diagram audit: FO authors and runs; the script reads and refuses; Spacedock binds; the Captain rules. Both unreadable inputs and absent records stop before preparation, and delivery-only fields do not gate ideation. Surfaces remain `none`; no UI or schema artifact is owed. Native diagram rendering is not claimed by the text audit.
+Diagram/prose audit: FO authors/runs/corrects; the script checks supplied data; Spacedock binds; the Captain rules. The legacy branch preserves combined-text behavior and has no summary-location guarantee. No initial or ideation gate gains a new command. `Surfaces: none` owes no UI/database artifact. Diagram syntax/native rendering is not claimed; actors, branch order and stops were compared with the prose.
 
 ### Chain and existing-code evidence
 
-1. **Spacedock first:** read the installed 0.27.3 `skills/fo-gate-lifecycle/SKILL.md`, particularly Prepare and Cold report candidate. It owns prepare/commit/read/present and report sufficiency, and documents no kc-dev-flow role-record or external-round predicate. Its initial gate reviews the seed with no worker report. This design does not modify Spacedock, reconstruct a binding or add an initial-stage report requirement.
-2. **Package next:** fetched origin and pinned `origin/main` to `5725d495bb83a17ec13616bb5421bf5ffdc71f70`; `.claude-plugin/plugin.json` says released package version `0.33.0`. The installed Codex 0.33.0 workflow, delivery checker and role checker were byte-compared with those source files. `delivery_gate.py question` already runs before validation preparation and reuses text/reviewer checks; `check` calls `owed_role_calls` only before merge. `role_triggers.py` reads committed state, ignores fenced examples, recognizes the canonical alignment section and counts repair/amendment events. `design_surfaces.py` runs before design gates but has no delivery-summary input. Bounded searches: read these caller/function seams, then search the workflow/role parser for Reviewer, second-reviewer, gate-prepare and round rules. Conclusion: repair the existing question-check seam; no replacement engine. External chat and unrecorded/manual calls remain unknown.
-3. **Historical sources:** #744's side-folder `batch-9-reviews/README.md` records one chief-engineer run before ideation and a second before delivery. Replay the ideation artifact at `b0055d05af5d2e75828f408e846e6f18c789f112` with one known call, and its delivery artifact at `3dc8105cc2e03853c7a4da498389b56a2cb9f6e7` with two; do not retroactively require the second run at the first gate. #745's approved delivery attempt is `review/validation/briefing-2/index.json`, whose artifact points to `9948c3eb9aa0cb61959080da6f2776de9881fab4`; its summary has neither external rounds nor a second-reviewer outcome. Both observer reports were read. Historical files stay unchanged.
-4. **Adopters last, read only:** Relay `subspace-relay/dhaka/docs/dev2/README.md` at code HEAD `5c75e36b5b220c44911c4575286d24bd973d53f6` has the canonical role line but its declared `.spacedock-state` is absent locally: no Relay state replay is claimed. Web `subspace-web/dev2-fo/docs/dev2/README.md` at `485195ec9b30833a3b55e937d7598041932d312e` already runs delivery `question` and has an empty second-reviewer setting; state pin `2c3a6dcbfb3a8e178d65151237a0c234351612c0`. QNow `qnow-adopt-dev2/docs/dev2/README.md` at `278f79ca3eb03a8c1286817f542c4ec4b744bfed` declares Copilot; state pin `2b132074819d4eb6890f3bf731be321032a00442`. These local versions differ; no automatic sync or new remote read was done.
-5. **Past decisions:** read accepted architecture decision records (ADRs) 0004 (external rounds), 0020 (word-budget changes), 0026 (counted role triggers and dated calls), 0027 (checks at existing FO writes), and 0043 (optional batch review). Searched state `Override:` records; the applicable precedent rejects guessing authority from prose. Keep the ADR 0026 exclusion of review-round drift from the merge hold; this task does not pass `--review-rounds` or introduce new role triggers. D1 proposes a new record-presence contract, not an exception to the trigger policy. Draft ADR title: `gate-preparation-checks-declared-reviews-in-their-required-homes`, no number reserved here.
-6. **Provider limit:** `gh pr view 744 --repo iamcxa/kc-claude-plugins --json number,state,mergeCommit` exited 1, `error connecting to api.github.com`. No hosted PR state, provider review completion or merge was independently verified. The source Git fetch succeeded. Local archive references to #744/#745 identify the replay; they do not replace provider evidence.
+1. **Spacedock first:** read installed 0.27.3 `skills/fo-gate-lifecycle/SKILL.md`, Prepare and Cold report candidate. It owns prepare/commit/read/present and report sufficiency, but supplies no package-specific review-field preflight. Its initial gate reviews the seed without a report. This design changes no Spacedock code, binding, hook or stage graph.
+2. **Package second:** `git fetch origin` succeeded; current `origin/main` is `5725d495bb83a17ec13616bb5421bf5ffdc71f70`, released package `0.33.0`. Installed Codex `delivery_gate.py`, `role_triggers.py` and `references/sd/workflow.md` match those source bytes. Traced `question` (lines 637-657), argparse (660-677), existing reviewer/text helpers and all package caller hits. The current question command already accepts a caller-supplied task, text and optional workflow directory and performs no remote action or gate write. Repair this seam; do not add a replacement checker or a committed-task/history subsystem. The existing `role_triggers.outside_fences` helper may be imported unchanged for summary filtering only; no role function is invoked.
+3. **Historical replay:** #745's stored validation briefing-2 summary points to task commit `9948c3eb9aa0cb61959080da6f2776de9881fab4`. The original summary lacks both review fields. Existing CLI and isolated summary experiments below reproduce the location distinction. All corrections in the experiment are explicitly synthetic, not historical repairs or statements that the count was zero. GitHub read-only query succeeded in this revision: `gh pr view 745 --repo iamcxa/kc-claude-plugins --json number,state,mergeCommit` reported MERGED at `e9347c8e511d4dbfee49d59dc7e486f376b4fa0c`. This corrects only the earlier run's connectivity limit; it proves neither the historical reviews nor acceptance of their contents.
+4. **Adopters last, read-only:** Relay code HEAD `5c75e36b5b220c44911c4575286d24bd973d53f6` declares `.spacedock-state`, absent locally, so no Relay state replay is claimed. Web code HEAD `485195ec9b30833a3b55e937d7598041932d312e`, state `2c3a6dcbfb3a8e178d65151237a0c234351612c0`, uses the legacy combined-file command and empty second-reviewer configuration. QNow code HEAD `278f79ca3eb03a8c1286817f542c4ec4b744bfed`, state `8d09186345940d7b92369157d8e05007541a2825`, configures Copilot. No adopter is mutated or silently upgraded; current configuration is a compatibility input, not proof of its historical configuration.
+5. **Past rulings:** read accepted architecture decision records (ADRs) 0004 (external rounds), 0020 (word budget), 0023 (carried merge authority), 0026 (role-event policy), 0027 (checks at existing writes), and 0043 (named batches) at that source. Read state `Override:` records: unrelated reversals do not authorize a new role policy here. Preserve the explicit exclusion of review-round drift from the merge hold. The current Captain decision narrows the former proposal; it does not reopen those decisions.
 
 ### Proposed implementation boundary
 
-Extend `delivery_gate.py question`, retaining the existing `check` merge command and its authority rules. New `--summary-file` is required for question; `--text-file` supplies the question. The task's committed status selects ideation versus validation, using the existing adopted stage mapping; unsupported or ambiguous state holds with exit 2. Initial/backlog gates retain the existing seed check. Five-stage ideation and POC/Pilot/Prod validation all run this same preflight; no additional worker stage is introduced.
+- `question` gains optional `--summary-file`; omission preserves the released path. Supplying an unreadable summary exits 2; an empty summary exits 1. No requirement is added to `check`, no task-status selector is added, and initial/ideation commands stay unchanged.
+- In the supplied-summary branch, keep ordinary text checks on question plus summary, but run configured-reviewer and outcome checks on the summary alone; a reviewer declaration or outcome present only in the question must not satisfy them. Use the existing fence iterator for these new summary checks. Do not change legacy parsing, ordinary decline/confirmation grammar, model thresholds, round drift, Copilot policy or merge checks.
+- The summary count is a presence/form check, not a new ledger or history audit. No state snapshot pinning, dirty-task refusal, new history read, provider call, source-authentication claim or extra lifecycle read is introduced. Keep existing flat/folder task support and explicit `--workflow-dir` support for archived/split-root fixtures.
+- Update the existing delivery command in the workflow and its POC-derived route test. Do not broaden it to ideation. Test the actual command and return-code handling with a disposable prepare-call recorder: failing preflight must not reach prepare, and a successful recipe must forward the same summary bytes. That is recipe proof, not a native Spacedock hook. A later observed adopted gate is required to claim FO followed it in real use.
+- One package PR, existing tests and CI job; no new script, service or CI trigger. CI cost per PR was not measured; no cost reduction is claimed. Package release versioning stays with release-please.
 
-Read task records from the actual Git state root at a pinned HEAD, resolving flat, folder and archived paths; do not assume an archived task's parent is the state root. Refuse an uncommitted difference in the target task, without requiring the whole shared state checkout to be clean. A sibling's pending edit must not block this task. Reuse `role_triggers` parsing/functions and owed-event semantics, with no new threshold or model policy. Compare exact distinct canonical call lines with the declared counts; match by role, not a question keyword. Stage reports, fenced examples and side-folder Reviewer lines are not canonical records. The declaration is cumulative through this gate; repeated identical lines cannot increase the count.
+### Experiments already exercised
 
-For validation, run the existing ordinary question checks over question plus summary, but run the second-reviewer/outcome and new round-count presence checks on the summary only. Preserve current refusal quotes, conditional retry, production/database trigger handling, sufficiency, necessity and merge hold-out behavior. For ideation, run the role-record checks only; do not require delivery sufficiency/necessity, external rounds, Copilot or merge clauses. The summary contains one integer external count; extra commentary/evidence remains free text. Parse these named lines outside fences; do not redesign unrelated decline or amendment parsing. The proposed prototype below isolates this predicate and does not implement these integration/error branches.
+The executable experiment is preserved below, using only Python 3, the declared 0.33.0 package and pinned local Git objects. It produced 17 expected results: historical summary refused; synthetic complete summary accepted; question-only/later-ask and fenced fields refused; duplicate, negative, decimal, word and empty counts refused; no configured reviewer accepted without a fabricated result; Pilot not-triggered accepted and Prod not-triggered refused; outcome-only-in-question and answer token refused; recognized review token accepted; released CLI raw historical text refused, while its question-only diagnostic correction passed. Removing the round predicate or allowing the question to satisfy summary fields causes the negative controls to pass, demonstrating the intended boundary's sensitivity. No candidate CLI exists yet.
 
-A legacy `question` call without `--summary-file` returns a configuration error with the exact command to use. Package source tests and the adopted workflow recipe change together. Independently adopted projects require their normal authorized workflow refresh; do not rewrite their READMEs in this task. No new hook, script, stored call ledger, role launch or historical rewrite. Future CI uses the existing package job; no trigger change or CI-cost claim is proposed.
-
-### Replay already exercised
-
-Disposable Python experiment, `/tmp/gate-review-ideation-probe.py`, run with installed 0.33.0 parsers and the committed snapshots above; source and results are preserved below so `/tmp` is not a durable dependency. Eleven expected outcomes passed:
-
-| Case | Observed exit | What would falsify the claim |
-| --- | --- | --- |
-| #744 original ideation summary | 1, no declaration | Missing mandatory declaration accepted |
-| #744 first known call declared, no canonical chief-engineer record | 1, 1 versus 0 | Side-folder activity counted as alignment |
-| #744 first call inserted under alignment | 0 | Valid record still refused |
-| #744 record instead under Side notes | 1 | Wrong heading accepted |
-| #744 delivery declares both actual calls | 1, 2 versus 0 | One record or none clears two calls |
-| #744 two distinct alignment lines inserted | 0 | Correct cumulative records refused |
-| #745 original delivery summary | 1 | Missing delivery fields accepted |
-| #745 role declaration added, delivery fields still absent | 1 | Ordinary role pass hides summary gap |
-| #745 synthetic complete summary | 0 | Complete declared summary refused |
-| #745 fields supplied only outside the summary | 1 | Question or later ask clears summary gap |
-| #745 fields inside fenced example | 1 | Example counted as real record |
-
-Baseline control: the unmodified 0.33.0 `question` CLI on #745's historical task and original combined question/summary exits 1 already (missing clauses, findings join and configured reviewer). A diagnostic question-only addition of those ordinary fields, reasoned fixture declines, `External rounds: 0` and a reasoned Copilot configuration-error outcome exits 0 (`gate text complete`) while the original summary remains unchanged. The new behavior is location enforcement and optional-call accounting, not claiming the entire original text escaped every current check. The controlled additions are synthetic; they do not repair or authenticate historical evidence.
-
-The #745 synthetic correction uses an explicit zero and a reasoned not-run outcome to test the parser, not to claim those were the historical review facts or to grant delivery. Published archive state is not repaired. A no-configuration second-reviewer case remains an implementation criterion.
-
-At plugin state `e751ef6409b6a7e7bf87f4d3661b1f0cb51a531d`, 31 committed task files have canonical calls; Web has 2, QNow has 0 under the pinned states above. All 33 passed the isolated count/location predicate with declarations frozen from their canonical lines; moving the alignment heading made all 33 fail. This tests compatibility of existing call syntax and removal sensitivity. It is not an independent census of actual calls, a full gate pass, or evidence that old summaries already contain the new mandatory declaration. Under D1, preparing a fresh gate needs that declaration even for a previously well-recorded task. Existing reports, closed gates and historical assertions are preserved.
+The released CLI also ran without `--summary-file` on all 60 Web validation briefings at the pinned state, reading each artifact's original task revision and current Web configuration. All 60 exit 1 already: all lack the current Sufficiency/Necessity clauses, with some additional decline defects. These are baseline failures, not regressions introduced here. The first briefing (`ac9-feedback-phone-revision-drawer-note-time`, task revision `d430df1ba3d7b8f3973b306d400ccaadf96461c3`) passes after adding just synthetic Sufficiency/Necessity clauses. Candidate compatibility must preserve both the 60 original verdicts/messages and this positive control; “all archived gates pass” is not an acceptance claim.
 
 ### Words FO reads at each moment
 
-Root `learning.md` requires a per-moment corpus, including instruction outputs, instead of a single README size. This change is not a reading-reduction claim. The exact proposed replacement is:
+Exact replacement for the existing sentence beginning `Before the validation gate prepare`:
 
-> Before every non-initial `gate prepare`, FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question file> --summary-file <summary file>` and uses that summary unchanged. It declares cumulative `Role calls: chief-engineer=N; engineering-reviewer=N.`; a delivery summary also declares `External rounds: N` and the configured second-reviewer outcome. Nonzero holds preparation. Missing calls belong under `## FO alignment`; unreported activity remains unverifiable.
+> Before the validation `gate prepare`, FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question file> --summary-file <summary file>`; nonzero holds preparation. The summary declares `External rounds: N` and the configured second-reviewer outcome. Use that summary unchanged; callers omitting `--summary-file` retain combined-text checks.
 
-It replaces the existing sentence starting `Before the validation gate prepare` in Delivery authority. Count with `len(text.split())`, exact heading boundaries, unchanged base `5725d495bb83a17ec13616bb5421bf5ffdc71f70`. The temporary reading probe executes current `test_pr_watch.TasksTests` with provider fixtures and counts its real printed lines; it does not contact GitHub or prove native host reads. The new successful question output remains `gate text complete`; new mandatory gate-data lines are counted at their gate.
+Counted with Python `len(text.split())` against source `5725d495bb83a17ec13616bb5421bf5ffdc71f70`. The whole workflow changes **5754 → 5781 (+27)**, replacing the prior +42 proposal. The probe runs the existing watcher fixture to capture actual printed output. A second implementation using line-based section extraction and regex word counting independently matched all 14 before/after lifecycle totals.
 
-| Lifecycle moment | Base words | Proposed words | Difference |
+| Lifecycle moment | Before | Proposed | Change |
 | --- | ---: | ---: | ---: |
-| Startup or full resume | 6959 | 7001 | +42 |
-| Idle with an open pull request | 862 | 904 | +42 |
-| Idle with a merged pull request | 833 | 875 | +42 |
+| Startup/full resume | 6959 | 6986 | +27 |
+| Idle, open PR | 862 | 889 | +27 |
+| Idle, merged PR | 833 | 860 | +27 |
 | After archive | 333 | 333 | 0 |
-| Merge ask | 2408 | 2450 | +42 |
-| Ideation gate, clean check | 3303 | 3352 | +49 |
-| Delivery gate, clean check | 3530 | 3579 | +49 |
+| Merge ask | 2408 | 2435 | +27 |
+| Ideation gate, unchanged command | 3303 | 3330 | +27 |
+| Delivery gate, clean separate-summary command | 3530 | 3560 | +30 |
 
-Manifest: startup = whole workflow + dev skill + workflow mod + Spacedock pr-merge startup + printed watcher output; idle = mod + pr-merge idle + Delivery authority + Extensions + watcher output; archive = mod + learn extension + archive output; merge ask = Delivery authority + Extensions + Spacedock gate-lifecycle + present-gate + sitting output; ideation gate = Stages + Delivery authority + gate-lifecycle + question output + new Role calls line; delivery gate also includes Extensions and the new External rounds line. Whole workflow changes 5754 to 5796 (+42). The two gate examples include only newly required field data; normal task prose, existing reviewer results and role-specific extension loads are variable common data, not zero words. Unchanged global/host contracts are common to both arms and outside this bounded corpus. A listed fo-feedback startup read adds its unchanged 599 words to both arms. Each additional workflow reread adds the same +42. No claim of total model context or actual live FO attention.
+Manifest: startup = whole workflow + dev skill + workflow mod + Spacedock pr-merge startup + watcher output; idle = mod + pr-merge idle + Delivery authority + Extensions + watcher output; archive = mod + learn extension + archive output; merge ask = Delivery authority + Extensions + Spacedock lifecycle + present-gate + sitting output; ideation = Stages + Delivery authority + lifecycle; delivery = Stages + Delivery authority + Extensions + lifecycle + unchanged `gate text complete` output, plus three words for the new canonical `External rounds: 0` line. Reviewer content was already required in the summary and remains variable common data; no role declaration or new ideation output is counted. Ideation grows only because this bounded corpus includes Delivery authority, not because its command changes.
 
-Failure output must also be recounted at implementation from the real CLI, including existing owed-role `next:` lines and new defects, and compared with the same archived inputs. The experiment currently prints count/location defects; it does not measure final CLI diagnostics. Do not hide an added instruction in a diagnostic or ADR/help file outside the manifest. Existing role/reviewer rule passages remain authoritative; the new ADR is a decision record consulted for a governing change, not a second routine runtime instruction. D1 includes the +42 workflow increase because the new required invocation/declaration causes it; ADR 0020 still requires the Captain's actual quoted ruling in the eventual budget step.
+Unchanged global/host instructions and full task prose are outside this bounded corpus, not asserted to be zero. Loading the optional fo-feedback startup extension adds the same 599 words to each arm; each extra workflow reread repeats +27. No reduction or total model-context claim is made. The existing command's failure output was exercised; candidate diagnostics and actual native FO reading remain unmeasured until implementation. Final acceptance recounts both clean and refusal output at the actual source/candidate, including help/ADR/extension reads if newly introduced. Do not hide recurring instructions in another file to satisfy the budget.
 
-### Unresolved Captain decision
+### Decision record and remaining Captain decision
 
-**D1 — Require the summary declaration and broaden the existing question preflight? Recommendation: yes.** Require the two cumulative role counts at each non-initial gate, a separate summary input, delivery fields in that summary, and the measured +42 workflow words; land the unnumbered ADR draft described above. These are coupled: without a declared inventory, a parser cannot distinguish a genuinely uncalled optional reviewer from #744's omitted records without inventing a trigger or guessing prose. What gets worse: FO must tally two counts per gate, legacy question callers need a workflow refresh, and the bounded reading corpus grows as measured. A false declaration still needs observer review. Alternative: retain existing records with no new declaration; less writing, but #744's optional-call omission cannot be reliably refused, so the stated stop condition must be explicitly narrowed by the Captain. No such narrowing or word-budget grant is assumed here.
+Decision C and batch ruling A are settled. Land an unnumbered ADR draft titled `delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility`, recording the Captain's 「照建議」 with the exact gate question, the observable-summary boundary, excluded role attestation, legacy compatibility and observer responsibility. FO reserves the number at implementation dispatch; no existing ADR is edited. This is a durable record of the accepted direction, not an additional runtime instruction.
+
+**Remaining decision: accept this exact +27 workflow-word raise with the revised design? Recommendation: yes.** It names the explicit summary operand, same-summary requirement and compatibility limit at the existing preflight. What gets worse: startup/resume and each listed Delivery-authority read grow by 27 words; old adopters retain a known location-check gap until their normal refresh. The old +42 proposal is withdrawn and is not treated as a grant. ADR 0020 requires the eventual positive budget step to quote the actual Captain ruling answering this measured proposal; return any changed total after sibling integration instead of assuming slack. No other material scope/interface decision remains unresolved.
 
 ## Acceptance criteria
 
-**AC-1** The question preflight refuses #744 at its historically correct gate boundaries for missing canonical call records, while preserving existing role triggers.
-Verified by: replay the ideation artifact `b0055d05af5d2e75828f408e846e6f18c789f112` with the first witnessed call and delivery artifact `3dc8105cc2e03853c7a4da498389b56a2cb9f6e7` with both witnessed calls through the candidate CLI in a disposable independent Git clone; record exit/output. Both refuse; correct-place distinct records pass. Move records into another heading, a side file, a fence, or duplicate one record: refusal returns. Run existing role-trigger tests; removing the question-to-role invocation must make the CLI integration test fail. Do not supply review-round drift as a new trigger. Current evidence: isolated predicate replays pass; candidate CLI/wiring not built.
+These six criteria replace the first design's six criteria under the recorded ideation revise. Current evidence is design-stage evidence only; each future candidate check below is still required.
 
-**AC-2** Delivery review fields must be in the exact proposed summary before gate preparation.
-Verified by: replay #745's validation attempt 2 with its bound summary, then a diagnostic copy containing truthful test-fixture counts and a configured reviewer outcome. The original refuses and the corrected fixture passes; placing fields only in the question, later merge text, task report or a fence still refuses. Missing/duplicate/negative round counts and missing configured outcomes refuse. A workflow without a configured second reviewer needs no fabricated reviewer result. Existing Copilot refusal, prod/db, hold-out, sufficiency and necessity tests still pass. Current evidence: isolated summary cases pass; full reviewer configuration and CLI integration remain future proof.
+**AC-1** The opted-in delivery command refuses the #745 summary-location defect before preparation.
+Verified by: extract the bound summary from `_archive/fo-interviews-extension/review/validation/briefing-2/index.json` and task revision `9948c3eb9aa0cb61959080da6f2776de9881fab4` into a disposable independent clone/temp fixture; use the recorded diagnostic question additions to make ordinary base checks pass, then run candidate `question --text-file <question> --summary-file <original-summary>`. It must exit 1 for absent summary facts. A synthetic complete summary must pass; moving the fields to the question, task report, later merge ask or a fence must restore refusal. Record exact inputs, base/candidate SHAs, exit and stdout. Removing summary enforcement must fail this test. Current: isolated predicate and released-CLI differential passed; candidate wiring not built.
 
-**AC-3** Previously valid role-call syntax remains usable; a removed record is detected without rewriting history.
-Verified by: run the pinned corpus of 31 package and 2 Web task files above with frozen declared counts and then with each canonical record removed or misplaced. The role-record predicate passes all original call records and refuses each deletion/move; capture per-task results. Do not label this full gate compatibility: old summaries require the new declaration only when preparing a new gate. QNow zero examples and locally unavailable Relay state are explicit limits. Unknown/malformed declarations, unfenced/fenced examples, valid waivers and duplicate exact call lines have focused CLI fixtures. Current evidence: all 33 count/location cases and all 33 heading-removal controls passed; other integration cases not yet verified.
+**AC-2** The summary check reuses existing reviewer rules and checks a bounded round-count form.
+Verified by: candidate CLI fixtures for zero/positive counts, missing/duplicate/negative/fractional/nonnumeric counts, valid optional detail, no configured reviewer, allowed not-triggered, Prod/db not-triggered refusal, wrong reviewer, missing outcome, review/comment versus answer tokens, saved Copilot refusal mismatch/missing file, retry offer, reasoned configuration error and unsupported PR type. Check exits 0/1/2 as applicable. Run existing delivery/reviewer suites unchanged. Mutate summary-only outcome lookup to combined text, or remove count checking: intended negatives must turn green and fail the suite. Current: 15 isolated summary cases and two sensitivity controls passed; full CLI/error/configuration integration remains unverified.
 
-**AC-4** The actual existing pre-gate entry routes both ideation and delivery correctly and stops before preparation on nonzero.
-Verified by: execute the documented command in a fresh shell against a disposable state repository and record a prepare-call sentinel in the harness. Nonzero prevents invoking prepare; success supplies exactly the checked summary bytes. Cover POC validation without an ideation requirement, non-delivery without external-review fields, unsupported state, unreadable files/configuration, flat/folder/archive tasks, uncommitted target task versus an unrelated dirty sibling, and task changes between read and use. A direct unchecked Spacedock invocation remains outside enforcement. Mutating the command to omit summary input, bypass the return code, use working-copy call records or pass another summary fails the integration assertion. Current evidence: source seam traced; real integration/sandbox fixture not yet built.
+**AC-3** Omitting the new argument preserves legacy callers, including Web, without a new record requirement.
+Verified by: run source and candidate `question` without `--summary-file` on the pinned 60 Web briefing/artifact pairs, and on package/QNow committed delivery inputs where readable, comparing exit and output per input. Preserve pre-existing failures and explain unavailable saved artifacts; do not synthesize “green history.” The Web positive diagnostic control and ordinary valid fixtures pass with no external-round or role-count declaration. Test flat/folder/archived task paths with the existing explicit workflow option. Making argparse require the new option or imposing its predicates on the omitted path must fail compatibility tests. Current: 60 Web base results and one synthetic positive measured; candidate/cross-adopter differential remains future proof; Relay state unavailable locally.
 
-**AC-5** The reading and change budget match the accepted design and introduce no hidden lifecycle load.
-Verified by: rerun the preserved reading probe on the exact implementation base/candidate and independently recount the same manifest, real clean/refusal CLI outputs and added gate data. Record each lifecycle total, including any extra help/ADR/extension read; omissions fail the manifest comparison. Run existing lint, delivery, role-trigger and POC README tests, and the repository's required checks for touched files. Budget +42 is a proposal ceiling for this exact wording, not granted authority; if final prose adds more or another batch changes the base, return the difference to FO/Captain. Existing CI trigger stays unchanged; CI cost was not measured and no saving is claimed. Current evidence: exact proposed clean-path counts measured; final implementation and refusal-output totals unverified.
+**AC-4** Only the existing delivery entry opts in, and the check precedes preparation using the same summary.
+Verified by: render the normal workflow and generated POC README, run their documented command in a fresh shell with disposable inputs, and record whether the subsequent prepare step is called and the bytes it receives. Exit 1/2 must stop; exit 0 passes the same summary. Cover unreadable/empty summary, unreadable configuration and no summary. Remove the command, omit its summary option, ignore its exit or swap the forwarded summary: the recipe assertion fails. Initial/ideation routes remain unchanged. Native real-use observation remains separate and must not be inferred from this harness. Current: seams traced; candidate recipe/native run not performed.
 
-**AC-6** Independent validation preserves the declared authority and ownership boundary.
-Verified by: diff exact candidate/base; only the files in Batch overlap change, ADR number reserved by FO at implementation dispatch, no Spacedock files or adopter copies touched, no new executable/hook, no role threshold/model/round-drift policy changed. Validate the new ADR and amended invocation docs; preserve reports and historical gate state. Remove the question-check call from the workflow recipe as a mutation: the wiring contract test must fail. A fresh live gate after adoption is the native evidence that FO follows the preflight; fixture checks alone must not be reported as that observation. Current evidence: ideation changed only this task body and disposable `/tmp` probes; adoption and native execution not run.
+**AC-5** Word counts and final changed files match the approved narrowed design.
+Verified by: rerun the preserved per-moment probe plus independent recount at the exact implementation base/candidate, and count real success and refusal diagnostics. Whole-workflow delta is +27 only for the exact replacement above; any different final delta returns to FO/Captain under ADR 0020. Run lint-skills, delivery, POC README and applicable dispatch/ADR checks for the final touched files. Removing an added read/output from the manifest or inventing a Captain budget quote fails validation. Current: 14 totals independently agree; final runtime/CI cost not measured; CI triggers unchanged.
+
+**AC-6** The task preserves role policy, history, authority and scope.
+Verified by: independently compare candidate/base: no `Role calls:` requirement, no new role call/trigger or review-drift merge hold, no new executable/hook, no Spacedock/adopter edit, no historical gate/report rewrite. Only Batch overlap's files change; FO supplies the ADR number at implementation dispatch and its linter validates the draft's eventual file. Mutating the legacy call to invoke a role counter or changing the stage route must fail the regression checks. A native gate after separate authorized adoption is needed before claiming workflow compliance. Current: design scope only; the previous report is retained byte-for-byte; implementation/native evidence pending.
 
 ### Batch overlap
 
-Proposed files: `kc-dev-flow-2/scripts/delivery_gate.py` (one existing question preflight, parser/error integration and help), `kc-dev-flow-2/scripts/test_delivery_gate.py` (behavioral replay and call-site tests), `kc-dev-flow-2/references/sd/workflow.md` (replace the existing invocation paragraph), `kc-dev-flow-2/scripts/lint-skills.py` (only the approved +42 budget step), `kc-dev-flow-2/scripts/test_poc_readme.py` (POC route preserves the preflight), `kc-dev-flow-2/VALIDATION.md` (evidence/limits), and `docs/adr/<reserved-at-dispatch>-gate-preparation-checks-declared-reviews-in-their-required-homes.md` if D1 is accepted. `role_triggers.py` is imported unchanged, no new script; no CI file or adopter README edits. The shared ADR directory is a number-allocation intersection even without a source conflict.
+Proposed files: `kc-dev-flow-2/scripts/delivery_gate.py` (optional input and existing question branch), `kc-dev-flow-2/scripts/test_delivery_gate.py` (replays, compatibility, malformed/configuration cases), `kc-dev-flow-2/references/sd/workflow.md` (one delivery invocation replacement), `kc-dev-flow-2/scripts/lint-skills.py` (only the approved exact budget step), `kc-dev-flow-2/scripts/test_poc_readme.py` (derived invocation), `kc-dev-flow-2/VALIDATION.md` (evidence/limits), and `docs/adr/<reserved-at-dispatch>-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md` (accepted boundary). The unmodified fence helper is reused; `role_triggers.py` is not changed. No new script, CI file, adopter README or shared ADR list file is proposed; ADR numbering is still a shared namespace.
 
-| Task read as it stands | Shared file/check or none | Implementation consequence |
-| --- | --- | --- |
-| seed-check-requires-alignment-result — missing alignment result | No direct file; seed gate and imports are adjacent | Keep initial seed behavior; run its suite after integration |
-| captain-amendment-form-checked — amendment shape/history | `VALIDATION.md`; delivery consumes amended task records but does not own its parser | Merge the shared evidence document sequentially |
-| adr-reserved-when-design-names-one — reserve before dispatch | Shared `docs/adr/` number allocation; its present Scope names dispatch_records/number_guards | Let its final reservation contract govern this task's new ADR |
-| validation-rerun-waits-for-captain-ruling — prevent unruled reruns | Shared `docs/adr/` allocation; its current design explicitly leaves delivery_gate alone | Preserve separate pre-dispatch and pre-gate checks |
-| gate-requires-recorded-reviews — this task | Owns only the proposed files listed above | No sibling writes during ideation |
-| adoption-asks-which-extensions — event-time extension rules | No direct file; shared interpretation of the adopted README | Do not borrow today's extension list for historical truth claims |
-| adr-required-statement — earlier ADR ledger proposal | Historical plan overlapped workflow/test_poc_readme and ADR allocation, but Captain closed it | Do not depend on its stale validation status or revive its ledger |
-| adr-silent-undo-probe — ADR reversal experiment | No package edits in its current scenario scope | No ordering dependency |
-| comment-check-reaches-delivery-gate — comment evidence at delivery | `delivery_gate.py`, `test_delivery_gate.py`, existing delivery entry | Integrate serially and rerun both predicates; do not silently absorb its scope |
-| journey-canvas-hosted-poc — hosted canvas | No owned checker file | No ordering dependency |
-| journey-server-host-pilot — private journey server | Shared ADR allocation only; checker consumer | No server or hosted-resource changes here |
-| ops-inbox-r1-setup-and-isolation — isolated operations inbox | Shared ADR allocation only; kc-ops-inbox/CI otherwise separate | FO reserves noncolliding numbers; no other dependency |
-| pr-review-lite-value-pilot — bounded review-value comparison | No shared checker; kc-pr-flow and its journey artifacts | No ordering dependency |
+| Task and meaning | Shared file/check or none; implementation consequence |
+| --- | --- |
+| seed-check-requires-alignment-result — seed alignment presence | No direct file; adjacent pre-gate entry, keep seed behavior and rerun its regression suite. |
+| captain-amendment-form-checked — amendment form/history | `VALIDATION.md` only; serialize evidence edits, no gate-history dependency. |
+| adr-reserved-when-design-names-one — reservation before dispatch | `VALIDATION.md` and consumption of its proposed reservation rule; FO reserves this design's ADR, no direct checker overlap. |
+| validation-rerun-waits-for-captain-ruling — unresolved rerun hold | Shared ADR number namespace; its latest design leaves delivery_gate/workflow unchanged. |
+| gate-requires-recorded-reviews — this summary-location repair | Owns only the seven proposed files; this stage writes only its entity body/report. |
+| adoption-asks-which-extensions — event-time extension context | No direct file; preserve adopted README reviewer configuration, no historical-extension inference. |
+| adr-required-statement — older product-ruling ledger | Explicitly closed 2026-10-20 despite stale validation status; old workflow/POC/ADR overlap is not live ownership. Do not revive it. |
+| adr-silent-undo-probe — ADR reversal experiment | Moved to dev2-poc; this copy is not dispatched. No runtime overlap. |
+| comment-check-reaches-delivery-gate — comment evidence at gate | Explicitly closed 2026-10-20; historical delivery_gate/test overlap is not an active dependency. This corrects the first report's ordering recommendation. |
+| journey-canvas-hosted-poc — shared hosted canvas | kc-journey-map hosting scope; no shared runtime file/check. |
+| journey-server-host-pilot — private hosted journey server | Folder task `journey-server-host-pilot/index.md`; no shared runtime file, coordinate any still-live ADR reservation. |
+| ops-inbox-r1-setup-and-isolation — isolated operations intake | kc-ops-inbox and its CI are separate; shared ADR reservation namespace only. |
+| pr-review-lite-value-pilot — bounded review comparison | kc-pr-flow/runtime and task-owned evidence; no shared checker file. |
 
-Recommended order: settle D1; coordinate `comment-check-reaches-delivery-gate` before editing the shared checker, whichever FO lands first becoming the other's tested base; land the seed/amendment/reservation work independently but serialize `VALIDATION.md` and ADR numbering. Re-read all completed sibling designs before dispatch because they were still changing during this read. Do not wait for unrelated journey/ops/review work. No peer was messaged and no other task was changed.
+Read-only local records were checked during concurrent batch revision (state tip observed `4e00304d3f901d13dc63c2c35d2e6ee427219d61`); they do not assert hosted PR liveness. Recommended order: FO settles the measured budget at the batch gate, reserves noncolliding ADR numbers, then implements this independent delivery-check slice; serialize `VALIDATION.md` with the amendment/reservation tasks and remeasure after any workflow-budget change. Do not wait on closed comment/ledger proposals or unrelated journey/ops/review tasks. Re-read sibling final designs at dispatch; no peer was messaged or other entity edited.
 
 ### Reproduction appendix
 
-The following disposable probe is the exact executable experiment used above. It requires Python 3, the named installed package and local committed histories; those machine-specific inputs are explicit, not a clean-checkout claim. For another machine, substitute the package/repository/state roots only and keep the pinned snapshots. It does not call Spacedock prepare or GitHub. Its full output preserves per-task corpus rows and separates synthetic corrections from facts.
+The following are disposable design experiments, not implementation. The package and local Git roots are declared machine-specific inputs; another machine substitutes roots but retains the exact source/task/state revisions. The summary fixture uses a reasoned configuration-error outcome and zero only as synthetic controls. It does not repair history, create a gate or contact a provider. The measurement uses released watcher fixtures, not a model run. Reproducing all candidate acceptance evidence still belongs to implementation/validation.
 
-#### Predicate replay
+#### Isolated summary replay
 
 ```python
 from pathlib import Path
-import sys,re,json,subprocess,hashlib
-PKG=Path('/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0')
-sys.path.insert(0,str(PKG/'scripts'))
+import sys,re,json,subprocess,tempfile,contextlib,io
 sys.dont_write_bytecode=True
-import role_triggers as roles
-import delivery_gate as gate
-ROOT=Path('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo')
-STATE=ROOT/'.context/dev2-adoption/worktree/docs/dev2/.spacedock-state'
+P=Path('/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.0')
+S=Path('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state')
+sys.path.insert(0,str(P/'scripts'))
+import delivery_gate as g
+from role_triggers import outside_fences
+
 def git(root,*args):return subprocess.check_output(['git','-C',str(root),*args],text=True)
-def counts(text):
-    kept=list(roles.alignment(list(roles.outside_fences(text))))
-    return {a:len(roles.records(kept,a)[0]) for a in ('chief-engineer','engineering-reviewer')}
-def manifest(c):return 'Role calls: '+ '; '.join(f'{a}={n}' for a,n in c.items())+'.'
-def proposed(text,summary,delivery=False,second='copilot'):
-    errors=[]
-    clean='\n'.join(roles.outside_fences(summary))
-    decl=re.findall(r'^Role calls: chief-engineer=(\d+); engineering-reviewer=(\d+)\.[ \t]*$',clean,re.M)
-    if len(decl)!=1: errors.append('summary needs one Role calls declaration')
-    else:
-        for (a,n),required in zip(counts(text).items(),map(int,decl[0])):
-            if n!=required:errors.append(f'{a}: summary records {required} calls, FO alignment records {n}')
-    if delivery:
-        rows=re.findall(r'^External rounds:[ \t]*(.+)$',clean,re.M)
-        if len(rows)!=1 or not re.match(r'\d+(?:[ \t.;]|$)',rows[0]):errors.append('summary needs one External rounds count')
-        if second:
-            rows=re.findall(r'^Second reviewer:[ \t]*(.+)$',clean,re.M|re.I)
-            if len(rows)!=1:errors.append('summary needs one Second reviewer outcome')
-            elif rows[0].lower().startswith(second+' because'):
-                if gate.unstated_second_reviewers(clean): errors.append('summary needs second reviewer result')
-            elif not rows[0].lower().startswith('not triggered'):errors.append('summary has wrong Second reviewer')
-    return errors
-results={'scope':'disposable predicate experiment; not candidate CLI or native FO proof','source':'5725d495bb83a17ec13616bb5421bf5ffdc71f70','state':'e751ef6409b6a7e7bf87f4d3661b1f0cb51a531d','cases':[]}
-def case(label,errors,want):
-    assert bool(errors)==want,(label,errors,want)
-    results['cases'].append({'case':label,'exit':int(bool(errors)),'errors':errors})
-for slug,rev,stage,attempt in [('batch-reaches-each-gate-together','b0055d05af5d2e75828f408e846e6f18c789f112','ideation',1),('fo-interviews-extension','9948c3eb9aa0cb61959080da6f2776de9881fab4','validation',2)]:
-    t=git(STATE,'show',f'{rev}:{slug}.md')
-    j=json.loads((STATE/'_archive'/slug/'review'/stage/f'briefing-{attempt}'/'index.json').read_text())
-    summary=j['artifacts'][0]['summary']; delivery=stage=='validation'
-    case(slug+' original summary',proposed(t,summary,delivery),True)
-    c=counts(t)
-    if not delivery:
-        c['chief-engineer']=1 # The first of the two documented calls preceded this ideation gate.
-        declared=summary+'\n'+manifest(c)
-        case(slug+' one historically due call declared',proposed(t,declared),True)
-        fixed=t.replace('## FO alignment\n','## FO alignment\nReviewer: kc-dev-flow-2:chief-engineer opus 2026-10-28 — batch ideation review\n',1)
-        case(slug+' correct-place record',proposed(fixed,declared),False)
-        case(slug+' wrong-place record',proposed(t+'\n## Side notes\nReviewer: kc-dev-flow-2:chief-engineer opus 2026-10-28 — batch ideation review\n',declared),True)
-    else:
-        declared=summary+'\n'+manifest(c)
-        case(slug+' calls declared but summary still lacks reviews',proposed(t,declared,True),True)
-        fixed=declared+'\nExternal rounds: 0; no external verdict read before this gate.\nSecond reviewer: copilot because review rules; copilot not run: no result recorded before this gate.'
-        # Synthetic correction, not a historical assertion that zero was true.
-        case(slug+' synthetic complete summary',proposed(t,fixed,True),False)
-        case(slug+' fields only in question',proposed(t,declared,True),True)
-        case(slug+' fenced fields',proposed(t,declared+'\n```\n'+fixed+'\n```',True),True)
-# Delivery #744: both batch calls occurred by this gate; one canonical engineering call already exists.
-slug='batch-reaches-each-gate-together'; rev='3dc8105cc2e03853c7a4da498389b56a2cb9f6e7'
-t=git(STATE,'show',f'{rev}:{slug}.md'); c=counts(t); c['chief-engineer']=2
-case('#744 delivery two missing calls',proposed(t,manifest(c)),True)
-fixed=t.replace('## FO alignment\n','## FO alignment\n'+''.join(f'Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-28 — batch {stage} review\n' for stage in ['ideation','delivery']),1)
-case('#744 delivery two canonical records',proposed(fixed,manifest(c)),False)
-roots=[STATE,Path('/Users/kent/conductor/workspaces/subspace-web/dev2-fo/docs/dev2/.spacedock-state'),Path('/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state')]
-results['corpus']=[]
-for root in roots:
-    rev={str(STATE):'e751ef6409b6a7e7bf87f4d3661b1f0cb51a531d',str(roots[1]):'2c3a6dcbfb3a8e178d65151237a0c234351612c0',str(roots[2]):'2b132074819d4eb6890f3bf731be321032a00442'}[str(root)]; passed=[]
-    for n in git(root,'ls-tree','-r','--name-only',rev).splitlines():
-        if not n.endswith('.md') or n.count('/')>2 or n.startswith('.'):continue
-        t=git(root,'show',f'{rev}:{n}')
-        if not re.match(r'---\n.*?\n(?:profile|status):',t,re.S):continue
-        c=counts(t)
-        if not sum(c.values()):continue
-        declared=manifest(c); assert not proposed(t,declared)
-        # Freeze declaration, then move all canonical calls outside their section.
-        bad=t.replace('## FO alignment','## Misplaced alignment')
-        assert proposed(bad,declared)
-        passed.append({'task':n,'counts':c})
-    results['corpus'].append({'root':str(root),'rev':rev,'passed':len(passed),'record_removal_fails':len(passed),'tasks':passed})
-print(json.dumps(results,indent=2))
+rev='9948c3eb9aa0cb61959080da6f2776de9881fab4'
+t=git(S,'show',rev+':fo-interviews-extension.md')
+j=json.loads((S/'_archive/fo-interviews-extension/review/validation/briefing-2/index.json').read_text())
+s=j['artifacts'][0]['summary'];q=j['question']
+# Isolated design predicate only, not a candidate CLI or Spacedock hook.
+def summary_errors(task,task_text,summary,second='copilot',extensions={'codex','copilot'},round_check=True):
+ clean='\n'.join(outside_fences(summary))
+ rows=re.findall(r'^External rounds:[ \t]*(.*)$',clean,re.M)
+ errors=[]
+ if round_check and (len(rows)!=1 or not re.fullmatch(r'[0-9]+(?:[.;][ \t]+\S.*|[.]?)?[ \t]*',rows[0])):
+  errors.append('summary needs one External rounds: N line')
+ p,_=g.reviewer_problems(task,task_text,clean,second,extensions);errors+=p
+ errors += [f'summary missing {name} outcome' for name in g.unstated_second_reviewers(clean)]
+ return errors
+results=[]
+def case(name,errors,want):
+ assert bool(errors)==want,(name,errors,want)
+ results.append({'case':name,'exit':int(bool(errors)),'errors':errors})
+with tempfile.TemporaryDirectory() as d:
+ root=Path(d);task=root/'task.md';task.write_text(t)
+ (root/'README.md').write_text('---\ntrunk: main\nsecond-reviewer: copilot\nextensions: [codex, copilot]\n---\n')
+ rounds='External rounds: 0\n'
+ outcome='Second reviewer: copilot because review rules.\nCopilot not run: configuration error: synthetic fixture has no provider.\n'
+ good=s+'\n'+rounds+outcome
+ case('historical summary',summary_errors(task,t,s),True)
+ case('synthetic complete summary',summary_errors(task,t,good),False)
+ case('fields only in question or later ask',summary_errors(task,t,s),True)
+ case('fenced fields',summary_errors(task,t,s+'\n```text\n'+rounds+outcome+'```'),True)
+ case('duplicate rounds',summary_errors(task,t,good+rounds),True)
+ for value in ['-1','1.5','one','']:
+  case('malformed rounds '+repr(value),summary_errors(task,t,good.replace(rounds,'External rounds: '+value+'\n')),True)
+ case('no configured reviewer',summary_errors(task,t,s+'\n'+rounds,'',set()),False)
+ case('pilot not triggered',summary_errors(task,t,s+'\n'+rounds+'Second reviewer: not triggered\n'),False)
+ case('prod not triggered',summary_errors(task,t.replace('profile: pilot','profile: prod'),s+'\n'+rounds+'Second reviewer: not triggered\n'),True)
+ case('outcome only in question',summary_errors(task,t,s+'\n'+rounds+'Second reviewer: copilot because review rules\n'),True)
+ case('answer is not review',summary_errors(task,t,s+'\n'+rounds+'Second reviewer: copilot because review rules\nCopilot answer=review:17\n'),True)
+ case('review token',summary_errors(task,t,s+'\n'+rounds+'Second reviewer: copilot because review rules\nCopilot review:17\n'),False)
+ # Independently remove either new boundary: each broken variant must falsely accept.
+ no_round=good.replace(rounds,'')
+ assert summary_errors(task,t,no_round) and not summary_errors(task,t,no_round,round_check=False)
+ assert summary_errors(task,t,s) and not summary_errors(task,t,s+'\n'+rounds+outcome)
+ # Full released CLI isolates location gap, with diagnostic additions explicitly synthetic.
+ owed=len(g.FINDING.findall((g.VALIDATION_SECTION.findall(t) or [''])[-1]))
+ additions='\nSufficiency: synthetic preflight control.\nNecessity: isolate summary location.\nDeclined, with reasons: '+ '; '.join(f'Polish, fixture {i} (diagnostic control only)' for i in range(owed))+'\n\n'+rounds+outcome
+ for label,text in [('historical combined',q+'\n'+s),('question-only diagnostic additions',q+additions+'\n'+s)]:
+  f=root/'text.txt';f.write_text(text);out=io.StringIO()
+  with contextlib.redirect_stdout(out): code=g.main(['question',str(task),'--text-file',str(f),'--workflow-dir',d])
+  results.append({'case':label,'exit':code,'output':out.getvalue()})
+  assert code==(1 if label=='historical combined' else 0),(label,code,out.getvalue())
+print(json.dumps({'scope':'isolated summary predicate plus released CLI, no candidate implementation','cases':results,'mutations':'dropping round predicate or accepting fields outside summary falsely accepts'},indent=2))
 ```
 
 #### Per-moment reading probe
@@ -319,7 +288,7 @@ read=lambda x:(P/x).read_text(); words=lambda x:len(x.split())
 def section(t,h):
  a=t.index('\n'+h+'\n')+1;b=t.find('\n## ',a+len(h));return t[a:b if b>=0 else None]
 old='Before the validation `gate prepare`, FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question-and-summary file>`.'
-new='Before every non-initial `gate prepare`, FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question file> --summary-file <summary file>` and uses that summary unchanged. It declares cumulative `Role calls: chief-engineer=N; engineering-reviewer=N.`; a delivery summary also declares `External rounds: N` and the configured second-reviewer outcome. Nonzero holds preparation. Missing calls belong under `## FO alignment`; unreported activity remains unverifiable.'
+new='Before the validation `gate prepare`, FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question file> --summary-file <summary file>`; nonzero holds preparation. The summary declares `External rounds: N` and the configured second-reviewer outcome. Use that summary unchanged; callers omitting `--summary-file` retain combined-text checks.'
 base=subprocess.check_output(['git','-C',str(R),'show','5725d495bb83a17ec13616bb5421bf5ffdc71f70:kc-dev-flow-2/references/sd/workflow.md'],text=True)
 assert base==read('references/sd/workflow.md'); assert base.count(old)==1
 candidate=base.replace(old,new)
@@ -343,59 +312,28 @@ def corpus(w):
 b=corpus(base);c=corpus(candidate);result={'old':old,'new':new,'workflow':{'base':words(base),'proposal':words(candidate),'delta':words(candidate)-words(base)},'moments':{}}
 for m in b:
  out=outputs.get(m,'gate text complete' if m=='delivery gate' else '')
- newout=outputs.get(m,'gate text complete')
- # New mandatory attestation is also read as gate data: 4 words; include at gate moments.
- extra='Role calls: chief-engineer=0; engineering-reviewer=0.' if m in ['ideation gate','delivery gate'] else ''
- if m=='delivery gate':extra+=' External rounds: 0.'
+ newout=out
+ extra='External rounds: 0' if m=='delivery gate' else ''
  result['moments'][m]={'base':words(b[m])+words(out),'proposal':words(c[m])+words(newout)+words(extra),'output_base':out,'output_proposal':newout,'new_gate_data':extra}
 print(json.dumps(result,indent=2))
 ```
 
-#### Frozen corpus results
+#### Released CLI baseline and compatibility evidence
 
-State e751ef6409b6a7e7bf87f4d3661b1f0cb51a531d: 31 originals pass, 31 record-removal controls refuse.
+Released `test_delivery_gate.py`: 113 tests passed in 79.606 seconds. These exercise ordinary reviewer/configuration, authority, role and merge behaviors; no candidate-specific test is claimed. Removing the existing reviewer checks would break their missing/invalid declaration cases. The new option still needs the candidate acceptance tests above.
 
-- `_archive/agent-reads-governing-adr.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/batch-reaches-each-gate-together.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/captain-question-load.md`: chief-engineer 1, engineering-reviewer 0.
-- `_archive/codex-reader-reads-receipt-marker.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/copilot-not-run-line-carries-quote.md`: chief-engineer 1, engineering-reviewer 0.
-- `_archive/delivery-gate-settles-skipped-checks.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/design-director-runs-ui-design-review.md`: chief-engineer 1, engineering-reviewer 2.
-- `_archive/fo-interviews-extension.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/fo-write-rules-checked.md`: chief-engineer 1, engineering-reviewer 1.
-- `_archive/fo-written-lines-checked-before-dispatch.md`: chief-engineer 1, engineering-reviewer 0.
-- `_archive/idle-hook-names-merged-tasks-without-learn.md`: chief-engineer 1, engineering-reviewer 1.
-- `_archive/journey-probe-finds-nested-maps.md`: chief-engineer 1, engineering-reviewer 0.
-- `_archive/kc-adr-format-source.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/kc-adr-tools-with-dev2-copy.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/kc-decision-log-cli.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/merge-ask-holds-missing-clauses.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/merge-gatekeeper.md`: chief-engineer 1, engineering-reviewer 0.
-- `_archive/new-work-starts-from-a-story-map.md`: chief-engineer 1, engineering-reviewer 1.
-- `_archive/paseo-codex-dispatch-practice.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/peers-rules-name-each-host-binding.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/read-adr-honors-adr-folder.md`: chief-engineer 1, engineering-reviewer 1.
-- `_archive/read-adr-reporting-rule-followup.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/release-acceptance/index.md`: chief-engineer 1, engineering-reviewer 1.
-- `_archive/release-review-staleness-held-at-dispatch.md`: chief-engineer 1, engineering-reviewer 0.
-- `_archive/release-walk-picky-reviewers-and-director.md`: chief-engineer 1, engineering-reviewer 1.
-- `_archive/reused-worker-dispatch-leaves-a-record.md`: chief-engineer 0, engineering-reviewer 1.
-- `_archive/seed-check-requires-schema-fields.md`: chief-engineer 1, engineering-reviewer 1.
-- `_archive/ui-design-review-in-ideation.md`: chief-engineer 1, engineering-reviewer 0.
-- `archive-waits-for-observer-report.md`: chief-engineer 1, engineering-reviewer 0.
-- `dispatch-carries-reserved-adr-number.md`: chief-engineer 1, engineering-reviewer 0.
-- `kc-decision-log-handoff-trial.md`: chief-engineer 0, engineering-reviewer 1.
+To reproduce the Web baseline: at state `2c3a6dcbfb3a8e178d65151237a0c234351612c0`, enumerate `*/review/validation/briefing-*/index.json` with git ls-tree; for each of 60 entries read question and artifact summaries, resolve each `git-root://state/<commit>/<path>` artifact through git show, write task/text into a disposable directory, then invoke released `question --text-file` with `--workflow-dir /Users/kent/conductor/workspaces/subspace-web/dev2-fo/docs/dev2`. Do not add --summary-file. Store per-briefing exit/stdout, retaining existing failures; add only the two stated synthetic clauses for the positive control. Machine-local output is `/tmp/gate-reviews-revision/web-baseline.json`; this recipe and pins, not that temporary file, are the durable inputs.
 
-State 2c3a6dcbfb3a8e178d65151237a0c234351612c0: 2 originals pass, 2 record-removal controls refuse.
+#### Governing source digests
 
-- `_archive/others-highlights-in-author-colour.md`: chief-engineer 0, engineering-reviewer 2.
-- `_archive/review-page-polish-on-the-real-page.md`: chief-engineer 0, engineering-reviewer 1.
+All below were read at source `5725d495bb83a17ec13616bb5421bf5ffdc71f70`, with Accepted status at that source; no branch pointer is offered as an exact citation.
 
-State 2b132074819d4eb6890f3bf731be321032a00442: 0 originals pass, 0 record-removal controls refuse.
-
-
-Prototype outputs: 11/11 expected case outcomes; the 33 positive records and 33 location-removal controls above. No candidate CLI, Spacedock gate mutation, hosted review or native FO action is established by this appendix. Pilot boundary remains the current task design, pending D1 and the normal gate.
+- `docs/adr/0004-review-rounds-stop-by-rule-and-comments-are-counted.md` — sha256:`bcd880d81657e19e130833f6f41362b4107e1d767c335b7438a3c3ea1754f805`.
+- `docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md` — sha256:`a49b4da2665730f648334a0a8465bde6df3c779e9b0c42b3e61510cc96185afb`.
+- `docs/adr/0023-a-delivery-gate-question-may-carry-the-merge-of-the-validated-head.md` — sha256:`d2a2d715e2fe1be91050210dc4751c0ab83175caf3376f7c3fe5b99830e20bc2`.
+- `docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md` — sha256:`6c32bca5b080bdd916f1963a7b5036b24b17fefe5ccb30b4a78f6a4527c60820`.
+- `docs/adr/0027-fo-write-rules-are-checked-by-the-script-fo-runs-at-the-write.md` — sha256:`3c4a5010f86bf4dd03725c458700bfe571694dcafff45233fb38823b62ce412c`.
+- `docs/adr/0043-a-named-batch-waits-for-its-next-gate-before-one-sitting.md` — sha256:`6b43a90efa50404769627db45c012ce71b6ac5a97ef83c0320d047e026ed78ec`.
 
 ## Stage Report: ideation
 
@@ -425,3 +363,32 @@ Prototype outputs: 11/11 expected case outcomes; the 33 positive records and 33 
 ### Summary
 
 Designed the bounded existing-check repair and preserved reproducible historical, positive-corpus and reading experiments in this task. D1 asks for the only new contract needed to expose optional-call omissions: declared cumulative calls and the exact gate summary, costing +42 workflow words; implementation, gate approval and native operation remain pending. GitHub API access failed, so the report claims pinned local evidence only; no product file, branch, PR or peer session was changed.
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: Revise the design under the Captain's ideation-gate revise of 2026-10-29 (「照建議」; the asks are in the gate question, decision C): build only the #745 half (a delivery gate's bound summary carries its external rounds and second-reviewer outcome, reusing existing checks, without making --summary-file required for existing callers such as Web); drop the Role calls: attestation for #744; re-measure the workflow word raise; batch ruling A applies; update criteria and the stop condition to match
+  Current PRFAQ/Mermaid, six replacement criteria and stop condition follow recorded decision C/batch ruling A; only the #745 summary location is checked, optional --summary-file preserves legacy calls, and the withdrawn role-attestation contract is absent from the active design.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (seed-check-requires-alignment-result, captain-amendment-form-checked, adr-reserved-when-design-names-one, validation-rerun-waits-for-captain-ruling, gate-requires-recorded-reviews) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  Batch overlap names seven proposed files and every listed task; shared evidence/ADR allocation is serialized, and the closed comment/ledger tasks are no longer treated as live dependencies. Other entities were read only.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  Exact source 5725d495bb83a17ec13616bb5421bf5ffdc71f70: workflow 5754 to 5781 (+27); startup 6959 to 6986, idle 862 to 889 / 833 to 860, archive 333 unchanged, merge 2408 to 2435, ideation 3303 to 3330, delivery 3530 to 3560; independent recount agrees.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-1 through AC-6 each name candidate evidence and a falsifier; only the measured +27 budget raise remains for the Captain. Existing direction/compatibility rulings are settled; longer recurring reading and old-adopter location gaps are disclosed.
+- DONE: AC-1 current-stage evidence
+  Released CLI accepts diagnostic review facts only in the question while the isolated summary predicate refuses the unchanged historical summary; removing the location boundary breaks the negative control. Candidate CLI/prepare integration is not built.
+- DONE: AC-2 current-stage evidence
+  15 isolated summary cases plus two released-CLI outcomes match expectations; count-removal and cross-location sensitivity controls expose false acceptance. Full candidate configuration/I/O/refusal matrix remains unverified.
+- DONE: AC-3 current-stage evidence
+  All 60 pinned Web historical inputs already exit 1 on the released legacy call; one stated synthetic clause-only correction passes without a summary argument. Candidate comparison is pending; imposing the new option on this path must fail it. Relay state is locally absent.
+- DONE: AC-4 current-stage evidence
+  Spacedock and package preflight seams traced, including POC route and explicit workflow path; recipe and native execution are future checks. Ignoring nonzero or forwarding different summary bytes must fail the recipe assertion.
+- DONE: AC-5 current-stage evidence
+  Fourteen before/after lifecycle totals independently agree; released delivery suite passes 113 tests, whose malformed/missing-reviewer controls would fail if existing checks were removed. Final candidate diagnostics/CI cost/native reading are unmeasured.
+- DONE: AC-6 current-stage evidence
+  Only this entity body is edited; original frontmatter and prior report preserved byte-for-byte, no role policy/new script/peer/adopter changes. Candidate file/ADR/native-adoption checks remain future evidence; any role attestation violates the accepted scope.
+- DONE: Required surface check
+  Installed 0.33.0 design_surfaces.py check exits 0: gate-requires-recorded-reviews.md: design surfaces presentable; Surfaces none, prose/diagram actors and stops audited, native diagram rendering not claimed.
+
+### Summary
+
+Revised the design to the delivery-summary half only, preserving optional-input compatibility and explicitly leaving unobservable role-call omissions with the observer. Reproducible summary/location controls and legacy baselines support the direction; implementation and native operation remain unverified, and the exact +27 workflow-word raise returns to the Captain through FO. GitHub access succeeded this revision; the earlier API-failure statement is historical, and the earlier report is retained unchanged.
