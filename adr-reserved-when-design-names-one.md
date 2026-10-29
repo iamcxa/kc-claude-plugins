@@ -361,7 +361,7 @@ Validator ran exactly the concatenated commands above with `bash --noprofile --n
 - DONE: Document dispositions and base-sensitive limit
   doc_impact rerun matches implementation: VALIDATION.md updated; ADR 0045 unaffected (full ruling/history controls pass); learning.md unaffected (consumer, corpus and lifecycle practices applied). Default number_guards against README origin/main exits 1 for sibling ADR 0045; explicit --base b8a66e826c7524fa944a7165296acba94b3f5e13 exits 0, so the stacked diff is clean but default trunk-based checking is not yet green.
 - DONE: Evidence and immutable candidate
-  Rerun recipes/results live at /tmp/validation-adr-751-evidence/{raw,corpus,reading,native}.{py,json}; raw source bytes independently compared with state Git history. Detached candidate remained clean at the exact head; local acceptance clone removed. No Git config write, PR mutation, push or candidate change; state report only.
+  Rerun recipes/results live at /tmp/validation-adr-751-evidence/{raw,corpus,reading,native}.{py,json}; raw source bytes independently compared with state Git history. Detached candidate remained clean at the exact head and was removed, as was the acceptance clone. No Git config write, PR mutation, product push or candidate change; the required spacedock state commit synchronized only this report to spacedock-state/dev2.
 
 ### Findings
 
