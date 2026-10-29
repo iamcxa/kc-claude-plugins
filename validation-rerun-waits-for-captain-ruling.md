@@ -15,6 +15,17 @@ gates:
                 id: briefing:validation-rerun-waits-for-captain-ruling:backlog:attempt-1:revision-1
                 digest: sha256:d36a5fb64dd9282e0c42919ae7a096cf8361cf8472b62eb565afb3a79b070341
                 room-ref: ./validation-rerun-waits-for-captain-ruling/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:validation-rerun-waits-for-captain-ruling:backlog:1
+                briefing: briefing:validation-rerun-waits-for-captain-ruling:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-29T00:39:50.417777Z"
+                decision: approve
+                reason: The Captain 「同意這些內容」 (chat, 2026-10-29), answering FO's joint batch-10 backlog sitting of six gates whose ask was 「決定：六張全照建議（五張進設計，被取代條件那張先留在待辦）？要改哪張直接說。」; accepts FO's recommendation to enter ideation on the pilot profile.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
