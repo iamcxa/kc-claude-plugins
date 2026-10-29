@@ -41,10 +41,13 @@ one `class:` line (never, docs-only, script-with-test or other, by allowlist), t
 and one last `next:` line, the `ASK` line: merge when the approved question named the merge, else ask. The `class:` line ends
 `(verdict ask)` when the saved verdict is `ask`.
 
-Usage: delivery_gate.py question <task file or task folder> --text-file <file> [--workflow-dir <dir>]
+Usage: delivery_gate.py question <task file or task folder> --text-file <file> [--summary-file <file>] [--workflow-dir <dir>]
 Runs the text checks of `check` on the validation gate question before `gate prepare`, and also refuses text that names the merge with
 `--match-head-commit` and has no sentence of the form "unless he says he merges or holds" (`unless` or `if`, then `he`, `you`, `the Captain` or `Captain`, then `say`, then `merge` or `hold`). Exit 0
 prints `gate text complete`; exit 1 prints each problem; exit 2 when an input cannot be read. `check` does not judge that clause.
+With --summary-file, ordinary text checks use question plus summary; reviewer checks use only
+the summary outside fences. It requires one top-level External rounds: N (nonnegative integer),
+optionally followed by a full stop or a semicolon/full stop and detail. Without it, legacy checks apply.
 """
 import argparse
 import datetime
@@ -57,6 +60,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from design_surfaces import FM_PROFILE, task_folder
 from number_guards import task_facts
+from role_triggers import outside_fences
 
 ROLE_TRIGGERS = Path(__file__).resolve().parent / "role_triggers.py"
 CANDIDATE = re.compile(r"^Candidate:[ \t]+([0-9a-f]{40})[ \t]*$", re.M)
@@ -452,9 +456,9 @@ def write_record(task, rec):
     return path
 
 
-def text_problems(task_text, gate_text, at_gate=False):
+def text_problems(task_text, gate_text, at_gate=False, reviewer_text=None):
     problems, nexts = [], []
-    for reviewer in unstated_second_reviewers(gate_text):
+    for reviewer in unstated_second_reviewers(gate_text if reviewer_text is None else reviewer_text):
         nexts.append("next: hold the ask until each second reviewer has an outcome.")
         problems.append(f"second reviewer {reviewer} has no stated outcome: "
                         f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
@@ -634,6 +638,13 @@ def check(args):
     return 0
 
 
+def summary_round_problems(text):
+    rows = re.findall(r"^External rounds:[ \t]*(.*)$", text, re.M)
+    if len(rows) != 1 or not re.fullmatch(r"[0-9]+(?:[.;][ \t]+\S.*|[.]?)?[ \t]*", rows[0]):
+        return ["summary needs one top-level External rounds: N line (nonnegative integer)"]
+    return []
+
+
 def question(args):
     task = Path(args.task)
     if task.is_dir():
@@ -644,11 +655,23 @@ def question(args):
         if not workflow_dir:
             raise ValueError("cannot find the workflow README with a trunk: next to the task or in --workflow-dir")
         second, extensions = reviewer_config(scalars, lists)
-        found, wanted = reviewer_problems(task, task_text, gate_text, second, extensions)
+        # see docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md
+        reviewer_text = None
+        if args.summary_file is not None:
+            summary = Path(args.summary_file).read_text()
+            reviewer_text = "\n".join(outside_fences(summary))
+            gate_text += "\n" + summary
+        found, wanted = reviewer_problems(task, task_text,
+                                         gate_text if reviewer_text is None else reviewer_text, second, extensions)
+        if reviewer_text is not None:
+            missing = summary_round_problems(reviewer_text)
+            found += missing
+            if missing:
+                wanted.append("next: hold preparation; record the external round count in the summary.")
     except (OSError, UnicodeDecodeError, ValueError) as error:
         emit(f"cannot read input: {error}")
         return 2
-    problems, nexts = text_problems(task_text, gate_text, at_gate=True)
+    problems, nexts = text_problems(task_text, gate_text, at_gate=True, reviewer_text=reviewer_text)
     problems += found
     nexts += wanted
     emit(*problems, *dict.fromkeys(nexts))
@@ -672,6 +695,7 @@ def main(argv=None):
     ask.add_argument("task")
     ask.add_argument("--text-file", required=True)
     ask.add_argument("--workflow-dir")
+    ask.add_argument("--summary-file")
     args = parser.parse_args(argv)
     return question(args) if args.command == "question" else check(args)
 
