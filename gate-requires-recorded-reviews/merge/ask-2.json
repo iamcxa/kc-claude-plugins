@@ -1,0 +1,22 @@
+{
+  "class": "never",
+  "head": "a2317cfc55e829163e3d7fcc386968eb3eea8cf1",
+  "model": "not run",
+  "necessity": "seven files (docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md, kc-dev-flow-2/VALIDATION.md, kc-dev-flow-2/references/sd/workflow.md, kc-dev-flow-2/scripts/del",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'No new Material, Deferred risk, Polish'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compat'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_poc_readme.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#748",
+  "sufficiency": "a delivery gate's bound summary must carry its external rounds and second-reviewer outcome; #745's omission replays as refused; 295 older delivery inputs keep their output; validation PASSED with six ",
+  "time": "2026-10-29T10:46:27Z",
+  "verdict": "ask"
+}
