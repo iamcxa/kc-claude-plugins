@@ -221,6 +221,11 @@ Proposed runtime/test files: `kc-dev-flow-2/scripts/dispatch_records.py`, `kc-de
 
 Also read `captain-ruling-sources-checked`: its source-authentication concern remains separate. Recommended order: land adoption's event-time extension change if ready; establish the amendment parser; then serialize the reservation and live-rerun changes, rerunning combined dispatch/law tests after rebases. FO rechecks final sibling file lists and reserves a noncolliding ADR number. Unrelated hosted/ops/review tasks do not block this Pilot.
 
+
+### Amendment 1 — 2026-10-29, chat (batch-10 exception question)
+Captain: 「可以」 (chat, 2026-10-29)
+Asked: 「決定：照上面的建議修改 AC-3 嗎？如果你想用別的方式處理，直接說。」, with the recommendation 「把 AC-3 改成「這三筆舊紀錄只需要通過新的裁決檢查；完整檢查擋下它們是正確的」。工作者也已經把同樣的裁決照正確格式重寫了一份，這一份能通過完整檢查。」
+Supersedes: AC-3
 ## Acceptance criteria
 
 **AC-1** The existing live `dispatch_records.py --names <record>` refuses both fresh and follow-up validation records when the newest report has open F-numbered Needs decision findings and lacks a later supported ruling. Evidence: candidate CLI in a temporary git state root, committed report then live record, exit 1 before the ruling and exit 0 after a later native ruling; input bytes unchanged. Falsifier: remove the predicate call and the before-ruling assertion fails. Current evidence: released checker and disposable #742 prototype exercised; candidate integration is future work.
