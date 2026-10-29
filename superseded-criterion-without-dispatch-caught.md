@@ -15,6 +15,14 @@ gates:
                 id: briefing:superseded-criterion-without-dispatch-caught:backlog:attempt-1:revision-1
                 digest: sha256:af1bb8385e43941ce189d271787971a948d3d80f20d8fa3b9058a2a80485edc1
                 room-ref: ./superseded-criterion-without-dispatch-caught/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:superseded-criterion-without-dispatch-caught:backlog:1
+                briefing: briefing:superseded-criterion-without-dispatch-caught:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-29T00:40:02.350315Z"
+                decision: hold
+                reason: The Captain 「同意這些內容」 (chat, 2026-10-29), answering FO's joint batch-10 backlog sitting whose ask was 「決定：六張全照建議（五張進設計，被取代條件那張先留在待辦）？要改哪張直接說。」; accepts FO's recommendation to hold in backlog until a real task archives with a superseded criterion still declared.
 ---
 
 ## Scope
