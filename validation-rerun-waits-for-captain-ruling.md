@@ -66,6 +66,17 @@ gates:
                 id: briefing:validation-rerun-waits-for-captain-ruling:validation:attempt-1:revision-1
                 digest: sha256:0c7ad2666cef589369a7cf34c1411f02b805fdddbea96b0ecc5ec1c14905117f
                 room-ref: ./validation-rerun-waits-for-captain-ruling/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:validation-rerun-waits-for-captain-ruling:validation:1
+                briefing: briefing:validation-rerun-waits-for-captain-ruling:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-29T10:46:06.691384Z"
+                decision: approve
+                reason: The Captain 「准合併」 (chat, 2026-10-29), answering FO's joint batch-10 delivery sitting of four gates whose ask was 「決定：四張全照建議合併（疊的三張用一般合併），並確認上面兩件事？要改哪張直接說。」; accepts FO's recommendation for this task as stated in the gate question.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-29T06:41:09Z
 worktree: .worktrees/spacedock-ensign-validation-rerun-waits-for-captain-ruling
 pr: iamcxa/kc-claude-plugins#750
