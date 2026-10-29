@@ -363,3 +363,89 @@ L3 excludes merge commits themselves, prior pushes, rewritten history, uncommitt
 edits and never-recorded rulings. Missing rulings, initial quotation fidelity and
 criterion ids omitted by meaning remain observer-owned; no semantic refusal,
 automatic revert, permanent-red state or new pre-gate history call is claimed.
+
+## Design ADR placeholders require a reservation, 2026-10-29
+
+Stacked base: `b8a66e826c7524fa944a7165296acba94b3f5e13` (the validation-rerun
+branch, on the amendment-form change). `dispatch_records.py --names` now refuses
+positive-numbered implementation and implementation-message records for Pilot/Prod
+when the last unfenced `## Design` (including ` — title` and `: title`) names
+`docs/adr/<placeholder>-title.md` and `number_guards.task_facts` finds no reserved
+ADR. It uses the existing numeric parser; migration numbers and dispatch-only
+numbers do not satisfy it. The diagnostic supplies the existing allocator/record/
+scope-copy/retry recovery. The first-record-only scope-copy check is unchanged.
+
+The signal is the literal path, including in ordinary explanatory prose; it does
+not classify intent, negation, decision quality or authorization. Fenced and
+quoted examples, numbered citations, earlier Design sections and report-only
+obligations do not signal it. POC and the folder/newest/coverage modes retain their
+existing behavior. Missing/unusual design forms and obligations omitted from the
+design remain observer work. No new ADR, declaration, hook or migration is added.
+
+Reproduce the behavioral proof from the repository root:
+
+```sh
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_dispatch_records.py -q
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_laws_check.py -q
+```
+
+The dispatch suite passes 87 tests, including `DesignAdrTests` and
+`DesignAdrMutationTests`; the laws suite passes 59. The new tests assert:
+
+- Raw #740 bytes from state commit `09da6be7ad5aaf687ea3f80e9553f3efb525cc17`
+  refuse with the new diagnostic. Embedded task/record SHA-256 values are
+  `9cdb2a04175c91eb996fb8c314067cfd6fe5fe4636ef399b97fc0effa4288406` and
+  `5f80555583c521fc2f21cca8ea407d542335b8d371a8f34c934e8b1b40ae6c20`;
+  the matched task path is at line 243. Released 0.33.0 exits 0 silently.
+  The stacked base already exits 1 for its unrelated amendment form at line 293;
+  candidate preserves that diagnostic. Allocator recovery clears the new refusal
+  while retaining that pre-existing error. Deleting the task ADR line, leaving a
+  migration only, or retaining a scope-only ADR number restores the new refusal.
+- Flat/folder tasks, Pilot/Prod/POC, first/repeated/message records, heading suffixes,
+  both reserved-number placeholder spellings, title placeholders, lists/tables/code,
+  quotes/fences, numbered citations, replacement Design sections and unrelated
+  modes exercise the boundary. Removing quote/fence filtering, applying the rule to
+  POC, using the first Design, or skipping continuations fails its named control.
+- The actual CLI governs a disposable shell build/spawn recorder. Missing input
+  produces zero calls and 27 diagnostic words; corrected input records build then
+  spawn with empty checker output. Disconnecting `check_task_facts` or its predicate
+  fails the raw replay. A separate installed Spacedock build in a disposable repo
+  produced a Codex envelope after actual allocator recovery (`ADR: 0001`, two words),
+  with zero build calls on refusal. Real `worker.spawn` was unavailable: the next
+  operation was a recorder, not a launched model. This does not prove native spawn.
+- L2 classifies the diagnostic as a violation, not Cannot, for both task layouts.
+  A later repair preserves the earlier event's result within the same fixed range;
+  a range starting after that event is clear. Removing the diagnostic parser or
+  reading today's task instead of event bytes fails this control. Eleven mutations
+  run fresh Python `-B` processes in cache-free copies and each fails an assertion.
+
+Committed corpus comparison used `git archive` snapshots and the stacked-base and
+candidate CLIs over every `*/dispatch/*.md`, including archives. Pins and counts:
+
+| State corpus | Commit | Records | Changed diagnostics |
+| --- | --- | ---: | ---: |
+| This workflow | `ac38184c7912d6eca53e0256dd498f935ac63d26` | 564 | 1 |
+| Relay | `6742b0b757700fb9b19d9fdb6e61984e5a6543c8` | 296 | 0 |
+| QNow | `77caf32322a54e806b8e5c8a0b094a5f2f60a5f7` | 249 | 0 |
+| Web | `7f3f3861c9b68defa60a07fbdecdc26d6d1fdbf2` | 138 | 0 |
+
+The changed record is this task's `implementation-1.md` (record SHA-256
+`a2384c9bc19425ce90846fb8316dfeca1099fb644817780d5879a2501b312a5d`): its active
+Design explains literal placeholder paths without quoting/fencing them. This is
+the documented structural limitation, not a newly discovered ADR obligation. The
+approved definition was preserved; FO must handle those explanatory examples
+through the authorized correction route before a future dispatch using this check.
+Existing reservations, amendment/renumber failures and unrelated verdicts remain.
+
+The task's fixed lifecycle recipes were executed on exact base/candidate source
+with the shipped watcher fixtures and installed Spacedock 0.27.3 instructions.
+Startup/open-idle/merged-idle/archive/merge-ask totals are unchanged:
+6967 / 870 / 833 / 333 / 2408 words. Executed output counts are 37 / 37 / 0 / 5 / 90;
+workflow stays 5754 words. New failure-path reading is 27 diagnostic words plus
+690 existing words (Number guards 222 and FO steps: number guards 468), two
+allocator words and zero retry words: 719 total. The design's 468-word recovery
+forecast omitted the separate 222-word Number guards section; both sections are
+included here. Existing stacked-base errors, when present, are additional and
+unchanged. No normal-path output, workflow-budget step or CI change was added.
+CI cost per PR was not measured. These local results do not establish hosted CI,
+RoboRev review, native model spawning, Captain acceptance or a merged delivery.

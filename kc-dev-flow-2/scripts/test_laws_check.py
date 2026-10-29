@@ -301,6 +301,30 @@ class L1Test(Base):
 
 
 class L2Test(Base):
+
+    def test_missing_design_adr_is_an_event_violation_even_after_later_repair(self):
+        for index in (False, True):
+            with self.subTest(index=index):
+                repo = Repo(self.tmp / f"l2-design-adr-{index}")
+                before = repo.commit("base", keep="x")
+                path = "t__index" if index else "t"
+                text = "---\nprofile: pilot\n---\n\n## Design\ndocs/adr/<reserved number>-a.md\n"
+                event = repo.commit("unreserved dispatch", **{path: text, "t__dispatch__implementation-1": record()})
+                initial = self.judge(repo, before, event)
+                code, out = initial
+                self.assertEqual(code, 1, out)
+                self.assertRegex(out, rf"record=t/dispatch/implementation-1\.md commit={event[:12]} design ADR placeholder has no reserved ADR")
+                self.assertNotIn("cannot judge", out)
+                repo.commit("reservation recovery", **{path: text + "\n## Number guards\nADR: 0020\n",
+                                                       "t__dispatch__implementation-1": record() + "ADR: 0020\n"})
+                self.assertEqual(self.judge(repo, before, event), initial)
+                current = self.judge(repo, before)
+                self.assertEqual(current[0], 1, current[1])
+                self.assertEqual([line for line in current[1].splitlines() if line.startswith("violation:")],
+                                 [line for line in initial[1].splitlines() if line.startswith("violation:")])
+                repo.commit("reserved continuation", **{"t__dispatch__implementation-2": record()})
+                self.assertEqual(self.judge(repo, event)[0], 0)
+
     def test_live_ruling_predicate_is_skipped_by_real_historical_snapshot_caller(self):
         repo = Repo(self.tmp / "l2-live-ruling")
         before = repo.commit("base", keep="x")
