@@ -54,6 +54,7 @@ Alignment: not needed before ideation: obligations from approved tasks.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review before the joint ideation sitting: approve, revise, split or hold each task, the Captain's decisions, overlap and order
 
 ## Design
 
