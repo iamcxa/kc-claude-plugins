@@ -47,6 +47,20 @@ gates:
                 id: briefing:peers-paseo-rule-matches-practice:ideation:attempt-2:revision-1
                 digest: sha256:ac50c7d9da255d7264ab751518270e35bb4183f18bf17d873578bab3825e4397
                 room-ref: ./peers-paseo-rule-matches-practice/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:peers-paseo-rule-matches-practice:ideation:2
+                briefing: briefing:peers-paseo-rule-matches-practice:ideation:attempt-2:revision-1
+                by: agent:first-officer
+                at: "2026-10-30T10:00:12.835097Z"
+                decision: approve
+                reason: 'FO read the newest ideation report: the revision applies the 2026-10-30 revise asks, names no new Captain choice and returns anything wider to FO; the design check passes.'
+                conn:
+                    quote: 決定：六張全照建議，同意放寬 Paseo 規則和真實測試，並授權改完直接進實作？要改哪張直接說。 — 准
+                    source: the Captain, chat, 2026-10-30, FO's joint batch-11 ideation sitting
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
