@@ -3,9 +3,11 @@
 ## Adoption and introducing sync
 
 Preserve an existing `.dev2/model-roster.json`; startup and ordinary sync do not
-ask again or rewrite it. Without one, at adoption or a sync introducing this
-feature, display the complete [recommendation](model-roster-defaults.json) and ask
-through the host's question UI:
+ask again or rewrite it. Ask only when the workflow frontmatter lists `paseo`
+and the Codex provider is available. Otherwise ask nothing, write nothing and
+retain README behavior. For eligible adoption or introducing sync without an
+existing roster, display the complete [recommendation](model-roster-defaults.json)
+and ask through the host's question UI:
 
 > Stage workers: ideation Astra/high, implementation Sol/high, validation Astra/high,
 > all Codex through Paseo. Save this shared repository choice or customize it?

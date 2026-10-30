@@ -345,6 +345,18 @@ FIXES = {
         need=("with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one",),
         old=(),
         swaps=((r" with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one,", ","),)),
+    "roster-question-prerequisites": dict(
+        file="references/model-roster.md",
+        need=("Ask only when the workflow frontmatter lists `paseo` and the Codex provider is available.",
+              "Otherwise ask nothing, write nothing and retain README behavior."),
+        old=(),
+        swaps=((r"Ask only when the workflow frontmatter lists `paseo` and the Codex provider is available\. Otherwise ask nothing, write nothing and retain README behavior\. ", ""),)),
+    "roster-adoption-prerequisites": dict(
+        file="references/sd/adoption.md",
+        need=("ask once about stage workers only when the workflow frontmatter lists `paseo` and the Codex provider is available.",
+              "Otherwise ask nothing, write nothing and retain README behavior."),
+        old=(),
+        swaps=((r" only when the workflow frontmatter lists `paseo` and the Codex provider is available\. Otherwise ask nothing, write nothing and retain README behavior\.", "."),)),
 }
 
 

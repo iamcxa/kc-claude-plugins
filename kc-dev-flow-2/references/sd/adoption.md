@@ -196,7 +196,7 @@ dropped extension, so the adopter's review of the sync PR is the only check.
 
 ## Before activation
 
-At adoption or introducing sync, follow `<package>/references/model-roster.md` to ask once about stage workers. Save only an explicit shared choice through the normal reviewed change. Preserve existing settings; no answer leaves README defaults.
+At adoption or introducing sync, follow `<package>/references/model-roster.md` to ask once about stage workers only when the workflow frontmatter lists `paseo` and the Codex provider is available. Otherwise ask nothing, write nothing and retain README behavior. Save only an explicit shared choice through the normal reviewed change. Preserve existing settings; no answer leaves README defaults.
 
 Review the concrete README, state mapping, exact stage-skill availability and
 copied mod with the user. Run SD state readiness and status validation using the
