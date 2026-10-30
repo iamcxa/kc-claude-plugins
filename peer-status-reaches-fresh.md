@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:peer-status-reaches-fresh:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:peer-status-reaches-fresh-ideation-1
+              briefing:
+                id: briefing:peer-status-reaches-fresh:ideation:attempt-1:revision-1
+                digest: sha256:3e50dff325abef10e54c5ae07c48421c8ed1f1c1a48faa6b17c25dec6c108313
+                room-ref: ./peer-status-reaches-fresh/review/ideation/briefing-1
 ---
 
 ## Scope

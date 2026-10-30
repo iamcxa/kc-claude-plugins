@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:peer-status-reaches-fresh:ideation:attempt-1:revision-1",
+  "question": "Revise peer-status-reaches-fresh at ideation? FO recommends revise; approving accepts these asks: delete the paseo insertion and let peers-paseo-rule-matches-practice carry the text under one owner; AC-1 starts an FO that has not read peers, since startup does not preload the rule; move AC-4 after delivery.",
+  "artifacts": [
+    {
+      "id": "artifact:peer-status-reaches-fresh:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a13779de2759adaf4109134810f0c42e9d72ee3d/peer-status-reaches-fresh.md",
+      "rev": "sha256:609c9ba78f417b26e4bae5da7a0b9f99f4c007545171c3ac6e6f7e4371ddb312",
+      "mediaType": "text/markdown",
+      "summary": "Chief-engineer: the rule may never load otherwise. Cost: real-use proof comes after delivery."
+    }
+  ]
+}
