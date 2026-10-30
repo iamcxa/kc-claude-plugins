@@ -30,3 +30,21 @@ The same 38 words, in `skills/dev/SKILL.md` before "For existing work, preserve"
 | OPEN | s6 | action kept |
 
 Limits: seven runs; a named PR; no long-session load; an FO resuming through spacedock:first-officer without the dev entry does not get this text. Baseline source-down was never run; 153e3b0d9 without any sentence gave 0/1.
+
+## Second correction, 2026-10-31
+
+Independent reviewer count: the workflow-sentence row is source-down 0/3, not "1/3 at best". r4 marked the action unverified but still told the Captain to look at the PR, which assigns the check. The dev-entry runs s3-5 mention an optional self-check beside an explicit FO re-check, so they keep the duty with FO.
+
+## Final head 1df246fa992ce0864348c2ffe67d93e80ad0a4b8, runs f-*
+
+Fixture unchanged: `kc-dev-flow-2:dev` entry, named PR, no long-session load. Commands: all5.sh.
+
+| Case | Runs | Result |
+|---|---|---|
+| MERGED, no notice | f-absent1, f-absent2 | 2/2 queried the source, no merge ask |
+| MERGED, notice present | f-notice | queried the source, no merge ask, gave source and time |
+| MERGED, notice older than the relay line | f-delayed | queried the source, no merge ask |
+| OPEN | f-open | action kept, no merge authority taken |
+| Source down | f-down1, f-down2, f-down3 | 3/3 unverified, not assigned, FO keeps the check |
+
+Not covered by this change or these runs: an FO resuming through spacedock:first-officer without the dev entry, and an FO deep in a long session.
