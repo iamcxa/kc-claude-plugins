@@ -56,11 +56,13 @@ gates:
 
 ## Budget
 
-- One package PR to the peers and paseo extension text; no new script.
+- One package PR changing only the shared Current peer facts section in `kc-dev-flow-2/extensions/peers/EXTENSION.md`; no new script. `peers-paseo-rule-matches-practice` owns all Paseo binding/notice wording. Natural-use observation follows delivery.
 
 ## Stop condition
 
-- The two 2026-10-28 events replay as prevented by the stated rule (a peer pushes merged, released or unblocked when it happens, or a Captain action named from a peer is checked at its source first).
+- Before delivery, the two admitted 2026-10-28 events replay as prevented: AC-1 begins with an FO that has not read peers and proves normal point-of-use loading before the source query/report; AC-2 preserves the boundary between an authorization and a completed release. Complete AC-3, AC-5 and AC-6 at their designated stages. A preloaded-rule replay is insufficient.
+- If the cold FO never loads peers, or a required replay/source/transport check fails, stop the dependent acceptance and return evidence to FO. Do not design or implement a startup preload, new hook, watchdog, script, host repair or broader send permission here.
+- AC-4 is explicitly after delivery: FO retains the observation obligation in the existing task/exchange record and observes the first natural transition after normal adoption. No event or unavailable authority means not run, not acceptance and not a pre-delivery hold. Do not delay delivery waiting for a natural event or claim real-use proof from fixtures.
 
 ## FO alignment
 
@@ -91,21 +93,27 @@ Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review befor
 
 **Which source?** For merge, the repository-qualified pull request (PR) state and merged revision; a local commit's presence does not prove hosted merge. For release, the actual tag/release or installation evidence relevant to the claim; merged does not mean released. For an unblock, the blocking task or original decision and the exact question it settled. An original authorization clearing a token-rotation step does not prove the credential changed or a release shipped; do not read secrets. Keep separate remaining steps separate. Missing access or disagreement yields `unverified as of <time>: <source gap>` and an FO-owned check, not “Captain must do X.” Existing Captain-source rules still apply to any authority claim.
 
-### Upstream chain and prior evidence
+### Captain revise and ownership
 
-Research sequence: Spacedock 0.27.3 ensign/shared core and first-officer shared/Codex runtime first; then kc-dev-flow-2 source; then sibling adopter snapshots. Spacedock owns local convergence, dispatch, state and gates; its boot counts are possibly stale, and its Codex completion notification starts durable-report verification. It supplies no peer-fact freshness rule in those read surfaces. This proposal changes neither worker completion nor its notification contract.
+The 2026-10-30 ideation resolution at 09:31:42.445165Z records the Captain's 「准」 to the joint sitting. Its newest `peer-status-reaches-fresh/review/ideation/briefing-1/index.json` asks exactly: delete the paseo insertion and let `peers-paseo-rule-matches-practice` carry it under one owner; start AC-1 with an FO that has not read peers because startup does not preload it; move AC-4 after delivery. The resolution permits FO to move a design staying within those asks to implementation without another sitting. This worker neither applies that transition nor grants acceptance.
 
-After successful `git fetch origin`, package source is `origin/main` **a6612948936a4f075625147b21aabd3b10b19eee**, manifest version **0.33.1**, read with `git show` rather than the unrelated colombo branch. Package checks use the dispatched Codex install `/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1`. Target state root is `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state`; pre-edit HEAD **07e7e5d7f85f9c0c4342628055d77ee0efab1890**. This task had Scope/alignment and no previous report or recorded PR; its original body/frontmatter are preserved.
+This cycle replaces the active design/criteria while preserving the entire earlier Stage Report. That report's two-file plan, reading totals, unlisted-send restriction and pre-delivery natural-use requirement are historical, not this cycle's instructions. The sibling's cycle-2 design at state commit `da23dd127b929a0d580fa181ce1c3d8879fc71d6` owns all Paseo-specific wording, including the transferred notice pointer, confirmed-transport permission without optional paseo listing, send flags and quiet-mode failure visibility. This task retains only transport-neutral Current peer facts and its loading/freshness proof. No duplicate paseo insertion is proposed.
 
-Bounded existing-capability check: (1) read peers and paseo extensions at that source, tracing fact → record → reply/send → Captain claim; (2) searched Spacedock's own core/runtime and read Paseo's own `SKILL.md` Connected hosts, Agents, Waiting and CLI semantics, plus `paseo agent update --help` and `paseo send --help`. peers already says check cited facts, keep human originals, record work-changing exchanges, and use bounded deferral. paseo already separates queue receipt from answer. Missing in that boundary are the point-of-report freshness requirement, observation time, and a transition-triggered notice to involved peers. No mechanism replacement is needed. No claim about all dormant host integrations follows from this bounded read.
+### Upstream chain and current evidence
 
-Paseo's own help exposes arbitrary label updates; its own skill exposes `labels`, not a freshness contract for `next` (displayed next step) or `next-owner` (displayed responsible actor). Treat both as hints and check their source. This task creates no label schema or board update obligation. Agent-scoped sends return a queued receipt, default to steer and finish notifications, and steering can fall back to interruption. `--no-wait` does not document callback suppression. Do not infer reliable delivery or atomic idle-check/send from those APIs. No live sends or label updates were performed.
+Read order this cycle: Spacedock 0.27.3 ensign/shared/Codex contract and first-officer shared/Codex runtime, then kc-dev-flow-2 framework/profile and source, then sibling adopters. Spacedock owns state, gates, dispatch and worker completion verification. Its boot marks counts possibly stale and does not preload peers. No worker notification or dispatch change is proposed.
 
-Read-only local `origin/main` adopter snapshots, not freshly fetched remote truth: relay `/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2` **a448ea34391653fc71b0760c048f29c781fbe50a**, `docs/dev2/README.md`, `[learn, peers, roborev, journey-map, release-acceptance]`; web `/Users/kent/conductor/workspaces/subspace-web/dev2-fo` **f2e1a4ccce8af1d9ab4ffb6591f8c84ff18d619a**, same README, `[learn, peers, roborev]`; qnow `/Users/kent/conductor/repos/qnow-adopt-dev2` **9cb4cf2c37d21f03918ddc9c50f2864f110b2524**, `docs/dev2-poc/README.md`, `[roborev, codex, copilot, learn, peers, journey-map]`. All omit paseo. Their normal adoption/sync and the sibling policy decision must govern new notices; freshness does not silently opt them in. Incoming evidence and source checks remain useful without new-send authority.
+`git fetch origin` succeeded. `origin/main` is `a6612948936a4f075625147b21aabd3b10b19eee`; `kc-dev-flow-2/.claude-plugin/plugin.json` is **0.33.1**. Source was read with `git show`; stage checks use `/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1`. The unrelated colombo branch `iamcxa/trim-kc-dev-flow-third` has pre-existing `.gitignore` and `.gstack/browse-startup-error.log` changes, preserved. The only writable durable artifact here is this entity body in the dispatched split-root state checkout on `spacedock-state/dev2`.
 
-`gh pr list --repo iamcxa/kc-claude-plugins --state open --limit 100 --json number,title,headRefName` succeeded on 2026-10-30: #699 ADR path probe, #674 model policy, #635 behavior-diff CI, #374 peer reply skill. None names this freshness task; this is inventory, not proof of unclaimed local work. No PR comment, issue comment, adopter mutation or peer message occurred.
+Bounded existing-capability check: required peers already checks cited sources, preserves original human authority, records exchanges and bounds busy-peer deferral; the package README routes it before opening a task or exchanging peer facts. The workflow Extensions section requires following listed extensions at their due steps. Neither this source read nor a keyword proves an FO composing a status discovers the rule. AC-1 therefore measures that entry path from a cold FO, without preloading peers or hinting its path. If it fails, return the loading gap to FO; no entry-point repair is designed here. The new content adds current-turn timing, sourced observation and bounded transition corrections to the existing mechanism.
 
-Read Architecture Decision Records (ADRs, durable repository rulings) 0011 (Captain authority), 0020 (workflow word budget), 0035 (extension selection), 0038 (peer transport/data), and 0042 (Paseo worker handoff) at the pinned source. They are Accepted there. State `Override:` matches relevant to peers/Paseo contain no contrary freshness ruling. Follow 0038's explicit refusal to require Paseo for all users and its requested-reply exception; do not broaden permissions from a notice. This is an operational refinement inside that authority, so no new ADR, number reservation or workflow budget change is proposed. The sibling adoption exception, if approved, owns its own ADR.
+Paseo primary evidence is its own `/Users/kent/.agents/skills/paseo/SKILL.md`, especially Connected hosts, Agents, Waiting and CLI semantics: queued sends are not answers, steering may fall back to interruption, and completion callbacks also carry errors/permission requests. Labels are display hints, not proof that a Captain action remains owed. The sibling owns callback policy and its authorized native failure-visibility test; this design supplies no alternative transport or silence-is-success rule. No sends, labels or native trials ran in this ideation.
+
+Read-only local origin/main snapshots, not newly fetched remote truth: relay `/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2` `a448ea34391653fc71b0760c048f29c781fbe50a`; web `/Users/kent/conductor/workspaces/subspace-web/dev2-fo` `f2e1a4ccce8af1d9ab4ffb6591f8c84ff18d619a`; qnow `/Users/kent/conductor/repos/qnow-adopt-dev2` `f364b6e8bfa072db46374dccfcc566d10667cf40`. Relay/web `docs/dev2/README.md` and qnow `docs/dev2-poc/README.md` list peers and omit paseo. After the sibling's published policy is adopted, omission no longer blocks confirmed-Paseo peer messaging; it still does not enable optional worker procedures. No adopter edit or listing campaign is proposed.
+
+`gh pr list --repo iamcxa/kc-claude-plugins --state open --limit 100 --json number,title,headRefName` failed this cycle: `error connecting to api.github.com`. Current open PR ownership is unverified; FO must reconcile it before implementation. Local state and git evidence remain usable. Round-004's relay/web accounts were reread; historical original sessions remain unread, so the two incidents are admitted replay inputs, not independently authenticated history.
+
+Read accepted Architecture Decision Records (ADRs, durable repository rulings) 0011, 0020, 0035, 0038 and 0042 at the pinned source; relevant task/gate records show no contrary Override. ADR 0038's existing listing restriction is superseded only through the sibling's new Captain-authorized ADR, owned there. This task requires no ADR number/index, workflow budget change or new permission. Preserve human authority, non-Paseo routes and worker completion.
 
 ### Reviewable extension text
 
@@ -123,41 +131,35 @@ On receipt, match the source and exchange, check before using the fact, and upda
 ```
 <!-- candidate-fresh-peers-end -->
 
-Proposed exact insertion in `kc-dev-flow-2/extensions/paseo/EXTENSION.md`, before `## Codex workers through Paseo`. Keep this as a pointer plus notice classification; the sibling `peers-paseo-rule-matches-practice` (peer transport policy) owns general send flags and selection.
-
-<!-- candidate-fresh-paseo-start -->
-```markdown
-For status changes, follow peers' Current peer facts. An information-only notice asks for no acknowledgement and sets `notifyOnFinish: false`; use a tool exposing that flag. Treat it as a new exchange unless it answers the same requested question. Apply the binding's identity, authority, idle/deferral and steering rules; a freshness need bypasses none of them. A no-action peer callback needs no Captain reply. Keep worker completion notifications unchanged.
-```
-<!-- candidate-fresh-paseo-end -->
-
-**Integration with the sibling design.** Its current proposed default `notifyOnFinish: false`, explicit reply references and no-ack notice route are compatible. Do not merge its replacement Paseo binding over this new shared section, or retain the base new-question `true` rule after that sibling replaces it. This task alone uses false only for information-only notices, leaving current requested replies false and base new questions true. General quiet-ask policy and the direct one-off exception remain that sibling's Captain choice. If it is deferred, this design can still check sources and use notices under the current listed-paseo policy; unlisted new notices stay unsent. A held go-live notice remains held.
+**Paseo wording has one owner.** This design contains no candidate paseo block and changes no Paseo binding. The sibling's current candidate carries the status pointer in its peers Paseo binding and optional paseo pre-worker text. Integrate that owner first, then this shared peers insertion once; reconstruct/recount the combined bytes. Its chosen transport permits confirmed-Paseo asks and notices without listing the optional extension, while retaining identity, authority, idle/deferral and requested-reply rules. No listing exception, callback default or native failure remedy is independently designed here. If that sibling cannot deliver its chosen policy, FO reconciles the dependency; do not silently retain its superseded restriction or transplant its text into this task.
 
 ### Sequence and stops
 
 ```mermaid
 flowchart TD
     O[Origin FO verifies merge, release or unblock] --> R[Record source, observation time and affected exchange]
-    R --> A{Authorized binding and delivery boundary available?}
-    A -->|no or uncertain| H[Record held or uncertain notice; no automatic retry]
-    A -->|yes| N[Send one scoped notice; no acknowledgement requested]
-    N --> I[Receiving FO matches source and exchange]
-    I --> Q{Duplicate or no-action finish?}
-    Q -->|yes| Z[No receipt reply or Captain update]
-    Q -->|no| U[Check fact before use; record correction at authorized write]
-    U --> F[FO composes peer status or Captain action]
+    R --> A{Existing binding permits notice?}
+    A -->|no or uncertain| H[Record held or uncertain; no automatic retry]
+    A -->|yes| N[Send one scoped notice through sibling-owned policy]
+    N --> I[Receiver matches source and exchange; holds correction until checked]
+    I --> F[FO composes peer-derived status or Captain action]
     H --> F
-    L[Old peer line or display label; notice may be missing] --> F
-    F --> C{Would this name a Captain action?}
-    C -->|no| T[Report only checked fact with source and observation time]
-    C -->|yes| S[Read original action source in this reporting turn]
+    L[Old peer line; notice absent or delayed] --> F
+    F --> B[Cold FO follows ordinary workflow entry; peers not preloaded]
+    B --> C{Loads peers before relying on peer fact?}
+    C -->|no| X[Acceptance fails; return loading gap to FO]
+    C -->|yes| J{Names a Captain action?}
+    J -->|no| T[Check fact before use; report source and observation time or uncertainty]
+    J -->|yes| S[Read original action source in this turn]
     S --> D{Source result?}
-    D -->|action still pending| P[Report sourced action; preserve normal Captain gate]
-    D -->|action cleared| E[Remove cleared action; keep other steps separate]
+    D -->|still pending| P[Report sourced action and time; preserve Captain gate]
+    D -->|cleared| E[Remove only cleared action; report source and time]
     D -->|unavailable or conflicting| V[Mark unverified; FO owns check; no stale Captain request]
 ```
 
-The notice branch uses the existing five-minute ceiling, one natural recheck, and stop when no independent work remains; it does not promise a timed wake. A requested same-question correction may reach a running asker under peers' existing exception; a new notice to a busy/unknown peer defers. An attended resume must reconcile prior uncertain delivery rather than resend. Receipt processing never changes a gate decision or bound briefing. An actual Captain approval/merge remains on its own authorized path.
+The cold-entry nodes describe the AC-1 proof obligation, not a runtime guard or new loading mechanism. A warm FO can reuse already-read policy; the source observation still must belong to this composing turn, with recheck after conflicting changes. A status without a Captain action still names its source and observation time, and an unverified fact stays marked unverified.
+
+The binding retains the five-minute ceiling, one natural recheck and stop without independent work. A same-question correction uses the requested-reply route; a new notice uses the new-send route. On receipt, duplicates/older observations do not restore stale actions; conflicting evidence triggers a source read. No receipt-only acknowledgement or no-action Captain reply is due, but errors/permission holds remain material under the sibling's policy. Do not edit a bound briefing, infer delivery, retry automatically or turn an observation into gate authority. These rules govern existing records, not a durable notice service.
 
 ### Two admitted incidents replayed as prevented
 
@@ -170,92 +172,90 @@ These are policy walkthroughs of `.notes/fo-feedback/round-004.md`, not new orig
 
 A live read of current history cannot prove what a 2026-10-28 actor saw. The source-check rule prevents the admitted false action under the stated replay inputs; behavior by an actual fresh FO remains an implementation/validation proof obligation. Neither adding a phrase nor this diagram proves compliance.
 
-### One unresolved Captain decision
+### Decisions and returns to FO
 
-**Recommendation:** require the source check in every turn that relays a peer-derived Captain action, with timestamped facts and best-effort transition notices to involved peers. Accept the added read and an explicit “unverified” outcome when the source is unavailable. The alternative is allowing a recent timestamp/notice to stand in for that read; it costs less but can repeat either admitted stale action after a rapid transition. This is one freshness standard choice; send-policy selection remains the sibling's separate gate, not silently decided here. No fixed expiry duration is proposed because the two incidents supply no evidence for one.
+No unresolved material choice remains within the three revise asks. Recommendation: implement the single shared peers insertion, require cold-entry and stale-action proof before delivery, and retain the natural-use observation after delivery as the Captain directed. Costs: extra source reads and explicit unverified outcomes remain; a loading failure can block candidate acceptance; real-use benefit is still unproven at delivery.
 
-Gate wording for FO: “Approve this design with mandatory current-turn source checking for peer-derived Captain actions, timestamped facts and scoped notices, accepting extra reads and unverified holds?” Approval of the design is still required; this report does not grant it.
+Return to FO rather than design here: startup preloading or an entry-path repair if AC-1 fails; changing quiet-mode flags or error surfaces; a watcher, timer, status store, new script or delivery guarantee; host changes, broader send authority, adopter enablement or an ADR beyond the sibling's owned ruling. The sibling's real two-agent transport test remains its pre-delivery obligation; moving this task's AC-4 does not move or waive that test. No second sitting is required for this faithful revision; any broader remedy needs FO to route the new decision.
 
 ### Words FO reads at each lifecycle moment
 
-<!-- freshness-reading-ledger -->
+Counts are Python `len(text.split())`, including headings/syntax. The shared peers insertion remains **262** words. This task alone changes peers **805 → 1067** and leaves paseo **562 → 562**; its former 67-word paseo insertion is deleted. With the sibling's current exact blocks, peers is **1039 → 1301**, paseo stays **389**, and primary Paseo skill sections add **607**. Combined unlisted exchange: original **1412 → 1908**; listed full-file exchange: **1974 → 2297**. This task adds **262** to either sibling-only route (1646 or 2035), once. Neither task may count the transferred pointer twice.
 
-Counts use Python `len(text.split())`, including headings, against the pinned source and exact insertion blocks above. This is a correctness repair that **increases reading**, not a reduction claim. Conservative cold reads include the full peers file (805 → 1067 words), full paseo file when listed (562 → 629), and the unchanged Paseo skill's Connected hosts, Agents, Waiting and CLI semantics (607). Thus an incoming/unlisted route is 1412 → 1674 (+262); a listed exchange is 1974 → 2303 (+329). The sibling's independent proposed reduction is not credited here: recount their combined bytes at integration.
+The common fixture program was rerun this cycle with the dispatched 0.33.1 package and Spacedock 0.27.3, exit 0. It exercises mocked provider/Spacedock responses in temporary repositories: startup 442, idle/open 672, idle/merged 1021, after archive 371, merge ask 1003. The durable program is the Python block starting `import sys, importlib.util, subprocess, json, re` in `peers-paseo-rule-matches-practice.md` at state commit `da23dd127b929a0d580fa181ce1c3d8879fc71d6`; extract with `git show <commit>:<task>`, run `python3 -B <extracted-program> <package-root> <spacedock-plugin-root>`. Missing observer refusal or a failed delivery fixture changes/fails the outputs. It is a control-text fixture, not live freshness or delivery proof.
 
-The following common control-text fixtures were executed in this stage using the dispatched package's `test_pr_watch.TasksTests`, `PrWatchTests`, `test_delivery_gate.DeliveryGateTests` and `observer_check.py`, with mocked provider/Spacedock responses in temporary repositories, exit 0. No real send or product check is inferred. Reproduction instrument: the Python block beginning `import sys, importlib.util, subprocess, json, re` in `peers-paseo-rule-matches-practice.md` at state commit **07e7e5d7f85f9c0c4342628055d77ee0efab1890**, file SHA-256 **44bd888650055b252b1dea6f64dc7dcca180665ac419aa166c55ea01395eafd6**. Extract that block from `git show <commit>:peers-paseo-rule-matches-practice.md`; run with Python 3 `-B`, package root and Spacedock plugin root. This is a pinned shared measurement instrument, not adoption of that sibling's unapproved policy.
+| Lifecycle moment | No peer event, original → combined | Listed event, original → sibling only → combined |
+| --- | ---: | ---: |
+| startup | 442 → 442 | 2416 → 2477 → 2739 |
+| idle, open PR | 672 → 672 | 2646 → 2707 → 2969 |
+| idle, merged PR / observer refusal and rerun | 1021 → 1021 | 2995 → 3056 → 3318 |
+| after archive | 371 → 371 | 2345 → 2406 → 2668 |
+| merge ask | 1003 → 1003 | 2977 → 3038 → 3300 |
+| unrelated dispatch without peer fact | unchanged | no extra load unless a peer fact is used |
 
-| Lifecycle moment | No peer event, before → after | Listed peer event, before → after | Common measured read corpus |
-| --- | ---: | ---: | --- |
-| Startup, open PR with pending checks | 442 → 442 | 2416 → 2745 | Spacedock startup hook 365 + dev2 mod 48 + tasks output 29 |
-| Idle, open PR becomes ready | 672 → 672 | 2646 → 2975 | idle hook 100 + mod 48 + Delivery authority 488 + tasks 29 + wait output 7 |
-| Idle, merged PR lacks observer, then report committed | 1021 → 1021 | 2995 → 3324 | idle 100 + mod 48 + authority 488 + learn 280 + wait 17 + refusal 68 + rerun 20 |
-| After archive, observer reaches learn handoff | 371 → 371 | 2345 → 2674 | mod 48 + learn 280 + after-merge output 15 + observer output 28 |
-| Merge ask, docs-only candidate matches dispatch | 1003 → 1003 | 2977 → 3306 | authority 488 + Extensions section 451 + wait 7 + delivery-gate output 57 |
-| Quiet dispatch / other unrelated event | unchanged corpus | +262 or +329 only if its peer route is due | No worker procedure or dispatch output changed |
+For unlisted exchanges add 1412 before, 1646 sibling-only and 1908 combined to each common row. A fresh FO using peer status pays the due load at that moment, not at an artificial startup preload; AC-1 records which entry/README passages it actually reads. This table is a bounded instruction/output corpus, not entire live-session totals. Add actual source/error response words and changed status/notice words from AC-1/AC-2/AC-3; retain those same addends in the later AC-4 observation. Do not wait for AC-4 to measure pre-delivery replay costs or price unavailable responses as zero. No reading-time, callback-count or runtime saving is claimed. No CI change or measured cost per PR is in scope.
 
-These are measured instruction-and-output totals up to the next worker/learn handoff, not entire live-session totals. They include every instruction-bearing script output in those bounded fixtures. A real new source query has additional response words **S(moment)**, and its changed status/notice has **M(moment)**; neither has a constant size nor was live-host traffic measured. Before/after real peer-action totals are the table + actual old/new S and M, to be captured at validation, including failed query responses. A source fact cannot be priced as zero because it is outside a Markdown file. The new required check adds a source-read call whenever no current-turn result exists; original authority checks may already incur the same read. Do not claim measured reading-time savings, lower notice counts or full runtime totals from this ledger. Startup does not newly preload these optional routes. No CI change or cost-per-PR claim is proposed.
-
-Reproduce the changed text counts using only the pinned git repository, task file and primary host skill supplied as arguments (Python 3 standard library):
+Reproduce exact policy counts with Python 3; pass the pinned git repository, this task, the sibling task extracted from the state commit above, and Paseo's primary skill. Candidate strings are assembled in memory only. Recount after any subsequent sibling/model/surface or control-output change.
 
 ```python
-import re, subprocess, sys
+import json, subprocess, sys
 from pathlib import Path
-repo, task, host = sys.argv[1:4]
+repo, task, sibling, host = sys.argv[1:5]
 base = 'a6612948936a4f075625147b21aabd3b10b19eee'
-t = Path(task).read_text()
-w = lambda s: len(s.split())
+t, b = Path(task).read_text(), Path(sibling).read_text()
 def source(name):
     return subprocess.check_output(['git', '-C', repo, 'show', base + ':kc-dev-flow-2/extensions/' + name + '/EXTENSION.md'], text=True)
-def added(name):
-    block = t.split('<!-- candidate-fresh-' + name + '-start -->', 1)[1].split('<!-- candidate-fresh-' + name + '-end -->', 1)[0]
-    return block.split('```markdown\n', 1)[1].rsplit('```', 1)[0]
+def block(text, marker):
+    part = text.split('<!-- ' + marker + '-start -->', 1)[1].split('<!-- ' + marker + '-end -->', 1)[0]
+    return part.split('```markdown\n', 1)[1].rsplit('```', 1)[0]
 p, x = source('peers'), source('paseo')
-p2 = p.replace('## Claude Code binding', added('peers') + '\n## Claude Code binding', 1)
-x2 = x.replace('## Codex workers through Paseo', added('paseo') + '\n## Codex workers through Paseo', 1)
-h = Path(host).read_text()
-host_words = sum(w(k + h.split(k, 1)[1].split('\n## ', 1)[0]) for k in ['## Connected hosts', '## Agents', '## Waiting', '## CLI semantics'])
-for label, before, after in [('peers', p, p2), ('paseo', x, x2)]:
-    print(label, w(before), w(after))
-print('unlisted', w(p)+host_words, w(p2)+host_words)
-print('listed', w(p)+w(x)+host_words, w(p2)+w(x2)+host_words)
+added = block(t, 'candidate-fresh-peers')
+p_s = p.split('## Paseo binding', 1)[0] + block(b, 'candidate-peers') + '\n## Other host binding' + p.split('## Other host binding', 1)[1]
+x_s = block(b, 'candidate-paseo') + '\n## Codex workers through Paseo' + x.split('## Codex workers through Paseo', 1)[1]
+p_only = p.replace('## Claude Code binding', added + '\n## Claude Code binding', 1)
+p_all = p_s.replace('## Claude Code binding', added + '\n## Claude Code binding', 1)
+h = Path(host).read_text(); w = lambda z: len(z.split())
+hw = sum(w(k + h.split(k, 1)[1].split('\n## ', 1)[0]) for k in ['## Connected hosts', '## Agents', '## Waiting', '## CLI semantics'])
+assert '<!-- candidate-fresh-paseo-start -->' not in t.split('## Stage Report:', 1)[0].splitlines()
+print(json.dumps({'peers': [w(p),w(p_only),w(p_s),w(p_all)], 'paseo': [w(x),w(x),w(x_s)], 'host': hw, 'added': w(added), 'unlisted': [w(p)+hw,w(p_s)+hw,w(p_all)+hw], 'listed': [w(p+x)+hw,w(p_s+x_s)+hw,w(p_all+x_s)+hw]}, indent=2))
 ```
 
 ### Batch overlap
 
-Proposed product change set: **only `kc-dev-flow-2/extensions/peers/EXTENSION.md` and `kc-dev-flow-2/extensions/paseo/EXTENSION.md`**, with the insertion points above. No executable checker, workflow template, ADR file/index, provider setting, adopted README or label schema changes. Runtime exchange records use the existing task or `.notes/peer-exchanges.md` path under the existing authority; they are not new package files. Only this task body is writable in ideation.
+Proposed product change set: **only `kc-dev-flow-2/extensions/peers/EXTENSION.md`**, inserting the transport-neutral Current peer facts section before Claude Code binding. The sibling is sole owner of the transferred Paseo pointer and all Paseo binding/extension edits. No executable checker, workflow template, ADR file/index, provider setting, adopted README or label schema changes. Runtime exchange records use the existing task or `.notes/peer-exchanges.md` path under the existing authority; they are not new package files. Only this task body is writable in ideation.
 
 | Batch/live task (routing slug; short meaning) | Same file or check; implementation ordering |
 | --- | --- |
 | batch10-after-release-obligations — post-release proof and repairs | No direct file overlap: laws_check/dispatch_records and native spawn proof. Same release/adopter timing; its evidence is not freshness evidence. |
 | names-check-says-what-it-skipped — dispatch diagnostics | No direct file overlap: dispatch_records and its checks. A new freshness paragraph is not a new pre-send diagnostic. |
-| peers-paseo-rule-matches-practice — peer send/selection policy | Direct overlap in both extension files and peer replay cases. Settle its Captain choice and apply its replacement binding first; insert freshness shared section and notice pointer after it. Owns quiet-ask default, direct named exception and any associated ADR. |
-| peer-status-reaches-fresh — this freshness design | Owns the two insertions and the two stale-action replay cases; no sibling state edits. |
-| model-roster-per-repo — role model selection | Direct overlap in paseo worker text; common full-file reading counts and package lint. Keep role/worker resolution out of the freshness section; rebase and recount. |
-| paseo-human-surfaces-visible-and-reachable — visible terminals/pages | Direct overlap in paseo full file and reading counts. Distinct human-surface section; serialize/rebase before final integrated recount. |
+| peers-paseo-rule-matches-practice — peer send/selection policy | Direct overlap in peers only and peer replay/reading checks. Its cycle-2 ruling permits confirmed-Paseo messaging without optional selection and owns flags, notice pointer, ADR and native failure test. Apply that binding first, then this shared section once; no independent paseo insertion. |
+| peer-status-reaches-fresh — this freshness design | Owns one shared peers insertion, cold-FO loading proof, two stale-action replays and post-delivery observation; no sibling state edits. |
+| model-roster-per-repo — role model selection | No direct file overlap in its revised eight-file stage-worker slice; shares workflow reading corpus, test_sd_dispatch and package lint through integration. Its paseo/model/adoption changes require a final combined recount. |
+| paseo-human-surfaces-visible-and-reachable — visible terminals/pages | No direct file overlap now that this task deletes its paseo insertion. Its paseo surface edits still affect combined reading counts; integrate with that file owner before recount. |
 | adoption-asks-which-extensions — historical extension checks | Current narrowed task owns dispatch_records/number_guards/tests/laws, not these extension files. No shared file; normal adopter selection remains its existing authority. |
 | adr-required-statement — decision evidence at completion | No direct extension overlap; existing ADR/report checks may apply at implementation. No ADR number or shared index is requested here. |
-| adr-silent-undo-probe — fictional refactor experiment | No overlap: existing archived harness/scenario only. |
+| adr-silent-undo-probe — fictional refactor experiment | No peers file overlap: local record remains ideation for its fictional refactor harness/scenario; do not infer closure from an earlier overlap table. |
 | comment-check-reaches-delivery-gate — exact-head comment evidence | No overlap: delivery_gate/tests/validation principles. Rerun the reading fixture if its output lands first; do not change its check. |
 | journey-canvas-hosted-poc — hosted canvas experiment | No overlap: kc-journey-map hosting artifacts and its own state. |
-| journey-server-host-pilot — private server adapters | No overlap: kc-journey-map server/adapters; existing validation stays independently owned. |
+| journey-server-host-pilot — private server adapters | No peers overlap established: top-level/archive task absent locally; sibling cites validation dispatch records for local server adapters. Current remote ownership remains unverified; return ownership check to FO. |
 | ops-inbox-r1-setup-and-isolation — signed ops intake | No product-file overlap. Its relay/qnow notices are a concrete shared **authority case**: go-live-held notices cannot be sent merely to satisfy freshness. |
 | pr-review-lite-value-pilot — bounded review experiment | No overlap: kc-pr-flow review capability and trial state; no shared checker or numbering here. |
 
-Recommended order: settle peer-send policy, land its extension edits, add freshness, then integrate model-roster/human-surface edits under a single owner for the shared paseo file and recount the combined reads. Other code/check tasks may proceed independently; if delivery-gate output changes, rerun the common fixtures. FO rechecks live task and PR ownership before implementation. All sibling files were read only; active designs can change after this snapshot.
+Recommended order: sibling owns and integrates peer-send/notice policy under its accepted revise, then add this shared peers section once; model-roster/human-surface owners reconcile their own paseo changes and recount combined reads. Require this task's cold-entry replay before delivery; retain natural-use observation after delivery. Other code/check tasks may proceed independently; if delivery-gate output changes, rerun the common fixtures. FO rechecks live task and PR ownership before implementation. All sibling files were read only; active designs can change after this snapshot.
 
 ## Acceptance criteria
 
-**AC-1 — A cleared Web merge is not a Captain action.** At the exact candidate, run a fresh FO policy replay with the admitted stale relay line, Web PR 186 MERGED/b71f912, and a source-read interface whose calls are logged. Run with notice present, absent and delayed; in each case the output removes the cleared merge/approval, includes source/time, and has a current-turn source read. Negative control: make the source OPEN with a pending action and expect that action to remain, without claiming permission to merge. Falsifier: no query, stale request after MERGED, or suppressing a truly pending action. Design evidence: incident walkthrough above; fresh-agent execution is not yet run.
+**AC-1 — A cold FO loads the rule and removes a cleared Web merge.** Before delivery, start a fresh isolated FO context that has not read peers (no inherited history, peers content, path hint, current-turn source answer or replay verdict). Provide ordinary adopted workflow entry, a Captain status request, the admitted stale relay line and logged read-only source access; expose the exact combined candidate through normal package paths. Do not put this task's criteria or answer in the FO prompt. Capture initial context, file/tool read trace, package SHA, fixture bytes and resulting Captain-facing status. Require an observed read of peers before reliance on the peer fact, followed by a current-turn source query for `spacedock-dev/subspace-web` PR 186. Run notice present, absent and delayed with MERGED/b71f912; all remove the cleared merge/approval and include source/time. OPEN negative control retains the pending action without merge authority; unavailable source yields unverified and an FO-owned check. Falsifier: preloading/hinting peers to make the run pass, failure to discover it, no query, stale request after MERGED or suppressing the OPEN action. A harness that injects the rule or expected response proves nothing about loading. If the normal entry fails, report the trace to FO; do not add a loader here. Current evidence: planned cold test and incident walkthrough; no fresh FO has been launched in this ideation.
 
-**AC-2 — A cleared unblock does not become a release claim.** Replay web's old v0/CL line with an accessible original authorization plus its answered question clearing that step; then with those originals unavailable, and with an unrelated completion notice. Expected: remove only the proved cleared step; unavailable/irrelevant evidence gives unverified and an FO-owned source check, never credential access or “released.” Record transcript, source fixture bytes and source-read calls. Falsifier: original text is never consulted, unavailable evidence preserves the stale action as current, or authorization is upgraded to delivery. Design evidence: second walkthrough; native/history originals remain unverified.
+**AC-2 — A cleared unblock does not become a release claim.** Before delivery, replay web's old v0/CL line with accessible original authorization and the question it answered clearing that step; then with originals unavailable and with an unrelated completion. Record exact input/source bytes, current-turn read calls and transcript. Expected: remove only the proved cleared step; unavailable/irrelevant evidence is unverified with an FO-owned check, never credential access or a released claim. Falsifier: skipping originals, upgrading authorization to delivery or treating the old cleared step as current. Historical originals remain unverified; these are declared replay inputs, not invented historical proof.
 
-**AC-3 — Transition notices are scoped, quiet and authority preserving.** Exercise merged/released/unblocked changes through a recording transport, with known involved peers, an unrelated peer, running/unknown recipient, unlisted paseo, a held go-live action and a same-question correction. Observe only permitted recipients, explicit steer, notice false flag/no acknowledgement request, existing deferral, unsent/uncertain reason, and no automatic resend at an attended resume without reconciliation. Deliver the same notice twice and an older conflicting notice: source recheck must keep the current fact. Deliver a receipt-only and no-action finish: no new send or Captain status turn; material change/blocker remains reportable. Falsifier: broadcast, interrupt override, unlisted new send, duplicate action, timestamp ordering assumed authoritative, or a new timer. Recorder proves requested routing/flags, not real delivery. Candidate replay and native delivery are future checks.
+**AC-3 — Transition corrections preserve the integrated binding.** Before delivery, use a recording transport and the exact integrated peer policy to exercise merged/released/unblocked changes, known involved/unrelated peers, running/unknown recipients, confirmed-Paseo with paseo unlisted, held go-live and same-question correction. Observe scoped authorized recipients, binding-owned explicit flags/quiet notice, existing deferral and unsent/uncertain reasons; unlisted paseo alone is not a refusal after the sibling lands. At attended resume reconcile uncertain delivery, never auto-resend. Duplicate, older or conflicting observations cannot restore a stale action; source checks settle conflict. Receipt-only/no-action finishes cause no new acknowledgement or Captain turn, while errors/permission holds remain material. Falsifier: broadcast, authority bypass, interrupt override, suppression of a real error, duplicate action, timestamp-only truth or automatic retry. Recorder evidence proves requested behavior only; sibling owns native ask/reply/notice/failure visibility and must not have its test replaced by this one. Current evidence: design cases only.
 
-**AC-4 — Real bounded use demonstrates the value.** After normal authorized adoption, use the first naturally occurring peer dependency transition in one named pair, without synthetic peer messages or a background watch. Retain the original source observation, notice or held reason, recipient's subsequent query and Captain-facing status in the existing exchange record. A skipped/lost notice must still lead to a checked or explicitly unverified action. Falsifier: the first resulting status repeats a disproved Captain action or takes a receipt/finish as proof. If no suitable event occurs or send/adoption authority is absent, report not run and hold this acceptance claim; do not invent a live success. This requirement is distinct from fixture success and from approval of this design.
+**AC-4 — After delivery, observe one natural adopted peer transition.** This is a post-delivery observation, not a condition for implementation, validation pass or delivery. FO retains ownership in this task/exchange record and, after normal authorized adoption, uses the first naturally occurring transition in one confirmed pair; no synthetic peer message, polling, timer or forced enablement. Retain original source observation, permitted notice or held reason, receiver's next query and Captain-facing status, with actual response/message word counts. The status must be checked or explicitly unverified even if notice was lost/skipped. Falsifier: repeating a disproved Captain action or treating receipt/finish as proof. If no event or authority exists, record not run and the reason; report the later failure to FO without designing a remedy or silently reopening a gate. No real-use success is claimed at delivery; the accepted cost is delayed evidence of value. Current evidence: future obligation only.
 
-**AC-5 — Reading cost and ordinary orchestration remain visible.** Rerun the embedded recount at the exact base/candidate, plus the pinned common fixture instrument, and capture actual source/error responses and old/new status/notice words in the AC-4 sample. Report every lifecycle row, including +262 peers and +329 listed cold-policy load or an explained updated count after sibling integration; do not claim full totals without S/M. Run existing package routing/lint checks applicable to text edits and verify unchanged worker completion, optional adoption and gate/authority paths. Falsifier: hiding moved/added text, counting callback suppression as proven savings, dropping worker finish signals, or asserting a wrapper enforces these prose rules. Design counts/fixture output are measured; final candidate checks and real-output totals are not yet verified.
+**AC-5 — Reading cost and ordinary orchestration remain visible.** Before delivery, independently run the embedded recount at exact base/combined candidate and the pinned common fixture instrument. Record the five lifecycle rows, cold-entry reads and actual source/error/status/notice words in AC-1/AC-2/AC-3; AC-4 adds later real-use words without gating delivery. This task alone adds 262 peers words and zero paseo words; explain updated totals after integration. Run existing package lint and applicable test_lint_skills.py/test_sd_dispatch.py with the dispatched Spacedock root; preserve worker signals, authority/gates and optional worker selection. Falsifier: counting the transferred pointer twice, hiding new reads/output, asserting fixture/native callback savings, requiring AC-4 to complete pre-delivery or changing worker completion. Current evidence: draft policy/common fixture counts measured; final candidate/behavior counts pending.
 
-**AC-6 — The design is reviewable and stays within scope.** Run the dispatched `design_surfaces.py check` on this task; render the Mermaid and inspect origin/receiver roles, authorized-send branch, source-read branch and both uncertain stops against the prose. Verify only this entity body changed and all four dispatch checklist items are reported. Falsifier: missing usable criterion/artifact, a diagram allowing stale Captain action on unreadable source, changed frontmatter/sibling task, or any implementation/message/adopter change in ideation. Current-stage receipts follow in the report.
+**AC-6 — The revised design is presentable and scoped.** At ideation, run dispatched design_surfaces.py check; render/inspect the Mermaid against origin/receiver, cold loading, source-read branches and both failure/uncertain stops. Verify body-only change and prior report/frontmatter byte preservation, four dispatch checklist items and exact newest gate asks. Falsifier: remaining owned paseo insertion, omitted cold-start trace, AC-4 blocking delivery, missing criterion/diagram, changed sibling/frontmatter or unauthorized implementation/send/adopter change. Current receipts are in the appended cycle-2 report.
 
 ## Stage Report: ideation
 
@@ -285,3 +285,34 @@ Recommended order: settle peer-send policy, land its extension edits, add freshn
 ### Summary
 
 Designed mandatory current-turn source checks for peer-derived Captain actions, timestamped facts and bounded change notices inside the two existing extension files. Design and reading fixtures pass within their stated limits; implementation, original-event verification, actual peer delivery and real-use acceptance are not claimed. FO must present the single freshness-standard recommendation, coordinate the sibling send-policy gate and integrate shared extension edits before implementation; no gate was resolved here.
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: Revise the design under the Captain's ideation-gate revise of 2026-10-30 (「准」); the asks are in this task's newest ideation gate question (review/ideation, newest briefing); do exactly those asks, update criteria and the stop condition to match, and name anything that would go beyond them as a return to FO rather than designing it; peers-paseo-rule-matches-practice now owns the shared text, so read its newest design and stay consistent with it
+  Newest briefing and 2026-10-30 revise govern: deleted owned paseo insertion, cold-entry AC-1, post-delivery AC-4; stop/criteria match; sibling cycle 2 at da23dd127 owns transport wording. Out-of-scope loading/host remedies return to FO.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (batch10-after-release-obligations, names-check-says-what-it-skipped, peers-paseo-rule-matches-practice, peer-status-reaches-fresh, model-roster-per-repo, paseo-human-surfaces-visible-and-reachable) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  Batch overlap names the sole changed product path, all 14 required task rows and shared reading/replay checks; sibling owns Paseo, while model/surface tasks have no direct file overlap with this narrowed change.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  Recount exit 0: own peers 805→1067 (+262), own paseo unchanged; integrated listed route 1974→2297. Common mocked lifecycle fixtures reran exit 0: 442/672/1021/371/1003; actual replay/native response words remain pending.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  Six individually falsifiable criteria name evidence and stage timing; no unresolved material choice within the revise grant. Added reads, cold-loading failure risk and delayed real-use evidence are explicit costs.
+- SKIPPED: AC-1 — Cold-FO loading and cleared Web merge replay.
+  Not run at ideation; before delivery require unhinted entry/read trace and MERGED/OPEN/unavailable controls. Preloading peers or repeating the cleared action fails acceptance.
+- SKIPPED: AC-2 — Cleared unblock replay.
+  Inputs and falsifiers specified; original-session/native behavior unverified. Treating authorization as release completion fails.
+- SKIPPED: AC-3 — Integrated correction/authority behavior.
+  Candidate recorder and sibling-owned native checks are later work; no sends performed. Unlisted-only refusal under the delivered sibling policy, forbidden send or hidden material error fails.
+- SKIPPED: AC-4 — Natural adopted transition after delivery.
+  Captain explicitly moved this observation after delivery; FO retains it without a pre-delivery hold. No natural event is not run, never proof of value.
+- DONE: AC-5 — Design-stage reading evidence.
+  Embedded independent reconstruction and pinned common fixture program executed; double-counted pointer or omitted due text changes the counts. Final candidate lint/behavior and response-word evidence remain pending.
+- DONE: AC-6 — Presentability and scoped revision.
+  design_surfaces.py check exit 0: peer-status-reaches-fresh.md: design surfaces presentable; frontmatter and whole prior report preserved byte-for-byte; git diff --check clean; only this entity is modified by this worker.
+- DONE: Render and inspect the revised diagram.
+  Mermaid 11.16.1 / Playwright 1.62.1 / Chrome rendered 18 nodes, SVG 37,210 bytes; inspected cold-loading failure, notice/hold, status-only and action-source exits. Sandbox browser launch failed; permitted temporary-browser retry passed.
+- DONE: Use the dispatched local fallback after GitHub API failure.
+  gh pr list failed: error connecting to api.github.com; git fetch/source and local state checked, remote ownership remains for FO to reconcile before implementation.
+
+### Summary
+
+Revised only the active state design under the Captain's three asks: shared peers text only, cold-FO loading proof before delivery, and natural-use observation after delivery. Current-stage design/diagram/recount checks pass; fresh-agent behavior, native delivery and real-use value are not claimed. FO can dispatch within the recorded revise grant, after reconciling shared-file/PR ownership; any loading or transport remedy beyond the asks returns to FO.
