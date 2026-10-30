@@ -47,6 +47,20 @@ gates:
                 id: briefing:names-check-says-what-it-skipped:ideation:attempt-2:revision-1
                 digest: sha256:84a0d6524fe61a3cb15b2977c8f94cec8b23baba04915be1ec46e13b91980b88
                 room-ref: ./names-check-says-what-it-skipped/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:names-check-says-what-it-skipped:ideation:2
+                briefing: briefing:names-check-says-what-it-skipped:ideation:attempt-2:revision-1
+                by: agent:first-officer
+                at: "2026-10-30T09:59:59.754307Z"
+                decision: approve
+                reason: 'FO read the newest ideation report: the revision applies the 2026-10-30 revise asks, names no new Captain choice and returns anything wider to FO; the design check passes.'
+                conn:
+                    quote: 決定：六張全照建議，同意放寬 Paseo 規則和真實測試，並授權改完直接進實作？要改哪張直接說。 — 准
+                    source: the Captain, chat, 2026-10-30, FO's joint batch-11 ideation sitting
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
