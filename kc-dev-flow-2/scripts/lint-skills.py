@@ -55,9 +55,6 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=27, why="delivery summary preflight names the separate summary, unchanged use and legacy compatibility",
          captain="「進實作」 (Captain, chat, 2026-10-29), answering 「決定：四張全准進實作，含工作流文件多 27 字？要改哪張直接說。」; ideation gate attempt 2 of gate-requires-recorded-reviews",
          loaded="startup and resume of the First Officer, and each Delivery authority read including delivery gate preparation"),
-    dict(delta=38, why="the workflow Extensions section carries the peer-action source check at the FO entry point",
-         captain="「可以」 (Captain, chat, 2026-10-30), amendment 1 of peer-status-reaches-fresh, answering 「決定：#756 改成在工作流 README 加這 38 個字並放寬上限，可以嗎？」",
-         loaded="startup and resume of the First Officer, and each Extensions read before reporting a peer-derived Captain action"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.

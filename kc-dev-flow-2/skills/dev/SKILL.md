@@ -33,6 +33,8 @@ unrelated approved development. This entry-level check is not a host SessionStar
 hook. Use [learn](../learn/SKILL.md) for an explicitly requested named-task loop;
 notices do not authorize evaluation, delivery, retry or merge.
 
+Before naming a Captain action from a peer, check that action at its original source in the current reporting turn; if inaccessible, mark it unverified and keep the check with FO; do not assign it to the Captain.
+
 For existing work, preserve its recorded variant/profile, approved outcome,
 scope, non-goals and stop condition. Read current state, reports and delivery
 status instead of assuming a prior conversation is current. An invalid profile,
