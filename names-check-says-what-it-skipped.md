@@ -56,11 +56,11 @@ gates:
 
 ## Budget
 
-- One package PR inside `scripts/dispatch_records.py`; no new script.
+- Captain 2026-10-30 「准」, newest ideation question: one package PR changing `kc-dev-flow-2/scripts/dispatch_records.py`, its existing `scripts/test_dispatch_records.py`, and `references/sd/workflow.md` (last two paths relative to `kc-dev-flow-2/`). No new script; no other product file without return to FO.
 
 ## Stop condition
 
-- A record outside a task folder no longer exits 0 silently, the relative form is refused or ruled allowed, and every current in-folder record keeps its verdict.
+- Plain `--names` names skipped context checks on stderr while keeping existing verdict/stdout; `--names --strict` refuses missing task association with exit 2 before dispatch. Relative script paths stay allowed, no `Repository files:` syntax is added, and every associated record keeps its existing verdict in both modes. The three-file scope, word-neutral workflow and compatibility evidence must pass; any broader change returns to FO.
 
 ## FO alignment
 
@@ -74,152 +74,131 @@ Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review befor
 
 ### PRFAQ
 
-**Proposition.** FO can see when a dispatch-record check lacks task context, and new dispatches distinguish executable package paths from repository edit targets. Preserve the existing `--names` verdicts used for historical records; add `--names --strict` for the pre-dispatch check. This is a proposed compatibility choice, not an approved expansion of the one-file Budget. Pilot, `Surfaces: none`: PRFAQ and Mermaid are the artifacts; no UI, database, deployment or new recurring service.
+**Proposition.** The First Officer (FO) sees which checks lacked task context; the pre-dispatch `--names --strict` command refuses that missing context. Relative script paths remain allowed. This Pilot design replaces the earlier strict-path proposal under the Captain's 2026-10-30 「准」 revision, recorded in `review/ideation/briefing-1/index.json` and the ideation gate resolution at 09:31:36Z. That question says to keep the outside-folder notice and strict refusal, drop relative-path rejection and `Repository files:`, and widen the Budget to the checker, its tests and workflow text. The old title is retained frontmatter, not the current acceptance contract. `Surfaces: none`: this PRFAQ and Mermaid are the owed artifacts.
 
-**Why not simply reject every relative name?** The batch-10 records name files the worker edits, quoted commands the worker must put into documentation, and candidate-repository tests. They are not all instructions to run the installed package. A blanket path rejection changes old verdicts; a prose classifier would guess at intent. Use one explicit, path-only `Repository files:` line for references in strict records; a script token elsewhere is treated as executable for this bounded check. Do not interpret verbs such as “edit”, “run”, or “describe” as permission.
+**What does plain `--names` do?** Keep existing exit codes, stdout diagnostics, task-fact predicates and validation-history behavior for readable records. Add one stderr notice per record lacking the existing supported association: resolved `<task>/dispatch/<record>.md` with `<task>/index.md` or adjacent `<task>.md` (index takes the current precedence). Outside `dispatch/`, identify Candidate eligibility, task facts and validation ruling history as not checked. Under `dispatch/` without an adjacent task, identify task facts and validation ruling history; Candidate checking still runs when applicable. The notices name unavailable check categories, not violations or claims those checks apply to every record. No task discovery from cwd or matching slugs elsewhere.
 
-**What changes in the existing mode?** Keep `--names <records>` exit codes, stdout diagnostics, task-fact predicates and validation-history behavior. For each record lacking the supported context (`<task>/dispatch/<record>.md` and adjacent `<task>.md` or `<task>/index.md`), print a precise skipped-check notice to stderr. Outside `dispatch/`, identify Candidate eligibility, task facts and validation ruling history as not checked; with `dispatch/` but no task file, Candidate checking still runs and the notice names only task facts and ruling history. A file read failure is a diagnostic and exit 2. The notice is not a claim that names-only success clears a dispatch. Do not silently choose cwd's task or another task with the same slug.
+**What does strict add?** Accept `--names --strict <record>...`; `--strict` without `--names`, or without a record, is usage error 2. Run the same existing checks and same context notices; aggregate the existing statuses with context status 2 when any record lacks that association. Every associated record retains its ordinary result in both modes. Multiple records must still expose existing defects and each missing-context notice; do not stop at the first absent task. Flat/index, live/archive and symlink handling follow the existing resolved-path semantics. A valid task layout under `/tmp` is associated; the directory's name is not a refusal rule. Existing non-Git validation-history skipping remains unchanged: strict confirms task association, not complete historical proof. No unrelated input-error redesign is included.
 
-**What does strict mean?** `--strict` is an additional option of `--names`, rejected as usage error in other modes. It runs the existing checks plus these structural pre-dispatch checks:
+**What happens to relative paths?** No relative-path classifier, rejection, run/edit distinction, declaration syntax or migration is built. Directory-bearing tokens such as `kc-dev-flow-2/scripts/X.py`, `scripts/X.py` and `./X.py` keep the existing name-check behavior in both modes; bare known package script names keep the existing error. Preserve the script inventory, scanned regions and token matcher. Remove the old workflow paragraph's blanket absolute-path requirement, replacing it with the exact paragraph below. The absolute `Package root:` binding and skill-root instructions stay; permitting relative notation does not verify which file a worker actually executes. Accepted cost, named in the approved briefing: the form flagged in batch 10 stays legal and a worker can still run a repository copy. No new enforcement of provenance is claimed.
 
-1. Require the supported task/dispatch association; missing association returns 2 with the same skipped-check notice. Keep both flat and index task layouts and archive layouts; resolve symlinks consistently with the existing checker. A correctly associated in-folder record under `/tmp` is valid: path location is not the criterion.
-2. Scan the same Checklist and Scope notes regions (whole file only when neither exists) for the package's existing basename inventory, including extension scripts. A token with a directory is executable only when absolute; reject `kc-dev-flow-2/scripts/X.py`, `scripts/X.py`, `./X.py`, `../X.py`, `~/X.py`, `$ROOT/scripts/X.py` and `<package>/scripts/X.py`. Keep the current bare-name diagnostic. Quote/backtick wrapping and a fenced command must not hide a token. Non-package names remain outside this check. This does not verify filesystem existence, provenance of an absolute path or shell expansion.
-3. In those scanned regions, accept a column-zero `Repository files:` line only when its entire value is a comma-separated list of repository-relative POSIX paths, optionally backtick-wrapped. Each path must contain a directory component; forbid whitespace, traversal, shell punctuation and command arguments. This is a declaration of files to inspect/edit, never an instruction to execute. A mixed line such as `Repository files: kc-dev-flow-2/scripts/X.py; python3 ...` is invalid. Bare known names remain errors. Repository commands to execute use an absolute candidate-worktree path; installed tools use the declared absolute package root. No exemption from an earlier line carries to another line.
-4. Preserve all other predicates, precedence and 0/1/2 meanings: 0 no detected violation, 1 a record defect, 2 insufficient association/input or existing history failure. Strict does not claim a complete shell parser, automatic Spacedock enforcement, or additional validation-history coverage in non-git snapshots. The existing non-git history limitation remains documented and tested.
+**Who consumes the result?** `laws_check.py:l2_dispatch_record_complete` reconstructs event-time folders/tasks and calls plain `--names`; `run_check` consumes stdout only for exits 0/1. New notices therefore go to stderr, with no legacy stdout or verdict change. `pr_watch.py tasks` uses `--newest`, which stays unchanged, as do default folder checking and `--coverage`. New regression fixtures belong in the existing `test_dispatch_records.py`; they can exercise the real laws consumer using temporary Git records without editing it. If consumer production code or another test file actually needs an edit, return the expanded file list to FO before implementation.
 
-**What is the migration?** New dispatches follow the updated workflow's strict invocation; historical callers retain the legacy mode. Do not rewrite committed task or dispatch bytes, invent a grandfathering timestamp, or backfill adopter records. In strict mode, the historical batch-10 records intentionally need their repository references classified; their plain `--names` verdict stays unchanged. Adopters receive this instruction through their normal, separately authorized published-package README sync. Until that happens, the detached-copy notice improves visibility but does not make their old invocation fail closed.
-
-**Who consumes the output?** `laws_check.py:l2_dispatch_record_complete` reconstructs the dispatch folder, sibling records and task at each event commit in a temporary directory, then calls plain `--names`. Preserve that mode's stdout grammar: new skip notices are stderr only. `run_check` ignores non-traceback stderr on exit 0/1 but treats 2 as Cannot; no production parser change is needed for this design. Add real consumer tests in `test_laws_check.py`; if implementation adds a new stdout diagnostic to legacy mode, stop and include its parser in the same change. `pr_watch.py tasks` invokes `--newest`, which calls `check_names` alone: do not widen it to strict or task-fact checks. Strict mode is owned by the pre-build workflow command, not by those consumers.
+**How does the new route arrive?** FO runs strict on the saved associated record before `dispatch build`; nonzero holds. Spacedock's own build-to-spawn handoff stays uninterrupted. This is the package's instructed preflight, not a native Spacedock hook or proof that a model follows instructions. Historical callers retain plain mode. Adopters receive workflow text only through their separately authorized published-package sync; no old record rewrite or adopter change is part of this task.
 
 ### Journey
 
 ```mermaid
 flowchart TD
-  A[FO writes saved dispatch record] --> B[FO runs names with strict]
-  B --> C{Task and dispatch associated?}
-  C -->|No| D[Exit 2 with skipped checks]
+  A[FO saves authorized dispatch record] --> B[FO runs names with strict]
+  B --> R[Collect existing check results - relative paths allowed]
+  R --> C{Task and dispatch associated?}
+  C -->|No| D[Print skipped checks on stderr - exit 2]
   D --> E[FO restores task context]
   E --> B
-  C -->|Yes| F{Relative package reference?}
-  F -->|Path-only Repository files declaration| G[Run existing checks]
-  F -->|Executable or ambiguous token| H[Exit 1 with path remedy]
-  H --> I[FO classifies reference or writes absolute command]
-  I --> B
-  F -->|None| G
-  G -->|Defect or history failure| J[Existing refusal and repair route]
-  J --> B
-  G -->|Pass| K[FO builds and forwards dispatch]
-  L[Historical caller runs plain names] --> M[Keep existing verdict and stdout]
-  M --> N{Context missing?}
-  N -->|Yes| O[Print skipped checks on stderr]
-  N -->|No| P[Return existing verdict]
-  O --> P
+  C -->|Yes| F{Existing check result?}
+  F -->|Defect or history failure| G[Existing refusal and repair route]
+  G --> B
+  F -->|Pass| H[FO builds and forwards dispatch]
+  I[Historical caller runs plain names] --> J[Run existing checks with unchanged verdict]
+  J --> K{Task context missing?}
+  K -->|Yes| L[Print skipped checks on stderr]
+  K -->|No| M[Return existing verdict and stdout]
+  L --> M
 ```
 
-Design approval remains Captain-owned before implementation. The diagram starts at an otherwise authorized dispatch; a checker pass grants no gate approval, merge authority or proof that a worker started. Rendered with Mermaid CLI 12.0.0 and visually inspected on 2026-10-30: `/tmp/names-check-ideation/journey.png`; actors, strict/legacy branches, refusal loops and build boundary match the prose. The first sandboxed render could not start Chromium; the approved local render outside the sandbox succeeded. Reproduce by extracting this block and running `mmdc -i journey.mmd -o journey.png` with version 12.0.0; no hosted resource is involved.
+The diagram starts at an otherwise authorized dispatch. A pass grants no gate, merge or worker-start authority. Captain approval for this bounded revision is already recorded; FO owns transition to implementation. Rendering and visual comparison are recorded in the new stage report.
 
 ### Bounded existing-code check and current evidence
 
-Read chain, 2026-10-30:
+Read chain on 2026-10-30: Spacedock, then package, then adopters.
 
-- Spacedock 0.27.3: its own `skills/first-officer/references/fo-dispatch-core.md`, “dispatch.build”, takes checklist/scope files and forwards its generated artifact unchanged; ensign shared core and Codex runtime own the report/return channel. It does not document automatically running this package's `--names`. Repair the package's existing instructed check; do not add a second builder or claim a native pre-write hook.
-- Package: `git fetch origin` succeeded. `origin/main` is `a6612948936a4f075625147b21aabd3b10b19eee`, released manifest version 0.33.1. The dispatched Codex package's `dispatch_records.py`, its test, `laws_check.py` and workflow template are byte-identical to that revision. `check_task_facts` currently continues silently if association is absent; `SCRIPT_TOKEN` deliberately excludes names with a directory. Existing tests explicitly expect directory-bearing names and detached files to pass. This is an existing compatibility contract, not an accidental lack of test coverage.
-- Callers found before choosing the change: package `laws_check.py` calls plain `--names` on reconstructed copies; `test_dispatch_records.py:names` deliberately creates detached record fixtures; `test_design_surfaces.py` builds in-folder snapshots; `pr_watch.py` calls `--newest`, not `--names`. The batch-9 FO copy is the observed operational caller. Search boundary: all tracked current-package references plus these four local adopter state snapshots; private scripts/chat-only commands elsewhere are unknown. No new script is proposed.
-- Sibling adopters: read Relay `beirut-dev2/docs/dev2/README.md`, Web `dev2-fo/docs/dev2/README.md` and QNow `qnow-adopt-dev2/docs/dev2/README.md`. All prescribe absolute package roots and plain `--names`; none supplies a structural run/edit distinction. Read their local state commits only; no adopter fetch, write or repair.
-- Prior authority: read ADR 0017 (judge each push's events), 0020 (word-budget accounting) and 0027 (check structured FO writes at the existing checker), and state's `Override:` results. ADR 0027's rejected phrase-based ruling check supports explicit syntax rather than guessing verbs. No relevant override authorizes changing historical verdicts. No ADR number or new durable ruling is silently reserved; if Captain chooses the compatibility contract, its executable/docs tests are the bounded contract proposed here.
-- GitHub API: `gh pr list --repo iamcxa/kc-claude-plugins --state open ...` failed with `error connecting to api.github.com`. Current open-PR overlap is unverified; local task records supply the overlap table, not a claim of live GitHub status.
+- Spacedock 0.27.3's own `skills/first-officer/references/fo-dispatch-core.md` places checklist/scope preparation before build and requires immediate forwarding after build. It does not run this package checker automatically. Its ensign core/runtime owns append-only reports and return; no upstream or alternate builder change is needed.
+- `git fetch origin` succeeded; current `origin/main` is `a6612948936a4f075625147b21aabd3b10b19eee`, released package manifest 0.33.1. `git show origin/main:kc-dev-flow-2/<path>` matched the dispatched Codex install byte-for-byte for `dispatch_records.py`, its test, `laws_check.py` and workflow text. The checker silently skips missing associations today; existing relative-directory tokens already pass. Repair that context visibility, retain the approved path behavior.
+- Two bounded source searches covered the checker/functions and all package callers, then the workflow/adopter entry instructions. Known copy consumers: laws' event-time snapshots, detached test fixtures, and the observed FO copy incident. `--newest` is a separate consumer route. Private/manual callers outside these sources remain unknown; do not claim a universal caller census.
+- Read-only Relay `beirut-dev2/docs/dev2/README.md`, Web `dev2-fo/docs/dev2/README.md`, and QNow `qnow-adopt-dev2/docs/dev2/README.md` still prescribe plain `--names` and absolute package wording. This task changes none of them. Read accepted ADRs 0017 (event-time laws), 0020 (word-budget equality), 0027 (checks at structured writes), plus relevant `Override:` records. The current Captain decision supersedes the earlier path proposal; it does not authorize new heuristics or historical rewrites.
+- `gh pr list --repo iamcxa/kc-claude-plugins --state open --limit 50 --json number,title,headRefName` failed: `error connecting to api.github.com`. Hosted PR ownership is unverified; local task bodies and latest gate questions supply the overlap table.
 
-Historical replay used the installed absolute script, without modifying it. For each row, `git show <revision>:<slug>.md` and `git show <revision>:<slug>/dispatch/ideation-1.md` populate a fresh `<root>/<slug>.md` and `<root>/<slug>/dispatch/ideation-1.md`; copy those same record bytes to `<root>/copy.md`. Run `python3 -B <absolute package>/scripts/dispatch_records.py --names <record>` on both. All in-folder results print the existing missing-Result diagnostic; all copies print nothing.
+This revision re-exercised the installed baseline. Three historical replays again returned copy exit 0 with empty output versus associated exit 1 for missing `Result:`: `batch-reaches-each-gate-together` at `566a50400518f4d9fe217803605611e7910e7de5`, `captain-ruling-sources-checked` at `39e071b2969c37958ca70dd5a72dac40ea257800`, and `reused-worker-dispatch-leaves-a-record` at `0ccdbb305328e410fd4fb5fb53ca729837302688`. Reproduce by exporting each state's `<slug>.md` and `<slug>/dispatch/ideation-1.md` at that revision, copying the record beside the task folder, then running the installed absolute script with `--names` on both record paths. Four batch-10 `_archive/captain-amendment-form-checked/dispatch/{ideation-1,ideation-2,implementation-1,validation-1}.md` records at package-state pin below again returned 0. This revision preserves those relative-path results, including strict when task context is present.
 
-| Batch-9 slug | State revision | Copy exit | In-folder exit |
-| --- | --- | ---: | ---: |
-| batch-reaches-each-gate-together | `566a50400518f4d9fe217803605611e7910e7de5` | 0 | 1 |
-| captain-ruling-sources-checked | `39e071b2969c37958ca70dd5a72dac40ea257800` | 0 | 1 |
-| reused-worker-dispatch-leaves-a-record | `0ccdbb305328e410fd4fb5fb53ca729837302688` | 0 | 1 |
+Re-ran all 1,281 records from the previously exported, pinned snapshots after checking every record's SHA-256 against its prior receipt; zero exit/stdout differences. For independent reproduction, `git archive <state SHA>` into a fresh non-Git directory, enumerate `dispatch/*.md`, preserve task layout, invoke the installed `dispatch_records.main(['--names', record])`, and normalize only the exported root in stdout. These are baseline snapshot results, not candidate or live-history proof.
 
-Batch-10 replay at package-workflow state `8db6925f2d2c4579496103e736aa477de92ac608`: all four `_archive/captain-amendment-form-checked/dispatch/{ideation-1,ideation-2,implementation-1,validation-1}.md` return 0 with empty stdout. `ideation-2` names checker files to change; `implementation-1` also names `kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs)`. The observer called the relative forms a rule violation. This design does not erase that observation: strict mode requires explicit classification; legacy replay remains diagnostic under its original mode.
-
-Committed snapshot baseline: export each exact state SHA with `git archive` into separate scratch directories; enumerate all `dispatch/*.md`, preserve the full task layout, invoke the installed `main(['--names', record])`, capture exit/stdout and the record's SHA-256. This exercised 1,281 records, not only a text search. All 1,281 had an adjacent supported task; there were no input exceptions. These are non-git snapshot results: validation-ruling history is intentionally not proved by this corpus. Live git parity is an additional implementation criterion below.
-
-| Local state checkout | Pinned state SHA | Records | Exit 0 / 1 / 2 |
+| Local state | Pinned SHA | Records | Exit 0 / 1 / 2 |
 | --- | --- | ---: | --- |
 | Package workflow | `8db6925f2d2c4579496103e736aa477de92ac608` | 572 | 362 / 210 / 0 |
 | Relay | `2019310178b25a3742ff8ec51bfda09aad634f2c` | 304 | 133 / 171 / 0 |
 | Web | `e8c96bf22e455163d0beb062c3c503b626955258` | 146 | 91 / 55 / 0 |
 | QNow | `8a4eb114943778cfc1bad3ac59820e4e80329e09` | 259 | 104 / 155 / 0 |
 
-Scratch receipts: `/tmp/names-check-ideation/baseline.json` and `replay/results.json`. They are convenient local receipts, not a portable dependency; pins, extraction procedure and commands above reproduce the evidence. Candidate parity and strict behavior are not implemented or verified in ideation.
+The briefing's 287/573 regex observation is FO's cited reason for allowing relative paths, not this replay's denominator or a run/edit classifier. Local convenience receipts: `/tmp/names-check-ideation/baseline.json`, `/tmp/names-check-ideation-cycle2/baseline-recheck.json`; reproduction uses the pins and commands above, not these machine-local files. Candidate behavior remains unimplemented.
 
 ### Words FO reads at each lifecycle moment
 
-Do not count only the file that shrank. Counting method is whitespace-separated words (`len(text.split())`), using exact current 0.33.1 bytes and the exact replacement below. The changed dispatch paragraph is 41 words before, 35 after; whole workflow template 5,781 before, 5,775 after. The entire common mod is 48 words in both; no new mod, read-on-demand document or extra success output is introduced. Package-generated paths count as one word. Dynamic unrelated tool outputs are held equal for the same fixture, denoted U below; they are not claimed to be zero or measured end-to-end live totals.
+Use whitespace splitting for both sides and the same fixture inputs. Replace exactly the existing 41-word paragraph from “A checklist or scope-notes line” through “rewrites each name it lists” with this 41-word paragraph:
 
-Proposed replacement, in place of the current paragraph from “A checklist or scope-notes line” through “rewrites each name it lists”:
+> Before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names --strict <record>` on the saved record; nonzero holds dispatch. Relative script paths are allowed; bare package script names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped context checks on stderr.
 
-> Before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names --strict <record>`; nonzero holds. Use absolute executable paths; put repository references on path-only `Repository files:` lines. Plain `--names` preserves historical verdicts; skipped-check notices are not dispatch clearance.
+Measured against current package bytes: workflow remains 5,781 words; full common mod `references/sd/mods/kc-dev-flow-2.md` remains 48. No budget arithmetic or `lint-skills.py` edit is needed. No instructions move to a mod, new reference or success output. U below means the same unchanged input/output on both sides, not zero or a measured live total.
 
-| Moment and every changed input | Before | Proposed after |
+| Moment and complete changed-input accounting | Before | Designed after |
 | --- | --- | --- |
-| Startup/resume: full workflow + full common mod + identical idle output | 5,829 + U_start | 5,823 + U_start |
-| Pre-dispatch: affected paragraph + clean checker output | 41 + 0 | 35 + 0 |
-| Pre-dispatch: detached copy | 41 + 0 | 35 + skipped-context diagnostic; strict exit 2 |
-| Pre-dispatch: relative executable | 41 + 0 | 35 + path diagnostic; strict exit 1 |
-| Idle with open PR: unchanged idle hook, pr_watch and newest output | U_open | U_open |
-| Idle with merged PR: unchanged watch output and post-merge instructions | U_merged | U_merged |
-| After archive: unchanged extension learning/observer instructions and output | U_archive | U_archive |
-| Merge ask: unchanged delivery command, rules and output | U_merge | U_merge |
+| Startup/resume: full workflow + common mod + identical idle output | 5,829 + U_start | 5,829 + U_start |
+| Before dispatch: paragraph + clean associated check | 41 + 0 | 41 + 0 |
+| Before dispatch: detached copy + otherwise clean check | 41 + 0 | 41 + 21; strict exit 2 |
+| Before dispatch: dispatch folder missing task + otherwise clean check | 41 + 0 | 41 + 18; strict exit 2 |
+| Before dispatch: associated relative-path record | 41 + existing output | 41 + same output |
+| Idle on open PR: common mod, idle/watch inputs and output | 48 + U_open | 48 + U_open |
+| Idle on merged PR: common mod, watch/post-merge inputs and output | 48 + U_merged | 48 + U_merged |
+| After archive: extension learning/observer inputs and output | U_archive | U_archive |
+| Merge ask: delivery command, rules and output | U_merge | U_merge |
 
-Exact diagnostic proposals (implementation measures each emitted branch, including file/line prefixes):
+Exact designed stderr lines (counting a no-space record-path prefix as one word):
 
-- Outside folder, stderr: `<record>:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.`
-- Missing task, stderr: `<record>:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.`
-- Strict relative path, stdout: `<record>:1: relative package script path <path>; use an absolute execution path or a Repository files: line.`
-- Strict malformed reference declaration, stdout: `<record>:1: invalid Repository files declaration; use comma-separated repository paths without commands.`
+- `<record>:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.` — 21 words.
+- `<record>:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.` — 18 words.
 
-Failure branches deliberately add reading so a skipped check is visible; do not claim every lifecycle total decreases. Record diagnostic word counts with the actual candidate output in validation. Existing instruction bodies and other script outputs stay byte-for-byte equal under same inputs. `lint-skills.py` receives a -6 budget step, subject to recount on rebased main; no word-budget increase is proposed. New `Repository files:` declarations replace repeated relative references in new dispatches; measure the original and classified batch-10 checklist text in implementation, rather than claiming the marker is free.
+Count each emitted notice for multi-record calls, plus unchanged existing diagnostic output; paths containing spaces change whitespace counts and must use identical paths on both sides. The two increases are intentional visibility costs, not an overall reading reduction. Static prose/diagnostic counts are measured design text, not observed candidate output. Validation must capture actual stdout/stderr and recount the final rebased workflow. This design does not change CI triggers; incremental CI cost per PR is not measured at ideation.
 
-### Captain decision
+### Captain decision and return boundary
 
-**One decision: approve the compatibility split and the necessary six-file scope, or keep this task warning-only?** Recommend the split above: legacy `--names` keeps all current in-folder verdicts, while the workflow uses strict mode for new dispatches and explicit repository references. The two choices are coupled: an automatic relative-path refusal cannot preserve historical mixed-purpose records without either a new invocation boundary or guessing their intent. Approval must explicitly allow `dispatch_records.py`, its tests, consumer regression tests, workflow wording, its routing tests and budget accounting; the current Budget remains unchanged until the Captain rules.
+No unresolved Captain choice remains inside this revision: the recorded 「准」 accepted context notices, strict association refusal, relative paths and the widened Budget, with implementation allowed after revision without another sitting. Recommendation: implement exactly that three-file slice. What gets worse is already accepted: relative notation still permits wrong-copy execution, and legacy callers can ignore stderr; stricter preflight reaches adopters only after their normal sync.
 
-What gets worse: FO must use the strict invocation and classify repository references; callers still using plain `--names` can ignore the visible warning. The alternative within a literal one-production-file budget is to emit skip notices only and defer relative-path enforcement; that does not meet the intended title. Making existing `--names` uniformly strict would be simpler, but violates the requested unchanged historical verdicts and breaks detached fixtures/copy consumers; do not do it silently. No task-fact predicate is broadened under the recommended choice.
+Return to FO before adding relative-path rejection, a `Repository files:` marker, executable provenance checks, non-Git history refusal, new scripts, an ADR, a changed legacy verdict/stdout grammar, or files outside the three named below. A required scope expansion or changed compatibility result is a stop, not an implementation detail to self-approve. Recommend retaining this narrow boundary; it leaves those adjacent guarantees unproved. If the neutral wording cannot fit rebased source, return the concrete word/budget delta rather than editing the budget or other documents here.
 
 ### Batch overlap
 
-Proposed implementation files (six): `kc-dev-flow-2/scripts/dispatch_records.py`; `scripts/test_dispatch_records.py`; `scripts/test_laws_check.py`; `references/sd/workflow.md`; `scripts/test_sd_dispatch.py`; `scripts/lint-skills.py` (all remaining paths relative to `kc-dev-flow-2/`). No new script, CI workflow, ADR/index or adopter state edit. `laws_check.py` and `pr_watch.py` are unchanged consumers whose real behavior must be tested. If the approved final choice instead changes legacy stdout, include `laws_check.py` explicitly before implementation; this design does not authorize that silently.
+Implementation changes exactly `kc-dev-flow-2/scripts/dispatch_records.py`, `kc-dev-flow-2/scripts/test_dispatch_records.py`, and `kc-dev-flow-2/references/sd/workflow.md`. Existing laws, dispatch-transport, POC and lint suites are run unchanged; no production consumer, other test file, budget script, CI, ADR/index or adopter edit is proposed. This supersedes the first design's six-file list. State work is this entity only.
 
-Read-only live-task snapshot; slugs below are routing identifiers, followed by their purpose. No other session was contacted or edited.
-
-| Task | Same file/check and ordering |
+| Task routing name — purpose | Shared file/check and ordering |
 | --- | --- |
-| batch10-after-release-obligations — post-release repairs/evidence | dispatch_records.py validation history and laws_check.py, with dispatch/laws tests; land its inline-state fix first, then verify this mode boundary does not bypass it. Native worker-start proof remains separately owed. |
-| names-check-says-what-it-skipped — this dispatch diagnostic task | Owns the six files above and this state design only. |
-| peers-paseo-rule-matches-practice — peer transport policy | No direct file overlap; peers/paseo/adoption text changes may share release timing. No parser or history change. |
-| peer-status-reaches-fresh — fresh peer facts | No direct file overlap in the read scope; peers/paseo status guidance. Recheck its final design before implementation. |
-| model-roster-per-repo — per-repository role models | Direct overlap: dispatch_records.py, dispatch/laws tests, workflow.md, test_sd_dispatch.py, lint-skills.py; it also proposes laws_check.py. Agree on legacy/strict boundaries before adding model-record diagnostics; land this first, roster rebases and repeats the corpus and word recount. |
-| paseo-human-surfaces-visible-and-reachable — visible terminals/browser | No direct product file overlap: paseo extension only; shared pre-build scope-note seam. Names checking occurs before dispatch build, never between build and required immediate spawn. |
-| adoption-asks-which-extensions — event-time extension checks | Direct overlap: dispatch_records.py, test_dispatch_records.py, test_laws_check.py; its number_guards/laws.md edits are separate. Preserve historical copied-folder and README behavior; land it before this change or rebase with one owner for integration. |
-| adr-required-statement — durable-decision report evidence | No direct proposed file overlap from its current design; its live validation ownership stays untouched. Do not reinterpret ADR statements as executable directives. |
-| adr-silent-undo-probe — ADR refactor experiment | None; archived fictional-scenario harness, no package checker edits. |
-| comment-check-reaches-delivery-gate — comment evidence at delivery | None in its current design: delivery_gate.py/tests and validation principles; its earlier scope names laws/dispatch as investigated seams, not proposed edits. |
-| journey-canvas-hosted-poc — hosted canvas experiment | None; journey hosting artifacts, not dispatch parsing. |
-| journey-server-host-pilot — private journey server | None; kc-journey-map server/adapters and current validation. |
-| ops-inbox-r1-setup-and-isolation — event intake/isolation | None; kc-ops-inbox and its own workflow. |
-| pr-review-lite-value-pilot — bounded review trial | None; kc-pr-flow capability and trial evidence. |
+| batch10-after-release-obligations — post-release repairs | Shares dispatch_records.py and test_dispatch_records.py; laws/history is the consumer seam. Land its inline-state repair first, then preserve that behavior in both modes. Its native-start and other delivery proofs remain separately owed. |
+| names-check-says-what-it-skipped — this context notice task | Owns the three named files and this state revision. |
+| peers-paseo-rule-matches-practice — peer transport policy | No direct file overlap; peers/paseo/adoption wording and separate real transport proof. |
+| peer-status-reaches-fresh — current peer facts | No direct file overlap after its narrowed peers-only change; its latest question gives the Paseo insertion to the peer-policy task. |
+| model-roster-per-repo — repository stage model choices | Current revised design shares workflow.md only; it explicitly drops dispatch/laws/test/lint edits. Land this wording first, then rebase and recount its neutral workflow pointer. Its older overlap references to this task's six files are superseded here. |
+| paseo-human-surfaces-visible-and-reachable — worker terminal/browser reach | No file overlap; shared pre-build scope-note seam. Keep checks before build and do not reinterpret relative-path allowance as visibility evidence. |
+| adoption-asks-which-extensions — historical extension context | Shares dispatch_records.py and test_dispatch_records.py if resumed; latest gate question holds until a live record is affected. Do not wait on or revive it. If FO resumes it, serialize changes and rerun consumer/history checks. |
+| adr-required-statement — old ADR ledger proposal | Body closed 2026-10-20 despite validation frontmatter; no live dependency. Its abandoned workflow edit grants nothing here. |
+| adr-silent-undo-probe — ADR reversal experiment | Held and moved to a separate POC workflow by recorded ruling; no shared file/check. |
+| comment-check-reaches-delivery-gate — comment evidence proposal | Body closed 2026-10-20; no shared file/check and no dependency. |
+| journey-canvas-hosted-poc — hosted canvas trial | No overlap; journey hosting artifacts. |
+| journey-server-host-pilot — private journey server | Read folder-form index.md, validation owned elsewhere; no overlap with the three files. |
+| ops-inbox-r1-setup-and-isolation — event intake/isolation | No overlap; separate kc-ops-inbox package/workflow. |
+| pr-review-lite-value-pilot — bounded review trial | No overlap; separate kc-pr-flow experiment and journey artifacts. |
 
-Recommended order: resolve the single Captain choice; land historical extension/inline-state repairs, then this compatibility split, then model-roster changes. Serialize shared workflow/test/budget edits and recount on the actual rebased main. Other tasks can proceed independently; re-read their final file lists and live PR status before implementation because GitHub was unavailable here.
+Recommended order: FO refreshes hosted ownership when possible; integrate the active inline-state repair, then this context-only change, then roster workflow wording with a combined recount. Held/closed tasks are not prerequisites. Re-read current sibling file lists before implementation; shared state is concurrent and no sibling file was edited or session contacted.
 
 ## Acceptance criteria
 
-**AC-1 — Detached context is visible without altering historical verdicts.** Verified by running the three pinned batch-9 replays above against base and candidate: candidate plain mode keeps exits 0/1 and existing stdout but emits the exact outside-context notice on the copy; strict copy exits 2 and in-folder still returns the missing-Result exit 1. Exercise missing task, flat/index layouts, archive layouts, symlink resolution, missing input and multi-record aggregation. Falsifier: restore the silent `continue`, infer a task from cwd, or make plain mode return 2; the relevant assertion fails. Current evidence: base replay observed, candidate unimplemented.
+**AC-1** Outside-task context is visible and strict refuses it. Evidence: replay all three pinned batch-9 cases against base/candidate; candidate plain copies retain exit 0 and old stdout but emit the 21-word notice, strict copies exit 2, and associated originals retain missing-Result exit 1. Add missing-task (18-word notice, Candidate check still active), flat/index precedence, live/archive, symlink, valid `/tmp` layout, usage and multi-record fixtures. Falsifier: silent skip, cwd task inference, early exit hiding a later defect, or plain exit 2 fails the respective assertion. Current: base replays reconfirmed; candidate unimplemented.
 
-**AC-2 — Executable paths and repository references are structurally distinct.** Verified by strict subprocess fixtures covering every listed relative form, bare names, absolute installed/candidate commands, non-package names, backticks/fences, path-only declarations and mixed declaration/command rejection. Replay the four exact batch-10 records in legacy mode unchanged; strict mode identifies their ambiguous relative references, and an explicitly classified copy passes the new path check while retaining other verdicts. Falsifier: accept any directory as sufficient, exempt an entire mixed line, or let a declaration authorize a later relative command. Current evidence: four base records exit 0; strict fixtures are future proof, not reported passes.
+**AC-2** Relative script paths stay allowed in both modes; no new reference syntax exists. Evidence: associated subprocess fixtures cover existing directory-bearing forms, bare known names, absolute paths, non-package names and current scanned-region behavior; both modes preserve base verdict/stdout. Replay the four pinned batch-10 records unchanged with tasks present; both modes return the base result without declarations. Falsifier: restore strict relative rejection or require `Repository files:` and these fixtures fail; removing the bare-name check fails the existing negative control. Current: all four base records re-ran at exit 0; candidate unimplemented.
 
-**AC-3 — Existing consumers and every current in-folder record keep their verdict.** Verified by rerunning base/candidate plain mode over every record of the four pinned snapshots (1,281 baseline), comparing normalized stdout and exit per file, then doing the same in independent local git clones at those SHAs to cover live validation-history behavior. Keep no-git and live-history results separate; do not waive new differences. Run real laws integration on event-time folder snapshots with missing/available adjacent tasks, exit-1 defects plus stderr notices, and ensure no `Cannot` or lost violation caused by the notice. Verify --newest/default/--coverage behavior is unchanged. Falsifier: make stderr part of the laws stdout grammar, route --newest through strict mode, or change an existing task predicate. Current evidence: snapshot baseline and caller inspection only; live-clone and candidate comparisons remain future checks.
+**AC-3** Compatibility holds across every current associated record and real consumers. Evidence: base/candidate exit/stdout equality in plain and strict modes for each associated record of the 1,281 pinned snapshots and every associated record at implementation-time pins; repeat in independent local Git clones at those pins for live ruling-history behavior, reporting non-Git and Git results separately. Exercise actual laws event-time consumption with task present/missing and a real stdout defect plus stderr notice, requiring the same verdict/violation and no parser failure; run existing laws suite. Verify default, `--newest`, `--coverage` and inline-state repair behavior unchanged. Falsifier: move notices to stdout, route a historical consumer through strict, or change a task predicate; respective consumer/corpus assertions fail. Current: all 1,281 baseline results/hash checks repeated with zero drift; candidate/live-clone parity remains unverified.
 
-**AC-4 — New dispatches use the strict check before builder handoff.** Verified by existing test_sd_dispatch transport fixtures: run the actual checker on saved files, refuse a bad path/context before invoking the real builder, then repair and capture the generated artifact. Check Pilot/Prod workflow and derived POC instructions use the same strict pre-build route; no new ideation requirement for POC. Falsifier: replace the workflow invocation with legacy `--names`, omit strict checks from the fixture, or build after a nonzero result. This proves instructions/CLI/transport, not that a model obeys every instruction or starts natively. Current evidence: upstream dispatch contract inspected; candidate transport unverified.
+**AC-4** The workflow instructs strict preflight before builder handoff without path classification. Evidence: the existing test file binds the exact replacement paragraph and invokes the actual checker on saved valid/invalid layouts; nonzero prevents a test's builder call, repaired context reaches the existing real dispatch builder fixture. Run existing `test_sd_dispatch.py` and derived POC checks with their declared dependencies; inspect generated Pilot/Prod/POC instruction routes. Falsifier: substitute plain `--names` in workflow, build on nonzero, or insert the removed declaration requirement; the corresponding assertion fails. This proves CLI/instruction/transport seams, not native worker start or model compliance. Current: source/route inspected; candidate behavior and builder integration unverified.
 
-**AC-5 — Scope and reading cost stay explicit.** Verified by diff limited to the approved file list, existing dispatch/laws/SD/POC/lint suites, rendered Mermaid compared with prose, and before/after word receipts for every lifecycle row above using identical inputs. Preserve old reports, task frontmatter and adopter state. Falsifier: move extra instructions into a mod/output without counting them, remove the original absolute-path obligation without a replacement strict test, or introduce a legacy stdout line not consumed by laws. No CI trigger change; incremental CI cost per PR is not measured at ideation and must be stated/measured in implementation. Current evidence: exact prose counts and base snapshots; no candidate cost or behavior claim.
+**AC-5** The approved boundary and per-moment reading accounting hold. Evidence: diff only the three approved product files; no new script, path policy, consumer parser or budget edit. Run the relevant existing dispatch/laws/transport/POC/lint suites, render/inspect Mermaid against the prose, and capture final before/after prose plus stdout/stderr for every lifecycle row with identical inputs. Workflow count remains equal to its rebased baseline; clean output unchanged; notice costs explicit. Falsifier: uncounted moved instructions, added relative refusal, a changed untouched lifecycle input, scope expansion or a nonzero word-budget delta fails the respective check and returns to FO. Current: 41-to-41 paragraph and 5,781-to-5,781 workflow measured; candidate checks and CI cost unverified.
 
 ## Stage Report: ideation
 
@@ -243,3 +222,29 @@ Authored the Pilot design and explicit compatibility choice after replaying both
 - AC-3: 1,281 base snapshot results captured with exact state pins; candidate and live-git comparisons unverified. Routing legacy/newest through strict mode must fail compatibility tests.
 - AC-4: Native builder contract and package caller source read; candidate checker-to-builder exercise remains unverified. Restoring the legacy workflow invocation must fail the future routing test.
 - AC-5: Design check exit 0, rendered Mermaid inspected, exact static word delta -6; implementation diff, package suites and CI cost unverified. An uncounted instruction move must fail the future per-moment ledger.
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: Revise the design under the Captain's ideation-gate revise of 2026-10-30 (「准」); the asks are in this task's newest ideation gate question (review/ideation, newest briefing); do exactly those asks, update criteria and the stop condition to match, and name anything that would go beyond them as a return to FO rather than designing it
+  Updated Design, Budget, Stop condition and AC-1 through AC-5 to the recorded 2026-10-30 revise: context-only strict refusal; relative paths allowed; no declaration syntax; exactly three proposed files. Prior report and frontmatter remain byte-identical.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (batch10-after-release-obligations, names-check-says-what-it-skipped, peers-paseo-rule-matches-practice, peer-status-reaches-fresh, model-roster-per-repo, paseo-human-surfaces-visible-and-reachable) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  Batch overlap rereads all fourteen named tasks and latest applicable questions; active inline-state repair first, this change next, roster wording after; held/closed work is not a prerequisite. gh failed connecting to api.github.com, so hosted ownership is unverified.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  Whitespace recount against a6612948936a4f075625147b21aabd3b10b19eee: replacement 41 to 41, workflow 5,781 to 5,781, workflow plus common mod 5,829 to 5,829; designed notices add 21 or 18 words. Final runtime outputs remain future evidence.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-1, AC-2, AC-3, AC-4 and AC-5 each state reproducible evidence and a falsifier; no unresolved choice inside the grant. New path policy, consumer changes or extra files return to FO; candidate behavior is not claimed.
+
+### Summary
+
+Revised the Pilot design under the Captain's recorded 「准」: retain skipped-context notices and strict association refusal, allow relative script paths, and remove the old classifier/declaration design. The existing design-surfaces check returned `names-check-says-what-it-skipped.md: design surfaces presentable` (exit 0); Mermaid CLI 12.0.0 rendered the revised diagram and visual comparison confirmed actors, both modes, existing-result collection, refusal/repair loops and the build boundary. No product implementation, sibling/adopter edit, frontmatter change or stage transition occurred; FO can route the bounded revision under the existing grant, while implementation/validation remain outstanding.
+
+### Acceptance evidence at ideation
+
+- AC-1: Re-ran three pinned batch-9 cases: detached copies 0 with no notice, associated records 1 for missing Result; candidate notice/strict behavior unimplemented. Restoring silent skip must fail the future notice assertion.
+- AC-2: Four pinned batch-10 associated records again exit 0; candidate two-mode path preservation unverified. Reintroducing relative rejection must fail unchanged-record fixtures.
+- AC-3: Rechecked hashes and executed all 1,281 baseline snapshot records: zero exit/stdout drift. Candidate/strict/live-Git and real consumer comparisons remain future evidence; stdout notices or consumer strict routing must fail them.
+- AC-4: Spacedock's own dispatch contract and package/adopter routes read; actual candidate checker-to-builder evidence unverified. A legacy workflow invocation or builder-on-nonzero must fail the proposed routing fixture.
+- AC-5: Exact static word counts, successful design check and rendered/inspected Mermaid are current proof; candidate scope/suites, actual output costs and CI cost are unverified. An extra product file, word-budget delta or hidden moved instruction must fail validation.
+- Render receipt: `/tmp/names-check-ideation-cycle2/journey.png`; reproduce from the task's Mermaid with Mermaid CLI 12.0.0 and local Chromium. Offline npx metadata lookup failed, then the installed CLI was used; sandboxed Chromium failed to start, and the permitted local render succeeded. These machine-local convenience paths are not product dependencies.
+
+This complete cycle-2 report supersedes the prior report's design recommendation, not its historical evidence. The previous report is preserved verbatim; its strict relative-path proposal and unresolved six-file choice no longer govern this task.
