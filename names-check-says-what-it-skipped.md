@@ -63,6 +63,7 @@ gates:
                 state: consumed
 started: 2026-10-30T10:19:43Z
 worktree: .worktrees/spacedock-ensign-names-check-says-what-it-skipped
+pr: iamcxa/kc-claude-plugins#758
 ---
 
 ## Scope
