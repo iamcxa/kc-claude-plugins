@@ -3,7 +3,7 @@ title: Inside Paseo, FO and workers open human-facing terminals and browser tabs
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -60,7 +60,7 @@ gates:
                     source: the Captain, chat, 2026-10-30, FO's joint batch-11 ideation sitting
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
