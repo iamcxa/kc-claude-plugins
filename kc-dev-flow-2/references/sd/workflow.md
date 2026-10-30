@@ -559,6 +559,8 @@ can still show the task awaiting merge.
 
 ## Extensions
 
+Before naming a Captain action from a peer, check that action at its original source in the current reporting turn; if inaccessible, mark it unverified and keep the check with FO; do not assign it to the Captain.
+
 Extensions are optional accessories in `<package>/extensions/<name>/`, each described by
 its `EXTENSION.md`: what it needs, the stage or FO step it joins, the instruction it
 adds, how its result is read, and what happens when it cannot run. This README's
