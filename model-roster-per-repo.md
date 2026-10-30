@@ -329,6 +329,10 @@ Recommended order: land the shared diagnostic workflow/test change, settle peer-
 
 **AC-6 — Scope, reading and regressions.** On the exact candidate, run package lint, existing SD/POC derivation/dispatch tests and applicable existing checks; compare the eight-file allowlist and role declarations, assert no private store, fallback automation, native adapter or new law. Recount the exact text/output ledger below and capture exercised accept/customize/cancel/error outputs separately. Confirm absent-file routes and current special-role instructions are preserved. Measure the model-free suite runtime delta per PR; CI YAML and trigger stay unchanged. FO checks #674 ownership/remaining scope before delivery and does not close native/director/partner remainders as delivered. Falsifier: add an enforcement file, silently alter a role, change README-default behavior, or omit loaded helper output from the count. Current: proposed passage counts measured; candidate tests, native evidence, CI runtime and hosted closure are unverified.
 
+## Number guards
+
+ADR: 0047
+
 ## Stage Report: ideation
 
 - DONE: A design for a per-repository model roster: a dev2-recommended default set (FO on Claude), each role's model, reasoning level and host, a question UI that asks only when nothing is recorded and records only an explicit answer, later changes, and every dispatch reading it; the recommended set in the repository and a personal override outside it, as proposed in Scope; a reviewer of a different family than its worker refused or flagged; a capacity stop falling back by rule; how Draft PR iamcxa/kc-claude-plugins#674 and the absorbed backlog tasks close; batch 9's hand-chosen roster replayed from the setting; the default set, where each layer lives and which roles the UI asks about returned as Captain decisions; split into smaller tasks if it exceeds one PR
