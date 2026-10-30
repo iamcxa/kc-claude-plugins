@@ -3,7 +3,7 @@ title: dispatch_records.py says what it did not check, and refuses a relative pa
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
