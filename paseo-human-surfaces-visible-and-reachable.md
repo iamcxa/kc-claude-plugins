@@ -61,6 +61,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-30T10:19:52Z
+worktree: .worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable
 ---
 
 ## Scope
