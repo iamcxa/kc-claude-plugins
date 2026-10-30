@@ -746,4 +746,3 @@ Executed exactly with bash --noprofile --norc on the five-line script; no enviro
 ### Summary
 
 REJECTED on c804241d24a2b378604409c17340db29c096ac51: transport relaxation and notification/authority prose meet the scoped design, and local structure, measurements, CI and bound RoboRev evidence pass. Pilot acceptance still lacks the quiet-notice failure/reconciliation proof and literal single-pair sequence; FO owns evidence routing, final combined recount and delivery decision. Validation changed no product bytes, task frontmatter, sibling, PR or host policy.
-
