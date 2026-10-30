@@ -34,6 +34,14 @@ gates:
                 id: briefing:peer-status-reaches-fresh:ideation:attempt-1:revision-1
                 digest: sha256:3e50dff325abef10e54c5ae07c48421c8ed1f1c1a48faa6b17c25dec6c108313
                 room-ref: ./peer-status-reaches-fresh/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:peer-status-reaches-fresh:ideation:1
+                briefing: briefing:peer-status-reaches-fresh:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-30T09:31:42.445165Z"
+                decision: revise
+                reason: The Captain 「准」 (chat, 2026-10-30), answering FO's joint batch-11 ideation sitting of six gates whose ask was 「決定：六張全照建議，同意放寬 Paseo 規則和真實測試，並授權改完直接進實作？要改哪張直接說。」; accepts the direction and the revise asks named in this gate's question, and grants that a revised design staying within those asks goes to implementation without another sitting.
 ---
 
 ## Scope
