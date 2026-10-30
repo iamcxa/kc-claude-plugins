@@ -92,6 +92,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review before the joint ideation sitting: approve, revise, split or hold each task, the Captain's decisions, overlap and order
+Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6.1-astra 2026-10-30 — does amendment 1 withdraw what the Captain approved, and what changes in the build?
 
 ## Design
 
@@ -453,6 +454,14 @@ Recommended order: this task owns one coherent Paseo/notice wording change; inte
 **AC-5 — One owner carries compatible status wording.** Evidence: diff final files against both revised tasks: this task contains Paseo notice classification/flags/no-ack/error distinction; sibling contains only its shared Current peer facts rule and no duplicate paseo insertion. Exercise same-question correction versus new notice, held go-live, stale or duplicate status and source-unavailable cases using the sibling's accepted source rules. Falsifier: old listing restriction survives in any entry/prerequisite, duplicate sibling pointer lands, freshness bypasses send authority, or a no-action finish generates Captain work while an error is discarded. Current: sibling file and newest gate read; no sibling edits. Its fresh-FO loading and after-delivery real-use checks remain separately owned and unverified here.
 
 **AC-6 — Point-of-use cost and existing orchestration remain visible.** Evidence: independently reproduce complete draft/shipped-file counts and the five common fixture rows; capture real source/error/message word addends in AC-3/AC-4; recount combined sibling/roster/surface changes once. Run shipped design_surfaces.py check, render/inspect final Mermaid; at implementation run existing lint-skills.py and applicable test_lint_skills.py/test_sd_dispatch.py with the declared Spacedock root, and verify worker section/defaults/template unchanged by this task. Verify the new FO-reserved ADR records the actual ruling without rewriting 0038. Falsifier: measuring only one shrinking file, omitting moved/status/output words, stale count treated as final, missing graph branch/criterion, disabled worker signal, guessed ADR number, or changed sibling/frontmatter. Current: draft counts and common fixtures measured; final candidate/native/ADR evidence still pending.
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-30, chat
+Captain: 「好」 (chat, 2026-10-30)
+Asked: 「決定：#754 改成「提問開通知、其餘關閉，並禁止替對方回應權限」，可以嗎？」, which FO had stated as: 「建議不變，但要連同禁止回應權限的那句一起加，並用真實測試確認收到權限通知時 FO 只回報。沒有這句，我就不建議開。」
+Supersedes: AC-3, AC-4
+Design: Set notifyOnFinish: false for routine peer asks, requested replies and information-only notices.
 
 ## Number guards
 
