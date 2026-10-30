@@ -93,6 +93,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review before the joint ideation sitting: approve, revise, split or hold each task, the Captain's decisions, overlap and order
+Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-30 — does amendment 1 withdraw what the Captain approved, and what changes in the build?
 
 ## Design
 
@@ -278,6 +279,14 @@ Recommended order: sibling owns and integrates peer-send/notice policy under its
 **AC-5 — Reading cost and ordinary orchestration remain visible.** Before delivery, independently run the embedded recount at exact base/combined candidate and the pinned common fixture instrument. Record the five lifecycle rows, cold-entry reads and actual source/error/status/notice words in AC-1/AC-2/AC-3; AC-4 adds later real-use words without gating delivery. This task alone adds 262 peers words and zero paseo words; explain updated totals after integration. Run existing package lint and applicable test_lint_skills.py/test_sd_dispatch.py with the dispatched Spacedock root; preserve worker signals, authority/gates and optional worker selection. Falsifier: counting the transferred pointer twice, hiding new reads/output, asserting fixture/native callback savings, requiring AC-4 to complete pre-delivery or changing worker completion. Current evidence: draft policy/common fixture counts measured; final candidate/behavior counts pending.
 
 **AC-6 — The revised design is presentable and scoped.** At ideation, run dispatched design_surfaces.py check; render/inspect the Mermaid against origin/receiver, cold loading, source-read branches and both failure/uncertain stops. Verify body-only change and prior report/frontmatter byte preservation, four dispatch checklist items and exact newest gate asks. Falsifier: remaining owned paseo insertion, omitted cold-start trace, AC-4 blocking delivery, missing criterion/diagram, changed sibling/frontmatter or unauthorized implementation/send/adopter change. Current receipts are in the appended cycle-2 report.
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-30, chat
+Captain: 「可以」 (chat, 2026-10-30)
+Asked: 「決定：#756 改成在工作流 README 加這 38 個字並放寬上限，可以嗎？」, which FO had stated as: 「**建議：加這一句，共 38 個字。** #756 其餘文字留在 peers 檔，用來規範發更正通知的那一方。」
+Supersedes: AC-1
+Design: Proposed product change set: **only `kc-dev-flow-2/extensions/peers/EXTENSION.md`**, inserting the transport-neutral Current peer facts section before Claude Code binding.
 
 ## Stage Report: ideation
 

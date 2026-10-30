@@ -1,0 +1,1 @@
+2026-10-30T11:11:31Z gh pr view 186 --repo spacedock-dev/subspace-web --json state,isDraft,reviewDecision,mergeable,statusCheckRollup,title,url,mergedAt
