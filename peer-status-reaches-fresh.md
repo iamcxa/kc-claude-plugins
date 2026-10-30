@@ -337,3 +337,42 @@ Designed mandatory current-turn source checks for peer-derived Captain actions, 
 ### Summary
 
 Revised only the active state design under the Captain's three asks: shared peers text only, cold-FO loading proof before delivery, and natural-use observation after delivery. Current-stage design/diagram/recount checks pass; fresh-agent behavior, native delivery and real-use value are not claimed. FO can dispatch within the recorded revise grant, after reconciling shared-file/PR ownership; any loading or transport remedy beyond the asks returns to FO.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria in the task file; the revised design approved under the Captain's 2026-10-30 grant (「准」, recorded at the ideation gate): shared peers text only, no paseo insertion, consistent with the wording PR #754 owns; only the files the design names
+  Candidate 8f42107b1cc9ae0b3a7d10ad2a2408b46fcbe0cd on spacedock-ensign/peer-status-reaches-fresh, base 4c182bc66a1384d8a677b6a83a2b8dbd2088a7df; adds the exact approved 262-word Current peer facts section to kc-dev-flow-2/extensions/peers/EXTENSION.md; no other product path changed.
+- DONE: Commit locally, no push; PR text written for FO; stacked on PR #754, so write the PR text with base branch spacedock-ensign/peers-paseo-rule-matches-practice
+  Scoped Conventional Commit made locally; /tmp/impl-peer-status-reaches-fresh-pr.md contains title/body and the stacked base. No product push or PR creation; fetched source and live open-PR inventory confirmed #754 owns the base and no open PR uses this task branch.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins; FO pushes, opens the Draft PR, runs RoboRev and reads CI
+  Explicit Paseo/Codex dispatch assigns publication, exact-head review and CI to FO; prepared text is concrete for that handoff. No PR opened: no worker push grant.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Full acceptance is not green. Four exact-byte/scope controls refuse base-without-change, duplicate insertion, missing current-turn wording and missing worker boundary; these are structural checks, not behavioral falsifier proof. AC-1/AC-2/AC-3 behavior and their mutations remain not run.
+- SKIPPED: AC-1 — A cold FO loads the rule and removes a cleared Web merge
+  Dispatched to FO: unhinted cold entry/read trace plus notice present/absent/delayed, MERGED/OPEN/unavailable controls. No fresh FO launched, source queried or cold-entry/source/status words measured by this worker; failure must return to FO without a loader repair.
+- SKIPPED: AC-2 — A cleared unblock does not become a release claim
+  Accessible/unavailable/unrelated original-source behavioral replays and mutations not run; no historical authorization authenticated or credential read. The candidate preserves original-authority rules; this textual preservation does not prove compliant behavior.
+- SKIPPED: AC-3 — Transition corrections preserve the integrated binding
+  Recording-transport merged/released/unblocked, recipient/authority/duplicate/conflict/uncertain/error cases and behavioral mutations not run. FO retains independent replay and the sibling's native transport/error-visibility duties; no peer experiment, send retry or host change performed.
+- SKIPPED: AC-4 — After delivery, observe one natural adopted peer transition
+  FO owns this post-delivery obligation in this task: first natural authorized pair transition, source/notice-or-held reason, receiver query, Captain-facing result and actual word counts. No event/adoption here; not real-use success and not a pre-delivery hold.
+- DONE: AC-5 — Reading cost and ordinary orchestration remain visible: independent recount and pinned common fixtures
+  Embedded programs extracted from this task and sibling state da23dd127b929a0d580fa181ce1c3d8879fc71d6 ran python3 -B, exit 0. Actual stacked-base→candidate peers 1039→1301; paseo 389 unchanged; primary host addend 607; unlisted 1646→1908 and listed 2035→2297. Original route totals 1412/1974; pointer counted once.
+- DONE: Record the five lifecycle rows
+  Startup/idle-open/idle-merged/archive/merge-ask common fixture rows remain 442/672/1021/371/1003; listed original→base→candidate rows 2416→2477→2739, 2646→2707→2969, 2995→3056→3318, 2345→2406→2668, 2977→3038→3300. Missing observer refusal changes/fails the fixture; these are mocked control-text counts, not callback/runtime savings.
+- SKIPPED: AC-5 actual cold-entry/source/error/status/notice word addends
+  Behavioral replays were not run, so these addends are unmeasured, not zero; FO must append them with AC-1/AC-2/AC-3, and later AC-4. Existing capability audit was completed in the accepted design; no new mechanism or missing-capability claim is introduced.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), applicable test_lint_skills.py/test_sd_dispatch.py with the dispatched Spacedock root
+  All exit 0: workflow 5781/5781 words; 45 lint tests and fresh/reused dispatch/Team/authority/report/refusal fixtures. Final test rerun uses python3 -B and fresh empty PYTHONPYCACHEPREFIX directories; Spacedock CLI 0.27.2, plugin root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3. Logs: /private/tmp/peer-status-reaches-fresh-evidence/{lint-tests,dispatch-tests}.log.
+- DONE: adr_lint.py docs/adr --since <base> exit 0; number_guards.py check exit 0
+  Dispatched 0.33.1 scripts at exact base/candidate: 45 ADR records, no legacy; number guard PASS/no findings with --base 4c182bc66a1384d8a677b6a83a2b8dbd2088a7df. Initial default-trunk check wrongly included sibling ADR 0046 and failed R4; explicit stacked base correctly excludes it. No ADR added/reserved by this task; existing 0020/0037/0038/0042/0046 read at candidate, with 0046 narrowing 0038.
+- DONE: comment_ratio.py within its maximum; affected-document disposition; scope and AC-6 preservation checks
+  comment_ratio.py base HEAD exit 0: code 0, comments 0, 0.0%, maximum 5% not enforced below 20 code lines. doc_impact.py exit 0, 0 documents listed; peers is updated. design_surfaces.py exit 0/presentable (implementation scope check not run); diagram and AC-6 ideation receipts remain unchanged. Existing transport/authority/worker bytes, workflow budget and sibling/adopter files preserved; git diff --check clean.
+- SKIPPED: RoboRev complete review evidence
+  Required post-commit roborev_gate.py --repo <assigned worktree> --base 4c182bc66a1384d8a677b6a83a2b8dbd2088a7df exited 3: incomplete: the roborev daemon is not running. Preflight absence was sent to FO; no clean review or repair is claimed.
+- DONE: CI cost measured or stated as not measured; split-root state boundary
+  CI cost per PR not measured; no CI trigger changed. State root/branch verified spacedock-state/dev2; append after status --read total_lines 339, preserve all previous bytes/frontmatter, commit and sync this entity path only. Task remains implementation; no acceptance, transition or gate resolution claimed.
+
+### Summary
+
+The exact approved single-file insertion is committed locally at 8f42107b1cc9ae0b3a7d10ad2a2408b46fcbe0cd, stacked on #754, with PR text prepared for FO. Structural, dispatch and reading checks pass within their stated boundaries; cold loading, independent behavior/mutations, native transport, actual replay word addends, exact-head RoboRev and CI remain for FO before accepted delivery, while natural-use observation remains after delivery. This is an implementation handoff, not a claim that every acceptance criterion is green.
