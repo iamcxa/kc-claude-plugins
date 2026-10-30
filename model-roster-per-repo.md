@@ -61,6 +61,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-30T10:33:26Z
+worktree: .worktrees/spacedock-ensign-model-roster-per-repo
 ---
 
 ## Scope
