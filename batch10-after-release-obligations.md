@@ -42,6 +42,11 @@ gates:
                 at: "2026-10-30T09:31:33.035001Z"
                 decision: revise
                 reason: The Captain 「准」 (chat, 2026-10-30), answering FO's joint batch-11 ideation sitting of six gates whose ask was 「決定：六張全照建議，同意放寬 Paseo 規則和真實測試，並授權改完直接進實作？要改哪張直接說。」; accepts the direction and the revise asks named in this gate's question, and grants that a revised design staying within those asks goes to implementation without another sitting.
+            - id: gate-attempt:batch10-after-release-obligations-ideation-2
+              briefing:
+                id: briefing:batch10-after-release-obligations:ideation:attempt-2:revision-1
+                digest: sha256:37846abc615c40916a204a7cb5f5aa081aaf197b600d6da95bf7d546d5c9e919
+                room-ref: ./batch10-after-release-obligations/review/ideation/briefing-2
 ---
 
 ## Scope

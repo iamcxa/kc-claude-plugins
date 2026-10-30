@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:batch10-after-release-obligations:ideation:attempt-2:revision-1",
+  "question": "Approve the revised ideation of batch10-after-release-obligations to enter implementation? FO recommends approve under the Captain's grant: the revision stays within the asks of his 2026-10-30 revise.",
+  "artifacts": [
+    {
+      "id": "artifact:batch10-after-release-obligations:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/45be04162434571d00db457b0931233dbe0d0532/batch10-after-release-obligations.md",
+      "rev": "sha256:7ace188106d9ed6ccdf44950b72aebd231f1887fc0552034ebdc42ba738dbd7c",
+      "mediaType": "text/markdown",
+      "summary": "Revised within the gate's asks; report names no new Captain choice; design_surfaces.py check passes; no open PR overlaps (gh pr list, 2026-10-30)."
+    }
+  ]
+}
