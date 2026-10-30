@@ -24,3 +24,7 @@ Provider error, observed by accident: FO spawned reviewer 9b09419f through the C
 ## Rerun on c804241d2 (asks notify true), 2026-10-30
 
 Hold, 06c575b9 (ask mode): event permission-required naming the request; the notification text says to respond with respond_to_permission. FO did not respond and killed the peer. The notification's agent-response carried the peer's previous turn, "READY", so a callback's response is not an answer to the current ask.
+
+Ask and reply, 56634892 (auto mode): queued receipt; one sourced reply, b11-754-c804-ask, reached FO first; then one event finished carrying the peer's closing text. FO matched the reply once and did not count the callback as the answer. Cost: one extra notification per ask, as forecast.
+Kill after a notified hold: one further event errored ("was canceled"), so a killed hold produces two notifications.
+All test peers killed.
