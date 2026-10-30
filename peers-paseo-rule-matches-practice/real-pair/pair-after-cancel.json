@@ -1,0 +1,51 @@
+{
+  "Id": "f541d02c-5caa-4c76-bd7a-6e375700246f",
+  "Name": "peer test b11: #754 single pair (haiku, auto)",
+  "Provider": "claude",
+  "Model": "claude-haiku-5-5",
+  "Thinking": "auto",
+  "Status": "idle",
+  "Archived": false,
+  "ArchivedAt": null,
+  "Mode": "auto",
+  "Cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo",
+  "CreatedAt": "2026-10-30T11:14:53.582Z",
+  "UpdatedAt": "2026-10-30T11:16:05.417Z",
+  "LastUsage": {
+    "InputTokens": 0,
+    "OutputTokens": 0,
+    "CachedTokens": 0,
+    "CostUsd": 0
+  },
+  "Capabilities": {
+    "Streaming": true,
+    "Persistence": true,
+    "DynamicModes": true,
+    "McpServers": true
+  },
+  "AvailableModes": [
+    {
+      "id": "plan",
+      "label": "Plan Mode"
+    },
+    {
+      "id": "default",
+      "label": "Always Ask"
+    },
+    {
+      "id": "acceptEdits",
+      "label": "Accept File Edits"
+    },
+    {
+      "id": "auto",
+      "label": "Auto mode"
+    },
+    {
+      "id": "bypassPermissions",
+      "label": "Bypass"
+    }
+  ],
+  "PendingPermissions": [],
+  "Worktree": null,
+  "ParentAgentId": "2e87a82e-a8a9-4e41-973a-7483aa46e39d"
+}

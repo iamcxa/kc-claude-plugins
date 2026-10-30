@@ -33,3 +33,13 @@ Quiet notice on c804241d2, a412c4be: steer, notify false; peer logged it and sen
 Quiet reply arguments on c804241d2: the reply call recorded in the 56634892 log carries activeTurnBehavior steer and notifyOnFinish false.
 Report-only: the hold on 06c575b9 was recorded before any cleanup, and this FO session's transcript holds 0 respond_to_permission calls. The kill afterwards was cleanup, not part of that proof; on the old head a cancel reached the peer as a rejection.
 Known limit: a lost quiet notice has no reply to miss, so its sender cannot tell. A cancelled quiet turn reads as finished; the sender sees only the missing reply on a requested answer.
+
+## Single pair on c804241d2, 2026-10-30, peer f541d02c (auto mode)
+
+One peer, in order. Ask b11-754-pair-ask, steer, notify true: receipt, one sourced reply, then one event finished. Notice b11-754-pair-notice, steer, notify false: logged, nothing sent back, no callback. Log: peer-f541d02c.log.
+
+Failed quiet notice b11-754-pair-notice-fail: steer, notify false; turn seen running, then cancelled. No callback from 2026-10-30T11:16:16Z to 2026-10-30T11:17:01Z. Status read: idle (pair-after-cancel.json).
+
+Exchange record: b11-754-pair-notice-fail stays UNRESOLVED. FO's only signal was a queued receipt; FO cannot tell from the host that the notice was absorbed, so FO does not record it as delivered.
+
+Limit: this is FO recording an outcome by rule. A notice requests no reply, so nothing on the sender's side would ever have shown this failure had FO not cancelled it itself.
