@@ -63,6 +63,7 @@ gates:
                 state: consumed
 started: 2026-10-30T10:01:21Z
 worktree: .worktrees/spacedock-ensign-batch10-after-release-obligations
+pr: iamcxa/kc-claude-plugins#755
 ---
 
 ## Scope
