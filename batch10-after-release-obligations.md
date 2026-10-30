@@ -339,3 +339,38 @@ Designed the bounded post-release closure sequence and verified the two current 
 ### Summary
 
 Revised only the accepted gate asks: compare raw amendment regions before parsing, publish both repairs then move the pin independently of five owner form returns, and accept a real Paseo-started implementation worker. Replayed the real records and local history, corrected shared-file ordering, and preserved all prior report/frontmatter/Scope bytes. Pilot remains design-only; implementation and operational receipts belong to the next stages, with no extra Captain sitting required for this in-scope revision.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved revised design in only its five named product files; commit locally and prepare PR text without version bumps.
+  Branch spacedock-ensign/batch10-after-release-obligations; base a6612948936a4f075625147b21aabd3b10b19eee; candidate 0c55b9a574b8abd845e2ab969c200aa44b1588e4; PR title/body /tmp/impl-batch10-after-release-obligations-pr.md; clean code worktree.
+- DONE: AC-1 raw comparison precedes parsing, preserving existing append-only protection and exact real-record inputs.
+  RealAmendmentTests: five asserted source hashes, Scope/report pairs 0/0/2/0/2 -> all 0, original flat/archive layouts, protected-heading edits refuse; parser spy rejects premature parsing; full source forms remain refused. Evidence /tmp/batch10-obligation-evidence/{sources,real-records,form-checks}.json.
+- DONE: AC-2 inline history resolves only the owning workflow through the real --names CLI.
+  Eight split-root/inline x flat/folder/live/archive cases pass; released inline exits 2/uncommitted-report. Foreign and uncommitted rulings hold; old/same/missing/shallow/rewritten/ambiguous history and non-Git tests retain their boundaries; removing prefix or weakening ancestry fails. Evidence inline-matrix.json in the same directory.
+- DONE: Every implemented criterion has its named falsifiers exercised with fresh Python -B processes and caches excluded.
+  Final law+dispatch suites: 152 tests, exit 0, real-record inputs enabled; 22 mutation controls fail their target assertions, including absent/delayed shortcut, whole-file comparison, normalized/deduplicated bytes, malformed skip, foreign history, missing prefix and same-commit ruling. Evidence mutations.json.
+- DONE: Take implementation-1-message-1's bounded reading; preserve existing fallback semantics and show a section move invokes parsing instead of the shortcut.
+  RawAmendmentTests spies two parser calls on section moves; valid-entry placement remains the existing form boundary, not a new L3 refusal. Exact a944a5ea98a267512c718a0ccce30356a61298f6..af41b314b294bf4a802cb5df13b0c3e7786ace5c replay stays (17, [], None, 0), including 5f1674bef0de8464347266f8838fa625fb5a0112; history-replay.json.
+- DONE: AC-3 preserve the five original form defects and named owners independently of pin activation.
+  Pinned hashes asserted; amendment diagnostics remain 1/1/6/1/4 and five full form CLIs exit 1. No sibling record, closure/archive disposition or form parser edited; no owner-acknowledgement or repair prerequisite added.
+- SKIPPED: AC-3 executed owner returns/handoff receipts.
+  FO-owned by dispatch; source/path/diagnostics retained in sources.json and form-checks.json for the existing plugin, relay and QNow owners. No sibling messages or edits sent by this worker.
+- SKIPPED: AC-4 normal publication, deployed pin and actual watched state-push run; AC-5 first eligible post-0.33.1 real implementation startup; AC-6 actual adopted delivery gate.
+  FO-owned operational receipts after integration; no local fixture is claimed as publication, hosted CI, real startup or gate acceptance. CI cost per PR not measured; CI triggers/full-history settings unchanged.
+- DONE: AC-7 independently recount five normal lifecycle scenarios and changed real-record/inline diagnostics at the exact integrated base/candidate.
+  Base/candidate 6994 startup, 897 idle/open, 860 idle/merged, 418 archive/missing-observer, 2435 merge ask; outputs 37/0/90/90. Archive corrects design forecast 401: actual watcher 5 + observer recovery 85 + passages 328. Relay/operator outputs 46/40 -> 27/27; inline 16 -> 0. reading-{base,candidate}.json.
+- SKIPPED: AC-7 archive task ADR reservation and one-time operational output counts.
+  Existing task owner/FO reserves at its actual dispatch; no ADR selected or fabricated; pin, owner-return, actual-start and allocator receipts remain unobserved here.
+- DONE: Repository lint, ADR lint, number guards and comment ratio meet the completion checklist.
+  Repository lint exit 0, workflow 5781/5781 words; adr_lint docs/adr --since base exit 0 (44 checked); number_guards check exit 0/no findings; comment_ratio base HEAD exit 0, 1/230 comment/code lines = 0.4%, maximum 5%; git diff --check clean.
+- DONE: Existing form, watcher and Spacedock consumer checks preserve their boundaries.
+  Form suite 202 tests exit 0 (4 explicitly object-dependent skips); watcher suite 129 exit 0; test_sd_dispatch.py --sd-plugin-root Spacedock 0.27.3 package exit 0, harness reports 0.27.2; model-free dispatch/gate fixtures do not prove native worker execution.
+- DONE: Affected-document dispositions and task presentability.
+  doc_impact: VALIDATION.md updated; ADR 0045 unaffected because supported ruling/strict-order semantics are retained; learning.md unaffected because consumer/output checks and lifecycle measurement practices remain applicable. design_surfaces check task exit 0; no diagram changed; no new ADR, skill or workflow document required.
+- SKIPPED: Complete RoboRev review; product push, Draft PR opening and hosted CI.
+  Exact candidate gate invoked after commit, exit 3: incomplete: the roborev daemon is not running. FO owns rerun, publication and CI; no clean review claimed and no product branch push/PR opened. Hosted open-PR inventory was read successfully; no existing PR for this branch.
+
+### Summary
+
+Implemented and locally committed the two bounded repairs, retained original form debt, and prepared the PR text for FO. FO's committed follow-up preserves the existing section-placement boundary; all local behavior/consumer checks pass, while RoboRev and the named operational/publication receipts remain with FO. Pilot scope and the five-file product boundary are unchanged; this report is implementation evidence, not task closure or delivery approval.
