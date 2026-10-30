@@ -61,6 +61,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-30T10:12:16Z
+worktree: .worktrees/spacedock-ensign-peer-status-reaches-fresh
 ---
 
 ## Scope
