@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:names-check-says-what-it-skipped:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of names-check-says-what-it-skipped to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that dispatch_records.py no longer passes silently on a record outside a task folder, and a relative package script path is refused or ruled allowed; profile pilot (package rules and scripts, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:names-check-says-what-it-skipped:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/73aa6fd4634d64a49dd388f77f7078b63b966b77/names-check-says-what-it-skipped.md",
+      "rev": "sha256:7e9014c9a91c2c91e3b22450107d668fb6dc65ceb8f3af8cfb920562d0035bf0",
+      "mediaType": "text/markdown",
+      "summary": "Bites: batch 9's three Result: misses passed on a /tmp copy; batch 10's relative paths passed the names check (observer)."
+    }
+  ]
+}
