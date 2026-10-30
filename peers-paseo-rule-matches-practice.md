@@ -15,6 +15,17 @@ gates:
                 id: briefing:peers-paseo-rule-matches-practice:backlog:attempt-1:revision-1
                 digest: sha256:206116b487a362fb351755204e68648f11d9af26e6c9b1910980350bd8c11024
                 room-ref: ./peers-paseo-rule-matches-practice/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:peers-paseo-rule-matches-practice:backlog:1
+                briefing: briefing:peers-paseo-rule-matches-practice:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-30T08:18:26.672769Z"
+                decision: approve
+                reason: The Captain 「對，全准且全確認」 (chat, 2026-10-30), answering FO's joint batch-11 backlog sitting of six gates whose ask was 「決定：六張全准進設計，並確認上面三件事？要改哪張直接說。」; accepts FO's recommendation and the confirmations stated in the gate question.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
