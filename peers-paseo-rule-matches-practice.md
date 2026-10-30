@@ -93,6 +93,7 @@ Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review before the joint ideation sitting: approve, revise, split or hold each task, the Captain's decisions, overlap and order
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-30 — does amendment 1 withdraw what the Captain approved, and what changes in the build?
+Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-31 — does amendment 2 withdraw what the Captain approved, and what changes in the build?
 
 ## Design
 
@@ -470,6 +471,12 @@ Superseded text:
 **AC-3 — Real two-agent ask, reply and notice are observed before validation passes.** Evidence: on the exact candidate, FO binds one authorized pair; validator retains actual confirmed server/agent identities, explicit steer/notify false calls, receipt and recipient-side ask, one sourced reply matched once, and one no-ack notice. Separate queue receipt, delivery, answer and authority. Falsifier: recorder-only proof, guessed recipient, list-gated ask, callback counted as the explicit answer, duplicate handling causes another action, or worker notifications are disabled. Current: Captain's gate explicitly authorizes the bounded validation; no live experiment in this ideation. Missing host access holds this criterion; do not substitute the sibling's post-delivery observation.
 
 **AC-4 — Quiet sends do not silently lose peer errors or permission holds.** Evidence: use the same authorized real pair and a safe supported failure/hold route; compare actual receiver failure with sender-visible notification/activity and attended unresolved-exchange reconciliation while false. Preserve error/hold source and reporting time; silence stays unresolved. Include unavailable return route, duplicate/no-action finish and a normal worker signal as separate controls. Falsifier: errored peer becomes invisible, no way to distinguish unresolved/failure from success, or a hold is bypassed. Current: primary docs/schema show callbacks also carry errors/holds, so this is explicitly unverified and may fail. If untestable or failed, return evidence to FO and hold quiet-send acceptance; do not invent host changes, polling or a new default under this design.
+
+### Amendment 2 — 2026-10-31, chat
+Captain: 「可以」 (chat, 2026-10-31)
+Asked: 「決定：#754 改成「提問和告知都開通知，只有回覆關閉」，可以嗎？」
+Supersedes: AC-7, AC-8
+Design: Set notifyOnFinish: false for routine peer asks, requested replies and information-only notices.
 
 ## Number guards
 
