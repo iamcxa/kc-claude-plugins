@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:peers-paseo-rule-matches-practice:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of peers-paseo-rule-matches-practice to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that the peers rule on new Paseo asks matches what FOs do, with the choice of listing paseo everywhere or relaxing the clause returned at the ideation gate; profile pilot (package rules and scripts, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:peers-paseo-rule-matches-practice:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f3686a132a45f16edab6510e79bbf347f5151bb1/peers-paseo-rule-matches-practice.md",
+      "rev": "sha256:c248538fcb33bb27f3f0b035b9c91c1a234c3d299b7bcb0a0c3135cf88e5650d",
+      "mediaType": "text/markdown",
+      "summary": "Bite: interview round 004: five of five FOs initiate Paseo asks with paseo unlisted; none records peers not run."
+    }
+  ]
+}

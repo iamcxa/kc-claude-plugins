@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:peers-paseo-rule-matches-practice:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:peers-paseo-rule-matches-practice-backlog-1
+              briefing:
+                id: briefing:peers-paseo-rule-matches-practice:backlog:attempt-1:revision-1
+                digest: sha256:206116b487a362fb351755204e68648f11d9af26e6c9b1910980350bd8c11024
+                room-ref: ./peers-paseo-rule-matches-practice/review/backlog/briefing-1
 ---
 
 ## Scope
