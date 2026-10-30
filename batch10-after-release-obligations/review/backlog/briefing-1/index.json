@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:batch10-after-release-obligations:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of batch10-after-release-obligations to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that the four obligations batch 10 left, plus the two Codex P2 fixes, are met with receipts or returned to the Captain: the native spawn proof, the five live amendment repairs before the dev2-laws pin moves, one observed adopted delivery gate, and the hand-reserved ADR; profile pilot (package rules and scripts, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:batch10-after-release-obligations:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/14561dab39772e008533e3038849a3d13e24d634/batch10-after-release-obligations.md",
+      "rev": "sha256:b1a27ef54f59ba146224d2c754930a2571d80730e3d05d72d3898d71517e2cec",
+      "mediaType": "text/markdown",
+      "summary": "Filed from the batch-10 chief-engineer delivery review; two declined Codex P2 findings on #749 and #750 are recorded in it."
+    }
+  ]
+}
