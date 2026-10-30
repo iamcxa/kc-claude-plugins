@@ -54,3 +54,8 @@ Two fresh Claude sonnet FOs in auto mode, placed in a scratch workflow, told to 
 | 52170058 (cold-fo-b.log) | yes, and cited the rule | no | reported the pending request and left it |
 
 Limits: two runs; these agents load the user's global settings; the model declined in the run that never read the rule, so this does not show the rule causes the behavior. FO also mistyped a peer id and stopped two stray runs (9c412e22, f84df6ee); they are not counted.
+
+## Notified notice that fails, 2026-10-30, peer 9439eabc (auto mode)
+
+Notice b11-754-notified-notice-fail, steer, notify true: turn seen running at 16:11:18Z, then cancelled. The host sent event errored, "was canceled", within the 30 s watch ending 16:11:55Z. The same cancelled notice with notify false produced no event (b11-754-pair-notice-fail). The peer was not asked to reply in either run. The event's agent-response carried the previous turn, "READY".
+Not tested: a successful notified notice's finish event on this head, and a dropped delivery before the turn starts.
