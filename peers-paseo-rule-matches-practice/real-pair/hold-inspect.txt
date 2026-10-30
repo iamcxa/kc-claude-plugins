@@ -1,0 +1,2 @@
+Status              running                                                                                                              
+PendingPermissions  permission-0408b950-7c28-4bcb-8656-d912a62e2fbe (mcp__paseo__send_agent_prompt)                                      
