@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:names-check-says-what-it-skipped:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:names-check-says-what-it-skipped-ideation-1
+              briefing:
+                id: briefing:names-check-says-what-it-skipped:ideation:attempt-1:revision-1
+                digest: sha256:cfb5dd611bd652f1f6a0c26721afbef53aaa02245800c0ec662ea6db1cdf789f
+                room-ref: ./names-check-says-what-it-skipped/review/ideation/briefing-1
 ---
 
 ## Scope

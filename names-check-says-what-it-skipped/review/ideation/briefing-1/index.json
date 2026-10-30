@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:names-check-says-what-it-skipped:ideation:attempt-1:revision-1",
+  "question": "Revise names-check-says-what-it-skipped at ideation? FO recommends revise; approving accepts these asks: keep the notice for a record outside a task folder and the --strict refusal; drop relative-path rejection and the Repository files: line, and rule relative script paths allowed (a regex finds them in 287 of 573 plugin records); widen the Budget to dispatch_records.py, its tests and the workflow text.",
+  "artifacts": [
+    {
+      "id": "artifact:names-check-says-what-it-skipped:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/058a225421c28f31aa7844aef4d140408bc212f2/names-check-says-what-it-skipped.md",
+      "rev": "sha256:41d8beb2c8e272eb56c6b1963ae1a7af0fb1e208b6494ebb0e13f55d20d75d05",
+      "mediaType": "text/markdown",
+      "summary": "Chief-engineer: relative-path refusal would misfire on current records. Cost: the form the batch-10 observer flagged stays legal and a worker can still run a repository copy."
+    }
+  ]
+}
