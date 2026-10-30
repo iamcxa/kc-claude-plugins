@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.33.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.33.0...kc-dev-flow-2-v0.33.1) (2026-10-29)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** check review facts in delivery summaries ([#748](https://github.com/iamcxa/kc-claude-plugins/issues/748)) ([07a0cd0](https://github.com/iamcxa/kc-claude-plugins/commit/07a0cd08d715f61576588a558cd5fc6512f1b3d5))
+* **kc-dev-flow-2:** hold validation reruns for recorded Captain rulings ([ad0ecac](https://github.com/iamcxa/kc-claude-plugins/commit/ad0ecac3bb651e01a3ca1379307e1514383e01f7))
+* **kc-dev-flow-2:** hold validation reruns for recorded Captain rulings ([0c63467](https://github.com/iamcxa/kc-claude-plugins/commit/0c634671926ad8bf0a93410f7cc59e7ad17c4e99))
+* **kc-dev-flow-2:** require reserved ADR for design placeholders ([8b7af18](https://github.com/iamcxa/kc-claude-plugins/commit/8b7af18d7818d740081d79d480c85c1459f3a5a4))
+* **kc-dev-flow-2:** require reserved ADR for design placeholders ([58c9d0f](https://github.com/iamcxa/kc-claude-plugins/commit/58c9d0f26c78b4b038668b7170389512d8e727e0))
+* **kc-dev-flow-2:** validate amendment records and detect committed rewrites ([f4a8c55](https://github.com/iamcxa/kc-claude-plugins/commit/f4a8c5547b4e78a5d44aca4c57007b3574ecc2ed))
+* **kc-dev-flow-2:** validate amendment records and detect committed rewrites ([da5053f](https://github.com/iamcxa/kc-claude-plugins/commit/da5053febb546b2a7cf6ffe676b0d5a8b7e338a4))
+
 ## [0.33.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.32.1...kc-dev-flow-2-v0.33.0) (2026-10-28)
 
 

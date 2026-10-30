@@ -2,6 +2,9 @@ import contextlib
 import importlib.util
 import io
 import os
+import json
+import re
+import sys
 from pathlib import Path
 import subprocess
 import tempfile
@@ -528,7 +531,7 @@ class AmendmentTests(unittest.TestCase):
         moved = AMENDMENT.replace("**AC-2**: the old outcome.", '**AC-2**: the old outcome.\nAsked: the \\"old\\" question')
         self.assertEqual(self.errors(moved), [])
         self.assertEqual(self.errors(AMENDMENT.replace("Supersedes: AC-2\n", 'Asked: he said "yes"\nSupersedes: AC-2\n')), [])
-        unskipped = mutated('moved = moved or line.startswith("Superseded text:")', "moved = False")
+        unskipped = mutated('for line in entry.prefix.split("\\n"):', 'for line in entry.raw.split("\\n"):')
         self.assertTrue(self.errors(moved, module=unskipped))
 
     def test_the_design_line_is_not_read(self):
@@ -548,7 +551,7 @@ class AmendmentTests(unittest.TestCase):
         mutant = mutated('## Captain amendments{GO_SPACE}$", re.I)', '## Captain amendments{GO_SPACE}$")')
         text = AMENDMENT.replace("## Captain amendments", "## Captain Amendments")
         self.assertTrue(self.errors(text, BOTH))
-        self.assertEqual(self.errors(text, BOTH, mutant), [])
+        self.assertTrue(any("outside" in e for e in self.errors(text, BOTH, mutant)))
 
     def test_mutation_dropping_the_disjointness_rule_fails_its_case(self):
         mutant = mutated("& declared", "& set()")
@@ -594,7 +597,7 @@ class AmendmentTests(unittest.TestCase):
         self.assertTrue(self.errors(waived, "**AC-1**: a driver sees seats.\n", mutant))
 
     def test_mutation_reading_the_design_line_fails_its_case(self):
-        mutant = mutated("DECLARATION_LINE.match(line)", "AC_DECLARATION.search(line)")
+        mutant = mutated("declarations(entry.moved)", '[(m.group(1), line) for line in entry.prefix.split("\\n") + entry.moved for m in [AC_DECLARATION.search(line)] if m]')
         text = AMENDMENT.replace("Supersedes: AC-2\n", "Supersedes: AC-2\nDesign: **AC-9** names a paragraph.\n")
         self.assertEqual(self.errors(text), [])
         self.assertTrue(self.errors(text, module=mutant))
@@ -606,20 +609,20 @@ class AmendmentTests(unittest.TestCase):
         self.assertTrue(self.errors(cited, module=mutant))
 
     def test_mutation_reading_the_id_list_past_the_waiver_text_fails_its_case(self):
-        mutant = mutated("value[:waiver.start()] if waiver else value", "value")
+        mutant = mutated("ids = AC_ID.findall(prefix)", "ids = AC_ID.findall(value)")
         held = AMENDMENT.replace("**AC-2**: the old outcome.\n", "**AC-1**: kept.\n**AC-2**: the old outcome.\n")
         text = held.replace("Supersedes: AC-2", "Supersedes: AC-1 (no replacement: AC-2 moved to a new task)")
         self.assertTrue(self.errors(text, REPLACEMENT))
         self.assertEqual(self.errors(text, REPLACEMENT, mutant), [])
 
     def test_mutation_dropping_the_captain_rule_fails_its_case(self):
-        mutant = mutated("        if not CAPTAIN_WORDS.search(entry):\n", "        if False:\n")
+        mutant = mutated("        if len(captains) != 1 or not captains[0].strip():\n", "        if False:\n")
         text = AMENDMENT.replace("Captain: 「keep the count per slot」 (gate reason)\n", "")
         self.assertTrue(self.errors(text))
         self.assertEqual(self.errors(text, module=mutant), [])
 
     def test_mutation_dropping_the_fence_skip_flags_a_fenced_example(self):
-        mutant = mutated("        elif not inside:\n            kept.append(line)\n", "        else:\n            kept.append(line)\n")
+        mutant = mutated("        marker = AMENDMENT_FENCE.match(line)", "        marker = None")
         self.assertEqual(self.errors(FENCED_EXAMPLE), [])
         self.assertTrue(self.errors(FENCED_EXAMPLE, module=mutant))
 
@@ -2135,6 +2138,251 @@ class BuiltScreenTests(MutantMixin, unittest.TestCase):
         for old, new in (('f"preview: {picture.resolve()}"', '""'), ('*ruling_notes("built-screen decline", lines, upheld, groups)', "*[]")):
             with self.subTest(new):
                 self.assertNotEqual(self.run_check(module=mutated(old, new))[1], self.run_check()[1])
+
+
+
+
+class AmendmentStructureTests(unittest.TestCase):
+    def form(self, value="none", tail="", section="## Captain amendments"):
+        return f"{section}\n\n### Amendment 1 — 2026-10-29, chat\nCaptain: words\nSupersedes: {value}\n{tail}"
+
+    def test_whole_value_grammar_and_unique_ids(self):
+        for value in ("none", "AC-1.", "AC-1, AC-2 and AC-3", "AC-1 AC-X", "AC-1, and AC-2.",
+                      "AC-1 (no replacement: sent elsewhere)"):
+            with self.subTest(value=value):
+                self.assertEqual(ds.amendment_form(self.form(value).split("\n"))[1], [])
+        for value in ("", "none (adds a criterion: x)", "AC-1 to AC-3", "AC-8's falsifier", "AC-1, AC-1",
+                      "AC-1 and AC-2 and AC-3", "AC-1 and AC-2 AC-3", "summary AC-1", "AC-1 (whole block)", "none; elsewhere", "AC-1 (no replacement: )"):
+            with self.subTest(value=value):
+                self.assertTrue(ds.amendment_form(self.form(value).split("\n"))[1])
+
+    def test_section_ownership_duplicate_sections_numbers_and_malformed_headings(self):
+        for text in (self.form(section="## Number guards"), self.form() + self.form(),
+                     self.form().replace("1 — 2026-10-29", "one"),
+                     self.form(tail="Captain: second\n"), self.form(tail="Supersedes: none\n")):
+            with self.subTest(text=text):
+                self.assertTrue(ds.amendment_form(text.split("\n"))[1])
+
+    def test_feedback_and_fenced_examples_end_or_hide_entries(self):
+        text = self.form(tail="### Feedback Cycles\nNot a Captain record.\n")
+        entries, errors = ds.amendment_form(text.split("\n"))
+        self.assertEqual(errors, [])
+        self.assertEqual(len(entries), 1)
+        self.assertNotIn("Feedback", entries[0].raw)
+        for fence in ("```", "~~~~"):
+            text = self.form(tail=f"Design:\n{fence}md\n## quoted\n### Amendment 99\nCaptain: example\n{fence}\n")
+            self.assertEqual(ds.amendment_form(text.split("\n"))[1], [])
+            self.assertIn("### Amendment 99", ds.parse_amendments(text.split("\n"))[0][0].metadata)
+
+    def test_mismatched_fences_and_moved_metadata_are_not_live(self):
+        for tail in ("Design:\n```\nold\n", "Design:\n~~~~\nold\n```\n"):
+            self.assertTrue(any("fence" in m for _, m in ds.amendment_form(self.form(tail=tail).split("\n"))[1]))
+        tail = 'Superseded text:\n**AC-1**: old\nCaptain: copied\nSupersedes: prose AC-2\n'
+        self.assertEqual(ds.amendment_form(self.form(tail=tail).split("\n"))[1], [])
+
+    def test_raw_crlf_and_trailing_content_spaces_survive(self):
+        text = self.form(tail="Design: retained spaces  \n\n").replace("\n", "\r\n")
+        records, errors = ds.amendment_form(text.split("\n"))
+        self.assertEqual(errors, [])
+        self.assertTrue(records[0].raw.endswith("spaces  \r"))
+        self.assertEqual(records[0].metadata, records[0].raw)
+
+    def test_restoring_first_section_scanning_or_substring_ids_breaks_controls(self):
+        wrong = self.form(section="## Number guards")
+        self.assertTrue(ds.amendment_form(wrong.split("\n"))[1])
+        mutant = mutated('if not AMENDMENTS_HEADING.match(owner or ""):', 'if False:')
+        self.assertEqual(mutant.amendment_form(wrong.split("\n"))[1], [])
+        prose = self.form("AC-1 to AC-3")
+        mutant = mutated('if not SUPERSEDES_VALUE.fullmatch(value.strip()):', 'if False:')
+        self.assertEqual(mutant.amendment_form(prose.split("\n"))[1], [])
+        self.assertTrue(ds.amendment_form(prose.split("\n"))[1])
+
+    def test_disabling_fences_and_generic_heading_splitting_break_controls(self):
+        text = self.form(tail="Design:\n```\nold\n")
+        mutant = mutated('marker = AMENDMENT_FENCE.match(line)', 'marker = None')
+        self.assertEqual(mutant.amendment_form(text.split("\n"))[1], [])
+        self.assertTrue(ds.amendment_form(text.split("\n"))[1])
+        text = self.form(tail="### Feedback Cycles\nNo captain.\n")
+        mutant = mutated('if AMENDMENT_START.match(line):', 'if line.startswith("### "):')
+        self.assertTrue(mutant.amendment_form(text.split("\n"))[1])
+        self.assertEqual(ds.amendment_form(text.split("\n"))[1], [])
+
+
+@unittest.skipUnless(os.environ.get("DEV2_AMENDMENT_CORPORA"), "set DEV2_AMENDMENT_CORPORA and DEV2_AMENDMENT_BASE for frozen corpus CLI replay")
+class AmendmentCorpusTests(unittest.TestCase):
+    def test_every_pinned_task_and_artifact_with_per_file_verdicts(self):
+        import tarfile
+        import concurrent.futures
+        base = Path(os.environ["DEV2_AMENDMENT_BASE"])
+        corpora = json.loads(os.environ["DEV2_AMENDMENT_CORPORA"])
+        evidence = Path(os.environ["DEV2_AMENDMENT_EVIDENCE"])
+        evidence.mkdir(parents=True, exist_ok=True)
+        results, differences, counts = [], [], {}
+        with tempfile.TemporaryDirectory() as tmp:
+            for corpus in corpora:
+                dest = Path(tmp, corpus["name"])
+                dest.mkdir()
+                archive = subprocess.run(["git", "-C", corpus["state"], "archive", corpus["rev"]], capture_output=True, check=True)
+                with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tar:
+                    tar.extractall(dest, filter="data")
+                tasks = [p for p in sorted(dest.rglob("*.md"))
+                         if re.search(r"^variant: kc-dev-flow-2[ \t]*$", p.read_text(), re.M)]
+                counts[corpus["name"]] = len(tasks)
+                self.assertEqual(len(tasks), corpus["tasks"], "frozen export must not skip a task/fixture")
+                def one(path):
+                    rows = []
+                    for seed in (False, True):
+                        verdicts = []
+                        for scripts in (base, ROOT / "scripts"):
+                            done = subprocess.run([sys.executable, "-B", str(scripts / "design_surfaces.py"), "check",
+                                                   *(["--seed"] if seed else []), str(path)], capture_output=True, text=True, cwd=dest)
+                            verdicts.append({"exit": done.returncode, "stdout": done.stdout, "stderr": done.stderr, "stdout_words": len(done.stdout.split()),
+                                              "amendment_diagnostic_words": sum(len(line.split()) for line in done.stdout.splitlines() if "Captain amendment" in line),
+                                              "l3_words": sum(len(line.split()) for line in done.stdout.splitlines() if "L3" in line)})
+                        rows.append({"corpus": corpus["name"], "rev": corpus["rev"], "path": str(path.relative_to(dest)),
+                                     "mode": "seed" if seed else "full", "base": verdicts[0], "candidate": verdicts[1]})
+                    folder = path.parent if path.name == "index.md" else path.with_suffix("")
+                    records = sorted((folder / "dispatch").glob("*.md"))
+                    if records and (ds.parse_amendments(path.read_text().split("\n"))[0] or "### Feedback Cycles" in path.read_text()):
+                        verdicts = []
+                        for scripts in (base, ROOT / "scripts"):
+                            done = subprocess.run([sys.executable, "-B", str(scripts / "dispatch_records.py"), "--names", *map(str, records)], capture_output=True, text=True, cwd=dest)
+                            verdicts.append({"exit": done.returncode, "stdout": done.stdout, "stderr": done.stderr, "stdout_words": len(done.stdout.split()),
+                                              "amendment_diagnostic_words": sum(len(line.split()) for line in done.stdout.splitlines() if "Captain amendment" in line),
+                                              "l3_words": sum(len(line.split()) for line in done.stdout.splitlines() if "L3" in line)})
+                        rows.append({"corpus": corpus["name"], "rev": corpus["rev"], "path": str(path.relative_to(dest)), "mode": "dispatch", "base": verdicts[0], "candidate": verdicts[1]})
+                    return rows
+                with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+                    rows = [row for group in pool.map(one, tasks) for row in group]
+                for row in rows:
+                    if row["base"] != row["candidate"]:
+                        self.assertIn(row["mode"], ("full", "dispatch"), row)
+                        combined = row["base"]["stdout"] + row["candidate"]["stdout"]
+                        self.assertTrue("Captain amendment form" in combined or "Feedback Cycles" in combined, row)
+                        row["reason"] = "existing structural form violation" if "Captain amendment form" in combined else "Feedback Cycles false entry removed"
+                        differences.append(row)
+                results.extend(rows)
+        (evidence / "corpus-verdicts.json").write_text(json.dumps({"counts": counts, "rows": results}, ensure_ascii=False, indent=2))
+        (evidence / "corpus-differences.json").write_text(json.dumps(differences, ensure_ascii=False, indent=2))
+        print("frozen corpus:", counts, "mode rows:", len(results), "differences:", len(differences))
+
+
+
+@unittest.skipUnless(os.environ.get("DEV2_AMENDMENT_STATE"), "set DEV2_AMENDMENT_STATE for exact historical CLI replays")
+class AmendmentHistoricalTests(unittest.TestCase):
+    def test_real_form_bites_and_single_field_repairs_with_event_artifacts(self):
+        import tarfile
+        state = os.environ["DEV2_AMENDMENT_STATE"]
+        events = (
+            ("169e815d299e737722aa4ce3e9780620d7c27c8b", "seed-check-requires-schema-fields", "outside"),
+            ("a76431954dadf2a92092264ba6fabd1184393216", "idle-hook-names-merged-tasks-without-learn", "Supersedes"),
+            ("95fe8ce1bd7ff58798634b733abb4115fecfe23d", "read-adr-honors-adr-folder", "Supersedes"),
+            ("a9fca23f41f9063dbd090d9c8b2962f1a44d14c9", "batch-reaches-each-gate-together", "fence"))
+        for event, slug, expected in events:
+            with self.subTest(event=event), tempfile.TemporaryDirectory() as tmp:
+                dest = Path(tmp)
+                archive = subprocess.run(["git", "-C", state, "archive", event], capture_output=True, check=True)
+                with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tar:
+                    tar.extractall(dest, filter="data")
+                path = dest / f"{slug}.md"
+                original = path.read_text()
+                for script, args in (("design_surfaces.py", ["check", str(path)]),
+                                     ("dispatch_records.py", ["--names", *map(str, sorted((dest / slug / "dispatch").glob("*.md")))])):
+                    self.assertTrue(args[-1].endswith(".md"), "event must include its records")
+                    done = subprocess.run([sys.executable, "-B", str(ROOT / "scripts" / script), *args], cwd=dest, capture_output=True, text=True)
+                    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+                    self.assertTrue(any("Captain amendment form" in line and expected in line for line in done.stdout.splitlines()), done.stdout)
+                if expected == "outside":
+                    repaired = original.replace("### Amendment 2", "## Captain amendments\n\n### Amendment 2")
+                elif expected == "Supersedes":
+                    repaired = re.sub(r"(?m)^Supersedes:.*$", "Supersedes: none", original)
+                else:
+                    repaired = original
+                if expected != "fence":
+                    path.write_text(repaired)
+                    for script, args in (("design_surfaces.py", ["check", str(path)]),
+                                         ("dispatch_records.py", ["--names", *map(str, sorted((dest / slug / "dispatch").glob("*.md")))])):
+                        done = subprocess.run([sys.executable, "-B", str(ROOT / "scripts" / script), *args], cwd=dest, capture_output=True, text=True)
+                        self.assertFalse(any("Captain amendment form" in line and expected in line for line in done.stdout.splitlines()), done.stdout)
+                    self.assertFalse(any(expected in message for _, message in ds.amendment_form(repaired.split("\n"))[1]))
+        event = "e9bac6a6d"
+        text = subprocess.run(["git", "-C", state, "show", f"{event}:idle-hook-names-merged-tasks-without-learn.md"], capture_output=True, text=True, check=True).stdout
+        self.assertFalse(any("Feedback Cycles" in entry.header for entry in ds.parse_amendments(text.split("\n"))[0]))
+
+    def test_real_rewrite_cli_ranges_and_exact_state_workflow_invocation(self):
+        evidence = Path(os.environ["DEV2_AMENDMENT_EVIDENCE"])
+        evidence.mkdir(parents=True, exist_ok=True)
+        state = os.environ["DEV2_AMENDMENT_STATE"]
+        rows = []
+        with tempfile.TemporaryDirectory() as tmp:
+            clone = Path(tmp, "state")
+            subprocess.run(["git", "clone", "--shared", "--no-checkout", state, str(clone)], capture_output=True, check=True)
+            readme = Path(tmp, "readme.md")
+            readme.write_text(Path(os.environ["DEV2_AMENDMENT_README"]).read_text())
+            for event in ("95fe8ce1bd7ff58798634b733abb4115fecfe23d", "16129ea4c1a238dd885e9f08513ce3a52ad27f2d", "34c820b5db98d5da119a1b021ce6af45d616acdc"):
+                values = []
+                for scripts in (Path(os.environ["DEV2_AMENDMENT_BASE"]), ROOT / "scripts"):
+                    done = subprocess.run([sys.executable, "-B", str(scripts / "laws_check.py"), str(clone), "--before", event + "^", "--after", event, "--readme", str(readme)], capture_output=True, text=True)
+                    values.append({"exit": done.returncode, "stdout": done.stdout, "stderr": done.stderr, "stdout_words": len(done.stdout.split()),
+                                              "amendment_diagnostic_words": sum(len(line.split()) for line in done.stdout.splitlines() if "Captain amendment" in line),
+                                              "l3_words": sum(len(line.split()) for line in done.stdout.splitlines() if "L3" in line)})
+                self.assertEqual(values[0]["exit"], 0, values)
+                self.assertEqual(values[1]["exit"], 1, values)
+                self.assertIn("violation: L3 amendment-append-only", values[1]["stdout"])
+                rows.append({"event": event, "base": values[0], "candidate": values[1]})
+        (evidence / "historical-laws.json").write_text(json.dumps(rows, ensure_ascii=False, indent=2))
+
+    def test_declared_reading_manifest_and_fixture_stdout(self):
+        import test_pr_watch as watch_tests
+        if not os.environ.get("DEV2_AMENDMENT_SPACEDOCK"):
+            self.skipTest("set DEV2_AMENDMENT_SPACEDOCK to the declared Spacedock package")
+        sd = Path(os.environ["DEV2_AMENDMENT_SPACEDOCK"])
+        def part(text, heading):
+            match = re.search(r"(?m)^" + re.escape(heading) + r"[ \t]*$", text)
+            self.assertIsNotNone(match, heading)
+            end = re.search(r"(?m)^## ", text[match.end():])
+            return text[match.start():match.end() + end.start() if end else len(text)]
+        workflow = (ROOT / "references/sd/workflow.md").read_text()
+        upstream = (sd / "mods/pr-merge.md").read_text()
+        texts = {"workflow": workflow, "dev": (ROOT / "skills/dev/SKILL.md").read_text(),
+                 "mod": (ROOT / "references/sd/mods/kc-dev-flow-2.md").read_text(),
+                 "startup": part(upstream, "## Hook: startup"), "idle": part(upstream, "## Hook: idle"),
+                 "delivery": part(workflow, "## Delivery authority"), "extensions": part(workflow, "## Extensions"),
+                 "learn": (ROOT / "extensions/learn/EXTENSION.md").read_text(),
+                 "gate": (sd / "skills/fo-gate-lifecycle/SKILL.md").read_text(),
+                 "present": (sd / "skills/present-gate/SKILL.md").read_text()}
+        counts = {key: len(text.split()) for key, text in texts.items()}
+        outputs = {}
+        for label, state in (("open", "OPEN"), ("merged", "MERGED"), ("archive", None), ("sitting", None)):
+            fixture = watch_tests.TasksTests()
+            fixture.setUp()
+            try:
+                if label == "archive":
+                    fixture.readme("learn")
+                    fixture.archive("some-task")
+                    code, lines = fixture.tasks({})
+                elif label == "sitting":
+                    fixture.readme("")
+                    fixture.gates(*[(f"t{i}", "validation", "awaiting-captain") for i in range(4)])
+                    code, lines = fixture.tasks({})
+                else:
+                    fixture.readme("roborev")
+                    fixture.task("t", pr="o/r#7")
+                    code, lines = fixture.tasks({"pr view 7": watch_tests.view(state)})
+                self.assertEqual(code, 0, lines)
+                outputs[label] = {"words": len(" ".join(lines).split()), "lines": lines}
+            finally:
+                fixture.doCleanups()
+        totals = {"startup": sum(counts[k] for k in ("workflow", "dev", "mod", "startup")) + outputs["open"]["words"],
+                  "idle_open": sum(counts[k] for k in ("mod", "idle", "delivery", "extensions")) + outputs["open"]["words"],
+                  "idle_merged": sum(counts[k] for k in ("mod", "idle", "delivery", "extensions")) + outputs["merged"]["words"],
+                  "archive": counts["mod"] + counts["learn"] + outputs["archive"]["words"],
+                  "merge_ask": sum(counts[k] for k in ("delivery", "extensions", "gate", "present")) + outputs["sitting"]["words"]}
+        self.assertEqual(list(totals.values()), [6959, 862, 833, 333, 2408])
+        result = {"instruction_words": counts, "fixture_stdout": outputs, "totals": totals,
+                  "startup_with_feedback": totals["startup"] + len((ROOT / "extensions/fo-feedback/EXTENSION.md").read_text().split())}
+        self.assertEqual(result["startup_with_feedback"], 7558)
+        Path(os.environ["DEV2_AMENDMENT_EVIDENCE"], "reading.json").write_text(json.dumps(result, indent=2))
 
 
 if __name__ == "__main__":

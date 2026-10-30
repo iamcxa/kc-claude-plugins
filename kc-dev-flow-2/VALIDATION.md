@@ -1,5 +1,56 @@
 # Validation scope
 
+## Delivery summary preflight, measured 2026-10-29
+
+Against source `5725d495bb83a17ec13616bb5421bf5ffdc71f70`, the optional
+`delivery_gate.py question --summary-file` branch checks summary round-count
+form and existing reviewer rules outside fences. Its ordinary checks still use
+question plus summary; omitted input keeps the released combined-text path.
+ADR 0044 records the scope and compatibility ruling.
+
+The operator-interview validation briefing 2, bound to state task revision
+`9948c3eb9aa0cb61959080da6f2776de9881fab4`, reproduces the location defect:
+synthetic ordinary clauses and review facts added only to its question pass the
+source legacy command, while the candidate's separate original summary exits 1.
+A synthetic complete summary exits 0; fenced fields, task-report fields and
+later-ask fields do not discharge summary omissions. These fixtures do not
+repair history or attest that its external-round count was zero.
+
+Legacy exit codes and stdout matched on 295 committed briefing/artifact pairs:
+60 Web at state `2c3a6dcbfb3a8e178d65151237a0c234351612c0` (all exit 1),
+103 package at `6aaca91fa884a3d49683bb1a0a9438ec7f713c53` (12 exit 0,
+48 exit 1, 43 exit 2), and 132 QNow at
+`8d09186345940d7b92369157d8e05007541a2825` (all exit 1). Package exit-2
+cases lack saved Copilot refusal output at the bound revision; no missing
+provider evidence was fabricated. Web's clause-only synthetic positive control
+passes both. Workflow configuration was read from the locally adopted README;
+this comparison does not reconstruct historical configuration. Relay state was
+unavailable locally.
+
+The delivery suite covers count forms, fences, declaration/outcome location,
+existing Copilot refusal/configuration policy, I/O failures and flat/folder
+split-root inputs. The POC README suite executes each route's extracted command
+in a fresh shell with a disposable prepare recorder: exits 1/2 stop it; exit 0
+forwards identical summary bytes. Cache-free Python mutation runs reject removed
+summary/count checks, combined outcome lookup, a mandatory argument, role-counter
+invocation, removed/legacy recipe, ignored exit, swapped summary and changed stage
+route. This is local recipe evidence, not a native Spacedock pre-prepare hook.
+
+Two independent counts reproduce workflow 5754 to 5781 (+27): startup 6959 to
+6986; idle open 862 to 889; idle merged 833 to 860; archive 333 unchanged;
+merge ask 2408 to 2435; ideation 3303 to 3330; clean delivery 3530 to 3560,
+including the three-word count line. Each worker's inlined workflow sections
+remain 1044 words. Actual clean output is 3 words; isolated location refusal
+output is 49 words versus the legacy diagnostic control's 3, and raw historical
+refusal is 146. No help, ADR or extension read is newly required at runtime.
+The task retains the exact corpus/replay recipe and budget approval; deliberately
+omitting a corpus read or substituting a fake approval fails its recount.
+
+No CI trigger changed; cost per PR was not measured. Native adoption, faithful
+FO use, truthful supplied facts, direct unchecked preparation and later summary
+substitution remain unproven or observer-owned. A local pass grants no approval,
+publication, merge or release authority.
+
 This file records the package's validation evidence and its limits.
 
 ## Field use, measured 2026-10-12
@@ -145,3 +196,256 @@ remains inspectable. Provider responses and sends in these tests are explicitly
 simulated. No live GitHub PR, remote merge, hook or automatic startup was exercised.
 The same tests preserve immutable completed evaluation bytes while delivery state
 changes. The earlier skill-discovery evidence predates the new `learn` entry.
+
+
+## Amendment structure and push-range law
+
+Local implementation proof, 2026-10-29; source base
+`5725d495bb83a17ec13616bb5421bf5ffdc71f70` (0.33.0). The candidate changes the
+shared amendment parser, its full/dispatch callers, L2 output classification,
+and adds L3 to the existing laws registry. No workflow, skill, mod, CI trigger,
+package version or adopter configuration is changed. No new ADR is introduced:
+the append-only and event-range rules are already accepted in ADRs 0005/0017.
+
+The touched suites exercise structure, raw-byte transitions, event-time CLI
+replays and callers. Ten isolated source mutations, run with `python3 -B` and
+no copied caches, each make its behavioral test fail with an assertion (not an
+import/runtime crash): first-section-only scanning, substring id extraction,
+generic level-three entries, disabled fences, tip-only blobs, ignored deletions,
+skipped index tasks, stripped fenced metadata, missing L2 classification and
+missing-evidence-as-green. Full/seed/dispatch controls retain pending-worker
+semantics. Unknown subprocess output and unreadable/missing history are exit 2.
+Registry parity checks the L3 heading against the executable registry.
+
+Historical CLI replays export the event's complete tracked tree, including its
+records and referenced artifacts. Full check and dispatch `--names` refuse:
+
+| State event | Task | Specific form refusal |
+| --- | --- | --- |
+| `169e815d299e737722aa4ce3e9780620d7c27c8b` | seed-check-requires-schema-fields | Amendment 2 outside the section; Supersedes prose |
+| `a76431954dadf2a92092264ba6fabd1184393216` | idle-hook-names-merged-tasks-without-learn | Supersedes prose |
+| `95fe8ce1bd7ff58798634b733abb4115fecfe23d` | read-adr-honors-adr-folder | Supersedes prose |
+| `a9fca23f41f9063dbd090d9c8b2962f1a44d14c9` | batch-reaches-each-gate-together | Design fence encounters another opening delimiter before a close |
+
+Moving just the misplaced heading into a section removes its location defect;
+replacing just the malformed Supersedes values removes their grammar defects
+in both CLIs. Other defects may still refuse the task. The `e9bac6a6d` idle-hook
+snapshot has no invented Feedback Cycles amendment. Balanced backtick/tilde
+examples, quoted headings, CRLF, terminal punctuation and valid worker payloads
+have paired controls. An opening delimiter of the same type and sufficient length
+with an info string before a close is diagnosed in the amendment region; shorter
+nested delimiters remain literal fenced content.
+
+The existing state-workflow laws command was run locally on an isolated full-history
+state clone with explicit parent/event endpoints and the adopted README. Base exits
+0 on each of the following ranges; candidate exits 1 with the L3 protected-span
+violation independently of worker timing:
+
+| Parent-to-event range | Protected change |
+| --- | --- |
+| `95fe8ce1bd7ff58798634b733abb4115fecfe23d^..95fe8ce1bd7ff58798634b733abb4115fecfe23d` | Supersedes metadata |
+| `16129ea4c1a238dd885e9f08513ce3a52ad27f2d^..16129ea4c1a238dd885e9f08513ce3a52ad27f2d` | previously recorded payload |
+| `34c820b5db98d5da119a1b021ce6af45d616acdc^..34c820b5db98d5da119a1b021ce6af45d616acdc` | Design metadata before an unmatched fence |
+
+The three actual L3 outputs contain 21, 25 and 24 words respectively (each includes
+a nine-word summary); complete stdout contains 39, 43 and 42 words versus 18 on
+base. Per-file full/dispatch diagnostic word counts are retained in the JSON.
+
+Positive committed fixtures append entries/moved blocks and preserve bytes across
+archive, rename and flat/index moves, including delete/add correspondence without
+a Git rename. Negative fixtures edit metadata/fences/payload, extend metadata,
+remove/reorder/renumber entries or delete a task. Later repair/deletion in a range
+does not hide its earlier event. A subsequent clean range does not re-report it.
+Fixed-range L3 output survives working-copy/tip/archive/README changes. Ambiguous
+correspondence/spans, missing or truncated parents and unreadable blobs are not green.
+For unmatched fences only a change before the uncertain span is a definite violation.
+
+Frozen corpus exports include every tracked Markdown task/fixture declaring
+`variant: kc-dev-flow-2`, plus all tracked dependencies. The package's 174 includes
+`_archive/prod-security-review-gates/security/replay-c2/fixture-relay-prod-task.md`;
+there are 173 canonical task paths, not a skipped 174th task. Base and candidate full
+and seed CLIs run per file, plus dispatch `--names` for every relevant recorded folder.
+The corpus manifest asserts the expected count, so skipping a file fails the replay.
+Scope history is unavailable in these archive exports; its identical CLI note is
+retained in both verdicts. Event-history proof uses the separate full-history clone.
+
+| Corpus pin | Files | Full passes, base/candidate | Seed passes, base/candidate |
+| --- | ---: | ---: | ---: |
+| package `731a165dfdf02549a9d13b0624174351e8a6d7be` | 174 | 86/76 | 19/19 |
+| relay `7fbde2c526769e0968d05fac858fc63b31c6274c` | 97 | 67/55 | 9/9 |
+| web `2c3a6dcbfb3a8e178d65151237a0c234351612c0` | 42 | 11/11 | 6/6 |
+| qnow `934789a124e50dd45f37af59bb337573462739ea` | 135 | 47/43 | 0/0 |
+
+All 988 mode verdicts are retained in generated `corpus-verdicts.json`; all 54
+message/exit differences in `corpus-differences.json` cover the 32 files below.
+There are 26 full-pass-to-refusal changes, six dispatch-pass-to-refusal changes,
+and zero seed changes. Differences on already-refused tasks are retained too.
+The table groups each file's changed modes; diagnostic text in the JSON names
+its actual line/heading. Supersedes prose, bare amendment-labelled notes/proposals,
+misplaced records and malformed headings are structural violations; examples need
+fences and notes need non-amendment headings. No slug allowlist is used. Replacing
+a malformed Supersedes value may also remove an old move/replacement diagnostic
+because the new parser does not pretend prose is a valid id list.
+
+| Corpus and file | Changed modes | Structural explanation |
+| --- | --- | --- |
+| package `_archive/fo-batch-sittings.md` | full, dispatch | Supersedes grammar |
+| package `_archive/fo-write-rules-checked.md` | full, dispatch | Supersedes grammar |
+| package `_archive/idle-hook-names-merged-tasks-without-learn.md` | full, dispatch | Supersedes grammar |
+| package `_archive/kc-decision-log-cli.md` | full, dispatch | Supersedes grammar |
+| package `_archive/peers-rules-name-each-host-binding.md` | full, dispatch | Supersedes grammar |
+| package `_archive/read-adr-honors-adr-folder.md` | full, dispatch | Supersedes grammar |
+| package `_archive/release-acceptance/index.md` | full, dispatch | Captain field, Supersedes grammar, duplicate number, heading, placement |
+| package `_archive/release-walk-picky-reviewers-and-director.md` | full, dispatch | Supersedes grammar |
+| package `_archive/seed-check-requires-schema-fields.md` | full, dispatch | Supersedes grammar |
+| package `adr-required-statement.md` | full | Supersedes grammar |
+| package `kc-decision-log-handoff-trial.md` | full | Supersedes grammar |
+| relay `_archive/account-publish-ceiling.md` | full, dispatch | Supersedes grammar, heading, placement |
+| relay `_archive/close-race-copilot.md` | full | Supersedes grammar |
+| relay `_archive/decision-panel-host.md` | full | Supersedes grammar |
+| relay `_archive/junk-share-edge-cost.md` | full, dispatch | Supersedes grammar, heading |
+| relay `_archive/one-identity-entry.md` | full | Supersedes grammar |
+| relay `_archive/owner-link-leak-safe.md` | full, dispatch | Supersedes grammar, heading |
+| relay `_archive/owner-sees-all-feedback-room.md` | full, dispatch | Supersedes grammar, placement |
+| relay `_archive/owner-sees-all-feedback.md` | full, dispatch | Supersedes grammar |
+| relay `_archive/review-keyword-invocations.md` | full, dispatch | Supersedes grammar |
+| relay `_archive/review-ui-consistency-relay.md` | full | Supersedes grammar |
+| relay `_archive/review-ui-dialogs-specs-both-shells.md` | full | Supersedes grammar |
+| relay `_archive/spacedock-install-beta.md` | full, dispatch | Supersedes grammar |
+| relay `limit-telemetry-posthog.md` | full, dispatch | Captain field, Supersedes grammar, duplicate number, heading, placement |
+| web `_archive/briefing-frame-and-controls.md` | full, dispatch | Supersedes grammar, heading |
+| qnow `_archive/accept-branch-invitation.md` | full | Supersedes grammar |
+| qnow `_archive/office-header-shows-phone.md` | full | Supersedes grammar |
+| qnow `_archive/qnow-migration-baseline.md` | full, dispatch | Supersedes grammar |
+| qnow `_archive/staff-multi-branch.md` | full | Supersedes grammar |
+| qnow `_archive/vehicle-based-pricing.md` | full, dispatch | Supersedes grammar |
+| qnow `branch-hours-generate-starts.md` | full, dispatch | Supersedes grammar |
+| qnow `operator-secret-hardening.md` | full, dispatch | Captain field, Supersedes grammar, heading, placement |
+
+Reproduce from the complete source checkout (Python with tarfile's `data` extraction
+filter, Git, the declared Spacedock 0.27.3 package, and all four pinned state object
+sets required). Export base `kc-dev-flow-2` with `git archive` into an external
+scratch directory. Supply `DEV2_AMENDMENT_BASE` as its scripts directory;
+`DEV2_AMENDMENT_CORPORA` as a JSON array of `{name, state, rev, tasks}` rows using
+the four pins/counts above; `DEV2_AMENDMENT_STATE` as the package state repository;
+`DEV2_AMENDMENT_README` as its adopted workflow README; `DEV2_AMENDMENT_SPACEDOCK`
+as the declared Spacedock package root; and `DEV2_AMENDMENT_EVIDENCE` as an external
+output directory. Then run from the repository root:
+
+```sh
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_design_surfaces.py
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_dispatch_records.py
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_laws_check.py
+```
+
+Optional object-dependent replays report skips without those declared inputs;
+ordinary structural/event fixture tests and mutation controls run without them.
+Generated JSON retains per-file messages, historical law output, mutation assertion
+failures and actual reading output; it is evidence of this local run, not hosted CI.
+
+Reading was recounted using the design's manifest and `test_pr_watch.TasksTests`
+provider fixtures: workflow 5754, dev entry 763, package mod 48, upstream startup
+365, upstream idle 100, Delivery authority 461, Extensions 224, learn extension 280,
+gate lifecycle 958, present-gate 675 words. Fixture stdout contributes 29 open-PR,
+0 merged-PR, 5 archive and 90 four-gate-sitting words. Base/candidate lifecycle
+totals stay 6959 startup, 862 idle/open, 833 idle/merged, 333 after archive and 2408
+merge ask; startup with optional feedback stays 7558. No normal-path instruction
+is added. A no-event L3 summary is nine additional words when read, bringing the
+three-law summaries to 27; variable refusals/violations are retained and counted
+separately in generated evidence. Stubs do not prove real host execution.
+
+The inspected state CI package pin remains
+`22219a3e4bc48a69a893bd757923e8c034d1ba6e`. This candidate is not activated there.
+A published package pin adoption and an actual state-push run are still required
+for hosted enforcement. CI cost per PR is **not measured**; the existing state-push
+trigger is unchanged. GitHub API/PR CI is delegated to FO in this dispatch.
+L3 excludes merge commits themselves, prior pushes, rewritten history, uncommitted
+edits and never-recorded rulings. Missing rulings, initial quotation fidelity and
+criterion ids omitted by meaning remain observer-owned; no semantic refusal,
+automatic revert, permanent-red state or new pre-gate history call is claimed.
+
+## Design ADR placeholders require a reservation, 2026-10-29
+
+Stacked base: `b8a66e826c7524fa944a7165296acba94b3f5e13` (the validation-rerun
+branch, on the amendment-form change). `dispatch_records.py --names` now refuses
+positive-numbered implementation and implementation-message records for Pilot/Prod
+when the last unfenced `## Design` (including ` — title` and `: title`) names
+`docs/adr/<placeholder>-title.md` and `number_guards.task_facts` finds no reserved
+ADR. It uses the existing numeric parser; migration numbers and dispatch-only
+numbers do not satisfy it. The diagnostic supplies the existing allocator/record/
+scope-copy/retry recovery. The first-record-only scope-copy check is unchanged.
+
+The signal is the literal path, including in ordinary explanatory prose; it does
+not classify intent, negation, decision quality or authorization. Fenced and
+quoted examples, numbered citations, earlier Design sections and report-only
+obligations do not signal it. POC and the folder/newest/coverage modes retain their
+existing behavior. Missing/unusual design forms and obligations omitted from the
+design remain observer work. No new ADR, declaration, hook or migration is added.
+
+Reproduce the behavioral proof from the repository root:
+
+```sh
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_dispatch_records.py -q
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_laws_check.py -q
+```
+
+The dispatch suite passes 87 tests, including `DesignAdrTests` and
+`DesignAdrMutationTests`; the laws suite passes 59. The new tests assert:
+
+- Raw #740 bytes from state commit `09da6be7ad5aaf687ea3f80e9553f3efb525cc17`
+  refuse with the new diagnostic. Embedded task/record SHA-256 values are
+  `9cdb2a04175c91eb996fb8c314067cfd6fe5fe4636ef399b97fc0effa4288406` and
+  `5f80555583c521fc2f21cca8ea407d542335b8d371a8f34c934e8b1b40ae6c20`;
+  the matched task path is at line 243. Released 0.33.0 exits 0 silently.
+  The stacked base already exits 1 for its unrelated amendment form at line 293;
+  candidate preserves that diagnostic. Allocator recovery clears the new refusal
+  while retaining that pre-existing error. Deleting the task ADR line, leaving a
+  migration only, or retaining a scope-only ADR number restores the new refusal.
+- Flat/folder tasks, Pilot/Prod/POC, first/repeated/message records, heading suffixes,
+  both reserved-number placeholder spellings, title placeholders, lists/tables/code,
+  quotes/fences, numbered citations, replacement Design sections and unrelated
+  modes exercise the boundary. Removing quote/fence filtering, applying the rule to
+  POC, using the first Design, or skipping continuations fails its named control.
+- The actual CLI governs a disposable shell build/spawn recorder. Missing input
+  produces zero calls and 27 diagnostic words; corrected input records build then
+  spawn with empty checker output. Disconnecting `check_task_facts` or its predicate
+  fails the raw replay. A separate installed Spacedock build in a disposable repo
+  produced a Codex envelope after actual allocator recovery (`ADR: 0001`, two words),
+  with zero build calls on refusal. Real `worker.spawn` was unavailable: the next
+  operation was a recorder, not a launched model. This does not prove native spawn.
+- L2 classifies the diagnostic as a violation, not Cannot, for both task layouts.
+  A later repair preserves the earlier event's result within the same fixed range;
+  a range starting after that event is clear. Removing the diagnostic parser or
+  reading today's task instead of event bytes fails this control. Eleven mutations
+  run fresh Python `-B` processes in cache-free copies and each fails an assertion.
+
+Committed corpus comparison used `git archive` snapshots and the stacked-base and
+candidate CLIs over every `*/dispatch/*.md`, including archives. Pins and counts:
+
+| State corpus | Commit | Records | Changed diagnostics |
+| --- | --- | ---: | ---: |
+| This workflow | `ac38184c7912d6eca53e0256dd498f935ac63d26` | 564 | 1 |
+| Relay | `6742b0b757700fb9b19d9fdb6e61984e5a6543c8` | 296 | 0 |
+| QNow | `77caf32322a54e806b8e5c8a0b094a5f2f60a5f7` | 249 | 0 |
+| Web | `7f3f3861c9b68defa60a07fbdecdc26d6d1fdbf2` | 138 | 0 |
+
+The changed record is this task's `implementation-1.md` (record SHA-256
+`a2384c9bc19425ce90846fb8316dfeca1099fb644817780d5879a2501b312a5d`): its active
+Design explains literal placeholder paths without quoting/fencing them. This is
+the documented structural limitation, not a newly discovered ADR obligation. The
+approved definition was preserved; FO must handle those explanatory examples
+through the authorized correction route before a future dispatch using this check.
+Existing reservations, amendment/renumber failures and unrelated verdicts remain.
+
+The task's fixed lifecycle recipes were executed on exact base/candidate source
+with the shipped watcher fixtures and installed Spacedock 0.27.3 instructions.
+Startup/open-idle/merged-idle/archive/merge-ask totals are unchanged:
+6967 / 870 / 833 / 333 / 2408 words. Executed output counts are 37 / 37 / 0 / 5 / 90;
+workflow stays 5754 words. New failure-path reading is 27 diagnostic words plus
+690 existing words (Number guards 222 and FO steps: number guards 468), two
+allocator words and zero retry words: 719 total. The design's 468-word recovery
+forecast omitted the separate 222-word Number guards section; both sections are
+included here. Existing stacked-base errors, when present, are additional and
+unchanged. No normal-path output, workflow-budget step or CI change was added.
+CI cost per PR was not measured. These local results do not establish hosted CI,
+RoboRev review, native model spawning, Captain acceptance or a merged delivery.

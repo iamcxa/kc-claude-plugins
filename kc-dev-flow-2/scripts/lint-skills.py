@@ -52,6 +52,9 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=178, why="joint raise for reused-worker coverage and named batches waiting for one sitting; before-send and the director batch pass were withdrawn",
          captain="「照建議」 (Captain, chat, 2026-10-28), answering 「決定：五張全照建議（四張准並照上面刪減，一張暫緩）；如果哪張要改，直接說。」; amendment 1 of reused-worker-dispatch-leaves-a-record accepts coverage and a joint raise of about 180 words with batch-reaches-each-gate-together",
          loaded="startup and resume of the First Officer, after each worker report before advancement or gate preparation, and batch readiness, optional review and sitting preparation"),
+    dict(delta=27, why="delivery summary preflight names the separate summary, unchanged use and legacy compatibility",
+         captain="「進實作」 (Captain, chat, 2026-10-29), answering 「決定：四張全准進實作，含工作流文件多 27 字？要改哪張直接說。」; ideation gate attempt 2 of gate-requires-recorded-reviews",
+         loaded="startup and resume of the First Officer, and each Delivery authority read including delivery gate preparation"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.

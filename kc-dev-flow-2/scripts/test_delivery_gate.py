@@ -1511,7 +1511,8 @@ def refusal(body, head=HEAD40):
 class ReviewerDeclarationTests(unittest.TestCase):
     def run_cli(self, command, text=DECLARATION + "Copilot review:18.", source=None, config=REVIEWERS,
                 task=TASK, title="fix(x): y", module=None, folder=False, split=False, explicit=False,
-                source_error=False, missing_readme=False, readme_error=False, before_question=None, head_arg=HEAD40):
+                source_error=False, missing_readme=False, readme_error=False, before_question=None, head_arg=HEAD40,
+                summary=None, summary_error=False):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             readme(d, config)
@@ -1532,6 +1533,10 @@ class ReviewerDeclarationTests(unittest.TestCase):
             text_file = root / "gate.txt"
             text_file.write_text(CLAUSES + text)
             argv = [command, str(entry.parent if folder else entry), "--text-file", str(text_file)]
+            summary_file = root / "summary.txt"
+            if summary is not None:
+                summary_file.write_text(summary)
+                argv += ["--summary-file", str(summary_file)]
             if command == "check":
                 argv += ["--pr", "o/r#9", "--head", head_arg]
             if explicit:
@@ -1539,6 +1544,8 @@ class ReviewerDeclarationTests(unittest.TestCase):
             out = io.StringIO()
             read = Path.read_text
             def read_input(path, *a, **kw):
+                if summary_error and path == summary_file:
+                    raise PermissionError("summary unreadable")
                 if source_error and path == saved:
                     raise PermissionError("saved output unreadable")
                 if readme_error and path == root / "README.md":
@@ -1546,7 +1553,8 @@ class ReviewerDeclarationTests(unittest.TestCase):
                 return read(path, *a, **kw)
             with stubbed(d, pr=pr_json(title=title)), contextlib.redirect_stdout(out), \
                     mock.patch.object(Path, "read_text", read_input), \
-                    mock.patch.object(module or gate, "owed_role_calls", return_value=(0, [])):
+                    mock.patch.object(module or gate, "owed_role_calls", return_value=(0, []),
+                                      side_effect=AssertionError("question must not count role calls") if command == "question" else None):
                 if before_question is not None:
                     text_file.write_text(CLAUSES + before_question)
                     self.assertEqual((module or gate).main(["question", str(entry), "--text-file", str(text_file)]), 0)
@@ -1706,6 +1714,92 @@ class ReviewerDeclarationTests(unittest.TestCase):
 def tearDownModule():
     for out in OUTPUTS:
         assert "--auto" not in out and "--admin" not in out, out
+
+
+class SummaryTests(unittest.TestCase):
+    run_cli = ReviewerDeclarationTests.run_cli
+    good = "External rounds: 0\n" + DECLARATION + "Copilot review:18.\n"
+
+    def ask(self, summary, **kw):
+        return self.run_cli("question", summary=summary, **kw)
+
+    def test_round_count_matrix(self):
+        for count in ("0", "2", "003", "1.", "1; one review read", "2. two reviews read"):
+            with self.subTest(count=count):
+                self.assertEqual(self.ask(self.good.replace("0\n", count + "\n"))[0], 0)
+        for count in ("", "-1", "1.5", "one", "1;", "1 trailing words", "+1"):
+            with self.subTest(count=count):
+                code, out = self.ask(self.good.replace("0\n", count + "\n"))
+                self.assertEqual(code, 1, out)
+                self.assertIn("summary needs one top-level External rounds: N", out)
+        for summary in ("", self.good.replace("External rounds: 0\n", ""),
+                        self.good + "External rounds: 1\n", self.good.replace("External rounds:", "- External rounds:"),
+                        "```text\n" + self.good + "```\n", "~~~text\n" + self.good + "~~~\n"):
+            self.assertEqual(self.ask(summary)[0], 1)
+
+    def test_declaration_and_outcome_must_both_be_in_summary(self):
+        for summary in ("External rounds: 0\n", "External rounds: 0\n" + DECLARATION,
+                        "External rounds: 0\nCopilot review:18.\n",
+                        "External rounds: 0\n" + DECLARATION + "```\nCopilot review:18.\n```\n"):
+            with self.subTest(summary=summary):
+                self.assertEqual(self.ask(summary)[0], 1)
+        self.assertEqual(self.ask(self.good, text="Question only: Second reviewer: codex because example.")[0], 0)
+        self.assertEqual(self.ask(self.good, text="", task=TASK + "\n## Stage Report: implementation\n\n" + self.good)[0], 0)
+        self.assertEqual(self.ask("External rounds: 0\n", text="", task=TASK + "\n## Stage Report: implementation\n\n" + self.good)[0], 1)
+
+    def test_existing_reviewer_policy_applies_to_summary(self):
+        cases = [("Second reviewer: not triggered.", 0), (DECLARATION + "Copilot review:18.", 0),
+                 (DECLARATION + "Copilot comment:18.", 0), (DECLARATION + "Copilot answer=review:18.", 1),
+                 (DECLARATION + "Copilot ANSWER=comment:18.", 1),
+                 ("Second reviewer: codex because review rules. Codex review:18.", 1),
+                 (DECLARATION + DECLARATION + "Copilot review:18.", 1),
+                 (DECLARATION + "Copilot not run: configuration error: no provider.", 0),
+                 (DECLARATION + "Copilot not run: configuration error:", 1),
+                 (DECLARATION + "Copilot skipped: docs PR.", 0),
+                 (DECLARATION + "Copilot skipped: fix PR.", 1)]
+        for reviewer, expected in cases:
+            with self.subTest(reviewer=reviewer):
+                self.assertEqual(self.ask("External rounds: 0\n" + reviewer)[0], expected)
+        for task in (TASK.replace("pilot", "prod"), TASK + "\nSurfaces: db\n"):
+            self.assertEqual(self.ask("External rounds: 0\nSecond reviewer: not triggered.\n", task=task)[0], 1)
+        for config in ("extensions: []\nsecond-reviewer:\n", "extensions: [learn]\n"):
+            self.assertEqual(self.ask("External rounds: 0\n", config=config)[0], 0)
+            self.assertEqual(self.ask("External rounds: 0\n" + DECLARATION, text="", config=config)[0], 1)
+        self.assertEqual(self.ask("External rounds: 0\nSecond reviewer: codex because rules.\nCodex comment:19.\n",
+                                 config="extensions: [codex, copilot]\nsecond-reviewer: codex\n")[0], 0)
+
+    def test_saved_refusal_errors_and_retry_still_apply(self):
+        source, line = refusal("quota unavailable")
+        good = "External rounds: 0\n" + DECLARATION + line + RETRY
+        self.assertEqual(self.ask(good, source=source)[0], 0)
+        for bad in (good.replace("quota unavailable", "wrong quota"), good.replace("answer=review:17", "answer=review:18"),
+                    good.replace(RETRY, "")):
+            self.assertEqual(self.ask(bad, source=source)[0], 1)
+        for kw in ({}, {"source": source, "source_error": True}):
+            self.assertEqual(self.ask(good, **kw)[0], 2)
+        self.assertEqual(self.ask(good, source="not a saved refusal\n")[0], 1)
+
+    def test_io_configuration_and_archived_folder_inputs(self):
+        for kw in ({"summary_error": True}, {"missing_readme": True}, {"readme_error": True},
+                   {"config": "extensions: [copilot]\nsecond-reviewer: copilot\n"}):
+            code, out = self.ask(self.good, **kw)
+            self.assertEqual(code, 2, out)
+            self.assertIn("cannot read input", out)
+        for folder in (False, True):
+            self.assertEqual(self.ask(self.good, folder=folder, split=True, explicit=True)[0], 0)
+
+    def test_summary_boundaries_have_mutation_falsifiers(self):
+        no_count = variant_of('return ["summary needs one top-level External rounds: N line (nonnegative integer)"]', 'return []')
+        mixed = variant_of('reviewer_text = "\\n".join(outside_fences(summary))',
+                           'reviewer_text = gate_text + "\\n" + "\\n".join(outside_fences(summary))')
+        for summary, mutant in ((DECLARATION + "Copilot review:18.\n", no_count),
+                                ("External rounds: 0\n" + DECLARATION, mixed)):
+            self.assertEqual(self.ask(summary)[0], 1)
+            self.assertEqual(self.ask(summary, text="Copilot review:18.", module=mutant)[0], 0)
+        legacy_broken = variant_of('if args.summary_file is not None:', 'if True:')
+        self.assertEqual(self.ask(None)[0], 0)
+        with self.assertRaises(TypeError):
+            self.ask(None, module=legacy_broken)
 
 
 if __name__ == "__main__":
