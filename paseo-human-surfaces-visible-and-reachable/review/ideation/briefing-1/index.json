@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-human-surfaces-visible-and-reachable:ideation:attempt-1:revision-1",
+  "question": "Revise paseo-human-surfaces-visible-and-reachable at ideation? FO recommends revise; approving accepts these asks: use the installed Paseo skill instead of the docs read; trial a real terminal and tab in this workflow first, relay's rr replay second; Tailscale Serve is a per-task fallback for cross-device reach.",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-human-surfaces-visible-and-reachable:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7e3449ec57b550f48cdc570d778b907146d1facc/paseo-human-surfaces-visible-and-reachable.md",
+      "rev": "sha256:c21bd4c38bd8da7027500561531b8a415a8eb16d54fd79cbc20942e63fc2955d",
+      "mediaType": "text/markdown",
+      "summary": "Chief-engineer: Captain visibility of a create_terminal cwd is unobserved, and installed rr lacks pair. Cost: setup per device; the relay route stays unverified longer."
+    }
+  ]
+}

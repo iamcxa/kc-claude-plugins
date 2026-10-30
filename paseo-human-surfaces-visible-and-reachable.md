@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:paseo-human-surfaces-visible-and-reachable:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:paseo-human-surfaces-visible-and-reachable-ideation-1
+              briefing:
+                id: briefing:paseo-human-surfaces-visible-and-reachable:ideation:attempt-1:revision-1
+                digest: sha256:61c4aa944a8301e42963b410856ec59eee2744569fbe4c163e9aae49458fdeac
+                room-ref: ./paseo-human-surfaces-visible-and-reachable/review/ideation/briefing-1
 ---
 
 ## Scope
