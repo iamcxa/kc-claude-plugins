@@ -47,6 +47,20 @@ gates:
                 id: briefing:paseo-human-surfaces-visible-and-reachable:ideation:attempt-2:revision-1
                 digest: sha256:c054122a89475a17357daba5e2c0817d6f0c69ce9b0a5a8373dea02dbc0529ce
                 room-ref: ./paseo-human-surfaces-visible-and-reachable/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:paseo-human-surfaces-visible-and-reachable:ideation:2
+                briefing: briefing:paseo-human-surfaces-visible-and-reachable:ideation:attempt-2:revision-1
+                by: agent:first-officer
+                at: "2026-10-30T10:00:48.083263Z"
+                decision: approve
+                reason: 'FO read the newest ideation report: the revision applies the 2026-10-30 revise asks, names no new Captain choice and returns anything wider to FO; the design check passes.'
+                conn:
+                    quote: 決定：六張全照建議，同意放寬 Paseo 規則和真實測試，並授權改完直接進實作？要改哪張直接說。 — 准
+                    source: the Captain, chat, 2026-10-30, FO's joint batch-11 ideation sitting
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
