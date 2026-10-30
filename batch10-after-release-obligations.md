@@ -61,6 +61,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-30T10:01:21Z
+worktree: .worktrees/spacedock-ensign-batch10-after-release-obligations
 ---
 
 ## Scope
