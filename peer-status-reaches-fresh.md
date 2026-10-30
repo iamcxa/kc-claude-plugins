@@ -94,6 +94,7 @@ Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review before the joint ideation sitting: approve, revise, split or hold each task, the Captain's decisions, overlap and order
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-30 — does amendment 1 withdraw what the Captain approved, and what changes in the build?
+Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-31 — does amendment 2 withdraw what the Captain approved, and what changes in the build?
 
 ## Design
 
@@ -291,6 +292,11 @@ Design: Proposed product change set: **only `kc-dev-flow-2/extensions/peers/EXTE
 Superseded text:
 
 **AC-1 — A cold FO loads the rule and removes a cleared Web merge.** Before delivery, start a fresh isolated FO context that has not read peers (no inherited history, peers content, path hint, current-turn source answer or replay verdict). Provide ordinary adopted workflow entry, a Captain status request, the admitted stale relay line and logged read-only source access; expose the exact combined candidate through normal package paths. Do not put this task's criteria or answer in the FO prompt. Capture initial context, file/tool read trace, package SHA, fixture bytes and resulting Captain-facing status. Require an observed read of peers before reliance on the peer fact, followed by a current-turn source query for `spacedock-dev/subspace-web` PR 186. Run notice present, absent and delayed with MERGED/b71f912; all remove the cleared merge/approval and include source/time. OPEN negative control retains the pending action without merge authority; unavailable source yields unverified and an FO-owned check. Falsifier: preloading/hinting peers to make the run pass, failure to discover it, no query, stale request after MERGED or suppressing the OPEN action. A harness that injects the rule or expected response proves nothing about loading. If the normal entry fails, report the trace to FO; do not add a loader here. Current evidence: planned cold test and incident walkthrough; no fresh FO has been launched in this ideation.
+
+### Amendment 2 — 2026-10-31, chat
+Captain: 「756可以。」 (chat, 2026-10-31)
+Asked: 「現在只等你回覆 #756：改放 `dev` 入口技能、不放寬上限，可以嗎？」, which FO had stated as: 「**建議：把這句話改放 `dev` 入口技能，撤掉工作流 README 那句和放寬上限。**」
+Supersedes: AC-7
 
 ## Stage Report: ideation
 
