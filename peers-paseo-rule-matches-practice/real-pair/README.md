@@ -70,3 +70,11 @@ Word cost measured for that event's body: about 20 words, plus the host envelope
 Loss before the turn starts: NOT reproduced. FO sent b11-754-422c-notice-lost, notify true, and called kill_agent in the same step. kill_agent returned success, yet the peer later logged the notice, ran a turn and sent event finished; status read idle, not archived. So killing a peer does not drop a queued message. No native pre-start loss has been observed; the unresolved fallback for "queued, no turn, no callback" stands as a rule and is unexercised.
 
 Correction to "killed" lines above: kill_agent did not always leave a peer closed. Six test agents still read idle; FO archived them, with the two strays and the holding peers, on 2026-10-31.
+
+## Failure paths on 422caef5a, peers c491e6cf (ask mode) and ff4c9721 (auto mode)
+
+Ask hold and quiet-reply hold, b11-754-422c-hold, steer, notify true: event permission-required naming permission-2ecc8f4f; the request is the peer's own reply with notifyOnFinish false, so a held quiet reply surfaces through the ask's notification. FO did not respond. Pending at archive time (hold-422c.txt).
+Ask failure, b11-754-422c-ask-fail, steer, notify true: turn seen running at 16:29:14Z, cancelled; event errored, "was canceled".
+Notice failure, b11-754-422c-notice-fail, steer, notify true: turn seen running at 16:29:31Z, cancelled; result in sender-trace.jsonl.
+A cancelled turn is the only failure route exercised here; a provider error was seen once, by accident, on reviewer 9b09419f.
+Sender-side record: sender-trace.jsonl, rebuilt from FO's transcript, FO's own record.

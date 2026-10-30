@@ -1,0 +1,1 @@
+PendingPermissions  permission-2ecc8f4f-e334-44eb-8cba-1c9941d825b7 (mcp__paseo__send_agent_prompt) 

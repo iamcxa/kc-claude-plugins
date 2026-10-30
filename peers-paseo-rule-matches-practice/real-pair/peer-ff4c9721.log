@@ -1,0 +1,18 @@
+[Message received] kc-plugin dev2 FO
+You are a bounded test peer. Do no work now: reply with the single word READY and stop. Do not change any file.
+READY
+[Message received] 2e87a82e-a8a9-4e41-973a-7483aa46e39d
+Peer ask, exchange id b11-754-422c-ask-fail. Read kc-dev-flow-2/README.md and kc-dev-flow-2/VALIDATION.md, then write a section-by-section summary of each in your own reply. Do not change any file.
+[Read] /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/kc-dev-flow-2/README.md
+[Read] /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/kc-dev-flow-2/VALIDATION.md
+[Message received] 2e87a82e-a8a9-4e41-973a-7483aa46e39d
+Information-only notice, exchange id b11-754-422c-notice-fail. No acknowledgement is requested; send nothing back to me. To absorb this notice, read kc-dev-flow-2/README.md and kc-dev-flow-2/VALIDATION.md, then write a section-by-section summary of each in your own reply. Do not change any file.
+kc-dev-flow-2 is an optional, experimental alternative to kc-dev-flow. It has a thin start entry, stage skills, a Spacedock (SD) workflow adaptation, and a manual learning loop. It is not a replacement for kc-dev-flow, and existing projects stay on their current variant. I read both files and made no changes.
+
+**README.md**
+
+- **Intro:** What the package is. It does not migrate old projects, does not claim full safeguard parity, and does not claim the one-third size reduction. Learning runs only when someone invokes it. There are no hooks or background jobs.
+- **Controlled trial:** How to try it locally. Claude uses `--plugin-dir` on the package path, then `/kc-dev-flow-2:dev`. Codex uses a per-run marketplace override pointing at the repository root, then removal afterward. Bare `/dev` in Codex is unverified.
+- **Entry:** `kc-dev-flow-2:dev` resolves the project, workflow, and task, then hands control to SD's First Officer (FO). It does not adopt or rewrite a workflow. If no workflow exists, the user follows the SD adoption reference.
+- **Framework:** The FO picks a profile (POC, Pilot, or Prod) and records it. SD owns state, dispatch, gates, and recovery. POC skips ideation and has its own four-stage route. Pilot and Prod share a five-stage route. Several Production and POC eligibility rules are described but not implemented or proven.
+- **Authority and loading:** User instructions and project rules outrank the profile. Each stage skill loads its profile, then stage rules, then any adopted project learning. Conflicts go
