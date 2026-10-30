@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-human-surfaces-visible-and-reachable:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of paseo-human-surfaces-visible-and-reachable to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that inside Paseo, FO and workers open human-facing terminals and browser tabs in the Captain's visible workspace, reachable from his other devices; approving also confirms the words the relay FO relayed from him on 2026-10-28; profile pilot (package rules and scripts, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-human-surfaces-visible-and-reachable:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a3e56aa574b0c5cf2974af0def85f75f666a2078/paseo-human-surfaces-visible-and-reachable.md",
+      "rev": "sha256:3707eefbbed557731ac9595008c0b35ae664cbedb6ab906ceae746f218caca81",
+      "mediaType": "text/markdown",
+      "summary": "Bite: relay rr-pairs-once trials, 2026-10-28: a terminal he could not see, one cancelled pairing request. Cross-device approach returns at the ideation gate."
+    }
+  ]
+}

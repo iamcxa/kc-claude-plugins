@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:paseo-human-surfaces-visible-and-reachable:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:paseo-human-surfaces-visible-and-reachable-backlog-1
+              briefing:
+                id: briefing:paseo-human-surfaces-visible-and-reachable:backlog:attempt-1:revision-1
+                digest: sha256:5f8a004229033ecfce7006217bc74aaf2c68502e2820bb61779448b089b1d8a8
+                room-ref: ./paseo-human-surfaces-visible-and-reachable/review/backlog/briefing-1
 ---
 
 ## Scope
