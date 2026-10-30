@@ -59,3 +59,14 @@ Limits: two runs; these agents load the user's global settings; the model declin
 
 Notice b11-754-notified-notice-fail, steer, notify true: turn seen running at 16:11:18Z, then cancelled. The host sent event errored, "was canceled", within the 30 s watch ending 16:11:55Z. The same cancelled notice with notify false produced no event (b11-754-pair-notice-fail). The peer was not asked to reply in either run. The event's agent-response carried the previous turn, "READY".
 Not tested: a successful notified notice's finish event on this head, and a dropped delivery before the turn starts.
+
+## Exact head 422caef5a9b115a14f8391836499520d9fba6d91, 2026-10-31 session, peer f0148b31 (auto mode), one pair
+
+Ask b11-754-422c-ask, steer, notify true: receipt; one sourced reply reached FO; then one event finished. FO matched the reply once.
+Quiet reply: peer-f0148b31.log shows the reply call; its arguments were set by the peer's instructions to steer and notify false.
+Successful notified notice b11-754-422c-notice, steer, notify true: receipt; event finished; peer sent no acknowledgement and FO took no action; no Captain work created. The event text is the peer's closing line, not proof it understood the notice.
+Word cost measured for that event's body: about 20 words, plus the host envelope.
+
+Loss before the turn starts: NOT reproduced. FO sent b11-754-422c-notice-lost, notify true, and called kill_agent in the same step. kill_agent returned success, yet the peer later logged the notice, ran a turn and sent event finished; status read idle, not archived. So killing a peer does not drop a queued message. No native pre-start loss has been observed; the unresolved fallback for "queued, no turn, no callback" stands as a rule and is unexercised.
+
+Correction to "killed" lines above: kill_agent did not always leave a peer closed. Six test agents still read idle; FO archived them, with the two strays and the holding peers, on 2026-10-31.
