@@ -28,3 +28,8 @@ Hold, 06c575b9 (ask mode): event permission-required naming the request; the not
 Ask and reply, 56634892 (auto mode): queued receipt; one sourced reply, b11-754-c804-ask, reached FO first; then one event finished carrying the peer's closing text. FO matched the reply once and did not count the callback as the answer. Cost: one extra notification per ask, as forecast.
 Kill after a notified hold: one further event errored ("was canceled"), so a killed hold produces two notifications.
 All test peers killed.
+
+Quiet notice on c804241d2, a412c4be: steer, notify false; peer logged it and sent nothing back; no callback. Log: quiet-notice-peer-log.txt.
+Quiet reply arguments on c804241d2: the reply call recorded in the 56634892 log carries activeTurnBehavior steer and notifyOnFinish false.
+Report-only: the hold on 06c575b9 was recorded before any cleanup, and this FO session's transcript holds 0 respond_to_permission calls. The kill afterwards was cleanup, not part of that proof; on the old head a cancel reached the peer as a rejection.
+Known limit: a lost quiet notice has no reply to miss, so its sender cannot tell. A cancelled quiet turn reads as finished; the sender sees only the missing reply on a requested answer.
