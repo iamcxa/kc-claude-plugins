@@ -15,6 +15,17 @@ gates:
                 id: briefing:names-check-says-what-it-skipped:backlog:attempt-1:revision-1
                 digest: sha256:673bdc90c43332620087320fb379e5e83b5682f54cc8b4fd1228991d4159f7a6
                 room-ref: ./names-check-says-what-it-skipped/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:names-check-says-what-it-skipped:backlog:1
+                briefing: briefing:names-check-says-what-it-skipped:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-30T08:18:21.341984Z"
+                decision: approve
+                reason: The Captain 「對，全准且全確認」 (chat, 2026-10-30), answering FO's joint batch-11 backlog sitting of six gates whose ask was 「決定：六張全准進設計，並確認上面三件事？要改哪張直接說。」; accepts FO's recommendation and the confirmations stated in the gate question.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
