@@ -375,3 +375,45 @@ Revised only the accepted gate asks: compare raw amendment regions before parsin
 ### Summary
 
 Implemented and locally committed the two bounded repairs, retained original form debt, and prepared the PR text for FO. FO's committed follow-up preserves the existing section-placement boundary; all local behavior/consumer checks pass, while RoboRev and the named operational/publication receipts remain with FO. Pilot scope and the five-file product boundary are unchanged; this report is implementation evidence, not task closure or delivery approval.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #755 head 0c55b9a5 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for the two bounded product repairs at 0c55b9a574b8abd845e2ab969c200aa44b1588e4, base a6612948936a4f075625147b21aabd3b10b19eee; independent detached worktree, candidate unchanged. This is not closure of the FO-owned operational obligations.
+- DONE: AC-1 exact real-record replay, pre-parser shortcut and append-only failure boundaries.
+  Fresh law suite: 63 tests exit 0 with all five pinned hashes enabled; ten Scope/report cases retain flat/archive paths, base exits 0/0/2/0/2 become all 0; parser spy, metadata/heading/content/deletion/order/fence/history controls and all 22 mutation assertions pass. Removing/delaying equality or normalizing/deduplicating regions fails its target assertion; section moves call parsing twice and retain the FO-disposed existing form boundary (implementation-1-message-1), not a new law refusal.
+- DONE: AC-2 owning-workflow inline history, strict ordering and evidence refusals.
+  Fresh dispatch suite: 89 tests exit 0; eight real --names split/inline x flat/folder/live/archive rows pass, released inline exits 2/uncommitted-report; foreign/uncommitted/old/same-commit rulings hold. Missing prefix, foreign-history lookup and weakened ancestry mutations fail; shallow/broken/missing/ambiguous history and separately labelled non-Git behavior retain existing tests.
+- DONE: AC-3 preserve original form debt and owner/disposition inventory.
+  All five committed source hashes match the Design inventory; full form CLIs still exit 1 and amendment errors remain 1/1/6/1/4. Malformed-skip and form-leniency mutations fail; no source entry or closure/archive disposition changed, and no form-repair prerequisite was added. Owner handoffs remain FO-owned, not claimed executed.
+- DONE: AC-4/AC-5/AC-6/AC-7 operational boundary and applicable falsifiers assessed without substituting fixtures for receipts.
+  Five-file diff leaves CI trigger/full history/pin, launch contracts, delivery recipe and allocator unchanged; therefore stale pin/local law green cannot establish AC-4, recorder/idle creation cannot establish AC-5, fixture summary cannot establish AC-6, and invented reservation cannot establish AC-7. Delivery suite 119 tests exit 0 includes missing count/second reviewer and legacy-call mutation controls. Actual pin/run, startup, adopted gate and allocator falsifiers require their FO-owned event and were not run as operational evidence.
+- DONE: AC-7 exact base/candidate lifecycle reading and historical compatibility recount.
+  Independently executed existing watcher measurement: both 6994/897/860/418/2435 words (startup/idle-open/idle-merged/archive/merge ask); outputs 37/0/90/90. Archive 418 correctly replaces design forecast 401 (328 passage + 5 watcher + 85 recovery); relay/operator full CLI diagnostics 46/40 -> 27/27, inline 16 -> 0. All 150 historical commits replay to L3 (17, [], null, 0), retaining the known container-repair event. Watcher 129 tests exit 0 exercises missing-observer recovery; no candidate counts invented from workflow size alone.
+- DONE: The operational receipts the design leaves to FO after integration (pin move, first real startup, adopted delivery gate, owner returns) are not your candidate; judge them as FO-owned and say so
+  AC-3 owner returns, AC-4 publication/pin/live amendment-bearing state push, AC-5 first eligible post-0.33.1 startup timing/activity/report, AC-6 checked-summary/native gate identity and AC-7 archive ADR reservation/one-time output counts remain FO-owned and unverified here; none blocks this bounded candidate verdict, none is closed by it.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five steps below ran unchanged via bash --noprofile --norc, exit 0; observations shown per step. No new Material, Deferred risk, Polish or Needs decision findings. No UI surface; script proves bounded CLI behavior, not operational receipts or full real-source replay.
+- DONE: Required route checks, every implementation limit and affected-document dispositions.
+  Active-package adr_lint exit 0 (44 checked, 0 legacy), number_guards exit 0/no findings, comment_ratio 1/230=0.4% <=5%, dispatch_records 5 complete, task design check exit 0, lint exit 0 (5781/5781 words), diff --check clean. Read the sole added comment: explains the separator ownership boundary. doc_impact lists VALIDATION.md updated; ADR 0045 and learning.md unaffected for the implementation's stated reasons, independently confirmed.
+- DONE: Consumer checks and external evidence boundary.
+  Form suite 202 tests exit 0/4 object-dependent skips, separately offset by the five exact source form checks above; watcher 129 and delivery 119 tests exit 0. Existing SD consumer harness passes using installed 0.27.3 passages and executable 0.27.2: model-free compatibility only. Implementation's RoboRev exit 3 is incomplete evidence, FO-owned; no clean local review inferred. Live PR #755 remains Draft/OPEN at the exact head with four successful checks; hosted PR checks do not establish pin activation, release or acceptance. CI cost per PR unmeasured; no CI change.
+
+### Summary
+
+The candidate fixes the two reproduced defects with minimal product scope; base failures, fresh negative cases and 22 failing mutations justify both retained changes. All implementation caveats are retained or refreshed with explicit evidence boundaries; task closure and delivery authority remain with FO/Captain. Independent raw outputs are in /tmp/pr755-validation/{laws,dispatch,forms,watcher,delivery,sd,acceptance}.log and {real-records,inline-matrix,mutations,form-checks,history-replay,reading-base,reading-candidate}.json; these are local supporting artifacts, while the findings and commands are retained here.
+
+### Minimal acceptance script (one fresh bash shell, five steps)
+
+1. Exact checkout; observed `candidate verified`, exit 0:
+   `cd /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-batch10-after-release-obligations; test "$(git rev-parse HEAD)" = 0c55b9a574b8abd845e2ab969c200aa44b1588e4; printf 'candidate verified\n'`
+2. Raw/history boundaries; observed `Ran 15 tests`, `OK`, exit 0:
+   `PYTHONPATH=kc-dev-flow-2/scripts python3 -B -m unittest test_laws_check.RawAmendmentTests test_laws_check.L3Test -q`
+3. Eight root/layout CLI cases and ruling order; observed `Ran 2 tests`, `OK`, exit 0:
+   `PYTHONPATH=kc-dev-flow-2/scripts python3 -B -m unittest test_dispatch_records.LiveValidationRulingTests.test_split_and_inline_layouts_use_only_the_owning_workflow_history test_dispatch_records.LiveValidationRulingTests.test_inline_old_same_and_missing_reports_retain_refusals -q`
+4. ADR lint; observed `44 ADR file(s) checked, 0 legacy`, exit 0:
+   `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/adr_lint.py docs/adr --since a6612948936a4f075625147b21aabd3b10b19eee`
+5. Product bytes/whitespace; observed `clean candidate`, exit 0:
+   `git diff --exit-code HEAD -- kc-dev-flow-2; git diff --check a6612948936a4f075625147b21aabd3b10b19eee HEAD; printf 'clean candidate\n'`
+
+Run all steps in order with `set -euo pipefail`. Requires this complete candidate checkout, Python 3/Git and the declared installed package for step 4; teammates must provide those same inputs. The real-record suites additionally require the five source repositories and pinned objects named in Design and DEV2_OBLIGATION_SOURCES as documented in candidate VALIDATION.md; they were enabled in this validation, but are outside this small acceptance script.
