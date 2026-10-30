@@ -3,7 +3,7 @@ title: The peers rule on new Paseo asks matches what FOs do, either by listing p
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
