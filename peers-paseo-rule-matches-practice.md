@@ -451,6 +451,10 @@ Recommended order: this task owns one coherent Paseo/notice wording change; inte
 
 **AC-6 — Point-of-use cost and existing orchestration remain visible.** Evidence: independently reproduce complete draft/shipped-file counts and the five common fixture rows; capture real source/error/message word addends in AC-3/AC-4; recount combined sibling/roster/surface changes once. Run shipped design_surfaces.py check, render/inspect final Mermaid; at implementation run existing lint-skills.py and applicable test_lint_skills.py/test_sd_dispatch.py with the declared Spacedock root, and verify worker section/defaults/template unchanged by this task. Verify the new FO-reserved ADR records the actual ruling without rewriting 0038. Falsifier: measuring only one shrinking file, omitting moved/status/output words, stale count treated as final, missing graph branch/criterion, disabled worker signal, guessed ADR number, or changed sibling/frontmatter. Current: draft counts and common fixtures measured; final candidate/native/ADR evidence still pending.
 
+## Number guards
+
+ADR: 0046
+
 ## Stage Report: ideation
 
 - DONE: A design for making the peers rule on new Paseo asks match practice, comparing listing paseo in adopters whose peers run inside Paseo against relaxing the clause, including default steer and finish-notice behaviour and a Captain-named outbound ask; each round-004 event in .notes/fo-feedback/round-004.md replayed as allowed or refused by a stated rule; the choice returned as a Captain decision with a recommendation
