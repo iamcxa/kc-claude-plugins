@@ -2,6 +2,8 @@
 """Exercise real SD dispatch transport in disposable repos; never spawn a model."""
 
 import argparse
+import copy
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -9,6 +11,7 @@ import re
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
 import uuid
 
@@ -369,6 +372,190 @@ def at_0_10_1(texts, name):
         flat, count = re.subn(pattern, lambda _: old, flat)
         assert count == 1, (name, pattern, count)
     return {**texts, path: flat}
+
+
+def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
+    base.mkdir()
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+
+    def call(args, cwd=base, expected=0):
+        result = subprocess.run([str(x) for x in args], cwd=cwd, env=env,
+                                capture_output=True, text=True, timeout=30)
+        with (base / "commands.jsonl").open("a") as log:
+            log.write(json.dumps(dict(argv=[str(x) for x in args], cwd=str(cwd),
+                                      exit=result.returncode, stdout=result.stdout,
+                                      stderr=result.stderr)) + "\n")
+        assert result.returncode == expected, (args, result.stdout, result.stderr)
+        return result
+
+    repo = base / "code"
+    call(["git", "init", "--initial-branch=main", repo])
+    (repo / "README.md").write_text("Existing README model: sonnet\n")
+
+    def commit(*paths):
+        call(["git", "-C", repo, "add", "--", *paths])
+        call(["git", "-C", repo, "-c", "user.name=Fixture", "-c",
+              "user.email=fixture@example.invalid", "-c", "commit.gpgsign=false",
+              "-c", "core.hooksPath=/dev/null", "commit", "-m", "test: roster fixture"])
+
+    commit("README.md")
+    state = base / "state"
+    call(["git", "-C", repo, "worktree", "add", "--detach", state])
+    roster = repo / ".dev2/model-roster.json"
+
+    def manifest(root):
+        return {str(p.relative_to(root)): (p.stat().st_mode, hashlib.sha256(p.read_bytes()).hexdigest())
+                for p in root.rglob("*") if p.is_file()}
+
+    def resolve(stage="implementation", root=repo, authors=(), error=None):
+        args = [sys.executable, "-B", resolver, "resolve", "--code-root", root, "--stage", stage]
+        for path in authors:
+            args.extend(["--author-record", path])
+        result = call(args, cwd=state, expected=1 if error else 0)
+        if error:
+            assert error in result.stderr, result.stderr
+            assert result.stdout == "", result.stdout
+            return result.stderr
+        return json.loads(result.stdout)
+
+    before = manifest(repo)
+    absent = resolve()
+    assert absent["source"] == "readme-default" and absent["tuple"] is None, absent
+    assert resolve() == absent and manifest(repo) == before
+    assert (repo / "README.md").read_text() == "Existing README model: sonnet\n"
+    resolve(root=repo / "nested", error="git rev-parse")
+    resolve(root=Path("."), error="code-root: expected absolute")
+    resolve(stage="observer", error="stage: unsupported")
+    recommendation = json.loads((ROOT / "references/model-roster-defaults.json").read_text())
+    data = copy.deepcopy(recommendation)
+    data["decision"] = "fixture-explicit-answer"
+    roster.parent.mkdir()
+
+    def save(value):
+        roster.write_text(value if isinstance(value, str) else json.dumps(value, indent=2) + "\n")
+
+    save(data)
+    resolve(error="uncommitted choice")
+    commit(".dev2/model-roster.json")
+    before = manifest(repo)
+    chosen = resolve()
+    assert resolve() == chosen and manifest(repo) == before
+    assert chosen["digest"] == "sha256:" + hashlib.sha256(roster.read_bytes()).hexdigest()
+    assert chosen["commit"] == call(["git", "-C", repo, "rev-parse", "HEAD"]).stdout.strip()
+    assert chosen["source"] == "repository" and chosen["role"] == "implementation"
+    # Historical batch inputs: tuple-only fixtures, not child-runtime evidence.
+    # Source: _archive/paseo-codex-dispatch-practice/dispatch/{stage}-1.md.
+    history = {
+        "ideation": ("gpt-6-astra", "18eeff12f0ad4f662ce5889bc6e78bf36223cf4b9282beed86506245bbd5d331"),
+        "implementation": ("gpt-6.1-sol", "e65a8911f7d741ba78aa6b98bdae59de3d9753b7c72d95ec31ae42e73b04a833"),
+        "validation": ("gpt-6-astra", "2f33b40eba6c9a881e9070199857843351c746e8408ba37195b630eb169d0bff"),
+    }
+    for stage, (model, digest) in history.items():
+        expected = dict(provider="codex", model=model, effort="high", host="paseo")
+        assert resolve(stage)["tuple"] == expected, (stage, digest)
+        assert data["stages"][stage] == expected, (stage, digest)
+    assert resolve("repair")["tuple"] == chosen["tuple"]
+    assert resolve("repair")["role"] == "implementation"
+    assert resolve("validation")["family"] == "unverified"
+    assert resolve(root=state)["source"] == "readme-default"
+    linked = base / "linked-code"
+    call(["git", "-C", repo, "worktree", "add", "--detach", linked])
+    assert resolve(root=linked)["tuple"] == chosen["tuple"]
+    nested = repo / "nested"
+    nested.mkdir()
+    resolve(root=nested, error="code-root: expected exact")
+    save(dict(data, decision="unreviewed"))
+    resolve(error="uncommitted choice")
+    call(["git", "-C", repo, "add", "--", ".dev2/model-roster.json"])
+    resolve(error="uncommitted choice")
+    save(data)
+    call(["git", "-C", repo, "add", "--", ".dev2/model-roster.json"])
+    roster.chmod(0)
+    try:
+        resolve(error="unreadable regular file")
+    finally:
+        roster.chmod(0o644)
+
+    malformed = [("{", "Expecting property name"),
+                 ('{"schema_version":1,"schema_version":1}', "duplicate key: schema_version")]
+    for field, value, error in (("schema_version", 2, "schema_version"),
+                                 ("schema_version", True, "schema_version"),
+                                 ("decision", "", "decision"),
+                                 ("selected_from", None, "selected_from"),
+                                 ("private_override", {}, "roster: expected keys")):
+        malformed.append((dict(data, **{field: value}), error))
+    missing = copy.deepcopy(data)
+    del missing["stages"]["ideation"]
+    malformed.append((missing, "stages: expected keys"))
+    extra = copy.deepcopy(data)
+    extra["stages"]["observer"] = extra["stages"]["validation"]
+    malformed.append((extra, "stages: expected keys"))
+    for field, value in (("provider", "claude"), ("host", "native"),
+                         ("model", "unknown"), ("effort", "")):
+        bad = copy.deepcopy(data)
+        bad["stages"]["ideation"][field] = value
+        malformed.append((bad, f"stages.ideation.{field}"))
+    partial = copy.deepcopy(data)
+    del partial["stages"]["implementation"]["effort"]
+    malformed.append((partial, "stages.implementation: expected keys"))
+    for bad, error in malformed:
+        save(bad)
+        commit(".dev2/model-roster.json")
+        resolve(error=error)
+    save(data)
+    commit(".dev2/model-roster.json")
+    roster.unlink()
+    resolve(error="uncommitted choice")
+    commit(".dev2/model-roster.json")
+    assert resolve()["source"] == "readme-default"
+    roster.symlink_to(repo / "README.md")
+    commit(".dev2/model-roster.json")
+    resolve(error="symlink is unsupported")
+    roster.unlink()
+    data["stages"]["implementation"] = dict(provider="codex", model="gpt-6-astra", effort="xhigh", host="paseo")
+    save(data)
+    commit(".dev2/model-roster.json")
+    assert resolve()["tuple"] == data["stages"]["implementation"]
+    assert resolve(root=linked)["tuple"] == chosen["tuple"], "must read the pinned checkout"
+
+    records = base / "author-records/dispatch"
+    records.mkdir(parents=True)
+    task = base / "author-records.md"
+    task.write_text("---\nprofile: pilot\nstatus: implementation\n---\n\n## Stage Report: implementation\n\n- DONE: Fixture\n\n### Summary\n\nFixture.\n")
+    legacy = records / "implementation-1.md"
+    sha = "a" * 40
+    header = (f"Dispatched: {sha}\nModel: gpt-6.1-sol (Codex via Paseo, thinking high; fixture)\n")
+    body = ("\n## Checklist\nExercise the accepted slice.\n\n## Scope notes\n"
+            f"Package root: {ROOT}\nSend your completion message to `main`.\n")
+    legacy.write_text(header + body)
+    augmented = records / "implementation-2.md"
+    augmented.write_text(header + "Roster: source=repository; role=implementation; provider=codex; "
+                         f"model=gpt-6.1-sol; effort=high; host=paseo; digest=sha256:{'b' * 64}; commit={sha}\n" + body)
+    for path in (legacy, augmented):
+        result = resolve("validation", authors=[path])
+        assert result["family"] == "same-family: openai", result
+        assert result["authors"][0]["record"] == str(path)
+        assert result["authors"][0]["tuple"]["model"] == "gpt-6.1-sol", "use authors, not today's Astra default"
+        call([sys.executable, "-B", ROOT / "scripts/dispatch_records.py", "--names", path])
+    call([sys.executable, "-B", ROOT / "scripts/dispatch_records.py", records.parent])
+    call([sys.executable, "-B", ROOT / "scripts/dispatch_records.py", "--readme", TEMPLATE,
+          "--coverage", task, "--stage", "implementation"])
+    data["stages"]["validation"]["model"] = "gpt-6.1-sol"
+    save(data)
+    commit(".dev2/model-roster.json")
+    assert resolve("validation", authors=[legacy, augmented])["family"] == "same-family: openai"
+    unknown = records / "repair-unknown.md"
+    unknown.write_text("Model: unknown\n")
+    for authors in ([], [unknown], [records / "missing.md"], [legacy, unknown]):
+        result = resolve("validation", authors=authors)
+        assert result["family"] == "unverified", result
+        assert len(result["authors"]) == len(authors)
+    contradictory = records / "repair-contradictory.md"
+    contradictory.write_text(header + "Roster: source=repository; role=observer; provider=codex; model=gpt-6-astra; effort=high; host=paseo\n" + body)
+    assert resolve("validation", authors=[contradictory])["family"] == "unverified"
+    call([sys.executable, "-B", ROOT / "scripts/dispatch_records.py", "--names", contradictory])
+    print("PASS: roster subprocess replay, absolute/split-root/linked roots, read-only repeatability, full schema/error controls, committed changes/deletion and candidate-author family evidence; legacy record checks do not establish roster use")
 
 
 def exercise(base, binary, sd_root):
@@ -997,6 +1184,7 @@ def main():
         parser.error("set SPACEDOCK_BIN to the installed Spacedock executable")
     base = Path(tempfile.mkdtemp(prefix="dev-flow-2-sd-")).resolve()
     try:
+        exercise_model_roster(base / "model-roster")
         exercise(base, str(Path(binary).resolve()), args.sd_plugin_root.resolve())
     except Exception:
         print(f"FAIL: fixtures and raw CLI evidence retained at {base}")

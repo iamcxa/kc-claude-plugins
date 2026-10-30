@@ -196,6 +196,8 @@ dropped extension, so the adopter's review of the sync PR is the only check.
 
 ## Before activation
 
+At adoption or introducing sync, follow `<package>/references/model-roster.md` to ask once about stage workers. Save only an explicit shared choice through the normal reviewed change. Preserve existing settings; no answer leaves README defaults.
+
 Review the concrete README, state mapping, exact stage-skill availability and
 copied mod with the user. Run SD state readiness and status validation using the
 explicit directory. Run `spacedock status --workflow-dir <absolute-dir> --boot` and confirm

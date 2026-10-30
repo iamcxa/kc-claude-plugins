@@ -16,6 +16,8 @@ A queued receipt or completion on unrelated work is not an answer. Keep the retu
 
 ## Codex workers through Paseo
 
+For configured stage workers, resolve and record the repository tuple before build; supply its provider/model and thinkingOptionId through this existing route. Keep generated fields and immediate spawn order. Special roles stay unchanged.
+
 For a listed paseo extension, this is the Paseo Codex exception to the worker-opened Draft PR rule; other hosts keep their delivery owner. It grants no push, PR, ready or merge authority.
 
 Resolve the stage's absolute worktree on the destination host. Pass a matching workspaceId explicitly to create_agent. If Spacedock creates the worktree during dispatch build, the immediate spawn can use Paseo's CLI with --new-workspace local --cwd <worktree>; this registers the existing directory without creating another worktree. Plain --cwd does not override an agent caller's workspace. Check current Paseo help before use. A prompt saying cd is not placement. If placement is unavailable or mismatched, hold and return the gap to the Captain. Preserve Spacedock's generated prompt and immediate spawn order.

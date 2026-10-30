@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "selected_from": "0.33.1",
+  "decision": "replace-with-explicit-adoption-answer-reference",
+  "stages": {
+    "ideation": {
+      "provider": "codex",
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "host": "paseo"
+    },
+    "implementation": {
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "host": "paseo"
+    },
+    "validation": {
+      "provider": "codex",
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "host": "paseo"
+    }
+  }
+}
