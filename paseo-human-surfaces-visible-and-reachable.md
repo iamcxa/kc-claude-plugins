@@ -63,6 +63,7 @@ gates:
                 state: consumed
 started: 2026-10-30T10:19:52Z
 worktree: .worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable
+pr: iamcxa/kc-claude-plugins#757
 ---
 
 ## Scope
