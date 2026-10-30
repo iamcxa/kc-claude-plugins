@@ -445,7 +445,7 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
     assert chosen["commit"] == call(["git", "-C", repo, "rev-parse", "HEAD"]).stdout.strip()
     assert chosen["source"] == "repository" and chosen["role"] == "implementation"
     # Historical batch inputs: tuple-only fixtures, not child-runtime evidence.
-    # Source: _archive/paseo-codex-dispatch-practice/dispatch/{stage}-1.md.
+    history_source = "_archive/paseo-codex-dispatch-practice/dispatch/{stage}-1.md"
     history = {
         "ideation": ("gpt-6-astra", "18eeff12f0ad4f662ce5889bc6e78bf36223cf4b9282beed86506245bbd5d331"),
         "implementation": ("gpt-6.1-sol", "e65a8911f7d741ba78aa6b98bdae59de3d9753b7c72d95ec31ae42e73b04a833"),
@@ -453,8 +453,8 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
     }
     for stage, (model, digest) in history.items():
         expected = dict(provider="codex", model=model, effort="high", host="paseo")
-        assert resolve(stage)["tuple"] == expected, (stage, digest)
-        assert data["stages"][stage] == expected, (stage, digest)
+        assert resolve(stage)["tuple"] == expected, (history_source.format(stage=stage), digest)
+        assert data["stages"][stage] == expected, (history_source.format(stage=stage), digest)
     assert resolve("repair")["tuple"] == chosen["tuple"]
     assert resolve("repair")["role"] == "implementation"
     assert resolve("validation")["family"] == "unverified"
