@@ -3,7 +3,7 @@ title: The peers rule on new Paseo asks matches what FOs do, either by listing p
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: implementation
 gates:
     version: 1
     records:
@@ -477,6 +477,12 @@ Captain: 「可以」 (chat, 2026-10-31)
 Asked: 「決定：#754 改成「提問和告知都開通知，只有回覆關閉」，可以嗎？」
 Supersedes: AC-7, AC-8
 Design: Set notifyOnFinish: false for routine peer asks, requested replies and information-only notices.
+
+### Amendment 3 — 2026-10-31, chat
+Captain: 「可以」 (chat, 2026-10-31)
+Asked: 「決定：#754 改成「提問和告知都開通知，只有回覆關閉」，可以嗎？」
+Supersedes: none
+Design: Set notifyOnFinish: true for peer asks; set it false for requested replies and information-only notices.
 
 ## Number guards
 
