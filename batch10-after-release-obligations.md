@@ -47,6 +47,20 @@ gates:
                 id: briefing:batch10-after-release-obligations:ideation:attempt-2:revision-1
                 digest: sha256:37846abc615c40916a204a7cb5f5aa081aaf197b600d6da95bf7d546d5c9e919
                 room-ref: ./batch10-after-release-obligations/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:batch10-after-release-obligations:ideation:2
+                briefing: briefing:batch10-after-release-obligations:ideation:attempt-2:revision-1
+                by: agent:first-officer
+                at: "2026-10-30T09:59:48.08703Z"
+                decision: approve
+                reason: 'FO read the newest ideation report: the revision applies the 2026-10-30 revise asks, names no new Captain choice and returns anything wider to FO; the design check passes.'
+                conn:
+                    quote: 決定：六張全照建議，同意放寬 Paseo 規則和真實測試，並授權改完直接進實作？要改哪張直接說。 — 准
+                    source: the Captain, chat, 2026-10-30, FO's joint batch-11 ideation sitting
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
