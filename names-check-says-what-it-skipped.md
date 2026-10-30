@@ -42,6 +42,11 @@ gates:
                 at: "2026-10-30T09:31:36.40661Z"
                 decision: revise
                 reason: The Captain 「准」 (chat, 2026-10-30), answering FO's joint batch-11 ideation sitting of six gates whose ask was 「決定：六張全照建議，同意放寬 Paseo 規則和真實測試，並授權改完直接進實作？要改哪張直接說。」; accepts the direction and the revise asks named in this gate's question, and grants that a revised design staying within those asks goes to implementation without another sitting.
+            - id: gate-attempt:names-check-says-what-it-skipped-ideation-2
+              briefing:
+                id: briefing:names-check-says-what-it-skipped:ideation:attempt-2:revision-1
+                digest: sha256:84a0d6524fe61a3cb15b2977c8f94cec8b23baba04915be1ec46e13b91980b88
+                room-ref: ./names-check-says-what-it-skipped/review/ideation/briefing-2
 ---
 
 ## Scope

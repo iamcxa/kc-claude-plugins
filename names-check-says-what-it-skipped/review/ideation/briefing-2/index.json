@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:names-check-says-what-it-skipped:ideation:attempt-2:revision-1",
+  "question": "Approve the revised ideation of names-check-says-what-it-skipped to enter implementation? FO recommends approve under the Captain's grant: the revision stays within the asks of his 2026-10-30 revise.",
+  "artifacts": [
+    {
+      "id": "artifact:names-check-says-what-it-skipped:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/b08dc2ac84d86f7aa570d5a9d889dd308a185ba1/names-check-says-what-it-skipped.md",
+      "rev": "sha256:08e369d35a8f7d2fccae65e5931c1190ae6448d55b271a756e4d0d01a208126a",
+      "mediaType": "text/markdown",
+      "summary": "Revised within the gate's asks; report names no new Captain choice; design_surfaces.py check passes; no open PR overlaps (gh pr list, 2026-10-30)."
+    }
+  ]
+}
