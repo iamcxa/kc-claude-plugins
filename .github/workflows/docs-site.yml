@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "kc-dev-flow-2/**"
+      - "kc-journey-map/**"
       - "site/**"
       - ".github/workflows/docs-site.yml"
   workflow_dispatch:

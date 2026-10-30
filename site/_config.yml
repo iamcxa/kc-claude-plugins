@@ -10,6 +10,8 @@ search:
 aux_links:
   Source on GitHub: https://github.com/iamcxa/kc-claude-plugins
 
+mermaid:
+  version: "12.2.0"
 relative_links:
   enabled: true
   collections: true

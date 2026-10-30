@@ -1,5 +1,5 @@
 #!/bin/bash
-# usage: stage.sh <out-dir>   copies every plugin with a site/<plugin>/nav.yml (without its tests) and this site's config into an empty <out-dir>
+# usage: stage.sh <out-dir>   copies the pages of every plugin with a site/<plugin>/nav.yml and this site's config into an empty <out-dir>
 set -euo pipefail
 OUT=${1:?out dir}
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -29,7 +29,7 @@ rsync -a "$HERE/_sass" "$OUT/"
 } >> "$OUT/_config.yml"
 
 for p in "${PLUGINS[@]}"; do
-  rsync -a --exclude tests/ --exclude __pycache__/ --exclude 'test_*.py' "$ROOT/$p/" "$OUT/_$p/"
+  python3 "$HERE/select-pages.py" "$ROOT" "$p" | rsync -a --files-from=- "$ROOT/$p/" "$OUT/_$p/"
   rsync -a --exclude nav.yml "$HERE/$p/" "$OUT/_$p/"
 done
 

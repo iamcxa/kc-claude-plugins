@@ -1,0 +1,12 @@
+- scope: { path: "README.md" }
+  values: { nav_order: 1, permalink: /kc-journey-map/ }
+- scope: { path: "skills/kc-journey-map/SKILL.md" }
+  values: { parent: "Skills", nav_order: 1 }
+- scope: { path: "skills/kc-journey-progress/SKILL.md" }
+  values: { title: "Journey progress", parent: "Skills", nav_order: 2 }
+- scope: { path: "skills/kc-journey-map/references" }
+  values: { parent: "References" }
+- scope: { path: "docs" }
+  values: { parent: "Private hosting" }
+- scope: { path: "CHANGELOG.md" }
+  values: { nav_order: 99 }

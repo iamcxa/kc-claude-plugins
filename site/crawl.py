@@ -37,9 +37,11 @@ for f,p in pages.items():
             if path.startswith(base+'/'): tgt=path[len(base)+1:]
             elif path.startswith('/'): print("ABSOLUTE-NO-BASE",f,l); bad+=1; continue
             else: tgt=os.path.normpath(os.path.join(os.path.dirname(f),path))
-            if tgt.endswith('/') or tgt=='' : tgt=os.path.join(tgt,'index.html')
+            if tgt=='' or os.path.isdir(os.path.join(site,tgt)): tgt=os.path.join(tgt,'index.html')
         if not os.path.exists(os.path.join(site,tgt)): print("MISSING",f,l,'->',tgt); bad+=1; continue
         if frag and tgt in pages and frag not in pages[tgt].ids: print("NO ANCHOR",f,l); bad+=1
+for f in pages:
+    if re.search(r'<p>\|.*\|\s*$',open(os.path.join(site,f)).read(),re.M): print("RAW TABLE",f); bad+=1
 print("LINK/IMAGE PROBLEMS:",bad)
 ext=sorted({l for p in pages.values() for t,l in p.links if l.startswith('http') and 'iamcxa.github.io' not in l})
 print("EXTERNAL LINKS:"); [print(" ",e) for e in ext]
