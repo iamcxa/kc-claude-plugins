@@ -15,6 +15,17 @@ gates:
                 id: briefing:batch10-after-release-obligations:backlog:attempt-1:revision-1
                 digest: sha256:dc41df47f30012878baa94c857f89d6dcf18cde1446c51a12538f7ef9da1519d
                 room-ref: ./batch10-after-release-obligations/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:batch10-after-release-obligations:backlog:1
+                briefing: briefing:batch10-after-release-obligations:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-30T08:18:15.569986Z"
+                decision: approve
+                reason: The Captain 「對，全准且全確認」 (chat, 2026-10-30), answering FO's joint batch-11 backlog sitting of six gates whose ask was 「決定：六張全准進設計，並確認上面三件事？要改哪張直接說。」; accepts FO's recommendation and the confirmations stated in the gate question.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
