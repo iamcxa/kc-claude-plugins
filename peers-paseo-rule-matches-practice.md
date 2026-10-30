@@ -63,6 +63,7 @@ gates:
                 state: consumed
 started: 2026-10-30T10:01:54Z
 worktree: .worktrees/spacedock-ensign-peers-paseo-rule-matches-practice
+pr: iamcxa/kc-claude-plugins#754
 ---
 
 ## Scope
