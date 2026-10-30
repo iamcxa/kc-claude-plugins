@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:peers-paseo-rule-matches-practice:ideation:attempt-1:revision-1",
+  "question": "Revise peers-paseo-rule-matches-practice at ideation to relax the clause? FO recommends revise; approving accepts it: when the transport is confirmed Paseo, a new ask is allowed without listing paseo, so adopters not on Paseo have no binding at all (answering his 「不是每個人都要 paseo」, ADR 0038); this reverses ADR 0038's chosen option through a new ADR; validation runs one real two-agent ask, reply and notice, which he authorizes; check that notifyOnFinish false does not silence an errored peer.",
+  "artifacts": [
+    {
+      "id": "artifact:peers-paseo-rule-matches-practice:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d3c30398de2701d226c5a35c172f0c387f2afb0b/peers-paseo-rule-matches-practice.md",
+      "rev": "sha256:b6a07a8b7940f3086d3648c75ca6216ff3518f982cf832c489ff5bc1d74b2500",
+      "mediaType": "text/markdown",
+      "summary": "Ideation recommended listing paseo with a named exception; chief-engineer differs: no six README syncs and no named exception. Cost: no per-repo opt-out; ADR 0038's chosen option reversed."
+    }
+  ]
+}

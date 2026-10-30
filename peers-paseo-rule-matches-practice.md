@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:peers-paseo-rule-matches-practice:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:peers-paseo-rule-matches-practice-ideation-1
+              briefing:
+                id: briefing:peers-paseo-rule-matches-practice:ideation:attempt-1:revision-1
+                digest: sha256:732e7da04717a0f9ee8c457731fcaae9d30864d5a8e99a9fb056041300493015
+                room-ref: ./peers-paseo-rule-matches-practice/review/ideation/briefing-1
 ---
 
 ## Scope
