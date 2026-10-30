@@ -34,6 +34,14 @@ gates:
                 id: briefing:peers-paseo-rule-matches-practice:ideation:attempt-1:revision-1
                 digest: sha256:732e7da04717a0f9ee8c457731fcaae9d30864d5a8e99a9fb056041300493015
                 room-ref: ./peers-paseo-rule-matches-practice/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:peers-paseo-rule-matches-practice:ideation:1
+                briefing: briefing:peers-paseo-rule-matches-practice:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-30T09:31:39.460058Z"
+                decision: revise
+                reason: The Captain 「准」 (chat, 2026-10-30), answering FO's joint batch-11 ideation sitting of six gates whose ask was 「決定：六張全照建議，同意放寬 Paseo 規則和真實測試，並授權改完直接進實作？要改哪張直接說。」; accepts the direction and the revise asks named in this gate's question, and grants that a revised design staying within those asks goes to implementation without another sitting.
 ---
 
 ## Scope
