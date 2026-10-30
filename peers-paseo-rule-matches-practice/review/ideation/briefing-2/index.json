@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:peers-paseo-rule-matches-practice:ideation:attempt-2:revision-1",
+  "question": "Approve the revised ideation of peers-paseo-rule-matches-practice to enter implementation? FO recommends approve under the Captain's grant: the revision stays within the asks of his 2026-10-30 revise.",
+  "artifacts": [
+    {
+      "id": "artifact:peers-paseo-rule-matches-practice:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/fbae6d8f7660753fa6e8049d1b359f63fa3574b0/peers-paseo-rule-matches-practice.md",
+      "rev": "sha256:4987c8af12bb091bbeb1ed7746c064faf85f859a7eb835fa2de09bf716568074",
+      "mediaType": "text/markdown",
+      "summary": "Revised within the gate's asks; report names no new Captain choice; design_surfaces.py check passes; no open PR overlaps (gh pr list, 2026-10-30)."
+    }
+  ]
+}
