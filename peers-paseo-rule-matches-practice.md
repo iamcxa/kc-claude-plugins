@@ -92,7 +92,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review before the joint ideation sitting: approve, revise, split or hold each task, the Captain's decisions, overlap and order
-Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6.1-astra 2026-10-30 — does amendment 1 withdraw what the Captain approved, and what changes in the build?
+Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-30 — does amendment 1 withdraw what the Captain approved, and what changes in the build?
 
 ## Design
 

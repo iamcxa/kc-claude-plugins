@@ -18,3 +18,5 @@ Measured gap: with notifyOnFinish false a cancelled turn reads as finished, and 
 Not tested: a provider-side crash or error. Cancel is the only failure route exercised.
 
 FO did not answer any permission prompt. FO's cancel of 5a9ffabf reached the peer as a rejection, and it then refused to resend, so a cancelled hold makes that peer unusable for that exchange. FO also asked 1662962d for a sleep loop that would have got around its sleep block; the peer refused and FO withdrew the request.
+
+Provider error, observed by accident: FO spawned reviewer 9b09419f through the CLI, which sends no finish callback, with an unsupported model id. Within five seconds the provider returned 400; FO's next status read showed status error, attentionReason "error" and lastError. A cancel reads as finished; a provider error reads as error.
