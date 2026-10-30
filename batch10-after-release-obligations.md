@@ -3,7 +3,7 @@ title: Batch-10 obligations owed after release are met or returned to the Captai
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
