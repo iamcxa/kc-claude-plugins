@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:model-roster-per-repo:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of model-roster-per-repo to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that each repository records which model, reasoning level and host each role runs on, from a dev2-recommended default set, and every dispatch reads it; approving also confirms FO's reading that no per-vendor usage measurement is owed and that this task absorbs Draft #674, dispatch-sets-reasoning-effort, design-director-model-follows-task and the multi-model part of gpt-partner-extension-proposal, retired or closed inside this task; profile pilot (package rules and scripts, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:model-roster-per-repo:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e8925e7587c00d9e63e0beee0d60dbbb0bea75c4/model-roster-per-repo.md",
+      "rev": "sha256:db89d9ed78945cd69bdb6284e7e33a553b56c9666b8839b697654349f09ae8ea",
+      "mediaType": "text/markdown",
+      "summary": "Source: the Captain, 2026-10-29. Batch 9 and 10 ran this roster by hand."
+    }
+  ]
+}
