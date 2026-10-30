@@ -349,3 +349,61 @@ Local convenience receipts under `/tmp/names-check-implementation/`: `*-parity.j
 - `references/sd/workflow.md` — updated: replaces the former blanket absolute-path paragraph with the exact approved 41-word strict preflight paragraph; no instructions move elsewhere.
 - The bounded existing-code audit in the approved design remains applicable: Spacedock prepares context before build and forwards immediately afterwards; this package adds no native hook. Re-read sibling task scopes before implementation; inherited inline-state repair is first in the stack, roster shares workflow wording after this task, and held adoption work is not revived. No peer/sibling edits or contacts occurred.
 - Local required checks run from the assigned code worktree; product branch remains local. RoboRev exit 3 is missing evidence. FO must push/open the Draft PR against the specified parent, run the exact-head gate and inspect hosted CI before routing fresh validation. No CI cost saving or native transport/startup success is inferred from these tests.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #758 head 9f065b01 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at `9f065b01f1c6d6561793a168f584075edb85bf1f`; AC-1–AC-5 independently exercised below, with no new Material, Deferred risk, Polish or Needs decision finding. Product bytes unchanged.
+- DONE: This PR is stacked on PR #755: its base is spacedock-ensign/batch10-after-release-obligations at 0c55b9a574b8abd845e2ab969c200aa44b1588e4, so diff against that, not origin/main
+  Detached exact-head worktree created under the assigned worktree, tested clean and removed; three-file diff against that parent, `git diff --check` exit 0. Existing inline-state/history repair retained.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step script below ran unchanged via `/bin/bash --noprofile --norc /tmp/names-check-validation/acceptance.sh`, exit 0; installed ADR lint exit 0, 44 ADRs and 0 legacy. No UI surface; CLI behavior substitutes for a screen walk.
+- DONE: Take FO's exact-head receipts: RoboRev clean on 9f065b01f, evidence=roborev:1345, base 0c55b9a574b8abd845e2ab969c200aa44b1588e4
+  Read `dispatch/validation-1-message-1.md`; accepted as FO-provided exact-head review evidence, not an independently rerun RoboRev review. Implementation's former exit 3 is correctly recorded as incomplete, now supplemented by this receipt.
+- DONE: Read hosted CI yourself with gh pr checks 758 and state what it covers
+  `gh pr checks 758 --repo iamcxa/kc-claude-plugins` and `gh pr view ... --json headRefOid,baseRefName,isDraft,state` independently confirmed the exact head/stacked base, OPEN Draft and four passing checks: GitGuardian, live multi-profile route gate, Python unit tests and version parity. This covers configured checks, not native worker execution, adoption, human approval or merge.
+
+### Summary
+
+PASSED for the approved Pilot outcome at `9f065b01f1c6d6561793a168f584075edb85bf1f`. Goal sufficiency is demonstrated by visible missing-context notices and strict preflight refusal while associated records and real consumers retain their verdicts; minimal necessity is supported by incident replays and mutations that remove each retained behavior. Gate and delivery remain with FO and the Captain.
+
+### Acceptance evidence and limits
+
+- AC-1: Re-exported all three batch-9 incidents at their Design pins: associated base/plain/strict exits 1/1/1 with identical missing-Result stdout; copied exits 0/0/2, unchanged stdout, 21-word stderr notice. Missing-task controls emit 18 words while Candidate checks remain active; precedence, archive, symlink, cwd, usage and multi-record fixtures pass. Silent-notice, plain-refusal, early-return and lost-predicate mutations are rejected.
+- AC-2: Both modes retain relative, absolute, bare-name and scanned-region behavior; all four pinned batch-10 records remain 0 with empty streams in base/plain/strict. Relative-refusal, removed-bare-check and declaration mutations fail their assertions. No path classifier or `Repository files:` requirement was added.
+- AC-3: Reused the existing replay scaffold with fresh exports and independent `--no-hardlinks --no-checkout` Git clones at every pinned and implementation-time SHA in the implementation table: 1,281 + 1,300 associated records per storage kind, all pinned snapshot hashes matching prior receipts and all 16 runs with zero exit/stdout/stderr drift against base in plain and strict modes. Web's two `rewritten-report` exit-2 holds occur only with Git history, identically in base and both modes; snapshots are not history proof. Actual laws event-time consumer retains task-present/missing violations and parses a stdout defect plus stderr notice; stdout-notice and strict-historical-caller mutations fail. Existing default/newest/coverage and inline repair regressions pass.
+- AC-4: Actual strict command holds the test's builder call on missing association, then repaired context reaches unchanged `test_sd_dispatch.exercise`; standalone `python3 -B kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.3` also exits 0, exercising Pilot/Prod/POC and fresh/reused transport. Local dependency declarations: `SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock` (CLI 0.27.2), `SD_PLUGIN_ROOT` above (package 0.27.3). Plain-preflight and build-on-nonzero mutations fail. This is instruction/CLI/builder evidence; no native worker-start or model-compliance claim.
+- AC-5: Exactly the three approved product files changed; paragraph 41→41, workflow 5781→5781, common mod 48 unchanged. Same-input lifecycle outputs remain startup/open 29, merged 20, archive 0, merge ask 3 words; unchanged extension/rule inputs remain explicit U on both sides, not zero. Only missing-context paths add 21/18 stderr words. A clean disposable package passes lint; one added word alone makes it fail at 5782/5781. Mermaid CLI 12.0.0 freshly rendered `journey.png`; visual inspection confirms check collection before context refusal, repair loops and authorized FO build boundary.
+- Verification commands: `python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_dispatch_records.py` with the declared SD variables: 96 tests, no skips; same command for `test_laws_check.py`: 63 tests with one documented source-dependent skip, followed by `test_laws_check.RealAmendmentTests.test_five_pinned_records_scope_and_report_edits_keep_form_debt` with the five documented sources: 1/1 passed; `test_poc_readme.py`: 9/9; repository lint, installed ADR lint, number guards, comment ratio, dispatch-record completeness and design-surfaces check all exit 0. Comment ratio 224 code/0 comment lines, 0.0% ≤5%; all twelve context mutations and inherited history/ADR controls reject their deliberate defects.
+- Retained documents: `doc_impact.py <base> HEAD` lists ADR 0045 and `learning.md`, both `unaffected`: history predicates/ordering and the historical stdout consumer remain unchanged and were exercised. Workflow is updated in place; no instruction moved. No new ADR, version, budget, CI trigger, consumer, adopter or product file. CI cost per PR was not measured.
+- Limits judged: Relative notation still permits executing a repository copy; package provenance is not newly enforced. Non-Git snapshots do not prove history; strict proves association only. Fixture reading counts are not live organization totals; unchanged inputs are accounted as U. Hosted unit CI omits the SD environment for the embedded builder test, while local 96-test evidence supplies it and hosted CI separately runs `test_sd_dispatch.py`. No publication, adopter sync, native startup, human gate or merge is inferred. These match the accepted boundaries and need no repair.
+- Receipts: `/tmp/names-check-validation/{package,relay,web,qnow}-parity.json`, `incidents-reading.json`, `lifecycle-streams.json`, `journey.{mmd,png}`, `dispatch.log`, `laws.log`, `real-laws.log`, `poc.log`, `sd-dispatch.log`, `budget-falsifier.log`, `acceptance.log`; temporary verification scaffolds are not product dependencies. Corpus source SHAs and reproduction recipe remain in the preceding implementation report and Design.
+
+### Five-step acceptance script
+
+Run the complete block in a fresh Bash shell. It takes under one minute here, needs the declared local checkout/installs, and covers CLI seams, selected mutations and lint; full corpus/history, hosted CI and native worker execution are outside this short script.
+
+```bash
+#!/bin/bash
+# Step 1: select the delivered candidate; expect the exact head below.
+set -euo pipefail
+WT=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-names-check-says-what-it-skipped
+test "$(git -C "$WT" rev-parse HEAD)" = 9f065b01f1c6d6561793a168f584075edb85bf1f
+git -C "$WT" rev-parse HEAD
+# Step 2: exercise copy refusal, relative paths, consumers and actual builder; expect six tests, OK, no skips.
+export SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock
+export SD_PLUGIN_ROOT=/Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.3
+cd "$WT" && python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_dispatch_records.py -k ContextNoticeTests
+# Step 3: exercise twelve deliberate failures; expect one mutation test, OK.
+cd "$WT" && python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_dispatch_records.py -k ContextMutationTests
+# Step 4: check reading budget and decision records; expect 5781/5781 and 44 ADRs, zero legacy, exit 0.
+cd "$WT" && python3 -B kc-dev-flow-2/scripts/lint-skills.py
+cd "$WT" && python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/adr_lint.py docs/adr --since 0c55b9a574b8abd845e2ab969c200aa44b1588e4
+# Step 5: verify tracked bytes; expect PASS tracked candidate unchanged.
+git -C "$WT" diff --check
+test -z "$(git -C "$WT" status --porcelain --untracked-files=no)"
+printf 'PASS tracked candidate unchanged\n'
+```
+
+Observed: step 1 printed `9f065b01f1c6d6561793a168f584075edb85bf1f`; step 2 `Ran 6 tests in 35.778s`, `OK`, no skips, with real builder fixture PASS lines; step 3 `Ran 1 test in 9.169s`, `OK` (twelve mutations); step 4 `PASS`, `5781 of 5781 words`, `44 ADR file(s) checked, 0 legacy`; step 5 `PASS tracked candidate unchanged`. Whole script exit 0; full streams retained in `acceptance.log`.
