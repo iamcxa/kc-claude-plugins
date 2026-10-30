@@ -269,3 +269,82 @@ Revised the Pilot design under the Captain's recorded 「准」: retain skipped-
 - Render receipt: `/tmp/names-check-ideation-cycle2/journey.png`; reproduce from the task's Mermaid with Mermaid CLI 12.0.0 and local Chromium. Offline npx metadata lookup failed, then the installed CLI was used; sandboxed Chromium failed to start, and the permitted local render succeeded. These machine-local convenience paths are not product dependencies.
 
 This complete cycle-2 report supersedes the prior report's design recommendation, not its historical evidence. The previous report is preserved verbatim; its strict relative-path proposal and unresolved six-file choice no longer govern this task.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved three-file context-only design on the assigned branch and stacked base; commit locally and prepare the Conventional Commit PR title/body for FO.
+  Worktree `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-names-check-says-what-it-skipped`, branch `spacedock-ensign/names-check-says-what-it-skipped`, base `origin/spacedock-ensign/batch10-after-release-obligations` at `0c55b9a574b8abd845e2ab969c200aa44b1588e4`, candidate `9f065b01f1c6d6561793a168f584075edb85bf1f`; PR text `/tmp/impl-names-check-says-what-it-skipped-pr.md` specifies that base and stacking on PR #755. Product diff contains only the three approved files, with no version/budget/consumer/ADR change; working tree clean after commit.
+- DONE: Every acceptance criterion and its behavioral falsifiers, with fresh Python -B processes and cache-free mutation copies.
+  AC-1 through AC-5 evidence below; 96 dispatch tests pass with no skips, including 12 context-boundary mutations, inherited ADR/history mutations and actual Spacedock builder transport. The base fails the new copy-notice and workflow-preflight controls. The budget falsifier appends one word to a disposable copy and repository lint exits 1 at 5782 versus 5781.
+- DONE: Run the repository lint and required local checks; retain the earlier inline-state repair.
+  `python3 -B kc-dev-flow-2/scripts/lint-skills.py` exits 0, workflow 5781/5781; installed `adr_lint.py docs/adr --since 0c55b9a574b8abd845e2ab969c200aa44b1588e4` exits 0 (44 ADRs, 0 legacy); installed `number_guards.py check --repo <worktree> --base <base> --workflow-dir <workflow> --task <entity>` exits 0; `comment_ratio.py <base> HEAD --repo <worktree> --workflow-dir <workflow>` exits 0: code lines 224, comment lines 0, 0.0%, maximum 5% met; committed diff check exits 0. The 63-test unchanged laws suite passes with one object-dependent skip, then that exact real-record test passes separately with its five documented source pins supplied; the 9-test unchanged POC derivation suite passes. The real builder suite runs unchanged inside the new preflight test, including split-root and both graph routes.
+- DONE: Affected retained documents and the approved per-moment reading boundary.
+  `doc_impact.py <base> HEAD` lists ADR 0045 and learning.md: both unaffected, for the reasons below. Exact workflow and runtime counts are below; Mermaid CLI 12.0.0 renders the current task diagram and visual inspection confirms actors, order, collection before refusal, repair loops and the build boundary. No CI trigger changes; CI cost per PR not measured.
+- SKIPPED: Obtain an exact-head RoboRev verdict.
+  Ran `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/extensions/roborev/roborev_gate.py --repo <worktree> --base 0c55b9a574b8abd845e2ab969c200aa44b1588e4` after commit: exit 3, `incomplete: the roborev daemon is not running`. No clean review is claimed. FO owns the exact-head gate before fresh validation under the dispatched Paseo exception.
+- SKIPPED: Push the product branch, open the Draft PR, request reviews or read hosted CI.
+  No PR opened: no worker push grant; dispatch and ADR 0042 assign publication and review to FO. FO receives the local candidate and prepared PR text; no product push, PR mutation, config write, ready action or merge was performed. Hosted ownership/CI remain unverified.
+
+### Summary
+
+Implemented skipped-context stderr notices and opt-in strict association refusal while preserving relative paths, legacy stdout/verdicts, historical consumers and the stacked inline-state repair. All local acceptance evidence passed at candidate `9f065b01f1c6d6561793a168f584075edb85bf1f`; RoboRev is incomplete because its daemon is not running, and product publication, hosted CI and independent validation remain with FO. This is a Pilot implementation handback, not a gate approval, native worker-start proof or delivery claim.
+
+### Acceptance evidence
+
+**AC-1 — association and notices.** Three pinned batch-9 incidents replay against the stacked base and candidate: `batch-reaches-each-gate-together` at `566a50400518f4d9fe217803605611e7910e7de5`, `captain-ruling-sources-checked` at `39e071b2969c37958ca70dd5a72dac40ea257800`, and `reused-worker-dispatch-leaves-a-record` at `0ccdbb305328e410fd4fb5fb53ca729837302688`. Each associated original is exit 1 with the same missing-Result stdout in base, candidate plain and candidate strict. Each detached byte-identical copy is base 0, candidate plain 0 plus its 21-word stderr notice, and candidate strict 2 with that notice. Existing task association is resolved-path-only; tests exercise valid temporary layouts, flat/index precedence, live/archive paths, symlinks pointing in/out, no cwd inference, missing-task clean plain 0/strict 2, Candidate checks without a task, usage errors and multi-record diagnostics. Silent-notice, plain-refusal, early-context-return, lost-Candidate and lost-task-fact mutations each fail their respective assertions.
+
+**AC-2 — unchanged path behavior.** Subprocess controls in both modes exercise directory-bearing relative paths, absolute paths, bare known names, non-package names, quote/backtick/fenced commands, mixed declaration-like text and the existing scanned regions. Relative paths and text containing `Repository files:` get no new special treatment; bare `adr_lint.py` still fails. All four unchanged `_archive/captain-amendment-form-checked/dispatch/{ideation-1,ideation-2,implementation-1,validation-1}.md` records at package state `8db6925f2d2c4579496103e736aa477de92ac608` return 0 with empty streams in base and both candidate modes. Relative-refusal, lost-bare-name and declaration mutations fail their controls; no classifier or declaration syntax exists in product code.
+
+**AC-3 — complete corpus and real consumers.** Compared base plain, candidate plain and candidate strict exit/stdout/stderr for every associated record, once in fresh `git archive` exports and separately in independent `git clone --no-hardlinks --no-checkout` full-history copies checked out at each pin below. All 1281 pinned record hashes match the ideation receipts; every record at these pins is associated. Total comparisons cover 1281 pinned and 1300 implementation-time records per storage kind, with zero base/candidate drift in either mode. Only exported-root prefixes in diagnostics are normalized; modes retain exact diagnostic order and content.
+
+| State corpus | Ideation pin / records | Implementation-time pin / records |
+| --- | --- | --- |
+| Package | `8db6925f2d2c4579496103e736aa477de92ac608` / 572 | `dc030bf82d74cf01acc29db4e143580e12a6174e` / 585 |
+| Relay | `2019310178b25a3742ff8ec51bfda09aad634f2c` / 304 | same pin / 304 |
+| Web | `e8c96bf22e455163d0beb062c3c503b626955258` / 146 | `04cb95f24288665c013e85a30e7cc558c91c90ee` / 150 |
+| QNow | `8a4eb114943778cfc1bad3ac59820e4e80329e09` / 259 | `20c5a1871e543752fd1968bf9c5bbdaef6b72a09` / 261 |
+
+Non-Git pinned exit distributions 0/1/2: package 362/210/0, Relay 133/171/0, Web 91/55/0, QNow 104/155/0. Current exports: 375/210/0, 133/171/0, 94/56/0, 106/155/0. Git results equal their corresponding exports except Web: pinned 89/55/2 and current 92/56/2; `_archive/review-page-reads-as-an-app/dispatch/validation-{1,2}.md` retain the base's existing `rewritten-report` history hold in all modes. No claim is made that a non-Git pass proves history.
+
+The new regression test invokes the actual laws CLI over temporary committed task-present and task-missing events, including a real bare-name stdout defect accompanied by a context notice on stderr. It returns the expected L2 violations and no parser failure. Moving notices to stdout or routing the historical consumer through strict makes this control fail. The unchanged laws suite and the existing default, newest, coverage, validation-history and eight inline/split-state layout controls pass. No production consumer parser edit is needed because `run_check` consumes stdout, not stderr.
+
+**AC-4 — preflight to builder.** The existing test file binds the exact approved paragraph, extracts and executes its actual strict command on a saved record, verifies a missing task prevents the fixture's builder call, then restores context and invokes the unchanged real `test_sd_dispatch.exercise` fixture with declared `SPACEDOCK_BIN` and `SD_PLUGIN_ROOT`. It exercises ten fresh/reused route-stage-host handoffs, both graph routes, Pilot/Prod/POC selection, generated stage text, Team/context transport, negative controls, split-root reuse and synthetic gates. Plain-preflight, declaration and build-on-nonzero mutations fail assertions. This proves package instructions, CLI and builder transport; it does not prove native worker startup, skill/model compliance or human approval.
+
+**AC-5 — scope, reading and render.** Product diff is exactly `kc-dev-flow-2/scripts/dispatch_records.py`, `kc-dev-flow-2/scripts/test_dispatch_records.py`, and `kc-dev-flow-2/references/sd/workflow.md`; test changes include adapting the inherited call-site mutation to the new local `files` variable. No new product script, budget, version, CI, ADR, consumer or adopter change. The paragraph remains 41 words, workflow 5781, common mod 48, combined full load 5829. Same-input fixture captures retain stdout/stderr separately for every row below; these are bounded fixture measurements, not live organization-wide reading totals.
+
+| Lifecycle moment | Base | Candidate |
+| --- | --- | --- |
+| Startup/resume: workflow + mod + same idle fixture output | 5829 + 29 | 5829 + 29 |
+| Pre-dispatch clean associated record: paragraph + check output | 41 + 0 | 41 + 0 |
+| Pre-dispatch detached copy: paragraph + output | 41 + 0, exit 0 | 41 + 21 stderr words, strict exit 2 |
+| Pre-dispatch missing adjacent task: paragraph + output | 41 + 0, exit 0 | 41 + 18 stderr words, strict exit 2 |
+| Pre-dispatch associated relative-path fixture | 41 + 0 | 41 + 0 |
+| Idle/open PR: mod + same output | 48 + 29 | 48 + 29 |
+| Idle/merged PR: mod + same output | 48 + 20 | 48 + 20 |
+| After archive: same unchanged extension inputs + fixture output | U_archive + 0 | U_archive + 0 |
+| Merge ask: same delivery instructions + valid question output | U_merge + 3 | U_merge + 3 |
+
+Only known changed prose is recounted; unchanged extension/rule inputs remain U on both sides, as in the approved design, not a hidden zero. Lifecycle output fixtures use the existing PR-watch test provider, real local watcher/observer/question paths and temporary state; no hosted PR action occurs. Notices are emitted once per unsupported record; paths here have no spaces. One extra workflow word makes the actual repository lint fail (5782/5781). The current Mermaid is freshly rendered and visually checked: existing checks precede strict context refusal, associated defects follow the existing repair route, and only an associated pass reaches FO's build step.
+
+### Reproduction and receipts
+
+Run from the exact candidate checkout with Python 3 and Git:
+
+```sh
+SD_PLUGIN_ROOT=<Spacedock-0.27.3-package-containing-mods/pr-merge.md> SPACEDOCK_BIN=<absolute-spacedock-executable> python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_dispatch_records.py
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_laws_check.py
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_poc_readme.py
+python3 -B kc-dev-flow-2/scripts/lint-skills.py
+```
+
+For the laws object-dependent test, supply `DEV2_OBLIGATION_SOURCES` using the five `{state, rev, path}` records already documented in `kc-dev-flow-2/VALIDATION.md`; the separate run here passes all five source hash assertions and ten unrelated-edit replays. Full-history clones must have the pinned source objects. For each corpus/pin, export or clone the state without changing its task layout; enumerate `**/dispatch/*.md`; load checker source from base `git show <base>:kc-dev-flow-2/scripts/dispatch_records.py` and the candidate with the same package dependencies; invoke `main(['--names', record])` on both plus candidate `main(['--names', '--strict', record])`; capture streams separately and compare associated records. Do not replace Git clones with exported snapshots when evaluating history.
+
+Local convenience receipts under `/tmp/names-check-implementation/`: `*-parity.json` (per-record results), `incidents-reading.json` (three incidents, four records, prose/notice streams), `lifecycle-streams.json`, `real-records.json`, and `journey.{mmd,png}`. Temporary replay helpers there are verification scaffolding, not product dependencies; remove after FO/validation retain or reproduce the evidence. Suite logs: `/tmp/names-check-verified-tests.log`, `/tmp/names-check-laws.log`, `/tmp/names-check-real-laws.log`, `/tmp/names-check-poc.log`; mutations `/tmp/names-check-mutations-2.log` and `/tmp/names-check-budget-falsifier.log`. Initial harness failures were corrected before the passing final suite; no failed result is reported as green.
+
+### Retained documents and boundaries
+
+- `docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md` — unaffected: the live ruling predicate, event order, non-Git skip and newest exclusion remain as accepted. Strict association is an additional opt-in preflight, not a change to that ruling. Read at base `0c55b9a574b8abd845e2ab969c200aa44b1588e4`, SHA-256 `124d19068d071b0d8414a8aac0a87b0b3a8c06b3e0ef345af60357cd9df2e336`; status Accepted.
+- `learning.md` — unaffected: its parser-learning applicability concerns parsed output. The actual L2 consumer is exercised with stderr notices plus stdout defects and remains unchanged. Its per-moment reading and full-corpus practices are applied above; no learning entry is edited.
+- `references/sd/workflow.md` — updated: replaces the former blanket absolute-path paragraph with the exact approved 41-word strict preflight paragraph; no instructions move elsewhere.
+- The bounded existing-code audit in the approved design remains applicable: Spacedock prepares context before build and forwards immediately afterwards; this package adds no native hook. Re-read sibling task scopes before implementation; inherited inline-state repair is first in the stack, roster shares workflow wording after this task, and held adoption work is not revived. No peer/sibling edits or contacts occurred.
+- Local required checks run from the assigned code worktree; product branch remains local. RoboRev exit 3 is missing evidence. FO must push/open the Draft PR against the specified parent, run the exact-head gate and inspect hosted CI before routing fresh validation. No CI cost saving or native transport/startup success is inferred from these tests.
