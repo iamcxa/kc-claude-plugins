@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:batch10-after-release-obligations:ideation:attempt-1:revision-1",
+  "question": "Revise batch10-after-release-obligations at ideation? FO recommends revise; approving accepts these asks: laws_check.py compares raw amendment bytes before any parsing, so a malformed heading on an unchanged record no longer exits 2 (the design's fix sat too late; real relay limit-telemetry-posthog still exited 2); move the dev2-laws pin right after the two fixes instead of holding it, and return form repairs to each record's owner; a Paseo-started worker satisfies the spawn proof; test against the real records, not a synthetic fence fixture.",
+  "artifacts": [
+    {
+      "id": "artifact:batch10-after-release-obligations:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0592c4e6d1688b0afe392954c8131d8bebd88c1c/batch10-after-release-obligations.md",
+      "rev": "sha256:730ee6568881b9fdf9d816c7b30deebc2eed82dae5b25fcb57c2a89fd7aeb624",
+      "mediaType": "text/markdown",
+      "summary": "Chief-engineer ran real task bytes: both plugin records and archived qnow passed L3; a 150-commit dry run gave L3 17/0. Cost: design_surfaces.py check still refuses those records at their next gate."
+    }
+  ]
+}

@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:batch10-after-release-obligations:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:batch10-after-release-obligations-ideation-1
+              briefing:
+                id: briefing:batch10-after-release-obligations:ideation:attempt-1:revision-1
+                digest: sha256:05264cd604d5e323218b39c64021c91c0503c60801331c2d8e0f9c70ddfe0a8e
+                room-ref: ./batch10-after-release-obligations/review/ideation/briefing-1
 ---
 
 ## Scope
