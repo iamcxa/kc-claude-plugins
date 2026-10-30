@@ -1,0 +1,16 @@
+# Architecture review, 2026-10-31 (kc-dev-flow-2:engineering-reviewer on fable; a reviewer's words, not a ruling)
+
+Candidate: spacedock-ensign/ops-inbox-r1-setup-and-isolation at 7aa5ccad2b631400bd6ec8239f6c6c2f1d929d41. Recommendation: escalate. Verdict: sound with fixes; the first fix is a Captain ruling, not code.
+
+FO check the same day: `gh api orgs/spacedock-dev --jq .plan.name` printed `free`; `gh api repos/spacedock-dev/subspace-relay/rulesets`, the same for subspace-relay-ops-trigger, and `.../branches/main/protection` each answered 403 "Upgrade to GitHub Pro or make this repository public to enable this feature."
+
+- F1 (blocks) Rulesets are impossible on the target: free plan, private repositories. An injected FO can push relay `main` or forge `spacedock-state/ops` with the agent token (contents:write); only the prompt forbids it. Read-back rows R15-R19 ERROR, so AC-7 cannot pass as written, and their `next:` text points at the wrong fix. POC1's ruleset evidence came from an iamcxa scratch repo and did not transfer. Fix options: Team plan; relay public; or records and PR in a separate repository with the relay token minted contents:read. Add the precondition to RUNBOOK S10.
+- F2 (no block; about 10 lines) FO escalates to the agent App private key and the model token: FO-allowed `git config core.hooksPath <dir>`, then `ops-run.mjs`'s `git commit` under its env printed 'HOOK RAN; secret seen: yes'. Fix: build `gitEnv` from an allowlist and do everything after the FO from a fresh clone, copying only the record file. State that `--allowedTools` is not a boundary.
+- F3 (no block; needs F1) With ruleset-main, the agent token can still approve and merge a human PR (pull_requests:write; 1 approval, no code owner, no last-push approval). Fix: make `ruleset-agent-creations.json` mandatory and add `{"type":"update"}`. Live App-approval counting not tested.
+- F4 (no block) The read-back key can sign `ops.metric.crossed` from `urn:ops-inbox:fake` and open a prod incident (202 open). The preview key gave 25 dispatches for 25 metrics: each a runner job up to 45 min and up to 5 USD model, a branch and a Draft PR, with no cap. Fix: 403 a non-selftest event from `urn:ops-inbox:`; per-key hourly claim counter. Model token egress: `--max-budget-usd` caps the run, not an exfiltrated token.
+- F5 (no block) Read-back gaps: R2/R20 accept any 40-hex (7aa5ccad is only on a feature branch); R18 `--workflows-checked` is a word, not a read; R9 proves token shape, not that the agent App is on relay only.
+- F6 (over-building, Captain's call) `captain` receiver and forced `OPS_CAPTAIN_SLACK_USER`; `urn:sentry:` on the relay-prod key and Sentry fixtures; 25-minute join wait then fallback-open; heartbeat and recovered paths if relay sends only crossed. Keep `OPS_RULES`.
+
+Holds, per the reviewer's probes: bad or unknown signature 401 before any store write; duplicate 200 no dispatch; join starts no agent; invalid key or rule list 500; `ops-event.yml` passes event and branch as env; metric data has no free-text field; ops-gate requires `OPS_CAPTAIN_LOGIN` and same-repo head. npm test: 133 pass.
+
+Not checked: live GitHub App approval counting and workflows-permission refusal; Netlify Blobs `onlyIfNew`; spacedock on hostile state-branch content; relay's emitter and #455; Slack webhook; the exe.dev VMs.
