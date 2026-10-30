@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:peer-status-reaches-fresh:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:peer-status-reaches-fresh-backlog-1
+              briefing:
+                id: briefing:peer-status-reaches-fresh:backlog:attempt-1:revision-1
+                digest: sha256:fab4edc4bff6684565f1a88b14d19171662102bf71f1305a2d93f6b1874ba04d
+                room-ref: ./peer-status-reaches-fresh/review/backlog/briefing-1
 ---
 
 ## Scope
