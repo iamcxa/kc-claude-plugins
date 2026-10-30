@@ -82,7 +82,7 @@ pr: iamcxa/kc-claude-plugins#754
 
 ## Stop condition
 
-- Every round-004 event has a stated allowed/refused/unknown disposition under confirmed-transport permission, including a compliant qnow path without a listing exception. Validation requires real ask/reply/notice and failure visibility with quiet callbacks. If that check is unavailable or false hides error/permission holds, stop and return evidence to FO; no host repair, watcher, automatic listing or notification redesign is authorized. Preserve non-Paseo routing, worker signals and human authority.
+- Every round-004 event has a stated allowed/refused/unknown disposition under confirmed-transport permission, including a compliant qnow path without a listing exception. Validation requires real ask/reply/notice with ask callbacks enabled, replies/notices quiet, and visible ask failure/hold notifications with report-only permission handling under amendment 1. If that check is unavailable or an ask failure/hold remains hidden, stop and return evidence to FO; no host repair, watcher, automatic listing or notification redesign is authorized. Preserve non-Paseo routing, worker signals and human authority.
 
 ## FO alignment
 
@@ -104,7 +104,7 @@ Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6.1-astra 2026-10-30 — does a
 
 **What stays optional?** paseo still selects the existing Paseo Codex worker publication/local-review procedure. Messaging never activates it. fo-feedback still needs its own selection, named maintainer, anchor, cadence and question grant; only its redundant paseo prerequisite is removed. No adopter README listing campaign, model change, host change or extra polling service is needed.
 
-**Why quieter messages?** Explicit, referenced replies and information-only notices need no receipt-only acknowledgement. Suppress routine completion callbacks only subject to the real failure-visibility acceptance below. Paseo documents that the same callback carries errors and permission requests: explicit replies alone cannot prove a crashed peer remains visible. If the native check shows hidden failure, hold this candidate and return the result to FO rather than accepting silence or designing another notification system.
+**Why different notification flags?** Captain amendment 1 enables notifyOnFinish for peer asks after the old-head real-pair check found quiet cancelled turns appearing finished. Requested replies and information-only notices keep it false and request no receipt-only acknowledgement. A permission notification about another agent is reported to FO, never approved or denied with respond_to_permission. Native error/hold visibility and report-only handling still need a rerun on the amended head; a callback grants no authority.
 
 **Who owns freshness wording?** The newest `peer-status-reaches-fresh` (current peer facts) gate asks that task to delete its paseo insertion and let this task carry that text. This task alone owns the Paseo send/notice wording in both transport binding and optional-extension pointer; the sibling retains its `## Current peer facts` section in peers, its fresh-FO loading test and its real-use observation after delivery. Its old candidate-paseo insertion must not also land. Reading its task/briefing is coordination; no sibling edit or message is authorized here.
 
@@ -112,9 +112,9 @@ Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6.1-astra 2026-10-30 — does a
 
 No unresolved material design choice remains within the revise asks. Cost accepted by the relaxation: required peers gains proactive Paseo scope and a repository cannot disable peer asks just by omitting paseo; existing authority still limits each exchange. No six-README enablement or Captain-named exception remains. Recommendation: implement this bounded ruling, then require the native evidence before validation passes. What gets worse: more peer text for an incoming-only reader, and a live failure-visibility requirement can hold delivery.
 
-New unnumbered ADR draft title: **“Confirmed Paseo transport permits peer asks without optional extension selection.”** Context: round-004's five unlisted senders and qnow's named ask. Decision: cite the exact Captain Words/Asked and this gate; supersede only ADR 0038's optional-listing prerequisite for outbound Paseo peer asks. Retain its transport-based routing, non-Paseo path, source/authority rules, busy bound and requested-running-reply exception. Preserve ADR 0035's required learn/peers and optional worker choice, and ADR 0042's listed worker handoff. Consequences: loss of listing-based opt-out, quiet-send failure risk and required native proof. FO reserves the ADR number at implementation dispatch; no ADR/index or prior decision is edited during ideation.
+New unnumbered ADR draft title: **“Confirmed Paseo transport permits peer asks without optional extension selection.”** Context: round-004's five unlisted senders and qnow's named ask. Decision: cite the exact Captain Words/Asked and this gate; supersede only ADR 0038's optional-listing prerequisite for outbound Paseo peer asks. Retain its transport-based routing, non-Paseo path, source/authority rules, busy bound and requested-running-reply exception. Preserve ADR 0035's required learn/peers and optional worker choice, and ADR 0042's listed worker handoff. Consequences: loss of listing-based opt-out, ask callbacks, report-only permission handling and required native proof under amendment 1. FO reserves the ADR number at implementation dispatch; no ADR/index or prior decision is edited during ideation.
 
-Return to FO rather than design here: host/error-notification changes; a polling/watchdog or reliable queue; altered quiet-send default if the failure test fails; automatic adopter selection; zero-interruption guarantee; new model/worker/surface policy; broader profile or production obligations. The existing recorded callback choice when an explicit return route is unavailable is retained, not a new fallback mechanism. An unavailable native test leaves acceptance unverified, not waived.
+Return to FO rather than design here: host/error-notification changes; a polling/watchdog or reliable queue; further notification-default changes if the amended failure test fails; automatic adopter selection; zero-interruption guarantee; new model/worker/surface policy; broader profile or production obligations. The existing recorded callback choice when an explicit return route is unavailable is retained, not a new fallback mechanism. An unavailable native test leaves acceptance unverified, not waived.
 
 ### Upstream chain and evidence refreshed this cycle
 
@@ -140,9 +140,9 @@ Keep serverId with the full host-stamped agentId and confirm the destination thr
 
 For a new ask or information-only notice, check status and send once only to an idle peer. Busy or unknown status uses the five-minute deferral above. Requested answers may reach a running asker. Set activeTurnBehavior: "steer" explicitly; never select interrupt. Known unavailable steering defers even a reply; unknown capability or a status race still risks Paseo's interrupt fallback. These restrictions do not govern FO's own workers.
 
-Set notifyOnFinish: false for routine peer asks, requested replies and information-only notices. An ask names its question reference and requests one explicit sourced reply to the confirmed return address; check that return host route first. A notice asks for no acknowledgement. If the return route is unavailable, use independent research or record a specifically chosen completion callback with notifyOnFinish: true. Use a tool exposing both flags; CLI --no-wait does not prove callbacks are disabled. Match replies and callbacks once to the question; a receipt, unrelated finish or duplicate is not an answer. Preserve missing, failed or uncertain outcomes in the exchange record; no automatic resend.
+Set notifyOnFinish: true for peer asks; set it false for requested replies and information-only notices. An ask names its question reference and requests one explicit sourced reply to the confirmed return address; check that return host route first. A notice asks for no acknowledgement. If the return route is unavailable, use independent research or record a specifically chosen completion callback with notifyOnFinish: true. Use a tool exposing both flags; CLI --no-wait does not prove callbacks are disabled. Match replies and callbacks once to the question; a receipt, unrelated finish or duplicate is not an answer. Preserve missing, failed or uncertain outcomes in the exchange record; no automatic resend.
 
-Quiet notifications must not hide a peer error or permission hold. Do not infer success from silence or discard an error as a no-action finish. At the next attended reconciliation, inspect unresolved exchange evidence and report a material failure or hold to FO. If the host cannot expose that failure with callbacks disabled, record the gap and return the quiet-send policy to FO; do not claim this policy validated or invent polling, a watcher or host changes.
+Report a permission notification about another agent to FO; never answer it with respond_to_permission. A notification grants no authority to approve or deny that agent's request. Do not infer success from silence or discard an error as a no-action finish. At the next attended reconciliation, inspect unresolved exchange evidence and report a material failure or hold to FO. If the host cannot expose an ask's failure or hold with callbacks enabled, record the gap and return the policy to FO; do not claim it validated or invent polling, a watcher or host changes.
 
 For status corrections, follow peers' Current peer facts when that rule is delivered: a same-question answer uses the reply route; another notice uses the new-send route. Freshness bypasses no identity, authority or busy-peer boundary. A no-action finish creates no Captain reply duty; worker completion keeps its own contract.
 ```
@@ -238,20 +238,22 @@ flowchart TD
     H -->|eligible at sole recheck| I
     G -->|yes| F
     F -->|no or unknown| I{Notice or confirmed explicit return route?}
-    I -->|yes| J[Send once: explicit steer and notify false]
+    I -->|yes| U{New ask?}
+    U -->|yes| L[Send once: explicit steer and notify true]
+    U -->|no| J[Send once: explicit steer and notify false]
     I -->|no| K{Recorded callback chosen?}
-    K -->|yes| L[Send once: explicit steer and notify true]
+    K -->|yes| L
     K -->|no| X
     J --> M[Paseo queues; receipt is not answer]
     L --> M
     M --> N{Exchange result}
     N -->|matched sourced reply| R[Check source; record once; keep human authority separate]
     N -->|notice delivered| S[Record evidence; no acknowledgement or Captain reply duty]
-    N -->|error, hold, missing or uncertain| T[Record unresolved; attended reconciliation; no automatic resend]
-    T -->|failure hidden by quiet mode| X
+    N -->|error, hold, missing or uncertain| T[Report error or hold; never respond_to_permission; reconcile unresolved]
+    T -->|ask failure hidden despite notification| X
 ```
 
-Deferral is one episode, not a loop resetting five minutes. An eligible recheck still checks known-unavailable steering; otherwise it ends unsent. New notices use the idle rule; requested same-question corrections use the running-reply exception. Status races still carry upstream interruption risk. Errors/permission holds are material, distinct from no-action finishes. A silent peer is unresolved, never success. Worker completion is outside this graph. No diagram node performs a host repair or bypasses a gate.
+Deferral is one episode, not a loop resetting five minutes. An eligible recheck still checks known-unavailable steering; otherwise it ends unsent. New notices use the idle rule; requested same-question corrections use the running-reply exception. Status races still carry upstream interruption risk. Errors/permission holds are material, distinct from no-action finishes. Permission notifications about another agent are reported to FO, never answered with respond_to_permission. A silent peer is unresolved, never success. Worker completion is outside this graph. No diagram node performs a host repair or bypasses a gate.
 
 ### Round-004 replay
 
@@ -296,35 +298,35 @@ Each event below was re-read against `.notes/fo-feedback/round-004.md`. Disposit
 
 The Captain authorized one real two-agent ask, reply and notice in the newest gate. FO binds one consenting, confirmed pair, their server/agent IDs, current candidate/package revision and one disposable read-only question before validation. No live projects are edited; this worker does not message peers. The validator records actual arguments, queue receipts, recipient receipt, explicit sourced reply and information-only notice in the existing task record. The notice requests no acknowledgement. A permission or error is evidence, never approval to bypass it.
 
-Exercise a harmless failure/permission condition on the same bounded pair using a supported, reversible host route. Do not damage a repository, credentials or a provider to induce failure. Compare sender-visible results with the receiver's actual terminal error/hold under notifyOnFinish false, including the next attended unresolved-exchange reconciliation. An explicit success-shaped reply or a fake transport recorder is insufficient. If no safe real error route exists, state the missing evidence and return to FO. If the error remains hidden, this acceptance fails: do not pass quiet-send behavior, automatically flip defaults or add a watchdog. Any remedy beyond wording faithful to the chosen rule needs FO to return the new choice to the Captain. Retain the existing return-route-unavailable callback case and distinguish its true callback from the false-mode test.
+Exercise a harmless failure/permission condition on the same bounded pair using a supported, reversible host route with ask notifyOnFinish true. Do not damage a repository, credentials or a provider to induce failure. Compare sender-visible permission/error notifications with the receiver error/hold and attended unresolved-exchange reconciliation; retain source and reporting time. FO reports a notification about another agent and never calls respond_to_permission to approve or deny it. Requested replies and information-only notices keep notifyOnFinish false as controls, with no acknowledgement. If no safe real failure route exists or an ask failure remains hidden, state the missing evidence and return to FO; do not pass acceptance or invent host changes, polling or a permission workaround. The old-head real-pair/README.md is historical evidence; FO owns the amended-head rerun under AC-7 and AC-8.
 
 The sibling's first natural dependency-transition observation stays **after delivery**, under its owner; it is not substituted for this task's authorized native validation or imposed here as an extra pre-delivery dependency. Its fresh-FO test must start without peers preloaded, but that test and loading repair are not implemented by this task.
 
 ### Words FO reads at each lifecycle moment
 
-Counts are Python `len(text.split())`, including headings and syntax, on the pinned source and exact draft blocks above. This correctness change may increase reading. Count whole peers, plus whole paseo only when listed, plus the primary host sections at first exchange; no hidden saving from moving the procedure. The retained-document replacements are counted too. No script output changes are designed.
+Amendment 1 recount (previous reports remain historical): counts are Python `len(text.split())`, including headings and syntax, on the pinned source and exact draft blocks above. This correctness change may increase reading. Count whole peers, plus whole paseo only when listed, plus the primary host sections at first exchange; no hidden saving from moving the procedure. The retained-document replacements are counted too. No script output changes are designed.
 
 | Package passage | Before | Revised | Delta |
 | --- | ---: | ---: | ---: |
-| `extensions/peers/EXTENSION.md` | 805 | 1039 | +234 |
+| `extensions/peers/EXTENSION.md` | 805 | 1058 | +253 |
 | `extensions/paseo/EXTENSION.md` | 562 | 389 | -173 |
 | `references/sd/adoption.md` | 2182 | 2188 | +6 |
 | `README.md` | 3118 | 3128 | +10 |
 | `extensions/fo-feedback/EXTENSION.md` | 599 | 603 | +4 |
 
-Unchanged primary host addend: **607** words. Unlisted Paseo exchange: **1412 → 1646** (+234); listed full-file exchange: **1974 → 2035** (+61). Non-Paseo operation loads no Paseo binding/host skill as a new obligation; whole-file peers growth is shown above for readers who cold-read the whole file. There is no list-selection or named-exception branch to read.
+Unchanged primary host addend: **607** words. Unlisted Paseo exchange: **1412 → 1665** (+253); listed full-file exchange: **1974 → 2054** (+80). Non-Paseo operation loads no Paseo binding/host skill as a new obligation; whole-file peers growth is shown above for readers who cold-read the whole file. There is no list-selection or named-exception branch to read.
 
 The previous cycle's declared Python fixture instrument was executed again from the installed 0.33.1 package with Spacedock 0.27.3 (exit 0). It exercises mocked GitHub/Spacedock responses, not live peer messaging. Measured common corpus stays: startup 442; idle/open 672; idle/merged 1021; archive 371; merge ask 1003. Full reproduction instrument remains below.
 
 | Lifecycle moment | No peer event, before → revised | Listed peer event, before → revised |
 | --- | ---: | ---: |
-| startup | 442 → 442 | 2416 → 2477 |
-| idle-open | 672 → 672 | 2646 → 2707 |
-| idle-merged | 1021 → 1021 | 2995 → 3056 |
-| after-archive | 371 → 371 | 2345 → 2406 |
-| merge-ask | 1003 → 1003 | 2977 → 3038 |
+| startup | 442 → 442 | 2416 → 2496 |
+| idle-open | 672 → 672 | 2646 → 2726 |
+| idle-merged | 1021 → 1021 | 2995 → 3075 |
+| after-archive | 371 → 371 | 2345 → 2425 |
+| merge-ask | 1003 → 1003 | 2977 → 3057 |
 
-For an unlisted exchange at any row add 1412 before and 1646 after instead. Adoption/sync cold read counts full adoption plus README (both listed above), then selected extensions as actually due; no peer-message list changes or forced six-adopter rollout. Interview-resume cold read adds fo-feedback, peers and host; do not auto-load paseo. Scope ends at the next worker/learn handoff: real source/error output and message words vary and are not priced zero. Validation records their actual before/after words in the native sample; no live-session total, runtime saving or notice reduction has been measured here.
+For an unlisted exchange at any row add 1412 before and 1665 after instead. Adoption/sync cold read counts full adoption plus README (both listed above), then selected extensions as actually due; no peer-message list changes or forced six-adopter rollout. Interview-resume cold read adds fo-feedback, peers and host; do not auto-load paseo. Scope ends at the next worker/learn handoff: real source/error output and message words vary and are not priced zero. Validation records their actual before/after words in the native sample; no live-session total, runtime saving or notice reduction has been measured here.
 
 The sibling freshness section is not included twice: it owns a separate peers insertion. Its current proposed section adds 262 words; an integrated cold read adds that once to both revised exchange routes, subject to the sibling's final bytes. Our transferred status pointer is already included in the figures above; do not add its old 67-word paseo insertion. Model/surface/adoption edits by other tasks require an exact final recount, not addition of stale deltas. No workflow budget increase or CI change is proposed; CI cost per PR is not measured because no CI work is in scope.
 
@@ -414,9 +416,9 @@ try:
 finally:f.doCleanups()
 ```
 
-Current design check: the dispatched `design_surfaces.py check` printed `peers-paseo-rule-matches-practice.md: design surfaces presentable`, exit 0. Independent reconstruction from the task blocks matched all five complete-file counts and both exchange routes; a missing row or stale paragraph changes the comparison. The unchanged common fixture program reran exit 0.
+Pre-amendment design-stage receipt (historical): the dispatched `design_surfaces.py check` printed `peers-paseo-rule-matches-practice.md: design surfaces presentable`, exit 0. Independent reconstruction from the task blocks matched all five complete-file counts and both exchange routes; a missing row or stale paragraph changes the comparison. The unchanged common fixture program reran exit 0.
 
-Mermaid 11.16.1 and Playwright 1.62.1 with supported Chrome rendered the final graph (19 nodes, SVG 50,973 bytes) and its actors, routing, single deferral, quiet/callback branches, notice/result exits and failure stop were visually inspected. The sandbox browser launch failed; the permitted local-browser retry succeeded. Scratch outputs `/private/tmp/peers-practice-cycle2/policy.svg` and `.png` are disposable; the durable diagram source is above. A fresh reviewer supplies these declared render versions/browser; no package dependency is added. Frontmatter and the earlier Stage Report were compared byte-for-byte unchanged. Native messaging/error behavior and final candidate checks remain unverified.
+Before amendment 1, Mermaid 11.16.1 and Playwright 1.62.1 with supported Chrome rendered the then-current graph (19 nodes, SVG 50,973 bytes) and its actors, routing, single deferral, quiet/callback branches, notice/result exits and failure stop were visually inspected. The sandbox browser launch failed; the permitted local-browser retry succeeded. Scratch outputs `/private/tmp/peers-practice-cycle2/policy.svg` and `.png` are disposable; the durable diagram source is above. A fresh reviewer supplies these declared render versions/browser; no package dependency is added. Frontmatter and the earlier Stage Report were compared byte-for-byte unchanged. Native messaging/error behavior and final candidate checks remain unverified.
 
 ### Batch overlap
 
@@ -447,13 +449,13 @@ Recommended order: this task owns one coherent Paseo/notice wording change; inte
 
 **AC-2 — Existing authority and every round-004 event retain a path or stated stop.** Evidence: independent reviewer maps every numbered answer, qnow worker answer, disclosure and comparison to the full revised replay above. Exercise relayed authority, wrong area, busy/unknown status, known-unavailable steer, one natural recheck, missing return route and duplicate/unrelated reply. Falsifier: qnow still has no path, a peer quote grants action authority, an unknown/busy new send proceeds, explicit interrupt appears, or the five-minute deadline resets. Current evidence: complete prospective table and primary host semantics; historical missing facts remain unknown, not newly compliant.
 
-**AC-3 — Real two-agent ask, reply and notice are observed before validation passes.** Evidence: on the exact candidate, FO binds one authorized pair; validator retains actual confirmed server/agent identities, explicit steer/notify false calls, receipt and recipient-side ask, one sourced reply matched once, and one no-ack notice. Separate queue receipt, delivery, answer and authority. Falsifier: recorder-only proof, guessed recipient, list-gated ask, callback counted as the explicit answer, duplicate handling causes another action, or worker notifications are disabled. Current: Captain's gate explicitly authorizes the bounded validation; no live experiment in this ideation. Missing host access holds this criterion; do not substitute the sibling's post-delivery observation.
-
-**AC-4 — Quiet sends do not silently lose peer errors or permission holds.** Evidence: use the same authorized real pair and a safe supported failure/hold route; compare actual receiver failure with sender-visible notification/activity and attended unresolved-exchange reconciliation while false. Preserve error/hold source and reporting time; silence stays unresolved. Include unavailable return route, duplicate/no-action finish and a normal worker signal as separate controls. Falsifier: errored peer becomes invisible, no way to distinguish unresolved/failure from success, or a hold is bypassed. Current: primary docs/schema show callbacks also carry errors/holds, so this is explicitly unverified and may fail. If untestable or failed, return evidence to FO and hold quiet-send acceptance; do not invent host changes, polling or a new default under this design.
-
 **AC-5 — One owner carries compatible status wording.** Evidence: diff final files against both revised tasks: this task contains Paseo notice classification/flags/no-ack/error distinction; sibling contains only its shared Current peer facts rule and no duplicate paseo insertion. Exercise same-question correction versus new notice, held go-live, stale or duplicate status and source-unavailable cases using the sibling's accepted source rules. Falsifier: old listing restriction survives in any entry/prerequisite, duplicate sibling pointer lands, freshness bypasses send authority, or a no-action finish generates Captain work while an error is discarded. Current: sibling file and newest gate read; no sibling edits. Its fresh-FO loading and after-delivery real-use checks remain separately owned and unverified here.
 
-**AC-6 — Point-of-use cost and existing orchestration remain visible.** Evidence: independently reproduce complete draft/shipped-file counts and the five common fixture rows; capture real source/error/message word addends in AC-3/AC-4; recount combined sibling/roster/surface changes once. Run shipped design_surfaces.py check, render/inspect final Mermaid; at implementation run existing lint-skills.py and applicable test_lint_skills.py/test_sd_dispatch.py with the declared Spacedock root, and verify worker section/defaults/template unchanged by this task. Verify the new FO-reserved ADR records the actual ruling without rewriting 0038. Falsifier: measuring only one shrinking file, omitting moved/status/output words, stale count treated as final, missing graph branch/criterion, disabled worker signal, guessed ADR number, or changed sibling/frontmatter. Current: draft counts and common fixtures measured; final candidate/native/ADR evidence still pending.
+**AC-6 — Point-of-use cost and existing orchestration remain visible.** Evidence: independently reproduce complete draft/shipped-file counts and the five common fixture rows; capture real source/error/message word addends in AC-7/AC-8; recount combined sibling/roster/surface changes once. Run shipped design_surfaces.py check, render/inspect final Mermaid; at implementation run existing lint-skills.py and applicable test_lint_skills.py/test_sd_dispatch.py with the declared Spacedock root, and verify worker section/defaults/template unchanged by this task. Verify the new FO-reserved ADR records the actual ruling without rewriting 0038. Falsifier: measuring only one shrinking file, omitting moved/status/output words, stale count treated as final, missing graph branch/criterion, disabled worker signal, guessed ADR number, or changed sibling/frontmatter. Current: draft counts and common fixtures measured; final candidate/native/ADR evidence still pending.
+
+**AC-7 — Amended by Captain, amendment 1: real asks notify; replies and notices stay quiet.** Evidence: on the exact amended candidate, FO binds the authorized real pair and retains confirmed server/agent identities, explicit steer/notify true ask, queued receipt and recipient-side ask, one sourced explicit reply with notify false matched once, and one notify false no-ack notice. Keep queue receipt, delivery, explicit answer, callback and authority separate; callback/reply duplicates update the same exchange without another action. Falsifier: an ask uses false, a requested reply or information-only notice uses true, recorder-only or old-head proof substitutes for the rerun, a callback alone counts as the explicit answer, or worker notifications are disabled. Current: real-pair/README.md records the FO-run old-head experiment at 4c182bc66a1384d8a677b6a83a2b8dbd2088a7df; the amended-head rerun stays with FO and is not yet verified.
+
+**AC-8 — Amended by Captain, amendment 1: ask errors and holds surface; another agent's permission is report-only.** Evidence: on that exact real pair and amended head, use a safe supported failure/hold route with ask notify true; retain receiver error/hold and sender notification/activity, source and reporting time. Observe FO report a permission notification about the other agent without calling respond_to_permission to approve or deny it. Keep unresolved reconciliation, quiet reply/notice, unavailable return route, duplicate/no-action finish and a normal worker signal as controls. Falsifier: ask failure/hold is hidden or treated as success, another agent's permission notification triggers respond_to_permission, quiet controls generate acknowledgements, a callback grants action authority, or a hold is bypassed. Current: the old-head experiment found quiet cancelled turns appearing finished and a hold visible through status; notified permission/error events were observed, but no amended-head rerun or provider crash is proved. An unavailable safe route or hidden ask failure holds acceptance and returns evidence to FO; no host repair, polling or permission workaround is authorized.
 
 ## Captain amendments
 
@@ -462,6 +464,12 @@ Captain: 「好」 (chat, 2026-10-30)
 Asked: 「決定：#754 改成「提問開通知、其餘關閉，並禁止替對方回應權限」，可以嗎？」, which FO had stated as: 「建議不變，但要連同禁止回應權限的那句一起加，並用真實測試確認收到權限通知時 FO 只回報。沒有這句，我就不建議開。」
 Supersedes: AC-3, AC-4
 Design: Set notifyOnFinish: false for routine peer asks, requested replies and information-only notices.
+
+Superseded text:
+
+**AC-3 — Real two-agent ask, reply and notice are observed before validation passes.** Evidence: on the exact candidate, FO binds one authorized pair; validator retains actual confirmed server/agent identities, explicit steer/notify false calls, receipt and recipient-side ask, one sourced reply matched once, and one no-ack notice. Separate queue receipt, delivery, answer and authority. Falsifier: recorder-only proof, guessed recipient, list-gated ask, callback counted as the explicit answer, duplicate handling causes another action, or worker notifications are disabled. Current: Captain's gate explicitly authorizes the bounded validation; no live experiment in this ideation. Missing host access holds this criterion; do not substitute the sibling's post-delivery observation.
+
+**AC-4 — Quiet sends do not silently lose peer errors or permission holds.** Evidence: use the same authorized real pair and a safe supported failure/hold route; compare actual receiver failure with sender-visible notification/activity and attended unresolved-exchange reconciliation while false. Preserve error/hold source and reporting time; silence stays unresolved. Include unavailable return route, duplicate/no-action finish and a normal worker signal as separate controls. Falsifier: errored peer becomes invisible, no way to distinguish unresolved/failure from success, or a hold is bypassed. Current: primary docs/schema show callbacks also carry errors/holds, so this is explicitly unverified and may fail. If untestable or failed, return evidence to FO and hold quiet-send acceptance; do not invent host changes, polling or a new default under this design.
 
 ## Number guards
 
@@ -567,3 +575,40 @@ Revised Pilot design implements the exact 2026-10-30 revise direction: transport
 ### Summary
 
 The approved six-file implementation is committed at 4c182bc66a1384d8a677b6a83a2b8dbd2088a7df with prepared PR text; required local structural checks and reading measurements passed. Implementation is ready for FO handoff, not accepted delivery: independent policy replay/mutations, exact-head RoboRev, native AC-3/AC-4 and integrated-owner recount remain. The product branch stays local; the separate path-scoped state commit/sync records this report without publishing code.
+
+## Stage Report: implementation
+
+- DONE: Apply Captain amendment 1 with one follow-up commit on the existing branch of Draft PR #754
+  Branch spacedock-ensign/peers-paseo-rule-matches-practice; base a6612948936a4f075625147b21aabd3b10b19eee; prior head 4c182bc66a1384d8a677b6a83a2b8dbd2088a7df; candidate c804241d24a2b378604409c17340db29c096ac51. Fetch succeeded; only peers EXTENSION.md and named ADR 0046 changed in this commit; no version bump or product push.
+- DONE: Move superseded AC-3 and AC-4 verbatim into amendment 1 and replace them under fresh ids
+  Both original blocks preserved byte-for-byte under Superseded text; active AC-7/AC-8 carry Amended by Captain, amendment 1. Design, native plan, stops, graph and ledger follow notified asks, quiet replies/notices and report-only permissions; frontmatter and prior reports preserved.
+- DONE: ADR 0046 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  Existing in-branch ADR 0046 updated as expressly dispatched: quotes Captain 「好」 and Asked 「決定：#754 改成「提問開通知、其餘關閉，並禁止替對方回應權限」，可以嗎？」; original listing reversal and ADR 0035/0038/0042 boundaries retained.
+- DONE: Implement the approved send flags and permission boundary in peers' Paseo binding
+  Asks set notifyOnFinish true; requested replies/notices false; permission notifications about another agent go to FO, never respond_to_permission. Explicit steer, sourced answers, duplicate reconciliation, bounded deferral and worker signals retained. This is prose policy, not a send interceptor.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Full acceptance remains unverified: independent AC-1/AC-2/AC-5 policy replays and behavioral falsifiers stay with validation. Existing executable checks and isolated amendment-form mutations ran python3 -B without caches; no substring assertion or mock is offered as native behavior.
+- SKIPPED: AC-7/AC-8 amended-head real pair, error/hold visibility, report-only permission proof and native reading addends
+  Read real-pair/README.md: prior-head quiet cancelled turns appeared finished; holds visible in status; notified permission/error controls observed, no provider crash proved. FO owns the amended-head rerun including no respond_to_permission call; this worker created no agents and ran no peer experiment.
+- DONE: Repository lint-skills.py and applicable test_lint_skills.py/test_sd_dispatch.py
+  Repository lint exits 0 (workflow 5781/5781 words), 45 existing lint tests pass, dispatch fixtures pass with binary 0.27.2 and declared plugin root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3. These prove structural routes, not execution of peer policy prose.
+- DONE: ADR lint, number guards, design-surfaces check and amendment falsifiers
+  Dispatched 0.33.1 adr_lint.py docs/adr --since a6612948936a4f075625147b21aabd3b10b19eee --require 0046 exits 0 (45 records); number_guards.py check and design_surfaces.py check exit 0. Control exits 0; removing replacement markers or restoring active AC-3/AC-4 exits 1 with the actual dispatch retained; omitting that fixture defers the move check by design.
+- DONE: AC-6 complete-file recount and five common lifecycle fixture rows
+  len(split()) base→candidate: peers 805→1058, paseo 562→389, adoption 2182→2188, README 3118→3128, fo-feedback 599→603; host 607. Unlisted exchange 1412→1665, listed 1974→2054; amendment adds 19 words over prior head. Common fixtures 442/672/1021/371/1003 unchanged; listed totals 2496/2726/3075/2425/3057. Embedded reconstruction matches actual package bytes.
+- SKIPPED: Integrated sibling/roster/surface acceptance and final combined recount
+  Read peer-status-reaches-fresh: it owns shared Current peer facts and cold-entry/post-delivery evidence; this task owns Paseo wording. No sibling/adopter edits or combined-head acceptance; FO integrates/recounts final bytes once. Native source/error/message words and runtime/notice savings unmeasured.
+- DONE: Render/inspect amended Mermaid and preserve orchestration/default bytes
+  Mermaid 11.16.1/Playwright 1.62.1 with supported Chrome renders 20 nodes, SVG 53,437 bytes; visually inspected ask-true/reply-notice-false branches, bounded deferral and report-only hold exit. Worker procedure, template, shared/Claude/Other text and ADR 0038 match base; sandbox Chrome launch required permitted retry.
+- DONE: comment_ratio.py within its maximum, doc_impact.py and scope checks
+  Exact committed candidate: code lines 0, comment lines 0, 0.0%; maximum 5% not enforced below 20 code lines, exit 0. doc_impact.py lists 0 documents, exit 0; six original retained PR files remain, two amended documents updated. git diff --check exits 0; no executable/CI change.
+- SKIPPED: RoboRev complete review evidence
+  Required post-commit roborev_gate.py --repo <assigned worktree> --base a6612948936a4f075625147b21aabd3b10b19eee exits 3: incomplete: the roborev daemon is not running. No clean review or host repair claimed; FO owns exact-head review before its dependent step.
+- DONE: PR text prepared and ownership/state checked
+  Updated /tmp/impl-peers-paseo-rule-matches-practice-pr.md with scoped Conventional Commit title, candidate and #754 update text. Product worktree clean on assigned branch; only this worker running there, previous worker idle; task remains implementation. State report commit/sync is path-scoped to this entity on spacedock-state/dev2.
+- SKIPPED: FO pushes/updates existing Draft PR #754 and reads CI
+  Live #754 OPEN/Draft at prior head; explicit worker boundary delegates publication/CI. No product push, PR mutation, review request, ready or merge. CI cost per PR not measured; no trigger changed.
+
+### Summary
+
+Captain amendment 1 is implemented at c804241d24a2b378604409c17340db29c096ac51 with fresh AC-7/AC-8, updated design/ADR, passing local structural checks and prepared PR text. This complete report supersedes the earlier implementation report for the amended candidate; old reports and moved criteria remain historical. Acceptance still needs FO publication, amended-head native/error/permission proof, independent policy validation, exact-head RoboRev/CI and final integrated recount.
