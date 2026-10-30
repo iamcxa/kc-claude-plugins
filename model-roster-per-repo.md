@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:model-roster-per-repo:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:model-roster-per-repo-ideation-1
+              briefing:
+                id: briefing:model-roster-per-repo:ideation:attempt-1:revision-1
+                digest: sha256:abee7d3947ffa4414a1d0855973d8222508a6ac119403d672d5b91de9f2b7b02
+                room-ref: ./model-roster-per-repo/review/ideation/briefing-1
 ---
 
 ## Scope

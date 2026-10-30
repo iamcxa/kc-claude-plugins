@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:model-roster-per-repo:ideation:attempt-1:revision-1",
+  "question": "Split model-roster-per-repo and revise its ideation to a first slice? FO recommends revise; approving accepts it: a committed .dev2/model-roster.json, one accept-or-customize question at adoption or sync, model_roster.py resolve, stage workers only, the tuple in the dispatch record, a same-family flag, and a batch-9 replay; an absent file means today's README default, not a hold; default stage workers on Codex Sol and Astra; the personal layer, capacity automation, law enforcement, special-role hosting and native routes are deferred to later tasks; special roles stay as they run today (Claude reviewing Codex workers) until he rules otherwise.",
+  "artifacts": [
+    {
+      "id": "artifact:model-roster-per-repo:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e9d3107b60bfeacdc8ddc329ed9a13dc2815c6a6/model-roster-per-repo.md",
+      "rev": "sha256:11ebc9453532cad0c439c1dca386f4d2fe9547d9cd1694791146181c5618e255",
+      "mediaType": "text/markdown",
+      "summary": "Chief-engineer: about 25 files, does not fit one PR. Cost: capacity fallback stays manual, so the Stop condition is split; validation shares a vendor with implementation."
+    }
+  ]
+}
