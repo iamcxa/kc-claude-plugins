@@ -50,6 +50,210 @@ IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NA
 BARE = COMPLETE.replace("1. Independent verdict", "1. Run adr_lint.py. Independent")
 
 
+class ContextNoticeTests(unittest.TestCase):
+    PARAGRAPH = ("Before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names --strict <record>` "
+                 "on the saved record; nonzero holds dispatch. Relative script paths are allowed; bare package script "
+                 "names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped "
+                 "context checks on stderr.")
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name).resolve()
+        self.record = self.root / "task/dispatch/ideation-1.md"
+        self.record.parent.mkdir(parents=True)
+        self.record.write_text(COMPLETE)
+        self.task = self.root / "task.md"
+        self.task.write_text("---\nprofile: pilot\n---\n")
+
+    def cli(self, *files, strict=False, cwd=None):
+        return subprocess.run([sys.executable, "-B", records.__file__, "--names",
+                               *(["--strict"] if strict else []), *map(str, files or (self.record,))],
+                              cwd=cwd, capture_output=True, text=True)
+
+    def test_copy_notice_preserves_plain_verdict_and_strict_refuses_without_cwd_inference(self):
+        self.task.write_text("## FO alignment\nAlignment: needed\n")
+        copy = self.root / "copy.md"
+        copy.write_bytes(self.record.read_bytes())
+        for strict in (False, True):
+            associated = self.cli(strict=strict)
+            self.assertEqual(associated.returncode, 1, associated.stdout)
+            self.assertIn("no 'Result:' line", associated.stdout)
+            self.assertEqual(associated.stderr, "")
+            done = self.cli(copy, strict=strict, cwd=self.record.parent)
+            self.assertEqual(done.returncode, 2 if strict else 0)
+            self.assertEqual(done.stdout, "")
+            self.assertEqual(done.stderr, f"{copy}:1: context checks not run: Candidate eligibility, task facts, "
+                             "validation ruling history; record is outside task/dispatch; run on the saved record.\n")
+            self.assertEqual(len(done.stderr.split()), 21)
+
+    def test_missing_task_keeps_candidate_check_and_multirecord_diagnostics(self):
+        self.task.unlink()
+        for strict in (False, True):
+            done = self.cli(strict=strict)
+            self.assertEqual(done.returncode, 2 if strict else 0)
+            self.assertEqual(done.stdout, "")
+            self.assertEqual(len(done.stderr.split()), 18)
+        validation = self.record.with_name("validation-1.md")
+        validation.write_text(COMPLETE)
+        copy = self.root / "copy.md"
+        copy.write_text(COMPLETE)
+        for strict in (False, True):
+            done = self.cli(self.record, validation, copy, strict=strict)
+            self.assertEqual(done.returncode, 2 if strict else 1)
+            self.assertIn("no 'Candidate: <40-hex head>' line", done.stdout)
+            self.assertEqual(len(done.stderr.splitlines()), 3)
+            self.assertEqual(done.stderr.splitlines()[0], f"{self.record}:1: context checks not run: task facts, "
+                             "validation ruling history; no adjacent task file; restore it before dispatch.")
+            self.assertEqual(len(done.stderr.splitlines()[0].split()), 18)
+
+    def test_live_archive_flat_index_precedence_and_resolved_symlinks(self):
+        for archive in ("", "_archive/"):
+            folder = self.root / archive / "layout"
+            (folder / "dispatch").mkdir(parents=True)
+            record = folder / "dispatch/ideation-1.md"
+            record.write_text(COMPLETE)
+            flat, index = folder.with_suffix(".md"), folder / "index.md"
+            flat.write_text("## FO alignment\nAlignment: needed\n")
+            for strict in (False, True):
+                self.assertEqual(self.cli(record, strict=strict).returncode, 1)
+            index.write_text("---\nprofile: pilot\n---\n")
+            alias = self.root / ("archive-link.md" if archive else "live-link.md")
+            alias.symlink_to(record)
+            for strict in (False, True):
+                for target in (record, alias):
+                    done = self.cli(target, strict=strict)
+                    self.assertEqual((done.returncode, done.stdout, done.stderr), (0, "", ""))
+            outside = self.root / ("archive-outside.md" if archive else "live-outside.md")
+            outside.write_text(COMPLETE)
+            inward = folder / "dispatch/symlink.md"
+            inward.symlink_to(outside)
+            self.assertEqual(self.cli(inward, strict=True).returncode, 2)
+
+    def test_strict_usage_and_existing_path_notation_and_scanned_regions(self):
+        for args in (("--strict",), ("--strict", str(self.record)), ("--names", "--strict"), ("--names",)):
+            done = subprocess.run([sys.executable, "-B", records.__file__, *args], capture_output=True, text=True)
+            self.assertEqual(done.returncode, 2, done.stderr)
+            self.assertIn("Usage:", done.stdout)
+            self.assertNotIn("Traceback", done.stderr)
+        for token in ("kc-dev-flow-2/scripts/adr_lint.py", "scripts/adr_lint.py", "./adr_lint.py", "../adr_lint.py",
+                      "~/adr_lint.py", "$ROOT/scripts/adr_lint.py", "<package>/scripts/adr_lint.py",
+                      "/abs/adr_lint.py", "non_package.py", "adr_lint.py"):
+            for wrap in (token, f"`{token}`", f"```sh\npython3 {token}\n```",
+                         f"Repository files: {token}; python3 {token}"):
+                self.record.write_text(COMPLETE.replace("1. Independent verdict", wrap + "\n1. Independent verdict"))
+                for strict in (False, True):
+                    done = self.cli(strict=strict)
+                    self.assertEqual(done.returncode, int(token == "adr_lint.py"), done.stdout)
+                    self.assertEqual(done.stderr, "")
+        self.record.write_text("adr_lint.py\n" + COMPLETE)
+        self.assertEqual(self.cli(strict=True).returncode, 0)
+        self.record.write_text("adr_lint.py\n")
+        self.assertEqual(self.cli(strict=True).returncode, 1)
+
+    def test_workflow_strict_preflight_holds_then_repaired_context_reaches_real_builder_fixture(self):
+        workflow = Path(records.__file__).parents[1] / "references/sd/workflow.md"
+        self.assertIn(self.PARAGRAPH, " ".join(workflow.read_text().split()))
+        self.assertNotIn("Repository files:", workflow.read_text())
+        command = re.search(r"`python3 ([^`]+)`", self.PARAGRAPH)[1].split()
+        command = [part.replace("<package>", str(workflow.parents[2])).replace("<record>", str(self.record))
+                   for part in command]
+        self.task.unlink()
+        held = subprocess.run([sys.executable, "-B", *command], capture_output=True, text=True)
+        self.assertEqual(held.returncode, 2)
+        builds = []
+        if held.returncode == 0:
+            builds.append("unexpected build")
+        self.assertEqual(builds, [])
+        self.task.write_text("---\nprofile: pilot\n---\n")
+        ready = subprocess.run([sys.executable, "-B", *command], capture_output=True, text=True)
+        self.assertEqual((ready.returncode, ready.stdout, ready.stderr), (0, "", ""))
+        if ready.returncode == 0:
+            from test_sd_dispatch import exercise
+            binary = os.environ.get("SPACEDOCK_BIN") or shutil.which("spacedock")
+            sd_root = os.environ.get("SD_PLUGIN_ROOT")
+            if not binary or not sd_root:
+                self.skipTest("real builder needs SPACEDOCK_BIN and SD_PLUGIN_ROOT (mods/pr-merge.md)")
+            fixture = self.root / "builder"
+            fixture.mkdir()
+            exercise(fixture, str(Path(binary).resolve()), Path(sd_root))
+            builds.append(fixture / "commands.jsonl")
+        self.assertEqual(len(builds), 1)
+        calls = [json.loads(line) for line in builds[0].read_text().splitlines()]
+        self.assertTrue(any("build" in call["argv"] and call["exit"] == 0 for call in calls))
+
+    def test_real_laws_event_consumer_preserves_task_present_missing_and_notice_plus_defect(self):
+        from test_laws_check import Repo, laws, record, task
+        repo = Repo(self.root / "state")
+        before = repo.commit("seed", keep="fixture")
+        repo.commit("records", **{"t": task(body="## FO alignment\nAlignment: needed\n"),
+                                   "t__dispatch__ideation-1": record()})
+        repo.commit("missing task with a real bare-name defect",
+                    **{"absent__dispatch__implementation-1": record(checklist="Run adr_lint.py")})
+        readme = self.root / "README.md"
+        readme.write_text(NO_EXTENSIONS)
+        code, out = laws(repo.path, "--before", before, "--readme", readme)
+        self.assertEqual(code, 1, out)
+        self.assertIn("no 'Result:' line", out)
+        self.assertIn("bare package script name adr_lint.py", out)
+        self.assertNotIn("does not parse", out)
+        self.assertNotIn("context checks not run", out)
+        done = self.cli(repo.path / "absent/dispatch/implementation-1.md")
+        self.assertEqual(done.returncode, 1, done.stdout)
+        self.assertIn("bare package script name", done.stdout)
+        self.assertIn("context checks not run", done.stderr)
+
+
+class ContextMutationTests(unittest.TestCase):
+    def test_context_boundary_falsifiers_fail_without_caches(self):
+        prefix = "test_dispatch_records.ContextNoticeTests."
+        cases = (
+            ("silent", "scripts/dispatch_records.py", 'print(f"{file}:1: context checks not run: {notice}", file=sys.stderr)', 'pass',
+             "test_copy_notice_preserves_plain_verdict_and_strict_refuses_without_cwd_inference"),
+            ("plain-refusal", "scripts/dispatch_records.py", 'if strict else status', 'if True else status',
+             "test_copy_notice_preserves_plain_verdict_and_strict_refuses_without_cwd_inference"),
+            ("stdout-notice", "scripts/dispatch_records.py", ', file=sys.stderr)', ')',
+             "test_real_laws_event_consumer_preserves_task_present_missing_and_notice_plus_defect"),
+            ("lost-candidate", "scripts/dispatch_records.py", ', check_candidates(files),', ', 0,',
+             "test_missing_task_keeps_candidate_check_and_multirecord_diagnostics"),
+            ("early-context-return", "scripts/dispatch_records.py", '        status = max(check_names(files, package),',
+             '        if strict and check_context(files):\n            return 2\n        status = max(check_names(files, package),',
+             "test_missing_task_keeps_candidate_check_and_multirecord_diagnostics"),
+            ("lost-task-facts", "scripts/dispatch_records.py", ', check_task_facts(files),', ', 0,',
+             "test_copy_notice_preserves_plain_verdict_and_strict_refuses_without_cwd_inference"),
+            ("relative-refusal", "scripts/dispatch_records.py", 'status = max(check_names(files, package),',
+             'status = max(int(any("scripts/" in Path(file).read_text() for file in files)), check_names(files, package),',
+             "test_strict_usage_and_existing_path_notation_and_scanned_regions"),
+            ("lost-bare-name", "scripts/dispatch_records.py", 'max(check_names(files, package),', 'max(0,',
+             "test_strict_usage_and_existing_path_notation_and_scanned_regions"),
+            ("strict-history-consumer", "scripts/laws_check.py", '"--names", *files', '"--names", "--strict", *files',
+             "test_real_laws_event_consumer_preserves_task_present_missing_and_notice_plus_defect"),
+            ("plain-preflight", "references/sd/workflow.md", '--names --strict <record>', '--names <record>',
+             "test_workflow_strict_preflight_holds_then_repaired_context_reaches_real_builder_fixture"),
+            ("declaration", "references/sd/workflow.md", 'Relative script paths are allowed;',
+             'Relative script paths require Repository files:;',
+             "test_workflow_strict_preflight_holds_then_repaired_context_reaches_real_builder_fixture"),
+            ("build-on-nonzero", "scripts/test_dispatch_records.py", 'if held.returncode == 0:', 'if True:',
+             "test_workflow_strict_preflight_holds_then_repaired_context_reaches_real_builder_fixture"),
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            package = Path(tmp) / "package"
+            shutil.copytree(Path(records.__file__).parents[1], package, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+            for label, name, old, new, target in cases:
+                with self.subTest(mutation=label):
+                    path = package / name
+                    original = path.read_text()
+                    self.assertIn(old, original)
+                    path.write_text(original.replace(old, new, 1))
+                    done = subprocess.run([sys.executable, "-B", "-m", "unittest", prefix + target, "-q"],
+                                          cwd=package / "scripts", capture_output=True, text=True,
+                                          env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
+                    path.write_text(original)
+                    self.assertNotEqual(done.returncode, 0, label + done.stdout + done.stderr)
+                    self.assertIn("AssertionError", done.stderr, label + done.stderr)
+                    self.assertFalse(list(package.rglob("*.pyc")))
+
+
 class DispatchRecordTests(unittest.TestCase):
     def check(self, files, target=None, readme=NO_EXTENSIONS):
         with tempfile.TemporaryDirectory() as d:
@@ -2541,7 +2745,7 @@ class DesignAdrMutationTests(unittest.TestCase):
         cases = (
             ("no-predicate", "dispatch_records.py", 'and not facts["adr"] and design_adr_placeholder(task.read_text())', 'and False',
              "test_dispatch_records.DesignAdrTests.test_raw_740_bytes_refuse_then_allocator_recovery_and_missing_line_controls"),
-            ("disconnected", "dispatch_records.py", 'check_task_facts(args[1:])', '0',
+            ("disconnected", "dispatch_records.py", ', check_task_facts(files),', ', 0,',
              "test_dispatch_records.DesignAdrTests.test_raw_740_bytes_refuse_then_allocator_recovery_and_missing_line_controls"),
             ("scope-only", "dispatch_records.py", 'not facts["adr"] and design_adr_placeholder', 'not facts["adr"] and "ADR: " not in path.read_text() and design_adr_placeholder',
              "test_dispatch_records.DesignAdrTests.test_raw_740_bytes_refuse_then_allocator_recovery_and_missing_line_controls"),
