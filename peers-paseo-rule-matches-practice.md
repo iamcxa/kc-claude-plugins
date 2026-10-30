@@ -516,3 +516,44 @@ Pilot ideation only: the design, Mermaid, full event replay, reproducible word l
 ### Summary
 
 Revised Pilot design implements the exact 2026-10-30 revise direction: transport-based peer permission, no listing campaign or named exception, one owner for Paseo status wording, a new ADR at implementation, and real native/failure proof before validation passes. The previous report and frontmatter remain unchanged; no host, product, adopter or sibling mutation occurred. FO retains transition ownership under the existing grant; hidden-error evidence or any broader redesign returns to FO.
+
+## Stage Report: implementation
+
+- DONE: Bounded implementation on the assigned origin/main-based worktree, committed locally with named-file staging and no version bump
+  Branch spacedock-ensign/peers-paseo-rule-matches-practice; base a6612948936a4f075625147b21aabd3b10b19eee; candidate 4c182bc66a1384d8a677b6a83a2b8dbd2088a7df; exactly the five approved package documents and ADR 0046 changed; git fetch origin succeeded and product worktree is clean.
+- DONE: ADR 0046 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  docs/adr/0046-confirmed-paseo-transport-permits-peer-asks.md quotes 「准」 and the exact Asked from the 2026-10-30 gate; reverses only 0038's listing prerequisite and preserves 0035/0042; prior ADR 0038 bytes unchanged.
+- DONE: AC-1 implementation and entry/prerequisite consistency review
+  Required peers now permits confirmed-Paseo asks/replies for listed, unlisted, declined or unanswered optional selection; absent skill/unknown destination still stops, non-Paseo keeps its binding, and messaging grants neither worker nor interview authority. Draft blocks and actual five files match; no adopter or template change.
+- DONE: AC-2 implementer crosswalk of every round-004 event and retained authority/busy boundaries
+  Reread .notes/fo-feedback/round-004.md and all 31 prospective replay rows: qnow uses the ordinary confirmed route; relayed authority, wrong area, busy/unknown new sends, unavailable steering and held go-live stop; one natural recheck never resets the deadline; missing routes and duplicate/unrelated replies remain unresolved or use the recorded callback choice. This is a prose review, not independent runtime proof.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Full acceptance is not green: fresh independent AC-1/AC-2/AC-5 policy replays and behavioral falsifier mutations remain for validation. The executed structural/ADR mutations below prove document/dispatch checks only; no invented policy interpreter or recorder is offered as native behavior.
+- SKIPPED: AC-3 real two-agent ask, reply and notice; AC-4 quiet-send error/permission visibility and native word addends
+  The dispatch explicitly assigns the Captain-authorized real pair and safe failure/hold route to FO at validation. No peer experiment ran; hidden errors or an unavailable safe route hold quiet-send acceptance and return to FO; silence is not success.
+- DONE: AC-5 one owner carries the Paseo status wording without changing the sibling
+  Read peer-status-reaches-fresh's revised task: this candidate owns notice/reply flags, no-ack/error distinctions and the conditional Current peer facts pointer; sibling owns its sole shared section, cold-entry proof and after-delivery observation. No sibling/adopter changes, worker suppression or duplicate sibling paseo insertion.
+- SKIPPED: Final integrated sibling/roster/surface acceptance and independent source-status replay
+  Sibling's shared section is not in this candidate; in-memory composition adds its current 262-word draft once (peers 1301; unlisted with host 1908; listed 2297), not a delivered combined head. FO must integrate owners and recount exact final bytes; no status/freshness behavior is certified here.
+- DONE: AC-6 complete-file and point-of-use word recount, including unchanged common lifecycle controls
+  len(split()) base→candidate: peers 805→1039, paseo 562→389, adoption 2182→2188, package README 3118→3128, fo-feedback 599→603; host addend 607, unlisted 1412→1646, listed 1974→2035. Task's embedded recount was extracted with fence-aware closing lines and checked against actual files; no output/source/message saving is claimed.
+- DONE: Five lifecycle fixture rows reproduced with the dispatched package and declared Spacedock root
+  Embedded fixture program exited 0: no-peer startup/idle-open/idle-merged/archive/merge-ask 442/672/1021/371/1003 unchanged; listed exchange 2416→2477 / 2646→2707 / 2995→3056 / 2345→2406 / 2977→3038. Fixture provider data is synthetic, not live traffic.
+- DONE: Repository lint-skills.py and applicable test_lint_skills.py/test_sd_dispatch.py
+  All exit 0: workflow 5781/5781 words; 45 lint tests, rerun python3 -B with an empty PYTHONPYCACHEPREFIX; dispatch fixtures include route/report/Team-loss/wording refusal controls (binary spacedock 0.27.2, plugin root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3). Missing required peers or optional EXTENSION.md is refused; these tests do not parse peer policy prose.
+- DONE: ADR lint, reserved-number guard, design-surfaces check and decision-record falsifiers
+  Dispatched 0.33.1 adr_lint.py docs/adr --since a6612948936a4f075625147b21aabd3b10b19eee --require 0046 exits 0 (45 records); number_guards.py check exits 0 at base/candidate; design_surfaces.py check exits 0. Three isolated python3 -B/empty-cache ADR mutations remove Words, Recommended or required 0046: each exits 1, control exits 0; form does not authenticate human authority.
+- DONE: Render/inspect the final Mermaid and preserve orchestration/default bytes
+  Mermaid 11.16.1/Playwright 1.62.1 with local Chrome rendered 19 nodes, SVG 50,973 bytes; visually checked transport/identity/idle/reply, bounded deferral, callback, notice and unresolved/error exits against prose. Recheck eligibility includes the prose's steering check. Worker section, shared/Claude/other binding text, workflow template and fo-feedback outside Needs match base byte-for-byte.
+- DONE: comment_ratio.py within its maximum; doc_impact.py per-document disposition; scope/diff check
+  comment_ratio.py: code lines 0, comment lines 0, 0.0%; maximum 5% not enforced below 20 code lines, exit 0. doc_impact.py base HEAD: 0 documents listed, exit 0; five affected retained documents updated. git diff --check exits 0; no script, CI, hook, model or host change.
+- SKIPPED: RoboRev complete review evidence
+  Required post-commit roborev_gate.py --repo <assigned worktree> --base a6612948936a4f075625147b21aabd3b10b19eee attempted once, exit 3: incomplete: the roborev daemon is not running. FO notified; no clean review claimed and no daemon/host repair attempted.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins; FO pushes, opens the Draft PR, runs RoboRev and reads CI
+  No product push/PR opened under the explicit worker boundary. Conventional scoped title/body prepared at /tmp/impl-peers-paseo-rule-matches-practice-pr.md; FO owns publication, exact-head review and CI. Live open PR inventory read successfully: #699, #674, #635, #374; no PR from this task branch.
+- DONE: CI cost measured or stated as not measured; final ownership/state boundary
+  CI cost per PR not measured; no CI trigger changed. Assigned code worktree has only this running worker; shared state branch verified spacedock-state/dev2, task remains implementation. Append only this report, preserve prior body/frontmatter, commit/sync only this entity path; no task transition or gate approval is claimed.
+
+### Summary
+
+The approved six-file implementation is committed at 4c182bc66a1384d8a677b6a83a2b8dbd2088a7df with prepared PR text; required local structural checks and reading measurements passed. Implementation is ready for FO handoff, not accepted delivery: independent policy replay/mutations, exact-head RoboRev, native AC-3/AC-4 and integrated-owner recount remain. The product branch stays local; the separate path-scoped state commit/sync records this report without publishing code.
