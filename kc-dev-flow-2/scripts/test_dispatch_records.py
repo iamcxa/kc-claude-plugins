@@ -939,6 +939,63 @@ class LiveValidationRulingTests(unittest.TestCase):
         self.assertIn("findings F2,F3;", out)
         self.assertNotIn("F4", out)
 
+    def test_split_and_inline_layouts_use_only_the_owning_workflow_history(self):
+        results = []
+        for prefix in ("", "docs/dev2/"):
+            for layout in ("task.md", "task/index.md", "_archive/task.md", "_archive/task/index.md"):
+                with self.subTest(prefix=prefix, layout=layout):
+                    self.new_state("## Scope\nWork\n")
+                    self.task.unlink()
+                    self.shutil.rmtree(self.record.parent.parent)
+                    self.task = self.root / (prefix + layout)
+                    self.task.parent.mkdir(parents=True, exist_ok=True)
+                    folder = self.task.parent if self.task.name == "index.md" else self.task.with_suffix("")
+                    self.record = folder / "dispatch/validation-2.md"
+                    self.record.parent.mkdir(parents=True, exist_ok=True)
+                    self.record.write_text(COMPLETE.replace("Model:", f"Candidate: {HEAD}\nModel:"))
+                    self.save(REPORT)
+                    self.commit("own report")
+                    foreign = self.root / "docs/foreign/task.md"
+                    foreign.parent.mkdir(parents=True)
+                    foreign.write_text("---\ntitle: task\nprofile: pilot\n" + native_ruling() + "---\n" + REPORT)
+                    self.commit("foreign newer ruling")
+                    foreign_output = self.assert_hold()
+                    self.save(REPORT, native_ruling())
+                    uncommitted_output = self.assert_hold()
+                    self.commit("own strictly later ruling")
+                    candidate = self.cli()
+                    self.assertEqual(candidate, (0, ""))
+                    base = None
+                    if os.environ.get("DEV2_OBLIGATION_BASE"):
+                        done = subprocess.run([sys.executable, "-B", str(Path(os.environ["DEV2_OBLIGATION_BASE"]) / "dispatch_records.py"),
+                                               "--names", str(self.record)], capture_output=True, text=True)
+                        base = (done.returncode, done.stdout + done.stderr)
+                        self.assertEqual(base[0], 2 if prefix else 0, base[1])
+                    results.append({"prefix": prefix, "layout": layout, "foreign": foreign_output,
+                                    "uncommitted": uncommitted_output, "base": base, "candidate": candidate})
+        if os.environ.get("DEV2_OBLIGATION_EVIDENCE"):
+            import json
+            Path(os.environ["DEV2_OBLIGATION_EVIDENCE"], "inline-matrix.json").write_text(json.dumps(results, indent=2))
+
+    def test_inline_old_same_and_missing_reports_retain_refusals(self):
+        for timing in ("old", "same", "missing"):
+            self.new_state("## Scope\nWork\n")
+            old_task = self.task
+            self.task = self.root / "docs/dev2/task.md"
+            self.task.parent.mkdir(parents=True)
+            old_task.rename(self.task)
+            self.shutil.move(str(self.record.parent.parent), str(self.task.with_suffix("")))
+            self.record = self.task.with_suffix("") / "dispatch/validation-2.md"
+            if timing == "old":
+                self.save("## Scope\nWork\n", native_ruling())
+                self.commit("old ruling")
+            self.save(REPORT, native_ruling())
+            if timing != "missing":
+                self.commit("report and ruling")
+            out = self.assert_hold(2 if timing == "missing" else 1)
+            if timing == "missing":
+                self.assertIn("uncommitted-report", out)
+
     def test_flat_folder_and_archive_moves_preserve_committed_report_identity(self):
         report_sha = self.git("rev-parse", "HEAD")
         for relative in ("task/index.md", "_archive/task/index.md", "_archive/task.md"):

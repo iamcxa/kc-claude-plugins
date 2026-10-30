@@ -233,9 +233,8 @@ def amendment_pairs(changes):
 
 
 def amendment_blob(ctx, rev, path):
-    from design_surfaces import parse_amendments
     if path is None:
-        return []
+        return ""
     blob = subprocess.run(["git", "-C", str(ctx.state), "show", f"{rev}:{path}"], capture_output=True)
     if blob.returncode:
         raise Cannot(f"git show {rev}:{path} failed: {blob.stderr.decode('utf-8', 'replace').strip()}")
@@ -243,11 +242,57 @@ def amendment_blob(ctx, rev, path):
         text = blob.stdout.decode("utf-8")
     except UnicodeDecodeError as err:
         raise Cannot(f"{rev}:{path}: unreadable UTF-8 blob: {err}") from err
+    return text
+
+
+def raw_amendment_regions(text):
+    from design_surfaces import AMENDMENT_FENCE, AMENDMENT_LEVEL, AMENDMENT_START, AMENDMENTS_HEADING
+    lines = text.splitlines(keepends=True)
+    regions, owners = [], {}
+    owner, active, fence = None, None, None
+
+    def finish(end, uncertain=False):
+        nonlocal active
+        if active is not None:
+            start, context = active
+            # Blank separators outside fences belong to the following section.
+            if not uncertain:
+                while end > start and not lines[end - 1].strip():
+                    end -= 1
+            regions.append((context, "".join(lines[start:end])))
+            active = None
+
+    for i, line in enumerate(lines):
+        marker = AMENDMENT_FENCE.match(line)
+        if fence:
+            if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip():
+                fence = None
+            continue
+        if marker:
+            fence = marker[1]
+            continue
+        heading = AMENDMENT_LEVEL.match(line)
+        if not heading:
+            continue
+        finish(i)
+        if len(heading[1]) <= 2:
+            owners[line] = owners.get(line, 0) + 1
+            owner = (line, owners[line])
+            if AMENDMENTS_HEADING.match(line):
+                regions.append(("section", owner))
+        if AMENDMENT_START.match(line):
+            active = (i, owner)
+    finish(len(lines), uncertain=fence is not None)
+    return regions if not fence or regions else None
+
+
+def parsed_amendments(text, source):
+    from design_surfaces import parse_amendments
     entries, issues = parse_amendments(text.split("\n"))
     ambiguous = [f"line {line}: {message}" for line, message in issues
                  if any(word in message for word in ("duplicate", "malformed"))]
     if ambiguous:
-        raise Cannot(f"{rev}:{path}: ambiguous protected spans: {'; '.join(ambiguous)}")
+        raise Cannot(f"{source}: ambiguous protected spans: {'; '.join(ambiguous)}")
     return entries
 
 
@@ -284,6 +329,12 @@ def l3_amendment_append_only(ctx):
             try:
                 before = amendment_blob(ctx, f"{commit}^", old)
                 after = amendment_blob(ctx, commit, new)
+                regions = raw_amendment_regions(before)
+                if regions is not None and regions == raw_amendment_regions(after):
+                    judged += bool(regions)
+                    continue
+                before = parsed_amendments(before, f"{commit}^:{old}")
+                after = parsed_amendments(after, f"{commit}:{new}")
             except Cannot as err:
                 unavailable.append(f"commit={commit[:12]} old={old} new={new} {err}")
                 continue

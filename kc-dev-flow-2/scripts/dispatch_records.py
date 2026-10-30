@@ -326,7 +326,12 @@ def later_captain_ruling(root, task, text, selected):
     if ruling_git(root, "rev-parse", "--is-shallow-repository") != "false":
         raise RulingHistoryError("shallow-history")
     slug = task.parent.name if task.name == "index.md" else task.stem
-    paths = [f"{prefix}{name}" for prefix in ("", "_archive/")
+    state = task.parent.parent if task.name == "index.md" else task.parent
+    if state.name == "_archive":
+        state = state.parent
+    state_prefix = state.relative_to(root).as_posix()
+    state_prefix = "" if state_prefix == "." else state_prefix + "/"
+    paths = [f"{state_prefix}{prefix}{name}" for prefix in ("", "_archive/")
              for name in (f"{slug}.md", f"{slug}/index.md")]
     _, current = captain_records(text, slug)
     pinned = task_snapshot(root, head, paths)
