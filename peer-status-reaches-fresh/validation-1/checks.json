@@ -1,0 +1,100 @@
+[
+  {
+    "name": "adr-stacked",
+    "args": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "422caef5a9b115a14f8391836499520d9fba6d91"
+    ],
+    "exit": 0,
+    "stdout": "45 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  {
+    "name": "numbers-stacked",
+    "args": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/peer-status-reaches-fresh.md",
+      "--base",
+      "422caef5a9b115a14f8391836499520d9fba6d91"
+    ],
+    "exit": 0,
+    "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 422caef5a9b1 head 1df246fa992c merge-base 422caef5a9b1\n",
+    "stderr": ""
+  },
+  {
+    "name": "documents",
+    "args": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/doc_impact.py",
+      "422caef5a9b115a14f8391836499520d9fba6d91",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n",
+    "stderr": ""
+  },
+  {
+    "name": "comments",
+    "args": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/comment_ratio.py",
+      "422caef5a9b115a14f8391836499520d9fba6d91",
+      "HEAD",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "stdout": "code lines 0, comment lines 0, 0.0%\nmaximum 5% (package default) not enforced: 0 code lines added, fewer than 20\n",
+    "stderr": ""
+  },
+  {
+    "name": "dispatch-records",
+    "args": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/peer-status-reaches-fresh"
+    ],
+    "exit": 0,
+    "stdout": "7 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "name": "design",
+    "args": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/peer-status-reaches-fresh.md"
+    ],
+    "exit": 0,
+    "stdout": "peer-status-reaches-fresh.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+    "stderr": ""
+  },
+  {
+    "name": "AC-6-empty-criteria",
+    "args": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/design_surfaces.py",
+      "check",
+      "/private/tmp/peer-status-validation-1df246fa/missing-criteria.md"
+    ],
+    "exit": 1,
+    "stdout": "missing-criteria.md: '## Acceptance criteria' declares no criterion (a '**AC-<id>**' bold line)\nmissing-criteria.md: '### Amendment 2 \u2014 2026-10-31, chat' supersedes AC-7 but no criterion says 'Amended by Captain, amendment 2' and its 'Supersedes:' line does not say 'no replacement'\nscope check not run: stage is validation, not ideation\n",
+    "stderr": ""
+  }
+]

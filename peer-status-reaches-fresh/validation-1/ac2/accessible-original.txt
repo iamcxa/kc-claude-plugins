@@ -1,0 +1,4 @@
+SYNTHETIC REPLAY ORIGINAL; not a historical Captain record.
+Question: May CL proceed with the v0 token-rotation step?
+Captain: Yes, CL may proceed; this clears the authorization hold only.
+Remaining: token rotation and v0 release are not recorded complete.

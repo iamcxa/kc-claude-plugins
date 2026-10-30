@@ -1,0 +1,242 @@
+{
+  "candidate": "1df246fa992ce0864348c2ffe67d93e80ad0a4b8",
+  "observed_at": "2026-10-30T16:35:57.769740+00:00",
+  "boundary": "Warm validator follows exact policy; synthetic declared sources and recording endpoint only; no fresh FO, real send, historical authentication, host delivery or permission response.",
+  "ac2": [
+    {
+      "case": "accessible",
+      "source": "/private/tmp/peer-status-validation-1df246fa/ac2/accessible-original.txt",
+      "source_bytes": "SYNTHETIC REPLAY ORIGINAL; not a historical Captain record.\nQuestion: May CL proceed with the v0 token-rotation step?\nCaptain: Yes, CL may proceed; this clears the authorization hold only.\nRemaining: token rotation and v0 release are not recorded complete.\n",
+      "observed_at": "2026-10-30T16:35:57.769740+00:00",
+      "status": "The authorization hold is cleared by the original question and answer. Token rotation and v0 release remain unverified; FO will check their own records. No Captain action is currently assigned.",
+      "source_words": 38,
+      "status_words": 30
+    },
+    {
+      "case": "unavailable",
+      "source": "/private/tmp/peer-status-validation-1df246fa/ac2/unavailable-original.txt",
+      "source_bytes": "SOURCE_UNAVAILABLE: original question and Captain answer cannot be read.\n",
+      "observed_at": "2026-10-30T16:35:57.769740+00:00",
+      "status": "The old token authorization wait is unverified because the original question and answer are unavailable. FO owns the source check; no Captain action or release completion is assigned.",
+      "source_words": 9,
+      "status_words": 28
+    },
+    {
+      "case": "unrelated",
+      "source": "/private/tmp/peer-status-validation-1df246fa/ac2/unrelated-original.txt",
+      "source_bytes": "SYNTHETIC REPLAY ORIGINAL; not a historical Captain record.\nQuestion: Is the dashboard color task complete?\nAnswer: The dashboard color task is complete.\n",
+      "observed_at": "2026-10-30T16:35:57.769740+00:00",
+      "status": "Dashboard completion does not settle the token authorization. The old wait is unverified; FO owns the original-source check. No Captain action or release completion is assigned.",
+      "source_words": 22,
+      "status_words": 26
+    }
+  ],
+  "ac3": [
+    {
+      "case": "merged",
+      "input": "Confirmed Paseo, paseo unlisted; previously involved idle peer A and unrelated idle peer B. Verified original transition.",
+      "decision": "Send once to A only; keep B out; no worker procedure activated.",
+      "calls": [
+        {
+          "serverId": "fixture-host",
+          "agentId": "fixture-peer-a",
+          "activeTurnBehavior": "steer",
+          "notifyOnFinish": true,
+          "prompt": "merged correction; source fixture-original; observed 2026-10-30T16:35:57.769740+00:00; exchange fixture-q1; no acknowledgement requested."
+        }
+      ]
+    },
+    {
+      "case": "released",
+      "input": "Confirmed Paseo, paseo unlisted; previously involved idle peer A and unrelated idle peer B. Verified original transition.",
+      "decision": "Send once to A only; keep B out; no worker procedure activated.",
+      "calls": [
+        {
+          "serverId": "fixture-host",
+          "agentId": "fixture-peer-a",
+          "activeTurnBehavior": "steer",
+          "notifyOnFinish": true,
+          "prompt": "released correction; source fixture-original; observed 2026-10-30T16:35:57.769740+00:00; exchange fixture-q1; no acknowledgement requested."
+        }
+      ]
+    },
+    {
+      "case": "unblocked",
+      "input": "Confirmed Paseo, paseo unlisted; previously involved idle peer A and unrelated idle peer B. Verified original transition.",
+      "decision": "Send once to A only; keep B out; no worker procedure activated.",
+      "calls": [
+        {
+          "serverId": "fixture-host",
+          "agentId": "fixture-peer-a",
+          "activeTurnBehavior": "steer",
+          "notifyOnFinish": true,
+          "prompt": "unblocked correction; source fixture-original; observed 2026-10-30T16:35:57.769740+00:00; exchange fixture-q1; no acknowledgement requested."
+        }
+      ]
+    },
+    {
+      "case": "same-question",
+      "input": "Confirmed running asker A requests correction to fixture-q1; steering available.",
+      "decision": "Requested reply may reach the running asker; callbacks disabled.",
+      "calls": [
+        {
+          "serverId": "fixture-host",
+          "agentId": "fixture-peer-a",
+          "activeTurnBehavior": "steer",
+          "notifyOnFinish": false,
+          "prompt": "merged correction; source fixture-original; observed 2026-10-30T16:35:57.769740+00:00; exchange fixture-q1; no acknowledgement requested."
+        }
+      ]
+    },
+    {
+      "case": "running-new",
+      "input": "A is running; new notice; independent work remains.",
+      "decision": "Defer; first deferral 10:00 UTC, deadline 10:05 UTC. No send.",
+      "calls": []
+    },
+    {
+      "case": "unknown-new",
+      "input": "A status unknown; no independent work remains.",
+      "decision": "Stop waiting now; persist unsent notice/status unknown. No send.",
+      "calls": []
+    },
+    {
+      "case": "still-busy",
+      "input": "Natural independent-work boundary 10:03 UTC; A still running.",
+      "decision": "One recheck ends deferral; save unsent notice; no poll or automatic retry.",
+      "calls": []
+    },
+    {
+      "case": "expired",
+      "input": "First deferral 10:00 UTC; resumed at 10:06 UTC.",
+      "decision": "Deadline expired; preserve original deadline; save unsent notice.",
+      "calls": []
+    },
+    {
+      "case": "steer-unavailable",
+      "input": "Requested reply; steering known unavailable.",
+      "decision": "Defer even reply; no interrupt override.",
+      "calls": []
+    },
+    {
+      "case": "held-go-live",
+      "input": "Confirmed idle A; proposed correction would authorize held go-live.",
+      "decision": "Record factual unblock only; do not send a go-live instruction. Approval hold remains; no send.",
+      "calls": []
+    },
+    {
+      "case": "uncertain-send",
+      "input": "Prior requested correction returned queued receipt; no recipient turn or callback.",
+      "decision": "Persist uncertain delivery; receipt does not establish delivery.",
+      "calls": []
+    },
+    {
+      "case": "attended-resume",
+      "input": "Same uncertain notice; recipient evidence remains unavailable at attended resume.",
+      "decision": "Inspect unresolved exchange evidence; retain uncertain reason, report gap to FO, no automatic resend.",
+      "calls": []
+    },
+    {
+      "case": "duplicate",
+      "input": "Same source revision and fixture-q1 already consumed.",
+      "decision": "No second action; no receipt acknowledgement.",
+      "calls": []
+    },
+    {
+      "case": "older",
+      "input": "Older OPEN observation arrives after source verified MERGED.",
+      "decision": "Do not restore stale merge action; no acknowledgement.",
+      "calls": []
+    },
+    {
+      "case": "conflict",
+      "input": "Newer timestamp says OPEN, source fixture-original currently says MERGED.",
+      "decision": "Read source fixture-original now; keep merge action cleared; timestamp is not truth.",
+      "source_query": true,
+      "calls": []
+    },
+    {
+      "case": "source-down",
+      "input": "Conflicting observation, original source unreachable.",
+      "decision": "Mark unverified; FO owns check, no Captain action.",
+      "source_query": true,
+      "calls": []
+    },
+    {
+      "case": "bound-briefing",
+      "input": "Source correction arrives while briefing digest is bound.",
+      "decision": "Append existing peer-exchanges note at authorized write; briefing bytes preserved.",
+      "calls": []
+    },
+    {
+      "case": "finish-only",
+      "input": "Information-only notice finishes with no action.",
+      "decision": "No new acknowledgement or Captain turn; finish does not prove understanding.",
+      "calls": []
+    },
+    {
+      "case": "real-error",
+      "input": "Notified notice callback reports receiver failure.",
+      "decision": "Report material error to FO; preserve failed evidence, no automatic resend.",
+      "calls": []
+    },
+    {
+      "case": "permission-hold",
+      "input": "Callback reports another agent permission request.",
+      "decision": "Report hold to FO; never call respond_to_permission.",
+      "calls": []
+    },
+    {
+      "case": "worker-finish",
+      "input": "Our dispatched worker sends its completion signal.",
+      "decision": "Retain worker completion contract; peer no-action suppression does not swallow it.",
+      "calls": []
+    }
+  ],
+  "sends": [
+    {
+      "case": "merged",
+      "tool": "send_agent_prompt",
+      "arguments": {
+        "serverId": "fixture-host",
+        "agentId": "fixture-peer-a",
+        "activeTurnBehavior": "steer",
+        "notifyOnFinish": true,
+        "prompt": "merged correction; source fixture-original; observed 2026-10-30T16:35:57.769740+00:00; exchange fixture-q1; no acknowledgement requested."
+      }
+    },
+    {
+      "case": "released",
+      "tool": "send_agent_prompt",
+      "arguments": {
+        "serverId": "fixture-host",
+        "agentId": "fixture-peer-a",
+        "activeTurnBehavior": "steer",
+        "notifyOnFinish": true,
+        "prompt": "released correction; source fixture-original; observed 2026-10-30T16:35:57.769740+00:00; exchange fixture-q1; no acknowledgement requested."
+      }
+    },
+    {
+      "case": "unblocked",
+      "tool": "send_agent_prompt",
+      "arguments": {
+        "serverId": "fixture-host",
+        "agentId": "fixture-peer-a",
+        "activeTurnBehavior": "steer",
+        "notifyOnFinish": true,
+        "prompt": "unblocked correction; source fixture-original; observed 2026-10-30T16:35:57.769740+00:00; exchange fixture-q1; no acknowledgement requested."
+      }
+    },
+    {
+      "case": "same-question",
+      "tool": "send_agent_prompt",
+      "arguments": {
+        "serverId": "fixture-host",
+        "agentId": "fixture-peer-a",
+        "activeTurnBehavior": "steer",
+        "notifyOnFinish": false,
+        "prompt": "merged correction; source fixture-original; observed 2026-10-30T16:35:57.769740+00:00; exchange fixture-q1; no acknowledgement requested."
+      }
+    }
+  ]
+}
