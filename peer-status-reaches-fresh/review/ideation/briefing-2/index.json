@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:peer-status-reaches-fresh:ideation:attempt-2:revision-1",
+  "question": "Approve the revised ideation of peer-status-reaches-fresh to enter implementation? FO recommends approve under the Captain's grant: the revision stays within the asks of his 2026-10-30 revise.",
+  "artifacts": [
+    {
+      "id": "artifact:peer-status-reaches-fresh:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/9872b0e7d7b3ce587e87f2ca1cb505ca5c5ccfba/peer-status-reaches-fresh.md",
+      "rev": "sha256:ca1dffa60d79d34456d3e4838bd5e9780584f06ceddfefb62fdd4222c79a79c4",
+      "mediaType": "text/markdown",
+      "summary": "Revised within the gate's asks; report names no new Captain choice; design_surfaces.py check passes; no open PR overlaps (gh pr list, 2026-10-30)."
+    }
+  ]
+}
