@@ -3,7 +3,7 @@ title: A peer FO's status reaches other FOs fresh, so a stale line is not relaye
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: implementation
 gates:
     version: 1
     records:
@@ -95,6 +95,7 @@ Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review before the joint ideation sitting: approve, revise, split or hold each task, the Captain's decisions, overlap and order
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-30 — does amendment 1 withdraw what the Captain approved, and what changes in the build?
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-31 — does amendment 2 withdraw what the Captain approved, and what changes in the build?
+Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-31 — does amendment 3 withdraw what the Captain approved, and what changes in the build?
 
 ## Design
 
@@ -302,6 +303,10 @@ Superseded text:
 
 **AC-7** — A cold FO checks a peer-derived Captain action through the workflow entry. Amended by Captain, amendment 1. Before delivery, FO reruns the cold runs on the new head: start a fresh isolated FO context without inherited history, peers preloading/path hints, a current-turn source answer or a replay verdict. Provide ordinary adopted workflow entry carrying the exact candidate workflow sentence, a Captain status request, the admitted stale relay line and logged read-only source access. Do not put this task's criteria or answer in the FO prompt. Capture initial context, file/tool read trace, package SHA, fixture bytes and resulting Captain-facing status. Require a current-turn source query for `spacedock-dev/subspace-web` PR 186 before naming its Captain action; reading peers is no longer a pass condition. Run notice present, absent and delayed with MERGED/b71f912; all remove the cleared merge/approval and include source/time. OPEN negative control retains the pending action without merge authority; unavailable source yields unverified and an FO-owned check, with no Captain action assigned. Falsifier: injecting the rule or expected answer into the prompt, no query, stale request after MERGED, suppressing the OPEN action or assigning the inaccessible action to the Captain. Retain the shared peers section for transition corrections. If the ordinary entry/source test fails, report the trace to FO; do not add a startup preload, hook, watchdog or other loader. Current evidence: earlier FO-run cold cases in `peer-status-reaches-fresh/cold-fo/README.md` are on the prior head or scratch wording; new-head reruns are pending.
 
+### Amendment 3 — 2026-10-31, chat
+Captain: 「可以」 (chat, 2026-10-31)
+Asked: 「決定：#756 拿掉 FO 回報要寫查證時間這項驗收要求，可以嗎？」, which FO had stated as: 「peers 檔裡規範發更正通知那一方的時間要求不變。」
+Supersedes: AC-8
 
 ## Stage Report: ideation
 
