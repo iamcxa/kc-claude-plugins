@@ -1,0 +1,4 @@
+pass unit tests (python3)
+pass multi-profile route gate (live Spacedock)
+pass version parity (plugin.json / marketplace.json / codex / README)
+pass GitGuardian Security Checks
