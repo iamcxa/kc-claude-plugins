@@ -3,7 +3,7 @@ title: The peers rule on new Paseo asks matches what FOs do, either by listing p
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: implementation
 gates:
     version: 1
     records:
@@ -94,6 +94,7 @@ Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review before the joint ideation sitting: approve, revise, split or hold each task, the Captain's decisions, overlap and order
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-30 — does amendment 1 withdraw what the Captain approved, and what changes in the build?
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-31 — does amendment 2 withdraw what the Captain approved, and what changes in the build?
+Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-31 — does amendment 4 withdraw what the Captain approved, and what changes in the build?
 
 ## Design
 
@@ -492,6 +493,11 @@ Captain: 「可以」 (chat, 2026-10-31)
 Asked: 「決定：#754 改成「提問和告知都開通知，只有回覆關閉」，可以嗎？」
 Supersedes: none
 Design: Set notifyOnFinish: true for peer asks; set it false for requested replies and information-only notices.
+
+### Amendment 4 — 2026-10-31, chat
+Captain: 「可以。」 (chat, 2026-10-31)
+Asked: 「決定：#754 放寬這兩項條件，再重新驗證一次，可以嗎？」, which FO had stated as: 「放寬這兩項驗收條件（失敗測試可用別的代理，開始處理前遺失列為未驗證的限制），再重新驗證」
+Supersedes: AC-10
 
 ## Number guards
 
