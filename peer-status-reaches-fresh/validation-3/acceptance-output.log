@@ -1,0 +1,13 @@
+39fdbb28b411d44a323741f645c7c1d75c653be1
+45 ADR file(s) checked, 0 legacy
+Unchanged: exact head, dev/peers bytes, four harness files, eight original cold logs and final outputs.
+g-absent1: source repository + PR 186 present; attribution PASS
+g-absent2: source repository + PR 186 present; attribution PASS
+g-delayed: source repository + PR 186 present; attribution PASS
+g-notice: source repository + PR 186 present; attribution PASS
+FALSIFIER DETECTED: repository removed
+FALSIFIER DETECTED: PR removed
+FALSIFIER DETECTED: missing current-turn source query
+F5 cleared under corrected AC-9; no source-revision/URL duty imposed.
+PASSED at 39fdbb28b411d44a323741f645c7c1d75c653be1 within carried-forward bounded validation-2 evidence.
+Not proven: historical authorization, native delivery, full package sealing, direct FO resumes, long sessions or post-delivery natural use.

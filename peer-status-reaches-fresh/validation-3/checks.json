@@ -1,0 +1,14 @@
+{
+  "fresh-shell-acceptance": {
+    "exit": 0
+  },
+  "detached-adr": {
+    "exit": 0,
+    "output": "45 ADR file(s) checked, 0 legacy"
+  },
+  "dispatch-records": {
+    "exit": 0,
+    "output": "12 dispatch record(s) complete"
+  },
+  "unchanged-evidence-base": "9e4564aec71afb96a48328a56b1ae9ac7055df06"
+}
