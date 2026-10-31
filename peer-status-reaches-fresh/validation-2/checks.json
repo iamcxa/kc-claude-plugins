@@ -1,0 +1,134 @@
+{
+  "lint": {
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "tail": [
+      "PASS: basic frontmatter, declared profile routes, role bindings and package script paths",
+      "references/sd/workflow.md: 5781 of 5781 words; no unlisted passage repeats it",
+      "Not checked: full Agent Skills conformance or host/workflow behavior"
+    ]
+  },
+  "lint-tests": {
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "exit": 0,
+    "tail": [
+      "----------------------------------------------------------------------",
+      "Ran 45 tests in 11.667s",
+      "",
+      "OK"
+    ]
+  },
+  "dispatch-tests": {
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "exit": 0,
+    "tail": [
+      "PASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist",
+      "PASS: Batch gates survives POC derivation but changes no pilot/POC worker stage definition; inlining mutations reach both implementation definitions",
+      "PASS: four separately prepared/committed batch gates retain mapped approve/revise/hold/unanswered authority; stale-binding mutation refuses; resumed approval advances its own task without duplicate resolution",
+      "Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge"
+    ]
+  },
+  "adr": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "422caef5a9b115a14f8391836499520d9fba6d91"
+    ],
+    "exit": 0,
+    "tail": [
+      "45 ADR file(s) checked, 0 legacy"
+    ]
+  },
+  "documents": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/doc_impact.py",
+      "422caef5a9b115a14f8391836499520d9fba6d91",
+      "39fdbb28b411d44a323741f645c7c1d75c653be1"
+    ],
+    "exit": 0,
+    "tail": [
+      "0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'"
+    ]
+  },
+  "comments": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/comment_ratio.py",
+      "422caef5a9b115a14f8391836499520d9fba6d91",
+      "39fdbb28b411d44a323741f645c7c1d75c653be1",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "tail": [
+      "code lines 0, comment lines 0, 0.0%",
+      "maximum 5% (package default) not enforced: 0 code lines added, fewer than 20"
+    ]
+  },
+  "dispatch-records": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/peer-status-reaches-fresh"
+    ],
+    "exit": 0,
+    "tail": [
+      "10 dispatch record(s) complete"
+    ]
+  },
+  "design": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/peer-status-reaches-fresh.md"
+    ],
+    "exit": 0,
+    "tail": [
+      "peer-status-reaches-fresh.md: design surfaces presentable",
+      "scope check not run: stage is validation, not ideation"
+    ]
+  },
+  "numbers": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/peer-status-reaches-fresh.md",
+      "--base",
+      "422caef5a9b115a14f8391836499520d9fba6d91"
+    ],
+    "exit": 0,
+    "tail": [
+      "migration guard skipped: no migrations-path declared",
+      "PASS: no findings",
+      "base 422caef5a9b1 head 39fdbb28b411 merge-base 422caef5a9b1"
+    ]
+  }
+}

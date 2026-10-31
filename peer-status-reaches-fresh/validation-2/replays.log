@@ -1,0 +1,25 @@
+AC-2 accessible The authorization hold is cleared by the original question and answer. Token rotation and v0 release remain unverified; FO will check their own records. No Captain action is currently assigned.
+AC-2 unavailable The old token authorization wait is unverified because the original question and answer are unavailable. FO owns the source check; no Captain action or release completion is assigned.
+AC-2 unrelated Dashboard completion does not settle the token authorization. The old wait is unverified; FO owns the original-source check. No Captain action or release completion is assigned.
+AC-3 merged Send once to A only; keep B out; no worker procedure activated.
+AC-3 released Send once to A only; keep B out; no worker procedure activated.
+AC-3 unblocked Send once to A only; keep B out; no worker procedure activated.
+AC-3 same-question Requested reply may reach the running asker; callbacks disabled.
+AC-3 running-new Defer; first deferral 10:00 UTC, deadline 10:05 UTC. No send.
+AC-3 unknown-new Stop waiting now; persist unsent notice/status unknown. No send.
+AC-3 still-busy One recheck ends deferral; save unsent notice; no poll or automatic retry.
+AC-3 expired Deadline expired; preserve original deadline; save unsent notice.
+AC-3 steer-unavailable Defer even reply; no interrupt override.
+AC-3 held-go-live Record factual unblock only; do not send a go-live instruction. Approval hold remains; no send.
+AC-3 uncertain-send Persist uncertain delivery; receipt does not establish delivery.
+AC-3 attended-resume Inspect unresolved exchange evidence; retain uncertain reason, report gap to FO, no automatic resend.
+AC-3 duplicate No second action; no receipt acknowledgement.
+AC-3 older Do not restore stale merge action; no acknowledgement.
+AC-3 conflict Read source fixture-original now; keep merge action cleared; timestamp is not truth.
+AC-3 source-down Mark unverified; FO owns check, no Captain action.
+AC-3 bound-briefing Append existing peer-exchanges note at authorized write; briefing bytes preserved.
+AC-3 finish-only No new acknowledgement or Captain turn; finish does not prove understanding.
+AC-3 real-error Report material error to FO; preserve failed evidence, no automatic resend.
+AC-3 permission-hold Report hold to FO; never call respond_to_permission.
+AC-3 worker-finish Retain worker completion contract; peer no-action suppression does not swallow it.
+Recorded sends: 4 real sends: 0

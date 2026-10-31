@@ -1,0 +1,3 @@
+missing-criteria.md: '## Acceptance criteria' declares no criterion (a '**AC-<id>**' bold line)
+missing-criteria.md: '### Amendment 3 — 2026-10-31, chat' supersedes AC-8 but no criterion says 'Amended by Captain, amendment 3' and its 'Supersedes:' line does not say 'no replacement'
+scope check not run: stage is validation, not ideation

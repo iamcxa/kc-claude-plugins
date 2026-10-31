@@ -1,0 +1,40 @@
+{
+  "static-words": {
+    "startup-hook": 365,
+    "idle-hook": 100,
+    "mod": 48,
+    "authority": 488,
+    "extensions": 451,
+    "learn": 280
+  },
+  "output-words": {
+    "tasks-pending": 29,
+    "tasks-green": 29,
+    "wait-green": 7,
+    "wait-merged": 17,
+    "tasks-missing": 68,
+    "tasks-rerun": 20,
+    "after-lines": 15,
+    "observer-archived": 28,
+    "gate": 57
+  },
+  "common-totals": {
+    "startup": 442,
+    "idle-open": 672,
+    "idle-merged": 1021,
+    "after-archive": 371,
+    "merge-ask": 1003
+  },
+  "outputs": {
+    "tasks-pending": "fact: o/r#7 OPEN draft=False checks=pending\nnext: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-peer-status-reaches-fresh/.context/validation-2-candidate/kc-dev-flow-2/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp65o1urif/watch.json wait` in the background, unless one is running.\nnext: when it exits, do the next: lines it prints.",
+    "tasks-green": "fact: o/r#7 OPEN draft=False checks=green\nnext: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-peer-status-reaches-fresh/.context/validation-2-candidate/kc-dev-flow-2/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp65o1urif/watch.json wait` in the background, unless one is running.\nnext: when it exits, do the next: lines it prints.",
+    "wait-green": "o/r#1 feat: x: checks pending -> green\n",
+    "wait-merged": "o/r#1 feat: x: state OPEN -> MERGED; checks pending -> green\nnext: run the idle hooks now.\n",
+    "tasks-missing": "next: keep some-task out of pr-merge's scan in this pass.\nobserver report not committed: some-task/observer.md at HEAD.\nnext: dispatch kc-dev-flow-2:observer with only the state checkout, some-task and the workflow README.\nnext: save its report unedited as some-task/observer.md.\nnext: if it cannot be dispatched, save the one line `observer not run: <reason>` there instead.\nnext: run `spacedock state commit some-task --workflow-dir <workflow dir>`.\nnext: run the idle hooks again.",
+    "tasks-rerun": "next: let pr-merge record some-task.\nafter pr-merge: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-peer-status-reaches-fresh/.context/validation-2-candidate/kc-dev-flow-2/scripts/observer_check.py /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp65o1urif/repo/docs/dev2/.spacedock-state some-task`.\nafter pr-merge: do each next: line it prints.",
+    "after-lines": "after pr-merge: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-peer-status-reaches-fresh/.context/validation-2-candidate/kc-dev-flow-2/scripts/observer_check.py /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp65o1urif/repo/docs/dev2/.spacedock-state some-task`.\nafter pr-merge: do each next: line it prints.",
+    "observer-archived": "observer report committed: _archive/some-task/observer.md at HEAD.\nnext: run kc-dev-flow-2:learn for some-task.\nnext: send learn's notice, then the observer report unedited, in one message; answer none of its findings.\n",
+    "gate": "PR head 40c714a6 equals dispatched candidate 40c714a6; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "gate-exit": "0"
+  }
+}

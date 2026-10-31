@@ -1,0 +1,105 @@
+{
+  "recount": {
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/peer-status-validation-2/recount.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-peer-status-reaches-fresh/.context/validation-2-candidate",
+      "/Users/kent/.agents/skills/paseo/SKILL.md"
+    ],
+    "tail": [
+      "    2344",
+      "  ]",
+      "}"
+    ]
+  },
+  "replays": {
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/peer-status-validation-2/record_replays.py"
+    ],
+    "tail": [
+      "AC-3 permission-hold Report hold to FO; never call respond_to_permission.",
+      "AC-3 worker-finish Retain worker completion contract; peer no-action suppression does not swallow it.",
+      "Recorded sends: 4 real sends: 0"
+    ]
+  },
+  "missing-criteria": {
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/design_surfaces.py",
+      "check",
+      "/tmp/peer-status-validation-2/missing-criteria.md"
+    ],
+    "tail": [
+      "missing-criteria.md: '## Acceptance criteria' declares no criterion (a '**AC-<id>**' bold line)",
+      "missing-criteria.md: '### Amendment 3 \u2014 2026-10-31, chat' supersedes AC-8 but no criterion says 'Amended by Captain, amendment 3' and its 'Supersedes:' line does not say 'no replacement'",
+      "scope check not run: stage is validation, not ideation"
+    ]
+  },
+  "common-base-pinned": {
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/peer-status-validation-2/common-pinned.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-peer-status-reaches-fresh/.context/validation-2-base/kc-dev-flow-2",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "tail": [
+      "    \"gate-exit\": \"0\"",
+      "  }",
+      "}"
+    ]
+  },
+  "common-base-anchored": {
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/peer-status-validation-2/common-anchored.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-peer-status-reaches-fresh/.context/validation-2-base/kc-dev-flow-2",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "tail": [
+      "    \"gate-exit\": \"0\"",
+      "  }",
+      "}"
+    ]
+  },
+  "common-head-pinned": {
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/peer-status-validation-2/common-pinned.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-peer-status-reaches-fresh/.context/validation-2-candidate/kc-dev-flow-2",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "tail": [
+      "    \"gate-exit\": \"0\"",
+      "  }",
+      "}"
+    ]
+  },
+  "common-head-anchored": {
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/peer-status-validation-2/common-anchored.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-peer-status-reaches-fresh/.context/validation-2-candidate/kc-dev-flow-2",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "tail": [
+      "    \"gate-exit\": \"0\"",
+      "  }",
+      "}"
+    ]
+  }
+}

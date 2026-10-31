@@ -1,0 +1,20 @@
+flowchart TD
+    O[Origin FO verifies merge, release or unblock] --> R[Record source revision, observation time and affected exchange]
+    R --> A{Existing binding permits notice?}
+    A -->|no or uncertain| H[Record held or uncertain; no automatic retry]
+    A -->|yes| N[Send one scoped dated notice through sibling policy]
+    N --> I[Receiver matches source and exchange; holds correction until checked]
+    I --> F[FO composes peer-derived Captain status]
+    H --> F
+    L[Old peer line; notice absent or delayed] --> F
+    F --> B[Cold FO follows ordinary dev entry; peers not preloaded]
+    B --> C{Exact dev sentence delivered?}
+    C -->|no| X[Acceptance fails; return entry trace to FO]
+    C -->|yes| J{Names a Captain action?}
+    J -->|no| T[Check fact before use; report source or FO-owned uncertainty]
+    J -->|yes| S[Read original action source in this turn]
+    S --> D{Source result?}
+    D -->|still pending| P[Report sourced pending action; preserve Captain gate]
+    D -->|cleared| E[Remove only cleared action; name source revision]
+    D -->|unavailable or conflicting| V[Mark unverified; FO owns check; no Captain action]
+    U[Direct FO resume without dev or long session] --> Z[Coverage unverified; no loader or guarantee added]

@@ -1,0 +1,56 @@
+[
+  {
+    "path": "docs/adr/0005-a-captain-amendment-is-recorded-by-fo-and-moved-by-the-next-worker.md",
+    "commit": "39fdbb28b411d44a323741f645c7c1d75c653be1",
+    "sha256": "124927b2ac20e1f21e8d20c905735bf33bc0d6b7c9d544fc4ac8caa76b3da03d",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0016-the-amendment-check-refuses-an-unnamed-move-and-an-unmarked-replacement.md",
+    "commit": "39fdbb28b411d44a323741f645c7c1d75c653be1",
+    "sha256": "3eb8e39aaa0be288f2d9370f1ed829623a757c4b417e031945070528c5001994",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "commit": "39fdbb28b411d44a323741f645c7c1d75c653be1",
+    "sha256": "a49b4da2665730f648334a0a8465bde6df3c779e9b0c42b3e61510cc96185afb",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0035-learn-and-peers-are-on-by-default-and-an-adopter-picks-the-recommended-extensions-at-install.md",
+    "commit": "39fdbb28b411d44a323741f645c7c1d75c653be1",
+    "sha256": "6d9b63ed7650183877ba0c5b8092565dfd0ddb36a58a1a37cd5ac6c47e6ed8a4",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "commit": "39fdbb28b411d44a323741f645c7c1d75c653be1",
+    "sha256": "978f2731eda46ecb8351e435bed023d77620e25714c9b6defe5f0fbd962a6029",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0038-peer-facts-and-human-ruling-sources.md",
+    "commit": "39fdbb28b411d44a323741f645c7c1d75c653be1",
+    "sha256": "7006089c00c69a592dc4f21ae18af94e4a7c7b46ad1b7cb21cf0fce5ec805d4e",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0042-paseo-codex-workers-hand-publication-and-local-review-to-fo.md",
+    "commit": "39fdbb28b411d44a323741f645c7c1d75c653be1",
+    "sha256": "4f8603fd34f432392c6031be761c6cf3fe8c8bb37338e914b63865ab04cad4b4",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md",
+    "commit": "39fdbb28b411d44a323741f645c7c1d75c653be1",
+    "sha256": "124d19068d071b0d8414a8aac0a87b0b3a8c06b3e0ef345af60357cd9df2e336",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0046-confirmed-paseo-transport-permits-peer-asks.md",
+    "commit": "39fdbb28b411d44a323741f645c7c1d75c653be1",
+    "sha256": "740eab7579126db1a4e8b54743cf645c2bb2b9ae1a961629e3eff118e52d2874",
+    "status": "Accepted"
+  }
+]
