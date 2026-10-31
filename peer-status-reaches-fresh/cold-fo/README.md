@@ -48,3 +48,9 @@ Fixture unchanged: `kc-dev-flow-2:dev` entry, named PR, no long-session load. Co
 | Source down | f-down1, f-down2, f-down3 | 3/3 unverified, not assigned, FO keeps the check |
 
 Not covered by this change or these runs: an FO resuming through spacedock:first-officer without the dev entry, and an FO deep in a long session.
+
+## Exact head 39fdbb28b411d44a323741f645c7c1d75c653be1, runs g-*
+
+Same matrix as f-*, rerun because the head changed. Harness bytes: harness/ (run.sh, all5.sh, gh-log, fixture workflow README).
+MERGED no notice 2/2, notice present 1/1, older notice 1/1: all queried the source, no merge ask. OPEN 1/1: action kept. Source down 3/3: not assigned, FO keeps the check. Amendment 3 removed the status observation-time duty, so it is not scored.
+Not covered: direct first-officer resumes and long sessions.

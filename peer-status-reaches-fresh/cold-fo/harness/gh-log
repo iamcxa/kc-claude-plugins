@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "$(date -u +%FT%TZ) gh $*" >> "$GH_LOG"
+case "$GH_MODE" in
+ real) case "$1 $2" in "pr view") exec /opt/homebrew/bin/gh "$@";; *) echo refused >&2; exit 1;; esac;;
+ open) echo '{"state":"OPEN","mergedAt":null,"mergeCommit":null,"headRefOid":"1683cc569ef38e75fbed348e96ad7c6f6fcbbc11","reviewDecision":"REVIEW_REQUIRED"}';;
+ down) echo 'error connecting to api.github.com' >&2; exit 1;;
+esac
