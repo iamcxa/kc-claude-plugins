@@ -14,6 +14,14 @@ Act only within existing authority. Scope changes, deletion, outward-facing acti
 
 A busy peer defers an exchange for at most five minutes from the first deferral. Note the deadline, do independent work, and recheck at most once at a natural work boundary; never poll or block the turn. If no independent work remains, stop waiting now. On expiry or a still-busy recheck, end the deferral: research a question yourself, or save an unsent answer and its reason in the exchange record. No automatic retry. This is a ceiling, not a promise of a timed wakeup.
 
+## Current peer facts
+
+A relayed status names its source. Before naming a Captain action from a peer, check that action at its original source in the current reporting turn, after relevant notices. A label, timestamp, queued receipt or finish notice is not that check. If inaccessible or conflicting, mark the fact unverified and keep the check with FO; do not assign the Captain the unverified action. A merge proves neither release nor another step's completion.
+
+When your verified merge, release or unblock changes a previously involved peer's next step, record the changed fact, source revision, observation time and affected exchange in the existing task or peer-exchanges note. Send one information-only correction to those confirmed peers through the authorized binding; no broadcast. A correction answering the same question follows its reply route; a new notice needs new-send authority. If held, unavailable or uncertain, record the unsent or uncertain notice and reason; do not infer delivery or retry automatically. At the next attended resume, reconcile pending notices before any authorized send. No timer or background retry is added.
+
+On receipt, match the source and exchange, check before using the fact, and update the affected status at its next authorized write. Duplicates or older observations do not restore a stale action; conflicting or unordered evidence requires a source check. Preserve a bound briefing and record the correction in the existing note. Do not send receipt-only acknowledgements or surface a no-action peer finish to the Captain; report a material change, blocker or decision instead. Worker completion follows its own contract.
+
 ## Claude Code binding
 
 Use ListAgents and SendMessage with the currently listed address. Keep a Captain-named or previously confirmed peer. Otherwise, at most once per session, send one read-only probe to each listed online peer, excluding workers and teammates: ask its repository, task and session id from CLAUDE_CODE_SESSION_ID. Record `Peer: <area> = <session id>; listed as <name> (<Captain or reply>, <date>)`. Never infer ownership from name, directory or recency.
