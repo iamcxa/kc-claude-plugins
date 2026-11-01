@@ -61,6 +61,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:names-check-says-what-it-skipped:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:names-check-says-what-it-skipped-validation-1
+              briefing:
+                id: briefing:names-check-says-what-it-skipped:validation:attempt-1:revision-1
+                digest: sha256:a7d20fee5825cd84ba57368efc723bc2ffeb2a5fa862ff8aa8c6080050e65627
+                room-ref: ./names-check-says-what-it-skipped/review/validation/briefing-1
 started: 2026-10-30T10:19:43Z
 worktree: .worktrees/spacedock-ensign-names-check-says-what-it-skipped
 pr: iamcxa/kc-claude-plugins#758
