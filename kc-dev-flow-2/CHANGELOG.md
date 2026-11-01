@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.34.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.33.1...kc-dev-flow-2-v0.34.0) (2026-11-01)
+
+
+### Features
+
+* **kc-dev-flow-2:** resolve repository stage model rosters ([ddcd129](https://github.com/iamcxa/kc-claude-plugins/commit/ddcd129dd3a0e9e8898ad695b15c7f0ace0b345a))
+* **kc-dev-flow-2:** resolve shared stage-worker model choices ([e18f9cb](https://github.com/iamcxa/kc-claude-plugins/commit/e18f9cb557b6ab939b303e7b9c54cf5898f81e45))
+* **kc-dev-flow-2:** route attended surfaces through visible Paseo workspaces ([9b32877](https://github.com/iamcxa/kc-claude-plugins/commit/9b32877f4b98583fa41ce090664f20b3ffcae122))
+* **kc-dev-flow-2:** route attended surfaces through visible Paseo workspaces ([d067ae3](https://github.com/iamcxa/kc-claude-plugins/commit/d067ae38aa3df31028710f9ce068a83ea262a49f))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** check peer actions from the dev entry ([6f1f835](https://github.com/iamcxa/kc-claude-plugins/commit/6f1f83522c673ecb19f1acb461137fbd4576b609))
+* **kc-dev-flow-2:** check peer actions from the workflow entry ([362418e](https://github.com/iamcxa/kc-claude-plugins/commit/362418e024e61f842ba44ece845adf3063b31517))
+* **kc-dev-flow-2:** check relayed peer actions at their current source ([96b7307](https://github.com/iamcxa/kc-claude-plugins/commit/96b73073a1384951fab6de74ecfee94719127535))
+* **kc-dev-flow-2:** check relayed peer actions at their current source ([8f42107](https://github.com/iamcxa/kc-claude-plugins/commit/8f42107b1cc9ae0b3a7d10ad2a2408b46fcbe0cd))
+* **kc-dev-flow-2:** expose skipped dispatch context checks ([3f8a869](https://github.com/iamcxa/kc-claude-plugins/commit/3f8a869748ffb22de054d7cc45db3b6c2b83f3ec))
+* **kc-dev-flow-2:** expose skipped dispatch context checks ([9f065b0](https://github.com/iamcxa/kc-claude-plugins/commit/9f065b01f1c6d6561793a168f584075edb85bf1f))
+* **kc-dev-flow-2:** gate roster adoption on available Paseo Codex route ([a8536dc](https://github.com/iamcxa/kc-claude-plugins/commit/a8536dc5239edc3db6c1b76cb3bb7e1ce0433088))
+* **kc-dev-flow-2:** notify peer asks and report permission holds ([c804241](https://github.com/iamcxa/kc-claude-plugins/commit/c804241d24a2b378604409c17340db29c096ac51))
+* **kc-dev-flow-2:** notify peer notices and preserve unresolved sends ([422caef](https://github.com/iamcxa/kc-claude-plugins/commit/422caef5a9b115a14f8391836499520d9fba6d91))
+* **kc-dev-flow-2:** permit peer asks through confirmed Paseo transport ([605a755](https://github.com/iamcxa/kc-claude-plugins/commit/605a7551ce385d3943bb4ed3a2965e1c90794137))
+* **kc-dev-flow-2:** permit peer asks through confirmed Paseo transport ([4c182bc](https://github.com/iamcxa/kc-claude-plugins/commit/4c182bc66a1384d8a677b6a83a2b8dbd2088a7df))
+* **kc-dev-flow-2:** preserve absent-roster author evidence ([cf8e584](https://github.com/iamcxa/kc-claude-plugins/commit/cf8e5848654f03fa5c509751298e2f75d7c151ba))
+* **kc-dev-flow-2:** preserve unchanged amendments and resolve inline history ([37b8319](https://github.com/iamcxa/kc-claude-plugins/commit/37b8319b6f75027de50351123e2bea32db8cd716))
+* **kc-dev-flow-2:** preserve unchanged amendments and resolve inline history ([0c55b9a](https://github.com/iamcxa/kc-claude-plugins/commit/0c55b9a574b8abd845e2ab969c200aa44b1588e4))
+* **kc-dev-flow-2:** retain source attribution in relayed status ([39fdbb2](https://github.com/iamcxa/kc-claude-plugins/commit/39fdbb28b411d44a323741f645c7c1d75c653be1))
+
 ## [0.33.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.33.0...kc-dev-flow-2-v0.33.1) (2026-10-29)
 
 
