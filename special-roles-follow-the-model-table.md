@@ -3,6 +3,17 @@ title: Special roles follow the Captain's model table, and the trigger check rec
 status: backlog
 variant: kc-dev-flow-2
 profile: pilot
+gates:
+    version: 1
+    records:
+        - id: gate:special-roles-follow-the-model-table:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:special-roles-follow-the-model-table-backlog-1
+              briefing:
+                id: briefing:special-roles-follow-the-model-table:backlog:attempt-1:revision-1
+                digest: sha256:b2c65d5d5587dfaa508f2ffe71c13a4672dad8862a220fd572d9f9f14c343bb2
+                room-ref: ./special-roles-follow-the-model-table/review/backlog/briefing-1
 ---
 
 ## Scope
