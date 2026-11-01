@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:model-roster-question-needs-both-families:backlog:attempt-1:revision-1",
+  "question": "「決定：五件事都照建議，第 5 項用這張表，並把 xhigh 上限寫進設定檔檢查，可以嗎？」",
+  "artifacts": [
+    {
+      "id": "artifact:model-roster-question-needs-both-families:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7956884c971aa1261c8129f666f23be2f3f0da90/model-roster-question-needs-both-families.md",
+      "rev": "sha256:363a109a8e02ffd6c2891b8e170350d19d96d1e6a756eea326b586b2978bef97",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 backlog sitting; recommended approve to enter ideation under pilot."
+    }
+  ]
+}

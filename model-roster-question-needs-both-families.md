@@ -3,6 +3,17 @@ title: Model roster question asks only when Paseo, Codex and Claude are all avai
 status: backlog
 variant: kc-dev-flow-2
 profile: pilot
+gates:
+    version: 1
+    records:
+        - id: gate:model-roster-question-needs-both-families:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:model-roster-question-needs-both-families-backlog-1
+              briefing:
+                id: briefing:model-roster-question-needs-both-families:backlog:attempt-1:revision-1
+                digest: sha256:b8a4d203d360d9ab93d9279689d80d5330565e4842f23a72ca3caf3d5a1d5e25
+                room-ref: ./model-roster-question-needs-both-families/review/backlog/briefing-1
 ---
 
 ## Scope
