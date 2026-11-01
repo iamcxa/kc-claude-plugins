@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "422caef5a9b115a14f8391836499520d9fba6d91",
+  "model": "not run",
+  "necessity": "the peers binding and record 0046 are what those runs exercise; the amendment-4 reviewer found no executable change needed.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F3 Deferred risk: Complete native'",
+    "point: deferred: '- F3 Deferred risk: Complete native-output'",
+    "point: deferred: '- F3 Deferred risk: Complete native'",
+    "point: deferred: '- F5 Deferred risk: Loss before'",
+    "point: deferred: 'Declined: complete native output and combined'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 2 dated 2026-10-31'",
+    "point: amendment: 'Amendment 3 dated 2026-10-31'",
+    "point: amendment: 'Amendment 4 dated 2026-10-31'",
+    "point: path: 'docs/adr/0046-confirmed-paseo-transport-permits-peer-asks.md'",
+    "point: path: 'kc-dev-flow-2/extensions/fo-feedback/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/extensions/paseo/EXTENSION.md'",
+    "point: more: 3 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#754",
+  "sufficiency": "confirmed Paseo peers can ask without listing paseo, asks and notices notify, and a permission notification is report-only, shown by the real runs in real-pair/README.md.",
+  "time": "2026-11-01T07:38:01Z",
+  "verdict": "ask"
+}
