@@ -3,6 +3,17 @@ title: The second round on a task prompts the FO to step back
 status: backlog
 variant: kc-dev-flow-2
 profile: pilot
+gates:
+    version: 1
+    records:
+        - id: gate:second-round-prompts-a-step-back:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:second-round-prompts-a-step-back-backlog-1
+              briefing:
+                id: briefing:second-round-prompts-a-step-back:backlog:attempt-1:revision-1
+                digest: sha256:829aa3bcbbf71e38c8028d23c276c06eb0541014413628e8097d6fc5ec68c41b
+                room-ref: ./second-round-prompts-a-step-back/review/backlog/briefing-1
 ---
 
 ## Scope
