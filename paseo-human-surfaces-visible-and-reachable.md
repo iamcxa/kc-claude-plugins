@@ -61,6 +61,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:paseo-human-surfaces-visible-and-reachable:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:paseo-human-surfaces-visible-and-reachable-validation-1
+              briefing:
+                id: briefing:paseo-human-surfaces-visible-and-reachable:validation:attempt-1:revision-1
+                digest: sha256:245d2d12bd053e085b82ca7898cef112ae675d5b468a7ef30eaf925cac5d02eb
+                room-ref: ./paseo-human-surfaces-visible-and-reachable/review/validation/briefing-1
 started: 2026-10-30T10:19:52Z
 worktree: .worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable
 pr: iamcxa/kc-claude-plugins#757

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-human-surfaces-visible-and-reachable:validation:attempt-1:revision-1",
+  "question": "「決定：四件事都照這個新建議嗎？要改哪件直接說。」 Item 3 of that sitting: merge this PR after its amended criteria pass; item 4: regular merge with --match-head-commit, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-human-surfaces-visible-and-reachable:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b0a3ea5f08e791c7afc9df6b92f08eedbf97df05/paseo-human-surfaces-visible-and-reachable.md",
+      "rev": "sha256:106b681b8f2a48b819c0a1fd3fa761ec31faca954f499af29014ab731abf9377",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of paseo-human-surfaces-visible-and-reachable, PR #757, head 8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc, in the batch 11 sitting.\nSufficiency: the Captain found and used the terminal and the page on desktop and phone in human-trial/README.md, and the picture check fails when the picture is removed.\nNecessity: the one section is what those steps follow; a cold FO received it in 3 of 6 runs in cold-fo/README.md, which is stated as the limit.\nExternal rounds: 1.\nSecond reviewer: copilot review:5727059556 found no open issues on this head, and is required because the PR changes merge or review rules.\nCodex review: no major issues on this head, comment:6555249442.\nDeclined: the worker reach and URL handback before delivery (validation-2 F1 and F2: post-delivery under AC-8 and AC-9, cold-fo/README.md shows 3 of 6); product page lazy images and API checks (validation-2 F5: the fixture has none, human-trial/README.md)."
+    }
+  ]
+}
