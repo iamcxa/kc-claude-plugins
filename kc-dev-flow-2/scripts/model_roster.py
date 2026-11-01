@@ -67,7 +67,7 @@ def author(path):
     try:
         text = path.read_text(encoding="utf-8").split("\n## ", 1)[0]
         lines = re.findall(r"^Roster: (.+)$", text, re.M)
-        if len(lines) == 1:
+        if len(lines) == 1 and lines[0] != "absent; source README default":
             parts = lines[0].split("; ")
             pairs = [part.split("=", 1) for part in parts]
             if any(len(pair) != 2 for pair in pairs):
@@ -79,7 +79,7 @@ def author(path):
             if (row["provider"] == "codex" and row["host"] == "paseo"
                     and row["model"] in MODELS and row["effort"] in EFFORTS):
                 result["tuple"] = row
-        elif not lines:
+        elif not lines or lines == ["absent; source README default"]:
             models = re.findall(r"^Model: (gpt-6\.1-sol|gpt-6-astra) \(Codex via Paseo, thinking (low|medium|high|xhigh|max|ultra)(?:[;,)])", text, re.M)
             if len(models) == 1:
                 result["tuple"] = dict(provider="codex", model=models[0][0], effort=models[0][1], host="paseo")
@@ -111,21 +111,22 @@ def resolve(root, stage, records):
         if path.exists():
             raise Invalid(f"{ROSTER}: present but not committed")
         # see docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md
-        return {"source": "readme-default", "role": stage, "tuple": None,
-                "path": ROSTER, "commit": commit, "digest": None}
-    if not entry.startswith(b"100644 blob ") and not entry.startswith(b"100755 blob "):
-        raise Invalid(f"{ROSTER}: expected regular committed file")
-    raw = path.read_bytes()
-    if raw != git(root, "show", f"{commit}:{ROSTER}"):
-        raise Invalid(f"{ROSTER}: bytes differ from committed choice")
-    data = validate(json.loads(raw.decode("utf-8"), object_pairs_hook=unique))
-    role = "implementation" if stage == "repair" else stage
-    result = {"source": "repository", "role": role, "tuple": data["stages"][role],
-              "path": ROSTER, "commit": commit, "digest": "sha256:" + hashlib.sha256(raw).hexdigest()}
+        result = {"source": "readme-default", "role": stage, "tuple": None,
+                  "path": ROSTER, "commit": commit, "digest": None}
+    else:
+        if not entry.startswith(b"100644 blob ") and not entry.startswith(b"100755 blob "):
+            raise Invalid(f"{ROSTER}: expected regular committed file")
+        raw = path.read_bytes()
+        if raw != git(root, "show", f"{commit}:{ROSTER}"):
+            raise Invalid(f"{ROSTER}: bytes differ from committed choice")
+        data = validate(json.loads(raw.decode("utf-8"), object_pairs_hook=unique))
+        role = "implementation" if stage == "repair" else stage
+        result = {"source": "repository", "role": role, "tuple": data["stages"][role],
+                  "path": ROSTER, "commit": commit, "digest": "sha256:" + hashlib.sha256(raw).hexdigest()}
     if stage == "validation":
         authors = [author(path) for path in records]
         result["authors"] = authors
-        result["family"] = ("same-family: openai" if authors and all(a["tuple"] for a in authors)
+        result["family"] = ("same-family: openai" if result["tuple"] and authors and all(a["tuple"] for a in authors)
                             else "unverified")
     return result
 

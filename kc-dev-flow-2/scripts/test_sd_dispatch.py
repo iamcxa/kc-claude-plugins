@@ -541,10 +541,12 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
     body = ("\n## Checklist\nExercise the accepted slice.\n\n## Scope notes\n"
             f"Package root: {ROOT}\nSend your completion message to `main`.\n")
     legacy.write_text(header + body)
+    absent_roster = records / "implementation-3.md"
+    absent_roster.write_text(header + "Roster: absent; source README default\n" + body)
     augmented = records / "implementation-2.md"
     augmented.write_text(header + "Roster: source=repository; role=implementation; provider=codex; "
                          f"model=gpt-6.1-sol; effort=high; host=paseo; digest=sha256:{'b' * 64}; commit={sha}\n" + body)
-    for path in (legacy, augmented):
+    for path in (legacy, augmented, absent_roster):
         result = resolve("validation", authors=[path])
         assert result["family"] == "same-family: openai", result
         assert result["authors"][0]["record"] == str(path)
@@ -567,6 +569,18 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
     contradictory.write_text(header + "Roster: source=repository; role=observer; provider=codex; model=gpt-6-astra; effort=high; host=paseo\n" + body)
     assert resolve("validation", authors=[contradictory])["family"] == "unverified"
     call([sys.executable, "-B", ROOT / "scripts/dispatch_records.py", "--names", contradictory])
+    absent_unknown = records / "repair-absent-unknown.md"
+    absent_unknown.write_text("Model: unknown\nRoster: absent; source README default\n")
+    assert resolve("validation", authors=[absent_unknown])["family"] == "unverified"
+    expected_author = dict(provider="codex", model="gpt-6.1-sol", effort="high", host="paseo")
+    for authors in ([], [legacy, augmented, absent_roster], [unknown, absent_unknown, contradictory, records / "missing.md"]):
+        result = resolve("validation", root=state, authors=authors)
+        assert result["source"] == "readme-default" and result["tuple"] is None, result
+        assert result.get("authors") == [
+            dict(record=str(path), tuple=expected_author if path in (legacy, augmented, absent_roster) else None)
+            for path in authors
+        ], ("absent roster must retain author references and tuples", result)
+        assert result.get("family") == "unverified", ("no configured validator tuple", result)
     print("PASS: roster subprocess replay, absolute/split-root/linked roots, read-only repeatability, full schema/error controls, committed changes/deletion and candidate-author family evidence; legacy record checks do not establish roster use")
 
 
