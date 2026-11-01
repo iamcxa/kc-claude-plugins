@@ -61,6 +61,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:peers-paseo-rule-matches-practice:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:peers-paseo-rule-matches-practice-validation-1
+              briefing:
+                id: briefing:peers-paseo-rule-matches-practice:validation:attempt-1:revision-1
+                digest: sha256:698838c264e65eba9d1450f1b3f030f80c9d7113a550b0fac249b49ddd89052d
+                room-ref: ./peers-paseo-rule-matches-practice/review/validation/briefing-1
 started: 2026-10-30T10:01:54Z
 worktree: .worktrees/spacedock-ensign-peers-paseo-rule-matches-practice
 pr: iamcxa/kc-claude-plugins#754
