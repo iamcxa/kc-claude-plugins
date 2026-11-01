@@ -14,6 +14,17 @@ gates:
                 id: briefing:validation-gate-requires-the-question-check:backlog:attempt-1:revision-1
                 digest: sha256:2cff60765797645d97fe6b7571907bb19f2f1737186af25b4515bb6e3c3e02c5
                 room-ref: ./validation-gate-requires-the-question-check/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:validation-gate-requires-the-question-check:backlog:1
+                briefing: briefing:validation-gate-requires-the-question-check:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-01T17:47:59.462076Z"
+                decision: approve
+                reason: The Captain 「可以，但不用寫了就報錯，接受 `max` 和 `ultra`沒關係，等於就是不建議，但使用者真的想要也可以」 (chat, 2026-11-02), answering the batch 12 sitting 「決定：五件事都照建議，第 5 項用這張表，並把 xhigh 上限寫進設定檔檢查，可以嗎？」; approves Pilot, this outcome and these bounds, with the stated change.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
