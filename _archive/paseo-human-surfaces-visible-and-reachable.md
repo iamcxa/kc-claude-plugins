@@ -3,7 +3,7 @@ title: Inside Paseo, FO and workers open human-facing terminals and browser tabs
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -88,10 +88,13 @@ gates:
                 reason: The Captain 「可以」 (chat, 2026-11-01), answering the batch 11 sitting 「決定：四件事都照這個新建議嗎？要改哪件直接說。」, whose item 3 merges this PR after its amended criteria pass and item 4 uses a regular merge; accepts the recommendation stated in that question.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-30T10:19:52Z
 worktree: .worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable
 pr: pr-merge:757
+verdict: PASSED
+completed: 2026-11-01T09:54:27Z
+archived: 2026-11-01T09:54:28Z
 ---
 
 ## Scope
