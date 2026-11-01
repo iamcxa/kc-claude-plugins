@@ -54,3 +54,191 @@ Result: aligned at backlog: Batch 12 backlog sitting: the Captain 「可以，�
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+## Design
+
+Base: `origin/main` 146727de, package 0.34.0. The state checkout is `spacedock-state/dev2` at 99e8bb36f.
+
+### PRFAQ
+
+**Press line.** When a task's validations have twice left a Material or Needs decision finding, or two amendments have replaced approved criteria, the First Officer (FO) now sees the three questions at the idle check and the merge check. At three, a chief-engineer has to ask them, and the merge ask waits for that call or a dated waiver.
+
+**FAQ.**
+
+- *What counts as a failed validation?* A `## Stage Report: validation` section holding at least one `- F<N> Material` or `- F<N> Needs decision` bullet. `skills/validation/principles.md` already requires that bullet form, and `DECISION_FINDING` in `dispatch_records.py` already reads it (ADR 0045).
+- *What counts as a relaxation?* An entry under `## Captain amendments` whose `Supersedes:` does not start with `none`. The count reads replacements; the words cannot tell direction, and `prod-security-review-gates` amendment 1 replaced a criterion without lowering it. FO judges whether it was a relaxation.
+- *Is this the README's "round"?* No. A round in the README's review-finding rules is one external reviewer's verdict on the PR head. This task does not count those, and the printed lines do not say "round".
+- *Does the second time stop anything?* No. It prints and holds nothing, so the merge ask is unaffected. It repeats on each run until the count reaches three or the task is archived. There is no answer record: grading is a non-goal, and a record invites going through the motions.
+- *What does it not catch?* A first-round over-build; an FO that reads the questions and answers them badly; a rejected report written without F bullets (D1).
+
+### Sequence
+
+```mermaid
+flowchart TD
+  A[FO runs pr_watch.py tasks, or delivery_gate.py check] --> B[role_triggers.py reads the committed task]
+  B --> C[Count validations with a Material or Needs decision bullet]
+  B --> D[Count amendments whose Supersedes is not none]
+  C --> E{Highest of the two counts}
+  D --> E
+  E -->|0 or 1| F[No new line]
+  E -->|2| G[Print one next: reminder with the three questions]
+  G --> H[Exit code unchanged, merge ask not held]
+  E -->|3 or more| I{Chief-engineer call or waiver that clears}
+  I -->|Yes| F
+  I -->|No| J[Print owed chief-engineer line with the three questions, exit 1]
+  J --> K[Idle prints it; merge ask holds until recorded]
+```
+
+### Mechanism
+
+`scripts/role_triggers.py`, in `check`, reading the lines `outside_fences` yields:
+
+- Two new counts as above. They are separate: one failed validation plus one replacing amendment prints nothing, because the Captain ruled each "a second time".
+- Highest count exactly 2: print `next: <slug> has <F> validations with a Material or Needs decision finding and <R> replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?`. This line alone does not change the exit code.
+- Either count at 3 or more: chief-engineer is owed, exit 1, through `owed_line`. That line carries the three questions instead of `QUESTION["chief-engineer"]`, so `owed_line` takes the question as a parameter. Still one line per task and role: when repair passes or review rounds are also owed, their facts join the same line and the three questions win. The reminder is not printed at this level. A fourth failure owes no second call.
+- Clearing the third replacing amendment: a call or waiver dated no earlier than the heading date of that amendment, the existing date rule used for `--drift-date`. Peers' 2026-10-30 chief-engineer call does not clear its 2026-10-31 amendment.
+- Clearing the third failed validation: any chief-engineer call or waiver, because a stage-report heading has no date. This is the limit ADR 0026 already accepted for the repair event. A chief-engineer call made earlier in the task clears it unasked.
+
+`scripts/pr_watch.py`, in `tasks`: today it forwards the script's stdout only on exit 1. It also forwards `next:` lines on exit 0.
+
+`scripts/delivery_gate.py`, in `check`: on exit 0 from `owed_role_calls` it emits `next:` lines before the record and `ASK` lines, adds no problem, and `ASK` stays the last line. On exit 1 the lines already reach `nexts`.
+
+`docs/adr/0026-…`: one amendment paragraph recording the new events and the Captain's words from this task's gate. It carries no number. Docstrings of the three scripts are updated. `references/sd/workflow.md` and `references/sd/mods/kc-dev-flow-2.md` do not change: the idle hook already says "Do each `next:` line", and each printed line states its own action.
+
+### Existing events tried first
+
+Checked 2026-11-02 with a one-off read-only reader over `*.md` task files, live and archived, skipping fenced blocks. Corpora: this workflow (96 tasks with a validation report or a replacing amendment), relay (61, worktree copy at 88a54b00, 2026-10-23) and qnow (64, d5ab7e823, 2026-11-02). The reader is not retained; the reproducible proof is the acceptance criteria.
+
+| Candidate count | Tasks at 2 or more | Why not |
+| --- | --- | --- |
+| Repair events (implementation headings minus one) | not the same event | `paseo-codex-dispatch-practice` failed three validations with one implementation report, so 0 repair passes |
+| `--drift-date` | not a count | It dates external review rounds on an open PR, and `delivery_gate.py` runs without it. Its clear rule is reused above |
+| Validation headings | 54 of 96 here | Most re-checks pass |
+| A validation heading followed by an implementation heading | 77 of 217 | Same false fires, and misses `paseo-codex-dispatch-practice` |
+| Summary says REJECTED without PASSED | 13 of 217 | Conflicts with two rulings (D1) |
+| F bullet (chosen) | 7 of 217 | Reads a required form; misses reports written without it (D1) |
+
+Tasks that would fire with the chosen counts: at the highest count 2 or more, 12 of 96, 5 of 61, 4 of 64 (21 of 221). At 3 or more, 6, 2, 2 (10 of 221).
+
+Replays on real commits with a prototype outside the repository (`/tmp`, not retained):
+
+| Task at commit | Records | Result |
+| --- | --- | --- |
+| `peers-paseo-rule-matches-practice` f0203ee02 | none | silent |
+| `paseo-codex-dispatch-practice` 1e17be9a0 | one failed | silent |
+| `adr-reserved-when-design-names-one` c03f77631 | one rejected, then passed | silent |
+| `paseo-codex-dispatch-practice` e0dc64f88 | two failed | reminder |
+| `read-adr-honors-adr-folder` 95c1ecc8b | two replacing | reminder |
+| `peers-paseo-rule-matches-practice` ff2063c53 | second replacing, 2026-10-31 | reminder, before amendment 4 was asked |
+| `peers-paseo-rule-matches-practice` 7d203d562 | third replacing | chief-engineer owed |
+| `paseo-codex-dispatch-practice` 0e5b6f59a | three failed | chief-engineer owed |
+
+### Upstream check
+
+- Spacedock 0.27.3: `feedback-rejection-flow` escalates to the human at cycle 3 of a rejected feedback gate and writes `### Feedback Cycles` only when a workflow declares it. The three READMEs of this workflow, relay and qnow do not mention it (`grep -lE 'step back|退一步|Feedback Cycles'`, no match, 2026-11-02). It has no second-time prompt and asks no questions.
+- kc-dev-flow-2: `git grep -nEi 'step back|third round|second round|three questions|cycle 3' origin/main -- kc-dev-flow-2`, excluding tests and changelog: no match. `role_triggers.py` is the existing seam, working through idle and merge for role calls, with no consumer for this event.
+- Sibling adopters: the same README search finds nothing. Scripts come from the package.
+- Need: the Scope's bite, `peers-paseo-rule-matches-practice`, is the falsifier above. The Captain's global standing questions exist and did not fire.
+
+### Words FO reads at each moment
+
+Lines counted with `wc -w`, the slug as one word. Base and candidate use the same replay.
+
+| Moment | Base | Candidate | Passage |
+| --- | --- | --- | --- |
+| Startup | 0 added | 0 added | README unchanged, mod unchanged; startup runs the idle hook, so the idle rows apply |
+| Idle, count below 2 | 0 | 0 | none |
+| Idle, count 2 | 0 | 51 on each run, per task | the reminder |
+| Idle, count 3 and call owed | 0 | 70 on each run until recorded | the owed line |
+| Idle on a merged PR, after the archive | 0 | 0 | `tasks` reads live tasks only |
+| Merge ask, count below 2 | 0 | 0 | none |
+| Merge ask, count 2 | 0 | 51, no hold | the reminder |
+| Merge ask, count 3 and call owed | 0 | 81, holds | 11-word problem line plus the owed line |
+
+Workflow word budget: unchanged, no raise under ADR 0020. What gets worse: the 51 words repeat on every idle run for the life of a task at count 2. The alternatives add a clearing record or a session mark for a cost nobody has yet complained about.
+
+### Decisions for the Captain
+
+- **D1. How is a failed validation read?** Recommend the F bullet. It follows both past rulings: ADR 0026 ("does not match phrases") and `delivery-gate-verdict-form` amendment 2 (「好」, 2026-10-15), where #647 spent five commits and three Codex P1s reading prose and the check stopped reading it. What gets worse: of 13 tasks with two summaries saying REJECTED, 7 lack the bullets; 2 of those still fire on replacing amendments and 5 stay silent, including `pr-review-lite-value-pilot` (9 such reports) and three qnow tasks. Passed reports that kept such a bullet also count (`seed-check-requires-schema-fields`). The alternative, the REJECTED word in the Summary, catches those but reverses both rulings, and a misread would hold a merge at three.
+- **D2. Does the third time hold the merge ask?** Recommend yes, with the existing waiver. This matches repair passes and amendments; review rounds, the other precedent, do not hold (ADR 0026, 「按建議不算」). What gets worse: about 10 of 221 tasks need one more line before merge, including tasks whose latest validation passed.
+- **D3. Who is the independent reviewer?** Recommend chief-engineer, whose description covers "drifting" routes. An engineering-reviewer call dated on the amendment already clears by date whatever it asked (ADR 0026), so the questions would go unasked on the replacing-amendment path. What gets worse: chief-engineer is not an assurance role, and batch 11's useful catch came from an engineering reviewer.
+
+### Batch overlap
+
+Files this design changes: `scripts/role_triggers.py`, `scripts/test_role_triggers.py`, `scripts/pr_watch.py`, `scripts/test_pr_watch.py`, `scripts/delivery_gate.py`, `scripts/test_delivery_gate.py`, `docs/adr/0026-…`.
+
+| Task | Overlap |
+| --- | --- |
+| special-roles-follow-the-model-table (batch 12) | `role_triggers.py`, `test_role_triggers.py`, and possibly the docstring: it changes model ranking, this changes `check`. Its non-goal keeps it off when a role is called |
+| validation-gate-requires-the-question-check (batch 12) | `delivery_gate.py` and its test, per its Scope; no design yet, recheck when it lands |
+| model-roster-question-needs-both-families (batch 12) | none |
+| comment-check-reaches-delivery-gate (other session) | `delivery_gate.py` `check` and `test_delivery_gate.py`: the same function, different lines |
+| adoption-asks-which-extensions (other session) | none: its table leaves `pr_watch.py` and `delivery_gate.py` unchanged |
+| adr-required-statement (other session, validation) | No shared file. Its required ledger lines in the validation Summary do not touch the F-bullet count. It may require this task's ADR amendment ruling in its ledger |
+| adr-silent-undo-probe, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot | none |
+| fo-write-checks-parse-top-level (not in the dispatch list, ideation) | `delivery_gate.py` `declined_items` and its test: a different function |
+
+Recommended order: this task before special-roles-follow-the-model-table, whose edit is the smaller rebase; comment-check-reaches-delivery-gate and validation-gate-requires-the-question-check in either order, with the later one rebasing on `check`.
+
+## Acceptance criteria
+
+`S` is a checkout of `spacedock-state/dev2`. `P` is `kc-dev-flow-2/scripts` at the candidate. Fixture tests go in the three named test files, each of which CI runs by name in `.github/workflows/kc-dev-flow-2-tests.yml`.
+
+**AC-1** Two failed validations print the reminder; fewer print nothing.
+Verified by: `python3 -B $P/role_triggers.py $S paseo-codex-dispatch-practice --rev e0dc64f886cf80e7579551a4002a05b4c603f1c9` prints one `next:` line holding all three questions and exits 0; the same at `1e17be9a0734eb1b122b83335bb7ff96a3a331cb` (one failed) and `adr-reserved-when-design-names-one` at `c03f77631e6fa06afdaa275ecb3f05559314f9c6` (one rejected, then passed) print no such line. A fixture proves a bullet in a fenced block does not count, and neither does a `Deferred risk` bullet.
+Falsifier: count validation headings instead of bullets; the `c03f7763` replay prints the line and the test fails.
+
+**AC-2** Two replacing amendments print the reminder; `Supersedes: none` does not count.
+Verified by: `read-adr-honors-adr-folder` at `95c1ecc8b1f0477c8c986ee2895b00e8d105b69e` prints the line; `peers-paseo-rule-matches-practice` at `ff2063c539a2fbf8c446797d7051fc34c406aff9` prints it too. A fixture with amendments `Supersedes: AC-1` and `Supersedes: none` with a non-none `Design:` prints none.
+Falsifier: reuse the existing `events` test, which counts `Design:` as well; the fixture prints the line and fails.
+
+**AC-3** The idle check surfaces the reminder without inventing a hold.
+Verified by: a `test_pr_watch.py` case through `tasks` on a live fixture at count 2 prints the reminder and returns 0, and a first-round fixture prints nothing new. An archived task prints nothing.
+Falsifier: restore forwarding on exit 1 only; the first case fails.
+
+**AC-4** The merge check surfaces the reminder without holding.
+Verified by: a `test_delivery_gate.py` case at count 2 running the real `role_triggers.py` exits 0, prints the reminder before `ASK`, and `ASK` is the last line; a count-2 task with another problem prints the problem and the reminder. A first-round fixture's output equals base's.
+Falsifier: drop the exit-0 emit; the first case fails. Treat the reminder as a problem; exit is 1 and the case fails.
+
+**AC-5** The third time owes a chief-engineer call carrying the three questions, and holds the merge ask.
+Verified by: `paseo-codex-dispatch-practice` at `0e5b6f59a8e5a067b2739bf1b78863d96399240f` and `peers-paseo-rule-matches-practice` at `7d203d562789a107d651f3169b6a89b153024d33` each exit 1 with a chief-engineer `next:` line holding all three questions and no reminder line. Fixtures: replacing-amendment event, a call dated before the third amendment leaves it owed, a call or dated waiver on or after it clears; failed-validation event, any call or waiver clears. A `test_delivery_gate.py` case holds the ask until the call is committed. With repair passes also owed, one chief-engineer line prints.
+Falsifier: clear the amendment event with any call; the 7d203d562 replay exits without owing chief-engineer and fails.
+
+**AC-6** Nothing changes below the threshold and FO's standing text does not grow.
+Verified by: `git diff --stat origin/main -- kc-dev-flow-2/references/sd/workflow.md kc-dev-flow-2/references/sd/mods/kc-dev-flow-2.md` is empty; `python3 kc-dev-flow-2/scripts/lint-skills.py` and the package's test suite pass; at `peers-paseo-rule-matches-practice` `f0203ee02` base and candidate `role_triggers.py` print the same bytes. The candidate's printed lines measure within the table above, recounted by the validator with `wc -w`.
+Falsifier: add a line to the mod; the diff is not empty.
+
+**AC-7** ADR 0026 records the new events with the Captain's words.
+Verified by: `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --since origin/main` passes, and the amendment paragraph quotes the gate's reply and question for D1 to D3 and says which precedent each follows.
+Falsifier: omit the paragraph; a reader comparing `docs/adr/` with `check` finds an event no ruling names. Not machine-checked: this is the validator's comparison against the gate record.
+
+## Stage Report: ideation
+
+- DONE: A design for this task's Scope: what counts as a round and where each script prints the reminder, using the existing --drift-date and repair events first
+  `## Design`, Mechanism and Existing events tried first; prototype replays on 8 real commits.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (model-roster-question-needs-both-families, second-round-prompts-a-step-back, validation-gate-requires-the-question-check, special-roles-follow-the-model-table) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  Table and `Recommended order:` line; validation-gate-requires-the-question-check had no design to compare yet.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  `### Words FO reads at each moment`; 0 at startup and below threshold, 51 at count 2, 70 or 81 at count 3. Words are computed from the proposed line text, not yet from a built candidate.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-1 to AC-7 and D1 to D3.
+- DONE: AC-1 two failed validations print the reminder
+  Not yet verified on a candidate; prototype printed it at e0dc64f88 and stayed silent at 1e17be9a0 and c03f77631.
+- DONE: AC-2 two replacing amendments print the reminder
+  Not yet verified on a candidate; prototype printed it at 95c1ecc8b and ff2063c53. The `Supersedes: none` fixture is not yet written.
+- DONE: AC-3 idle check surfaces the reminder without a hold
+  Not yet verified; `pr_watch.py` `tasks` read at origin/main forwards stdout on exit 1 only, so the change is needed.
+- DONE: AC-4 merge check surfaces the reminder without holding
+  Not yet verified; `delivery_gate.py` `check` read at origin/main reads the script's lines only on nonzero exit.
+- DONE: AC-5 the third time owes a chief-engineer call and holds
+  Not yet verified on a candidate; prototype reported it owed at 0e5b6f59a and 7d203d562. Clear rules and the hold are not exercised.
+- DONE: AC-6 nothing changes below the threshold
+  Not yet verified on a candidate; prototype printed no new line at f0203ee02.
+- DONE: AC-7 ADR 0026 records the new events
+  Not yet verified: the wording waits for the Captain's gate reply.
+- DONE: Design surfaces check run
+  `design_surfaces.py check`: `second-round-prompts-a-step-back.md: design surfaces presentable`, exit 0; `spacedock status --read --ac-scan` reads AC-1 to AC-7.
+
+### Summary
+
+The design counts F-bullet validations and replacing amendments in `role_triggers.py`: two prints a non-holding `next:` reminder at the idle and merge checks, and three owes a chief-engineer call that holds the merge ask. Reading the verdict word collides with ADR 0026 and the 2026-10-15 ruling, so D1 recommends the existing bullet form and states its cost: 5 of 13 word-detected tasks stay silent. No README or mod words change; D1 to D3 go to the Captain.
