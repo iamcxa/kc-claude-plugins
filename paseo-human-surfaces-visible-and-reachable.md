@@ -69,6 +69,10 @@ gates:
                 id: briefing:paseo-human-surfaces-visible-and-reachable:validation:attempt-1:revision-1
                 digest: sha256:245d2d12bd053e085b82ca7898cef112ae675d5b468a7ef30eaf925cac5d02eb
                 room-ref: ./paseo-human-surfaces-visible-and-reachable/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-01T09:47:53.80222Z"
+                reason: 'bound text failed the delivery question check: the second-reviewer line lacked the required form; no decision was made on it'
 started: 2026-10-30T10:19:52Z
 worktree: .worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable
 pr: iamcxa/kc-claude-plugins#757
