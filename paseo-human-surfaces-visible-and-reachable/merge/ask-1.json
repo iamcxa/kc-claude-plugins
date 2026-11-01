@@ -1,0 +1,19 @@
+{
+  "class": "never",
+  "head": "8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc",
+  "model": "not run",
+  "necessity": "the one section is what those steps follow; a cold FO received it in 3 of 6 runs in cold-fo/README.md, which is stated as the limit.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F5 Deferred risk: actual product'",
+    "point: deferred: 'F1/F2 become Deferred risk under post-delivery'",
+    "point: deferred: 'Declined: the worker reach and URL'",
+    "point: amendment: 'Amendment 1 dated 2026-11-01'",
+    "point: path: 'kc-dev-flow-2/extensions/paseo/EXTENSION.md'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#757",
+  "sufficiency": "the Captain found and used the terminal and the page on desktop and phone in human-trial/README.md, and the picture check fails when the picture is removed.",
+  "time": "2026-11-01T09:48:00Z",
+  "verdict": "ask"
+}
