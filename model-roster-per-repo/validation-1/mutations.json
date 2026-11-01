@@ -1,0 +1,70 @@
+[
+  {
+    "name": "cwd-instead-of-root",
+    "exit": 1,
+    "caught": true,
+    "assertion": "AssertionError: (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/mutations-rerun/cwd-instead-of-root/model_roster.py'), 'resolve', '--code-root', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/mutations-rerun/cwd-instead-of-root/fixture/code/nested'), '--stage', 'implementation'], '{\"commit\":\"ef9da469fcd912abed14080d4c11803fa68c2edb\",\"digest\":null,\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"readme-default\",\"tuple\":null}\\n', '')"
+  },
+  {
+    "name": "fabricated-absence",
+    "exit": 1,
+    "caught": true,
+    "assertion": "AssertionError: {'commit': 'eeee830bee9e3e38be7a842f7480ad0a5e4760af', 'digest': None, 'path': '.dev2/model-roster.json', 'role': 'implementation', 'source': 'repository', 'tuple': {'provider': 'codex'}}"
+  },
+  {
+    "name": "swap-stage",
+    "exit": 1,
+    "caught": true,
+    "assertion": "AssertionError: ('_archive/paseo-codex-dispatch-practice/dispatch/ideation-1.md', '18eeff12f0ad4f662ce5889bc6e78bf36223cf4b9282beed86506245bbd5d331')"
+  },
+  {
+    "name": "drop-effort",
+    "exit": 1,
+    "caught": true,
+    "assertion": "AssertionError: ('_archive/paseo-codex-dispatch-practice/dispatch/ideation-1.md', '18eeff12f0ad4f662ce5889bc6e78bf36223cf4b9282beed86506245bbd5d331')"
+  },
+  {
+    "name": "hide-family",
+    "exit": 1,
+    "caught": true,
+    "assertion": "AssertionError: {'authors': [{'record': '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/mutations-rerun/hide-family/fixture/author-records/dispatch/implementation-1.md', 'tuple': {'effort': 'high', 'host': 'paseo', 'model': 'gpt-6.1-sol', 'provider': 'codex'}}], 'commit': '6a16f9b4f01e13c635c40513fe5056dbeeb63264', 'digest': 'sha256:d1e05f68b0c3848e57b0955c2d7fbb89f6ae8c261ace2c3cc83c4bac86f14002', 'family': 'unverified', 'path': '.dev2/model-roster.json', 'role': 'validation', 'source': 'repository', 'tuple': {'effort': 'high', 'host': 'paseo', 'model': 'gpt-6-astra', 'provider': 'codex'}}"
+  },
+  {
+    "name": "write-on-resolve",
+    "exit": 1,
+    "caught": true,
+    "assertion": "AssertionError"
+  },
+  {
+    "name": "hard-refuse-family",
+    "exit": 1,
+    "caught": true,
+    "assertion": "AssertionError: (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/mutations-rerun/hard-refuse-family/model_roster.py'), 'resolve', '--code-root', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/mutations-rerun/hard-refuse-family/fixture/code'), '--stage', 'validation', '--author-record', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/mutations-rerun/hard-refuse-family/fixture/author-records/dispatch/implementation-1.md')], '', 'model-roster: family refused\\n')"
+  },
+  {
+    "name": "roster-question-prerequisites",
+    "caught": true,
+    "gaps": {
+      "roster-question-prerequisites": [
+        [
+          "Ask only when the workflow frontmatter lists `paseo` and the Codex provider is available.",
+          "Otherwise ask nothing, write nothing and retain README behavior."
+        ],
+        []
+      ]
+    }
+  },
+  {
+    "name": "roster-adoption-prerequisites",
+    "caught": true,
+    "gaps": {
+      "roster-adoption-prerequisites": [
+        [
+          "ask once about stage workers only when the workflow frontmatter lists `paseo` and the Codex provider is available.",
+          "Otherwise ask nothing, write nothing and retain README behavior."
+        ],
+        []
+      ]
+    }
+  }
+]

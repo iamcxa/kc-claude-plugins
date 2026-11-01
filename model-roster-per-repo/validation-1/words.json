@@ -1,0 +1,85 @@
+{
+  "base": {
+    "startup": 9710,
+    "idle_open": 1821,
+    "idle_merged_archive": 328,
+    "merge_ask": 2258,
+    "workflow": 5781,
+    "dispatch": 2444,
+    "adoption": 2182
+  },
+  "candidate": {
+    "startup": 9710,
+    "idle_open": 1821,
+    "idle_merged_archive": 328,
+    "merge_ask": 2258,
+    "workflow": 5781,
+    "dispatch": 2476,
+    "adoption": 2236,
+    "runtime": 634,
+    "settings": 44,
+    "configured_dispatch_static": 3154,
+    "absent_dispatch_static": 3110,
+    "adoption_with_reference_defaults": 2914
+  },
+  "fo_record_questions": [
+    {
+      "time": "2026-11-01T02:26:04.437Z",
+      "words": 48
+    },
+    {
+      "time": "2026-11-01T02:26:50.490Z",
+      "words": 41
+    },
+    {
+      "time": "2026-11-01T02:27:07.169Z",
+      "words": 39
+    },
+    {
+      "time": "2026-11-01T02:27:19.107Z",
+      "words": 38
+    },
+    {
+      "time": "2026-11-01T02:27:27.465Z",
+      "words": 38
+    },
+    {
+      "time": "2026-11-01T02:28:00.388Z",
+      "words": 45
+    },
+    {
+      "time": "2026-11-01T02:29:44.693Z",
+      "words": 40
+    }
+  ],
+  "fo_record_answers": [
+    {
+      "time": "2026-11-01T02:26:30.648Z",
+      "words": 42
+    },
+    {
+      "time": "2026-11-01T02:27:00.461Z",
+      "words": 41
+    },
+    {
+      "time": "2026-11-01T02:27:14.724Z",
+      "words": 21
+    },
+    {
+      "time": "2026-11-01T02:27:23.327Z",
+      "words": 20
+    },
+    {
+      "time": "2026-11-01T02:27:40.773Z",
+      "words": 20
+    },
+    {
+      "time": "2026-11-01T02:29:37.545Z",
+      "words": 56
+    },
+    {
+      "time": "2026-11-01T02:30:12.798Z",
+      "words": 46
+    }
+  ]
+}

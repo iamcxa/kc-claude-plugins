@@ -1,0 +1,68 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "adr",
+      "chunk_id": "b0a04d",
+      "wall_time_seconds": 1.5544425,
+      "exit_code": 0,
+      "original_token_count": 9,
+      "output": "45 ADR file(s) checked, 0 legacy\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "numbers",
+      "chunk_id": "b9bc76",
+      "wall_time_seconds": 1.701470708,
+      "exit_code": 0,
+      "original_token_count": 33,
+      "output": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase a6612948936a head a8536dc5239e merge-base a6612948936a\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "comments",
+      "chunk_id": "e1c897",
+      "wall_time_seconds": 1.217257375,
+      "exit_code": 0,
+      "original_token_count": 43,
+      "output": "code lines 318, comment lines 3, 0.9%\n   2/ 131 kc-dev-flow-2/scripts/model_roster.py\n   1/ 187 kc-dev-flow-2/scripts/test_sd_dispatch.py\nmaximum 5% (package default) met\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "documents",
+      "chunk_id": "3f233b",
+      "wall_time_seconds": 1.797959375,
+      "exit_code": 0,
+      "original_token_count": 109,
+      "output": "docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md\tupdated\tkc-dev-flow-2/scripts/model_roster.py\nkc-dev-flow-2/README.md\treview\tkc-dev-flow-2/scripts/test_sd_dispatch.py\nkc-dev-flow-2/references/sd/adoption.md\tupdated\tkc-dev-flow-2/scripts/test_sd_dispatch.py\nlearning.md\treview\tkc-dev-flow-2/scripts/test_sd_dispatch.py\n4 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "design",
+      "chunk_id": "15dd97",
+      "wall_time_seconds": 1.077678791,
+      "exit_code": 0,
+      "original_token_count": 28,
+      "output": "model-roster-per-repo.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "records",
+      "chunk_id": "617a16",
+      "wall_time_seconds": 1.1934095,
+      "exit_code": 0,
+      "original_token_count": 8,
+      "output": "6 dispatch record(s) complete\n"
+    }
+  }
+]

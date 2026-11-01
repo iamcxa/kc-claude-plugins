@@ -1,0 +1,30 @@
+{
+  "cwd-instead-of-root": [
+    "root = root.resolve()",
+    "root = Path.cwd().resolve()"
+  ],
+  "fabricated-absence": [
+    "return {\"source\": \"readme-default\", \"role\": stage, \"tuple\": None,",
+    "return {\"source\": \"repository\", \"role\": stage, \"tuple\": {\"provider\":\"codex\"},"
+  ],
+  "swap-stage": [
+    "role = \"implementation\" if stage == \"repair\" else stage",
+    "role = \"implementation\" if stage in (\"repair\", \"ideation\") else stage"
+  ],
+  "drop-effort": [
+    "if stage == \"validation\":\n        authors",
+    "result[\"tuple\"].pop(\"effort\")\n    if stage == \"validation\":\n        authors"
+  ],
+  "hide-family": [
+    "\"same-family: openai\" if authors and all(a[\"tuple\"] for a in authors)",
+    "\"unverified\" if authors and all(a[\"tuple\"] for a in authors)"
+  ],
+  "write-on-resolve": [
+    "root = root.resolve()",
+    "root = root.resolve()\n    (root / \"unexpected-write\").write_text(\"mutation\")"
+  ],
+  "hard-refuse-family": [
+    "result[\"authors\"] = authors",
+    "result[\"authors\"] = authors\n        if authors and all(a[\"tuple\"] for a in authors): raise Invalid(\"family refused\")"
+  ]
+}

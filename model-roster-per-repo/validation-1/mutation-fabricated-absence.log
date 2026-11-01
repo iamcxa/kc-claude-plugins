@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/validation-model-roster-a8536dc5/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 436, in exercise_model_roster
+    assert absent["source"] == "readme-default" and absent["tuple"] is None, absent
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'commit': 'eeee830bee9e3e38be7a842f7480ad0a5e4760af', 'digest': None, 'path': '.dev2/model-roster.json', 'role': 'implementation', 'source': 'repository', 'tuple': {'provider': 'codex'}}

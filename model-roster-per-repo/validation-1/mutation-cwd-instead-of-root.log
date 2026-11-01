@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/validation-model-roster-a8536dc5/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 439, in exercise_model_roster
+    resolve(root=repo / "nested", error="git rev-parse")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/validation-model-roster-a8536dc5/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 427, in resolve
+    result = call(args, cwd=state, expected=1 if error else 0)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/validation-model-roster-a8536dc5/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 401, in call
+    assert result.returncode == expected, (args, result.stdout, result.stderr)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/mutations-rerun/cwd-instead-of-root/model_roster.py'), 'resolve', '--code-root', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/mutations-rerun/cwd-instead-of-root/fixture/code/nested'), '--stage', 'implementation'], '{"commit":"ef9da469fcd912abed14080d4c11803fa68c2edb","digest":null,"path":".dev2/model-roster.json","role":"implementation","source":"readme-default","tuple":null}\n', '')

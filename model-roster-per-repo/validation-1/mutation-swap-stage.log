@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/validation-model-roster-a8536dc5/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 468, in exercise_model_roster
+    assert resolve(stage)["tuple"] == expected, (history_source.format(stage=stage), digest)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('_archive/paseo-codex-dispatch-practice/dispatch/ideation-1.md', '18eeff12f0ad4f662ce5889bc6e78bf36223cf4b9282beed86506245bbd5d331')

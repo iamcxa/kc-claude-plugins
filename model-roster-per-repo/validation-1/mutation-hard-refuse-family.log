@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/validation-model-roster-a8536dc5/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 548, in exercise_model_roster
+    result = resolve("validation", authors=[path])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/validation-model-roster-a8536dc5/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 427, in resolve
+    result = call(args, cwd=state, expected=1 if error else 0)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/validation-model-roster-a8536dc5/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 401, in call
+    assert result.returncode == expected, (args, result.stdout, result.stderr)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/mutations-rerun/hard-refuse-family/model_roster.py'), 'resolve', '--code-root', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/mutations-rerun/hard-refuse-family/fixture/code'), '--stage', 'validation', '--author-record', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/mutations-rerun/hard-refuse-family/fixture/author-records/dispatch/implementation-1.md')], '', 'model-roster: family refused\n')

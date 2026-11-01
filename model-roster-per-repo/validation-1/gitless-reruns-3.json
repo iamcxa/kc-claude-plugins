@@ -1,0 +1,12 @@
+[
+  {
+    "name": "test_dispatch_records",
+    "exit": 0,
+    "seconds": 97.917
+  },
+  {
+    "name": "test_laws_check",
+    "exit": 0,
+    "seconds": 86.513
+  }
+]

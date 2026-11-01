@@ -1,0 +1,198 @@
+[
+  {
+    "case": "accept",
+    "stage": "ideation",
+    "result": {
+      "commit": "9b892ad106e7643174732c589e2346d988f1825f",
+      "digest": "sha256:0334089ed04ffb50866b95042ee2ad0855c37d8412556b25cce85f6ee11b50d5",
+      "path": ".dev2/model-roster.json",
+      "role": "ideation",
+      "source": "repository",
+      "tuple": {
+        "effort": "high",
+        "host": "paseo",
+        "model": "gpt-6-astra",
+        "provider": "codex"
+      }
+    }
+  },
+  {
+    "case": "accept",
+    "stage": "implementation",
+    "result": {
+      "commit": "9b892ad106e7643174732c589e2346d988f1825f",
+      "digest": "sha256:0334089ed04ffb50866b95042ee2ad0855c37d8412556b25cce85f6ee11b50d5",
+      "path": ".dev2/model-roster.json",
+      "role": "implementation",
+      "source": "repository",
+      "tuple": {
+        "effort": "high",
+        "host": "paseo",
+        "model": "gpt-6.1-sol",
+        "provider": "codex"
+      }
+    }
+  },
+  {
+    "case": "accept",
+    "stage": "validation",
+    "result": {
+      "authors": [
+        {
+          "record": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-per-repo/dispatch/implementation-1.md",
+          "tuple": {
+            "effort": "high",
+            "host": "paseo",
+            "model": "gpt-6.1-sol",
+            "provider": "codex"
+          }
+        },
+        {
+          "record": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-per-repo/dispatch/implementation-1-message-1.md",
+          "tuple": {
+            "effort": "high",
+            "host": "paseo",
+            "model": "gpt-6.1-sol",
+            "provider": "codex"
+          }
+        },
+        {
+          "record": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-per-repo/dispatch/implementation-1-message-2.md",
+          "tuple": {
+            "effort": "high",
+            "host": "paseo",
+            "model": "gpt-6.1-sol",
+            "provider": "codex"
+          }
+        }
+      ],
+      "commit": "9b892ad106e7643174732c589e2346d988f1825f",
+      "digest": "sha256:0334089ed04ffb50866b95042ee2ad0855c37d8412556b25cce85f6ee11b50d5",
+      "family": "same-family: openai",
+      "path": ".dev2/model-roster.json",
+      "role": "validation",
+      "source": "repository",
+      "tuple": {
+        "effort": "high",
+        "host": "paseo",
+        "model": "gpt-6-astra",
+        "provider": "codex"
+      }
+    }
+  },
+  {
+    "case": "accept",
+    "stage": "repair",
+    "result": {
+      "commit": "9b892ad106e7643174732c589e2346d988f1825f",
+      "digest": "sha256:0334089ed04ffb50866b95042ee2ad0855c37d8412556b25cce85f6ee11b50d5",
+      "path": ".dev2/model-roster.json",
+      "role": "implementation",
+      "source": "repository",
+      "tuple": {
+        "effort": "high",
+        "host": "paseo",
+        "model": "gpt-6.1-sol",
+        "provider": "codex"
+      }
+    }
+  },
+  {
+    "case": "customize",
+    "stage": "ideation",
+    "result": {
+      "commit": "2758d67e16c5d73dbbcf0b99bc6a5c22010f8e64",
+      "digest": "sha256:63cdd96240e95bdfdca9e0a1bbaa5e8a065841d0cd1b99b09160c88995fedaff",
+      "path": ".dev2/model-roster.json",
+      "role": "ideation",
+      "source": "repository",
+      "tuple": {
+        "effort": "xhigh",
+        "host": "paseo",
+        "model": "gpt-6-astra",
+        "provider": "codex"
+      }
+    }
+  },
+  {
+    "case": "customize",
+    "stage": "implementation",
+    "result": {
+      "commit": "2758d67e16c5d73dbbcf0b99bc6a5c22010f8e64",
+      "digest": "sha256:63cdd96240e95bdfdca9e0a1bbaa5e8a065841d0cd1b99b09160c88995fedaff",
+      "path": ".dev2/model-roster.json",
+      "role": "implementation",
+      "source": "repository",
+      "tuple": {
+        "effort": "high",
+        "host": "paseo",
+        "model": "gpt-6-astra",
+        "provider": "codex"
+      }
+    }
+  },
+  {
+    "case": "customize",
+    "stage": "validation",
+    "result": {
+      "authors": [
+        {
+          "record": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-per-repo/dispatch/implementation-1.md",
+          "tuple": {
+            "effort": "high",
+            "host": "paseo",
+            "model": "gpt-6.1-sol",
+            "provider": "codex"
+          }
+        },
+        {
+          "record": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-per-repo/dispatch/implementation-1-message-1.md",
+          "tuple": {
+            "effort": "high",
+            "host": "paseo",
+            "model": "gpt-6.1-sol",
+            "provider": "codex"
+          }
+        },
+        {
+          "record": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-per-repo/dispatch/implementation-1-message-2.md",
+          "tuple": {
+            "effort": "high",
+            "host": "paseo",
+            "model": "gpt-6.1-sol",
+            "provider": "codex"
+          }
+        }
+      ],
+      "commit": "2758d67e16c5d73dbbcf0b99bc6a5c22010f8e64",
+      "digest": "sha256:63cdd96240e95bdfdca9e0a1bbaa5e8a065841d0cd1b99b09160c88995fedaff",
+      "family": "same-family: openai",
+      "path": ".dev2/model-roster.json",
+      "role": "validation",
+      "source": "repository",
+      "tuple": {
+        "effort": "xhigh",
+        "host": "paseo",
+        "model": "gpt-6-astra",
+        "provider": "codex"
+      }
+    }
+  },
+  {
+    "case": "customize",
+    "stage": "repair",
+    "result": {
+      "commit": "2758d67e16c5d73dbbcf0b99bc6a5c22010f8e64",
+      "digest": "sha256:63cdd96240e95bdfdca9e0a1bbaa5e8a065841d0cd1b99b09160c88995fedaff",
+      "path": ".dev2/model-roster.json",
+      "role": "implementation",
+      "source": "repository",
+      "tuple": {
+        "effort": "high",
+        "host": "paseo",
+        "model": "gpt-6-astra",
+        "provider": "codex"
+      }
+    }
+  }
+]

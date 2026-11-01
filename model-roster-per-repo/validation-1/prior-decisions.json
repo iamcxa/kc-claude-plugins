@@ -1,0 +1,18 @@
+[
+  {
+    "path": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "unchanged": true
+  },
+  {
+    "path": "docs/adr/0035-learn-and-peers-are-on-by-default-and-an-adopter-picks-the-recommended-extensions-at-install.md",
+    "unchanged": true
+  },
+  {
+    "path": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "unchanged": true
+  },
+  {
+    "path": "docs/adr/0042-paseo-codex-workers-hand-publication-and-local-review-to-fo.md",
+    "unchanged": true
+  }
+]

@@ -1,0 +1,10 @@
+[
+  "docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md",
+  "kc-dev-flow-2/extensions/paseo/EXTENSION.md",
+  "kc-dev-flow-2/references/model-roster-defaults.json",
+  "kc-dev-flow-2/references/model-roster.md",
+  "kc-dev-flow-2/references/sd/adoption.md",
+  "kc-dev-flow-2/references/sd/workflow.md",
+  "kc-dev-flow-2/scripts/model_roster.py",
+  "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+]

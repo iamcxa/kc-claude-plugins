@@ -1,0 +1,42 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "id": "23eb84ee-48b4-456b-98b3-58dcea2a6a86",
+      "model": "gpt-6-astra",
+      "effort": "xhigh",
+      "mode": "auto-review",
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo",
+      "runtimeInfo": {
+        "provider": "codex",
+        "sessionId": "01a194f4-6c2c-7202-bc27-a70ac89e22cd",
+        "model": "gpt-6-astra",
+        "thinkingOptionId": "xhigh",
+        "modeId": "auto-review",
+        "extra": {
+          "collaborationMode": "Default"
+        }
+      }
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "id": "3d1126f1-73ff-48fb-983b-3192d63723fb",
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "mode": "auto-review",
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable",
+      "runtimeInfo": {
+        "provider": "codex",
+        "sessionId": "01a194f4-318f-7cc0-9ac6-f8004f04b993",
+        "model": "gpt-6-astra",
+        "thinkingOptionId": "high",
+        "modeId": "auto-review",
+        "extra": {
+          "collaborationMode": "Default"
+        }
+      }
+    }
+  }
+]

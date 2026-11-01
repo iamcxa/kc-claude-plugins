@@ -1,0 +1,13 @@
+..................................................................F....................................................
+======================================================================
+FAIL: test_a_state_that_is_not_a_git_work_tree_holds_with_exit_2_and_the_scripts_message (__main__.OwedRoleCallTests.test_a_state_that_is_not_a_git_work_tree_holds_with_exit_2_and_the_scripts_message)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/validation-model-roster-a8536dc5/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1411, in test_a_state_that_is_not_a_git_work_tree_holds_with_exit_2_and_the_scripts_message
+    self.assertIn("is not a git work tree. Hold and report the cause.", result.out)
+AssertionError: 'is not a git work tree. Hold and report the cause.' not found in 'cannot tell whether a chief-engineer or engineering-reviewer call is owed: no task file for task at HEAD in /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.context/roster-validation-evidence/tmpm97vlc8t. Hold and report the cause.\nnext: hold the ask and show the Captain these lines.\n'
+
+----------------------------------------------------------------------
+Ran 119 tests in 89.843s
+
+FAILED (failures=1)

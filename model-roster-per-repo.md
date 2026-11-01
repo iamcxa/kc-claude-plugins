@@ -483,3 +483,45 @@ Delivered the eight-file shared stage-worker candidate and reproducible model-fr
 ### Summary
 
 Supersedes the earlier implementation report for the repaired candidate a8536dc5239edc3db6c1b76cb3bb7e1ce0433088; the earlier report and its evidence remain historical. The adoption entry points now require listed Paseo and available Codex before offering the shared roster; instruction-mutation checks and model-free regressions are recorded above, while actual host question/child-runtime acceptance and fresh RoboRev remain FO-owned and not run by this worker. Product commits stay local, with updated PR text in /tmp/impl-model-roster-per-repo-pr.md; this is neither a gate approval nor end-to-end acceptance/publication.
+
+
+## Stage Report: validation
+
+- FAILED: Independent verdict on PR #759 head a8536dc5 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  **REJECTED** at a8536dc5239edc3db6c1b76cb3bb7e1ce0433088, stacked base 9f065b01f1c6d6561793a168f584075edb85bf1f; source checks pass, but AC-1/AC-4 live controls and AC-5 real-record evidence do not. Full evidence and dispositions: [validation-1/evidence.md](model-roster-per-repo/validation-1/evidence.md).
+- DONE: Stacked on PR #758; judge AC-1 as FO's journey record and AC-4 as the real stage calls provided; classify omitted cases honestly; do not start agents yourself
+  Live GitHub confirms exact Draft head/base and five successful checks; RoboRev roborev:1348 remains FO-supplied. Live Paseo metadata confirms only Astra/high and Astra/xhigh, assigned roots and auto-review; no agents were started.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; package adr_lint.py docs/adr --since <base> with its exit code; verdict and Review-finding dispositions
+  [Six-step script and observations](model-roster-per-repo/validation-1/evidence.md#captain-acceptance-script): fresh bash exit 0; ADR lint with and without --require 0047 exits 0, 45 records/0 legacy. Script verifies the package/CLI boundary, not the incomplete human/runtime journey.
+- DONE: Read adoption-trial/question-receipts.jsonl and adoption-trial/fo-commands.jsonl with the last paragraphs of adoption-trial/README.md; they are FO's own record, and the scratch repositories no longer exist
+  Read the retained timestamps, commands and seven question/answer pairs; independently replayed both saved roster files, without presenting that replay as human consent or the original deleted repositories.
+- DONE: Judge as they stand: the record's missing author references and family, Sol/high and the two continuations were not run or kept, so classify those gaps yourself
+  F1–F7 below preserve the distinction between a demonstrated record failure, invalid acceptance evidence and missing behavioral proof; no candidate repair, new law, PR mutation or product push.
+- FAILED: AC-1 — Explicit shared adoption
+  FO-record evidence covers accept/customize/cancel/dismissal; saved choices resolve correctly. Real committed-file sync and its overwrite falsifier were not run; prerequisite-removal pins are instruction checks only. F7; original manifests/commits cannot be re-inspected.
+- DONE: AC-2 — Resolver and absent-file compatibility
+  Real CLI subprocess checks pass on absolute/split/linked roots, repeated reads, full invalid-data controls and committed change/deletion; wrong-cwd, fabricated-absence and write-on-read mutations fail assertions (resolver-commands.jsonl, mutations.json).
+- DONE: AC-3 — Batch-9 stage replay
+  All three source SHA-256 values independently match; CLI returns Astra/high, Sol/high, Astra/high and implementation for repair. Swapped-stage and missing-effort mutations fail the historical assertion; no child-runtime claim.
+- FAILED: AC-4 — Real stage dispatch and continuation
+  Runtime settings for two Astra calls are verified, but scratch source roots and the retained post-build grep do not meet the bound-root/immediate-spawn contract; Sol/high and both continuation cases remain unrun. F2–F6; no live falsifier was manufactured.
+- FAILED: AC-5 — Visible family evidence and records
+  Passing all three actual author records yields same-family: openai with Sol/high tuples; missing/unknown authors stay unverified. Hiding the warning or refusing same-family fails. The real dispatch omits references/family while existing record checks pass: F1.
+- DONE: AC-6 — Scope, reading and regressions
+  Exact eight-file scope, preserved roles/CI/laws/native boundaries; 26 model-free command entries exit 0 with seven existing fixture-dependent test skips. Six initial Git-nested fixture failures pass unchanged with TMPDIR=/tmp; full logs and final-regressions.json retain both.
+- DONE: Reading, measured runtime, document impact and applicable guards
+  Counts independently reproduce startup 9710/workflow 5781 unchanged, dispatch 2444→3154 configured/3110 absent and adoption 2182→2914 plus actual outputs; FO question payloads 289 words, timed answers 246. Local SD sample 35.37→42.26 s (+6.89 s, background test load); billed CI cost per PR unmeasured.
+- DONE: Decision, scope, comment and record checks
+  ADR/number/comment/design/record checks exit 0; comments 3/318=0.9%≤5%. Document dispositions match implementation; ADRs 0020/0035/0037/0042 byte-preserved. PR #674 remains open Draft at 0ced054c; native/director/partner scope is not closed.
+
+- F1 Material: FO's real validation loses candidate-author references and same-family visibility; value-ac[AC-5] requires both. Trigger: validation-1.md omits them, FO confirms its script dropped them, and independent replay returns same-family: openai; detail includes all four evidence fields.
+- F2 Needs decision: AC-4 used /tmp/roster-real-* as source but launched in different code worktrees; resolving this actual exact-head root returns readme-default, so repository-bound dispatch remains unproven.
+- F3 Needs decision: AC-4's retained spawnv sequence inserts grep after the build wrapper and before spawn, the explicit forbidden post-build-check counterexample; its ordered-launch proof fails.
+- F4 Needs decision: AC-4's real Sol/high resolver launch was not run.
+- F5 Needs decision: AC-4's unchanged-tuple continuation was not run.
+- F6 Needs decision: AC-4's changed-tuple continuation/fresh-handoff boundary was not run.
+- F7 Needs decision: AC-1's real sync preservation over an accepted committed file was not run.
+
+### Summary
+
+REJECTED for a8536dc5239edc3db6c1b76cb3bb7e1ce0433088: model-free package behavior passes, but the accepted Pilot journey is not established and its real dispatch record loses family evidence. The seven findings return to FO for disposition and owed evidence or a Captain amendment; none authorizes silent scope reduction or new runtime design. Product bytes remained unchanged; both validation detached checkouts and the acceptance-script checkout were removed, and only this task's validation report/evidence were committed to state.

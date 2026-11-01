@@ -1,0 +1,12 @@
+[
+  {
+    "name": "test_adr_doc_checks",
+    "exit": 0,
+    "seconds": 1.37
+  },
+  {
+    "name": "test_design_surfaces",
+    "exit": 0,
+    "seconds": 12.456
+  }
+]

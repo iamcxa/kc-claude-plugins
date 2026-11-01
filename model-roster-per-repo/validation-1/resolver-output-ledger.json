@@ -1,0 +1,331 @@
+[
+  {
+    "kind": "readme-default",
+    "exit": 0,
+    "words": 1,
+    "bytes": 164,
+    "output": "{\"commit\":\"52b4c3f578864627d6d8b1856ec053897779f781\",\"digest\":null,\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"readme-default\",\"tuple\":null}\n"
+  },
+  {
+    "kind": "readme-default",
+    "exit": 0,
+    "words": 1,
+    "bytes": 164,
+    "output": "{\"commit\":\"52b4c3f578864627d6d8b1856ec053897779f781\",\"digest\":null,\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"readme-default\",\"tuple\":null}\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 13,
+    "bytes": 143,
+    "output": "model-roster: git rev-parse: fatal: cannot change to '/private/tmp/dev-flow-2-sd-irn5vyc8/model-roster/code/nested': No such file or directory\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 7,
+    "bytes": 61,
+    "output": "model-roster: code-root: expected absolute Git worktree root\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 4,
+    "bytes": 44,
+    "output": "model-roster: stage: unsupported 'observer'\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 8,
+    "bytes": 87,
+    "output": "model-roster: .dev2/model-roster.json: uncommitted choice; return to repository review\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 298,
+    "output": "{\"commit\":\"9f14bec15cc579f996f5c64a6e22f961eb0ef294\",\"digest\":\"sha256:87449f1376c13532e787de99d4b0fc299aa4f2fc68ea5c2ec9729b767d34d747\",\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 298,
+    "output": "{\"commit\":\"9f14bec15cc579f996f5c64a6e22f961eb0ef294\",\"digest\":\"sha256:87449f1376c13532e787de99d4b0fc299aa4f2fc68ea5c2ec9729b767d34d747\",\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 292,
+    "output": "{\"commit\":\"9f14bec15cc579f996f5c64a6e22f961eb0ef294\",\"digest\":\"sha256:87449f1376c13532e787de99d4b0fc299aa4f2fc68ea5c2ec9729b767d34d747\",\"path\":\".dev2/model-roster.json\",\"role\":\"ideation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6-astra\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 298,
+    "output": "{\"commit\":\"9f14bec15cc579f996f5c64a6e22f961eb0ef294\",\"digest\":\"sha256:87449f1376c13532e787de99d4b0fc299aa4f2fc68ea5c2ec9729b767d34d747\",\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 329,
+    "output": "{\"authors\":[],\"commit\":\"9f14bec15cc579f996f5c64a6e22f961eb0ef294\",\"digest\":\"sha256:87449f1376c13532e787de99d4b0fc299aa4f2fc68ea5c2ec9729b767d34d747\",\"family\":\"unverified\",\"path\":\".dev2/model-roster.json\",\"role\":\"validation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6-astra\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 298,
+    "output": "{\"commit\":\"9f14bec15cc579f996f5c64a6e22f961eb0ef294\",\"digest\":\"sha256:87449f1376c13532e787de99d4b0fc299aa4f2fc68ea5c2ec9729b767d34d747\",\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 298,
+    "output": "{\"commit\":\"9f14bec15cc579f996f5c64a6e22f961eb0ef294\",\"digest\":\"sha256:87449f1376c13532e787de99d4b0fc299aa4f2fc68ea5c2ec9729b767d34d747\",\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 329,
+    "output": "{\"authors\":[],\"commit\":\"9f14bec15cc579f996f5c64a6e22f961eb0ef294\",\"digest\":\"sha256:87449f1376c13532e787de99d4b0fc299aa4f2fc68ea5c2ec9729b767d34d747\",\"family\":\"unverified\",\"path\":\".dev2/model-roster.json\",\"role\":\"validation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6-astra\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "readme-default",
+    "exit": 0,
+    "words": 1,
+    "bytes": 164,
+    "output": "{\"commit\":\"52b4c3f578864627d6d8b1856ec053897779f781\",\"digest\":null,\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"readme-default\",\"tuple\":null}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 298,
+    "output": "{\"commit\":\"9f14bec15cc579f996f5c64a6e22f961eb0ef294\",\"digest\":\"sha256:87449f1376c13532e787de99d4b0fc299aa4f2fc68ea5c2ec9729b767d34d747\",\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 7,
+    "bytes": 58,
+    "output": "model-roster: code-root: expected exact Git worktree root\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 8,
+    "bytes": 87,
+    "output": "model-roster: .dev2/model-roster.json: uncommitted choice; return to repository review\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 8,
+    "bytes": 87,
+    "output": "model-roster: .dev2/model-roster.json: uncommitted choice; return to repository review\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 5,
+    "bytes": 63,
+    "output": "model-roster: .dev2/model-roster.json: unreadable regular file\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 14,
+    "bytes": 90,
+    "output": "model-roster: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 4,
+    "bytes": 44,
+    "output": "model-roster: duplicate key: schema_version\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 4,
+    "bytes": 41,
+    "output": "model-roster: schema_version: expected 1\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 4,
+    "bytes": 41,
+    "output": "model-roster: schema_version: expected 1\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 6,
+    "bytes": 60,
+    "output": "model-roster: decision: expected nonempty provenance string\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 6,
+    "bytes": 65,
+    "output": "model-roster: selected_from: expected nonempty provenance string\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 8,
+    "bytes": 84,
+    "output": "model-roster: roster: expected keys decision, schema_version, selected_from, stages\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 7,
+    "bytes": 73,
+    "output": "model-roster: stages: expected keys ideation, implementation, validation\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 7,
+    "bytes": 73,
+    "output": "model-roster: stages: expected keys ideation, implementation, validation\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 4,
+    "bytes": 55,
+    "output": "model-roster: stages.ideation.provider: expected codex\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 4,
+    "bytes": 51,
+    "output": "model-roster: stages.ideation.host: expected paseo\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 5,
+    "bytes": 71,
+    "output": "model-roster: stages.ideation.model: expected gpt-6.1-sol, gpt-6-astra\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 9,
+    "bytes": 84,
+    "output": "model-roster: stages.ideation.effort: expected low, medium, high, xhigh, max, ultra\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 8,
+    "bytes": 81,
+    "output": "model-roster: stages.implementation: expected keys effort, host, model, provider\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 8,
+    "bytes": 87,
+    "output": "model-roster: .dev2/model-roster.json: uncommitted choice; return to repository review\n"
+  },
+  {
+    "kind": "readme-default",
+    "exit": 0,
+    "words": 1,
+    "bytes": 164,
+    "output": "{\"commit\":\"3fdba0752587994f4973307ccd296a3932d4a52d\",\"digest\":null,\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"readme-default\",\"tuple\":null}\n"
+  },
+  {
+    "kind": "error",
+    "exit": 1,
+    "words": 5,
+    "bytes": 62,
+    "output": "model-roster: .dev2/model-roster.json: symlink is unsupported\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 299,
+    "output": "{\"commit\":\"24c817c28483f998cca6639bb8affa4b88386847\",\"digest\":\"sha256:d1e05f68b0c3848e57b0955c2d7fbb89f6ae8c261ace2c3cc83c4bac86f14002\",\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"xhigh\",\"host\":\"paseo\",\"model\":\"gpt-6-astra\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 298,
+    "output": "{\"commit\":\"9f14bec15cc579f996f5c64a6e22f961eb0ef294\",\"digest\":\"sha256:87449f1376c13532e787de99d4b0fc299aa4f2fc68ea5c2ec9729b767d34d747\",\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 2,
+    "bytes": 525,
+    "output": "{\"authors\":[{\"record\":\"/private/tmp/dev-flow-2-sd-irn5vyc8/model-roster/author-records/dispatch/implementation-1.md\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}],\"commit\":\"24c817c28483f998cca6639bb8affa4b88386847\",\"digest\":\"sha256:d1e05f68b0c3848e57b0955c2d7fbb89f6ae8c261ace2c3cc83c4bac86f14002\",\"family\":\"same-family: openai\",\"path\":\".dev2/model-roster.json\",\"role\":\"validation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6-astra\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 2,
+    "bytes": 525,
+    "output": "{\"authors\":[{\"record\":\"/private/tmp/dev-flow-2-sd-irn5vyc8/model-roster/author-records/dispatch/implementation-2.md\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}],\"commit\":\"24c817c28483f998cca6639bb8affa4b88386847\",\"digest\":\"sha256:d1e05f68b0c3848e57b0955c2d7fbb89f6ae8c261ace2c3cc83c4bac86f14002\",\"family\":\"same-family: openai\",\"path\":\".dev2/model-roster.json\",\"role\":\"validation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6-astra\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 2,
+    "bytes": 713,
+    "output": "{\"authors\":[{\"record\":\"/private/tmp/dev-flow-2-sd-irn5vyc8/model-roster/author-records/dispatch/implementation-1.md\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}},{\"record\":\"/private/tmp/dev-flow-2-sd-irn5vyc8/model-roster/author-records/dispatch/implementation-2.md\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}],\"commit\":\"0c5a6d81cabf5d3989e0a01eadaa975cdac3cbc4\",\"digest\":\"sha256:fa922c338e06ae5f0b44f9c6ec63d177dc8f9c26f95cf4963c39e3e81e3c262c\",\"family\":\"same-family: openai\",\"path\":\".dev2/model-roster.json\",\"role\":\"validation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 329,
+    "output": "{\"authors\":[],\"commit\":\"0c5a6d81cabf5d3989e0a01eadaa975cdac3cbc4\",\"digest\":\"sha256:fa922c338e06ae5f0b44f9c6ec63d177dc8f9c26f95cf4963c39e3e81e3c262c\",\"family\":\"unverified\",\"path\":\".dev2/model-roster.json\",\"role\":\"validation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 445,
+    "output": "{\"authors\":[{\"record\":\"/private/tmp/dev-flow-2-sd-irn5vyc8/model-roster/author-records/dispatch/repair-unknown.md\",\"tuple\":null}],\"commit\":\"0c5a6d81cabf5d3989e0a01eadaa975cdac3cbc4\",\"digest\":\"sha256:fa922c338e06ae5f0b44f9c6ec63d177dc8f9c26f95cf4963c39e3e81e3c262c\",\"family\":\"unverified\",\"path\":\".dev2/model-roster.json\",\"role\":\"validation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 438,
+    "output": "{\"authors\":[{\"record\":\"/private/tmp/dev-flow-2-sd-irn5vyc8/model-roster/author-records/dispatch/missing.md\",\"tuple\":null}],\"commit\":\"0c5a6d81cabf5d3989e0a01eadaa975cdac3cbc4\",\"digest\":\"sha256:fa922c338e06ae5f0b44f9c6ec63d177dc8f9c26f95cf4963c39e3e81e3c262c\",\"family\":\"unverified\",\"path\":\".dev2/model-roster.json\",\"role\":\"validation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 633,
+    "output": "{\"authors\":[{\"record\":\"/private/tmp/dev-flow-2-sd-irn5vyc8/model-roster/author-records/dispatch/implementation-1.md\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}},{\"record\":\"/private/tmp/dev-flow-2-sd-irn5vyc8/model-roster/author-records/dispatch/repair-unknown.md\",\"tuple\":null}],\"commit\":\"0c5a6d81cabf5d3989e0a01eadaa975cdac3cbc4\",\"digest\":\"sha256:fa922c338e06ae5f0b44f9c6ec63d177dc8f9c26f95cf4963c39e3e81e3c262c\",\"family\":\"unverified\",\"path\":\".dev2/model-roster.json\",\"role\":\"validation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  },
+  {
+    "kind": "repository",
+    "exit": 0,
+    "words": 1,
+    "bytes": 451,
+    "output": "{\"authors\":[{\"record\":\"/private/tmp/dev-flow-2-sd-irn5vyc8/model-roster/author-records/dispatch/repair-contradictory.md\",\"tuple\":null}],\"commit\":\"0c5a6d81cabf5d3989e0a01eadaa975cdac3cbc4\",\"digest\":\"sha256:fa922c338e06ae5f0b44f9c6ec63d177dc8f9c26f95cf4963c39e3e81e3c262c\",\"family\":\"unverified\",\"path\":\".dev2/model-roster.json\",\"role\":\"validation\",\"source\":\"repository\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n"
+  }
+]
