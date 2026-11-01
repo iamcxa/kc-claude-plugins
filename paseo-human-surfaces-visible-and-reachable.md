@@ -3,7 +3,7 @@ title: Inside Paseo, FO and workers open human-facing terminals and browser tabs
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:

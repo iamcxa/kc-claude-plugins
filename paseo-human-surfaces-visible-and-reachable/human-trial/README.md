@@ -20,3 +20,5 @@ Not verified:
 - denied access for an excluded device: the tailnet holds only the Captain's own devices.
 - worker URL handback (step 4): no ordinary dispatched worker needed a page in this trial, so it was not exercised.
 - relay's real rr replay (step 6): separate.
+
+Relay replay (step 6) not run: 2026-11-01 the relay FO answered b11-757-rr that relay holds no rr candidate commit, staging authority or instruction sheet, and pointed at subspace-v0's terminal-review-works-in-paseo. That open task is about /subspace:r, not rr, and no supported rr opener inside Paseo was found. Relay stays unverified; AC-6 cannot be claimed as passed.
