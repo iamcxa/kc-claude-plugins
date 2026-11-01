@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "cf8e5848654f03fa5c509751298e2f75d7c151ba",
+  "model": "not run",
+  "necessity": "the eight files are what those paths load; the two Copilot repairs each have a falsifier that fails on reversion.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'Declined: real repository-bound dispatch and an'",
+    "point: acceptance-not-run: \"- F4 Needs decision: AC-4's real\"",
+    "point: acceptance-not-run: \"- F5 Needs decision: AC-4's unchanged-tuple\"",
+    "point: acceptance-not-run: \"- F6 Needs decision: AC-4's changed-tuple\"",
+    "point: acceptance-not-run: \"- F7 Needs decision: AC-1's real\"",
+    "point: amendment: 'Amendment 1 dated 2026-11-01'",
+    "point: path: 'docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md'",
+    "point: path: 'kc-dev-flow-2/extensions/paseo/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/references/model-roster-defaults.json'",
+    "point: path: 'kc-dev-flow-2/references/model-roster.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/adoption.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: more: 3 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#759",
+  "sufficiency": "a committed roster is read by the resolver and the question writes only on an explicit answer, shown by the adoption journey in adoption-trial/README.md and 3 of 3 cold FOs naming the right tuple in c",
+  "time": "2026-11-01T10:07:11Z",
+  "verdict": "ask"
+}
