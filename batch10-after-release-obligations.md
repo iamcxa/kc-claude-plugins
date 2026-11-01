@@ -69,6 +69,17 @@ gates:
                 id: briefing:batch10-after-release-obligations:validation:attempt-1:revision-1
                 digest: sha256:00375545d8253643c914dad5b3861969370a1ec88a954a95ab4abe9cfee50908
                 room-ref: ./batch10-after-release-obligations/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:batch10-after-release-obligations:validation:1
+                briefing: briefing:batch10-after-release-obligations:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-01T07:38:37.196627Z"
+                decision: approve
+                reason: The Captain 「可以」 (chat, 2026-11-01), answering the batch 11 sitting 「決定：四件事都照這個新建議嗎？要改哪件直接說。」, whose item 1 merges this PR and item 4 uses a regular merge; accepts the recommendation stated in that question.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-30T10:01:21Z
 worktree: .worktrees/spacedock-ensign-batch10-after-release-obligations
 pr: iamcxa/kc-claude-plugins#755
