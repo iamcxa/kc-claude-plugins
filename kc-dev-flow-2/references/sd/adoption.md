@@ -168,13 +168,13 @@ Ask which recommended or optional rows to add once, before the Captain reviews t
    status` to pass; `roborev` needs `roborev status` to pass; `copilot` needs `gh` 2.92 or later
    authenticated; `paseo` needs peers, Paseo's own `paseo` skill and read-only host/agent
    discovery. `fo-feedback` needs a named interviewing maintainer, a state checkout, peers,
-   readable batch membership/completion records and an available peer transport; new Paseo
-   asks also need a separately selected `paseo`. Show a row whose probe failed unchecked with the reason.
+   readable batch membership/completion records and an available peer transport. Confirmed
+   Paseo peer asks use peers without a separate paseo selection. Show a row whose probe failed unchecked with the reason.
 2. Put one multi-select to the Captain through the host's structured Ask UI, or in plain chat
    when none is available: the required rows shown as already on, `journey-map` with
    `release-acceptance` as one choice that writes both names, `codex`, `roborev`, and `copilot`
-   unchecked and marked quota-limited, and `paseo` unchecked for new fleet asks. Basic incoming
-   Paseo replies already belong to peers. Offer `fo-feedback` unchecked for the interviewing
+   unchecked and marked quota-limited, and `paseo` unchecked for its Paseo Codex worker handoff. Confirmed
+   Paseo peer asks and replies already belong to peers. Offer `fo-feedback` unchecked for the interviewing
    maintainer only; show its prerequisite results without enabling dependencies.
 3. Write the chosen names after the required ones. Never list a row whose probe failed; report
    `not listed: <name>, <reason>` and list it only when the Captain insists after seeing the reason.
@@ -182,7 +182,7 @@ Ask which recommended or optional rows to add once, before the Captain reviews t
    `recommended not chosen: <names>`, naming each recommended extension (`journey-map` and `release-acceptance` are two names)
    in the order step 2 lists them, whatever its probe said, and not the optional `copilot` or `paseo` or `fo-feedback`.
 5. Refuse a selection of `paseo` or `fo-feedback` without `peers`. For `fo-feedback`,
-   require its peer transport and separate `paseo` opt-in for new Paseo asks. Before its
+   require its available peer transport; confirmed Paseo uses peers without paseo opt-in. Before its
    first round, record the Captain-approved adoption anchor and question grant in
    `.notes/fo-feedback/index.md` in the state checkout; follow its extension for cadence.
    No answer leaves it off; selection here does not authorize an interview send.
