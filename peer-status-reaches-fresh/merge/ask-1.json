@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "39fdbb28b411d44a323741f645c7c1d75c653be1",
+  "model": "not run",
+  "necessity": "the dev sentence is what those runs received, and the peers text carries the sender's correction duties.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F3 Deferred risk: warm synthetic/recording'",
+    "point: deferred: '- F4 Deferred risk: original cold'",
+    "point: deferred: '- F5 Material: Released user/normal workflow:'",
+    "point: deferred: '- F3 Deferred risk: bounded authorization/recording'",
+    "point: deferred: '- F4 Deferred risk: all package/project/config'",
+    "point: deferred: 'Declined: bounded replays do not prove'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: acceptance-not-run: 'Third run: PASSED at 39fdbb28b411d44a323741f645c7c1d75c653be1, stacked'",
+    "point: amendment: 'Amendment 2 dated 2026-10-31'",
+    "point: amendment: 'Amendment 3 dated 2026-10-31'",
+    "point: path: 'kc-dev-flow-2/extensions/peers/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/skills/dev/SKILL.md'",
+    "point: more: 1 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#756",
+  "sufficiency": "an FO entering through dev checks a peer's Captain action at its source, shown by eight cold runs on this head in cold-fo/README.md: merged cleared, open kept, source down stays with FO.",
+  "time": "2026-11-01T07:39:33Z",
+  "verdict": "ask"
+}
