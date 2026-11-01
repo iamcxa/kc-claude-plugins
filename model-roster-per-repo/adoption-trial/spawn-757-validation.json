@@ -1,0 +1,43 @@
+{
+  "Id": "3d1126f1-73ff-48fb-983b-3192d63723fb",
+  "Name": "ensign b11: human-surfaces validation (gpt-6-astra high)",
+  "Provider": "codex",
+  "Model": "gpt-6-astra",
+  "Thinking": "high",
+  "Status": "running",
+  "Archived": false,
+  "ArchivedAt": null,
+  "Mode": "auto-review",
+  "Cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable",
+  "CreatedAt": "2026-11-01T02:33:13.835Z",
+  "UpdatedAt": "2026-11-01T02:33:53.844Z",
+  "LastUsage": {
+    "InputTokens": 57883,
+    "OutputTokens": 651,
+    "CachedTokens": 49536,
+    "CostUsd": 0
+  },
+  "Capabilities": {
+    "Streaming": true,
+    "Persistence": true,
+    "DynamicModes": false,
+    "McpServers": true
+  },
+  "AvailableModes": [
+    {
+      "id": "auto",
+      "label": "Default Permissions"
+    },
+    {
+      "id": "auto-review",
+      "label": "Auto-review"
+    },
+    {
+      "id": "full-access",
+      "label": "Full Access"
+    }
+  ],
+  "PendingPermissions": [],
+  "Worktree": null,
+  "ParentAgentId": "2e87a82e-a8a9-4e41-973a-7483aa46e39d"
+}
