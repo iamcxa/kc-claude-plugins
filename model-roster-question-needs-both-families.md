@@ -14,6 +14,17 @@ gates:
                 id: briefing:model-roster-question-needs-both-families:backlog:attempt-1:revision-1
                 digest: sha256:b8a4d203d360d9ab93d9279689d80d5330565e4842f23a72ca3caf3d5a1d5e25
                 room-ref: ./model-roster-question-needs-both-families/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:model-roster-question-needs-both-families:backlog:1
+                briefing: briefing:model-roster-question-needs-both-families:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-01T17:47:32.607771Z"
+                decision: approve
+                reason: The Captain 「可以，但不用寫了就報錯，接受 `max` 和 `ultra`沒關係，等於就是不建議，但使用者真的想要也可以」 (chat, 2026-11-02), answering the batch 12 sitting 「決定：五件事都照建議，第 5 項用這張表，並把 xhigh 上限寫進設定檔檢查，可以嗎？」; approves Pilot, this outcome and these bounds, with the stated change.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
