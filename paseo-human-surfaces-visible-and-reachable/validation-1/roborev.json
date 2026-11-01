@@ -1,0 +1,16 @@
+{
+  "job": {
+    "id": 1379,
+    "git_ref": "39fdbb28b411d44a323741f645c7c1d75c653be1..8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc",
+    "status": "done",
+    "agent": "codex",
+    "model": "gpt-5.6-terra",
+    "started_at": "2026-10-31T10:21:06+08:00",
+    "finished_at": "2026-10-31T10:21:22+08:00"
+  },
+  "review": {
+    "job_id": 1379,
+    "output": "SEVERITY_THRESHOLD_MET",
+    "verdict_bool": 1
+  }
+}

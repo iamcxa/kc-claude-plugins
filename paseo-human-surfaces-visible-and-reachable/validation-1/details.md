@@ -1,0 +1,66 @@
+# Independent validation of PR #757
+
+Verdict: **REJECTED for full Pilot acceptance**, candidate `8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc`, stacked base `39fdbb28b411d44a323741f645c7c1d75c653be1`. The product is exactly the accepted 292-word append to `kc-dev-flow-2/extensions/paseo/EXTENSION.md`; no product repair was made. Full journey sufficiency is unproved; the one section is minimally scoped to the recorded invisible-terminal, wrong-browser and phone-route failures. This does not show its instructions are followed by native workers.
+
+## Sources and execution boundary
+
+- Code inspected and checks run in detached `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable/.validation-8aa76f15`; removed after checks. Assigned branch was clean at the supplied candidate before work.
+- Current task and four dispatch records read; human-trial record is FO-authored, with quoted Captain confirmations, committed at state `51c6e6170e3924bda5a6f04439b8138cc118d95f`. Its later date supersedes the implementation report's “all native trials unrun” statement only for the operations it records.
+- Installed validation skill resolves package root to `/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1`, per stage package precedence. No substitute install was sought. The repository lint is the explicitly requested source-checkout exception.
+- Relevant accepted ADRs read: 0011, 0020, 0035, 0042, 0045, 0046. No new decision or number is introduced. Existing workflow choice includes paseo.
+- No agent, attended terminal, browser tab, network route, Serve setting or Relay request was created. Actual native falsifiers that require these actions were **not run**, following the dispatch's explicit restriction. Existing tests start no models. Their fixture approvals are not human approvals.
+- No screenshot file, raw terminal/browser capture, post-cleanup Serve JSON or second-device recording is retained beside human-trial/README.md; assertions about those observations below remain attributed to FO, not independently inspected captures.
+
+## Acceptance criteria and falsifiers
+
+| Criterion | Verdict and evidence | Counterexample / limit |
+|---|---|---|
+| AC-1: native FO/worker loading and placement | **UNMET.** Installed skill hash and 14 current schemas match implementation; policy identity and model-free scope-note transport pass. Actual attended generated worker dispatch, immediate build-to-spawn and worker-first-action receipt absent. Neither implementation-1 nor validation-1 is the required attended worker trial. | Independently rejected a candidate with its worker-instruction prefix removed using exact approved-text comparison. This is only document identity. Native omission, relocation and intervening-call controls **not run**; no native loading claim. |
+| AC-2: Captain finds and operates terminal | **Supported as FO-recorded evidence only.** Terminal 44e0744d at visible colombo workspace; FO records captured captain-visible twice and Captain 「我用手機貼上了」. Separate code cwd is preserved by pinned worker worktree. | Metadata-only or /tmp-owned terminal would fail the criterion; this record includes attributed human input. Independent invisible-terminal negative trial and cleanup replay **not run**. Do not call it validator-operated proof. |
+| AC-3: Paseo tab including cross-workspace worker handback | **PARTIAL / UNMET.** FO records tab 78f6236d, same workspace, screenshot, desktop clicked result and Captain 「好了」. Worker URL handback explicitly unrun; connected browser host receipt and missing-host/unsupported-opener trials not retained. | Current tool schema accepts URL only, not invented workspaceId. No OS-open substitution is credited. Actual cross-context/missing-host/unsupported-opener falsifier **not run**. |
+| AC-4: rendered pictures and action, not HTML 200 | **FO-recorded fixture support, bounded.** Intact 80×80, renamed SVG 404/naturalWidth 0 while HTML 200, restored 80×80 and desktop clicked are reported. Phone green-square/click rests on Captain 「有」. | Broken-image falsifier was run by FO and read by validator, **not independently rerun**. Screenshot itself not retained for inspection. No lazy/background/API/WebSocket behavior is present in the supplied fixture evidence; actual product-preview checks remain unverified. This does not pass Relay rendering. |
+| AC-5: actual second device with private bounds | **PARTIAL / UNMET.** FO records pixel-10-pro-xl terminal input and private page render/action; host kentmacbookpro-3, backend 52901, Serve HTTPS 8413, foreground step lifetime and cleanup against six pre-existing ports. | “Tailnet contains only Captain devices” is FO's statement, not an inspected effective access-policy receipt. Excluded-device denial explicitly unrun; baseline JSON alone does not prove after-state equality. No independent access/cleanup falsifier, phone-localhost test, or Funnel test run. Missing denial remains acceptance gap per criterion. |
+| AC-6: local-first supported Relay rr replay | **UNMET.** FO records no supported rr candidate, staging authority or instruction sheet available; the linked /subspace:r task is a different route. | Local fixture and historical rr reports are not replay proof. No rr invoked; duplicate-request/cancel/retry/unsupported-opener controls **not run**. AC-6 cannot pass. |
+| AC-7: bounded product scope and complete reading cost | **PASS for structural/document scope.** Exact one-file append, unchanged workflow/mod, current schema/skill recount; existing checks below. No adopter, sibling, version, script or CI change. | Independently rejected the base without the section and a candidate with extra policy text; exact diff path check catches an additional product file. These controls do not prove real use. |
+
+## Findings for FO disposition
+
+- F1 Needs decision: AC-1 native worker proof is unavailable. Normal user/workflow: Captain attends work delegated to a code worker. Harm: intended placement/loading remains unproved, not a demonstrated defect. Boundary: value-ac[AC-1] requires generated dispatch and first-actions receipt. Trigger evidence: both current dispatch files plus explicit implementation skip lack the attended worker trial. FO must arrange existing scoped proof or obtain a Captain amendment; validator cannot waive it.
+- F2 Needs decision: AC-3 ordinary worker-to-FO URL handback was not exercised. Normal user/workflow: worker in a separate workspace needs a human page. Harm: reach across those contexts unproved. Boundary: value-ac[AC-3] explicitly includes that route. Trigger evidence: human-trial/README.md says no ordinary worker needed a page. No proof-only agent or moved worker was substituted.
+- F3 Needs decision: AC-5 excluded-device denial/effective access bounds remain unverified. Normal user/workflow: Captain opens per-task Serve page on another device. Harm: own-device restriction is not established by the baseline and narrative alone; no broader exposure demonstrated. Boundary: value-ac[AC-5] retains an explicit acceptance gap when denial cannot run. Trigger evidence: trial record's Not verified entry. FO owns the missing device/policy evidence or Captain scope ruling.
+- F4 Needs decision: AC-6 cannot run on an identified supported rr candidate. Normal user/workflow: Captain replays the Relay pairing/publish journey after the local trial. Harm: original end-to-end journey unproved. Boundary: value-ac[AC-6] and Stop condition retain the real replay. Trigger evidence: dated FO report of missing candidate, staging authority and instruction sheet. Do not substitute /subspace:r, archived receipts, or local fixture success.
+- F5 Deferred risk: actual product lazy/background images and API/WebSocket rendering have no exercised page here. The fixture does not contain those behaviors; there is no demonstrated candidate defect. This becomes material if an in-scope delivered preview includes those dependencies and breaks on the private origin or second device. The retained FO record cannot establish a general rendering guarantee.
+
+## Commands and observed results
+
+`checks.json` carries exact commands, exit codes and output for all eight direct checks. Repository lint, ADR lint, stacked-base numbering, comment ratio, design check, document impact, dispatch-record check and diff check exited 0. ADR: 45 records, 0 legacy; also reran with `--require 0042 0046`, exit 0. Design reports scope check not run at validation; numbering reports no migrations-path. Comment ratio is 0 code/0 comments, 0.0%, 5% not enforced under 20 lines. No added code comments. Document impact lists zero documents; manual reader review confirms only paseo/EXTENSION.md updated, no changed diagrams, unchanged workflow scope-note mechanism.
+
+`python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_sd_dispatch.py --sd-plugin-root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3` exited 0: ten handoffs and ten Team-loss controls, forty-five reverted-wording controls, plus wrong-stage/missing-stage and gate fixtures. Runtime reports Spacedock 0.27.2 despite the selected 0.27.3 skill cache. Output explicitly excludes skill reading, worker execution, human gates and delivery; see dispatch-tests.log.
+
+`python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py` exited 1: 45 tests, seven failures and three errors. cache-lint.log reproduces the implementation limit: absent parent scripts/skill-frontmatter-lint.sh and kc-adr/skills/read-adr in installed-cache layout. This is not a product regression or a passing supplemental suite; required repository lint passes. No cache repair or alternate install used. Python ran with -B throughout.
+
+GitHub read at this validation returned #757 OPEN/DRAFT, exact candidate, base branch spacedock-ensign/peer-status-reaches-fresh, four successful checks (route gate, unit tests, version parity, GitGuardian). A later optional body fetch failed with api.github.com connectivity; the earlier successful snapshot is retained as observed, not a claim of continuous provider availability.
+
+`roborev show 1379` failed because the sandbox could not open the daemon log. No new review was launched. Read-only SQLite inspection of the existing reviews.db verified job 1379 done, exact BASE..HEAD, output SEVERITY_THRESHOLD_MET and verdict_bool=1; roborev.json retains this. The package gate maps verdict_bool=1 to clean when its other conditions pass. This corroborates FO's supplied clean record; it is not a rerun of the gate or proof of its process exit code.
+
+## Reading cost and prior implementation limits
+
+`recount.json` and tool-schemas.json retain measured inputs: extension 389→681 (+292), worker note 37 plus resolved-value delta, installed skill 1380, fourteen schemas 604, first uncached attended read 2665 plus unchanged inputs/unknown outputs; workflow 5781 and mod 48 unchanged, startup/resume 5829+U, idle 48+U, archive/merge ask U unless attended work is due. One-time runbook 796. Trial log/Serve/Relay output cost was unmeasured, not zero; no savings claim. CI unchanged; cost per PR not measured.
+
+The old implementation candidate d067ae38/base 8f42107b is historical. All product claims here bind to the integrated head 8aa76f15/base 39fdbb28. Its “no native trials” limit is now partially superseded by FO's attended fixture, not by worker proof. Its hosted-access and RoboRev gaps are partially superseded by the successful provider snapshot and exact stored review above; installed-cache test limitation persists. Publication is now an existing Draft PR, not delivery or adoption. No post-report repair was inferred.
+
+## Five-step Captain acceptance script
+
+Run exactly:
+```bash
+bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable/validation-1/acceptance.sh
+```
+
+Requires the named assigned checkout, its two pinned local Git objects, Python 3, Git, installed package and state checkout. The script creates and removes only its detached checkout. It contains five numbered steps with exact commands, not placeholders. Expected:
+1. PASS exact clean candidate at the stated head/base.
+2. Two document controls REJECTED, approved one-file append +292 words.
+3. Repository lint PASS, workflow 5781/5781; 45 ADR files/0 legacy.
+4. Number guard PASS, ratio 0.0%, zero impacted documents, four complete dispatch records, design surfaces presentable and no diff whitespace errors.
+5. FO's attributed trial and its gaps, ending STATIC CHECKS PASS; FULL PILOT ACCEPTANCE REJECTED.
+
+Ran byte-for-byte in fresh `bash --noprofile --norc`; exit 0, complete output in acceptance-output.log. First attempt failed at Git metadata creation (exit 128), preserved in acceptance-first-attempt.log; permitted sandbox escalation reran the unchanged script successfully. This script is under five minutes and verifies static policy/records only. It does not open surfaces, test devices, prove native instruction following, rerun Relay or turn the rejection into a pass.

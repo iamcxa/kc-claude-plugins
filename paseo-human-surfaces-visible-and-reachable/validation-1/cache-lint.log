@@ -1,0 +1,188 @@
+FAIL
+test_a_chat_only_rule_the_workflow_no_longer_says_is_named (__main__.RouteMutationTests.test_a_chat_only_rule_the_workflow_no_longer_says_is_named) ... ok
+test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused (__main__.RouteMutationTests.test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused) ... FAIL
+test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way (__main__.RouteMutationTests.test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way) ... ok
+test_a_listed_extension_that_is_not_required_is_named (__main__.RouteMutationTests.test_a_listed_extension_that_is_not_required_is_named) ... ok
+test_a_passage_copied_from_the_workflow_into_another_file (__main__.RouteMutationTests.test_a_passage_copied_from_the_workflow_into_another_file) ... ok
+test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment (__main__.RouteMutationTests.test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment) ... FAIL
+test_a_required_extension_missing_from_the_template_line_is_named (__main__.RouteMutationTests.test_a_required_extension_missing_from_the_template_line_is_named) ... ok
+test_a_row_marked_required_that_the_template_omits_is_named (__main__.RouteMutationTests.test_a_row_marked_required_that_the_template_omits_is_named) ... ok
+test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not (__main__.RouteMutationTests.test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not) ... ERROR
+test_a_synced_skill_is_checked_only_when_listed (__main__.RouteMutationTests.test_a_synced_skill_is_checked_only_when_listed) ... ERROR
+test_a_synced_skill_still_refuses_an_unbound_package_path (__main__.RouteMutationTests.test_a_synced_skill_still_refuses_an_unbound_package_path) ... ERROR
+test_bare_script_name (__main__.RouteMutationTests.test_bare_script_name) ... ok
+test_brace_placeholder (__main__.RouteMutationTests.test_brace_placeholder) ... ok
+test_cli_exits_one_naming_the_file (__main__.RouteMutationTests.test_cli_exits_one_naming_the_file) ... ok
+test_cross_profile_route (__main__.RouteMutationTests.test_cross_profile_route) ... ok
+test_cross_stage_route (__main__.RouteMutationTests.test_cross_stage_route) ... ok
+test_design_director_keeps_its_declared_model (__main__.RouteMutationTests.test_design_director_keeps_its_declared_model) ... ok
+test_design_director_needs_its_skill (__main__.RouteMutationTests.test_design_director_needs_its_skill) ... ok
+test_documented_journey_probe_finds_regular_yaml_at_each_depth (__main__.RouteMutationTests.test_documented_journey_probe_finds_regular_yaml_at_each_depth) ... ok
+test_duplicate_profile (__main__.RouteMutationTests.test_duplicate_profile) ... ok
+test_existing_frontmatter_validator_is_used (__main__.RouteMutationTests.test_existing_frontmatter_validator_is_used) ... FAIL
+test_extension_script_named_without_its_extension_path (__main__.RouteMutationTests.test_extension_script_named_without_its_extension_path) ... ok
+test_external_reference_symlink (__main__.RouteMutationTests.test_external_reference_symlink) ... ok
+test_machine_path_placeholder (__main__.RouteMutationTests.test_machine_path_placeholder) ... ok
+test_missing_markdown_table_separator (__main__.RouteMutationTests.test_missing_markdown_table_separator) ... ok
+test_missing_optional_extension_document_is_named (__main__.RouteMutationTests.test_missing_optional_extension_document_is_named) ... ok
+test_missing_principles (__main__.RouteMutationTests.test_missing_principles) ... ok
+test_missing_profile_reference (__main__.RouteMutationTests.test_missing_profile_reference) ... ok
+test_observer_keeps_its_declared_model (__main__.RouteMutationTests.test_observer_keeps_its_declared_model) ... ok
+test_old_variant_invocation (__main__.RouteMutationTests.test_old_variant_invocation) ... ok
+test_package_placeholder_without_root_line (__main__.RouteMutationTests.test_package_placeholder_without_root_line) ... ok
+test_poc_cannot_declare_ideation_active (__main__.RouteMutationTests.test_poc_cannot_declare_ideation_active) ... ok
+test_reversed_routing_markers (__main__.RouteMutationTests.test_reversed_routing_markers) ... ok
+test_role_binding_and_model_policy (__main__.RouteMutationTests.test_role_binding_and_model_policy) ... ok
+test_script_named_by_link_label_only (__main__.RouteMutationTests.test_script_named_by_link_label_only) ... ok
+test_the_chat_only_list_must_exist (__main__.RouteMutationTests.test_the_chat_only_list_must_exist) ... ok
+test_the_chat_only_list_must_hold_a_rule (__main__.RouteMutationTests.test_the_chat_only_list_must_hold_a_rule) ... ok
+test_the_known_overlap_is_listed_and_a_new_one_is_not (__main__.RouteMutationTests.test_the_known_overlap_is_listed_and_a_new_one_is_not) ... FAIL
+test_unknown_profile (__main__.RouteMutationTests.test_unknown_profile) ... ok
+test_valid_scaffold (__main__.RouteMutationTests.test_valid_scaffold) ... FAIL
+test_workflow_equal_to_its_word_budget_passes_and_prints_the_count (__main__.RouteMutationTests.test_workflow_equal_to_its_word_budget_passes_and_prints_the_count) ... FAIL
+test_workflow_over_its_word_budget (__main__.RouteMutationTests.test_workflow_over_its_word_budget) ... ok
+test_workflow_under_its_word_budget_names_the_cut_step (__main__.RouteMutationTests.test_workflow_under_its_word_budget_names_the_cut_step) ... ok
+test_wrong_shared_principle (__main__.RouteMutationTests.test_wrong_shared_principle) ... ok
+
+======================================================================
+ERROR: test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not (__main__.RouteMutationTests.test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 144, in test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not
+    self.copy_kc_adr_skill("read-adr")
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 141, in copy_kc_adr_skill
+    shutil.copytree(ROOT.parent / "kc-adr/skills/read-adr", self.root / "skills" / name, dirs_exist_ok=True)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/shutil.py", line 571, in copytree
+    with os.scandir(src) as itr:
+         ^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/kc-adr/skills/read-adr'
+
+======================================================================
+ERROR: test_a_synced_skill_is_checked_only_when_listed (__main__.RouteMutationTests.test_a_synced_skill_is_checked_only_when_listed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 152, in test_a_synced_skill_is_checked_only_when_listed
+    self.copy_kc_adr_skill("read-adr")
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 141, in copy_kc_adr_skill
+    shutil.copytree(ROOT.parent / "kc-adr/skills/read-adr", self.root / "skills" / name, dirs_exist_ok=True)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/shutil.py", line 571, in copytree
+    with os.scandir(src) as itr:
+         ^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/kc-adr/skills/read-adr'
+
+======================================================================
+ERROR: test_a_synced_skill_still_refuses_an_unbound_package_path (__main__.RouteMutationTests.test_a_synced_skill_still_refuses_an_unbound_package_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 157, in test_a_synced_skill_still_refuses_an_unbound_package_path
+    self.copy_kc_adr_skill("read-adr")
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 141, in copy_kc_adr_skill
+    shutil.copytree(ROOT.parent / "kc-adr/skills/read-adr", self.root / "skills" / name, dirs_exist_ok=True)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/shutil.py", line 571, in copytree
+    with os.scandir(src) as itr:
+         ^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/kc-adr/skills/read-adr'
+
+======================================================================
+FAIL: test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines (__main__.RouteMutationTests.test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 168, in test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines
+    self.assertEqual(lint.lint_tree(self.root), [])
+AssertionError: Lists differ: ['repository frontmatter check missing: /U[93 chars].sh'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'repository frontmatter check missing: /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh'
+
++ []
+- ['repository frontmatter check missing: '
+-  '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh']
+
+======================================================================
+FAIL: test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused (__main__.RouteMutationTests.test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 284, in test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused
+    self.assertEqual(lint.lint_tree(self.root), [])
+AssertionError: Lists differ: ['repository frontmatter check missing: /U[93 chars].sh'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'repository frontmatter check missing: /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh'
+
++ []
+- ['repository frontmatter check missing: '
+-  '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh']
+
+======================================================================
+FAIL: test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment (__main__.RouteMutationTests.test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 278, in test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment
+    self.assertEqual(lint.lint_tree(self.root), [])
+AssertionError: Lists differ: ['repository frontmatter check missing: /U[93 chars].sh'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'repository frontmatter check missing: /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh'
+
++ []
+- ['repository frontmatter check missing: '
+-  '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh']
+
+======================================================================
+FAIL: test_existing_frontmatter_validator_is_used (__main__.RouteMutationTests.test_existing_frontmatter_validator_is_used)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 318, in test_existing_frontmatter_validator_is_used
+    self.refuses("frontmatter:")
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 37, in refuses
+    self.assertTrue(any(expected in error for error in errors), errors)
+AssertionError: False is not true : ['repository frontmatter check missing: /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh']
+
+======================================================================
+FAIL: test_the_known_overlap_is_listed_and_a_new_one_is_not (__main__.RouteMutationTests.test_the_known_overlap_is_listed_and_a_new_one_is_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 302, in test_the_known_overlap_is_listed_and_a_new_one_is_not
+    self.assertEqual(lint.lint_tree(self.root), [])
+AssertionError: Lists differ: ['repository frontmatter check missing: /U[93 chars].sh'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'repository frontmatter check missing: /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh'
+
++ []
+- ['repository frontmatter check missing: '
+-  '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh']
+
+======================================================================
+FAIL: test_valid_scaffold (__main__.RouteMutationTests.test_valid_scaffold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 40, in test_valid_scaffold
+    self.assertEqual(lint.lint_tree(self.root), [])
+AssertionError: Lists differ: ['repository frontmatter check missing: /U[93 chars].sh'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'repository frontmatter check missing: /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh'
+
++ []
+- ['repository frontmatter check missing: '
+-  '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh']
+
+======================================================================
+FAIL: test_workflow_equal_to_its_word_budget_passes_and_prints_the_count (__main__.RouteMutationTests.test_workflow_equal_to_its_word_budget_passes_and_prints_the_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/test_lint_skills.py", line 257, in test_workflow_equal_to_its_word_budget_passes_and_prints_the_count
+    self.assertEqual(result.returncode, 0, result.stdout)
+AssertionError: 1 != 0 : FAIL: repository frontmatter check missing: /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/scripts/skill-frontmatter-lint.sh
+
+
+----------------------------------------------------------------------
+Ran 45 tests in 7.704s
+
+FAILED (failures=7, errors=3)

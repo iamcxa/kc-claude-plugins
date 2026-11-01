@@ -356,3 +356,38 @@ Limits: GitHub API query failed with "error connecting to api.github.com"; fetch
 ### Summary
 
 The approved Pilot authoring slice is locally committed as d067ae38aa3df31028710f9ce068a83ea262a49f over 8f42107b1cc9ae0b3a7d10ad2a2408b46fcbe0cd, with one product file and prepared PR text. Static/dispatch transport checks pass, but the supplemental installed-cache suite could not complete, RoboRev is incomplete, and all FO-owned native acceptance receipts/falsifiers remain unrun; full task acceptance is not claimed. FO retains publication, live trials, review/CI and the later roster integration/recount; this report changes no stage or gate.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #757 head 8aa76f15 against every acceptance criterion in the task file.
+  REJECTED for full Pilot acceptance at 8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc over stacked base 39fdbb28b411d44a323741f645c7c1d75c653be1; detached checks and criterion-by-criterion evidence/falsifiers: paseo-human-surfaces-visible-and-reachable/validation-1/details.md.
+- FAILED: Re-running each evidence command and at least one falsifier per criterion yourself.
+  Static commands and document controls ran; native AC-1–6 operations/falsifiers were not rerun because this dispatch prohibits agents, surfaces and Serve changes. FO's broken-image negative trial is read evidence, not my execution; unmet obligations remain explicit.
+- DONE: Judge every implementation-report limit and FO's attended trial as FO's record with the Captain's quoted confirmations.
+  AC-2 terminal input and AC-4 bounded fixture behavior have attributed human support; AC-1 worker loading, AC-3 cross-workspace handback and AC-5 access denial remain incomplete; AC-6 real rr replay is unrun. No screenshot/raw capture or after-Serve JSON is retained for independent visual/cleanup inspection.
+- DONE: Check the exact single-file policy, current skill/tool contract and lifecycle reading cost.
+  Approved +292-word append only; base/omitted-worker-note/extra-policy document controls reject. Extension 389→681; skill 1380, schemas 604, note 37+resolved values, first attended read 2665+unknown inputs/outputs; workflow/mod remain 5781/48, runbook 796. No CI change; cost per PR not measured.
+- DONE: Re-run package, decision, numbering, comment, document, design and dispatch-record checks.
+  All eight direct checks exit 0 in checks.json; ADR lint --since 39fdbb28b411d44a323741f645c7c1d75c653be1: 45 records/0 legacy, exit 0; --require 0042 0046 also exit 0. Skill-resolved package root is /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1.
+- DONE: Re-run applicable dispatch transport checks and evaluate supplemental cache-suite failure.
+  Model-free dispatch suite exits 0 (ten handoffs/ten Team-loss and forty-five wording controls); cannot prove worker reading/human gates. Cache lint suite reproduces seven failures/three errors in 45 tests from missing repository siblings, exit 1; source-checkout lint passes. See dispatch-tests.log and cache-lint.log.
+- DONE: Verify stacked candidate and existing review evidence without changing delivery state.
+  GitHub returned OPEN/DRAFT at exact head and four successful checks; later body fetch failed. Read-only review database confirms roborev:1379 done for exact base..head with verdict_bool=1; CLI show failed on daemon-log access. No new review, product push, PR comment, ready or merge.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output.
+  validation-1/acceptance.sh contains five steps; fresh bash --noprofile --norc exits 0 and ends “STATIC CHECKS PASS; FULL PILOT ACCEPTANCE REJECTED”; full commands, expected output and acceptance-output.log retained. Unchanged script rerun after permitted Git-metadata escalation; first failure retained.
+- DONE: Goal sufficiency and minimal necessity assessed against the same candidate.
+  One approved section addresses the recorded surface failures without extra product machinery; full bounded real-use journey remains unproved. Fixture success and historical receipts cannot replace worker/phone-access/Relay proof.
+- DONE: Preserve product bytes and return the result through split-root state.
+  No product edits; detached validation checkout removed, assigned branch remains at the candidate. Only this task's report/evidence are committed; workflow status/frontmatter and gate authority remain with FO.
+
+### Findings
+
+- F1 Needs decision: value-ac[AC-1] requires native generated scope notes/build-to-spawn/worker-first-actions proof; current records lack it. Arrange scoped proof or obtain a Captain amendment; no demonstrated product defect.
+- F2 Needs decision: value-ac[AC-3] includes ordinary cross-workspace worker URL handback; FO explicitly did not exercise it. A local FO tab does not establish this route.
+- F3 Needs decision: value-ac[AC-5] retains excluded-device denial/effective access as an acceptance gap; own-device tailnet statement is FO-attributed, not inspected policy/denial proof.
+- F4 Needs decision: value-ac[AC-6] requires real rr replay; FO records no supported candidate, staging authority or instruction sheet. /subspace:r and fixture success do not substitute.
+- F5 Deferred risk: actual product lazy/background/API/WebSocket behavior is absent from fixture evidence; a failing in-scope preview on the private origin would make it material. Full four-field dispositions are in details.md.
+
+### Summary
+
+The exact candidate preserves the approved one-section scope and passes structural checks, while the FO record supports bounded desktop/phone fixture observations. Full Pilot acceptance is REJECTED for the native worker, handback, access-denial and Relay obligations; no product defect was demonstrated or repaired, and no delivery authority was exercised.

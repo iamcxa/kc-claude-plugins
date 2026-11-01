@@ -1,0 +1,98 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "lint",
+      "cmd": "python3 -B kc-dev-flow-2/scripts/lint-skills.py",
+      "chunk_id": "7c2d85",
+      "wall_time_seconds": 1.557306125,
+      "exit_code": 0,
+      "original_token_count": 59,
+      "output": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5781 of 5781 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "adr",
+      "cmd": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/adr_lint.py' docs/adr --since 39fdbb28b411d44a323741f645c7c1d75c653be1",
+      "chunk_id": "bd165e",
+      "wall_time_seconds": 1.353745459,
+      "exit_code": 0,
+      "original_token_count": 9,
+      "output": "45 ADR file(s) checked, 0 legacy\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "numbers",
+      "cmd": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/number_guards.py' check --repo '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable/.validation-8aa76f15' --workflow-dir '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/..' --task '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable.md' --base 39fdbb28b411d44a323741f645c7c1d75c653be1 --head 8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc",
+      "chunk_id": "767458",
+      "wall_time_seconds": 1.428141208,
+      "exit_code": 0,
+      "original_token_count": 33,
+      "output": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 39fdbb28b411 head 8aa76f15f3ce merge-base 39fdbb28b411\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "comments",
+      "cmd": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/comment_ratio.py' 39fdbb28b411d44a323741f645c7c1d75c653be1 HEAD --workflow-dir '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/..'",
+      "chunk_id": "7c50af",
+      "wall_time_seconds": 1.1437120410000001,
+      "exit_code": 0,
+      "original_token_count": 29,
+      "output": "code lines 0, comment lines 0, 0.0%\nmaximum 5% (package default) not enforced: 0 code lines added, fewer than 20\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "design",
+      "cmd": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/design_surfaces.py' check '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable.md'",
+      "chunk_id": "738c24",
+      "wall_time_seconds": 1.150388875,
+      "exit_code": 0,
+      "original_token_count": 33,
+      "output": "paseo-human-surfaces-visible-and-reachable.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "docs",
+      "cmd": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/doc_impact.py' 39fdbb28b411d44a323741f645c7c1d75c653be1 HEAD",
+      "chunk_id": "965a22",
+      "wall_time_seconds": 1.163641458,
+      "exit_code": 0,
+      "original_token_count": 21,
+      "output": "0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "records",
+      "cmd": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/dispatch_records.py' '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable'",
+      "chunk_id": "90f9b1",
+      "wall_time_seconds": 1.1520437079999999,
+      "exit_code": 0,
+      "original_token_count": 8,
+      "output": "4 dispatch record(s) complete\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "name": "diff",
+      "cmd": "git -C '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable/.validation-8aa76f15' diff --check 39fdbb28b411d44a323741f645c7c1d75c653be1 HEAD",
+      "chunk_id": "369069",
+      "wall_time_seconds": 0.063554084,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    }
+  }
+]
