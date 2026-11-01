@@ -91,7 +91,7 @@ gates:
                 state: pending
 started: 2026-10-30T10:19:52Z
 worktree: .worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable
-pr: iamcxa/kc-claude-plugins#757
+pr: pr-merge:757
 ---
 
 ## Scope
