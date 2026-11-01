@@ -1,0 +1,19 @@
+violation | rule: "The summary declares `External rounds: N`" (Delivery authority) | evidence: "absent" (aca9933d9: review/validation/briefing-1/index.json; question replay exits 1).
+violation | rule: "Start in the assigned worktree; verify pwd and git root before edits." (Extensions; paseo/Codex workers) | evidence: "absent" (a6691c681: nine dispatches—both ideations, all validations, implementation-2-message-1 and implementation-5-message-1).
+ok | rule: "A Captain ruling is his reply to the question it settles" (FO steps: review findings) | evidence: "The Captain 「可以」 (chat, 2026-11-01)" (350fe63ad; three rulings follow briefings; none substitutes peer words).
+ok | rule: "a decision by `agent:first-officer` carries the grant it relies on" (Observer/Read) | evidence: "決定：六張全照建議，同意放寬 Paseo 規則和真實測試，並授權改完直接進實作？要改哪張直接說。 — 准" (04eae9323).
+ok | rule: "His plain approval accepts that recommendation only when the gate question says so" (FO steps: review findings) | evidence: "FO recommends approve; approving accepts that recommendation" (7a66cfd23; ideation and delivery also name their recommendation).
+ok | rule: "FO records the alignment result" (ideation) | evidence: "Result: aligned at backlog" (6a9d515b2, before dispatch ac1b14c00).
+ok | rule: "FO runs `python3 <package>/scripts/design_surfaces.py check`" (Observer/Read) | evidence: "seed fields and FO alignment recorded"; "design surfaces presentable" (replayed f3686a132, d3c30398d, fbae6d8f7; all exit 0).
+ok | rule: "FO names the amendment in the next dispatch's checklist." (Captain amendments) | evidence: "Captain amendment 4 in the task file" (5fdff8108; four entries have Captain/Asked/Supersedes; superseded blocks preserved).
+ok | rule: "FO records each printed `Migration: NNNN` / `ADR: NNNN` line" (FO steps: number guards) | evidence: "ADR: 0046" (f3c271ff8: task and implementation-1 scope).
+ok | rule: "FO runs `python3 <package>/scripts/delivery_gate.py check` before the merge ask" (Observer/Read) | evidence: "2026-11-01T07:38:01Z"; "422caef5a9b115a14f8391836499520d9fba6d91" (79ed784c4: merge/ask-1.json, before briefing aca9933d9 at 07:38:20Z).
+ok | rule: "FO confirms both goal sufficiency and minimal necessity" (validation) | evidence: "confirmed Paseo peers can ask without listing paseo"; "the peers binding and record 0046 are what those runs exercise" (79ed784c4: ask-1 sufficiency/necessity).
+ok | rule: "never counts as a clean result" (Extensions) | evidence: "copilot not run:"; "Copilot retry: available when the Captain confirms quota is back." (aca9933d9).
+ok | rule: "naming the finding, reason, candidate revision and the lines or evidence it rests on" (FO steps: review findings, 2) | evidence: "Declined: complete native output and combined reading totals"; "named unverified limit under amendment 4" (aca9933d9: summary binds 422caef5 and validation-3).
+observed | rule: "report whether a `Reviewer:` line exists" (Observer/Read) | evidence: "Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30" (d3c30398d); role_triggers exits 0, no next lines.
+can't tell | rule: "wait for every member's sufficient committed evidence" (Batch gates) | evidence: "absent" (a6691c681: Captain chat/joint sitting unavailable; siblings not audited).
+can't tell | rule: "confirm the file still matches the reviewed source" (Delivery authority) | evidence: "absent" (a6691c681: hook/merge/cleanup evidence outside state).
+can't tell | rule: "FO commits task state only through SD commands" (Workflow State) | evidence: "absent" (a6691c681: shell invocations outside state).
+
+Coverage: 13ae1d677–a6691c681; task-scoped history/diff, rulings, amendments, 14 dispatches, four briefings and merge receipt read; worker/native reports sampled. README matches event-time a66129489. No applicable Override/Precedent. Chat-only exclusions omitted; product/delivery unjudged.
