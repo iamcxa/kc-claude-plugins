@@ -3,7 +3,7 @@ title: Each repository records which model, reasoning level and host each role r
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
