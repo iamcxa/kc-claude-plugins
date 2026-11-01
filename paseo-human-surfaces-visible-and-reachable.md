@@ -78,6 +78,17 @@ gates:
                 id: briefing:paseo-human-surfaces-visible-and-reachable:validation:attempt-2:revision-1
                 digest: sha256:5089509d3bc77f8d72062ce82a2ae3238e260e85a92a1ec10f982068cc7e3eeb
                 room-ref: ./paseo-human-surfaces-visible-and-reachable/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:paseo-human-surfaces-visible-and-reachable:validation:2
+                briefing: briefing:paseo-human-surfaces-visible-and-reachable:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-01T09:48:39.307841Z"
+                decision: approve
+                reason: The Captain 「可以」 (chat, 2026-11-01), answering the batch 11 sitting 「決定：四件事都照這個新建議嗎？要改哪件直接說。」, whose item 3 merges this PR after its amended criteria pass and item 4 uses a regular merge; accepts the recommendation stated in that question.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-30T10:19:52Z
 worktree: .worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable
 pr: iamcxa/kc-claude-plugins#757
