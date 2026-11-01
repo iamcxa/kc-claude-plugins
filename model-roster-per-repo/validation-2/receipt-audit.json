@@ -1,0 +1,35 @@
+[
+  {
+    "criterion": "AC-7",
+    "mutation": "keep displayed/preselected Accept and write, remove explicit answer",
+    "detected": true,
+    "reason": "explicit answer must precede write",
+    "boundary": "receipt audit only; no new host dialog"
+  },
+  {
+    "criterion": "AC-8",
+    "mutation": "drop-explicit-effort",
+    "detected": true,
+    "reason": "explicit effort/model/mode required",
+    "boundary": "saved invocation/runtime consistency audit; no child launched"
+  },
+  {
+    "criterion": "AC-8",
+    "mutation": "wrong-workspace",
+    "detected": true,
+    "reason": "assigned workspace placement required",
+    "boundary": "saved invocation/runtime consistency audit; no child launched"
+  },
+  {
+    "criterion": "AC-8",
+    "mutation": "post-build-check",
+    "detected": true,
+    "reason": "successful build must lead directly to spawn",
+    "boundary": "saved invocation/runtime consistency audit; no child launched"
+  },
+  {
+    "criterion": "AC-8",
+    "check": "retained builder output equals received initial pointer prompt",
+    "passed": true
+  }
+]

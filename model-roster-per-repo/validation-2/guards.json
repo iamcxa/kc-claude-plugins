@@ -1,0 +1,106 @@
+[
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "96b73073a1384951fab6de74ecfee94719127535"
+    ],
+    "exit": 0,
+    "stdout": "45 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "96b73073a1384951fab6de74ecfee94719127535",
+      "--require",
+      "0047"
+    ],
+    "exit": 0,
+    "stdout": "45 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-per-repo.md"
+    ],
+    "exit": 0,
+    "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 96b73073a138 head a8536dc5239e merge-base 9f065b01f1c6\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/comment_ratio.py",
+      "96b73073a1384951fab6de74ecfee94719127535",
+      "a8536dc5239edc3db6c1b76cb3bb7e1ce0433088",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "stdout": "code lines 318, comment lines 3, 0.9%\n   2/ 131 kc-dev-flow-2/scripts/model_roster.py\n   1/ 187 kc-dev-flow-2/scripts/test_sd_dispatch.py\nmaximum 5% (package default) met\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-per-repo.md"
+    ],
+    "exit": 0,
+    "stdout": "model-roster-per-repo.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/doc_impact.py",
+      "96b73073a1384951fab6de74ecfee94719127535",
+      "a8536dc5239edc3db6c1b76cb3bb7e1ce0433088"
+    ],
+    "exit": 0,
+    "stdout": "docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md\tupdated\tkc-dev-flow-2/scripts/model_roster.py\nkc-dev-flow-2/README.md\tupdated\tkc-dev-flow-2/scripts/test_sd_dispatch.py\nkc-dev-flow-2/references/sd/adoption.md\tupdated\tkc-dev-flow-2/scripts/test_sd_dispatch.py\nlearning.md\treview\tkc-dev-flow-2/scripts/test_sd_dispatch.py\n4 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-per-repo"
+    ],
+    "exit": 0,
+    "stdout": "11 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/dispatch_records.py",
+      "--names",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-per-repo/dispatch/validation-2.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

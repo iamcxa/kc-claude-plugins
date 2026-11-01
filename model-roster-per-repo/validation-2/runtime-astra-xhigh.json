@@ -1,0 +1,25 @@
+{
+  "Id": "23eb84ee-48b4-456b-98b3-58dcea2a6a86",
+  "Name": "ensign b11: model-roster validation (gpt-6-astra xhigh)",
+  "Provider": "codex",
+  "Model": "gpt-6-astra",
+  "Thinking": "xhigh",
+  "Status": "closed",
+  "Archived": true,
+  "ArchivedAt": "2026-11-01T06:55:05.095Z",
+  "Mode": "auto-review",
+  "Cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo",
+  "CreatedAt": "2026-11-01T02:33:28.869Z",
+  "UpdatedAt": "2026-11-01T02:49:04.764Z",
+  "LastUsage": null,
+  "Capabilities": {
+    "Streaming": false,
+    "Persistence": true,
+    "DynamicModes": false,
+    "McpServers": false
+  },
+  "AvailableModes": [],
+  "PendingPermissions": [],
+  "Worktree": null,
+  "ParentAgentId": "2e87a82e-a8a9-4e41-973a-7483aa46e39d"
+}

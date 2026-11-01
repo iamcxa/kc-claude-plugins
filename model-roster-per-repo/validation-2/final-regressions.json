@@ -1,0 +1,252 @@
+[
+  {
+    "path": "kc-dev-flow-2/scripts/lint-skills.py",
+    "exit": 0,
+    "seconds": 0.211,
+    "log": "/tmp/roster-validation2-a8536dc5/lint-skills.log",
+    "test_summary": []
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_lint_skills.py",
+    "exit": 0,
+    "seconds": 10.973,
+    "log": "/tmp/roster-validation2-a8536dc5/test_lint_skills.log",
+    "test_summary": [
+      "Ran 45 tests in 10.857s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "exit": 0,
+    "seconds": 12.378,
+    "log": "/tmp/roster-validation2-a8536dc5/test_design_surfaces.log",
+    "test_summary": [
+      "Ran 202 tests in 12.275s",
+      "OK (skipped=4)"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "exit": 0,
+    "seconds": 1.285,
+    "log": "/tmp/roster-validation2-a8536dc5/test_adr_doc_checks.log",
+    "test_summary": [
+      "Ran 9 tests in 1.211s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "exit": 0,
+    "seconds": 1.961,
+    "log": "/tmp/roster-validation2-a8536dc5/test_poc_readme.log",
+    "test_summary": [
+      "Ran 9 tests in 1.877s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "exit": 0,
+    "seconds": 8.645,
+    "log": "/tmp/roster-validation2-a8536dc5/test_comment_ratio.log",
+    "test_summary": [
+      "Ran 14 tests in 8.583s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_number_guards.py",
+    "exit": 0,
+    "seconds": 19.38,
+    "log": "/tmp/roster-validation2-a8536dc5/test_number_guards.log",
+    "test_summary": [
+      "Ran 28 tests in 19.319s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "exit": 0,
+    "seconds": 0.101,
+    "log": "/tmp/roster-validation2-a8536dc5/test_codex_review.log",
+    "test_summary": [
+      "Ran 35 tests in 0.005s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "exit": 0,
+    "seconds": 2.421,
+    "log": "/tmp/roster-validation2-a8536dc5/test_roborev_gate.log",
+    "test_summary": [
+      "Ran 5 tests in 2.359s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "exit": 0,
+    "seconds": 0.057,
+    "log": "/tmp/roster-validation2-a8536dc5/test_copilot_review.log",
+    "test_summary": [
+      "Ran 15 tests in 0.000s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "exit": 0,
+    "seconds": 0.312,
+    "log": "/tmp/roster-validation2-a8536dc5/test_map_footprint.log",
+    "test_summary": [
+      "Ran 23 tests in 0.246s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "exit": 0,
+    "seconds": 1.526,
+    "log": "/tmp/roster-validation2-a8536dc5/test_release_acceptance.log",
+    "test_summary": [
+      "Ran 78 tests in 1.371s",
+      "OK (skipped=1)"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "exit": 0,
+    "seconds": 105.161,
+    "log": "/tmp/roster-validation2-a8536dc5/test_dispatch_records.log",
+    "test_summary": [
+      "Ran 96 tests in 105.037s",
+      "OK (skipped=1)"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "exit": 0,
+    "seconds": 71.982,
+    "log": "/tmp/roster-validation2-a8536dc5/test_delivery_gate.log",
+    "test_summary": [
+      "Ran 119 tests in 71.848s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_validation_security.py",
+    "exit": 0,
+    "seconds": 0.782,
+    "log": "/tmp/roster-validation2-a8536dc5/test_validation_security.log",
+    "test_summary": [
+      "Ran 5 tests in 0.700s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "exit": 0,
+    "seconds": 61.012,
+    "log": "/tmp/roster-validation2-a8536dc5/test_pr_watch.log",
+    "test_summary": [
+      "Ran 129 tests in 60.833s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "exit": 0,
+    "seconds": 5.037,
+    "log": "/tmp/roster-validation2-a8536dc5/test_replay_dispatch.log",
+    "test_summary": [
+      "Ran 8 tests in 4.938s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "exit": 0,
+    "seconds": 0.074,
+    "log": "/tmp/roster-validation2-a8536dc5/test_decision_ledger.log",
+    "test_summary": [
+      "Ran 8 tests in 0.019s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_package_version.py",
+    "exit": 0,
+    "seconds": 0.056,
+    "log": "/tmp/roster-validation2-a8536dc5/test_package_version.log",
+    "test_summary": [
+      "Ran 6 tests in 0.004s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "exit": 0,
+    "seconds": 7.856,
+    "log": "/tmp/roster-validation2-a8536dc5/test_workflow_checkout.log",
+    "test_summary": [
+      "Ran 13 tests in 7.801s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "exit": 0,
+    "seconds": 7.637,
+    "log": "/tmp/roster-validation2-a8536dc5/test_observer_check.log",
+    "test_summary": [
+      "Ran 19 tests in 7.574s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "exit": 0,
+    "seconds": 20.951,
+    "log": "/tmp/roster-validation2-a8536dc5/test_role_triggers.log",
+    "test_summary": [
+      "Ran 25 tests in 20.861s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_laws_check.py",
+    "exit": 0,
+    "seconds": 88.047,
+    "log": "/tmp/roster-validation2-a8536dc5/test_laws_check.log",
+    "test_summary": [
+      "Ran 63 tests in 87.982s",
+      "OK (skipped=1)"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_learning.py",
+    "exit": 0,
+    "seconds": 50.758,
+    "log": "/tmp/roster-validation2-a8536dc5/test_learning.log",
+    "test_summary": [
+      "Ran 47 tests in 50.683s",
+      "OK"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "exit": 0,
+    "seconds": 3.811,
+    "log": "/tmp/roster-validation2-a8536dc5/test_observer_recovery.log",
+    "test_summary": []
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3 --keep",
+    "exit": 0,
+    "seconds": 43.95,
+    "log": "/tmp/roster-validation2-a8536dc5/acceptance.log"
+  }
+]

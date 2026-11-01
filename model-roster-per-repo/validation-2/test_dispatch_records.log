@@ -1,0 +1,24 @@
+.......s................/tmp/tmpj2s_kgtn/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+......../tmp/tmp4dnenbxb/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+../tmp/tmpug5ai_84/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/tmplc400whk/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/tmpq3trgfy5/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/tmpr30y4kbg/task/dispatch/ideation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/tmpnhhb9cpu/task/elsewhere/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/tmp/tmpx_gbcckd/task/dispatch/validation-x.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/tmpqnl5ucdf/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/tmp1dcdwok3/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/tmpoka38yms/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/tmpf60e0i9w/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/tmpwr8cui42/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/tmpa1c9x5n0/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+./tmp/tmpenumdy_c/r.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./tmp/tmpheq1m3q5/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/tmp/tmp6gsvzxac/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/tmp/tmpvkpt20b1/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+........................................................../tmp/tmplyl4yiq6/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+..
+----------------------------------------------------------------------
+Ran 96 tests in 105.037s
+
+OK (skipped=1)

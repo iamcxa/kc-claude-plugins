@@ -585,3 +585,38 @@ This complete report supersedes the earlier implementation reports for the curre
 ### Summary
 
 This corrected report supersedes the preceding implementation report: its claim that repository-bound dispatch and uninterrupted build-to-spawn proof were due before delivery was a transcription error. AC-8 now places those observations after delivery, supplied by the first real adoption and dispatch; its other pre-delivery requirements and the unchanged product candidate remain as recorded.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #759 head a8536dc5 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  **PASSED for amendment 1's pre-delivery scope**, head a8536dc5239edc3db6c1b76cb3bb7e1ce0433088; main base 96b73073a1384951fab6de74ecfee94719127535, merge-base 9f065b01f1c6d6561793a168f584075edb85bf1f. [Evidence and dispositions](model-roster-per-repo/validation-2/evidence.md); post-delivery observations are not passed or waived.
+- DONE: The Captain's later ruling for this rerun is amendment 1 in the task file, and AC-7 to AC-9 are its replacements. The base is now main. Re-judge findings F1 to F7 of validation-1 against them. This record carries the author references and family that F1 found missing, and FO's validate script now spawns immediately after build; judge both. Repository-bound dispatch is owed after delivery: the real repository has no roster, so this record says absent. Do not start agents yourself
+  F1 resolved in the current record/report; F2–F7 remain recorded post-delivery obligations under AC-7/8. Current absent-roster resolve matches the header. No agents started, product bytes changed, PR operations or product push.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  [Six-step script and observed outputs](model-roster-per-repo/validation-2/evidence.md#captain-acceptance-script), fresh Bash exit 0; ADR lint with/without --require 0047 against pinned main exits 0, 45 records/0 legacy. Script establishes CLI/package behavior, not post-delivery real use.
+- DONE: AC-2 — Resolver and absent-file compatibility
+  100 subprocess commands/47 resolver outputs; explicit/split/linked roots, read-only repeatability, invalid data and committed edit/deletion pass. Wrong-cwd, fabricated-absence and write-on-read mutations fail existing assertions; resolver-commands.jsonl and mutations.json.
+- DONE: AC-3 — Batch-9 stage replay
+  Independently rehashed all three historical sources; real CLI yields Astra/high, Sol/high, Astra/high and implementation for repair. Swapped stage and dropped effort mutations fail; history-digests.json and mutations.json.
+- DONE: AC-6 — Scope, reading and regressions
+  Exact eight-file main merge-base diff; roles/laws/checkers/native/CI unchanged. All 26 model-free command entries pass with seven existing fixture-dependent skips. Extra-law scope control and removed eligibility pins are caught; final-regressions.json, scope-main.json and words.json.
+- DONE: AC-7 — Explicit shared adoption at the amended FO-record boundary
+  Read seven dialogs and retained manifest/commit commands; replayed accepted/customized snapshots for all stages. Receipt audit rejects preselection without the explicit answer before write; this is not a fresh host test. Original scratch repositories are gone; their manifests/commits cannot be re-inspected. Sync observation remains after delivery.
+- DONE: AC-8 — Pre-delivery real stage settings, prompt, assigned root and permission evidence
+  Live Paseo inspection corroborates the two recorded Astra/high and Astra/xhigh workers, assigned code roots and auto-review; current generated pointer equals the received prompt. Saved invocation controls reject missing effort, wrong workspace and post-build check; no live mutation/agent launch claimed.
+- DONE: AC-9 — Visible family evidence and records
+  Current dispatch names author cycles implementation-1.md and implementation-2.md and same-family: openai. Replayed those plus implementation-1-message-1.md, implementation-1-message-2.md and implementation-2-message-1.md: all Codex/gpt-6.1-sol/high/Paseo, the same worker per cycle. Sol/Astra and Sol/Sol flag OpenAI; missing/unknown stays unverified. Hiding/refusing the flag fails; names/folder checks alone still do not establish consumption.
+- DONE: Read adoption-trial/validation-2-spawn-command.txt and adoption-trial/validate-script-at-dispatch.py: the build is inside that script and the spawn follows it through a shell && on its exit status, with nothing between
+  Corrected receipt dated 2026-11-01T07:49:15.584Z forwards the builder's prompt through && directly to spawn, with no old post-build grep. This is FO-record evidence for the absent-roster rerun, not configured repository dispatch. The initially self-matching extraction was corrected before adjudication.
+- DONE: They are FO's own record; judge them as that
+  FO receipts, cold-FO reads, independent saved-data replay and live runtime inspections are distinguished in evidence.md; no cold read or metadata echo is represented as a new launch or full adoption proof.
+- DONE: Applicable guards, document impact, reading and cost
+  ADR/number/comment/design/record checks exit 0; comments 3/318=0.9%≤5%. ADR 0047/adoption updated; README generic claims and historical learning.md unaffected by this PR. Startup 9710/workflow 5781 unchanged versus merge-base; dispatch 2444→3154/3110, adoption 2182→2914 plus actual outputs. Main's separate counts retained. Local SD sample 33.41→43.95s (+10.54s, noisy); billed CI cost per PR not measured, triggers unchanged.
+- DONE: Judge implementation limits and current delivery state
+  Live GitHub: exact Draft head/main base, five successful checks; #674 remains open Draft with native remainder. RoboRev roborev:1348 is earlier FO-supplied evidence, not rerun. Original real-use delegation/skips remain historical; full post-delivery sufficiency, review/merge/adoption and native/director/partner closure stay with FO/Captain.
+- SKIPPED: Post-delivery observations retained by AC-7/8
+  First real adoption answer, repository-bound uninterrupted configured launch, Sol/high, unchanged continuation, changed-tuple fresh handoff, committed-file startup/sync preservation and overwrite falsifier remain owed; none is silently removed or counted passed.
+
+### Summary
+
+PASSED for the amended pre-delivery scope at a8536dc5239edc3db6c1b76cb3bb7e1ce0433088. F1's current record omission is resolved; historical F2–F7 remain as explicitly retained post-delivery observations, and no new Material or Needs decision finding was established. Validation is neither merge authority nor full real-adoption closure; the candidate author/validator family remains **same-family: openai** and must remain visible at the gate.

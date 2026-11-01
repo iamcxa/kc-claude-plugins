@@ -1,0 +1,22 @@
+{
+  "base": "96b73073a1384951fab6de74ecfee94719127535",
+  "head": "a8536dc5239edc3db6c1b76cb3bb7e1ce0433088",
+  "merge_base": "9f065b01f1c6d6561793a168f584075edb85bf1f",
+  "changed": [
+    "docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md",
+    "kc-dev-flow-2/extensions/paseo/EXTENSION.md",
+    "kc-dev-flow-2/references/model-roster-defaults.json",
+    "kc-dev-flow-2/references/model-roster.md",
+    "kc-dev-flow-2/references/sd/adoption.md",
+    "kc-dev-flow-2/references/sd/workflow.md",
+    "kc-dev-flow-2/scripts/model_roster.py",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ],
+  "preserved_adrs": [
+    "0020",
+    "0035",
+    "0037",
+    "0042"
+  ],
+  "extra_law_mutation_detected": true
+}
