@@ -69,6 +69,17 @@ gates:
                 id: briefing:names-check-says-what-it-skipped:validation:attempt-1:revision-1
                 digest: sha256:a7d20fee5825cd84ba57368efc723bc2ffeb2a5fa862ff8aa8c6080050e65627
                 room-ref: ./names-check-says-what-it-skipped/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:names-check-says-what-it-skipped:validation:1
+                briefing: briefing:names-check-says-what-it-skipped:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-01T07:40:14.094318Z"
+                decision: approve
+                reason: The Captain 「可以」 (chat, 2026-11-01), answering the batch 11 sitting 「決定：四件事都照這個新建議嗎？要改哪件直接說。」, whose item 1 merges this PR and item 4 uses a regular merge; accepts the recommendation stated in that question.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-30T10:19:43Z
 worktree: .worktrees/spacedock-ensign-names-check-says-what-it-skipped
 pr: iamcxa/kc-claude-plugins#758
