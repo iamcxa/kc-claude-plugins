@@ -1,0 +1,66 @@
+{
+  "TCP": {
+    "8410": {
+      "HTTPS": true
+    },
+    "8412": {
+      "HTTPS": true
+    },
+    "8531": {
+      "HTTPS": true
+    },
+    "8617": {
+      "HTTPS": true
+    },
+    "8660": {
+      "HTTPS": true
+    },
+    "8725": {
+      "HTTPS": true
+    }
+  },
+  "Web": {
+    "kentmacbookpro-3.tail815bb3.ts.net:8410": {
+      "Handlers": {
+        "/": {
+          "Proxy": "http://127.0.0.1:4410"
+        }
+      }
+    },
+    "kentmacbookpro-3.tail815bb3.ts.net:8412": {
+      "Handlers": {
+        "/": {
+          "Proxy": "http://127.0.0.1:4412"
+        }
+      }
+    },
+    "kentmacbookpro-3.tail815bb3.ts.net:8531": {
+      "Handlers": {
+        "/": {
+          "Proxy": "http://127.0.0.1:4531"
+        }
+      }
+    },
+    "kentmacbookpro-3.tail815bb3.ts.net:8617": {
+      "Handlers": {
+        "/": {
+          "Proxy": "http://127.0.0.1:4617"
+        }
+      }
+    },
+    "kentmacbookpro-3.tail815bb3.ts.net:8660": {
+      "Handlers": {
+        "/": {
+          "Proxy": "http://127.0.0.1:4660"
+        }
+      }
+    },
+    "kentmacbookpro-3.tail815bb3.ts.net:8725": {
+      "Handlers": {
+        "/": {
+          "Proxy": "http://127.0.0.1:4725"
+        }
+      }
+    }
+  }
+}
