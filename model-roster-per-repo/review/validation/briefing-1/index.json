@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:model-roster-per-repo:validation:attempt-1:revision-1",
+  "question": "「決定：四件事都照這個新建議嗎？要改哪件直接說。」 Item 2 of that sitting: merge this PR after its amended criteria pass; item 4: regular merge with --match-head-commit, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:model-roster-per-repo:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/75f9deda1a90476e033f0291947763577ed681a2/model-roster-per-repo.md",
+      "rev": "sha256:aaa08670261d858ff1a221b542b2d4a3b84a85fc3ffb72d02ca0f2f056f9e5fe",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of model-roster-per-repo, PR #759, head cf8e5848654f03fa5c509751298e2f75d7c151ba, in the batch 11 sitting.\nSufficiency: a committed roster is read by the resolver and the question writes only on an explicit answer, shown by the adoption journey in adoption-trial/README.md and 3 of 3 cold FOs naming the right tuple in cold-fo/README.md.\nNecessity: the eight files are what those paths load; the two Copilot repairs each have a falsifier that fails on reversion.\nExternal rounds: 2.\nSecond reviewer: Copilot because the PR changes merge or review rules. The copilot outcome is review:5727528518, with no line comments on this head after the two findings on a8536dc52 were repaired.\nCodex review: no major issues on this head, comment:6556465396.\nDeclined: real repository-bound dispatch and an unbroken build-to-spawn order before delivery (validation-3 F2 and F3: the repository has no committed roster until the Captain answers, AC-8 owes them after delivery); Sol/high, both continuations and sync preservation (validation-3 F4 to F7: post-delivery under AC-7 and AC-8, cold-fo/README.md)."
+    }
+  ]
+}

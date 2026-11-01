@@ -61,6 +61,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:model-roster-per-repo:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:model-roster-per-repo-validation-1
+              briefing:
+                id: briefing:model-roster-per-repo:validation:attempt-1:revision-1
+                digest: sha256:9a1b02493aa3d53c9c85fc12d8ac4659a17f7e5c44088876fb7b4c4418fac469
+                room-ref: ./model-roster-per-repo/review/validation/briefing-1
 started: 2026-10-30T10:33:26Z
 worktree: .worktrees/spacedock-ensign-model-roster-per-repo
 pr: iamcxa/kc-claude-plugins#759
