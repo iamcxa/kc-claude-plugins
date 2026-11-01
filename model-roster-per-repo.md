@@ -3,7 +3,7 @@ title: Each repository records which model, reasoning level and host each role r
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: implementation
 gates:
     version: 1
     records:
@@ -96,6 +96,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review before the joint ideation sitting: approve, revise, split or hold each task, the Captain's decisions, overlap and order
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-01: the chief-engineer batch review on opus ruled on these relaxations before the Captain answered; an engineering-reviewer on opus would repeat it
 
 ## Design
 
@@ -335,6 +336,13 @@ Recommended order: land the shared diagnostic workflow/test change, settle peer-
 ## Number guards
 
 ADR: 0047
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-01, chat
+Captain: 「可以」 (chat, 2026-11-01)
+Asked: 「決定：四件事都照這個新建議嗎？要改哪件直接說。」, which FO had stated as: 「| 2 | #759 | 放寬條件，修好派工紀錄，再驗證一次後合併，然後你回答一次設定問題 |」, with the relaxation stated as 「Sol/high、工作者延續、同步不覆蓋改成上線後觀察」
+Supersedes: AC-1, AC-4, AC-5
 
 ## Stage Report: ideation
 
