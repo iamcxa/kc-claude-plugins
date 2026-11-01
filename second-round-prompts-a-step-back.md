@@ -14,6 +14,17 @@ gates:
                 id: briefing:second-round-prompts-a-step-back:backlog:attempt-1:revision-1
                 digest: sha256:829aa3bcbbf71e38c8028d23c276c06eb0541014413628e8097d6fc5ec68c41b
                 room-ref: ./second-round-prompts-a-step-back/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:second-round-prompts-a-step-back:backlog:1
+                briefing: briefing:second-round-prompts-a-step-back:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-01T17:47:45.483733Z"
+                decision: approve
+                reason: The Captain 「可以，但不用寫了就報錯，接受 `max` 和 `ultra`沒關係，等於就是不建議，但使用者真的想要也可以」 (chat, 2026-11-02), answering the batch 12 sitting 「決定：五件事都照建議，第 5 項用這張表，並把 xhigh 上限寫進設定檔檢查，可以嗎？」; approves Pilot, this outcome and these bounds, with the stated change.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
