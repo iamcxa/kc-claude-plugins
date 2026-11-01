@@ -82,7 +82,7 @@ When requested, chief-engineer reviews the complete package/process batch before
 
 ## Stages
 
-Stage workers run on the workflow's default model.
+Stage workers follow `<package>/references/model-roster.md`; absence retains README defaults.
 `kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and
 `kc-dev-flow-2:observer` run on the model and reasoning their agent files declare, never
 a cheaper one. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
