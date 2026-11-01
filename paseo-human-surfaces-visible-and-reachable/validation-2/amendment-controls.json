@@ -1,0 +1,44 @@
+{
+  "preservation": "PASS: original blocks preserved; amendment commit preserved frontmatter/design; later FO stage transition excluded from preservation assertion",
+  "controls": [
+    {
+      "control": "current",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/design_surfaces.py",
+        "check",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/hs-amendment-at5ujk6w/paseo-human-surfaces-visible-and-reachable.md"
+      ],
+      "exit": 0,
+      "stdout": "paseo-human-surfaces-visible-and-reachable.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+      "stderr": ""
+    },
+    {
+      "control": "active superseded criterion",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/design_surfaces.py",
+        "check",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/hs-amendment-at5ujk6w/paseo-human-surfaces-visible-and-reachable.md"
+      ],
+      "exit": 1,
+      "stdout": "paseo-human-surfaces-visible-and-reachable.md: '### Amendment 1 \u2014 2026-11-01, chat' supersedes AC-1 but it is still declared in '## Acceptance criteria'\nscope check not run: stage is validation, not ideation\n",
+      "stderr": ""
+    },
+    {
+      "control": "unmarked replacements",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/design_surfaces.py",
+        "check",
+        "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/hs-amendment-at5ujk6w/paseo-human-surfaces-visible-and-reachable.md"
+      ],
+      "exit": 1,
+      "stdout": "paseo-human-surfaces-visible-and-reachable.md: '### Amendment 1 \u2014 2026-11-01, chat' supersedes AC-1, AC-3, AC-5, AC-6 but no criterion says 'Amended by Captain, amendment 1' and its 'Supersedes:' line does not say 'no replacement'\nscope check not run: stage is validation, not ideation\n",
+      "stderr": ""
+    }
+  ]
+}

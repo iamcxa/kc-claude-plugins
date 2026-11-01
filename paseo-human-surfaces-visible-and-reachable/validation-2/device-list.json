@@ -1,0 +1,24 @@
+{
+  "observed_utc": "2026-11-01T07:51:32.364026+00:00",
+  "devices": [
+    {
+      "host": "KentMacBookPro (3)",
+      "dns": "kentmacbookpro-3.tail815bb3.ts.net.",
+      "owner": "Kent Chen",
+      "self": true
+    },
+    {
+      "host": "Pixel 10 Pro XL",
+      "dns": "pixel-10-pro-xl.tail815bb3.ts.net.",
+      "owner": "Kent Chen",
+      "self": false
+    },
+    {
+      "host": "Kent’s Mac mini",
+      "dns": "kents-mac-mini.tail815bb3.ts.net.",
+      "owner": "Kent Chen",
+      "self": false
+    }
+  ],
+  "exit": 0
+}

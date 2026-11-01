@@ -436,3 +436,32 @@ The exact candidate preserves the approved one-section scope and passes structur
 ### Summary
 
 This complete report supersedes the earlier implementation report for the current amendment-only assignment; prior implementation and validation reports remain intact as historical evidence. Product candidate 8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc is unchanged; worker proof is post-delivery, the current own-device list was read, relay replay is separate, and the cold read limitation is explicit. This report grants no gate, merge, publication or full-acceptance decision.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #757 head 8aa76f15 against every acceptance criterion in the task file, and judging each limit the implementation report states.
+  PASSED for Captain-amended scope at 8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc; base main 96b73073a1384951fab6de74ecfee94719127535, merge-base 39fdbb28b411d44a323741f645c7c1d75c653be1. All seven active criteria and limits: paseo-human-surfaces-visible-and-reachable/validation-2/details.md.
+- SKIPPED: Re-running each evidence command and at least one falsifier per criterion yourself — native operations prohibited by this dispatch.
+  Static commands and document/amendment refusal controls rerun; AC-2/4/9 human actions and native falsifiers are FO-recorded, not independently replayed. Worker proof is deferred and Relay separate; no unrun falsifier is called passed.
+- DONE: The Captain's later ruling for this rerun is amendment 1 in the task file, and AC-8 to AC-11 are its replacements. Re-judge findings F1 to F4 of validation-1 against them; FO's trial is human-trial/README.md and the reach result is cold-fo/README.md; judge them as FO's record. Do not start agents, open surfaces or change Serve yourself.
+  F1/F2 become Deferred risk under post-delivery AC-8/9; F3 is satisfied by the replacement own-device-list observation; F4 leaves this task under AC-11. F5 rendering-dependency risk remains Deferred risk; no new Material finding. Full four-field dispositions in details.md.
+- DONE: Independently inspect the six cold logs and retain the accepted reading limitation.
+  cold-log-audit.json confirms section returned 3/6 (terminal/phone 1/3; worker notes 2/3); two skipped-section answers proposed 0.0.0.0 and one omitted the instruction. No Paseo tools or main control arm; this proves read/say behavior only.
+- DONE: Recheck AC-10's current own-device list and corroborate task-owned route cleanup without changing settings.
+  Read-only status at 07:51 UTC and acceptance run list KentMacBookPro (3), Pixel 10 Pro XL and Kent’s Mac mini, all Kent Chen. serve-after.json equals retained six-port baseline; no exclusion test or historical effective-policy proof claimed.
+- DONE: Verify the one-file policy, installed skill/current schemas and lifecycle reading cost.
+  Exact approved +292-word append; omitted-note/missing-section/extra-policy controls reject. Extension 389→681, skill 1380, schemas 604, note 37+resolved values, first attended 2665+unknown inputs/outputs; workflow/mod 5781/48, runbook 796. No CI change; cost per PR not measured.
+- DONE: Run required package, ADR, numbering, comment, document, design and dispatch checks against the named candidate/main base.
+  checks.json and acceptance-output.log: all required checks exit 0; ADR lint --since 96b73073a1384951fab6de74ecfee94719127535 --require 0042 0046 checks 45 records/0 legacy. Corrected strict name check passes six records; initial optional invocation error retained. Main-only document-impact hits ADR 0045/learning.md are unaffected; actual PR diff lists zero.
+- DONE: Exercise amendment preservation/refusal controls and applicable dispatch transport checks.
+  Original four blocks preserved; current amendment passes, restored active AC-1 and omitted replacement markings each exit 1. Model-free dispatch suite exits 0 (ten handoffs/ten Team-loss and forty-five wording controls); no worker reading or human gate proof.
+- DONE: Judge supplemental installed-cache and local-review limits without inventing clean evidence.
+  Cache suite reproduces exit 1: seven failures/three errors in 45 tests from missing repository siblings; required source lint passes. Latest implementation RoboRev attempt remains incomplete; prior exact-head stored review read only, no fresh gate or daemon claim. FO owns review/delivery.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; verdict naming the head, with findings classified by the workflow's Review-finding disposition.
+  validation-2/acceptance.sh has five full steps; bash --noprofile --norc at its final state path exits 0, full output in acceptance-output.log. It names local dependencies and explicitly distinguishes static checks/current list from FO human evidence and deferred live behavior.
+- DONE: Assess goal sufficiency/minimal necessity and preserve source/ownership boundaries.
+  Amended bounded goal supported by the attributed local terminal/page/phone trial and authored instruction; reliable native worker behavior unproved. One section addresses recorded wrong-cwd/browser/phone failures without extra machinery. Detached checkouts removed; assigned branch/head unchanged; only this task's report/evidence enter state commit.
+
+### Summary
+
+Cycle 2 supersedes validation 1's verdict for the Captain-amended criteria only: PASSED at 8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc, with FO-recorded human evidence and the explicit 3-of-6 reading limitation. Native worker execution/handback are post-delivery, Relay replay is separate, and original reports remain historical evidence. This report grants no gate, merge, publication or adoption decision.

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "mcp__paseo__browser_close_tab",
+    "description": "Close a Paseo browser tab, remove its resident webview, and unregister it from the browser automation host. Use browserId from browser_new_tab or browser_list_tabs.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__browser_close_tab(args: { browserId: string; }): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__browser_evaluate",
+    "description": "Evaluate a JavaScript function in a Paseo browser tab. Use browserId from browser_new_tab or browser_list_tabs; when ref is provided, refs come from the latest browser_snapshot and the resolved element is passed as the first argument.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__browser_evaluate(args: { browserId: string; function: string; ref?: string; }): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__browser_list_tabs",
+    "description": "List open Paseo browser tabs for this agent's workspace across connected browser automation hosts. Use returned browserId values with tab-scoped tools.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__browser_list_tabs(args: { [key: string]: unknown; }): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__browser_logs",
+    "description": "Read recent console messages and browser performance network entries for a Paseo browser tab. Use browserId from browser_new_tab or browser_list_tabs; maxEntries defaults to 50.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__browser_logs(args: { browserId: string; maxEntries?: number; }): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__browser_new_tab",
+    "description": "Create a new Paseo browser tab in this agent's workspace on the most recently connected browser automation host, opened in the background without switching the user's view. Pass an http(s) URL or a scheme-less host URL, which is treated as http; the returned browserId is used by tab-scoped tools.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__browser_new_tab(args: { url?: string; }): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__browser_screenshot",
+    "description": "Capture a PNG screenshot of a Paseo browser tab. Use browserId from browser_new_tab or browser_list_tabs. Set fullPage to true to capture the full page.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__browser_screenshot(args: { browserId: string; fullPage?: boolean; }): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__browser_snapshot",
+    "description": "Return a model-readable snapshot of a Paseo browser tab. Use browserId from browser_new_tab or browser_list_tabs; refs come from the latest browser_snapshot of the same tab and expire when the page changes.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__browser_snapshot(args: { browserId: string; }): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__capture_terminal",
+    "description": "Capture plain-text terminal output lines from a terminal session.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__capture_terminal(args: { end?: number; scrollback?: boolean; start?: number; stripAnsi?: boolean; terminalId: string; }): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__create_terminal",
+    "description": "Create a terminal session for a working directory.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__create_terminal(args: {\n  // Optional working directory. Defaults to your current working directory.\n  cwd?: string;\n  // Optional terminal name.\n  name?: string;\n}): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__kill_terminal",
+    "description": "Kill an existing terminal session.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__kill_terminal(args: { terminalId: string; }): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__list_hosts",
+    "description": "Discover this host and registered destination hosts for fleet tools.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__list_hosts(args: { [key: string]: unknown; }): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__list_terminals",
+    "description": "List terminals for a working directory or across all working directories.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__list_terminals(args: {\n  // List terminals across all working directories.\n  all?: boolean;\n  // Optional working directory. Defaults to your current working directory.\n  cwd?: string;\n}): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__list_workspaces",
+    "description": "List active workspaces.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__list_workspaces(args: {\n  includeBackground?: boolean;\n  // Destination server ID from list_hosts; omit for this host.\n  serverId?: string;\n}): Promise<CallToolResult>; };\n```"
+  },
+  {
+    "name": "mcp__paseo__send_terminal_keys",
+    "description": "Send text or a key token: Enter, Tab, Escape, Space, BSpace, Up, Down, Left, Right, Home, End, Insert, Delete, PageUp, PageDown, or F1-F12. Combine C- (Ctrl), M- (Alt), and S- (Shift) prefixes, e.g. C-r, S-Tab, or C-M-Left. Set literal=true to send the text unchanged.\n\nexec tool declaration:\n```ts\ndeclare const tools: { mcp__paseo__send_terminal_keys(args: { keys: string; literal?: boolean; terminalId: string; }): Promise<CallToolResult>; };\n```"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "base_extension": 389,
+  "candidate_extension": 681,
+  "added_section": 292,
+  "skill_words": 1380,
+  "skill_sha256": "4081a50ae285a7a4e48eda8f95ad230e660d3cf629e647e44aa0bf94b27279c3",
+  "schemas": 14,
+  "schema_words": 604,
+  "workflow_words": 5781,
+  "note_words": 37,
+  "runbook_words": 796
+}

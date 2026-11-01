@@ -1,0 +1,140 @@
+[
+  {
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "stdout": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5781 of 5781 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "96b73073a1384951fab6de74ecfee94719127535",
+      "--require",
+      "0042",
+      "0046"
+    ],
+    "exit": 0,
+    "stdout": "45 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-human-surfaces-visible-and-reachable/.validation-2-8aa76f15",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable.md",
+      "--base",
+      "96b73073a1384951fab6de74ecfee94719127535",
+      "--head",
+      "8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc"
+    ],
+    "exit": 0,
+    "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 96b73073a138 head 8aa76f15f3ce merge-base 39fdbb28b411\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/comment_ratio.py",
+      "96b73073a1384951fab6de74ecfee94719127535",
+      "8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "stdout": "code lines 0, comment lines 0, 0.0%\nmaximum 5% (package default) not enforced: 0 code lines added, fewer than 20\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/doc_impact.py",
+      "96b73073a1384951fab6de74ecfee94719127535",
+      "8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc"
+    ],
+    "exit": 0,
+    "stdout": "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md\treview\tkc-dev-flow-2/scripts/dispatch_records.py\nlearning.md\treview\tkc-dev-flow-2/scripts/dispatch_records.py, kc-dev-flow-2/scripts/laws_check.py\n2 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable"
+    ],
+    "exit": 0,
+    "stdout": "6 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable",
+      "--names",
+      "--strict"
+    ],
+    "exit": 2,
+    "stdout": "Check a task's dispatch records: each needs a Dispatched line with a full SHA, a Model line,\nnon-empty Checklist and Scope notes sections, a `Package root:` line with an absolute path inside Scope notes, a scope-notes\nline naming `main` as the completion recipient, and a checklist that is not only pointer lines (a record name plus only\nwords from POINTER_WORDS, as in \"Same checklist as implementation-2.\"); a pointer worded outside that set, such as\n\"Reuse the checklist of implementation-2.\", passes.\nWhen the workflow README lists an extension whose EXTENSION.md has an `Instruction FO adds to the scope notes`\nbullet, the first record of its `Joins:` stage (`implementation-1.md`) also needs that bullet's script paths with\n`<package>` replaced by the record's own `Package root:` value, or a line `<name> not run: <reason>`.\n\nUsage: dispatch_records.py [--readme FILE] <task folder or task .md file>\n       dispatch_records.py [--readme FILE] --coverage <task .md file> --stage <worker stage>\n       dispatch_records.py --names [--strict] <record file>...\n       dispatch_records.py --newest <state checkout> <task slug>\nExit 1 naming each record that lacks a part, or when the task has no dispatch records. The README is FILE, else the\nnearest README.md above the task folder with an `entity-type:` line; with neither, the run prints\n`extensions not checked: no workflow README above <folder>` and its exit code is unchanged. A missing FILE exits 2.\n--names prints `<file>:<line>: bare package script name <NAME>` for each package script (a .py file\ndirectly under <package>/scripts/ or <package>/extensions/<name>/) written with no directory part in the\nChecklist or Scope notes section (the whole file when it has neither heading), and exits 1 when any is found.\n--names also prints `<file>:1: no 'Candidate: <40-hex head>' line; ...` for a `validation-<N>.md` directly in a `dispatch/` folder\nwhose text above its first `## ` heading has no line delivery_gate.py accepts; --newest does not.\nFor a record in `<task folder>/dispatch/` with the task `<task folder>.md` beside the folder, --names also prints\n`<file>:1: reserved line 'ADR: NNNN' missing from scope notes; ...` when `implementation-1.md` has no scope-notes line\nfor each `ADR: NNNN` or `Migration: NNNN` the task's `## Number guards` reserves, and\n`<file>:1: Captain amendment N named in no dispatch checklist; ...` when an `### Amendment N` entry of the task's\n`## Captain amendments` (fenced lines skipped) is named by no `amendment N` phrase in any `## Checklist` of that folder's records.\n`<file>:1: '## FO alignment' records alignment as needed with no 'Result:' line; ...` for an `ideation-<N>.md` whose task has an unfenced\n`Alignment: needed` line and no `Result: <text>` line, and `<file>:1: Captain amendment N <Captain|Asked> line holds a backslash-quote copied from JSON; ...`\nfor a `\\\"` on a `Captain:` or `Asked:` amendment line outside a `Superseded text:` block.\n--names refuses implementation records (including message continuations) for Pilot/Prod when the last unfenced\n`## Design` (also ` \u2014 title` or `: title`) contains `docs/adr/<placeholder>-title.md` and task_facts has no reserved ADR.\nQuoted/fenced paths and numbered citations do not signal this obligation; scope-copy checks stay first-record-only.\nA record whose task file is absent is not judged by task-fact checks.\n--names reports skipped context checks on stderr. --strict requires --names and at least one record;\nit exits 2 for a record outside task/dispatch or without an adjacent task file, after running the existing checks.\n--names also refuses a live validation rerun with open F-numbered Needs decision findings until a later\ncommitted native Captain validation resolution or Captain amendment exists (ADR 0045). It skips this predicate\nfor non-git snapshots; missing or ambiguous required git history exits 2.\n--newest runs that scan on the file added by the latest commit that adds a file under <slug>/dispatch/, read as it\nis on disk: exit 0 when it is clean or the task has no record, 1 when a name is found, 2 when git cannot read the state.\n--coverage checks presence for a declared ideation, implementation or validation stage after an unfenced report:\nexit 0 when not due or covered, 1 when missing, 2 for invalid input or read errors. A positive-numbered stage\nrecord or stage message record covers repeated reports; contents and historical send timing are not checked.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable.md"
+    ],
+    "exit": 0,
+    "stdout": "paseo-human-surfaces-visible-and-reachable.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "96b73073a1384951fab6de74ecfee94719127535...8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.33.1/scripts/dispatch_records.py",
+      "--names",
+      "--strict",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable/dispatch/ideation-1.md",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable/dispatch/ideation-2.md",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable/dispatch/implementation-1.md",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable/dispatch/implementation-2.md",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable/dispatch/validation-1.md",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-human-surfaces-visible-and-reachable/dispatch/validation-2.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,57 @@
+Preparing worktree (detached HEAD 8aa76f15f)
+HEAD is now at 8aa76f15f Merge remote-tracking branch 'origin/spacedock-ensign/peer-status-reaches-fresh' into spacedock-ensign/paseo-human-surfaces-visible-and-reachable
+PASS candidate 8aa76f15f3ce56fbaa2b2e69dd0889c8bf5580fc; main 96b73073a1384951fab6de74ecfee94719127535; merge-base 39fdbb28b411d44a323741f645c7c1d75c653be1
+REJECTED document control: missing worker note
+REJECTED document control: missing section
+REJECTED document control: extra policy
+PASS one-file approved append; added words=292
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5781 of 5781 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+45 ADR file(s) checked, 0 legacy
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base 96b73073a138 head 8aa76f15f3ce merge-base 39fdbb28b411
+code lines 0, comment lines 0, 0.0%
+maximum 5% (package default) not enforced: 0 code lines added, fewer than 20
+0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'
+6 dispatch record(s) complete
+paseo-human-surfaces-visible-and-reachable.md: design surfaces presentable
+scope check not run: stage is validation, not ideation
+# Attended human-surface trial, FO-run, 2026-11-01, candidate 8aa76f15f
+
+Host srv_Vu_gVMYcYLxv, Captain's visible workspace wks_a8f029f6e72d90cb, cwd the colombo workspace.
+
+Terminal 44e0744d "Human surface trial": FO sent `printf 'surface-ready\n'`. The Captain said 「我用手機貼上了」; capture shows `captain-visible` twice and the terminal re-wrapped to a narrower width. Pasted over Paseo with the phone offline on Tailscale, so the terminal reach does not depend on Tailscale.
+
+Page: /tmp/hs-trial, `python3 -m http.server 52901 --bind 127.0.0.1`, tab 78f6236d in the same workspace.
+Intact: naturalWidth 80 and naturalHeight 80, screenshot shows the green square, network shows probe.svg.
+Negative control: probe.svg renamed, HTML still 200, svg 404, naturalWidth 0. Then restored.
+Serve baseline before any change: serve-baseline.json, ports 8410, 8412, 8531, 8617, 8660, 8725, none owned by this trial.
+
+Desktop tab: the Captain said 「好了」 at step 2; evaluate read result "clicked", naturalWidth 80, naturalHeight 80.
+
+Phone page: no approved private route existed for this page, so FO used the accepted per-task Tailscale Serve fallback: host kentmacbookpro-3, `tailscale serve --https=8413 52901` in foreground terminal ec69258e, tailnet only, lifetime this step. https://kentmacbookpro-3.tail815bb3.ts.net:8413/
+Phone pixel-10-pro-xl online, direct; server log 10:23:41 +08 shows the page, the picture and the favicon. The Captain: 「按了」, then asked whether he saw the green square and clicked: 「有」. A phone click sends no request, so that result rests on his word.
+
+Cleanup: Serve and http.server stopped, tab and both terminals closed and read back absent, Serve config equal to serve-baseline.json.
+
+Not verified:
+- denied access for an excluded device: the tailnet holds only the Captain's own devices.
+- worker URL handback (step 4): no ordinary dispatched worker needed a page in this trial, so it was not exercised.
+- relay's real rr replay (step 6): separate.
+
+Relay replay (step 6) not run: 2026-11-01 the relay FO answered b11-757-rr that relay holds no rr candidate commit, staging authority or instruction sheet, and pointed at subspace-v0's terminal-review-works-in-paseo. That open task is about /subspace:r, not rr, and no supported rr opener inside Paseo was found. Relay stays unverified; AC-6 cannot be claimed as passed.
+# Cold FO reach, candidate 8aa76f15f, FO-run, 2026-11-01
+
+Sonnet, dev entry, workflow listing paseo, no Paseo tools, so these show what the FO reads and says, not what it does. Harness: run2.sh; logs hs-*, hd-*.
+
+| Prompt | Runs | Section returned |
+|---|---|---|
+| Captain asks for a terminal and a preview for the phone | hs-1..3 | 1/3 |
+| FO writes scope notes for a worker who needs a preview page | hd-1..3 | 2/3 |
+
+hs-1 and hs-3 skipped it, still rejected localhost for the phone, but proposed binding to 0.0.0.0, wider than the section's private route. hd-2 skipped it and its scope notes carry no paseo instruction. origin/main was not run.
+Current device list: [('KentMacBookPro (3)', 'Kent Chen'), ('Pixel 10 Pro XL', 'Kent Chen'), ('Kent’s Mac mini', 'Kent Chen')]
+PASS current own-device list and unchanged Serve baseline; this is not an access-denial test
+STATIC CHECKS PASS; HUMAN EVIDENCE IS FO-RECORDED, NOT REPLAYED. Worker execution/handback are post-delivery; Relay replay is separate under amendment 1.
