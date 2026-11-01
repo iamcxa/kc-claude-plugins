@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/model-roster-validation3/probes.py", line 8, in <module>
+    m.exercise_model_roster(out/('fixture-'+sys.argv[1]),Path(sys.argv[2]));sys.exit(0)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.validation3-candidate/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 579, in exercise_model_roster
+    assert result.get("authors") == [
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('absent roster must retain author references and tuples', {'commit': 'd7c18a9188a9d3f1423628e7bff74e0bce779cfb', 'digest': None, 'path': '.dev2/model-roster.json', 'role': 'validation', 'source': 'readme-default', 'tuple': None})

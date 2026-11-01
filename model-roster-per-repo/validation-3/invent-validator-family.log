@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/model-roster-validation3/probes.py", line 8, in <module>
+    m.exercise_model_roster(out/('fixture-'+sys.argv[1]),Path(sys.argv[2]));sys.exit(0)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.validation3-candidate/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 583, in exercise_model_roster
+    assert result.get("family") == "unverified", ("no configured validator tuple", result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('no configured validator tuple', {'authors': [{'record': '/tmp/model-roster-validation3/fixture-invent-validator-family/author-records/dispatch/implementation-1.md', 'tuple': {'effort': 'high', 'host': 'paseo', 'model': 'gpt-6.1-sol', 'provider': 'codex'}}, {'record': '/tmp/model-roster-validation3/fixture-invent-validator-family/author-records/dispatch/implementation-2.md', 'tuple': {'effort': 'high', 'host': 'paseo', 'model': 'gpt-6.1-sol', 'provider': 'codex'}}, {'record': '/tmp/model-roster-validation3/fixture-invent-validator-family/author-records/dispatch/implementation-3.md', 'tuple': {'effort': 'high', 'host': 'paseo', 'model': 'gpt-6.1-sol', 'provider': 'codex'}}], 'commit': 'e78eb67a969e671e4ec186d81deec21ae3c50f12', 'digest': None, 'family': 'same-family: openai', 'path': '.dev2/model-roster.json', 'role': 'validation', 'source': 'readme-default', 'tuple': None})

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/model-roster-validation3/probes.py", line 8, in <module>
+    m.exercise_model_roster(out/('fixture-'+sys.argv[1]),Path(sys.argv[2]));sys.exit(0)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-per-repo/.validation3-candidate/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 551, in exercise_model_roster
+    assert result["family"] == "same-family: openai", result
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'authors': [{'record': '/tmp/model-roster-validation3/fixture-revert-absent-author/author-records/dispatch/implementation-3.md', 'tuple': None}], 'commit': 'c472371113659c74c006f8757f8be79483e2bf69', 'digest': 'sha256:d1e05f68b0c3848e57b0955c2d7fbb89f6ae8c261ace2c3cc83c4bac86f14002', 'family': 'unverified', 'path': '.dev2/model-roster.json', 'role': 'validation', 'source': 'repository', 'tuple': {'effort': 'high', 'host': 'paseo', 'model': 'gpt-6-astra', 'provider': 'codex'}}

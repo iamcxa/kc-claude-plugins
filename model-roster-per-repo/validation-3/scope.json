@@ -1,0 +1,11 @@
+{
+  "head": "cf8e5848654f03fa5c509751298e2f75d7c151ba",
+  "base": "9b32877f4b98583fa41ce090664f20b3ffcae122",
+  "repair_files": [
+    "kc-dev-flow-2/scripts/model_roster.py",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ],
+  "commits": [
+    "cf8e5848654f03fa5c509751298e2f75d7c151ba"
+  ]
+}

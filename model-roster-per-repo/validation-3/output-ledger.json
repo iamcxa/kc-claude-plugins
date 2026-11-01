@@ -1,0 +1,317 @@
+{
+  "command_count": 106,
+  "outputs": [
+    {
+      "category": "readme-default",
+      "bytes": 164,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "readme-default",
+      "bytes": 164,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "error",
+      "bytes": 146,
+      "words": 13,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 61,
+      "words": 7,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 44,
+      "words": 4,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 87,
+      "words": 8,
+      "exit": 1
+    },
+    {
+      "category": "repository",
+      "bytes": 298,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 298,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 292,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 298,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 329,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 298,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 298,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 329,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "readme-default",
+      "bytes": 164,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 298,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "error",
+      "bytes": 58,
+      "words": 7,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 87,
+      "words": 8,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 87,
+      "words": 8,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 63,
+      "words": 5,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 90,
+      "words": 14,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 44,
+      "words": 4,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 41,
+      "words": 4,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 41,
+      "words": 4,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 60,
+      "words": 6,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 65,
+      "words": 6,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 84,
+      "words": 8,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 73,
+      "words": 7,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 73,
+      "words": 7,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 55,
+      "words": 4,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 51,
+      "words": 4,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 71,
+      "words": 5,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 84,
+      "words": 9,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 81,
+      "words": 8,
+      "exit": 1
+    },
+    {
+      "category": "error",
+      "bytes": 87,
+      "words": 8,
+      "exit": 1
+    },
+    {
+      "category": "readme-default",
+      "bytes": 164,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "error",
+      "bytes": 62,
+      "words": 5,
+      "exit": 1
+    },
+    {
+      "category": "repository",
+      "bytes": 299,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 298,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 520,
+      "words": 2,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 520,
+      "words": 2,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 520,
+      "words": 2,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 703,
+      "words": 2,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 329,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 440,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 433,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 623,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 446,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "repository",
+      "bytes": 447,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "readme-default",
+      "bytes": 195,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "readme-default",
+      "bytes": 743,
+      "words": 1,
+      "exit": 0
+    },
+    {
+      "category": "readme-default",
+      "bytes": 648,
+      "words": 1,
+      "exit": 0
+    }
+  ]
+}

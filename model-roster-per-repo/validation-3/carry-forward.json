@@ -1,0 +1,12 @@
+{
+  "previous_state": "b0a3ea5f08e791c7afc9df6b92f08eedbf97df05",
+  "evidence_paths": [
+    "model-roster-per-repo/validation-1",
+    "model-roster-per-repo/validation-2",
+    "model-roster-per-repo/adoption-trial",
+    "model-roster-per-repo/cold-fo",
+    "_archive/paseo-codex-dispatch-practice/dispatch"
+  ],
+  "diff": "",
+  "criteria_and_amendment_identical": true
+}
