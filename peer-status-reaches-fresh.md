@@ -61,6 +61,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:peer-status-reaches-fresh:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:peer-status-reaches-fresh-validation-1
+              briefing:
+                id: briefing:peer-status-reaches-fresh:validation:attempt-1:revision-1
+                digest: sha256:38a6fd2bcf61690fa880e39a696bb7581ec676a30b010d199af7b02996574ddf
+                room-ref: ./peer-status-reaches-fresh/review/validation/briefing-1
 started: 2026-10-30T10:12:16Z
 worktree: .worktrees/spacedock-ensign-peer-status-reaches-fresh
 pr: iamcxa/kc-claude-plugins#756
