@@ -14,6 +14,17 @@ gates:
                 id: briefing:special-roles-follow-the-model-table:backlog:attempt-1:revision-1
                 digest: sha256:b2c65d5d5587dfaa508f2ffe71c13a4672dad8862a220fd572d9f9f14c343bb2
                 room-ref: ./special-roles-follow-the-model-table/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:special-roles-follow-the-model-table:backlog:1
+                briefing: briefing:special-roles-follow-the-model-table:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-01T17:48:13.754386Z"
+                decision: approve
+                reason: The Captain 「可以，但不用寫了就報錯，接受 `max` 和 `ultra`沒關係，等於就是不建議，但使用者真的想要也可以」 (chat, 2026-11-02), answering the batch 12 sitting 「決定：五件事都照建議，第 5 項用這張表，並把 xhigh 上限寫進設定檔檢查，可以嗎？」; approves Pilot, this outcome and these bounds, with the stated change.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
