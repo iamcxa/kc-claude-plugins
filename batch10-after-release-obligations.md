@@ -61,6 +61,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:batch10-after-release-obligations:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:batch10-after-release-obligations-validation-1
+              briefing:
+                id: briefing:batch10-after-release-obligations:validation:attempt-1:revision-1
+                digest: sha256:00375545d8253643c914dad5b3861969370a1ec88a954a95ab4abe9cfee50908
+                room-ref: ./batch10-after-release-obligations/review/validation/briefing-1
 started: 2026-10-30T10:01:21Z
 worktree: .worktrees/spacedock-ensign-batch10-after-release-obligations
 pr: iamcxa/kc-claude-plugins#755

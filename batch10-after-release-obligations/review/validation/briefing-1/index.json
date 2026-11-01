@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:batch10-after-release-obligations:validation:attempt-1:revision-1",
+  "question": "「決定：四件事都照這個新建議嗎？要改哪件直接說。」 Item 1 of that sitting: merge this PR; item 4: regular merge.",
+  "artifacts": [
+    {
+      "id": "artifact:batch10-after-release-obligations:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b42906f7e49f47738b93a2a71a4946d2597ecc7a/batch10-after-release-obligations.md",
+      "rev": "sha256:66eb01d9430be78898f7793bd09eb22cbd400a75e93aaee9744cd444bed1c27e",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of batch10-after-release-obligations, PR #755, head 0c55b9a574b8abd845e2ab969c200aa44b1588e4, in the batch 11 sitting.\nSufficiency: unchanged historical amendments stop failing the law check and inline history resolves, shown by 152 tests and a 150-commit replay in the validation report.\nNecessity: 22 mutations each fail a target assertion, and each changed file is needed by those tests.\nSecond reviewer: Copilot because the PR changes merge or review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5711215955\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: no major issues on this head, comment:6520986715.\nApproving merges this PR by regular merge unless you say you merge or hold."
+    }
+  ]
+}
