@@ -82,7 +82,7 @@ gates:
                 state: pending
 started: 2026-10-30T10:33:26Z
 worktree: .worktrees/spacedock-ensign-model-roster-per-repo
-pr: iamcxa/kc-claude-plugins#759
+pr: pr-merge:759
 ---
 
 ## Scope
