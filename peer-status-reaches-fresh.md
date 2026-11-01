@@ -69,6 +69,17 @@ gates:
                 id: briefing:peer-status-reaches-fresh:validation:attempt-1:revision-1
                 digest: sha256:38a6fd2bcf61690fa880e39a696bb7581ec676a30b010d199af7b02996574ddf
                 room-ref: ./peer-status-reaches-fresh/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:peer-status-reaches-fresh:validation:1
+                briefing: briefing:peer-status-reaches-fresh:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-01T07:40:21.237865Z"
+                decision: approve
+                reason: The Captain 「可以」 (chat, 2026-11-01), answering the batch 11 sitting 「決定：四件事都照這個新建議嗎？要改哪件直接說。」, whose item 1 merges this PR and item 4 uses a regular merge; accepts the recommendation stated in that question.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-30T10:12:16Z
 worktree: .worktrees/spacedock-ensign-peer-status-reaches-fresh
 pr: iamcxa/kc-claude-plugins#756
