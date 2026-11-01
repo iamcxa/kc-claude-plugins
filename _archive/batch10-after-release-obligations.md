@@ -3,7 +3,7 @@ title: Batch-10 obligations owed after release are met or returned to the Captai
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -79,10 +79,13 @@ gates:
                 reason: The Captain 「可以」 (chat, 2026-11-01), answering the batch 11 sitting 「決定：四件事都照這個新建議嗎？要改哪件直接說。」, whose item 1 merges this PR and item 4 uses a regular merge; accepts the recommendation stated in that question.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-30T10:01:21Z
 worktree: .worktrees/spacedock-ensign-batch10-after-release-obligations
 pr: pr-merge:755
+verdict: PASSED
+completed: 2026-11-01T07:48:15Z
+archived: 2026-11-01T07:48:15Z
 ---
 
 ## Scope
