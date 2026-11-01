@@ -43,7 +43,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.33.1 x-release-please-version -->
+<!-- kc-dev-flow-2 0.34.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -78,7 +78,7 @@ When requested, chief-engineer reviews the complete package/process batch before
 
 ## Stages
 
-Stage workers run on the workflow's default model.
+Stage workers follow `<package>/references/model-roster.md`; absence retains README defaults.
 `kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and
 `kc-dev-flow-2:observer` run on the model and reasoning their agent files declare, never
 a cheaper one. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
@@ -115,10 +115,7 @@ message to a worker FO resumes is a dispatch too, with the same check and a chec
 After each worker report, before advancing or preparing its gate, FO runs
 `python3 <package>/scripts/dispatch_records.py --coverage <task> --stage <stage>`; nonzero holds that task.
 This check does not observe unrecorded messages.
-A checklist or scope-notes line that names a package script writes
-`<package>/scripts/NAME.py` with the absolute root substituted, never the bare script
-name; before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names <record>`
-on the saved record and rewrites each name it lists. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
+Before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names --strict <record>` on the saved record; nonzero holds dispatch. Relative script paths are allowed; bare package script names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped context checks on stderr. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
 <dir> --read <task> --stage <stage> --checklist`, return any line it reports as neither
 DONE nor SKIPPED to the worker with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one, and do not edit the worker's report. The refusal itself
 does not say why; other causes are a missing evidence line or Summary and an uncommitted
