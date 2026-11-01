@@ -69,6 +69,17 @@ gates:
                 id: briefing:model-roster-per-repo:validation:attempt-1:revision-1
                 digest: sha256:9a1b02493aa3d53c9c85fc12d8ac4659a17f7e5c44088876fb7b4c4418fac469
                 room-ref: ./model-roster-per-repo/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:model-roster-per-repo:validation:1
+                briefing: briefing:model-roster-per-repo:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-01T10:07:39.154389Z"
+                decision: approve
+                reason: The Captain 「可以」 (chat, 2026-11-01), answering the batch 11 sitting 「決定：四件事都照這個新建議嗎？要改哪件直接說。」, whose item 2 merges this PR after its amended criteria pass and item 4 uses a regular merge; accepts the recommendation stated in that question.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-30T10:33:26Z
 worktree: .worktrees/spacedock-ensign-model-roster-per-repo
 pr: iamcxa/kc-claude-plugins#759
