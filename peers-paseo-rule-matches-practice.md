@@ -69,6 +69,17 @@ gates:
                 id: briefing:peers-paseo-rule-matches-practice:validation:attempt-1:revision-1
                 digest: sha256:698838c264e65eba9d1450f1b3f030f80c9d7113a550b0fac249b49ddd89052d
                 room-ref: ./peers-paseo-rule-matches-practice/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:peers-paseo-rule-matches-practice:validation:1
+                briefing: briefing:peers-paseo-rule-matches-practice:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-01T07:38:44.184921Z"
+                decision: approve
+                reason: The Captain 「可以」 (chat, 2026-11-01), answering the batch 11 sitting 「決定：四件事都照這個新建議嗎？要改哪件直接說。」, whose item 1 merges this PR and item 4 uses a regular merge; accepts the recommendation stated in that question.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-30T10:01:54Z
 worktree: .worktrees/spacedock-ensign-peers-paseo-rule-matches-practice
 pr: iamcxa/kc-claude-plugins#754
