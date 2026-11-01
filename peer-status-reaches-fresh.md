@@ -97,6 +97,7 @@ Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review befor
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-30 — does amendment 1 withdraw what the Captain approved, and what changes in the build?
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-31 — does amendment 2 withdraw what the Captain approved, and what changes in the build?
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-10-31 — does amendment 3 withdraw what the Captain approved, and what changes in the build?
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-01: ran on Codex gpt-6-astra under the Captain's 2026-10-27 model ruling; role_triggers.py ranks Claude model names only; reports in review/engineering-reviewer-amendment-*.md
 
 ## Design
 
