@@ -3,7 +3,7 @@ title: Inside Paseo, FO and workers open human-facing terminals and browser tabs
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: implementation
 gates:
     version: 1
     records:
@@ -95,6 +95,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-30 — batch-11 review before the joint ideation sitting: approve, revise, split or hold each task, the Captain's decisions, overlap and order
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-01: the chief-engineer batch review on opus ruled on these relaxations before the Captain answered; an engineering-reviewer on opus would repeat it
 
 ## Design
 
@@ -274,6 +275,13 @@ Recommended order: apply the accepted peer-policy edit (including the notice tex
 **AC-6** The local workflow trial precedes relay's real rr replay, with route-specific results. Evidence: time-ordered FO receipts for steps 1–6; a supported pinned relay candidate, documented opener, staging authority, Captain sign-in/code/confirmation, cancellation before retry and task-owned cleanup. Falsifier: replaying only old receipts, invoking the unsupported installed rr, accepting duplicate live requests or a successful local workflow fixture as relay proof. Current evidence: historical relay reports reread; neither new trial executed. If the relay candidate/opener is unavailable, FO receives a concrete gap and relay stays unverified; full task acceptance cannot claim this criterion passed.
 
 **AC-7** The change remains the single extension section and reading/ownership claims match the final bytes. Evidence: exact one-file product diff, lifecycle recount above including installed skill, current schemas, dispatch note and one-time trial instructions/outputs; run existing package lint and applicable dispatch/design checks from the dispatched package. Falsifier: counting only workflow.md, hiding the skill/runbook cost, editing an adopter or sibling, or treating relaxed peer asks as surface activation. Current evidence: current source/skill/schema counts and all named local overlap records checked; candidate lint/runtime recount awaits implementation. No new script or CI change/cost-saving claim.
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-01, chat
+Captain: 「可以」 (chat, 2026-11-01)
+Asked: 「決定：四件事都照這個新建議嗎？要改哪件直接說。」, which FO had stated as: 「| 3 | #757 | 同樣放寬條件後合併，**不再為它多跑輪次**，明確記下「規則只有一半機會被讀到」 |」, with the relaxation stated as 「#757 放寬條件後合併：工作者相關的兩項改成上線後觀察；「別的裝置連不上」改看裝置清單；relay 重跑拆成另一張票」
+Supersedes: AC-1, AC-3, AC-5, AC-6
 
 ## Stage Report: ideation
 
