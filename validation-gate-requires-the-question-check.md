@@ -3,6 +3,17 @@ title: A validation gate cannot be bound before the delivery question check pass
 status: backlog
 variant: kc-dev-flow-2
 profile: pilot
+gates:
+    version: 1
+    records:
+        - id: gate:validation-gate-requires-the-question-check:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:validation-gate-requires-the-question-check-backlog-1
+              briefing:
+                id: briefing:validation-gate-requires-the-question-check:backlog:attempt-1:revision-1
+                digest: sha256:2cff60765797645d97fe6b7571907bb19f2f1737186af25b4515bb6e3c3e02c5
+                room-ref: ./validation-gate-requires-the-question-check/review/backlog/briefing-1
 ---
 
 ## Scope
