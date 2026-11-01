@@ -1,0 +1,19 @@
+{
+  "class": "never",
+  "head": "9f065b01f1c6d6561793a168f584075edb85bf1f",
+  "model": "not run",
+  "necessity": "mutations remove each retained behaviour and fail; the workflow word count stays 5781.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'PASSED at `9f065b01f1c6d6561793a168f584075edb85bf1f`; AC-1\u2013AC-5 independently ex'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_records.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#758",
+  "sufficiency": "the check now says which records lacked task context and --strict refuses them, shown by three replayed batch-9 incidents and 1281 pinned records in the validation report.",
+  "time": "2026-11-01T07:39:26Z",
+  "verdict": "ask"
+}
