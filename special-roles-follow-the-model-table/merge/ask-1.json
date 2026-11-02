@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "8eed70b260346811a1f2aa035ca1354a2d735576",
+  "model": "not run",
+  "necessity": "the changed files are that table, the agents it names, the checker and their tests; one earlier RoboRev finding belonged to PR #765, which owns the defaults file.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: path: 'docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-c'",
+    "point: path: 'docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md'",
+    "point: path: 'kc-dev-flow-2/agents/chief-engineer.md'",
+    "point: path: 'kc-dev-flow-2/agents/design-director.md'",
+    "point: path: 'kc-dev-flow-2/agents/engineering-reviewer.md'",
+    "point: path: 'kc-dev-flow-2/agents/observer.md'",
+    "point: path: 'kc-dev-flow-2/references/model-roster.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/role_triggers.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_lint_skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_poc_readme.py'",
+    "point: more: 3 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#764",
+  "sufficiency": "role settings use effort so the Captain's table applies, the Reviewer check accepts Astra, and each role's declared settings match the table, shown by the probes and replays in the validation report.",
+  "time": "2026-11-02T08:20:10Z",
+  "verdict": "ask"
+}
