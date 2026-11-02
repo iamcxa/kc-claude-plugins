@@ -25,6 +25,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:model-roster-question-needs-both-families:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:model-roster-question-needs-both-families-ideation-1
+              briefing:
+                id: briefing:model-roster-question-needs-both-families:ideation:attempt-1:revision-1
+                digest: sha256:4f7daba3d0826bf70b5a617c5a9423d0bbc2a906f97720df749fa733ca51b30c
+                room-ref: ./model-roster-question-needs-both-families/review/ideation/briefing-1
 ---
 
 ## Scope

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:model-roster-question-needs-both-families:ideation:attempt-1:revision-1",
+  "question": "「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」",
+  "artifacts": [
+    {
+      "id": "artifact:model-roster-question-needs-both-families:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/104a1e5b70cb99462eecf4f7b9e80d6412869523/model-roster-question-needs-both-families.md",
+      "rev": "sha256:505fc65a3abea3a52dc8022ec7dacf1be939de59713673101d2488dc0c70ea5e",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 sitting; chief-engineer reviewed all four. Recommended revise with the decisions the sitting named, then a second presentation."
+    }
+  ]
+}
