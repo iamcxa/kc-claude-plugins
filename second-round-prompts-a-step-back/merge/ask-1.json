@@ -1,0 +1,23 @@
+{
+  "class": "never",
+  "head": "0d8cb2b13be65d6cd8917d343797e8fa515e155f",
+  "model": "not run",
+  "necessity": "the seven files are the counts, the two surfaces, ADR 0026's record and their tests; workflow words do not change.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 1 dated 2026-11-02'",
+    "point: path: 'docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-c'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/role_triggers.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_role_triggers.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#766",
+  "sufficiency": "two failed validations or two replacing amendments print the reminder at the idle and merge checks, the third holds the merge ask until chief-engineer is called, and each count reports at its own thre",
+  "time": "2026-11-02T15:43:42Z",
+  "verdict": "ask"
+}
