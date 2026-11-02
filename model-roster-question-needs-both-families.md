@@ -59,6 +59,7 @@ gates:
                 state: consumed
 started: 2026-11-02T04:56:19Z
 worktree: .worktrees/spacedock-ensign-model-roster-question-needs-both-families
+pr: iamcxa/kc-claude-plugins#765
 ---
 
 ## Scope
