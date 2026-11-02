@@ -356,3 +356,53 @@ The design now carries the Captain's five rulings and his three corrections. The
 ### Summary
 
 The approved role settings, model-floor behavior, table/workflow text and ADRs are locally committed with behavioral and mutation evidence. No product push or PR was made; FO retains sibling integration for RoboRev High 1397, publication, independent validation/CI and the old director seed's retirement. This report claims the bounded implementation and its listed checks, not a clean delivery gate.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design; only the files the design names
+  Code branch `spacedock-ensign/special-roles-follow-the-model-table`, base `c129cb215c2630d08853eeffae0fd5a2ee7e40c6`, candidate `562b1a87198d97bb2ae1d87b72884e390b20e146`; 15 authorized files (the CI repair dispatch adds test_poc_readme.py), no version bump, clean code tree.
+- DONE: One Draft PR stacked on PR #763
+  FO opened https://github.com/iamcxa/kc-claude-plugins/pull/764, observed Draft/open with base branch `spacedock-ensign/worker-completion-reaches-fo-on-paseo` and published head d14c5ae3b. This worker made no product push; the one follow-up commit is local for FO.
+- DONE: ADR 0049 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  Added `docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md`, with D1–D5, quoted Words/Asked and protection pointers; appended the approved model-floor amendment to ADR 0026.
+- DONE: AC-1: Engineering-reviewer accepts the table models and rejects cheaper calls
+  `python3 -B -m unittest test_role_triggers`: 27 pass; pilot Astra/prefixed Opus clear, Sol/Terra/Luna/Sonnet stay owed; prod Astra/Fable clear, Opus stays owed. Removing Astra fails 2 cases; leading-word rank fails 4 (`/tmp/special-roles-implementation/mutations.log`).
+- DONE: AC-2: Chief-engineer needs opus rank for repairs and review rounds
+  Both event paths exercised with Sonnet, Sol, Opus, Astra and waiver; removing the floor fails 4 cases. Date and waiver regressions pass in the same suite.
+- DONE: AC-3: Historical results and the real waived case
+  `/tmp/special-roles-implementation/replay.py`: all 184 task files at state `e9c2df74f01cfe7c181f93406a681d89f89e6584`, 0 changed exits; actual peer-policy task minus its waiver: base 1/candidate 0, Sol mutation 1; result rows in `replay-results.json` beside the script.
+- DONE: AC-4: Owed lines name both families and leave the recorded model open
+  Role tests assert both floors and `<model>`; `test_pr_watch` and `test_delivery_gate` run the real script. Reverting family wording fails 6 cases; 1009 unit tests from the complete CI job: 1002 pass, 7 skipped (26 commands, including lint and both Spacedock integration scripts); `/tmp/special-roles-ci-repair/suite-results.json` records each command, count and log. The earlier 322 was only a subset, not the CI suite.
+- DONE: AC-5: Actual Claude model and perTurnEffort reach all four roles
+  Unchanged agent bytes, verified against d14c5ae3b; its candidate session `76d6cece-b168-4c1b-a042-579620483668`: Opus/xhigh for chief-engineer and engineering-reviewer, Sonnet/high for director and observer; four Agent calls without model arguments. `/tmp/special-roles-implementation/native-evidence.json` binds agentType, transcripts and turns; scoped warnings candidate 0/base 4. Base session `a8e828f4-6f73-4af4-8564-91f7dd39cd2a` records medium; reasoning mutation session `1e4d5c54-443c-43c4-9155-c38703965874` restores medium and one warning. Initial sandbox login failure was resolved with native access; no credentials read. An explicit dispatch model can override the file.
+- DONE: AC-6: Seven approved rows, effort lint and explicit max acceptance
+  Repository lint passes; changed Claude table cell and agent effort are refused; removing the table comparison fails its mutation test. Real resolver accepts committed max and ultra rosters (`roster-effort-controls.log`); no effort cap added. The separately owned adoption-recommendation discrepancy is retained under RoboRev below.
+- DONE: AC-7: Four roles, implementation-worker family wording and 5781 words
+  Repository lint: 5781/5781, no budget step; family phrase counts 1/0. The real dispatch suite passes against CI plugin commit 4d158a484ec73e184861067f8ed1e20087fdc26a (`/tmp/special-roles-ci-repair/test_sd_dispatch.log`); dropping director breaks reviewer-record, restoring all-workers yields phrase count 0 (`dispatch-controls.log`). Workflow words stay 5781; model-roster.md 634→760; complete agent files chief-engineer 129→122 and reviewer 188→179.
+- DONE: AC-8: Stage defaults reach actual Spacedock dispatch
+  Disposable template builds: Claude ideation/validation opus, implementation sonnet; Codex null for all three. Removing either opus state emits sonnet/from defaults. `/tmp/special-roles-implementation/dispatch-controls.log`; raw CLI evidence at `/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-l4wp13y5/commands.jsonl` (binary reports 0.27.2).
+- DONE: AC-9: Decision lint and missing-record falsifier
+  `python3 -B <package>/scripts/adr_lint.py docs/adr --since c129cb215c2630d08853eeffae0fd5a2ee7e40c6 --require 0049`: exit 0, 48 ADR files/0 legacy; empty disposable ADR folder with --require 0049 exits 1, required record missing (`adr-missing-control.log`).
+- DONE: AC-10: Release-walk code and extension remain unchanged
+  `git diff --stat origin/main -- kc-dev-flow-2/scripts/release_acceptance.py kc-dev-flow-2/extensions/release-acceptance` is empty.
+- SKIPPED: AC-10: Retire design-director-model-follows-task after merge
+  The seed is still backlog; retiring it is FO's state action, explicitly outside this worker's scope. No post-merge retirement or its falsifier is claimed complete.
+- DONE: Repository lint, number guard, comment ratio and design check
+  Repository `lint-skills.py` exit 0; <package> number_guards check with the assigned --base: PASS/no findings; comment_ratio base..HEAD 63 code/2 comments, 3.2% ≤ 5%; design_surfaces check exit 0. <package> is `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0`.
+- SKIPPED: Clean RoboRev verdict and all acceptance criteria green
+  Native check on the repair head exits 1: `findings on 562b1a871; evidence=roborev:1400` (same scope finding as job 1397). High: model-roster.md's xhigh table differs from the still-high `references/model-roster-defaults.json` recommendation. Fix requires a file absent from this design's implementation list; no out-of-scope edit; no finding concerns the CI test repair. The approved sibling `model-roster-question-needs-both-families` owns that JSON and its Opus/high, Sol/xhigh, Astra/xhigh offer (current status implementation). FO must integrate that prerequisite and rerun review; the recommendation on this isolated candidate is not accepted as clean. The initial sandbox-only attempt printed `incomplete: the roborev daemon is not running`; native review produced the bound findings above; no clean review is claimed.
+- DONE: Affected-document dispositions
+  Updated: ADR 0049 and kc-dev-flow-2/README.md. Unaffected: ADR 0020 (no budget change); ADR 0037 (shared-work rule unchanged); references/sd/adoption.md (dispatch test scope unchanged); skills/maintain-flow/SKILL.md (same commands and budget contract); learning.md (historical evidence unchanged). `doc_impact.py base HEAD` lists these seven documents.
+- DONE: CI cost measured or stated as not measured
+  CI cost per PR not measured; no CI trigger changed. Stage-model cost increase not measured. Product publication, hosted CI and independent validation remain with FO; local/native checks do not establish those outcomes.
+
+- DONE: Repair the hosted CI failure in DeriveTests.test_only_the_ideation_entry_and_section_are_removed
+  Reproduced 9 tests/1 failure at d14c5ae3b. The derivation already removes the entire ideation entry and keeps validation's Opus setting; replace the adjacent-line assertion with entry-bounded checks for model and gate. test_poc_readme.py: 9 pass; a disposable mutant retaining the removed model fails that exact test (`/tmp/special-roles-ci-repair/mutation.log`, python3 -B, no cached input). poc_readme.py is unchanged.
+- DONE: Run the whole package test suite the CI job runs, and correct the report's test count
+  All 26 Python commands from .github/workflows/kc-dev-flow-2-tests.yml pass: 1009 unit tests (1002 pass, 7 existing conditional skips) plus skill lint and real dispatch/recovery integration. Spacedock binary 0.27.2; plugin checkout exactly 4d158a484ec73e184861067f8ed1e20087fdc26a, CI's pin. Skipped: four optional design/amendment corpora or historical probes, one optional journey YAML integration, one optional real dispatch builder, one obligation-history corpus; no optional corpus or integration inputs were added for this local replay. Local macOS run, no hosted rerun claimed; no CI trigger change or measured cost per PR. Manifest and command logs: /tmp/special-roles-ci-repair/.
+- DONE: One follow-up commit on the assigned branch, no product push
+  562b1a87198d97bb2ae1d87b72884e390b20e146 changes only kc-dev-flow-2/scripts/test_poc_readme.py (2 added lines, 1 removed). The repair scope is dispatch/implementation-1-message-1.md. FO owns publishing it and observing hosted CI.
+
+### Summary
+
+This complete report supersedes the previous implementation report, correcting its incomplete suite count and its stale no-PR observation. The CI defect was a positional test assertion; the derivation behavior is unchanged and all 26 local CI commands pass (1002 unit tests pass and 7 conditional tests are skipped). FO retains product push/hosted CI, independent validation, the recorded recommendation finding and old director seed retirement; no clean delivery gate is claimed.
