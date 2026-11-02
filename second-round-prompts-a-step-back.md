@@ -57,6 +57,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-02T06:02:41Z
+worktree: .worktrees/spacedock-ensign-second-round-prompts-a-step-back
 ---
 
 ## Scope
