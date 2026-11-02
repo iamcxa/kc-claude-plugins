@@ -45,6 +45,8 @@ gates:
 
 ## Scope
 
+- Title for FO to set (frontmatter is FO's; the slug stays): "The merge-ask check holds a gate text with no external round count".
+- Outcome, restated under the Captain's ideation revise of 2026-11-02: `delivery_gate.py check` holds the ask on a gate text with no `External rounds:` line. Binding is not refused: `spacedock gate prepare` runs no package check.
 - Source: Batch 12 backlog sitting: the Captain 「可以，但不用寫了就報錯，接受 `max` 和 `ultra`沒關係，等於就是不建議，但使用者真的想要也可以」 (chat, 2026-11-02), answering 「決定：五件事都照建議，第 5 項用這張表，並把 xhigh 上限寫進設定檔檢查，可以嗎？」, item 2: 開候選「`gate prepare` 要先擋下沒跑 `delivery_gate question` 的情況」.
 - Bite: batch 11, 2026-11-01. FO bound four validation briefings without running `delivery_gate.py question`, and bound #757's on text that had failed it. Only the observers found this, after merge (`_archive/*/observer.md`).
 - Consumer: every FO binding a validation gate.
@@ -61,6 +63,7 @@ gates:
 ## Stop condition
 
 - A replay of the batch 11 sequence is refused or reported at or before binding, by a check that runs at that moment. If no package seam can run then, stop and return that to FO with the nearest available moment.
+- Fired at ideation: no package seam runs at binding. The Captain accepted the nearest moment, `check`, in the revise of 2026-11-02.
 
 ## FO alignment
 
@@ -72,7 +75,7 @@ Release review: not needed: workflow maintenance, on no journey map.
 
 ## Design
 
-**Stop-condition result: no package seam is verified at the binding moment; the nearest is `delivery_gate.py check`, which FO ran 3 to 24 seconds before six of the seven batch 11 bindings.** This design adds the missing rule there. Decision D1 asks the Captain whether that answers his 「要先擋下」.
+**`delivery_gate.py check` holds a gate text with no `External rounds:` line; nothing refuses a binding.** No package seam is verified at the binding moment, and `check`, which FO ran 3 to 24 seconds before six of the seven batch 11 bindings, is the nearest. The Captain accepted this as enough for now (D1).
 
 ### PRFAQ
 
@@ -122,9 +125,11 @@ What this settles:
 
 ### The change
 
-`check` applies `summary_round_problems` to `outside_fences(gate_text)` and adds its problem and one `next:` line to the existing problem list. Existing-code check: this reuses the function `question` already has and adds no command, file format or stage.
+`check` applies `summary_round_problems` to `outside_fences(gate_text)` and adds its problem and one `next:` line to the existing problem list. Existing-code check: this reuses the function `question` already has and adds no command, file format or stage. `references/sd/workflow.md` already tells FO to give `check` the "question and summary", so the line is in the text FO is told to supply.
 
 Files: `kc-dev-flow-2/scripts/delivery_gate.py` (`check` and one docstring sentence), `kc-dev-flow-2/scripts/test_delivery_gate.py`, and one ADR. No change to `question`, `pr_watch.py`, `references/sd/workflow.md` or any mod.
+
+Existing `check` tests change too, a cost the first design missed. Trial on a throwaway copy of `origin/main` 146727de, 2026-11-02: at base `test_delivery_gate.py` gave 7 errors of 119 tests in that copy, cause not read, so implementation reruns the suite in a real worktree; with the rule, 76 tests failed or errored; adding the line to the shared `CLAUSES` fixture left those 7 errors and 6 failing tests that write their own text. Because `question` tests share `CLAUSES`, the implementation adds the line in the `check` helpers instead, so the `question` tests keep their inputs.
 
 ADR to land, short title "The merge-ask check requires the round count". It amends ADR 0044's "merge checks stay as before" and records the bound claim: `check` reads the text FO supplies, before binding in the observed order, and neither forces that order nor reads the bound briefing.
 
@@ -145,25 +150,30 @@ Counted with `wc -w`; base is 0.34.0.
 | Startup; idle on an open PR; idle on a merged PR; after the archive | workflow README, `pr_watch.py tasks` | unchanged | identical, +0 |
 | Before validation `gate prepare` | workflow.md paragraph "Before the validation `gate prepare`" | 41 | identical, +0 |
 | Merge ask, text complete | `delivery_gate.py check` output | unchanged | identical, +0 |
-| Merge ask, rounds line missing | `delivery_gate.py check` output | no such line | +22: a 10-word problem and a 12-word `next:` line; implementation measures the exact count |
+| Merge ask, rounds line missing | `delivery_gate.py check` output | no such line | +22: a 10-word problem and a 12-word `next:` line, counted on the trial's text |
 
 Workflow word budget: unchanged, no raise.
 
 ### Limits
 
-- An FO that skips `check`, or binds before it, is not refused. This is the Captain's decision in D1.
+- An FO that skips `check`, or binds before it, is not refused; the Captain accepted this in D1.
 - Presence and form only: the count is not checked for truth (ADR 0044).
 - An adopter whose FO text has no rounds line gets a new hold at the merge ask, cleared by adding the line.
 - The check runs after the Captain's chat answer when FO asks first, as in the batch 11 sitting; a hold then corrects the bound text, not what he read.
 
 ### Batch overlap
 
-- **`comment-check-reaches-delivery-gate` (other session, ideation): same function.** It changes `check`, `write_record` and `test_delivery_gate.py`; both additions are additive.
-- **ADR index, shared with any task landing an ADR:** `adr-required-statement`, `ops-inbox-r1-setup-and-isolation`, and possibly `model-roster-question-needs-both-families` and `adoption-asks-which-extensions`, each of which mentions one. FO reserves the number at dispatch.
-- **`model-roster-question-needs-both-families`, `second-round-prompts-a-step-back`, `special-roles-follow-the-model-table`:** no shared file beyond the ADR index. `check` calls `role_triggers.py`, which the last two may change, but this design leaves that call alone.
-- **`adoption-asks-which-extensions`, `adr-required-statement`, `adr-silent-undo-probe`, `journey-canvas-hosted-poc`, `journey-server-host-pilot`, `ops-inbox-r1-setup-and-isolation`, `pr-review-lite-value-pilot`:** none on `delivery_gate.py`, its tests or this rule.
+Files this design changes: `kc-dev-flow-2/scripts/delivery_gate.py`, `kc-dev-flow-2/scripts/test_delivery_gate.py`, one new file in `docs/adr/`.
 
-Recommended order: this task before `comment-check-reaches-delivery-gate`, because it is the smaller change and that task has not reached implementation; whichever lands second rebases its `check` and test edits.
+- **`second-round-prompts-a-step-back` (batch 12): same function, corrected.** Its design has `check` emit the reminder's `next:` lines after a clean `owed_role_calls`, and it changes `test_delivery_gate.py`. This task's rule sits just before `emit(*problems, *holds)`. A text held here may not show the reminder until the rerun; this rule is unaffected. Its new `check` cases must carry the rounds line once this task lands. The first design's "no shared file" was wrong.
+- **`comment-check-reaches-delivery-gate` (other session, ideation): same function.** It changes `check`, `write_record` and `test_delivery_gate.py`; both additions are additive. New `check` cases need the rounds line if it lands after this task.
+- **`fo-write-checks-parse-top-level` (same workflow, ideation; outside the dispatch's list):** same script and test file, different function (`declined_items`); no shared lines named.
+- **`special-roles-follow-the-model-table` (batch 12):** no file of this design except the ADR index. It changes `role_triggers.py`, which `check` calls; this design leaves that call alone, and its longer `next:` line prints beside this one.
+- **ADR index, shared with any task landing a new ADR:** `model-roster-question-needs-both-families`, `special-roles-follow-the-model-table`, `adr-required-statement`, `ops-inbox-r1-setup-and-isolation`. FO reserves the number at dispatch. `second-round-prompts-a-step-back` amends ADR 0026 and takes no number.
+- **`worker-completion-reaches-fo-on-paseo`, `picky-reviewers-may-run-on-gemini` (batch 12):** none in their Scopes; neither has a design yet, so FO rechecks when they do.
+- **`adoption-asks-which-extensions`, `adr-silent-undo-probe`, `journey-canvas-hosted-poc`, `pr-review-lite-value-pilot`:** none on `delivery_gate.py`, its tests or this rule. `journey-server-host-pilot` has no task file in this workflow's state checkout.
+
+Recommended order: last in batch 12, as the Captain ruled, after `worker-completion-reaches-fo-on-paseo`, `model-roster-question-needs-both-families`, `special-roles-follow-the-model-table`, `second-round-prompts-a-step-back` and `picky-reviewers-may-run-on-gemini`. This task then rebases on their `check` and test edits and gives their new `check` cases the rounds line. His ruling sets no order against `comment-check-reaches-delivery-gate`, which is another session's; whichever of the two lands second rebases.
 
 ## Acceptance criteria
 
@@ -180,15 +190,19 @@ Verified by: the implementer's replay of the question and summary from each `ind
 Verified by: both runs at validation, with `gh` reading the real PR. Any other problem the Draft state prints is expected and named.
 
 **AC-5** `question` is unchanged in both forms, and `check`'s output on a complete text is unchanged.
-Verified by: the existing `question` tests passing unedited, including the legacy combined path that accepts a text with no rounds line. Falsifier: moving the requirement into `text_problems` fails the legacy test.
+Verified by: the existing `question` tests passing with their inputs unedited, including the legacy combined path that accepts a text with no rounds line, and the existing `check` tests passing with only the rounds line added to their gate text. Falsifier: moving the requirement into `text_problems` fails the legacy test.
 
 **AC-6** `references/sd/workflow.md` and the mods have no diff, and `lint-skills.py` passes with `WORKFLOW_BUDGET_STEPS` unchanged.
 Verified by: `git diff --stat origin/main -- kc-dev-flow-2/references/sd/` empty, and the lint run.
 
-**AC-7** The ADR carries the Captain's words on D1 and the Limits above as bounded claims, and `adr_lint.py` passes.
+**AC-7** The ADR carries the Captain's 「可以」 with the question it answered, 「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」, and the Limits above as bounded claims, and `adr_lint.py` passes.
 Verified by: the lint run on the candidate.
 
 ## Decisions for the Captain
+
+None open.
+
+**D1, settled at the ideation revise of 2026-11-02: yes, the text check at `check` is enough for now.** The original question and its tradeoffs stay below as the record.
 
 **D1. Is stopping the text at `check`, seconds before binding, enough for now, with a separate trial of a host hook for the binding moment itself?** Recommended: yes. His candidate wording was 「`gate prepare` 要先擋下沒跑 `delivery_gate question` 的情況」; this design delivers less than that wording, because `check` is not forced to run first.
 
@@ -229,3 +243,34 @@ No package seam is verified at the binding moment, so this returns to FO under t
 Unverified: a host hook. A throwaway `claude -p` probe was denied by the auto-mode permission classifier and not retried. Codex's docs say plugins can bundle hooks, while `codex features list` on 0.162.1 prints `plugin_hooks removed false`, so that POC must settle it.
 
 For FO, outside this task's scope: `references/sd/adoption.md` § Secret reads and ADR 0003 say Codex has no pre-tool hook, while `codex features list` shows `hooks` stable; `merge-guard-stops-unasked-merges` is the natural home for the hook POC if D1 is accepted.
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: Revise the design under the Captain gate revise of 2026-11-02: the asks are in the reason of the newest ideation resolution in this task file; do exactly those asks, and name anything that would go beyond them
+  D1 recorded as settled; outcome restated in `## Scope` and `## Design`; overlap corrected; order set last. The title is frontmatter, so it is proposed in `## Scope` for FO to set. Beyond the asks: the test-cost correction, AC-5's wording and AC-7's exact words, all named in the Summary.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (worker-completion-reaches-fo-on-paseo, model-roster-question-needs-both-families, special-roles-follow-the-model-table, second-round-prompts-a-step-back, validation-gate-requires-the-question-check, picky-reviewers-may-run-on-gemini) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  `second-round-prompts-a-step-back` and `comment-check-reaches-delivery-gate` share `check` and its tests. `journey-server-host-pilot` has no task file here.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  +0 at every moment except a failing merge ask, +22 there, counted with `wc -w` on the trial's two lines; workflow word budget unchanged.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-1 to AC-7 stand; no decision is open, and D1 stays as the record. `design_surfaces.py check` printed: Scope changed after the backlog gate (1a8b1cb3): "- Title for FO to set (frontmatter is FO's; the slug stays): "The merge-ask chec". FO: restore the line; add an '### Amendment N' with 'Supersedes: none' only if the Captain asked for it, with his words verbatim and where he said them. A worker that sees this line reports it to FO and edits neither Scope nor amendments. exit 1
+- DONE: AC-1 not yet verified; future test and mutation.
+  The trial's rule ran on a throwaway copy, not a candidate.
+- DONE: AC-2 not yet verified; future test.
+  The accepted line forms are read from `summary_round_problems` as it stands.
+- DONE: AC-3 not yet verified for the candidate; the base half was measured in cycle 1.
+  `delivery_gate.py` and its test are unchanged from 146727de, the commit that replay used; `origin/main` is still that commit.
+- DONE: AC-4 not yet verified; needs the candidate's own PR at validation.
+  No candidate exists at ideation.
+- DONE: AC-5 not yet verified; wording corrected because `check` fixtures must change.
+  Trial: 76 tests failed or errored with the rule, 13 after a one-line fixture edit, of which 7 also error at base.
+- DONE: AC-6 not yet verified; future diff and lint run.
+  The design names no change under `references/sd/`.
+- DONE: AC-7 not yet verified; future lint run.
+  The ADR now has the Captain's words to quote; it stays a short title with no number.
+
+### Summary
+
+The design now says what it delivers: `check` holds a gate text with no round count, and binding is not refused. FO must set the new title in frontmatter, because a worker may not edit it: "The merge-ask check holds a gate text with no external round count".
+
+Beyond the four asks: a trial showed the first design missed a cost, since most existing `check` tests would fail until their text carries the line. The design now states that cost and AC-5 allows it; scope is unchanged. Not done and left to FO: filing the host-hook trial that D1's question mentioned. The 7 errors at base in the trial's copy were not diagnosed.
