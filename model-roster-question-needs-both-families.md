@@ -333,3 +333,44 @@ The design adds a `question` subcommand so the Paseo, Codex and Claude condition
 ### Summary
 
 The design now takes the Captain's four rulings: Opus only, publication and completion left to the completion task, `ultra` as `ultracode`, and the reviewer family worded by special-roles. AC-6 also proves completion reaches FO, and the order puts the completion task first. One thing goes beyond the asks and needs the Captain (D5): a disposable build shows the recommended set conflicts with the template's generated `sonnet` on a Claude FO, and nothing tells FO to pick `--host`, so the set cannot launch by the written route; answering yes also places special-roles before this task.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and D1 to D5, only in its named files; commit locally without a version bump.
+  Branch `spacedock-ensign/model-roster-question-needs-both-families`; assigned base `d14c5ae3b0c9f14eb89cd38a2fb500b2a57119fa`; candidate `e2eb2fb5a9629f52ab540fac1e274c287913cfac`; seven changed files, clean product tree. The existing `laws_check.readme_extensions` reader also covers block-list frontmatter.
+- SKIPPED: One Draft PR stacked on PR #764; product push and PR creation belong to FO.
+  No PR opened: no push grant. Hosted #764 is OPEN/DRAFT at the assigned base, #763 is OPEN/DRAFT at `c129cb215c2630d08853eeffae0fd5a2ee7e40c6`, and this branch has no open PR (2026-11-02). Title/body: `/tmp/impl-model-roster-question-needs-both-families-pr.md`; base branch `spacedock-ensign/special-roles-follow-the-model-table`.
+- DONE: AC-8 — ADR 0050 records the Captain's words and retained rules, superseding 0047.
+  Package `adr_lint.py docs/adr --since d14c5ae3b0c9f14eb89cd38a2fb500b2a57119fa --require 0050`: exit 0, 49 records; the resolver pointer targets the new record. Restoring 0047 Accepted fails the regression test.
+- DONE: AC-1 — question asks only with all three prerequisites and no roster, and writes nothing.
+  Final `test_sd_dispatch.py` subprocess replay covers all eight combinations, existing roster, empty input, disabled/unavailable providers, malformed input, inline/block lists and identical manifests; removing Claude eligibility fails the Codex-only case.
+- DONE: AC-2 — provider/model pairing and all six efforts are exercised.
+  Committed subprocess fixtures accept all six efforts on Opus, Sol and Astra; wrong providers/models and Sonnet refuse with field errors. Flattening model membership or imposing an xhigh cap fails the replay.
+- DONE: AC-3 — the recommendation and quoted question match Opus/high, Sol/xhigh and Astra/xhigh.
+  Explicit expected rows are asserted and resolved from committed fixtures; independent defaults and question-effort mutations fail. Historical batch-9 rows now use their own committed fixture.
+- DONE: AC-4 — option IDs preserve each effort except Claude ultra to ultracode, with absence null.
+  Replay checks every emitted value and retained tuple; live 2026-11-02 capabilities and committed recommended-row resolves: `/tmp/roster-live-capabilities.json`, `/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/roster-native-handoff-sxlhhmg0/{resolved,capabilities}.json`. Unmapped ultra and fabricated absent effort each fail.
+- DONE: AC-5 — both provider families, mixed authors and unknown authors are exercised.
+  Subprocess replay proves openai/anthropic/different-family/unverified, including a Claude Roster header passing `dispatch_records.py --names` and legacy Claude evidence staying unknown; fixed-openai and mixed-family mutations each fail.
+- SKIPPED: AC-6 — real Opus/high with low control, Sol/xhigh, Astra/xhigh and their completion callbacks; every criterion green.
+  This criterion assigns spawning to FO or validator; no real child run is claimed here. The committed fixture above is ready. Base contains completion candidate c129cb215 (ancestry exit 0), but #763 has no merge commit and its task's validation report is REJECTED; merge ancestry, native runtime and completion falsifiers remain due. FO was notified before dependent work.
+- DONE: AC-7 — absent-roster behavior and worker-family wording are retained.
+  Existing absence/linked-root/author cases pass with identical manifests and null option ID; removing either adoption or launch follow-family sentence fails its mutation pin.
+- SKIPPED: AC-9 — the literal origin/main workflow diff is empty.
+  Assigned-base-to-candidate workflow diff is empty and its 5781-word budget is unchanged. Origin/main-to-candidate contains the inherited #764 workflow change (4 additions, 4 removals); this task made no workflow edit. The local package-gate portion passes below.
+- SKIPPED: AC-10 — after release, FO updates #762 from the released package and asks the Captain to merge.
+  No release exists for this candidate; no predicted version, unreleased-script proof, #762 edit or merge request is claimed.
+- DONE: AC-11 — recommended rows build on their provider's host without a model conflict.
+  Real disposable candidate-template builds emit ideation opus/Skill bootstrap and implementation/validation null/Codex bootstrap: `/tmp/roster-provider-host-builds.json`; omitted host under Claude emits implementation sonnet: `/tmp/roster-implicit-host-falsifier.json`. Removing either D5 sentence fails its mutation pin.
+- DONE: Repository skill lint, dispatch tests, release parity, design surfaces, number guards and comment ratio run successfully.
+  All exit 0 after the last product change (parity's inputs are unchanged); `/tmp/roster-sd-final.log` retains fixtures at `/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-3mygw6w6`; package number guards use the assigned base and reserved 0050; comments 1/165, 0.6% <= 5%.
+- DONE: In-scope acceptance falsifiers were run with python3 -B and no copied caches.
+  All 16 mutations fail: `/tmp/roster-mutations-final.log`, raw logs/results `/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/roster-falsifiers-01fodkrh`; runner `/tmp/run_roster_mutations.py`. Exact-base resolver refuses the recommended Opus row with `stages.ideation.provider: expected codex` (`/tmp/roster-base-replay.log`). AC-6/AC-10 falsifiers remain with those deferred criteria.
+- SKIPPED: A clean exact-head RoboRev result, hosted CI and independent validation.
+  Required post-commit package gate was attempted at the final candidate, exit 3: `incomplete: the roborev daemon is not running` (`/tmp/roster-roborev-final.log`). FO owns review/publication/CI; none is reported clean.
+- DONE: Affected documents and reading cost are accounted for; no CI trigger changed.
+  `doc_impact.py` lists ADRs 0047/0050 and adoption.md updated; README.md unaffected: its test command and bounded evidence claims remain valid; learning.md unaffected: no practice changed. Against the assigned base, roster.md 760->873 words (adoption 201->259, launch 417->472); adoption.md 2241->2242; workflow 5781 unchanged. CI cost per PR and model spend were not measured.
+
+### Summary
+
+The approved local implementation is committed at e2eb2fb5a9629f52ab540fac1e274c287913cfac with behavior, mutation and package checks. Native runtime/completion proof, upstream merge ancestry, RoboRev, publication, hosted CI, independent validation and the after-release #762 update remain with FO; no product push or PR was made.
