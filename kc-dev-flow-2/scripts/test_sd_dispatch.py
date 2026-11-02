@@ -400,6 +400,62 @@ def at_0_10_1(texts, name):
     return {**texts, path: flat}
 
 
+def exercise_extension_lists(base, scripts=ROOT / "scripts"):
+    base.mkdir()
+    repo = base / "code"
+    subprocess.run(["git", "init", "--initial-branch=main", str(repo)], check=True, capture_output=True)
+    readme = repo / "README.md"
+    folder = repo / "task"
+    (folder / "dispatch").mkdir(parents=True)
+    record = folder / "dispatch/implementation-1.md"
+    header = f"Dispatched: {'a' * 40}\nModel: sonnet\n\n## Checklist\nInspect the fixture.\n\n## Scope notes\nPackage root: {ROOT}\n"
+    completion = ("Your final reply is your completion message: Paseo delivers it to FO when your turn ends. "
+                  "End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.")
+    providers = json.dumps([dict(provider=p, status="available", enabled="Enabled") for p in ("codex", "claude")])
+    env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
+
+    def run(script, args, expected, data=None):
+        def manifest():
+            return {str(p.relative_to(repo)): hashlib.sha256(p.read_bytes()).hexdigest()
+                    for p in repo.rglob("*") if p.is_file()}
+        before = manifest()
+        result = subprocess.run([sys.executable, "-B", str(scripts / script), *map(str, args)],
+                                env=env, input=data, text=True, capture_output=True, timeout=30)
+        with (base / "commands.jsonl").open("a") as log:
+            log.write(json.dumps(dict(script=script, readme=readme.read_text(), exit=result.returncode,
+                                      expected=expected, stdout=result.stdout, stderr=result.stderr)) + "\n")
+        assert result.returncode == expected, (script, readme.read_text(), result.stdout, result.stderr)
+        assert manifest() == before, (script, "reader changed fixture files")
+        return result
+
+    cases = []
+    for quote in ("{}", "'{}'", '"{}"'):
+        for listing in ("extensions: [{}]", "extensions:\n  - {}"):
+            for comment in ("", " # selected extension"):
+                cases.append((listing.format(quote.format("paseo")) + comment, True))
+    cases += [("extensions: [learn] # paseo", False),
+              ("extensions:\n  - learn # paseo", False),
+              ("extensions: []", False), ("extensions: [] # paseo", False),
+              ("extensions:\n  # paseo", False), ("", False),
+              ('extensions: ["not#paseo", "not,paseo"] # paseo', False)]
+    for body, listed in cases:
+        readme.write_text(f"---\nentity-type: task\n{body}\n---\n")
+        result = run("model_roster.py", ["question", "--code-root", repo, "--readme", readme,
+                                        "--providers", "-"], 0 if listed else 3, providers)
+        assert result.stdout == ("ask\n" if listed else "skip: paseo extension not listed\n"), result
+        record.write_text(header + completion + "\n")
+        run("dispatch_records.py", ["--readme", readme, folder], 0 if listed else 1)
+        record.write_text(header + MAIN_LINE + "\n")
+        run("dispatch_records.py", ["--readme", readme, folder], 0)
+    for quote in ("{}", "'{}'", '"{}"'):
+        for listing in ("extensions: [{}]", "extensions:\n  - {}"):
+            for name in ("roborev", "learn"):
+                readme.write_text("---\nentity-type: task\n" + listing.format(quote.format(name)) + " # roborev\n---\n")
+                result = run("dispatch_records.py", ["--readme", readme, folder], 1 if name == "roborev" else 0)
+                assert ("worker instruction is absent" in result.stdout) == (name == "roborev"), result
+    print("PASS: shared extension-list callers handle inline/block forms, quotes, comments, exact names, empty/no-key controls and unchanged manifests")
+
+
 def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
     base.mkdir()
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
@@ -1327,6 +1383,7 @@ def main():
         parser.error("set SPACEDOCK_BIN to the installed Spacedock executable")
     base = Path(tempfile.mkdtemp(prefix="dev-flow-2-sd-")).resolve()
     try:
+        exercise_extension_lists(base / "extension-lists")
         exercise_model_roster(base / "model-roster")
         exercise(base, str(Path(binary).resolve()), args.sd_plugin_root.resolve())
     except Exception:

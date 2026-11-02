@@ -11,8 +11,7 @@ import stat
 import subprocess
 import sys
 
-from decision_ledger import unquote
-from laws_check import Cannot, readme_extensions
+from workflow_extensions import readme_extensions
 
 ROSTER = ".dev2/model-roster.json"
 STAGES = ("ideation", "implementation", "validation")
@@ -104,7 +103,7 @@ def code_root(root):
 
 def question(root, readme, providers):
     root = code_root(root)
-    if "paseo" not in {unquote(name) for name in readme_extensions(readme)}:
+    if "paseo" not in readme_extensions(readme):
         return "skip: paseo extension not listed"
     if (root / ROSTER).exists() or (root / ROSTER).is_symlink():
         return "skip: roster already exists"
@@ -185,7 +184,7 @@ def main():
             print(result)
             return 0 if result == "ask" else 3
         result = resolve(args.code_root, args.stage, args.author_record)
-    except (Invalid, Cannot, OSError, UnicodeError, ValueError) as error:
+    except (Invalid, OSError, UnicodeError, ValueError) as error:
         print(f"model-roster: {error}", file=sys.stderr)
         return 1
     print(json.dumps(result, sort_keys=True, separators=(",", ":")))
