@@ -1,0 +1,48 @@
+[
+ [
+  "5cbc07b9",
+  "AC-6 Opus high",
+  "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo/3ca59078-f9d5-4f73-a603-97f91fd6f89d.jsonl",
+  [
+   "claude-fable-5-1",
+   "claude-opus-5-5"
+  ],
+  [
+   "high"
+  ]
+ ],
+ [
+  "d241e97a",
+  "AC-6 Opus low",
+  "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo/cccaa148-bbf5-491a-b943-0636be10ea23.jsonl",
+  [
+   "claude-fable-5-1",
+   "claude-opus-5-5"
+  ],
+  [
+   "low"
+  ]
+ ],
+ [
+  "b5491f32",
+  "AC-6 Sol xhigh",
+  "/Users/kent/.codex/sessions/2026/11/02/rollout-2026-11-02T14-48-50-01a19b04-939d-74d1-ab0b-a422b6686c57.jsonl",
+  [
+   "gpt-6.1-sol"
+  ],
+  [
+   "xhigh"
+  ]
+ ],
+ [
+  "4199a1c9",
+  "AC-6 Astra xhigh",
+  "/Users/kent/.codex/sessions/2026/11/02/rollout-2026-11-02T14-48-53-01a19b04-9eaf-7dd0-acb2-33d3bb5402cf.jsonl",
+  [
+   "gpt-6-astra"
+  ],
+  [
+   "xhigh"
+  ]
+ ]
+]
