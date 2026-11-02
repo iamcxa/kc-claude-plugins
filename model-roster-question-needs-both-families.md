@@ -1,6 +1,6 @@
 ---
 title: Model roster question asks only when Paseo, Codex and Claude are all available, and offers Claude models
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 gates:
@@ -279,6 +279,11 @@ ADR: 0050
 ### Amendment 1 — 2026-11-02, chat
 Captain: 「照建議」 (chat, 2026-11-02)
 Asked: 「決定：四件事都照建議嗎？要改哪件直接說。」, which FO had stated as: 「修這兩個 bug，在原本的票裡修」 and 「#765、#767 的條件不放寬，等前面合併後再驗」
+Supersedes: none
+
+### Amendment 2 — 2026-11-02, chat
+Captain: 「可以」 (chat, 2026-11-02)
+Asked: 「決定：#765 改成共用解析、重跑四個真實代理，然後重新驗證，可以嗎？」, which FO had stated as: 「做一個共用的解析函式，涵蓋單行、多行、引號和註解，兩個工具都用它，並把這些寫法都列成測試。」
 Supersedes: none
 
 ## Stage Report: ideation

@@ -1,0 +1,56 @@
+{
+ "5cbc07b9": {
+  "tag": "AC-6 Opus high",
+  "transcript": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo/3ca59078-f9d5-4f73-a603-97f91fd6f89d.jsonl",
+  "last_transcript_time": "2026-11-02T06:49:08.838Z",
+  "inbound": [
+   {
+    "received": "2026-11-02T06:49:14.031Z",
+    "event": "finished",
+    "message_id": "0b2fe9b7-0a68-40ea-b67d-2c8cba3e7739"
+   }
+  ],
+  "process_args": [
+   "/Users/kent/.local/bin/claude --output-format stream-json --verbose --input-format stream-json --thinking adaptive --thinking-display summarized --effort high --model claude-opus-5-5 --permission-prompt-tool stdio --mcp-config {"
+  ]
+ },
+ "d241e97a": {
+  "tag": "AC-6 Opus low",
+  "transcript": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo/cccaa148-bbf5-491a-b943-0636be10ea23.jsonl",
+  "last_transcript_time": "2026-11-02T06:49:05.530Z",
+  "inbound": [
+   {
+    "received": null,
+    "event": "finished",
+    "message_id": "f2470ee8-c12e-4046-8a1f-793f3c35722e"
+   }
+  ],
+  "process_args": []
+ },
+ "b5491f32": {
+  "tag": "AC-6 Sol xhigh",
+  "transcript": "/Users/kent/.codex/sessions/2026/11/02/rollout-2026-11-02T14-48-50-01a19b04-939d-74d1-ab0b-a422b6686c57.jsonl",
+  "last_transcript_time": "2026-11-02T06:49:10.259Z",
+  "inbound": [
+   {
+    "received": "2026-11-02T06:49:14.031Z",
+    "event": "finished",
+    "message_id": "0b2fe9b7-0a68-40ea-b67d-2c8cba3e7739"
+   }
+  ],
+  "process_args": []
+ },
+ "4199a1c9": {
+  "tag": "AC-6 Astra xhigh",
+  "transcript": "/Users/kent/.codex/sessions/2026/11/02/rollout-2026-11-02T14-48-53-01a19b04-9eaf-7dd0-acb2-33d3bb5402cf.jsonl",
+  "last_transcript_time": "2026-11-02T06:49:06.655Z",
+  "inbound": [
+   {
+    "received": null,
+    "event": "finished",
+    "message_id": "f2470ee8-c12e-4046-8a1f-793f3c35722e"
+   }
+  ],
+  "process_args": []
+ }
+}
