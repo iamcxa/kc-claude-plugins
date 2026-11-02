@@ -46,6 +46,17 @@ gates:
                 id: briefing:second-round-prompts-a-step-back:ideation:attempt-2:revision-1
                 digest: sha256:83f1414d81bf64e70776c96207221d701adf3f4089866952bf84787d0372f33f
                 room-ref: ./second-round-prompts-a-step-back/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:second-round-prompts-a-step-back:ideation:2
+                briefing: briefing:second-round-prompts-a-step-back:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-02T04:29:50.970199Z"
+                decision: approve
+                reason: The Captain 「照建議」 (chat, 2026-11-02), answering 「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」; accepts the recommendations stated in that sitting, including D5 for the roster and D1 and D2 for completion.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
