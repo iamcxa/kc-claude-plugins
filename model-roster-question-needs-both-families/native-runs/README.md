@@ -14,3 +14,5 @@ Sources: runtime.json (transcript path, models and efforts read from each), the 
 Limits: FO extracted these, so judge them as FO's record. The Claude transcripts also mention claude-fable-5-1, not requested; the run does not explain it. The children's `ps` output was not retained in the logs, so process arguments are missing and the transcript fields stand in for them. The fixture roster is not this repository's roster. The two stack conditions, #763's merge commit in the base and an empty origin/main workflow diff, cannot hold until the parents merge.
 
 Correction from the chief-engineer review, 2026-11-02: claude-fable-5-1 in the Claude transcripts is only the advisor tool attachment. Process arguments survive in transcript 3ca59078 and were not copied here; they carry a bearer token and must be redacted first. Codex process arguments are absent.
+
+At head 520173225 (bc882e648 repair plus main) the resolver gives the same three rows and digest on the same fixture; the four children were not re-spawned, because the repair changes only readme_extensions.
