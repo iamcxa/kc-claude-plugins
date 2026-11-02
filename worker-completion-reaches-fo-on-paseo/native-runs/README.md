@@ -18,3 +18,5 @@ Send-attempt check: in f33b5aa3.log and e48b1442.log the only match for SendMess
 AC-5 dispatch command, 2026-11-02T04:40:24Z, one shell command: impl1.py (dispatch build --stamp) && paseo workspace create --isolation local --path <worktree> --background --json; next host action create_agent.
 
 AC-5 real stage dispatch: special-roles-follow-the-model-table implementation-1, worker bc46043b. create_agent returned cwd .worktrees/spacedock-ensign-special-roles-follow-the-model-table with workspaceId wks_00a7078b0a0e1dc6. Falsifier seen on the probes above: with no workspaceId the worker's cwd is the FO's workspace. pwd and git top-level are in that worker's first actions; read its timeline.
+
+Real Codex stage worker bc46043b: event finished, reply ends `Done: special-roles-follow-the-model-table completed implementation.` No send tool row: 0.
