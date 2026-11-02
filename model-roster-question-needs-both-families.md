@@ -1,6 +1,6 @@
 ---
 title: Model roster question asks only when Paseo, Codex and Claude are all available, and offers Claude models
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 gates:
@@ -273,6 +273,13 @@ Verified by: after the release tag exists, the released `model_roster.py resolve
 ## Number guards
 
 ADR: 0050
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-02, chat
+Captain: 「照建議」 (chat, 2026-11-02)
+Asked: 「決定：四件事都照建議嗎？要改哪件直接說。」, which FO had stated as: 「修這兩個 bug，在原本的票裡修」 and 「#765、#767 的條件不放寬，等前面合併後再驗」
+Supersedes: none
 
 ## Stage Report: ideation
 
