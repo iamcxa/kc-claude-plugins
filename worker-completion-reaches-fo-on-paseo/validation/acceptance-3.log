@@ -1,0 +1,16 @@
+git: warning: confstr() failed with code 5: couldn't get path of DARWIN_USER_TEMP_DIR; using /tmp instead
+git: warning: confstr() failed with code 5: couldn't get path of DARWIN_USER_TEMP_DIR; using /tmp instead
+git: warning: confstr() failed with code 5: couldn't get path of DARWIN_USER_TEMP_DIR; using /tmp instead
+PASS: candidate fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf; tracked product clean; only checker and tests changed since prior validation
+....
+----------------------------------------------------------------------
+Ran 4 tests in 1.375s
+
+OK
+git: warning: confstr() failed with code 5: couldn't get path of DARWIN_USER_TEMP_DIR; using /tmp instead
+git: warning: confstr() failed with code 5: couldn't get path of DARWIN_USER_TEMP_DIR; using /tmp instead
+git: warning: confstr() failed with code 5: couldn't get path of DARWIN_USER_TEMP_DIR; using /tmp instead
+PASS: extension 819 words; workflow 5781; workflow, budget and dispatch pins unchanged
+47 ADR file(s) checked, 0 legacy
+dispatch coverage complete: validation
+PASS: validation-3 complete; folder reports only the preserved validation-1 diagnostic (exit 1)

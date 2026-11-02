@@ -1,0 +1,9 @@
+{
+  "id": 1403,
+  "git_ref": "146727ded0d4ce8014ea0b41a45dc3409d6b269b..fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf",
+  "branch": "spacedock-ensign/worker-completion-reaches-fo-on-paseo",
+  "status": "done",
+  "min_severity": "",
+  "verdict_bool": 0,
+  "output": "## Review Findings\n\n- **Severity**: High\n- **Location**: `kc-dev-flow-2/scripts/dispatch_records.py:549`\n- **Problem**: Paseo records still pass with the old `main` completion line because the normal `PARTS` match is accepted before the Paseo final-reply alternative. This contradicts the new required replacement and permits the previously broken completion route to remain in dispatch records.\n- **Fix**: When `paseo` is listed, require `PASEO_COMPLETION` for `COMPLETION_PART` and reject the legacy `main` line; update the test that currently asserts the legacy line passes.\n\n## Summary\n\nThe change documents and supports Paseo final-reply completion, but its checker does not enforce it for opted-in workflows."
+}

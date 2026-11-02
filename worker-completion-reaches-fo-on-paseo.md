@@ -409,3 +409,35 @@ PASSED recommended at c129cb215c2630d08853eeffae0fd5a2ee7e40c6, on one condition
 ### Summary
 
 The Copilot finding is repaired in one local follow-up commit: a comment naming paseo cannot enable final-reply completion. All 26 local CI test steps pass with the stated optional skips; new-head publication, hosted review/CI and fresh validation remain FO-owned. This report supersedes the earlier implementation report and retains the existing design, Captain amendment and native evidence obligations.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #763 head fef0ae5f against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf, base 146727ded0d4ce8014ea0b41a45dc3409d6b269b; bounded repair recheck with validation-2 judgments carried where inputs are unchanged. Evidence: worker-completion-reaches-fo-on-paseo/validation/evidence-3.md; local checks/falsifiers rerun, native evidence carried rather than respawned per the narrower checklist below.
+- DONE: Re-judge only the repair of Copilot's finding on extensions parsing, review:5732737746, with its falsifier, and that nothing else in the candidate changed since c129cb215; carry forward validation-2's judgements if their inputs are unchanged and say so. RoboRev on this head: findings on fef0ae5fa; evidence=roborev:1403
+  Only dispatch_records.py and its tests differ from c129cb215; the disabled-comment regression passes. Restoring the old parser in a cache-free copy causes three AssertionError failures, including the reported case. RoboRev 1403 is read and assessed below, not represented as clean.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five steps in validation/acceptance-3.md and acceptance-3.sh ran unchanged under env -i and bash --noprofile --norc, exit 0; full output retained. ADR lint from the loaded Codex-cache 0.34.0 package (Package rule precedence), --since base --require 0048: exit 0, 47 files, 0 legacy.
+- DONE: AC-1 — real Claude and Codex stage completion
+  Carried native inputs unchanged. FO transcript line 75723, 2026-11-02T06:13:09.225Z, independently confirms Claude 5c429108 finished with the task Done line; native-record-3.json closes validation-2's condition. Codex bc46043b stands; both saved logs have zero send-tool rows. CLI falsifier remains historical, not rerun.
+- DONE: AC-2 and AC-5 — non-Done/error/permission events and assigned-worktree placement
+  Carry validation-2's real-FO event and same-command build/registration evidence, including its no-workspaceId counterexample; all transport, prompt and placement inputs are byte-identical. No native agents started or permissions answered.
+- DONE: AC-3 and AC-4 — listed-extension boundary and exact instruction
+  Listed/unlisted/missing/commented/quoted cases pass; five cache-free mutations reject the old parser, absent listing guard, absent branch and changed word in either checker or extension. Full dispatch suite: 100 tests, OK, no skips.
+- DONE: AC-6 — workflow budget, main-line pins and non-Paseo behavior
+  Workflow.md, lint-skills.py and test_sd_dispatch.py remain byte-identical to base; lint 5781/5781, actual Spacedock fixtures and both main-line mutation pins pass. Fixture execution does not prove model obedience.
+- DONE: AC-7 and AC-8 — reading bound and required decision record
+  Independent recount 819 extension/5781 workflow/35 scope-line words; archive mutation rejects 820. ADR 0048 unchanged with both Captain answers/questions and ADR 0042 widening; removing Words label returns exit 1.
+- DONE: Ancillary checks and implementation limits
+  Number guards/design surfaces exit 0; comments 1/86, 1.2% <=5%; ADR 0048 updated, ADR 0045 and learning.md unaffected. Existing archive proof passes 25 tests; changed suite has no skips; other 26-step local-CI results are read only. No changed retained diagram or CI trigger; cost per PR unmeasured.
+- DONE: Current dispatch and hosted state
+  validation-3 names/strict and coverage pass; folder exit 1 names only preserved validation-1.md (carried F2 Polish). GitHub PR #763 OPEN, non-Draft, exact head, five checks SUCCESS; this supersedes older publication limits. No product push, PR mutation or delivery performed.
+- DONE: Judge FO's proposed decline of RoboRev 1403
+  Recommend decline: design Change 2 and AC-3 accept the new line as an alternative. Process-only rejection probe turns 14 passing live folders red on 30 main-only historical records; 10 records already use the new line. All-folder checking has no cutoff, but laws_check filters to added records, so “every record” and blanket “sync fails” overstate the evidence.
+- F2 Polish: carried unchanged; the historical validation-1 paraphrase alone fails the folder check, while the current record passes. Preserve the record as sent; no current product repair follows from it.
+- F3 Deferred risk: carried unchanged; contradictory upstream send instructions could affect a future Claude worker, but the real stage logs show no send attempts. Reopen on an observed attempt despite the correct scope line.
+- F4 Deferred risk: RoboRev 1403 correctly observes legacy-main acceptance, but new-dispatch loss is unobserved. FO's new Paseo dispatch is governed by contract[kc-dev-flow-2/extensions/paseo/EXTENSION.md#workers-through-paseo]; a future main-only dispatch losing completion makes this material. Rejecting history is outside the accepted alternative rule; recommend the proposed decline with the limits above.
+
+### Summary
+
+Validation cycle 3 recommends PASSED for fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf: the Copilot repair and falsifier pass, only the two intended files changed, and validation-2's Claude callback condition is now verified. Carry-forward native evidence is not a fresh native run on this head; Codex FO receivers, cross-host delivery, lower-tier real Claude stages and rerun native CLI falsifiers remain unverified. The FO decline is supported as a compatibility decision within this design; product bytes and task frontmatter remain unchanged, with gate and delivery still FO/Captain-owned.
