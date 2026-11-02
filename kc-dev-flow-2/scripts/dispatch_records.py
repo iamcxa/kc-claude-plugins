@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check a task's dispatch records: each needs a Dispatched line with a full SHA, a Model line,
 non-empty Checklist and Scope notes sections, a `Package root:` line with an absolute path inside Scope notes, a scope-notes
-line naming `main` as the completion recipient, and a checklist that is not only pointer lines (a record name plus only
+line naming `main` as the completion recipient (or the final-reply line when the README lists paseo), and a checklist that is not only pointer lines (a record name plus only
 words from POINTER_WORDS, as in "Same checklist as implementation-2."); a pointer worded outside that set, such as
 "Reuse the checklist of implementation-2.", passes.
 When the workflow README lists an extension whose EXTENSION.md has an `Instruction FO adds to the scope notes`
@@ -58,6 +58,11 @@ from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent.parent
 
+PASEO_COMPLETION_LINE = ("Your final reply is your completion message: Paseo delivers it to FO when your turn ends. "
+                         "End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.")
+COMPLETION_PART = "a scope-notes line naming main as the completion recipient"
+PASEO_COMPLETION = re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^" + re.escape(PASEO_COMPLETION_LINE) + r"$", re.M)
+
 PARTS = {
     "a 'Dispatched:' line with a full 40-character SHA": re.compile(r"^Dispatched:.*\b[0-9a-f]{40}\b", re.M),
     "a 'Model:' line": re.compile(r"^Model:[ \t]*\S", re.M),
@@ -65,7 +70,7 @@ PARTS = {
     "a non-empty '## Scope notes' section": re.compile(r"^## Scope notes[ \t]*\n(?:[ \t]*\n)*(?!## )\S", re.M),
     "a 'Package root:' line with an absolute path in its scope notes":
         re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^Package root:[ \t]*/\S", re.M),
-    "a scope-notes line naming main as the completion recipient":
+    COMPLETION_PART:
         re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?\bcompletion(?: message)? to [`']?main(?![\w-])", re.M | re.I),
 }
 
@@ -535,9 +540,17 @@ def main(argv=None, package=PACKAGE):
     if not records:
         print(f"{folder}: no dispatch records under dispatch/")
         return 1
-    errors = [f"{path.name}: needs {part}" for path in records
-              for part, pattern in PARTS.items() if not pattern.search(path.read_text())]
     readme = readme or find_readme(folder)
+    # see docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md
+    extension_list = re.match(r"\[([^\]]*)\]", frontmatter(readme).get("extensions", "")) if readme else None
+    listed = [item.strip().strip("'\"") for item in extension_list[1].split(",")] if extension_list else []
+    paseo = "paseo" in listed
+    errors = []
+    for path in records:
+        text = path.read_text()
+        for part, pattern in PARTS.items():
+            if not pattern.search(text) and not (part == COMPLETION_PART and paseo and PASEO_COMPLETION.search(text)):
+                errors.append(f"{path.name}: needs {part}")
     if readme:
         errors += extension_errors(folder, readme, package)
     names = [path.stem for path in records]
