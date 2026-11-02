@@ -59,6 +59,7 @@ gates:
                 state: consumed
 started: 2026-11-02T06:02:41Z
 worktree: .worktrees/spacedock-ensign-second-round-prompts-a-step-back
+pr: iamcxa/kc-claude-plugins#766
 ---
 
 ## Scope
