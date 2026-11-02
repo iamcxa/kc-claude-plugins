@@ -14,6 +14,17 @@ gates:
                 id: briefing:worker-completion-reaches-fo-on-paseo:backlog:attempt-1:revision-1
                 digest: sha256:e39b39adb2befc3f2f821036ee16d19f1a11e4ab321863ef1bf565d72a777797
                 room-ref: ./worker-completion-reaches-fo-on-paseo/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-completion-reaches-fo-on-paseo:backlog:1
+                briefing: briefing:worker-completion-reaches-fo-on-paseo:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-02T03:30:35.062633Z"
+                decision: approve
+                reason: The Captain 「可以」 (chat, 2026-11-02), answering 「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」; approves Pilot, this outcome and these bounds.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
