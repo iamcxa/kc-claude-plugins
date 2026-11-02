@@ -316,3 +316,42 @@ The design counts F-bullet validations and replacing amendments in `role_trigger
 ### Summary
 
 D1 to D3 now stand as the Captain ruled them, and the design says plainly that it counts replacing amendments and that 5 of 13 word-detected tasks stay silent; a re-run of the reader reproduced those totals. Landing after `special-roles-follow-the-model-table` puts the opus-rank floor on this call and changes the owed-line word counts, and `validation-gate-requires-the-question-check` shares `delivery_gate.py` `check` and goes last. A prototype run on a full package copy fails only two `test_role_triggers.py` fixtures, which the design names.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved Pilot design, D1 to D3, changing only the seven named files; commit locally without version bumps
+  CODE worktree `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back`; branch `spacedock-ensign/second-round-prompts-a-step-back`; base `e2eb2fb5a9629f52ab540fac1e274c287913cfac`; Candidate: 92dbf1d32c7142e010fad6a7d9807a17ae0ce240.
+- SKIPPED: One Draft PR stacked on PR #765, with Conventional Commit title scoped to the plugin
+  Publication belongs to FO under ADR 0042 and the dispatch: product branch not pushed; no PR exists for this branch in the live query; title/body prepared at `/tmp/impl-second-round-prompts-a-step-back-pr.md`, base branch `spacedock-ensign/model-roster-question-needs-both-families`.
+- DONE: AC-1 Two failed validations print the reminder; fewer print nothing
+  Real revisions e0dc64f88/1e17be9a0/c03f77631 pass; StepBackTest excludes passing reports, multiple bullets per report, fences and Deferred risk; counting headings makes its test exit 1 and c03f77631 wrongly print the reminder.
+- DONE: AC-2 Two replacing amendments print the reminder; Supersedes: none does not count
+  Real revisions 95c1ecc8b/ff2063c53 print one advisory; StepBackTest excludes Design-only replacements and mixed 1+1 counts; reusing events' Design count makes the fixture fail, exit 1.
+- DONE: AC-3 The idle check surfaces the reminder without inventing a hold
+  TasksTests.test_second_failed_validation_is_advisory_live_and_silent_archived runs the real script through tasks, checks exit 0 and live/first/archive behavior; restoring exit-1-only forwarding makes it fail, exit 1.
+- DONE: AC-4 The merge check surfaces the reminder without holding
+  OwedRoleCallTests checks the real script, reminder before record, ASK last, another problem retained and identical first-occurrence output; dropping exit-0 forwarding or treating the advisory as a problem each makes it fail, exit 1.
+- DONE: AC-5 The third time owes a chief-engineer call carrying the three questions, and holds the merge ask
+  Real revisions 0e5b6f59a/7d203d562 exit 1; StepBackTest covers dated call/waiver clearance, early/sonnet refusal, Astra acceptance, fourth occurrence and combined repair/review facts; delivery tests require committed clearance; any-call mutation fails and wrongly clears 7d203d562.
+- DONE: AC-6 Nothing changes below the threshold and FO's standing text does not grow
+  Three historical base/candidate byte comparisons pass; workflow/mod diff against assigned base is empty, added-mod-line mutation yields diff exit 1; wc -w counts are 51 advisory, 68 amendment-call, 73 validation-call (79/84 including the merge problem). Literal origin/main comparison includes eight inherited workflow lines from the parent stack, not this candidate's diff.
+- FAILED: AC-6 The package's complete test suite passes
+  25/26 commands pass (1,018 unittest cases, one failure, seven skips); test_poc_readme.py line 84 expects gate: true where inherited model: opus now sits; identical failure reproduced from untouched e2eb2fb5a archive. Outside the seven-file scope; FO notified for parent-owner repair. Native dispatch/recovery pass on installed Spacedock 0.27.3; CI pins 0.27.2.
+- DONE: AC-7 ADR 0026 records the new events with the Captain's words
+  Amendment quotes both 「可以」 and 「照建議」 with their exact gate questions, D1 to D3 and precedents; removing it leaves no ruling for the new events in manual gate/code comparison (not machine-checked); adr_lint.py docs/adr --since e2eb2fb5a --require 0026 exits 0, 49 records.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs)
+  Exit 0; workflow remains 5781/5781 words inherited from the base; no workflow word-budget raise or standing mod change.
+- DONE: number_guards.py check exit 0 and comment_ratio.py within its maximum
+  Installed 0.34.0 scripts, --base e2eb2fb5a and explicit workflow/task: PASS no findings; comment_ratio.py e2eb2fb5a HEAD reports 185 code lines, 0 comment lines, 0.0%, maximum 5% met.
+- DONE: Design surfaces and affected-document checks
+  design_surfaces.py check exits 0; doc_impact.py e2eb2fb5a HEAD lists ADR 0044 unaffected: optional question/summary contract unchanged, and ADR 0049 unaffected: model floor/defaults reused unchanged; the new role events are recorded in ADR 0026.
+- DONE: Exercise every named falsifier and compare committed task outputs
+  `python3 -B <CODE worktree>/.context/second-round-proof/verify.py` passes: eight historical replays, three byte comparisons, six failing behavioral mutants on cache-free copies, mod difference and manual ADR omission; corpus pinned at state 562bacf7e7e0be704397666160d33af12e3e70aa: 186 tasks, 12 changed outputs, all reaching approved thresholds; logs beside the script.
+- SKIPPED: roborev evidence= line
+  Exact committed candidate command with --repo <CODE worktree> --base e2eb2fb5a exits 3: incomplete: the roborev daemon is not running. No review verdict obtained; FO must run its delegated exact-head review.
+- SKIPPED: Product push, Draft PR creation, hosted CI and approval
+  FO owns these actions; none run by this worker. CI cost per PR was not measured; existing CI triggers unchanged.
+
+### Summary
+
+The approved questions now reach idle and merge checks at the second occurrence, and the third owes the model-qualified chief-engineer call with the approved clearing rules. Local candidate and PR text are ready; parent test repair, exact-head RoboRev, publication and hosted CI remain with FO, so the full-suite criterion is not green.
