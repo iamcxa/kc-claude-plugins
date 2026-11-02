@@ -25,6 +25,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:picky-reviewers-may-run-on-gemini:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:picky-reviewers-may-run-on-gemini-ideation-1
+              briefing:
+                id: briefing:picky-reviewers-may-run-on-gemini:ideation:attempt-1:revision-1
+                digest: sha256:7b33ecd1ffcec5146073b2c8d115c6769ecf10200448d6b8bb019ec9e400a028
+                room-ref: ./picky-reviewers-may-run-on-gemini/review/ideation/briefing-1
 ---
 
 ## Scope

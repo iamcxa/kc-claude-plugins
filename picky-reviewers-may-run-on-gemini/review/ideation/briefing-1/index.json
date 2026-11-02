@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:picky-reviewers-may-run-on-gemini:ideation:attempt-1:revision-1",
+  "question": "「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:picky-reviewers-may-run-on-gemini:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/2439de37e22f42a1b31bf6b721e1fa6ff038910c/picky-reviewers-may-run-on-gemini.md",
+      "rev": "sha256:13fb406709ea20fe9031a871bdcfa340b8538726a55607d855812f463e1145a1",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 ideation sitting. Chief-engineer reviewed the first four designs; the completion and Gemini designs had no separate batch review."
+    }
+  ]
+}
