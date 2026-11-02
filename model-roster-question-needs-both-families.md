@@ -427,3 +427,44 @@ The approved local implementation is committed at e2eb2fb5a9629f52ab540fac1e274c
 
 REJECTED at 57321c0b4e9006c2a80c72b4afb1aa368e1ec2a2 for incomplete accepted evidence, with no demonstrated scoped product-code defect. Local behavior, negative controls, host builds and five-step acceptance pass; the Pilot journey still needs AC-6 proof and the two stack-related requirements reconciled. Product bytes are unchanged; FO retains evidence, gate, review and delivery decisions.
 
+
+## Stage Report: implementation
+
+- DONE: Repair review:5733419844 and Captain amendment 1 on PR #765: read block and inline extension lists the same way, with a failing mutation.
+  `question` applies the existing `decision_ledger.unquote` helper before exact membership testing. Bare, single-quoted and double-quoted extension names now behave alike in both list forms; the shared laws reader is unchanged.
+- DONE: One follow-up commit on the assigned branch, only in the approved files, without a version bump or product push.
+  Repair base `3c49c24a3eba3d90093f330c051b682a3335ae23`; candidate `bc882e6483ab2ee6a0944bbdcf6d86f20ae8aef1`; branch `spacedock-ensign/model-roster-question-needs-both-families`. Only `scripts/model_roster.py` and `scripts/test_sd_dispatch.py` under kc-dev-flow-2 changed; tested file digests match the committed bytes.
+- DONE: Run the whole suite the CI job runs.
+  All 26 Python check commands from `.github/workflows/kc-dev-flow-2-tests.yml` exit 0: `/tmp/roster-repair-ci/results.json`, `progress.log`, and per-script logs. Local Darwin CLI 0.27.2 matches CI's version; plugin source is CI's exact commit `4d158a484ec73e184861067f8ed1e20087fdc26a`. This is local evidence; hosted CI after publication remains due.
+- SKIPPED: Seven cases disabled by the suite's existing environment conditions.
+  Four frozen/historical amendment corpus cases; one Node/yaml journey bridge; one dispatch builder case lacking its optional env variables; one external obligation corpus case. The suite reports 1009 unittest cases including these seven skips; no skip condition was added or changed.
+- DONE: Reproduce the failure before repair and run a failing quote-normalization mutation with python3 -B.
+  `/tmp/roster-repair-red.log`: quoted block list returns `skip`, exit 1 from the test; `/tmp/roster-repair-green.log`: replay passes, exit 0. `/tmp/roster-repair-ci/quote-mutation.log`: removing normalization restores the same wrong skip and fails exit 1; the mutant copied no caches.
+- DONE: AC-1 and AC-7 — prerequisite behavior, absence compatibility and read-only manifests remain exercised.
+  The final subprocess replay covers the original eight prerequisite combinations plus all six list/quote forms, missing either provider, and exact rejection of `not-paseo`; every question preserves its fixture manifest. The quoted-block case fails without this repair; existing absent/deletion/linked-root cases remain green.
+- DONE: AC-2 to AC-5 — model/effort pairs, recommended rows, option IDs and author families retain their local regression coverage.
+  Final `test_sd_dispatch.py` exercises committed fixtures for all six efforts, wrong pairings/Sonnet refusal, Opus/high + Sol/xhigh + Astra/xhigh, ultra-to-ultracode, null absence, both provider families and unknown authors. Prior live option-list evidence remains in `/tmp/roster-live-capabilities.json`; no new native child evidence is claimed.
+- DONE: AC-8 — ADR 0050 and the superseded 0047 pointer remain valid.
+  Package `adr_lint.py docs/adr --since e891e83582ac10936ffd67fb083b530b009ad847 --require 0050` exits 0, 49 records. This mechanical repair changes no ADR, reservation, ruling or protected pointer.
+- DONE: AC-9 — local package gates pass and the literal origin/main workflow diff is now empty.
+  At observed main `e891e83582ac10936ffd67fb083b530b009ad847`, `git diff --stat origin/main -- kc-dev-flow-2/references/sd/workflow.md` is empty; skill lint keeps 5781/5781 words and release parity exits 0. Parent #764 has merged; this result uses the retained criterion, without changing its base rule.
+- DONE: AC-11 — provider-host builds retain their model and bootstrap assertions.
+  The CI-pinned dispatch replay emits opus/Claude bootstrap for ideation and null/Codex bootstrap for implementation and validation; D5 text mutations still execute in that suite. No dispatch or workflow text changed in this repair.
+- SKIPPED: AC-6 — a committed-roster-to-runtime run with low control and matched finish receipts remains for FO or fresh validation.
+  No runtime or completion proof was produced by this repair. The dependency part is now observed: #763 merged as `52e8eba7bf3746fd93d9132548a8163c66a7a26b`, #764 merged as e891e835, and `git merge-base --is-ancestor 52e8eba7bf3746fd93d9132548a8163c66a7a26b e891e83582ac10936ffd67fb083b530b009ad847` exits 0 for the current PR base.
+- SKIPPED: AC-10 — FO's released-package update of #762 and Captain merge request remain post-release work.
+  No release, predicted version, consumer edit or merge request is claimed.
+- DONE: Captain amendment 1 retains the original conditions and no acceptance criterion is superseded.
+  Its `Supersedes: none` is preserved. The quote bug is repaired in this task; the earlier native acceptance evidence still needs fresh validation after the upstream merges, as the Captain required.
+- DONE: Required number, comment, design and document-impact checks are accounted for.
+  Number guards exit 0 against both pinned stack base `8eed70b260346811a1f2aa035ca1354a2d735576` and current main e891e835; design surfaces exit 0; comments 1/172, 0.6% <= 5%. `doc_impact.py 3c49c24a HEAD`: ADRs 0047/0050 unaffected (existing ruling unchanged), README/adoption unaffected (same commands and intended membership rule), learning.md unaffected (no practice change).
+- SKIPPED: Product publication, PR updates, hosted CI and fresh independent validation.
+  No product branch push or GitHub write was made. Existing #765 is OPEN, targets main and still has the pre-repair hosted head 3c49c24a at inspection; FO owns publication and revalidation of bc882e648.
+- SKIPPED: A clean exact-head RoboRev result.
+  Required package gate at candidate bc882e648 and current base e891e835 exits 3: `incomplete: the roborev daemon is not running` (`/tmp/roster-repair-ci/roborev-current-base.log`); no clean review claim. The earlier pinned-stack attempt also exits 3.
+- DONE: Scope, reading cost and CI boundaries remain unchanged by the repair.
+  Two source/test files implement the named quote bug and its falsifier; no workflow, instruction, version, CI trigger or additional abstraction changed. FO reading counts stay as previously recorded; CI cost per PR and model spend were not measured.
+
+### Summary
+
+This complete report supersedes the earlier implementation report and corrects its missing quoted-block coverage. The single local repair commit is bc882e6483ab2ee6a0944bbdcf6d86f20ae8aef1; all 26 CI commands pass locally, while native AC-6 proof, review, publication, hosted revalidation and post-release work remain with FO.
