@@ -444,3 +444,46 @@ This complete report supersedes the earlier implementation report: the inherited
 
 PASSED: candidate 1c0dbb540f354300b75dba5a119d2614c8fb0c02 satisfies AC-1 through AC-7 at the approved Pilot depth; goal sufficiency and minimal necessity are supported by the same replay and mutation evidence. Accepted count/clearance limits and local-versus-hosted boundaries are detailed in validation-1/details.md; FO retains exact-head review, gate and delivery decisions.
 
+
+## Stage Report: implementation
+
+- DONE: Repair review:5733422448 and Captain amendment 1; read Copilot's exact claim and confirm it first
+  Read https://github.com/iamcxa/kc-claude-plugins/pull/766#discussion_r4439960039; both new masking regressions failed at 1c0dbb540 before the fix: a cleared third event suppressed the other count's second-occurrence advisory.
+- DONE: Report each count at its own threshold, with a failing mutation for each masking case
+  StepBackTest now covers both directions at counts 3 and 4, third-event question deduplication, and an ordinary repair-call line that must retain the advisory; five new cache-free python3 -B mutants fail, including independently dropping either count, restoring max in both directions, and removing question deduplication.
+- DONE: One follow-up commit on the assigned branch; no product push
+  Candidate: 65e8f5a95bdb4cdc53235a862208caaded2ff403; exactly one commit after repair base 1c0dbb540f354300b75dba5a119d2614c8fb0c02, on `spacedock-ensign/second-round-prompts-a-step-back`; only role_triggers.py, test_role_triggers.py and the approved ADR 0026 changed. Integrated PR parent remains 3c49c24a3eba3d90093f330c051b682a3335ae23; code tree clean.
+- DONE: AC-1 Two failed validations print the reminder; fewer print nothing
+  Current candidate passes historical e0dc64f88/1e17be9a0/c03f77631 plus passing-report, multi-bullet, fence and Deferred-risk controls; the heading-count mutant fails and wrongly reminds at c03f77631.
+- DONE: AC-2 Two replacing amendments print the reminder; Supersedes: none does not count
+  Current candidate passes historical 95c1ecc8b/ff2063c53, Design-only and mixed 1+1 controls; broad-events mutant fails. Amendment 1's repair now preserves a second occurrence even after the other event's third or fourth occurrence is cleared.
+- DONE: AC-3 The idle check surfaces the reminder without inventing a hold
+  Existing tasks tests pass; two new consumer replays run the real checker through tasks for the masking cases, each yielding exit 0 and exactly one advisory; removing exit-0 forwarding fails the retained fixture.
+- DONE: AC-4 The merge check surfaces the reminder without holding
+  Existing merge tests pass; both masking consumer replays exit 0 with one advisory and ASK last; dropping forwarding or treating an advisory as a problem fails the retained fixtures.
+- DONE: AC-5 The third time owes a chief-engineer call carrying the questions and holds the merge ask
+  Real 0e5b6f59a/7d203d562 exit 1; date/model/waiver/fourth-event and committed-clearance tests pass; an owed line already carrying the questions suppresses the extra count-2 advisory, while a normal repair-call question does not; undated-amendment-call mutant fails.
+- DONE: AC-6 Nothing changes below the threshold and FO's standing text does not grow
+  Three historical base/candidate byte comparisons pass; workflow/mod unchanged against integrated parent; mod-line falsifier differs. wc -w confirms each previously masked case now prints 51 advisory words instead of zero; original 51/68/73-word lines remain, and duplicate-question mutation fails.
+- DONE: AC-6 Run the whole suite the CI job runs
+  26/26 CI-listed commands exit 0: 1,021 unittest cases, zero failures, seven skips; exact logs: `<CODE worktree>/.context/second-round-proof/review-5733422448/`; native dispatch uses CI plugin-source commit 4d158a484ec73e184861067f8ed1e20087fdc26a and Spacedock CLI 0.27.2 on darwin/arm64; candidate HEAD/working tree checked before and after.
+- DONE: AC-7 ADR 0026 records the Captain's words and the approved count rules
+  Original event ruling is retained; a new amendment quotes 「照建議」, its question and FO's proposed repair from task amendment 1, recording independent reminders and deduplication only by an emitted three-question call line. Manual omitted-ruling comparison exercised; ADR lint exits 0, 49 records, requiring 0026.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs)
+  Exit 0 at the candidate; inherited standing workflow remains 5781/5781 words; no word-budget raise or version bump.
+- DONE: number_guards.py check exit 0 and comment_ratio.py within its maximum
+  Installed 0.34.0 scripts against integrated parent 3c49c24a3 and current candidate: PASS no findings; 219 code lines, 0 comment lines, 0.0%, maximum 5% met.
+- DONE: Design surfaces and affected-document checks
+  design_surfaces.py check exits 0; doc_impact.py lists ADR 0044 unaffected: optional question/summary contract unchanged, and ADR 0049 unaffected: model floor/defaults unchanged; ADR 0026 contains the accepted reminder repair.
+- DONE: Refresh every original falsifier and the committed-task comparison
+  `python3 -B <CODE worktree>/.context/second-round-proof/review-5733422448/verify-current.py` passes: eight historical replays, three byte comparisons, six original rejected behavioral mutants, mod difference and manual ADR omission; state 86e7c8c0988073b16a561dd745994f4f385c1da4: 186 tasks, 12 changed outputs, all at approved thresholds. Five repair mutants are separately logged in masking-mutations.log; both consumer replays are in consumer-replays.log.
+- DONE: Reconcile the existing PR and prepared PR text without mutating GitHub
+  Live PR #766 is OPEN and ready, with published head 1c0dbb540 and base 3c49c24a3; its earlier Draft creation was by FO. Local repair candidate 65e8f5a95 remains unpublished; updated title/body is prepared at `/tmp/impl-second-round-prompts-a-step-back-pr.md` for FO.
+- SKIPPED: roborev evidence= line
+  Exact committed-candidate command with --repo <CODE worktree> --base 3c49c24a3 exits 3: incomplete: the roborev daemon is not running. This is no current review verdict; FO retains exact-head review.
+- SKIPPED: Product push, PR update/reply, fresh hosted CI/review, validation approval and merge
+  Not run by this worker; older 1c0dbb540 hosted results do not cover 65e8f5a95. CI cost per PR was not measured; existing CI triggers unchanged. Only the path-scoped corrected state report is committed and synced.
+
+### Summary
+
+This complete report supersedes both earlier implementation reports: Copilot's masking finding is reproduced and repaired under Captain amendment 1, with each count reaching its own advisory threshold and only one copy of the three questions when an owed line already carries them. One local follow-up commit contains the bounded repair and its tests; the full suite and refreshed proofs pass at 65e8f5a95bdb4cdc53235a862208caaded2ff403, while publication, exact-head review and fresh validation remain with FO.
