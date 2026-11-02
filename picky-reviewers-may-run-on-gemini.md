@@ -33,6 +33,14 @@ gates:
                 id: briefing:picky-reviewers-may-run-on-gemini:ideation:attempt-1:revision-1
                 digest: sha256:7b33ecd1ffcec5146073b2c8d115c6769ecf10200448d6b8bb019ec9e400a028
                 room-ref: ./picky-reviewers-may-run-on-gemini/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:picky-reviewers-may-run-on-gemini:ideation:1
+                briefing: briefing:picky-reviewers-may-run-on-gemini:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-02T04:30:03.490082Z"
+                decision: hold
+                reason: The Captain 「照建議」 (chat, 2026-11-02), answering 「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」; the task stops with no package change until Paseo offers an Antigravity mode a test shows refusing a write.
 ---
 
 ## Scope
