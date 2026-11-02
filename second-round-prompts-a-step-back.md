@@ -1,6 +1,6 @@
 ---
 title: The second round on a task prompts the FO to step back
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 gates:
