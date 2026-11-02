@@ -44,6 +44,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:worker-completion-reaches-fo-on-paseo:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:worker-completion-reaches-fo-on-paseo-validation-1
+              briefing:
+                id: briefing:worker-completion-reaches-fo-on-paseo:validation:attempt-1:revision-1
+                digest: sha256:e1788a39a519c2361d758405e69f037b70c05761ec29d9c5bb7429df1d0b08ce
+                room-ref: ./worker-completion-reaches-fo-on-paseo/review/validation/briefing-1
 started: 2026-11-02T04:30:20Z
 worktree: .worktrees/spacedock-ensign-worker-completion-reaches-fo-on-paseo
 pr: iamcxa/kc-claude-plugins#763

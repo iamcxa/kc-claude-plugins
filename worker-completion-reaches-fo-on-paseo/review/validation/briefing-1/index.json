@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-completion-reaches-fo-on-paseo:validation:attempt-1:revision-1",
+  "question": "「決定：四件事都照建議嗎？要改哪件直接說。」 Item 1 of that sitting: merge this PR; regular merge with --match-head-commit, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:worker-completion-reaches-fo-on-paseo:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/18d7958909fd7e0bdeb19616d49c511afac820b1/worker-completion-reaches-fo-on-paseo.md",
+      "rev": "sha256:6ab334d450b9c36f1db00f58cb3bef1de1d6ba7e810ea0875e15cc27cd94a7fe",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of worker-completion-reaches-fo-on-paseo, PR #763, head fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf, in the batch 12 sitting.\nSufficiency: real Claude and Codex stage workers delivered completion through Paseo's finish callback with no send attempted, and cancel, permission and no-Done cases each reached FO, in native-runs/README.md.\nNecessity: the six files are that rule, its checker, its ADR and its tests; validation-3 judged the extensions repair and carried the rest.\nExternal rounds: 2.\nSecond reviewer: Copilot because the PR changes merge or review rules. The copilot outcome is review:5733112447, with no line comments on this head after its finding on c129cb215 was repaired.\nCodex review: no major issues on this head, comment:6571314400.\nDeclined: RoboRev job 1403, refuse the old main line when paseo is listed (the Captain's item 4; evidence-3 records 30 main-only historical records, and AC-3 asks only that the new line be accepted). A new main-only record still passes, so FO's hand replacement is the only guard.; the validation-1 paraphrase kept as sent (validation-3 F2: the record is history and the current record passes the check); contradictory upstream send instructions (validation-3 F3: real stage logs in native-runs/README.md show no send attempts)."
+    }
+  ]
+}
