@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:special-roles-follow-the-model-table:validation:attempt-1:revision-1",
+  "question": "「決定：四件事都照建議嗎？要改哪件直接說。」 Item 1 of that sitting: merge this PR; regular merge with --match-head-commit, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:special-roles-follow-the-model-table:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/33f97a65ae6cdb8b9b62de06317eb92028f1de2a/special-roles-follow-the-model-table.md",
+      "rev": "sha256:97e046b40e0e9055d89272e879ba58aa39b5a60951ef02813e1743bba5052138",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of special-roles-follow-the-model-table, PR #764, head 8eed70b260346811a1f2aa035ca1354a2d735576, in the batch 12 sitting.\nSufficiency: role settings use effort so the Captain's table applies, the Reviewer check accepts Astra, and each role's declared settings match the table, shown by the probes and replays in the validation report.\nNecessity: the changed files are that table, the agents it names, the checker and their tests; one earlier RoboRev finding belonged to PR #765, which owns the defaults file.\nExternal rounds: 1.\nSecond reviewer: Copilot because the PR changes merge or review rules. The copilot outcome is review:5733412503, with no line comments on this head.\nCodex review: no major issues on this head, comment:6572348197."
+    }
+  ]
+}

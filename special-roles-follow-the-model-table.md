@@ -57,6 +57,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:special-roles-follow-the-model-table:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:special-roles-follow-the-model-table-validation-1
+              briefing:
+                id: briefing:special-roles-follow-the-model-table:validation:attempt-1:revision-1
+                digest: sha256:257d2f7677994032d065eb55a2368458b60ed9909c33d5fe4cf0c55f9daac26e
+                room-ref: ./special-roles-follow-the-model-table/review/validation/briefing-1
 started: 2026-11-02T04:40:41Z
 worktree: .worktrees/spacedock-ensign-special-roles-follow-the-model-table
 pr: iamcxa/kc-claude-plugins#764
