@@ -1,6 +1,6 @@
 ---
 title: Model roster question asks only when Paseo, Codex and Claude are all available, and offers Claude models
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 gates:
@@ -75,10 +75,13 @@ gates:
                 reason: 'The Captain 「准」 (chat, 2026-11-03), answering 「決定：合併 #765，並接受不修那項縮排問題，可以嗎？」.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-02T04:56:19Z
 worktree: .worktrees/spacedock-ensign-model-roster-question-needs-both-families
 pr: pr-merge:765
+verdict: PASSED
+completed: 2026-11-02T10:16:43Z
+archived: 2026-11-02T10:16:43Z
 ---
 
 ## Scope
