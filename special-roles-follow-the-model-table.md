@@ -78,7 +78,7 @@ gates:
                 state: pending
 started: 2026-11-02T04:40:41Z
 worktree: .worktrees/spacedock-ensign-special-roles-follow-the-model-table
-pr: iamcxa/kc-claude-plugins#764
+pr: pr-merge:764
 ---
 
 ## Scope
