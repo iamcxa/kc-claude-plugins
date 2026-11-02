@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:picky-reviewers-may-run-on-gemini:backlog:attempt-1:revision-1",
+  "question": "「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」",
+  "artifacts": [
+    {
+      "id": "artifact:picky-reviewers-may-run-on-gemini:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/adcbe6d9f23265a9fda2feb71b993b517e66821d/picky-reviewers-may-run-on-gemini.md",
+      "rev": "sha256:dc7bd86daaf8bd19727d0c386ba550d30a6ae1dba7a626979b084ffe6117fbe2",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 sitting; recommended approve to enter ideation under pilot."
+    }
+  ]
+}

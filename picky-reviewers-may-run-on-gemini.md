@@ -3,6 +3,17 @@ title: Release-walk picky reviewers can run on Gemini through Paseo
 status: backlog
 variant: kc-dev-flow-2
 profile: pilot
+gates:
+    version: 1
+    records:
+        - id: gate:picky-reviewers-may-run-on-gemini:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:picky-reviewers-may-run-on-gemini-backlog-1
+              briefing:
+                id: briefing:picky-reviewers-may-run-on-gemini:backlog:attempt-1:revision-1
+                digest: sha256:a4f46fda7b74cf046f55add81715ac4393dc096ecdd9cc8ff9903abc1d110d86
+                room-ref: ./picky-reviewers-may-run-on-gemini/review/backlog/briefing-1
 ---
 
 ## Scope
