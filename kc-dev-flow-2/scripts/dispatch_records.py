@@ -55,6 +55,7 @@ from delivery_gate import CANDIDATE, RECORD  # noqa: E402
 from design_surfaces import AMENDMENTS_HEADING, AMENDMENT_HEADER, amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
 from role_triggers import outside_fences  # noqa: E402
 from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
+from workflow_extensions import readme_extensions  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent.parent
 
@@ -134,7 +135,7 @@ def instruction_error(record, name, paths):
 
 
 def extension_errors(folder, readme, package):
-    listed = re.findall(r"[\w-]+", frontmatter(readme).get("extensions", ""))
+    listed = readme_extensions(readme)
     errors = []
     for name, stage, paths in declared_instructions(package, listed):
         for record in [Path(folder, "dispatch", f"{stage}-1.md")]:
@@ -542,8 +543,11 @@ def main(argv=None, package=PACKAGE):
         return 1
     readme = readme or find_readme(folder)
     # see docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md
-    extension_list = re.match(r"\[([^\]]*)\]", frontmatter(readme).get("extensions", "")) if readme else None
-    listed = [item.strip().strip("'\"") for item in extension_list[1].split(",")] if extension_list else []
+    try:
+        listed = readme_extensions(readme) if readme else []
+    except (OSError, UnicodeError, ValueError) as error:
+        print(f"{readme}: {error}")
+        return 2
     paseo = "paseo" in listed
     errors = []
     for path in records:
