@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:second-round-prompts-a-step-back:ideation:attempt-1:revision-1",
+  "question": "「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」",
+  "artifacts": [
+    {
+      "id": "artifact:second-round-prompts-a-step-back:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9de0c484dada206dba7d9b40b24fd38e3c3d2352/second-round-prompts-a-step-back.md",
+      "rev": "sha256:ca605a8f6c175bdf2e5c502123220247f417be70c4136865df936a2579aae85e",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 sitting; chief-engineer reviewed all four. Recommended revise with the decisions the sitting named, then a second presentation."
+    }
+  ]
+}

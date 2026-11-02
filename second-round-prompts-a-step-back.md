@@ -25,6 +25,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:second-round-prompts-a-step-back:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:second-round-prompts-a-step-back-ideation-1
+              briefing:
+                id: briefing:second-round-prompts-a-step-back:ideation:attempt-1:revision-1
+                digest: sha256:6d9383bb9f3621b5e61ab890a43e89060f65657e8da915bb8d411ef8f3ad65c5
+                room-ref: ./second-round-prompts-a-step-back/review/ideation/briefing-1
 ---
 
 ## Scope
