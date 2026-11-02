@@ -41,6 +41,11 @@ gates:
                 at: "2026-11-02T03:30:47.440487Z"
                 decision: revise
                 reason: 'The Captain 「可以」 (chat, 2026-11-02), answering 「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」; accepts the direction and asks: D1 Opus only; D2 yes, a Claude worker hands publication to FO as worker-completion-reaches-fo-on-paseo owns; D3 yes; D4 chief-engineer and engineering-reviewer differ from the implementation workers, worded by special-roles-follow-the-model-table; AC-6 also proves completion reaches FO; order after the completion task.'
+            - id: gate-attempt:model-roster-question-needs-both-families-ideation-2
+              briefing:
+                id: briefing:model-roster-question-needs-both-families:ideation:attempt-2:revision-1
+                digest: sha256:fff8879d3a9f22e5258141d28dddbf88a91ae476df5d1a16a235deeea091fc2b
+                room-ref: ./model-roster-question-needs-both-families/review/ideation/briefing-2
 ---
 
 ## Scope

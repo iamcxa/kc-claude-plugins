@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:model-roster-question-needs-both-families:ideation:attempt-2:revision-1",
+  "question": "「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:model-roster-question-needs-both-families:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/50b30c74d8b093b37926344cb846e212bc464077/model-roster-question-needs-both-families.md",
+      "rev": "sha256:2b63aab8e436c102dc3b04327cbfb268d64b8bf2eb1fd4c1a3062e63e9b536fc",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 ideation sitting. Chief-engineer reviewed the first four designs; the completion and Gemini designs had no separate batch review."
+    }
+  ]
+}
