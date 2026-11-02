@@ -343,3 +343,40 @@ The bounded Pilot implementation is locally committed with prepared PR text: Pas
 ### Summary
 
 REJECTED at c129cb215c2630d08853eeffae0fd5a2ee7e40c6: local behavior and hosted checks pass, but the accepted real-stage completion outcome is not yet demonstrated and the live validation record fails preflight. Every retained product change maps to the goal, its falsifier or the required ADR/publication obligation; no unrelated expansion found. Product bytes, branch and frontmatter are unchanged; FO owns evidence completion, dispatch correction and the next gate decision.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #763 head c129cb21 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at c129cb215c2630d08853eeffae0fd5a2ee7e40c6, on the condition that FO receives this worker's callback (AC-1 Claude below); without it, REJECTED. Native falsifiers read only, under "Do not start agents yourself". Evidence: worker-completion-reaches-fo-on-paseo/validation/evidence-2.md.
+- DONE: This rerun's ruling is Captain amendment 1 in the task file. You are the real Claude stage worker AC-1 needs: end your turn as your scope notes say; FO records what it receives. The real Codex stage worker is bc46043b in native-runs/README.md. Re-judge F1 and F2 of validation-1 and carry forward other judgements if their inputs are unchanged. Do not start agents yourself
+  Candidate and base unchanged since validation-1; AC-2 to AC-8 carried forward and also rerun. F1 closed by amendment 1, F2 narrowed to Polish. No agent started, no permission answered.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five steps in validation/acceptance-2.md, executable acceptance-2.sh; `env -i ... bash --noprofile --norc` exit 0 with output saved there. adr_lint.py --since base exit 0, 47 files; also with --require 0048, exit 0.
+- DONE: AC-1, Codex arm: a real stage worker delivers a finished callback holding its Done line
+  FO row 75528: bc46043b, spawned at row 75490 from a generated dispatch with the exact sentence; `paseo agent logs` shows 0 send rows. Read independently of native-runs/README.md. Falsifier read, not rerun.
+- SKIPPED: AC-1, Claude arm: FO receives this worker's finished callback holding its Done line
+  Cannot be observed from inside: the callback fires when this turn ends. Spawn checked at FO row 75652, agent 5c429108; no send tool called or loaded. FO records the row and counts send tool rows in `paseo agent logs 5c429108`, not word matches, since this worker's greps and Reads contain those words.
+- DONE: AC-2: non-Done finish, cancellation and permission callbacks reach FO
+  FO rows 75402 finished e97e30ec, 75388 errored 1aef76e0, 75436 permission-required e627ae31. Probes are valid here: this criterion asks for live spawns, not stage workers. Command-line arm read, not rerun.
+- DONE: AC-3: the final-reply line is accepted only with listed paseo
+  Listed, unlisted, missing and similar-name cases pass; removing the paseo guard or the branch raises AssertionError in the cache-free run. Also on the real records: `xpaseo` in a copied README returns exit 1 naming validation-2.md.
+- DONE: AC-4: the extension's line equals the checker's constant
+  The test reads both; changing one word in either fails it, in the cache-free mutation run.
+- DONE: AC-5: same-command registration, create_agent next, correct worktree
+  Carried forward from validation-1 with rows rechecked: row 75490 has workspaceId, result 75491 places bc46043b in its worktree; first actions are pwd and git top-level; one worktree listed. No-workspaceId falsifier read from validation-1's record.
+- DONE: AC-6: workflow word count, budget and pins unchanged; non-Paseo keeps main
+  lint-skills.py exit 0, 5781 of 5781; three files identical to base; test_sd_dispatch.py exit 0, whose fixtures include the main-line pins and a non-Paseo dispatch. No model is spawned by that fixture.
+- DONE: AC-7: extension recount within 819
+  Own str.split count 819, workflow 5781; adding one word gives 820 and is refused.
+- DONE: AC-8: ADR 0048 records the words, the questions and the widening of ADR 0042
+  adr_lint.py exit 0; removing the Words label gives exit 1. Read the file: both Captain answers with their questions, and "This widens ADR 0042 to Claude workers".
+- DONE: Dispatch records, comments, guards and documents
+  validation-2.md passes --names --strict and --coverage. Folder check still exit 1, for validation-1.md only (F2). Comments 1 of 75, 1.3%; number guards exit 0; doc_impact dispositions stand; design surfaces exit 0.
+- DONE: Implementation limits judged
+  Dispatch suite now 100 tests, no skips, so the earlier skip is closed. PR Draft at the exact head, five hosted checks SUCCESS. RoboRev job 1396 passes under its High and Critical filter only, so lower severities are not cleared. Six changed files all map to the design.
+- F2 Polish: the task folder's dispatch check still exits 1, only for validation-1.md, the first run's record. No current boundary is at risk: this rerun's record passes on the candidate. FO should leave that record as sent, because rewriting it would falsify what that worker received; validation-1's suggested one-line correction is withdrawn. If FO dispatches again on this task the folder check repeats the line, so FO records a decline.
+- F3 Deferred risk: a Claude stage worker still reads three send instructions (Spacedock's completion block, its Claude runtime, the workflow's Signal fact) against one scope line; only the scope line stops the send. Observed attempts: none, here and in the design's three Claude probes. It becomes material if a Paseo stage worker attempts a send despite the line, as the design's unchanged Signal fact would then be the cause.
+
+### Summary
+
+PASSED recommended at c129cb215c2630d08853eeffae0fd5a2ee7e40c6, on one condition: FO must receive this worker's finished callback holding its Done line and record it. If it does not arrive, the verdict is REJECTED, because that would be the stop condition. This report supersedes the earlier validation report. F1 is closed: amendment 1 supplied real stage workers, and the Codex one is verified. Not verified: a Codex FO as receiver, delivery across hosts, a Claude stage worker below Opus high, and the command-line falsifiers, which were read rather than rerun. Product bytes and frontmatter are unchanged.
