@@ -1,6 +1,6 @@
 ---
 title: A stage worker's completion reaches the FO on Paseo, whichever model it runs on
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 gates:
@@ -62,10 +62,13 @@ gates:
                 reason: The Captain 「照建議」 (chat, 2026-11-02), answering the batch 12 sitting 「決定：四件事都照建議嗎？要改哪件直接說。」, whose item 1 merges this PR and whose item 4 accepts the RoboRev 1403 decline; a regular merge as that sitting said.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-02T04:30:20Z
 worktree: .worktrees/spacedock-ensign-worker-completion-reaches-fo-on-paseo
 pr: pr-merge:763
+verdict: PASSED
+completed: 2026-11-02T08:19:40Z
+archived: 2026-11-02T08:19:40Z
 ---
 
 ## Scope
