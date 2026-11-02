@@ -13,6 +13,7 @@ The PR head is compared, as a prefix, with each line; it passes when it matches 
 --text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each,
 at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token; `answer=review:<id>` is no review.
+The gate text also needs one top-level `External rounds: N` line outside fences, using the summary count form below.
 Both commands require exactly one configured second-reviewer declaration, including `not triggered` when applicable.
 Prod/db cannot claim `not triggered`. Listed Copilot refusals must copy the quote/id from
 `<task>/review/copilot-not-run.txt` and offer `Copilot retry: available when the Captain confirms quota is back.`
@@ -611,6 +612,12 @@ def check(args):
         holds.extend(said or [f"role_triggers.py exited {code} with no message"])
     else:
         nexts.extend(line for line in said if line.startswith("next:"))
+
+    # see docs/adr/0051-the-merge-ask-check-requires-the-round-count.md
+    missing = summary_round_problems("\n".join(outside_fences(gate_text)))
+    problems += missing
+    if missing:
+        nexts.append("next: hold the ask; record the external round count in the summary.")
 
     emit(*problems, *holds)
     if problems:
