@@ -235,6 +235,10 @@ Verified by: the validator's own count over the candidate's `EXTENSION.md`. Fals
 **AC-8** A new ADR with the design's short title records the Captain's words and the question asked, and states it widens ADR 0042.
 Verified by: `adr_lint.py` on the candidate, which checks the `**Words:**` and `**Options considered:**` labels, and reading the file for the question asked and the ADR 0042 sentence, which no script checks. Falsifier: removing the `**Words:**` label fails the lint.
 
+## Number guards
+
+ADR: 0048
+
 ## Stage Report: ideation
 
 - DONE: A design for this task's Scope, with real evidence from one Claude and one Codex worker of what the FO actually receives
