@@ -85,7 +85,8 @@ Release review: not needed: workflow maintenance, on no journey map.
 - *Who is asked?* Whoever runs adoption or the introducing sync, once, with all three present and no roster yet. Existing rosters are preserved.
 - *Why a script for the condition?* 0.34.0 holds the condition as prose only, so no test can exercise it. `model_roster.py question` reads the workflow frontmatter, the roster path and the output of `paseo provider ls --json`. A missing Paseo gives empty input, which means ask nothing.
 - *Does `xhigh` become a cap?* No. The Captain's ruling: 「不用寫了就報錯，接受 `max` 和 `ultra`沒關係」. The recommendation stops at `xhigh`; `max` and `ultra` stay accepted.
-- *What does `ultra` mean on Claude?* Paseo has no Claude `ultra`; it lists `ultracode`. The resolver emits the Paseo option id, so a Claude `ultra` row launches `ultracode`. See decision D3.
+- *What does `ultra` mean on Claude?* Paseo has no Claude `ultra`; it lists `ultracode`. The resolver emits the Paseo option id, so a Claude `ultra` row launches `ultracode`. The Captain ruled yes (D3).
+- *Who publishes a Claude worker's branch, and how does FO hear it finished?* FO publishes, as for a Codex worker, and the completion route is the one in worker-completion-reaches-fo-on-paseo (D2). This task lands after it and adds neither rule.
 - *Is a mixed roster more diverse?* No claim. The `family` flag stays informational. It now names both families, because at 0.34.0 it says `same-family: openai` whenever tuples are present, which would be false once Claude rows exist.
 
 ```mermaid
@@ -103,6 +104,8 @@ flowchart TD
   J --> K{Child runtime evidence matches the row}
   K -- no --> I
   K -- yes --> L[Worker runs the stage]
+  L --> M[Completion reaches FO by the completion task's route]
+  M --> N[FO publishes any candidate branch]
 ```
 
 ### Chain checked
@@ -129,7 +132,9 @@ The control shows the evidence discriminates. Paseo's `effectiveThinkingOptionId
 
 `auto` mode: this ideation worker is itself a Claude child FO spawned through Paseo; its process shows `--effort high --model claude-opus-5-5 --permission-mode auto`. It was not launched through the resolver; AC-6 owes that. A `bypassPermissions` spawn from this `auto` session was refused by the host's classifier as an unsafe agent, so the route names `auto`.
 
-Not exercised: a Claude child pushing or opening a pull request (see D2), and a child at Sol/xhigh or Astra/xhigh launched from the new set (AC-6).
+The build disagrees with a roster row on the template's model. `spacedock dispatch build` on a disposable copy of this workflow's README (0.27.3, 2026-11-02): `--host claude` emits `model: sonnet` and the bootstrap `Skill(skill="spacedock:ensign")`; `--host codex` emits `model: null` and `$spacedock:ensign`. No package text names `--host` (`git grep -- --host` in `references` and `extensions`, origin/main 146727de). See D5.
+
+Not exercised: a child at Sol/xhigh or Astra/xhigh launched from the new set, and any completion reaching FO on the landed route (AC-6). A Claude child publishing is no longer asked of anyone (D2).
 
 ### What the design changes
 
@@ -141,17 +146,17 @@ Not exercised: a Claude child pushing or opening a pull request (see D2), and a 
    - New subcommand `question --code-root --readme --providers -`: exit 0 prints `ask`; exit 3 prints `skip: <reason>` naming the first missing condition; exit 1 on a malformed request. It writes nothing. It reads frontmatter with the package's existing reader.
    - The comment citing ADR 0047 moves to the new ADR's path.
 2. `kc-dev-flow-2/references/model-roster-defaults.json`: ideation `claude`/`claude-opus-5-5`/`high`, implementation `codex`/`gpt-6.1-sol`/`xhigh`, validation `codex`/`gpt-6-astra`/`xhigh`, each host `paseo`.
-3. `kc-dev-flow-2/references/model-roster.md`: the condition sentence becomes the `question` command plus "Ask only on exit 0"; the quoted question shows the new set; the supported-tuple sentence gains Claude and "`max` and `ultra` are accepted, not recommended; Claude's `ultra` is Paseo's `ultracode`, a multi-agent mode"; absence says workers follow FO's family; "existing Codex route" becomes the row provider's route; the launch passes `thinking_option_id`; Claude child evidence is named as the transcript's `model` and `perTurnEffort`; the family sentence covers both.
+3. `kc-dev-flow-2/references/model-roster.md`: the condition sentence becomes the `question` command plus "Ask only on exit 0"; the quoted question shows the new set; the supported-tuple sentence gains Claude and "`max` and `ultra` are accepted, not recommended; Claude's `ultra` is Paseo's `ultracode`, a multi-agent mode"; absence says workers follow FO's family; "existing Codex route" becomes the row provider's route; the launch passes `thinking_option_id`; a new sentence, "A `claude` row spawns in `auto` mode."; Claude child evidence is named as the transcript's `model` and `perTurnEffort`; the family sentence covers both.
 4. `kc-dev-flow-2/references/sd/adoption.md` § Before activation: the condition names Codex and Claude.
-5. `kc-dev-flow-2/extensions/paseo/EXTENSION.md` § Codex workers through Paseo: "A `claude` row uses the same placement, order and handoff, in `auto` mode." Subject to D2.
+5. `kc-dev-flow-2/extensions/paseo/EXTENSION.md`: no change here. Under D2, worker-completion-reaches-fo-on-paseo owns the Claude handoff sentence and any widening of ADR 0042. The `auto` clause moved to item 3, because that task's Scope does not name a mode.
 6. `kc-dev-flow-2/scripts/test_sd_dispatch.py`:
    - `roster-question-prerequisites` and `roster-adoption-prerequisites` pin the old sentence; both change, with their mutation swaps.
    - `("provider", "claude")` in the malformed list flips to a refused pairing (Claude with `gpt-6-astra`) and an unknown provider.
    - The history replay (`history = {`) asserts `data["stages"][stage] == expected` against the defaults file at Astra/high; it moves to an explicit batch-9 fixture so the new defaults do not rewrite history.
    - New cases for AC-1 to AC-5.
-7. New ADR, short title "Stage roster question needs Codex and Claude and offers Opus", number reserved by FO at implementation dispatch. Words: the Captain's 「主動詢問不必拿掉，但是應該是條件式的，也就是必須要是有 paseo + codex +cladue 都存在時才可以用」, 「構思改用 opus high」 and 「可以，但不用寫了就報錯，接受 `max` 和 `ultra`沒關係，等於就是不建議，但使用者真的想要也可以」 (chat, 2026-11-02). It restates what stays from 0047 (explicit answer, reviewed commit, read-only resolve, absence keeps README behavior) and sets 0047's Status to `Superseded by NNNN`, the form `read-adr` follows. Protects: `model_roster.py`, the absent-file return.
+7. New ADR, short title "Stage roster question needs Codex and Claude and offers Opus", number reserved by FO at implementation dispatch. Words: the Captain's 「主動詢問不必拿掉，但是應該是條件式的，也就是必須要是有 paseo + codex +cladue 都存在時才可以用」, 「構思改用 opus high」 and 「可以，但不用寫了就報錯，接受 `max` 和 `ultra`沒關係，等於就是不建議，但使用者真的想要也可以」 (chat, 2026-11-02). It restates what stays from 0047 (explicit answer, reviewed commit, read-only resolve, absence keeps README behavior), leaves ADR 0042 to the completion task, and sets 0047's Status to `Superseded by NNNN`, the form `read-adr` follows. Protects: `model_roster.py`, the absent-file return.
 
-Not changed: `references/sd/workflow.md`, so no `WORKFLOW_BUDGET_STEPS` step and no adopter README sync; `scripts/dispatch_records.py`; `agents/*.md`; `scripts/role_triggers.py`.
+Not changed: `references/sd/workflow.md`, so no `WORKFLOW_BUDGET_STEPS` step and no adopter README sync (D4's wording is special-roles-follow-the-model-table's edit there); `extensions/paseo/EXTENSION.md`; `scripts/dispatch_records.py`; `agents/*.md`; `scripts/role_triggers.py`.
 
 Why a script is needed (existing-code check): the bite shows the resolver refuses the row, and the condition has no executable seam today. Without `question`, AC-1 could only pin a sentence, which proves wording rather than behaviour. Cost is one subcommand and about 25 more words at adoption.
 
@@ -161,7 +166,7 @@ Package PR, then release, then FO updates Draft PR iamcxa/kc-claude-plugins#762:
 
 ### Words FO reads at each moment
 
-Whitespace split of the proposed text against origin/main 146727de.
+Whitespace split of the proposed text against origin/main 146727de. The first version's draft was deleted, so the revised rows add the counted new sentence to its counts: `wc -w` gives 7 for the `auto` sentence and 25 for D5's text.
 
 | Moment | What FO reads | Before | After | Change |
 |---|---|---|---|---|
@@ -169,38 +174,48 @@ Whitespace split of the proposed text against origin/main 146727de.
 | Adoption or introducing sync | `sd/adoption.md` | 2242 | 2245 | +3 |
 | Adoption or introducing sync | `model-roster.md` § Adoption and introducing sync | 210 | 261 | +51 |
 | Adoption or introducing sync | `question` output | 0 | 1 to about 10 | new, one line |
-| Stage launch, any repository | `model-roster.md` § Stage launch or continuation | 421 | 444 | +23 |
+| Stage launch, any repository | `model-roster.md` § Stage launch or continuation | 421 | 451 | +30 |
 | Stage launch, roster present | `resolve` JSON | one object | one more key | +1 key |
-| Stage launch, `paseo` listed | `extensions/paseo/EXTENSION.md` | 713 | 726 | +13 |
+| Stage launch, `paseo` listed | `extensions/paseo/EXTENSION.md` | 713 | 713 from this task | 0; the completion task's edit is counted there |
 
-FO reads the whole `model-roster.md` when it opens it, so a stage launch costs 634 to 708 words, +74. No moment that runs without a roster question or a stage launch changes. No word budget covers these files, so no raise is requested.
+FO reads the whole `model-roster.md` when it opens it, so a stage launch costs 634 to 715 words, +81, or 740, +106, under D5. No moment that runs without a roster question or a stage launch changes. No word budget covers these files, so no raise is requested. Other tasks' additions to `model-roster.md` (the `## Model table`) are counted in their files.
 
-### Unresolved decisions for the Captain
+### Captain's rulings on this design
 
-- **D1. Which Claude models does the roster accept?** Recommended: `claude-opus-5-5` only, as Scope says. What gets worse: a repository wanting Sonnet/high for implementation, which the table in special-roles-follow-the-model-table names, is returned to FO until one more string is added.
-- **D2. Does a Claude child through Paseo hand publication to FO as a Codex child does?** Recommended: yes, one procedure for the Paseo route, because no run shows a Claude child can push or open a pull request and the recommended set uses Claude only at ideation, which writes no branch. What gets worse: the new ADR widens ADR 0042's Codex-only exception, and FO takes one extra step for a child that might have been able to publish. The other reading of today's text ("other hosts keep their delivery owner") would leave the worker opening its own PR, unverified.
-- **D3. Does Claude `ultra` launch Paseo's `ultracode`?** Recommended: yes, because the Captain ruled `ultra` accepted and refusing it would be the error he declined. What gets worse: `ultra` on Claude is not a higher effort. The probe ran `--effort xhigh` plus a mode that tells the worker token cost is not a constraint, so its spend can exceed Codex `ultra`'s; spend was not measured.
-- **D4. Which family must chief-engineer and engineering-reviewer differ from?** `references/sd/workflow.md` says "use a different family from all workers or ask the Captain". With Opus ideation and Codex implementation no family qualifies, so every such review would ask the Captain. Recommended: differ from the candidate's author workers (implementation and repair), decided and worded in special-roles-follow-the-model-table, which already changes that section and carries the same rule. What gets worse: a reviewer may share the ideation worker's family.
+Gate of 2026-11-02, the Captain 「可以」, with the asks in the ideation resolution's reason.
+
+- **D1.** Opus only. A Claude row naming another model exits 1. A repository wanting Sonnet/high returns to FO until one string is added.
+- **D2.** Yes. A Claude worker hands publication to FO, as worker-completion-reaches-fo-on-paseo owns.
+- **D3.** Yes. Claude `ultra` launches Paseo's `ultracode`. Its spend was not measured.
+- **D4.** Chief-engineer and engineering-reviewer differ from the implementation workers, worded by special-roles-follow-the-model-table.
+
+### Beyond the asks, for the Captain
+
+One item goes beyond the asks. It is named here and is not adopted in the design or in AC-1 to AC-10.
+
+- **D5. Does stage launch say to build with `--host` set to the row's provider?** Recommended: yes, adding to `model-roster.md` § Stage launch: "Build with `--host` set to the row's provider. A generated Claude alias naming the row's model family, such as `opus` for `claude-opus-5-5`, is no conflict." Without it the recommended set cannot launch by the written route. A generated `sonnet` from a Claude FO conflicts with all three rows, and § Stage launch returns a conflict to FO. A Codex FO would give the Claude row the Codex bootstrap, `$spacedock:ensign`. What gets worse: 25 more words at every stage launch; this task must land after special-roles-follow-the-model-table so the Opus row builds as `opus`; and a customized Claude implementation row still returns to FO while the template says `sonnet`. If the answer is no, AC-6 stops at launch and returns to FO under Stop condition, and AC-11 drops.
 
 ### Batch overlap
 
 | Task | State | Same file or check | Effect |
 |---|---|---|---|
-| second-round-prompts-a-step-back | ideation | none named: `role_triggers.py`, `pr_watch.py`, the mod | none |
-| validation-gate-requires-the-question-check | ideation | none named: `delivery_gate.py`, `laws_check.py`, possibly `workflow.md` | none; this task leaves `workflow.md` alone |
-| special-roles-follow-the-model-table | backlog | same table values; `workflow.md` § Stages holds the roster pointer; D4's sentence | agree the values: ideation Opus/high, implementation Sol/xhigh, validation Astra/xhigh match its table; it owns D4 |
-| adoption-asks-which-extensions | ideation | `number_guards.py` `frontmatter` becomes a wrapper over `frontmatter_text`; `question` would call that reader. Its `adoption.md` scope lists no edit | signature kept, either order works; re-run tests after the second lands |
-| adr-required-statement | validation | `sd/adoption.md`, § Captain rulings ledger, a different section; the ADR index | no text conflict; the ADR number comes from FO's reservation |
-| adr-silent-undo-probe | ideation | none named; a probe | none; the ADR index only if it lands one |
+| worker-completion-reaches-fo-on-paseo | ideation, no design | `extensions/paseo/EXTENSION.md`, which it owns and this task no longer edits; ADR index; possibly `model-roster.md` | this task lands after it; AC-6 needs its route |
+| special-roles-follow-the-model-table | ideation, revise | `references/model-roster.md`, a new section; ADR index; its table values match the recommended set; its template `model: opus` feeds D5; it owns D4's sentence in `workflow.md` | rebase `model-roster.md`; order below |
+| second-round-prompts-a-step-back | ideation | none: `role_triggers.py`, `pr_watch.py`, the mod | none |
+| validation-gate-requires-the-question-check | ideation | ADR index only, per its own overlap section; this task leaves `workflow.md` alone | none beyond the reserved number |
+| picky-reviewers-may-run-on-gemini | ideation, no design | none in Scope: the release-acceptance extension and `release_acceptance.py`; its choice stays out of the model roster | none |
+| adoption-asks-which-extensions | ideation | `number_guards.py` `frontmatter` becomes a wrapper over `frontmatter_text`; `question` would call that reader. Its files name no `adoption.md` or roster edit. ADR index | signature kept, either order works; re-run tests after the second lands |
+| adr-required-statement | validation | `sd/adoption.md`, § Captain rulings ledger, a different section; ADR index | no text conflict; the number comes from FO's reservation |
+| adr-silent-undo-probe | ideation | none (`grep` for these files, no hit) | none |
 | comment-check-reaches-delivery-gate | ideation | none: `delivery_gate.py`, its tests, validation principles | none |
-| journey-canvas-hosted-poc | ideation | none (`grep` for these files, no hit) | none |
-| journey-server-host-pilot | validation | none (`grep` of `index.md`, 0 hits) | none |
-| ops-inbox-r1-setup-and-isolation | implementation | none (`grep`, no hit) | none |
-| pr-review-lite-value-pilot | implementation | none; its "roster" hits mean the live Cloud worker list | none |
+| journey-canvas-hosted-poc | ideation | none (`grep`, no hit) | none |
+| journey-server-host-pilot | validation | none (`grep -r` of its folder, no hit) | none |
+| ops-inbox-r1-setup-and-isolation | implementation | ADR index, per validation-gate-requires-the-question-check's overlap section; no file hit | reserved number |
+| pr-review-lite-value-pilot | implementation | none (`grep`, no hit for these files) | none |
 
-Tasks in ideation have no final file list yet, so these rows read Scope and any design as of 2026-11-02.
+Tasks with no design have no final file list yet, so those rows read Scope as of 2026-11-02.
 
-Recommended order: this task before special-roles-follow-the-model-table so its table lands on the accepted roster, and independently of the others; #762 after this task's release.
+Recommended order: worker-completion-reaches-fo-on-paseo, as the Captain ruled, then special-roles-follow-the-model-table if D5 is yes, because the Opus row needs the template's `opus`; then this task; then #762 after this task's release. If D5 is no, special-roles may land either side. This replaces this design's earlier order. If the completion task stops without a route, this task holds and returns to FO.
 
 ## Acceptance criteria
 
@@ -220,7 +235,7 @@ Verified by: a test asserts `thinking_option_id` equals the effort on every row 
 Verified by: `resolve --stage validation --author-record` with Codex validator and Codex author gives `same-family: openai`, Claude and Claude gives `same-family: anthropic`, Codex validator and Claude author gives `different-family`, and an unknown author stays `unverified`. A `Roster:` header with provider `claude` parses to a tuple and passes `dispatch_records.py --names`. Falsifier: keeping the fixed `same-family: openai` fails the mixed case.
 
 **AC-6** A roster naming Opus resolves and dispatches a real Claude ideation worker with the requested settings.
-Verified by: on the candidate package, a committed fixture roster with the recommended set is resolved, FO or the validator spawns a real Claude child through Paseo in `auto` mode with the emitted provider, model and `thinking_option_id`, and the record gives its process arguments and its transcript's `model` and `perTurnEffort`, next to a control child at `low`. The same run spawns a real child at Sol/xhigh and at Astra/xhigh and records that provider's runtime evidence. Paseo's echo and the worker's own statement do not count. Falsifier: a control reading the same as the requested child voids the run. If Paseo cannot apply a row, stop and return to FO, per Stop condition.
+Verified by: on the candidate package, a committed fixture roster with the recommended set is resolved, FO or the validator spawns a real Claude child through Paseo in `auto` mode with the emitted provider, model and `thinking_option_id`, and the record gives its process arguments and its transcript's `model` and `perTurnEffort`, next to a control child at `low`. The same run spawns a real child at Sol/xhigh and at Astra/xhigh and records that provider's runtime evidence. Paseo's echo and the worker's own statement do not count. Each of the three requested children also ends by the route worker-completion-reaches-fo-on-paseo landed: the spawning session, standing for FO, records the inbound message or finish notification naming the child's agent id and later than the child's last turn, and the child's transcript shows no refused send and no improvised second route. `git merge-base --is-ancestor` shows the candidate's base contains that task's merge commit. Falsifiers: a control reading the same as the requested child voids the run; a child that finishes with no inbound record at the spawner fails it, as the batch 12 route `paseo agent run --no-wait` did. If Paseo cannot apply a row, stop and return to FO, per Stop condition.
 
 **AC-7** Absence keeps README behavior and the text says workers follow FO's family.
 Verified by: the existing absent-roster cases still pass unchanged, `resolve` on a repository with no roster gives `source: readme-default` with `thinking_option_id` null and an identical file manifest, and the updated mutation specs for `model-roster.md` and `sd/adoption.md` fail when the condition or the follow sentence is removed.
@@ -233,6 +248,8 @@ Verified by: `git diff --stat origin/main -- kc-dev-flow-2/references/sd/workflo
 
 **AC-10** After release, #762 carries the set from the released package. Owed by FO after delivery, not by the candidate's validation.
 Verified by: after the release tag exists, the released `model_roster.py resolve` on #762's head returns the three rows with source `repository`, and `selected_from` equals the published version. FO then asks the Captain to merge. Falsifier: a predicted version, or running against an unreleased script, voids it.
+
+**AC-11** Under D5, each recommended row builds on its provider's host with no conflict. Verified by: `spacedock dispatch build --host <row provider>` on a disposable copy of the candidate's template emits `opus` and the `Skill(` bootstrap for ideation, and `null` and the `$spacedock:ensign` bootstrap for implementation and validation. A case in `test_sd_dispatch.py` pins the two sentences through a mutation spec. Falsifier: leaving out `--host` on a Claude host emits `sonnet` for implementation, as observed 2026-11-02.
 
 ## Stage Report: ideation
 
@@ -268,3 +285,29 @@ Verified by: after the release tag exists, the released `model_roster.py resolve
 ### Summary
 
 The design adds a `question` subcommand so the Paseo, Codex and Claude condition can be exercised, makes the roster's models per provider, sets the new recommended set, and keeps `max` and `ultra` accepted. Real children confirmed Paseo applies Opus high, with a low control. Three things the Captain or FO should see: Claude `ultra` is `ultracode`, which is `xhigh` plus a multi-agent mode (D3); the recommended mix makes the "different family from all workers" reviewer rule unsatisfiable (D4); and no run shows a Claude child can publish (D2). This worker ran on Opus/high through Paseo, and its spawned probes used `plan` mode because the host refused `bypassPermissions`.
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: Revise the design under the Captain gate revise of 2026-11-02: the asks are in the reason of the newest ideation resolution in this task file; do exactly those asks, and name anything that would go beyond them
+  D1 to D4 recorded as rulings; item 5 and the ADR leave publication to the completion task; AC-6 proves completion; order follows the completion task. Beyond the asks: D5 and AC-11, named, not adopted.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (worker-completion-reaches-fo-on-paseo, model-roster-question-needs-both-families, special-roles-follow-the-model-table, second-round-prompts-a-step-back, validation-gate-requires-the-question-check, picky-reviewers-may-run-on-gemini) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  Files are under `### What the design changes`; the table has 13 rows; `Recommended order:` puts the completion task first. Rows for tasks with no design read Scope only.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  `model-roster.md` 634 to 715, or 740 under D5; `EXTENSION.md` unchanged by this task; `workflow.md` 5781 unchanged. Base count re-measured; new sentences counted with `wc -w`; the 74-word part is the first version's count, not re-measured.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-1 to AC-11, and one open decision, D5. `design_surfaces.py check`: "design surfaces presentable", exit 0.
+- DONE: AC-1 evidence: not yet verified; future test.
+- DONE: AC-2 evidence: base half observed in cycle 1; candidate half not yet verified.
+- DONE: AC-3 evidence: not yet verified; future test.
+- DONE: AC-4 evidence: mapping observed by the cycle 1 probe; emission not yet verified.
+- DONE: AC-5 evidence: not yet verified; future test.
+- DONE: AC-6 evidence: settings observed on cycle 1 probes; the resolver-driven run and the completion half are not yet verified, and the completion route has no design yet.
+- DONE: AC-7 evidence: not yet verified on the candidate.
+- DONE: AC-8 evidence: not yet verified; ADR drafted as ruling and short title, no number.
+- DONE: AC-9 evidence: not yet verified; no `workflow.md` edit in the design.
+- DONE: AC-10 evidence: not yet verified; owed by FO after release. #762 is open, Draft, at d5a56521 (`gh pr view 762`, 2026-11-02).
+- DONE: AC-11 evidence: base half observed 2026-11-02 (`sonnet` on Claude, `null` on Codex, both bootstraps); the candidate's `opus` depends on special-roles and is not yet verified.
+
+### Summary
+
+The design now takes the Captain's four rulings: Opus only, publication and completion left to the completion task, `ultra` as `ultracode`, and the reviewer family worded by special-roles. AC-6 also proves completion reaches FO, and the order puts the completion task first. One thing goes beyond the asks and needs the Captain (D5): a disposable build shows the recommended set conflicts with the template's generated `sonnet` on a Claude FO, and nothing tells FO to pick `--host`, so the set cannot launch by the written route; answering yes also places special-roles before this task.
