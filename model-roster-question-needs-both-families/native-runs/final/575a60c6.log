@@ -1,0 +1,4 @@
+[Message received] kc-plugin dev2 FO
+Task: run `rtk proxy ps -ww -o command= -p $PPID` once. Your final reply is your completion message: Paseo delivers it to FO when your turn ends. End your turn with this line as that reply; do not send it with SendMessage or send_agent_prompt: Done: AC-6 final Opus low completed. Do not change any file.
+[Shell] rtk proxy ps -ww -o command= -p $PPID
+Done: AC-6 final Opus low completed.

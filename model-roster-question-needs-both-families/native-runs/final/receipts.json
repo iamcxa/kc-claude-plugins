@@ -1,0 +1,88 @@
+{
+ "8c33c57f": {
+  "tag": "AC-6 final Opus high",
+  "transcript": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo/204b7fb2-db08-4d30-90f6-9b89d4b04b53.jsonl",
+  "last_transcript_time": "2026-11-02T09:44:28.620Z",
+  "models": [
+   "claude-fable-5-1",
+   "claude-opus-5-5"
+  ],
+  "efforts": [
+   "high"
+  ],
+  "process_flags": [
+   "--thinking adaptive --effort high --model claude-opus-5-5"
+  ],
+  "send_tool_calls": 0,
+  "inbound": [
+   {
+    "session_time": "2026-11-02T09:44:30.665Z",
+    "event": "finished",
+    "message_id": "ee12f38d-6e47-4529-8eac-a8b16732e534"
+   }
+  ]
+ },
+ "575a60c6": {
+  "tag": "AC-6 final Opus low",
+  "transcript": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo/187e0719-be49-496e-8da8-e8fd01ea4028.jsonl",
+  "last_transcript_time": "2026-11-02T09:44:31.604Z",
+  "models": [
+   "claude-fable-5-1",
+   "claude-opus-5-5"
+  ],
+  "efforts": [
+   "low"
+  ],
+  "process_flags": [
+   "--thinking adaptive --effort low --model claude-opus-5-5"
+  ],
+  "send_tool_calls": 0,
+  "inbound": [
+   {
+    "session_time": "2026-11-02T09:44:33.986Z",
+    "event": "finished",
+    "message_id": "0838be28-423b-4def-afdb-888164148f5d"
+   }
+  ]
+ },
+ "84db4474": {
+  "tag": "AC-6 final Sol xhigh",
+  "transcript": "/Users/kent/.codex/sessions/2026/11/02/rollout-2026-11-02T17-44-21-01a19ba5-410d-7cb2-87df-aa21f6a5930b.jsonl",
+  "last_transcript_time": "2026-11-02T09:44:52.425Z",
+  "models": [
+   "gpt-6.1-sol"
+  ],
+  "efforts": [
+   "xhigh"
+  ],
+  "process_flags": [],
+  "send_tool_calls": 0,
+  "inbound": [
+   {
+    "session_time": "2026-11-02T09:44:54.446Z",
+    "event": "finished",
+    "message_id": "d818b4d8-5b98-4ed5-87b6-b3acd4db361c"
+   }
+  ]
+ },
+ "45f8566a": {
+  "tag": "AC-6 final Astra xhigh",
+  "transcript": "/Users/kent/.codex/sessions/2026/11/02/rollout-2026-11-02T17-44-23-01a19ba5-4944-7f72-a8eb-ae06523ec685.jsonl",
+  "last_transcript_time": "2026-11-02T09:44:59.675Z",
+  "models": [
+   "gpt-6-astra"
+  ],
+  "efforts": [
+   "xhigh"
+  ],
+  "process_flags": [],
+  "send_tool_calls": 0,
+  "inbound": [
+   {
+    "session_time": "2026-11-02T09:45:01.691Z",
+    "event": "finished",
+    "message_id": "0cc4fb4b-da02-4d16-9603-1b5c22ef67f3"
+   }
+  ]
+ }
+}

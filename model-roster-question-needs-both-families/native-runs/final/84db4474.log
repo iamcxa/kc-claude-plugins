@@ -1,0 +1,14 @@
+[Message received] kc-plugin dev2 FO
+Task: run `ps -ww -o command= -p $PPID` once. Your final reply is your completion message: Paseo delivers it to FO when your turn ends. End your turn with this line as that reply; do not send it with SendMessage or send_agent_prompt: Done: AC-6 final Sol xhigh completed. Do not change any file.
+I’ll run the requested command once.
+---
+
+Attempted once; the sandbox denied `ps`.
+
+```text
+Remaining: command output unavailable.
+Next: review sandbox restriction (you).
+Closable: no
+```
+
+Done: AC-6 final Sol xhigh completed.
