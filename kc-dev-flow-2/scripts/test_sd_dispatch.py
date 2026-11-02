@@ -350,16 +350,27 @@ FIXES = {
         swaps=((r" with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one,", ","),)),
     "roster-question-prerequisites": dict(
         file="references/model-roster.md",
-        need=("Ask only when the workflow frontmatter lists `paseo` and the Codex provider is available.",
-              "Otherwise ask nothing, write nothing and retain README behavior."),
+        need=("model_roster.py question --code-root <absolute-code-worktree-root> --readme <workflow-README> --providers -",
+              "Ask only on exit 0: the workflow lists `paseo`, Codex and Claude are available, and no roster exists.",
+              "Otherwise ask nothing, write nothing and retain README behavior; workers follow FO's family."),
         old=(),
-        swaps=((r"Ask only when the workflow frontmatter lists `paseo` and the Codex provider is available\. Otherwise ask nothing, write nothing and retain README behavior\. ", ""),)),
+        swaps=((r"model_roster\.py question --code-root <absolute-code-worktree-root> --readme <workflow-README> --providers -", ""),
+               (r"Ask only on exit 0:.*?no roster exists\.", ""),
+               (r"retain README behavior; workers follow FO's family\.", "retain README behavior."))),
     "roster-adoption-prerequisites": dict(
         file="references/sd/adoption.md",
-        need=("ask once about stage workers only when the workflow frontmatter lists `paseo` and the Codex provider is available.",
+        need=("ask once about stage workers only when the workflow frontmatter lists `paseo` and Codex and Claude providers are available.",
               "Otherwise ask nothing, write nothing and retain README behavior."),
         old=(),
-        swaps=((r" only when the workflow frontmatter lists `paseo` and the Codex provider is available\. Otherwise ask nothing, write nothing and retain README behavior\.", "."),)),
+        swaps=((r" only when the workflow frontmatter lists `paseo` and Codex and Claude providers are available\. Otherwise ask nothing, write nothing and retain README behavior\.", "."),)),
+    "roster-provider-host": dict(
+        file="references/model-roster.md",
+        need=("Build with `--host` set to the row's provider.",
+              "A generated Claude alias naming the row's model family, such as `opus` for `claude-opus-5-5`, is no conflict.",
+              "host behavior without a question or fabricated effort; workers follow FO's family."),
+        old=(),
+        swaps=((r"Build with `--host`.*?is no conflict\.", ""),
+               (r"host behavior without a question or fabricated effort; workers follow FO's family\.", "host behavior."))),
 }
 
 
@@ -394,9 +405,9 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
     env["PYTHONDONTWRITEBYTECODE"] = "1"
 
-    def call(args, cwd=base, expected=0):
+    def call(args, cwd=base, expected=0, data=None):
         result = subprocess.run([str(x) for x in args], cwd=cwd, env=env,
-                                capture_output=True, text=True, timeout=30)
+                                capture_output=True, text=True, input=data, timeout=30)
         with (base / "commands.jsonl").open("a") as log:
             log.write(json.dumps(dict(argv=[str(x) for x in args], cwd=str(cwd),
                                       exit=result.returncode, stdout=result.stdout,
@@ -423,6 +434,40 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
         return {str(p.relative_to(root)): (p.stat().st_mode, hashlib.sha256(p.read_bytes()).hexdigest())
                 for p in root.rglob("*") if p.is_file()}
 
+    readme = repo / "README.md"
+    providers = [dict(provider=p, status="available", enabled="Enabled") for p in ("codex", "claude")]
+
+    def ask(rows, expected, message):
+        before = manifest(repo)
+        result = call([sys.executable, "-B", resolver, "question", "--code-root", repo,
+                       "--readme", readme, "--providers", "-"],
+                      data=rows if isinstance(rows, str) else json.dumps(rows), expected=expected)
+        assert message in (result.stderr if expected == 1 else result.stdout), result
+        assert manifest(repo) == before, "question wrote files"
+
+    for paseo in (False, True):
+        readme.write_text(f"---\nextensions: [{'paseo' if paseo else ''}]\n---\n")
+        for codex in (False, True):
+            for claude in (False, True):
+                rows = [p for p, enabled in zip(providers, (codex, claude)) if enabled]
+                eligible = paseo and codex and claude
+                ask(rows, 0 if eligible else 3, "ask" if eligible else "skip:")
+    ask("", 3, "codex provider unavailable")
+    for provider in ("codex", "claude"):
+        rows = copy.deepcopy(providers)
+        next(p for p in rows if p["provider"] == provider)["status"] = "unavailable"
+        ask(rows, 3, f"{provider} provider unavailable")
+        rows = copy.deepcopy(providers)
+        next(p for p in rows if p["provider"] == provider)["enabled"] = "Disabled"
+        ask(rows, 3, f"{provider} provider unavailable")
+    for malformed in ("{", "{}", "[null]", '[{"provider":"codex"}]'):
+        ask(malformed, 1, "model-roster:")
+    roster.parent.mkdir()
+    roster.write_text("uncommitted existing choice")
+    ask(providers, 3, "roster already exists")
+    roster.unlink()
+    readme.write_text("Existing README model: sonnet\n")
+
     def resolve(stage="implementation", root=repo, authors=(), error=None):
         args = [sys.executable, "-B", resolver, "resolve", "--code-root", root, "--stage", stage]
         for path in authors:
@@ -437,15 +482,28 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
     before = manifest(repo)
     absent = resolve()
     assert absent["source"] == "readme-default" and absent["tuple"] is None, absent
+    assert absent["thinking_option_id"] is None, absent
     assert resolve() == absent and manifest(repo) == before
     assert (repo / "README.md").read_text() == "Existing README model: sonnet\n"
     resolve(root=repo / "nested", error="git rev-parse")
     resolve(root=Path("."), error="code-root: expected absolute")
     resolve(stage="observer", error="stage: unsupported")
     recommendation = json.loads((ROOT / "references/model-roster-defaults.json").read_text())
+    expected_rows = {
+        "ideation": dict(provider="claude", model="claude-opus-5-5", effort="high", host="paseo"),
+        "implementation": dict(provider="codex", model="gpt-6.1-sol", effort="xhigh", host="paseo"),
+        "validation": dict(provider="codex", model="gpt-6-astra", effort="xhigh", host="paseo"),
+    }
+    assert recommendation["stages"] == expected_rows, recommendation
+    text = (ROOT / "references/model-roster.md").read_text()
+    quoted = " ".join(line[2:] for line in text.splitlines() if line.startswith("> "))
+    for phrase in ("ideation Opus/high on Claude", "implementation Sol/xhigh", "Astra/xhigh on Codex"):
+        assert phrase in quoted, phrase
+    adr = ROOT.parent / "docs/adr/0050-stage-roster-question-needs-codex-and-claude-and-offers-opus.md"
+    assert adr.is_file()
+    assert "## Status\n\nSuperseded by 0050" in (ROOT.parent / "docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md").read_text()
     data = copy.deepcopy(recommendation)
     data["decision"] = "fixture-explicit-answer"
-    roster.parent.mkdir()
 
     def save(value):
         roster.write_text(value if isinstance(value, str) else json.dumps(value, indent=2) + "\n")
@@ -459,6 +517,19 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
     assert chosen["digest"] == "sha256:" + hashlib.sha256(roster.read_bytes()).hexdigest()
     assert chosen["commit"] == call(["git", "-C", repo, "rev-parse", "HEAD"]).stdout.strip()
     assert chosen["source"] == "repository" and chosen["role"] == "implementation"
+    for stage, row in expected_rows.items():
+        result = resolve(stage)
+        assert result["tuple"] == row and result["thinking_option_id"] == row["effort"], result
+    for provider, model in (("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("codex", "gpt-6-astra")):
+        for effort in ("low", "medium", "high", "xhigh", "max", "ultra"):
+            trial = copy.deepcopy(data)
+            trial["stages"]["ideation"].update(provider=provider, model=model, effort=effort)
+            save(trial)
+            commit(".dev2/model-roster.json")
+            result = resolve("ideation")
+            assert result["tuple"] == trial["stages"]["ideation"], result
+            expected = "ultracode" if provider == "claude" and effort == "ultra" else effort
+            assert result["thinking_option_id"] == expected, result
     # Historical batch inputs: tuple-only fixtures, not child-runtime evidence.
     history_source = "_archive/paseo-codex-dispatch-practice/dispatch/{stage}-1.md"
     history = {
@@ -466,10 +537,17 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
         "implementation": ("gpt-6.1-sol", "e65a8911f7d741ba78aa6b98bdae59de3d9753b7c72d95ec31ae42e73b04a833"),
         "validation": ("gpt-6-astra", "2f33b40eba6c9a881e9070199857843351c746e8408ba37195b630eb169d0bff"),
     }
+    historical = copy.deepcopy(data)
+    historical["stages"] = {stage: dict(provider="codex", model=model, effort="high", host="paseo")
+                            for stage, (model, _) in history.items()}
+    save(historical)
+    commit(".dev2/model-roster.json")
     for stage, (model, digest) in history.items():
         expected = dict(provider="codex", model=model, effort="high", host="paseo")
         assert resolve(stage)["tuple"] == expected, (history_source.format(stage=stage), digest)
-        assert data["stages"][stage] == expected, (history_source.format(stage=stage), digest)
+        assert historical["stages"][stage] == expected, (history_source.format(stage=stage), digest)
+    save(data)
+    commit(".dev2/model-roster.json")
     assert resolve("repair")["tuple"] == chosen["tuple"]
     assert resolve("repair")["role"] == "implementation"
     assert resolve("validation")["family"] == "unverified"
@@ -506,11 +584,16 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
     extra = copy.deepcopy(data)
     extra["stages"]["observer"] = extra["stages"]["validation"]
     malformed.append((extra, "stages: expected keys"))
-    for field, value in (("provider", "claude"), ("host", "native"),
+    for field, value in (("provider", "unknown"), ("host", "native"),
                          ("model", "unknown"), ("effort", "")):
         bad = copy.deepcopy(data)
         bad["stages"]["ideation"][field] = value
         malformed.append((bad, f"stages.ideation.{field}"))
+    for provider, model in (("claude", "gpt-6-astra"), ("codex", "claude-opus-5-5"),
+                            ("claude", "claude-sonnet-5-5")):
+        bad = copy.deepcopy(data)
+        bad["stages"]["ideation"].update(provider=provider, model=model)
+        malformed.append((bad, "stages.ideation.model"))
     partial = copy.deepcopy(data)
     del partial["stages"]["implementation"]["effort"]
     malformed.append((partial, "stages.implementation: expected keys"))
@@ -584,6 +667,23 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
             for path in authors
         ], ("absent roster must retain author references and tuples", result)
         assert result.get("family") == "unverified", ("no configured validator tuple", result)
+    claude_author = records / "implementation-4.md"
+    claude_author.write_text(f"Dispatched: {sha}\nModel: claude-opus-5-5 (Claude via Paseo, thinking high)\n"
+                            "Roster: source=repository; role=implementation; provider=claude; "
+                            "model=claude-opus-5-5; effort=high; host=paseo\n" + body)
+    call([sys.executable, "-B", ROOT / "scripts/dispatch_records.py", "--names", claude_author])
+    result = resolve("validation", authors=[claude_author])
+    assert result["family"] == "different-family", result
+    assert result["authors"][0]["tuple"]["provider"] == "claude", result
+    assert resolve("validation", authors=[claude_author, legacy])["family"] == "different-family"
+    data["stages"]["validation"] = dict(provider="claude", model="claude-opus-5-5", effort="high", host="paseo")
+    save(data)
+    commit(".dev2/model-roster.json")
+    assert resolve("validation", authors=[claude_author])["family"] == "same-family: anthropic"
+    assert resolve("validation", authors=[legacy])["family"] == "different-family"
+    assert resolve("validation", authors=[claude_author, unknown])["family"] == "unverified"
+    claude_author.write_text("Model: claude-opus-5-5 (Claude via Paseo, thinking high)\n")
+    assert resolve("validation", authors=[claude_author])["family"] == "unverified"
     print("PASS: roster subprocess replay, absolute/split-root/linked roots, read-only repeatability, full schema/error controls, committed changes/deletion and candidate-author family evidence; legacy record checks do not establish roster use")
 
 
@@ -689,6 +789,8 @@ def exercise(base, binary, sd_root):
                 assert envelope["subagent_type"] == "spacedock:ensign"
                 bootstrap = 'Skill(skill="spacedock:ensign")' if host == "claude" else "$spacedock:ensign"
                 assert bootstrap in envelope["prompt"], envelope["prompt"]
+                expected_model = ("sonnet" if stage == "implementation" else "opus") if host == "claude" else None
+                assert envelope["model"] == expected_model, envelope
                 expected = [binary, "dispatch", "show-stage-def", "--workflow-dir", str(repo), "--stage", stage]
                 fetches = [shlex.split(command) for command in envelope["fetch_commands"]]
                 assert fetches == [expected], fetches
