@@ -57,6 +57,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-02T04:56:19Z
+worktree: .worktrees/spacedock-ensign-model-roster-question-needs-both-families
 ---
 
 ## Scope
