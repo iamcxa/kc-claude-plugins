@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:second-round-prompts-a-step-back:ideation:attempt-2:revision-1",
+  "question": "「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:second-round-prompts-a-step-back:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/1833708358121d9df8ba3ae2b255738bb55f4ae1/second-round-prompts-a-step-back.md",
+      "rev": "sha256:e8dfc5109270982ce4f60d94d8884e663a7112a03efbd4a62e3ca827ea42b1da",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 ideation sitting. Chief-engineer reviewed the first four designs; the completion and Gemini designs had no separate batch review."
+    }
+  ]
+}

@@ -41,6 +41,11 @@ gates:
                 at: "2026-11-02T03:30:50.495671Z"
                 decision: revise
                 reason: 'The Captain 「可以」 (chat, 2026-11-02), answering 「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」; accepts the direction and asks: D1 the F bullet; D2 yes, the third time holds the merge ask with the existing waiver; D3 chief-engineer; state plainly that it counts replacing amendments, not every relaxation, and that 5 of 13 word-detected tasks stay silent; correct the overlap: it shares delivery_gate.py check with validation-gate-requires-the-question-check; order after special-roles-follow-the-model-table.'
+            - id: gate-attempt:second-round-prompts-a-step-back-ideation-2
+              briefing:
+                id: briefing:second-round-prompts-a-step-back:ideation:attempt-2:revision-1
+                digest: sha256:83f1414d81bf64e70776c96207221d701adf3f4089866952bf84787d0372f33f
+                room-ref: ./second-round-prompts-a-step-back/review/ideation/briefing-2
 ---
 
 ## Scope
