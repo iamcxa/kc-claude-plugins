@@ -1,0 +1,4 @@
+{"mutation": "inline-comment-membership", "matrix_exit": 1, "checker_exit": 0, "checker_expected": 1, "empty_and_no_key_controls": "pass", "cache": "python3 -B; copied caches excluded"}
+{"mutation": "quoted-block-item", "matrix_exit": 1, "checker_exit": 1, "checker_expected": 0, "empty_and_no_key_controls": "pass", "cache": "python3 -B; copied caches excluded"}
+{"mutation": "block-comment-membership", "matrix_exit": 1, "checker_exit": 1, "checker_expected": 0, "empty_and_no_key_controls": "pass", "cache": "python3 -B; copied caches excluded"}
+Evidence: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/validation-3/shared-mutations

@@ -1,0 +1,19 @@
+{
+  "candidate": "c2643dae831f9685166b7cd564d8d885e88a3f21",
+  "base": "e891e83582ac10936ffd67fb083b530b009ad847",
+  "state_before": "69b4b1f0199bde94de7828a42b8d73d35589adce",
+  "code_worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/validation-3/candidate",
+  "package_loaded": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0",
+  "package_assigned": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0",
+  "native_record_attribution": "FO run, independently corroborated with primary transcripts; no validator agent spawn",
+  "artifacts": {
+    "model-roster-question-needs-both-families/native-runs/final/84db4474.log": "a49b732795ee29459af6ee9bac8b3b18f348f9cfdc78f7e016a9f35b48a71403",
+    "model-roster-question-needs-both-families/native-runs/final/8c33c57f.log": "81c66081a5966e4614559913f7c87780211339f576d6d341154dca25672641a2",
+    "model-roster-question-needs-both-families/native-runs/final/receipts.json": "cb890846ad056ee8d71d7a4110516fc6222f41630c40b4fd7a8f296c1e41998a",
+    "model-roster-question-needs-both-families/native-runs/final/README.md": "77f9ba22fb2fdf57216b65aef6a89b5869859bf654c91e64f4570df18663c128",
+    "model-roster-question-needs-both-families/native-runs/final/575a60c6.log": "5e3c8250226c40a99f57aaf809fe06956e7471544365fad68004fb5f4b08ee2f",
+    "model-roster-question-needs-both-families/native-runs/final/45f8566a.log": "4d5d52edaa80f11a058e729ece22f2ba76305e39e34e246dd7f896858ac71ceb",
+    "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py": "bf0b9138e0a57f7e203f403be06eda011c33911566b5dd185ce4c5af7b6749cb",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py": "f0ad624f5d64f993c973c25f13a7da79e6b0cdfb34897e14945f08c13c8f7178"
+  }
+}

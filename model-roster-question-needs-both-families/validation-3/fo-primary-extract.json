@@ -1,0 +1,92 @@
+{
+  "source": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo/5c030106-8d82-4542-855e-1498b2563c69.jsonl",
+  "spawn": [
+    {
+      "timestamp": "2026-11-02T09:44:02.865Z",
+      "tool_id": "toolu_01DJY1widRTDwu3BUA3uiAgK",
+      "input": {
+        "name": null,
+        "provider": "claude/claude-opus-5-5",
+        "model": null,
+        "modeId": null,
+        "settings": {
+          "modeId": "auto",
+          "thinkingOptionId": "high"
+        },
+        "notifyOnFinish": true,
+        "cwd": null
+      }
+    },
+    {
+      "timestamp": "2026-11-02T09:44:05.259Z",
+      "tool_id": "toolu_01LxXj2hiMCRok21FiNFDXif",
+      "input": {
+        "name": null,
+        "provider": "claude/claude-opus-5-5",
+        "model": null,
+        "modeId": null,
+        "settings": {
+          "modeId": "auto",
+          "thinkingOptionId": "low"
+        },
+        "notifyOnFinish": true,
+        "cwd": null
+      }
+    },
+    {
+      "timestamp": "2026-11-02T09:44:07.513Z",
+      "tool_id": "toolu_01AL8F52111x81wHMBZW9vkh",
+      "input": {
+        "name": null,
+        "provider": "codex/gpt-6.1-sol",
+        "model": null,
+        "modeId": null,
+        "settings": {
+          "modeId": "auto-review",
+          "thinkingOptionId": "xhigh"
+        },
+        "notifyOnFinish": true,
+        "cwd": null
+      }
+    },
+    {
+      "timestamp": "2026-11-02T09:44:09.829Z",
+      "tool_id": "toolu_01GYZxPvfqpTqkmGm6ormtLw",
+      "input": {
+        "name": null,
+        "provider": "codex/gpt-6-astra",
+        "model": null,
+        "modeId": null,
+        "settings": {
+          "modeId": "auto-review",
+          "thinkingOptionId": "xhigh"
+        },
+        "notifyOnFinish": true,
+        "cwd": null
+      }
+    }
+  ],
+  "inbound": [
+    {
+      "timestamp": "2026-11-02T09:44:30.665Z",
+      "header": "<paseo-system version=\"1\" kind=\"agent-notification\" source-agent-id=\"8c33c57f-7f24-4f19-a4f8-6eda16789fc0\" message-id=\"ee12f38d-6e47-4529-8eac-a8b16732e534\" source-server-id=\"srv_Vu_gVMYcYLxv\" source-agent-title=\"b12 AC-6 final Opus high\" event=\"finished\">",
+      "completed": true
+    },
+    {
+      "timestamp": "2026-11-02T09:44:33.986Z",
+      "header": "<paseo-system version=\"1\" kind=\"agent-notification\" source-agent-id=\"575a60c6-60dd-42d8-a7ab-40a8750c85d5\" message-id=\"0838be28-423b-4def-afdb-888164148f5d\" source-server-id=\"srv_Vu_gVMYcYLxv\" source-agent-title=\"b12 AC-6 final Opus low control\" event=\"finished\">",
+      "completed": true
+    },
+    {
+      "timestamp": "2026-11-02T09:44:54.446Z",
+      "header": "<paseo-system version=\"1\" kind=\"agent-notification\" source-agent-id=\"84db4474-bb23-4f1c-ad14-6c3341a0b94f\" message-id=\"d818b4d8-5b98-4ed5-87b6-b3acd4db361c\" source-server-id=\"srv_Vu_gVMYcYLxv\" source-agent-title=\"b12 AC-6 final Sol xhigh\" event=\"finished\">",
+      "completed": true
+    },
+    {
+      "timestamp": "2026-11-02T09:45:01.691Z",
+      "header": "<paseo-system version=\"1\" kind=\"agent-notification\" source-agent-id=\"45f8566a-f182-4aa4-8e6a-e6fd03f0d7a6\" message-id=\"0cc4fb4b-da02-4d16-9603-1b5c22ef67f3\" source-server-id=\"srv_Vu_gVMYcYLxv\" source-agent-title=\"b12 AC-6 final Astra xhigh\" event=\"finished\">",
+      "completed": true
+    }
+  ],
+  "resolver_records": []
+}

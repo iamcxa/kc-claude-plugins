@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "selected_from": "0.33.1",
+  "decision": "fixture for AC-6, FO, 2026-11-02",
+  "stages": {
+    "ideation": {
+      "provider": "claude",
+      "model": "claude-opus-5-5",
+      "effort": "high",
+      "host": "paseo"
+    },
+    "implementation": {
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "host": "paseo"
+    },
+    "validation": {
+      "provider": "codex",
+      "model": "gpt-6-astra",
+      "effort": "xhigh",
+      "host": "paseo"
+    }
+  }
+}

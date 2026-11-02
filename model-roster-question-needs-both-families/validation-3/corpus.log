@@ -1,0 +1,7 @@
+{
+  "main": "e891e83582ac10936ffd67fb083b530b009ad847",
+  "state": "69b4b1f0199bde94de7828a42b8d73d35589adce",
+  "tasks": 190,
+  "changed_verdicts": 0,
+  "evidence": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/validation-3/corpus"
+}

@@ -1,0 +1,19 @@
+{"script": "model_roster.py", "readme": "---\nentity-type: task\nextensions: [paseo]\n---\n", "exit": 0, "expected": 0, "stdout": "ask\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions: [paseo]\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions: [paseo]\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "model_roster.py", "readme": "---\nentity-type: task\nextensions: [paseo] # selected extension\n---\n", "exit": 0, "expected": 0, "stdout": "ask\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions: [paseo] # selected extension\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions: [paseo] # selected extension\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "model_roster.py", "readme": "---\nentity-type: task\nextensions:\n  - paseo\n---\n", "exit": 0, "expected": 0, "stdout": "ask\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions:\n  - paseo\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions:\n  - paseo\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "model_roster.py", "readme": "---\nentity-type: task\nextensions:\n  - paseo # selected extension\n---\n", "exit": 0, "expected": 0, "stdout": "ask\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions:\n  - paseo # selected extension\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions:\n  - paseo # selected extension\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "model_roster.py", "readme": "---\nentity-type: task\nextensions: ['paseo']\n---\n", "exit": 0, "expected": 0, "stdout": "ask\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions: ['paseo']\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions: ['paseo']\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "model_roster.py", "readme": "---\nentity-type: task\nextensions: ['paseo'] # selected extension\n---\n", "exit": 0, "expected": 0, "stdout": "ask\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions: ['paseo'] # selected extension\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "dispatch_records.py", "readme": "---\nentity-type: task\nextensions: ['paseo'] # selected extension\n---\n", "exit": 0, "expected": 0, "stdout": "1 dispatch record(s) complete\n", "stderr": ""}
+{"script": "model_roster.py", "readme": "---\nentity-type: task\nextensions:\n  - 'paseo'\n---\n", "exit": 3, "expected": 0, "stdout": "skip: paseo extension not listed\n", "stderr": ""}

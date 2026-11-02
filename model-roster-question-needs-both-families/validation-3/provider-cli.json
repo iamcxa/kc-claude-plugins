@@ -1,0 +1,74 @@
+[
+  {
+    "provider": "claude",
+    "label": "Claude",
+    "status": "available",
+    "enabled": "Enabled",
+    "defaultMode": "auto",
+    "modes": "Plan Mode, Always Ask, Accept File Edits, Auto mode, Bypass"
+  },
+  {
+    "provider": "codex",
+    "label": "Codex",
+    "status": "available",
+    "enabled": "Enabled",
+    "defaultMode": "auto-review",
+    "modes": "Default Permissions, Auto-review, Full Access"
+  },
+  {
+    "provider": "copilot",
+    "label": "Copilot",
+    "status": "unavailable",
+    "enabled": "Disabled",
+    "defaultMode": "https://agentclientprotocol.com/protocol/session-modes#agent",
+    "modes": ""
+  },
+  {
+    "provider": "opencode",
+    "label": "OpenCode",
+    "status": "unavailable",
+    "enabled": "Disabled",
+    "defaultMode": "default",
+    "modes": ""
+  },
+  {
+    "provider": "pi",
+    "label": "Pi",
+    "status": "unavailable",
+    "enabled": "Disabled",
+    "defaultMode": "default",
+    "modes": ""
+  },
+  {
+    "provider": "omp",
+    "label": "Oh My Pi",
+    "status": "available",
+    "enabled": "Enabled",
+    "defaultMode": "full",
+    "modes": "Full Access, Write Approval, Always Ask"
+  },
+  {
+    "provider": "antigravity",
+    "label": "Antigravity",
+    "status": "available",
+    "enabled": "Enabled",
+    "defaultMode": "full-access",
+    "modes": "Full access"
+  },
+  {
+    "provider": "muse",
+    "label": "Muse Code",
+    "status": "unavailable",
+    "enabled": "Disabled",
+    "defaultMode": "default",
+    "modes": ""
+  },
+  {
+    "provider": "claude-fo",
+    "label": "Claude FO",
+    "status": "available",
+    "enabled": "Enabled",
+    "defaultMode": "auto",
+    "modes": "Plan Mode, Always Ask, Accept File Edits, Auto mode, Bypass"
+  }
+]

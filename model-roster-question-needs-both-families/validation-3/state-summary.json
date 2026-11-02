@@ -1,0 +1,15 @@
+{
+  "command": "read",
+  "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-question-needs-both-families.md",
+  "total_lines": "554",
+  "frontmatter": {
+    "gates": "",
+    "pr": "iamcxa/kc-claude-plugins#765",
+    "profile": "pilot",
+    "started": "2026-11-02T04:56:19Z",
+    "status": "validation",
+    "title": "Model roster question asks only when Paseo, Codex and Claude are all available, and offers Claude models",
+    "variant": "kc-dev-flow-2",
+    "worktree": ".worktrees/spacedock-ensign-model-roster-question-needs-both-families"
+  }
+}

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/roster-validation-3/host-builds.py", line 33, in <module>
+    r=run(args); envelope=json.loads(r.stdout)
+      ^^^^^^^^^
+  File "/tmp/roster-validation-3/host-builds.py", line 15, in run
+    assert r.returncode == 0, (args, r.stderr, r.stdout)
+           ^^^^^^^^^^^^^^^^^
+AssertionError: (['/Users/kent/.local/bin/spacedock', 'dispatch', 'build', '--workflow-dir', PosixPath('/tmp/roster-v3-hosts-ymh42d1c/repo/docs/dev2'), '--entity-path', PosixPath('/tmp/roster-v3-hosts-ymh42d1c/repo/docs/dev2/.spacedock-state/v3-host-ideation-claude.md'), '--stage', 'ideation', '--checklist-file', PosixPath('/tmp/roster-v3-hosts-ymh42d1c/checklist.txt'), '--scope-notes-file', PosixPath('/tmp/roster-v3-hosts-ymh42d1c/notes.txt'), '--stamp', '--host', 'claude'], 'dispatch build --stamp: state sync failed: git add failed: The following paths are ignored by one of your .gitignore files:\ndocs/dev2/.spacedock-state\nhint: Use -f if you really want to add them.\nhint: Disable this message with "git config set advice.addIgnoredFile false"\n', '')

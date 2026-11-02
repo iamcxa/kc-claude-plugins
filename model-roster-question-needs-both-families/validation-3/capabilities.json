@@ -1,0 +1,395 @@
+{
+  "at": "2026-11-02T09:48:14.731Z",
+  "providers": {
+    "providers": [
+      {
+        "id": "claude",
+        "label": "Claude",
+        "description": "Anthropic's multi-tool assistant with MCP support, streaming, and deep reasoning",
+        "enabled": true,
+        "modes": [
+          {
+            "id": "plan",
+            "label": "Plan Mode",
+            "description": "Analyze the codebase without executing tools or edits",
+            "icon": "ShieldEllipsis",
+            "colorTier": "planning"
+          },
+          {
+            "id": "default",
+            "label": "Always Ask",
+            "description": "Prompts for permission the first time a tool is used",
+            "icon": "Shield",
+            "colorTier": "safe"
+          },
+          {
+            "id": "acceptEdits",
+            "label": "Accept File Edits",
+            "description": "Automatically approves edit-focused tools without prompting",
+            "icon": "ShieldPlus",
+            "colorTier": "moderate"
+          },
+          {
+            "id": "auto",
+            "label": "Auto mode",
+            "description": "Uses a model classifier to review permission prompts automatically",
+            "icon": "ShieldCheck",
+            "colorTier": "moderate"
+          },
+          {
+            "id": "bypassPermissions",
+            "label": "Bypass",
+            "description": "Skip all permission prompts (use with caution)",
+            "icon": "ShieldOff",
+            "colorTier": "dangerous"
+          }
+        ],
+        "status": "available"
+      },
+      {
+        "id": "codex",
+        "label": "Codex",
+        "description": "OpenAI's Codex workspace agent with sandbox controls and optional network access",
+        "enabled": true,
+        "modes": [
+          {
+            "id": "auto",
+            "label": "Default Permissions",
+            "description": "Edit files and run commands with Codex's default approval flow.",
+            "icon": "Shield",
+            "colorTier": "moderate"
+          },
+          {
+            "id": "auto-review",
+            "label": "Auto-review",
+            "description": "Same workspace-write permissions as Default, but eligible `on-request` approvals are routed through the auto-reviewer subagent.",
+            "icon": "ShieldCheck",
+            "colorTier": "moderate"
+          },
+          {
+            "id": "full-access",
+            "label": "Full Access",
+            "description": "Edit files, run commands, and access the network without additional prompts.",
+            "icon": "ShieldOff",
+            "colorTier": "dangerous"
+          }
+        ],
+        "status": "available"
+      },
+      {
+        "id": "copilot",
+        "label": "Copilot",
+        "description": "GitHub Copilot via Agent Client Protocol with dynamic modes and session support",
+        "enabled": false,
+        "modes": [],
+        "status": "unavailable"
+      },
+      {
+        "id": "opencode",
+        "label": "OpenCode",
+        "description": "Open-source coding assistant with multi-provider model support",
+        "enabled": false,
+        "modes": [],
+        "status": "unavailable"
+      },
+      {
+        "id": "pi",
+        "label": "Pi",
+        "description": "Minimal terminal-based coding agent with multi-provider LLM support",
+        "enabled": false,
+        "modes": [],
+        "status": "unavailable"
+      },
+      {
+        "id": "omp",
+        "label": "Oh My Pi",
+        "description": "Multi-provider coding agent with native approvals, host tools, and subagents",
+        "enabled": true,
+        "modes": [
+          {
+            "id": "full",
+            "label": "Full Access",
+            "description": "Launches OMP with yolo approval mode so tools run without prompts.",
+            "icon": "ShieldOff",
+            "colorTier": "dangerous",
+            "isUnattended": true
+          },
+          {
+            "id": "write",
+            "label": "Write Approval",
+            "description": "Launches OMP with write approval mode — reads are free, writes require approval.",
+            "icon": "ShieldAlert",
+            "colorTier": "moderate"
+          },
+          {
+            "id": "ask",
+            "label": "Always Ask",
+            "description": "Launches OMP with always-ask approval mode for write and exec tools.",
+            "icon": "ShieldCheck",
+            "colorTier": "safe"
+          }
+        ],
+        "status": "available"
+      },
+      {
+        "id": "antigravity",
+        "label": "Antigravity",
+        "description": "Antigravity CLI on your host",
+        "enabled": true,
+        "modes": [
+          {
+            "id": "full-access",
+            "label": "Full access",
+            "description": "Antigravity cannot ask for permission when another app drives it. Paseo starts it with --dangerously-skip-permissions.",
+            "icon": "ShieldOff",
+            "colorTier": "dangerous",
+            "isUnattended": true
+          }
+        ],
+        "status": "available"
+      },
+      {
+        "id": "muse",
+        "label": "Muse Code",
+        "description": "Plugin provider Muse Code",
+        "enabled": false,
+        "modes": [],
+        "status": "unavailable"
+      },
+      {
+        "id": "claude-fo",
+        "label": "Claude FO",
+        "description": "Anthropic's multi-tool assistant with MCP support, streaming, and deep reasoning",
+        "enabled": true,
+        "modes": [
+          {
+            "id": "plan",
+            "label": "Plan Mode",
+            "description": "Analyze the codebase without executing tools or edits",
+            "icon": "ShieldEllipsis",
+            "colorTier": "planning"
+          },
+          {
+            "id": "default",
+            "label": "Always Ask",
+            "description": "Prompts for permission the first time a tool is used",
+            "icon": "Shield",
+            "colorTier": "safe"
+          },
+          {
+            "id": "acceptEdits",
+            "label": "Accept File Edits",
+            "description": "Automatically approves edit-focused tools without prompting",
+            "icon": "ShieldPlus",
+            "colorTier": "moderate"
+          },
+          {
+            "id": "auto",
+            "label": "Auto mode",
+            "description": "Uses a model classifier to review permission prompts automatically",
+            "icon": "ShieldCheck",
+            "colorTier": "moderate"
+          },
+          {
+            "id": "bypassPermissions",
+            "label": "Bypass",
+            "description": "Skip all permission prompts (use with caution)",
+            "icon": "ShieldOff",
+            "colorTier": "dangerous"
+          }
+        ],
+        "status": "available"
+      }
+    ]
+  },
+  "models": [
+    {
+      "provider": "claude",
+      "id": "claude-opus-5-5",
+      "label": "Opus 5.5",
+      "description": "Opus 5.5 · Latest release",
+      "isDefault": true,
+      "contextWindowMaxTokens": 1000000,
+      "thinkingOptions": [
+        {
+          "id": "low",
+          "label": "Low"
+        },
+        {
+          "id": "medium",
+          "label": "Medium",
+          "isDefault": true
+        },
+        {
+          "id": "high",
+          "label": "High"
+        },
+        {
+          "id": "xhigh",
+          "label": "Extra High"
+        },
+        {
+          "id": "max",
+          "label": "Max"
+        },
+        {
+          "id": "ultracode",
+          "label": "Ultra Code"
+        }
+      ],
+      "defaultThinkingOptionId": "medium"
+    },
+    {
+      "provider": "codex",
+      "id": "gpt-6.1-sol",
+      "label": "GPT-6.1-Sol",
+      "description": "Latest workhorse model for coding and everyday work.",
+      "isDefault": false,
+      "thinkingOptions": [
+        {
+          "id": "low",
+          "label": "low",
+          "description": "Fast responses with lighter reasoning",
+          "isDefault": false
+        },
+        {
+          "id": "medium",
+          "label": "medium",
+          "description": "Balances speed and reasoning depth for everyday tasks",
+          "isDefault": false
+        },
+        {
+          "id": "high",
+          "label": "high",
+          "description": "Greater reasoning depth for complex problems",
+          "isDefault": true
+        },
+        {
+          "id": "xhigh",
+          "label": "xhigh",
+          "description": "Extra high reasoning depth for complex problems",
+          "isDefault": false
+        },
+        {
+          "id": "max",
+          "label": "max",
+          "description": "Maximum reasoning depth for the hardest problems",
+          "isDefault": false
+        },
+        {
+          "id": "ultra",
+          "label": "ultra",
+          "description": "Maximum reasoning with automatic task delegation",
+          "isDefault": false
+        }
+      ],
+      "defaultThinkingOptionId": "high",
+      "metadata": {
+        "model": "gpt-6.1-sol",
+        "defaultReasoningEffort": "low",
+        "supportedReasoningEfforts": [
+          {
+            "reasoningEffort": "low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "reasoningEffort": "medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "reasoningEffort": "high",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "reasoningEffort": "xhigh",
+            "description": "Extra high reasoning depth for complex problems"
+          },
+          {
+            "reasoningEffort": "max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "reasoningEffort": "ultra",
+            "description": "Maximum reasoning with automatic task delegation"
+          }
+        ]
+      }
+    },
+    {
+      "provider": "codex",
+      "id": "gpt-6-astra",
+      "label": "GPT-6-Astra",
+      "description": "Frontier intelligence for the most demanding work.",
+      "isDefault": true,
+      "thinkingOptions": [
+        {
+          "id": "low",
+          "label": "low",
+          "description": "Fast responses with lighter reasoning",
+          "isDefault": false
+        },
+        {
+          "id": "medium",
+          "label": "medium",
+          "description": "Balances speed and reasoning depth for everyday tasks",
+          "isDefault": false
+        },
+        {
+          "id": "high",
+          "label": "high",
+          "description": "Greater reasoning depth for complex problems",
+          "isDefault": true
+        },
+        {
+          "id": "xhigh",
+          "label": "xhigh",
+          "description": "Extra high reasoning depth for complex problems",
+          "isDefault": false
+        },
+        {
+          "id": "max",
+          "label": "max",
+          "description": "Maximum reasoning depth for the hardest problems",
+          "isDefault": false
+        },
+        {
+          "id": "ultra",
+          "label": "ultra",
+          "description": "Maximum reasoning with automatic task delegation",
+          "isDefault": false
+        }
+      ],
+      "defaultThinkingOptionId": "high",
+      "metadata": {
+        "model": "gpt-6-astra",
+        "defaultReasoningEffort": "medium",
+        "supportedReasoningEfforts": [
+          {
+            "reasoningEffort": "low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "reasoningEffort": "medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "reasoningEffort": "high",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "reasoningEffort": "xhigh",
+            "description": "Extra high reasoning depth for complex problems"
+          },
+          {
+            "reasoningEffort": "max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          },
+          {
+            "reasoningEffort": "ultra",
+            "description": "Maximum reasoning with automatic task delegation"
+          }
+        ]
+      }
+    }
+  ]
+}

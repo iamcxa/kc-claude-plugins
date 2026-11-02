@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/validation-3/shared-mutations/check.py", line 5, in <module>
+    t.exercise_extension_lists(Path(sys.argv[2]),scripts=Path(sys.argv[3]))
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/validation-3/candidate/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 443, in exercise_extension_lists
+    result = run("model_roster.py", ["question", "--code-root", repo, "--readme", readme,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/validation-3/candidate/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 427, in run
+    assert result.returncode == expected, (script, readme.read_text(), result.stdout, result.stderr)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('model_roster.py', "---\nentity-type: task\nextensions:\n  - 'paseo'\n---\n", 'skip: paseo extension not listed\n', '')

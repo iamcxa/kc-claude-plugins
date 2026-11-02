@@ -1,0 +1,100 @@
+{
+  "8c33c57f": {
+    "source": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo/204b7fb2-db08-4d30-90f6-9b89d4b04b53.jsonl",
+    "runtime": [
+      {
+        "timestamp": "2026-11-02T09:44:23.579Z",
+        "model": "claude-opus-5-5",
+        "requestedModel": "claude-opus-5-5",
+        "advisorModel": "claude-fable-5-1",
+        "perTurnEffort": "high"
+      },
+      {
+        "timestamp": "2026-11-02T09:44:27.737Z",
+        "model": "claude-opus-5-5",
+        "requestedModel": "claude-opus-5-5",
+        "advisorModel": "claude-fable-5-1",
+        "perTurnEffort": "high"
+      }
+    ],
+    "tools": [
+      "Bash"
+    ],
+    "safe_flag_values": [
+      "adaptive",
+      "claude-opus-5-5",
+      "high"
+    ],
+    "last_timestamp": "2026-11-02T09:44:28.620Z"
+  },
+  "575a60c6": {
+    "source": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo/187e0719-be49-496e-8da8-e8fd01ea4028.jsonl",
+    "runtime": [
+      {
+        "timestamp": "2026-11-02T09:44:27.751Z",
+        "model": "claude-opus-5-5",
+        "requestedModel": "claude-opus-5-5",
+        "advisorModel": "claude-fable-5-1",
+        "perTurnEffort": "low"
+      },
+      {
+        "timestamp": "2026-11-02T09:44:30.991Z",
+        "model": "claude-opus-5-5",
+        "requestedModel": "claude-opus-5-5",
+        "advisorModel": "claude-fable-5-1",
+        "perTurnEffort": "low"
+      }
+    ],
+    "tools": [
+      "Bash"
+    ],
+    "safe_flag_values": [
+      "adaptive",
+      "claude-opus-5-5",
+      "low"
+    ],
+    "last_timestamp": "2026-11-02T09:44:31.604Z"
+  },
+  "84db4474": {
+    "source": "/Users/kent/.codex/sessions/2026/11/02/rollout-2026-11-02T17-44-21-01a19ba5-410d-7cb2-87df-aa21f6a5930b.jsonl",
+    "runtime": [
+      {
+        "timestamp": "2026-11-02T09:44:26.397Z",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh"
+      }
+    ],
+    "tools": [
+      {
+        "name": "exec",
+        "nested_tools": [
+          "exec_command"
+        ],
+        "command": "ps -ww -o command= -p $PPID"
+      }
+    ],
+    "safe_flag_values": [],
+    "last_timestamp": "2026-11-02T09:44:52.425Z"
+  },
+  "45f8566a": {
+    "source": "/Users/kent/.codex/sessions/2026/11/02/rollout-2026-11-02T17-44-23-01a19ba5-4944-7f72-a8eb-ae06523ec685.jsonl",
+    "runtime": [
+      {
+        "timestamp": "2026-11-02T09:44:29.232Z",
+        "model": "gpt-6-astra",
+        "effort": "xhigh"
+      }
+    ],
+    "tools": [
+      {
+        "name": "exec",
+        "nested_tools": [
+          "exec_command"
+        ],
+        "command": "ps -ww -o command= -p $PPID"
+      }
+    ],
+    "safe_flag_values": [],
+    "last_timestamp": "2026-11-02T09:44:59.675Z"
+  }
+}

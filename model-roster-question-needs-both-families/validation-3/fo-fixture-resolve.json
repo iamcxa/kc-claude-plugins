@@ -1,0 +1,20 @@
+[
+  {
+    "stage": "ideation",
+    "exit": 0,
+    "stdout": "{\"commit\":\"ad85e38ec23fc65d887160ab5c6df891b151d594\",\"digest\":\"sha256:64e98765c787ff03deaff091cc18705e5a14a59a48489ccd60754b19baf1fc51\",\"path\":\".dev2/model-roster.json\",\"role\":\"ideation\",\"source\":\"repository\",\"thinking_option_id\":\"high\",\"tuple\":{\"effort\":\"high\",\"host\":\"paseo\",\"model\":\"claude-opus-5-5\",\"provider\":\"claude\"}}\n",
+    "stderr": ""
+  },
+  {
+    "stage": "implementation",
+    "exit": 0,
+    "stdout": "{\"commit\":\"ad85e38ec23fc65d887160ab5c6df891b151d594\",\"digest\":\"sha256:64e98765c787ff03deaff091cc18705e5a14a59a48489ccd60754b19baf1fc51\",\"path\":\".dev2/model-roster.json\",\"role\":\"implementation\",\"source\":\"repository\",\"thinking_option_id\":\"xhigh\",\"tuple\":{\"effort\":\"xhigh\",\"host\":\"paseo\",\"model\":\"gpt-6.1-sol\",\"provider\":\"codex\"}}\n",
+    "stderr": ""
+  },
+  {
+    "stage": "validation",
+    "exit": 0,
+    "stdout": "{\"authors\":[],\"commit\":\"ad85e38ec23fc65d887160ab5c6df891b151d594\",\"digest\":\"sha256:64e98765c787ff03deaff091cc18705e5a14a59a48489ccd60754b19baf1fc51\",\"family\":\"unverified\",\"path\":\".dev2/model-roster.json\",\"role\":\"validation\",\"source\":\"repository\",\"thinking_option_id\":\"xhigh\",\"tuple\":{\"effort\":\"xhigh\",\"host\":\"paseo\",\"model\":\"gpt-6-astra\",\"provider\":\"codex\"}}\n",
+    "stderr": ""
+  }
+]

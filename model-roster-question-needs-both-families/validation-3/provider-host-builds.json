@@ -1,0 +1,162 @@
+[
+  {
+    "stage": "ideation",
+    "host": "claude",
+    "expected_model": "opus",
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/tmp/roster-v3-hosts-phfigj91/repo/docs/dev2",
+      "--entity-path",
+      "/tmp/roster-v3-hosts-phfigj91/repo/docs/dev2/.spacedock-state/v3-host-ideation-claude.md",
+      "--stage",
+      "ideation",
+      "--checklist-file",
+      "/tmp/roster-v3-hosts-phfigj91/checklist.txt",
+      "--scope-notes-file",
+      "/tmp/roster-v3-hosts-phfigj91/notes.txt",
+      "--stamp",
+      "--host",
+      "claude"
+    ],
+    "environment": {
+      "CLAUDECODE": "1",
+      "CODEX_THREAD_ID": "unset"
+    },
+    "exit": 0,
+    "envelope": {
+      "schema_version": 2,
+      "subagent_type": "spacedock:ensign",
+      "description": "<bounded outcome>: ideation",
+      "fetch_commands": [
+        "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /tmp/roster-v3-hosts-phfigj91/repo/docs/dev2 --stage ideation"
+      ],
+      "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-v3-host-ideation-claude-ideation.md",
+      "prompt": "Skill(skill=\"spacedock:ensign\"); then Read /tmp/spacedock-dispatch/spacedock-ensign-v3-host-ideation-claude-ideation.md and treat its content as your assignment.",
+      "model": "opus",
+      "name": "spacedock-ensign-v3-host-ideation-claude-ideation",
+      "run_in_background": true
+    }
+  },
+  {
+    "stage": "implementation",
+    "host": "codex",
+    "expected_model": null,
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/tmp/roster-v3-hosts-phfigj91/repo/docs/dev2",
+      "--entity-path",
+      "/tmp/roster-v3-hosts-phfigj91/repo/docs/dev2/.spacedock-state/v3-host-implementation-codex.md",
+      "--stage",
+      "implementation",
+      "--checklist-file",
+      "/tmp/roster-v3-hosts-phfigj91/checklist.txt",
+      "--scope-notes-file",
+      "/tmp/roster-v3-hosts-phfigj91/notes.txt",
+      "--stamp",
+      "--host",
+      "codex"
+    ],
+    "environment": {
+      "CLAUDECODE": "1",
+      "CODEX_THREAD_ID": "unset"
+    },
+    "exit": 0,
+    "envelope": {
+      "schema_version": 2,
+      "subagent_type": "spacedock:ensign",
+      "description": "<bounded outcome>: implementation",
+      "fetch_commands": [
+        "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /tmp/roster-v3-hosts-phfigj91/repo/docs/dev2 --stage implementation"
+      ],
+      "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-v3-host-implementation-codex-implementation.md",
+      "prompt": "$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-v3-host-implementation-codex-implementation.md and treat its content as your assignment.",
+      "model": null,
+      "name": "spacedock-ensign-v3-host-implementation-codex-implementation"
+    }
+  },
+  {
+    "stage": "validation",
+    "host": "codex",
+    "expected_model": null,
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/tmp/roster-v3-hosts-phfigj91/repo/docs/dev2",
+      "--entity-path",
+      "/tmp/roster-v3-hosts-phfigj91/repo/docs/dev2/.spacedock-state/v3-host-validation-codex.md",
+      "--stage",
+      "validation",
+      "--checklist-file",
+      "/tmp/roster-v3-hosts-phfigj91/checklist.txt",
+      "--scope-notes-file",
+      "/tmp/roster-v3-hosts-phfigj91/notes.txt",
+      "--stamp",
+      "--host",
+      "codex"
+    ],
+    "environment": {
+      "CLAUDECODE": "1",
+      "CODEX_THREAD_ID": "unset"
+    },
+    "exit": 0,
+    "envelope": {
+      "schema_version": 2,
+      "subagent_type": "spacedock:ensign",
+      "description": "<bounded outcome>: validation",
+      "fetch_commands": [
+        "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /tmp/roster-v3-hosts-phfigj91/repo/docs/dev2 --stage validation"
+      ],
+      "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-v3-host-validation-codex-validation.md",
+      "prompt": "$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-v3-host-validation-codex-validation.md and treat its content as your assignment.",
+      "model": null,
+      "name": "spacedock-ensign-v3-host-validation-codex-validation"
+    }
+  },
+  {
+    "stage": "implementation",
+    "host": null,
+    "expected_model": "sonnet",
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/tmp/roster-v3-hosts-phfigj91/repo/docs/dev2",
+      "--entity-path",
+      "/tmp/roster-v3-hosts-phfigj91/repo/docs/dev2/.spacedock-state/v3-host-implementation-implicit.md",
+      "--stage",
+      "implementation",
+      "--checklist-file",
+      "/tmp/roster-v3-hosts-phfigj91/checklist.txt",
+      "--scope-notes-file",
+      "/tmp/roster-v3-hosts-phfigj91/notes.txt",
+      "--stamp"
+    ],
+    "environment": {
+      "CLAUDECODE": "1",
+      "CODEX_THREAD_ID": "unset"
+    },
+    "exit": 0,
+    "envelope": {
+      "schema_version": 2,
+      "subagent_type": "spacedock:ensign",
+      "description": "<bounded outcome>: implementation",
+      "fetch_commands": [
+        "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /tmp/roster-v3-hosts-phfigj91/repo/docs/dev2 --stage implementation"
+      ],
+      "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-v3-host-implementation-implicit-implementation.md",
+      "prompt": "Skill(skill=\"spacedock:ensign\"); then Read /tmp/spacedock-dispatch/spacedock-ensign-v3-host-implementation-implicit-implementation.md and treat its content as your assignment.",
+      "model": "sonnet",
+      "name": "spacedock-ensign-v3-host-implementation-implicit-implementation",
+      "run_in_background": true
+    }
+  }
+]
