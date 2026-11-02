@@ -380,3 +380,32 @@ REJECTED at c129cb215c2630d08853eeffae0fd5a2ee7e40c6: local behavior and hosted 
 ### Summary
 
 PASSED recommended at c129cb215c2630d08853eeffae0fd5a2ee7e40c6, on one condition: FO must receive this worker's finished callback holding its Done line and record it. If it does not arrive, the verdict is REJECTED, because that would be the stop condition. This report supersedes the earlier validation report. F1 is closed: amendment 1 supplied real stage workers, and the Codex one is verified. Not verified: a Codex FO as receiver, delivery across hosts, a Claude stage worker below Opus high, and the command-line falsifiers, which were read rather than rerun. Product bytes and frontmatter are unchanged.
+
+## Stage Report: implementation
+
+- DONE: Repair evidence=review:5732737746 on kc-dev-flow-2/scripts/dispatch_records.py; decide membership from the list items only and add the commented-disabled case as a failing mutation.
+  The old scan accepted `extensions: [learn, peers] # paseo intentionally disabled`; the new regression first failed with `AssertionError: 0 != 1`. Membership now comes only from exact comma-separated items inside the bracketed list, trimming quotes; comments and longer item names cannot enable paseo. Only the checker and its test file changed in this repair.
+- DONE: Add that case as a failing mutation.
+  `PaseoCompletionMutationTests` restores the old whole-value word scan and requires the regression to fail with AssertionError; its five mutation cases pass under python3 -B in copies excluding pyc/cache files. Regression cases also cover an empty commented list, a longer quoted item, and genuinely listed single/double-quoted paseo items with trailing comments.
+- DONE: Run the whole suite the CI job runs.
+  All 26 Python steps extracted from `.github/workflows/kc-dev-flow-2-tests.yml` exited 0; logs and per-step results: `/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worker-completion-ci-no5nb9et/results.json`, driver `/tmp/worker-completion-ci-suite.py`, console `/tmp/worker-completion-ci-suite.log`. CI's pinned Spacedock plugin commit `4d158a484ec73e184861067f8ed1e20087fdc26a` and installed CLI 0.27.2 were used, on local macOS rather than hosted Ubuntu. Six optional cases were skipped: four design-surface corpus/history fixtures need DEV2_AMENDMENT_* inputs, one release-acceptance fixture needs the journey node/yaml toolchain, and one laws fixture needs DEV2_OBLIGATION_SOURCES. The dispatch-record suite ran 100 tests with no skips.
+- DONE: One follow-up commit on your branch, no push; correct your report.
+  Repair commit `fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf` on `spacedock-ensign/worker-completion-reaches-fo-on-paseo`, parent `c129cb215c2630d08853eeffae0fd5a2ee7e40c6`; original base `146727ded0d4ce8014ea0b41a45dc3409d6b269b`. Code tree clean after commit; product branch was not pushed. This complete new report replaces the prior implementation handoff.
+- DONE: Approved design D1/D2 and original acceptance local checks AC-3, AC-4, AC-6, AC-7 and AC-8 retained.
+  The total candidate still changes only the six design-named files. Full dispatch tests cover listed/unlisted/missing README, scope boundaries, instruction agreement and mutation falsifiers. Workflow.md, lint-skills.py and test_sd_dispatch.py remain byte-identical to the base; both main-line pins and real non-Paseo dispatch pass; extension recount remains 819, workflow 5781.
+- DONE: ADR 0048 and decision evidence retained.
+  The unchanged record quotes both Captain answers/questions, accepts same-command registration and extension-only scope, and widens ADR 0042. Package adr_lint.py --since the original base --require 0048 exits 0, 47 records; no version or workflow-budget bump.
+- DONE: Number guards, comment limit and design surface checks.
+  Package number_guards.py check at the repaired head and original base exits 0, no findings (migration guard skipped: no migrations-path declared); comment_ratio.py original-base HEAD exits 0: 86 code lines, 1 comment, 1.2%, maximum 5%. Design surfaces exit 0, presentable; scope check is not run outside ideation.
+- DONE: Affected documents and prepared publication text.
+  doc_impact.py lists ADR 0048 (updated by the original candidate, unaffected by this parsing repair), ADR 0045 (unaffected: its validation-ruling predicate is unchanged), and learning.md (unaffected: its practices remain true). README/adoption/extension wording is retained. `/tmp/impl-worker-completion-reaches-fo-on-paseo-pr.md` carries the new candidate and local-check results for FO.
+- SKIPPED: Every acceptance criterion green on the repaired head, including real-FO native runs and all native falsifiers.
+  Native AC-1/2/5 evidence remains preserved in the prior validation/native-run records at c129cb215; it was not rerun at this new head. Fresh validation and any required native rechecks remain FO-owned under implementation-1-message-1. Captain amendment 1 is retained unchanged; no stand-in agents were spawned.
+- SKIPPED: roborev evidence= line and new-head hosted review/CI.
+  The required post-commit roborev_gate.py --repo <assigned worktree> --base 146727ded0d4ce8014ea0b41a45dc3409d6b269b exits 3: `incomplete: the roborev daemon is not running`; review is not claimed clean. FO owns review/publication and hosted CI; the local CI-step replay is not a hosted result.
+- SKIPPED: Push or update Draft PR #763.
+  Existing PR is named by FO and the task. No push, PR comment, review request, ready marking or merge was performed; FO owns the new-head publication. CI triggers are unchanged; cost per PR was not measured.
+
+### Summary
+
+The Copilot finding is repaired in one local follow-up commit: a comment naming paseo cannot enable final-reply completion. All 26 local CI test steps pass with the stated optional skips; new-head publication, hosted review/CI and fresh validation remain FO-owned. This report supersedes the earlier implementation report and retains the existing design, Captain amendment and native evidence obligations.
