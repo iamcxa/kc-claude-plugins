@@ -1,6 +1,6 @@
 ---
 title: The second round on a task prompts the FO to step back
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 gates:
@@ -255,6 +255,13 @@ Falsifier: add a line to the mod; the diff is not empty.
 **AC-7** ADR 0026 records the new events with the Captain's words.
 Verified by: `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --since origin/main` passes, and the amendment paragraph quotes 「可以」 and its question from this task's newest ideation resolution, gives D1 to D3 and says which precedent each follows.
 Falsifier: omit the paragraph; a reader comparing `docs/adr/` with `check` finds an event no ruling names. Not machine-checked: this is the validator's comparison against the gate record.
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-02, chat
+Captain: 「照建議」 (chat, 2026-11-02)
+Asked: 「決定：四件事都照建議嗎？要改哪件直接說。」, which FO had stated as: 「修這兩個 bug，在原本的票裡修」
+Supersedes: none
 
 ## Stage Report: ideation
 
