@@ -5,7 +5,7 @@ Model: gpt-6.1-sol (Codex via Paseo, thinking xhigh; the same worker as implemen
 
 ## Checklist
 
-Repair the hosted unit-test failure on PR #764: test_poc_readme.py DeriveTests.test_only_the_ideation_entry_and_section_are_removed asserts the line after the ideation entry is gate: true, and this task's model: opus (the Captain's D3) now sits there; check the derived POC README still removes the whole ideation entry, including that line, and fix the test or the derivation accordingly, with a failing mutation
+Repair the hosted unit-test failure on PR #764: kc-dev-flow-2/scripts/test_poc_readme.py DeriveTests.test_only_the_ideation_entry_and_section_are_removed asserts the line after the ideation entry is gate: true, and this task's model: opus (the Captain's D3) now sits there; check the derived POC README still removes the whole ideation entry, including that line, and fix the test or the derivation accordingly, with a failing mutation
 This adds kc-dev-flow-2/scripts/test_poc_readme.py, and kc-dev-flow-2/scripts/poc_readme.py only if derivation is wrong, to your file list; FO authorizes that because the Captain's D3 requires it
 Run the whole package test suite the CI job runs, not a chosen subset, and correct your report's test count; one follow-up commit on your branch, no push
 
