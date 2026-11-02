@@ -1,0 +1,80 @@
+{
+  "mutations": [
+    {
+      "mutation": "AC-1-remove-call",
+      "exit": 1,
+      "target": "CheckRoundCountTests.test_missing_fenced_or_malformed_count_holds_without_saving_an_ask"
+    },
+    {
+      "mutation": "AC-2-require-nonzero",
+      "exit": 1,
+      "target": "CheckRoundCountTests.test_zero_and_detail_counts_preserve_the_complete_text_output"
+    },
+    {
+      "mutation": "AC-5-move-to-text-problems",
+      "exit": 1,
+      "target": "QuestionTests.test_legacy_combined_text_still_accepts_no_round_count"
+    }
+  ],
+  "replays": [
+    {
+      "task": "batch10-after-release-obligations",
+      "briefing": 1,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "problems": [
+        "summary needs one top-level External rounds: N line (nonnegative integer)"
+      ]
+    },
+    {
+      "task": "peers-paseo-rule-matches-practice",
+      "briefing": 1,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "problems": [
+        "summary needs one top-level External rounds: N line (nonnegative integer)"
+      ]
+    },
+    {
+      "task": "names-check-says-what-it-skipped",
+      "briefing": 1,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "problems": [
+        "summary needs one top-level External rounds: N line (nonnegative integer)"
+      ]
+    },
+    {
+      "task": "peer-status-reaches-fresh",
+      "briefing": 1,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "problems": [
+        "summary needs one top-level External rounds: N line (nonnegative integer)"
+      ]
+    },
+    {
+      "task": "paseo-human-surfaces-visible-and-reachable",
+      "briefing": 1,
+      "base_exit": 1,
+      "candidate_exit": 1,
+      "problems": [
+        "second reviewer declaration must name copilot because <nonempty trigger>, or not triggered"
+      ]
+    },
+    {
+      "task": "paseo-human-surfaces-visible-and-reachable",
+      "briefing": 2,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "problems": []
+    },
+    {
+      "task": "model-roster-per-repo",
+      "briefing": 1,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "problems": []
+    }
+  ]
+}

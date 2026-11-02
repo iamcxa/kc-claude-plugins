@@ -1,0 +1,89 @@
+FFFFFFF
+======================================================================
+FAIL: test_missing_fenced_or_malformed_count_holds_without_saving_an_ask (__main__.CheckRoundCountTests.test_missing_fenced_or_malformed_count_holds_without_saving_an_ask) (text='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached/.context/mutations-gvrzh5hv/test_delivery_gate.py", line 463, in test_missing_fenced_or_malformed_count_holds_without_saving_an_ask
+    self.assertEqual(result.code, 1, result.out)
+AssertionError: 0 != 1 : PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+
+
+======================================================================
+FAIL: test_missing_fenced_or_malformed_count_holds_without_saving_an_ask (__main__.CheckRoundCountTests.test_missing_fenced_or_malformed_count_holds_without_saving_an_ask) (text='```text\nExternal rounds: 1\n```\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached/.context/mutations-gvrzh5hv/test_delivery_gate.py", line 463, in test_missing_fenced_or_malformed_count_holds_without_saving_an_ask
+    self.assertEqual(result.code, 1, result.out)
+AssertionError: 0 != 1 : PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+
+
+======================================================================
+FAIL: test_missing_fenced_or_malformed_count_holds_without_saving_an_ask (__main__.CheckRoundCountTests.test_missing_fenced_or_malformed_count_holds_without_saving_an_ask) (text='~~~\nExternal rounds: 1\n~~~\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached/.context/mutations-gvrzh5hv/test_delivery_gate.py", line 463, in test_missing_fenced_or_malformed_count_holds_without_saving_an_ask
+    self.assertEqual(result.code, 1, result.out)
+AssertionError: 0 != 1 : PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+
+
+======================================================================
+FAIL: test_missing_fenced_or_malformed_count_holds_without_saving_an_ask (__main__.CheckRoundCountTests.test_missing_fenced_or_malformed_count_holds_without_saving_an_ask) (text='- External rounds: 1\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached/.context/mutations-gvrzh5hv/test_delivery_gate.py", line 463, in test_missing_fenced_or_malformed_count_holds_without_saving_an_ask
+    self.assertEqual(result.code, 1, result.out)
+AssertionError: 0 != 1 : PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+
+
+======================================================================
+FAIL: test_missing_fenced_or_malformed_count_holds_without_saving_an_ask (__main__.CheckRoundCountTests.test_missing_fenced_or_malformed_count_holds_without_saving_an_ask) (text='External rounds: -1\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached/.context/mutations-gvrzh5hv/test_delivery_gate.py", line 463, in test_missing_fenced_or_malformed_count_holds_without_saving_an_ask
+    self.assertEqual(result.code, 1, result.out)
+AssertionError: 0 != 1 : PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+
+
+======================================================================
+FAIL: test_missing_fenced_or_malformed_count_holds_without_saving_an_ask (__main__.CheckRoundCountTests.test_missing_fenced_or_malformed_count_holds_without_saving_an_ask) (text='External rounds: one\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached/.context/mutations-gvrzh5hv/test_delivery_gate.py", line 463, in test_missing_fenced_or_malformed_count_holds_without_saving_an_ask
+    self.assertEqual(result.code, 1, result.out)
+AssertionError: 0 != 1 : PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+
+
+======================================================================
+FAIL: test_missing_fenced_or_malformed_count_holds_without_saving_an_ask (__main__.CheckRoundCountTests.test_missing_fenced_or_malformed_count_holds_without_saving_an_ask) (text='External rounds: 1\nExternal rounds: 2\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached/.context/mutations-gvrzh5hv/test_delivery_gate.py", line 463, in test_missing_fenced_or_malformed_count_holds_without_saving_an_ask
+    self.assertEqual(result.code, 1, result.out)
+AssertionError: 0 != 1 : PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.369s
+
+FAILED (failures=7)

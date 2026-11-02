@@ -1,0 +1,24 @@
+.......s................/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpb6qpvsh3/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+......../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpt3j5rjve/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4kqft3qz/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpju08bnnd/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpoh1ytzre/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpk9ulos51/task/dispatch/ideation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpk79x80uv/task/elsewhere/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpyv1slxbq/task/dispatch/validation-x.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpc_jos1t7/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp8mr01d_5/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3nis98de/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3y6u08x_/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp9bjfqmhv/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfg5ooha_/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmptj5ehq3q/r.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp71lqr5fq/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp8ui5_1i1/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp0o_3k8w1/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+............................................................../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpntr9z8hf/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+..
+----------------------------------------------------------------------
+Ran 100 tests in 154.758s
+
+OK (skipped=1)

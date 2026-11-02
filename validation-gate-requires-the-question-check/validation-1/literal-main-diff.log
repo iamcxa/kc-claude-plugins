@@ -1,0 +1,59 @@
+diff --git a/kc-dev-flow-2/references/sd/adoption.md b/kc-dev-flow-2/references/sd/adoption.md
+index 3770ffa6b..eaa806f1a 100644
+--- a/kc-dev-flow-2/references/sd/adoption.md
++++ b/kc-dev-flow-2/references/sd/adoption.md
+@@ -173,7 +173,7 @@ Ask which recommended or optional rows to add once, before the Captain reviews t
+ 2. Put one multi-select to the Captain through the host's structured Ask UI, or in plain chat
+    when none is available: the required rows shown as already on, `journey-map` with
+    `release-acceptance` as one choice that writes both names, `codex`, `roborev`, and `copilot`
+-   unchecked and marked quota-limited, and `paseo` unchecked for its Paseo Codex worker handoff. Confirmed
++   unchecked and marked quota-limited, and `paseo` unchecked for its Paseo worker handoff. Confirmed
+    Paseo peer asks and replies already belong to peers. Offer `fo-feedback` unchecked for the interviewing
+    maintainer only; show its prerequisite results without enabling dependencies.
+ 3. Write the chosen names after the required ones. Never list a row whose probe failed; report
+@@ -196,7 +196,7 @@ dropped extension, so the adopter's review of the sync PR is the only check.
+ 
+ ## Before activation
+ 
+-At adoption or introducing sync, follow `<package>/references/model-roster.md` to ask once about stage workers only when the workflow frontmatter lists `paseo` and the Codex provider is available. Otherwise ask nothing, write nothing and retain README behavior. Save only an explicit shared choice through the normal reviewed change. Preserve existing settings; no answer leaves README defaults.
++At adoption or introducing sync, follow `<package>/references/model-roster.md` to ask once about stage workers only when the workflow frontmatter lists `paseo` and Codex and Claude providers are available. Otherwise ask nothing, write nothing and retain README behavior. Save only an explicit shared choice through the normal reviewed change. Preserve existing settings; no answer leaves README defaults.
+ 
+ Review the concrete README, state mapping, exact stage-skill availability and
+ copied mod with the user. Run SD state readiness and status validation using the
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index b7bf96cb2..2997e35b6 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -18,6 +18,7 @@ stages:
+       initial: true
+       gate: true
+     - name: ideation
++      model: opus
+       gate: true
+       context-sections:
+         - Dispatch facts
+@@ -31,6 +32,7 @@ stages:
+         - Affected documents
+         - Number guards
+     - name: validation
++      model: opus
+       worktree: true
+       fresh: true
+       feedback-to: implementation
+@@ -78,14 +80,12 @@ At each next gate, wait for every member's sufficient committed evidence, then p
+ 
+ `<package>/scripts/pr_watch.py tasks` sitting hints remain subject to this boundary; stage alone joins neither unrelated tasks nor incomplete batches. Unbatched tasks retain ordinary gates.
+ 
+-When requested, chief-engineer reviews the complete package/process batch before briefing bindings; engineering-reviewer handles contested hard-to-reverse claims. Give committed task files/artifact links, not FO's suspicions/conclusions. Record reviewer/model/evidence; use a different family from all workers or ask the Captain. Review advises, without approval authority.
++When requested, chief-engineer reviews the complete package/process batch before briefing bindings; engineering-reviewer handles contested hard-to-reverse claims. Give committed task files/artifact links, not FO's suspicions/conclusions. Record reviewer/model/evidence; use a different family from implementation workers or ask the Captain. Review advises, without approval authority.
+ 
+ ## Stages
+ 
+ Stage workers follow `<package>/references/model-roster.md`; absence retains README defaults.
+-`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and
+-`kc-dev-flow-2:observer` run on the model and reasoning their agent files declare, never
+-a cheaper one. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
++`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer`, `kc-dev-flow-2:design-director` and `kc-dev-flow-2:observer` run on its `## Model table` row, never cheaper. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
+ `Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.
+ 
+ `concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an

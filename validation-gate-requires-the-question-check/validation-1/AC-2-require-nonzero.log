@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_zero_and_detail_counts_preserve_the_complete_text_output (__main__.CheckRoundCountTests.test_zero_and_detail_counts_preserve_the_complete_text_output)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached/.context/mutations-gvrzh5hv/test_delivery_gate.py", line 469, in test_zero_and_detail_counts_preserve_the_complete_text_output
+    self.assertEqual(complete.code, 0, complete.out)
+AssertionError: 1 != 0 : summary needs one top-level External rounds: N line (nonnegative integer)
+next: hold the ask; record the external round count in the summary.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.166s
+
+FAILED (failures=1)

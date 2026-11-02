@@ -1,0 +1,19 @@
+Preparing worktree (detached HEAD 6c3494216)
+HEAD is now at 6c3494216 Merge remote-tracking branch 'origin/spacedock-ensign/second-round-prompts-a-step-back' into spacedock-ensign/validation-gate-requires-the-question-check
+Candidate: 6c34942164ecec9452c93f915e36241479f19dc5
+missing: exit=1, records=0
+summary needs one top-level External rounds: N line (nonnegative integer)
+next: hold the ask; record the external round count in the summary.
+0: exit=0, records=1
+2. two reviews read: exit=0, records=1
+legacy question without count: exit=0, gate text complete
+50 ADR file(s) checked, 0 legacy
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5781 of 5781 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+Stacked reference and budget diff: empty
+ kc-dev-flow-2/references/sd/adoption.md | 4 ++--
+ kc-dev-flow-2/references/sd/workflow.md | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+AC-6 literal trunk comparison: UNMET; inherited changes require disposition
+Acceptance replay complete; temporary checkout removed

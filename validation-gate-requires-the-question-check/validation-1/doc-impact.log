@@ -1,0 +1,3 @@
+docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md	review	kc-dev-flow-2/scripts/delivery_gate.py
+docs/adr/0051-the-merge-ask-check-requires-the-round-count.md	updated	kc-dev-flow-2/scripts/delivery_gate.py
+2 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

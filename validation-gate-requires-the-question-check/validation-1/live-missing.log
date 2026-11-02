@@ -1,0 +1,6 @@
+the PR is a draft
+the PR base 'spacedock-ensign/second-round-prompts-a-step-back' is not the trunk 'main'
+summary needs one top-level External rounds: N line (nonnegative integer)
+next: hold the ask; mark the PR ready under the Captain's authority and let its CI finish.
+next: hold the ask; the PR does not target the trunk, tell the Captain.
+next: hold the ask; record the external round count in the summary.

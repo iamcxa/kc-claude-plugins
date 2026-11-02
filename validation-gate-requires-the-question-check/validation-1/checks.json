@@ -1,0 +1,163 @@
+[
+  {
+    "label": "adr-lint",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "1c0dbb540f354300b75dba5a119d2614c8fb0c02",
+      "--require",
+      "0051"
+    ],
+    "exit": 0,
+    "stdout": "50 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  {
+    "label": "number-guards",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-gate-requires-the-question-check.md",
+      "--base",
+      "1c0dbb540f354300b75dba5a119d2614c8fb0c02",
+      "--head",
+      "6c34942164ecec9452c93f915e36241479f19dc5"
+    ],
+    "exit": 0,
+    "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 1c0dbb540f35 head 6c34942164ec merge-base 1c0dbb540f35\n",
+    "stderr": ""
+  },
+  {
+    "label": "comment-ratio",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "1c0dbb540f354300b75dba5a119d2614c8fb0c02",
+      "6c34942164ecec9452c93f915e36241479f19dc5",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "stdout": "code lines 38, comment lines 1, 2.6%\n   1/   6 kc-dev-flow-2/scripts/delivery_gate.py\nmaximum 5% (package default) met\n",
+    "stderr": ""
+  },
+  {
+    "label": "doc-impact",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "1c0dbb540f354300b75dba5a119d2614c8fb0c02",
+      "6c34942164ecec9452c93f915e36241479f19dc5"
+    ],
+    "exit": 0,
+    "stdout": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md\treview\tkc-dev-flow-2/scripts/delivery_gate.py\ndocs/adr/0051-the-merge-ask-check-requires-the-round-count.md\tupdated\tkc-dev-flow-2/scripts/delivery_gate.py\n2 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n",
+    "stderr": ""
+  },
+  {
+    "label": "design-surfaces",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-gate-requires-the-question-check.md"
+    ],
+    "exit": 0,
+    "stdout": "validation-gate-requires-the-question-check.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+    "stderr": ""
+  },
+  {
+    "label": "dispatch-installed",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-gate-requires-the-question-check"
+    ],
+    "exit": 1,
+    "stdout": "implementation-1.md: needs a scope-notes line naming main as the completion recipient\nvalidation-1.md: needs a scope-notes line naming main as the completion recipient\n",
+    "stderr": ""
+  },
+  {
+    "label": "dispatch-candidate",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached/kc-dev-flow-2/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-gate-requires-the-question-check"
+    ],
+    "exit": 0,
+    "stdout": "4 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "label": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached",
+      "diff",
+      "--check",
+      "1c0dbb540f354300b75dba5a119d2614c8fb0c02",
+      "6c34942164ecec9452c93f915e36241479f19dc5"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "label": "stacked-reference-diff",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached",
+      "diff",
+      "--exit-code",
+      "1c0dbb540f354300b75dba5a119d2614c8fb0c02",
+      "6c34942164ecec9452c93f915e36241479f19dc5",
+      "--",
+      "kc-dev-flow-2/references/sd/",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "label": "literal-main-diff",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached",
+      "diff",
+      "--exit-code",
+      "origin/main",
+      "6c34942164ecec9452c93f915e36241479f19dc5",
+      "--",
+      "kc-dev-flow-2/references/sd/"
+    ],
+    "exit": 1,
+    "stdout": "diff --git a/kc-dev-flow-2/references/sd/adoption.md b/kc-dev-flow-2/references/sd/adoption.md\nindex 3770ffa6b..eaa806f1a 100644\n--- a/kc-dev-flow-2/references/sd/adoption.md\n+++ b/kc-dev-flow-2/references/sd/adoption.md\n@@ -173,7 +173,7 @@ Ask which recommended or optional rows to add once, before the Captain reviews t\n 2. Put one multi-select to the Captain through the host's structured Ask UI, or in plain chat\n    when none is available: the required rows shown as already on, `journey-map` with\n    `release-acceptance` as one choice that writes both names, `codex`, `roborev`, and `copilot`\n-   unchecked and marked quota-limited, and `paseo` unchecked for its Paseo Codex worker handoff. Confirmed\n+   unchecked and marked quota-limited, and `paseo` unchecked for its Paseo worker handoff. Confirmed\n    Paseo peer asks and replies already belong to peers. Offer `fo-feedback` unchecked for the interviewing\n    maintainer only; show its prerequisite results without enabling dependencies.\n 3. Write the chosen names after the required ones. Never list a row whose probe failed; report\n@@ -196,7 +196,7 @@ dropped extension, so the adopter's review of the sync PR is the only check.\n \n ## Before activation\n \n-At adoption or introducing sync, follow `<package>/references/model-roster.md` to ask once about stage workers only when the workflow frontmatter lists `paseo` and the Codex provider is available. Otherwise ask nothing, write nothing and retain README behavior. Save only an explicit shared choice through the normal reviewed change. Preserve existing settings; no answer leaves README defaults.\n+At adoption or introducing sync, follow `<package>/references/model-roster.md` to ask once about stage workers only when the workflow frontmatter lists `paseo` and Codex and Claude providers are available. Otherwise ask nothing, write nothing and retain README behavior. Save only an explicit shared choice through the normal reviewed change. Preserve existing settings; no answer leaves README defaults.\n \n Review the concrete README, state mapping, exact stage-skill availability and\n copied mod with the user. Run SD state readiness and status validation using the\ndiff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md\nindex b7bf96cb2..2997e35b6 100644\n--- a/kc-dev-flow-2/references/sd/workflow.md\n+++ b/kc-dev-flow-2/references/sd/workflow.md\n@@ -18,6 +18,7 @@ stages:\n       initial: true\n       gate: true\n     - name: ideation\n+      model: opus\n       gate: true\n       context-sections:\n         - Dispatch facts\n@@ -31,6 +32,7 @@ stages:\n         - Affected documents\n         - Number guards\n     - name: validation\n+      model: opus\n       worktree: true\n       fresh: true\n       feedback-to: implementation\n@@ -78,14 +80,12 @@ At each next gate, wait for every member's sufficient committed evidence, then p\n \n `<package>/scripts/pr_watch.py tasks` sitting hints remain subject to this boundary; stage alone joins neither unrelated tasks nor incomplete batches. Unbatched tasks retain ordinary gates.\n \n-When requested, chief-engineer reviews the complete package/process batch before briefing bindings; engineering-reviewer handles contested hard-to-reverse claims. Give committed task files/artifact links, not FO's suspicions/conclusions. Record reviewer/model/evidence; use a different family from all workers or ask the Captain. Review advises, without approval authority.\n+When requested, chief-engineer reviews the complete package/process batch before briefing bindings; engineering-reviewer handles contested hard-to-reverse claims. Give committed task files/artifact links, not FO's suspicions/conclusions. Record reviewer/model/evidence; use a different family from implementation workers or ask the Captain. Review advises, without approval authority.\n \n ## Stages\n \n Stage workers follow `<package>/references/model-roster.md`; absence retains README defaults.\n-`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and\n-`kc-dev-flow-2:observer` run on the model and reasoning their agent files declare, never\n-a cheaper one. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as\n+`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer`, `kc-dev-flow-2:design-director` and `kc-dev-flow-2:observer` run on its `## Model table` row, never cheaper. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as\n `Reviewer: <agent> <model> <date> \u2014 <question>`; `<package>/scripts/role_triggers.py` lists calls owed.\n \n `concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an\n",
+    "stderr": ""
+  },
+  {
+    "label": "roborev",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/roborev_gate.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-detached",
+      "--base",
+      "1c0dbb540f354300b75dba5a119d2614c8fb0c02"
+    ],
+    "exit": 3,
+    "stdout": "incomplete: the roborev daemon is not running\n",
+    "stderr": ""
+  }
+]

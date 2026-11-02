@@ -343,3 +343,37 @@ Beyond the four asks: a trial showed the first design missed a cost, since most 
 ### Summary
 
 The committed three-file change holds missing-round merge-ask text without altering question compatibility or the workflow budget; seven historical supplied texts and three failing mutations exercise the intended difference. FO still owns publication, the real-PR acceptance runs, exact CI-pinned-source proof and RoboRev; this report grants no delivery or gate approval.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #767 head 6c349421 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED pending F1/F2 disposition at `6c34942164ecec9452c93f915e36241479f19dc5`; no demonstrated product defect. Evidence and all implementation-limit judgments: [validation-1/details.md](validation-gate-requires-the-question-check/validation-1/details.md).
+- DONE: Stacked on PR #766 at its current head. Run the whole suite the CI job runs. Do not start agents you were not asked to
+  GitHub confirms base `1c0dbb540f354300b75dba5a119d2614c8fb0c02`; all 26 CI commands exit 0 locally (1021 unittest cases plus integration checks), with pinned Spacedock source `4d158a484ec73e184861067f8ed1e20087fdc26a` and binary 0.27.2; exact-head hosted run 41405823880 is successful. No agents started.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five steps in [acceptance.sh](validation-gate-requires-the-question-check/validation-1/acceptance.sh), copied in full beside observed output in details.md; fresh `bash --noprofile --norc` exits 0 and reproduces F1. Resolved skill package is `/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0`; its `adr_lint.py docs/adr --since 1c0dbb540f354300b75dba5a119d2614c8fb0c02 --require 0051` exits 0, 50 records, 0 legacy.
+- DONE: AC-1 missing, fenced, bulleted, invalid or duplicate round counts hold without an ask record.
+  Candidate delivery suite passes 124 tests; removing the new call fails the count assertions with no import error (`AC-1-remove-call.log`).
+- DONE: AC-2 zero and count-with-detail forms pass without changing complete-check output.
+  Tested 0, 2, 003, 1., 2. detail and 1; detail; forcing nonzero counts fails the zero case (`AC-2-require-nonzero.log`).
+- DONE: AC-3 all seven state-99e8bb36 briefing texts replay with the specified verdicts.
+  Four missing-count texts change base 0 to candidate 1 with the count problem and no record; #757 briefing 1 stays 1 for its reviewer form, briefing 2 and model-roster stay 0 with identical stdout; `proof-results.json` records the base falsifier and fixture controls.
+- DONE: AC-4 the real command reads this PR through gh and distinguishes the two supplied texts.
+  Both exit 1 for Draft and non-trunk base; only missing-count text prints the rounds problem/next line. A removed-call copy loses that problem on the same real PR (`live-missing.log`, `live-present.log`, `live-no-count-rule.log`); no ask record was saved.
+- DONE: AC-5 question compatibility and complete-check output are unchanged.
+  Base/candidate question and text_problems syntax trees match, complete stdout matches, and existing question inputs are unchanged; moving the rule into text_problems fails the legacy no-count question (`AC-5-move-to-text-problems.log`).
+- FAILED: AC-6's literal empty origin/main reference-document comparison.
+  Current trunk `146727ded0d4ce8014ea0b41a45dc3409d6b269b` shows inherited adoption.md (4 lines) and workflow.md (8 lines); stacked-base diff is empty, WORKFLOW_BUDGET_STEPS is unchanged, and lint passes at 5781 words. Adding one word in a disposable copy fails lint at 5782; see F1.
+- DONE: AC-7 the decision record includes the exact Captain answer/question and all four bounded limits.
+  ADR lint exits 0; removing Words, Recommended or its code pointer fails. Contrary to the implementation report, removing Asked alone passes lint: the exact question and limits were therefore manually checked against this task, not inferred from lint (`extra-probes.json`).
+- DONE: Required number, comment, document, surface and dispatch checks were exercised and their results retained.
+  Number guard 0, comment ratio 38 code/1 comment = 2.6% within 5%, design surfaces 0, diff-check 0; ADR 0044 unaffected as a historical ruling amended by updated ADR 0051. Installed dispatch checker exits 1 while candidate checker exits 0 for all four records; see F2 and `checks.json`.
+- SKIPPED: A clean RoboRev verdict and delivery readiness.
+  Exact-head RoboRev attempt exits 3: `incomplete: the roborev daemon is not running`; FO owns review. PR remains Draft/stacked; no product push, review request, comment, ready mark or merge. CI cost per PR not measured; CI definitions/triggers unchanged.
+
+### Summary
+
+The supplied-text change is sufficient for the accepted nearest-check boundary and each of its three changed files is necessary for the rule, counterexamples or decision record; it does not enforce binding order or truthful review counts. Validation remains REJECTED for the two explicit dispositions below, with no proposed product repair; the full suite, real GitHub seam and historical replay pass.
+
+- F1 Needs decision: `value-ac[AC-6]` explicitly names an empty origin/main diff while this dispatch requires a stack containing approved parent workflow edits; the actual diff is nonempty, although this task adds none. Recommend FO resolve the accepted baseline wording through the existing scope/ruling route, preserving parent work; do not silently count the literal criterion as passed.
+- F2 Needs decision: the required installed 0.34.0 dispatch checker rejects implementation-1.md and validation-1.md for lacking a main-recipient line, while their exact final-reply wording is explicitly authorized here and accepted by the candidate checker inherited from PR #763. Recommend FO record the checker-version disposition; no record rewrite or plugin update was performed. Detailed normal-workflow, impact, boundary and trigger fields for both findings are in details.md.

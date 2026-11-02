@@ -1,0 +1,12 @@
+AC-5: question and text_problems AST unchanged; complete check output equals base
+AC-1-remove-call: mutation exit=1; target assertion failed; no import errors; python -B, caches cleared
+AC-2-require-nonzero: mutation exit=1; target assertion failed; no import errors; python -B, caches cleared
+AC-5-move-to-text-problems: mutation exit=1; target assertion failed; no import errors; python -B, caches cleared
+{"task": "batch10-after-release-obligations", "briefing": 1, "base_exit": 0, "candidate_exit": 1, "problems": ["summary needs one top-level External rounds: N line (nonnegative integer)"]}
+{"task": "peers-paseo-rule-matches-practice", "briefing": 1, "base_exit": 0, "candidate_exit": 1, "problems": ["summary needs one top-level External rounds: N line (nonnegative integer)"]}
+{"task": "names-check-says-what-it-skipped", "briefing": 1, "base_exit": 0, "candidate_exit": 1, "problems": ["summary needs one top-level External rounds: N line (nonnegative integer)"]}
+{"task": "peer-status-reaches-fresh", "briefing": 1, "base_exit": 0, "candidate_exit": 1, "problems": ["summary needs one top-level External rounds: N line (nonnegative integer)"]}
+{"task": "paseo-human-surfaces-visible-and-reachable", "briefing": 1, "base_exit": 1, "candidate_exit": 1, "problems": ["second reviewer declaration must name copilot because <nonempty trigger>, or not triggered"]}
+{"task": "paseo-human-surfaces-visible-and-reachable", "briefing": 2, "base_exit": 0, "candidate_exit": 0, "problems": []}
+{"task": "model-roster-per-repo", "briefing": 1, "base_exit": 0, "candidate_exit": 0, "problems": []}
+AC-3: all seven supplied texts replayed at state 99e8bb36; provider, task-history and role calls are fixture controls
