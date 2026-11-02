@@ -46,6 +46,17 @@ gates:
                 id: briefing:special-roles-follow-the-model-table:ideation:attempt-2:revision-1
                 digest: sha256:1833b337ceee43c359355beed816a7e173714071e639b613574dbab08d429163
                 room-ref: ./special-roles-follow-the-model-table/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:special-roles-follow-the-model-table:ideation:2
+                briefing: briefing:special-roles-follow-the-model-table:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-02T04:29:36.017525Z"
+                decision: approve
+                reason: The Captain 「照建議」 (chat, 2026-11-02), answering 「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」; accepts the recommendations stated in that sitting, including D5 for the roster and D1 and D2 for completion.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
