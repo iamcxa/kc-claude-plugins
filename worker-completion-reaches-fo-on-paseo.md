@@ -263,3 +263,38 @@ ADR: 0048
 ### Summary
 
 The design makes Paseo's finish callback the completion signal: `create_agent` with notify on, the worker's final reply as the `Done:` line, the rule in the paseo extension, and `dispatch_records.py` accepting that line only where `paseo` is listed. The callback reached the receiver from real Claude and Codex workers with no send attempted; the old route gave nothing on both models, and 125 of 125 real FO spawns with notify on got callbacks. `design_surfaces.py check` printed "design surfaces presentable", exit 0. A Codex FO as receiver remains unverified, and D1 and D2 are for the Captain. All probe workspaces and temporary files are removed.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design, including D1 and D2, in only its six named files; commit locally, no product push.
+  Branch `spacedock-ensign/worker-completion-reaches-fo-on-paseo`; fetched base `146727ded0d4ce8014ea0b41a45dc3409d6b269b`; candidate `c129cb215c2630d08853eeffae0fd5a2ee7e40c6`; clean code tree. Extension owns callback spawning, final reply, same-command workspace registration and the Claude publication handoff.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main implementing the approved design and acceptance criteria.
+  FO owns push/open under the dispatch and `dispatch/implementation-1-message-1.md`; no PR opened: no push grant. Title and body prepared at `/tmp/impl-worker-completion-reaches-fo-on-paseo-pr.md`; GitHub API lookup failed with `error connecting to api.github.com`, so PR state was not independently verified here.
+- DONE: ADR 0048 records the ruling the design names, quoting the Captain's words from the task file and its gate records.
+  `docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md` quotes 「可以」, 「照建議」 and both questions; records D1/D2 and explicitly widens ADR 0042. No workflow-budget rise or version bump.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared).
+  AC-1, AC-2 and AC-5, including real Claude/Codex callbacks, early finish, error, permission, cancel, build/registration placement and workspaceId falsifier, are not run, FO-owned by `implementation-1-message-1.md`; no stand-in receiver was used. AC-3/4/6/7/8 local proof follows.
+- DONE: AC-3 accepts the final-reply line only with listed paseo, retaining the existing diagnostic otherwise.
+  `test_dispatch_records.DispatchRecordTests` exercises listed, unlisted, missing README, similarly named extension, exact instruction and scope boundaries; removing the paseo condition or the acceptance branch makes the new test fail with AssertionError.
+- DONE: AC-4 keeps the extension's quoted scope instruction identical to the checker's constant.
+  The independent literal/document/constant assertion passes; changing one word in either implementation or extension fails. `PaseoCompletionMutationTests` runs all four mutations with `python3 -B` in a cache-free copy, checks AssertionError and verifies no pyc files.
+- DONE: AC-6 retains workflow words, budget, both main-line pins and non-Paseo dispatch.
+  Repository `lint-skills.py` exit 0: 5781 of 5781; workflow.md, lint-skills.py and test_sd_dispatch.py byte-identical to base. `SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock python3 -B kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3` exit 0, including both main-line mutation pins and real non-Paseo main-line dispatch.
+- DONE: AC-7 independently recounts the words FO reads at the dispatch moment.
+  Python str.split recount: extension 713 -> 819; workflow 5781 -> 5781; budget source unchanged. In a cache-free candidate archive, adding one word makes the <=819 assertion fail (820); no rise beyond the accepted table.
+- DONE: AC-8 and required ADR lint pass; the missing-label falsifier is refused.
+  `python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since 146727ded0d4ce8014ea0b41a45dc3409d6b269b --require 0048` exit 0, 47 records; removing Words label in the archived copy returns exit 1 with the required-label diagnostic.
+- DONE: Repository skill lint, number guards and comment ratio are within their required limits.
+  Skill lint exit 0; package `number_guards.py check --repo <assigned worktree> --workflow-dir <workflow> --task <entity> --base 146727ded0d4ce8014ea0b41a45dc3409d6b269b` exit 0, no findings (migration guard skipped: no migrations-path declared); `comment_ratio.py <base> HEAD` exit 0: 75 code lines, 1 comment, 1.3%, maximum 5%.
+- DONE: Dispatch-record regression tests and cache-free proof run.
+  `python3 -B -m unittest test_dispatch_records` exit 0, 99 tests, one environment-bound builder test skipped; the later cache-free candidate-archive run supplies SPACEDOCK_BIN/SD_PLUGIN_ROOT and passes 25 tests including that real builder test and four completion mutations, no skips. Logs: `/tmp/impl-worker-completion-proof.log`, `/tmp/impl-worker-completion-sd-dispatch.log`; replay: `python3 -B /tmp/impl-worker-completion-proof.py <assigned worktree> /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0`.
+- SKIPPED: roborev evidence= line; FO pushes, opens the Draft PR, runs RoboRev and reads CI.
+  Required post-commit `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/roborev_gate.py --repo <assigned worktree> --base 146727ded0d4ce8014ea0b41a45dc3409d6b269b` exit 3: `incomplete: the roborev daemon is not running`; no review-clean claim. Push, Draft PR, exact-head FO review and hosted CI are not run, FO-owned.
+- DONE: Affected-document review from package doc_impact.py.
+  Updated: ADR 0048. Unaffected: ADR 0045 (names-only validation-ruling predicate unchanged); learning.md (its parser/reading/measurement practices remain true). Manually updated extension, package README row and adoption paseo mention; no affected retained diagram. Existing design/upstream capability audit reused; no new abstraction or removed capability.
+- DONE: Design surface check and CI cost statement.
+  Package `design_surfaces.py check <entity>` exit 0: design surfaces presentable; scope check not run outside ideation. CI trigger unchanged; cost per PR not measured.
+
+### Summary
+
+The bounded Pilot implementation is locally committed with prepared PR text: Paseo stage workers finish by final reply, while the dispatch checker gates that instruction on the listed extension and other hosts retain main. Structural tests and their falsifiers pass; native callback/placement acceptance, RoboRev, publication and hosted CI remain FO-owned and are not claimed complete. Split-root report sync is the worker's handoff obligation; no task frontmatter or product remote was changed.
