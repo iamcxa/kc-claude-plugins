@@ -31,7 +31,7 @@ Falsifier: the command-line and `main` arm was read from the design's 2026-11-02
 - The rerun's own record passes every preflight on the candidate. Falsifiers on a disposable copy: replacing the sentence returns exit 1 naming validation-2.md; changing `paseo` to `xpaseo` in a copied README returns exit 1 naming validation-2.md.
 - Dropping validation-1.md from a disposable copy returns exit 0, 4 records.
 - validation-1.md is the instruction that run actually received. The workflow's Stages text says records exist "so the instruction a worker followed outlives the session that wrote it". Rewriting it to pass, as validation-1 suggested, would make it false.
-- Callers: the workflow text and laws_check.py; delivery_gate.py does not call it. Not read further than that grep.
+- A grep of delivery_gate.py and laws_check.py found it only in laws_check.py; other callers were not searched, and how laws_check.py treats this exit was not read.
 - Installed 0.34.0 refuses the new sentence until release, which is the expected order for a checker change in this same PR.
 
 ## Reruns at the candidate

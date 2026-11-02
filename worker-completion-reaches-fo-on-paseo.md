@@ -375,7 +375,7 @@ REJECTED at c129cb215c2630d08853eeffae0fd5a2ee7e40c6: local behavior and hosted 
 - DONE: Implementation limits judged
   Dispatch suite now 100 tests, no skips, so the earlier skip is closed. PR Draft at the exact head, five hosted checks SUCCESS. RoboRev job 1396 passes under its High and Critical filter only, so lower severities are not cleared. Six changed files all map to the design.
 - F2 Polish: the task folder's dispatch check still exits 1, only for validation-1.md, the first run's record. No current boundary is at risk: this rerun's record passes on the candidate. FO should leave that record as sent, because rewriting it would falsify what that worker received; validation-1's suggested one-line correction is withdrawn. If FO dispatches again on this task the folder check repeats the line, so FO records a decline.
-- F3 Deferred risk: a Claude stage worker still reads three send instructions (Spacedock's completion block, its Claude runtime, the workflow's Signal fact) against one scope line; only the scope line stops the send. Observed attempts: none, here and in the design's three Claude probes. It becomes material if a Paseo stage worker attempts a send despite the line, as the design's unchanged Signal fact would then be the cause.
+- F3 Deferred risk: a Claude stage worker still reads three send instructions (Spacedock's completion block, its Claude runtime, the workflow's Signal fact) against one scope line; only the scope line stops the send. Observed attempts: none, here, in the design's two create_agent Claude probes and in FO's f33b5aa3. It becomes material if a Paseo stage worker attempts a send despite the line.
 
 ### Summary
 
