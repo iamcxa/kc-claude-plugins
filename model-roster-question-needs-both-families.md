@@ -65,6 +65,17 @@ gates:
                 id: briefing:model-roster-question-needs-both-families:validation:attempt-1:revision-1
                 digest: sha256:ceb91efd7616158e8786c031754cd1f4ebafbe680e55fff7d22a2130ff5881c4
                 room-ref: ./model-roster-question-needs-both-families/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:model-roster-question-needs-both-families:validation:1
+                briefing: briefing:model-roster-question-needs-both-families:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-02T10:10:37.602055Z"
+                decision: approve
+                reason: 'The Captain 「准」 (chat, 2026-11-03), answering 「決定：合併 #765，並接受不修那項縮排問題，可以嗎？」.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-02T04:56:19Z
 worktree: .worktrees/spacedock-ensign-model-roster-question-needs-both-families
 pr: iamcxa/kc-claude-plugins#765
