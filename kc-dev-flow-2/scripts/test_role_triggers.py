@@ -76,7 +76,8 @@ class RoleTriggersTest(Fixture):
         code, lines = self.owed()
         self.assertEqual(code, 1)
         self.assertEqual(len(lines), 1)
-        self.assertIn(f"dispatch {CE} ", lines[0])
+        self.assertIn(f"dispatch {CE} on opus or gpt-6-astra ", lines[0])
+        self.assertIn(f"Reviewer: {CE} <model> <date>", lines[0])
         self.assertIn("has 4 repair passes", lines[0])
         self.assertLessEqual(len(lines[0].split()), 60)
         pr_lines = "".join(f"- PR #{n} merged\n" for n in (1, 2))
@@ -138,7 +139,7 @@ class RoleTriggersTest(Fixture):
         self.assertEqual((code, out.count("next:")), (1, 1))
         self.assertIn("has 3 review rounds, the newest on 2026-10-24;", out)
         self.assertIn("`Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>`", out)
-        self.assertLessEqual(len(out.split()), 56)
+        self.assertLessEqual(len(out.split()), 60)
         cleared = {"a call on the round's date": call(CE, "opus", "2026-10-24"), "a call after it": call(CE, "opus", "2026-10-25"),
                    "a dated waiver on it": f"Reviewer: {CE} not run 2026-10-24: Captain ordered it"}
         left = {"a call the day before": call(CE, "opus", "2026-10-23"), "an undated waiver": f"Reviewer: {CE} not run: Captain ordered it",
@@ -199,7 +200,8 @@ class RoleTriggersTest(Fixture):
         code, lines = self.owed()
         self.assertEqual((code, len(lines)), (1, 1))
         self.assertIn("has replacing amendments 1, 2, 4, 5, 6", lines[0])
-        self.assertIn(f"dispatch {ER} on opus ", lines[0])
+        self.assertIn(f"Reviewer: {ER} <model> <date>", lines[0])
+        self.assertIn(f"dispatch {ER} on opus or gpt-6-astra ", lines[0])
         self.assertLessEqual(len(lines[0].split()), 60)
 
     def test_an_amendment_is_cleared_by_a_call_or_a_dated_waiver_no_earlier_than_it(self):
@@ -224,9 +226,9 @@ class RoleTriggersTest(Fixture):
 
     def test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires(self):
         amendment = [(1, "2026-10-15", "AC-4", "none")]
-        cases = (("prod", "none", "on fable (profile prod)"), ("pilot", "db", "on fable (Surfaces db)"),
-                 ("prod", "db", "on fable (profile prod, Surfaces db)"), ("pilot", "none", "on opus "),
-                 ("pilot", "ui, db", "on fable (Surfaces db)"))
+        cases = (("prod", "none", "on fable or gpt-6-astra (profile prod)"), ("pilot", "db", "on fable or gpt-6-astra (Surfaces db)"),
+                 ("prod", "db", "on fable or gpt-6-astra (profile prod, Surfaces db)"), ("pilot", "none", "on opus or gpt-6-astra "),
+                 ("pilot", "ui, db", "on fable or gpt-6-astra (Surfaces db)"))
         for profile, surfaces, expected in cases:
             with self.subTest(profile=profile, surfaces=surfaces):
                 self.put(task(amendments=amendment, profile=profile).replace("Surfaces: none", f"Surfaces: {surfaces}"))
@@ -234,7 +236,7 @@ class RoleTriggersTest(Fixture):
                 self.assertIn(f"dispatch {ER} {expected}", lines[0])
                 self.assertLessEqual(len(lines[0].split()), 60)
         self.put(task(amendments=amendment, extra="```\nSurfaces: db\n```"))
-        self.assertIn("on opus ", self.owed()[1][0])
+        self.assertIn("on opus or gpt-6-astra ", self.owed()[1][0])
         self.put(task(repairs=4))
         self.assertNotIn("fable", self.owed()[1][0])
 
@@ -250,8 +252,32 @@ class RoleTriggersTest(Fixture):
                 self.assertEqual(code, expected)
                 if expected:
                     self.assertIn(f"on {'fable' if profile == 'prod' else 'opus'}", lines[0])
+        cases = (("pilot", "gpt-6-astra", 0), ("pilot", "claude-opus-5-5", 0),
+                 ("pilot", "gpt-6.1-sol", 1), ("pilot", "gpt-6.1-terra", 1), ("pilot", "gpt-6-luna", 1),
+                 ("pilot", "claude-sonnet-5-5", 1), ("prod", "gpt-6-astra", 0), ("prod", "fable", 0),
+                 ("prod", "claude-fable-5-1", 0), ("prod", "opus", 1), ("prod", "claude-opus-5-5", 1))
+        for profile, model, expected in cases:
+            with self.subTest(profile=profile, model=model):
+                self.put(task(amendments=amendment, profile=profile, extra=call(ER, model, "2026-10-18")))
+                self.assertEqual(self.owed()[0], expected)
         self.put(task(amendments=amendment, profile="prod", extra=f"Reviewer: {ER} not run 2026-10-18: widened only"))
         self.assertEqual(self.owed()[0], 0)
+
+    def test_chief_engineer_floor_applies_to_repairs_and_review_rounds(self):
+        for model, expected in (("sonnet", 1), ("gpt-6.1-sol", 1), ("opus", 0), ("gpt-6-astra", 0)):
+            for repairs, flags in ((4, ()), (0, ("--review-rounds", 2, "--drift-date", "2026-10-24"))):
+                with self.subTest(model=model, repairs=repairs):
+                    self.put(task(repairs=repairs, extra=call(CE, model, "2026-10-24")))
+                    self.assertEqual(run(self.state, SLUG, *flags)[0], expected)
+        for repairs, flags in ((4, ()), (0, ("--review-rounds", 2, "--drift-date", "2026-10-24"))):
+            self.put(task(repairs=repairs, extra=f"Reviewer: {CE} not run 2026-10-24: Captain waived"))
+            self.assertEqual(run(self.state, SLUG, *flags)[0], 0)
+
+    def test_astra_amendment_calls_clear_the_peer_policy_shape_without_its_waiver(self):
+        amendments = [(n, "2026-10-30", f"AC-{n}", "none") for n in (1, 2, 3)]
+        for model, expected in (("gpt-6-astra", 0), ("gpt-6.1-sol", 1)):
+            self.put(task(amendments=amendments, extra=call(ER, model, "2026-10-30")))
+            self.assertEqual(self.owed()[0], expected)
 
     def test_fenced_text_is_not_an_event_and_a_fenced_line_clears_nothing(self):
         fence = "".join(f"## Stage Report: implementation\n" for _ in range(6))

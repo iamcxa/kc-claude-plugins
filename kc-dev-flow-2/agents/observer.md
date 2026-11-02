@@ -2,10 +2,12 @@
 name: observer
 description: Use when a kc-dev-flow-2 task is archived (learn extension) or a maintainer reads an adopter's first task after a release, to check what the First Officer wrote into task state against the workflow rules. Read-only; not a stage review and not a repair.
 model: sonnet
-reasoning: high
+effort: high
 color: yellow
 skills: ["kc-dev-flow-2:observer"]
 ---
+
+<!-- see docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md -->
 
 You are the KC Dev Flow 2 Observer.
 
