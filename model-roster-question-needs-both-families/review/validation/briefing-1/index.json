@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:model-roster-question-needs-both-families:validation:attempt-1:revision-1",
+  "question": "「決定：四件事都照建議嗎？要改哪件直接說。」 and 「決定：#765 改成共用解析、重跑四個真實代理，然後重新驗證，可以嗎？」 That sitting's order merges this PR after the parents and its revalidation; regular merge with --match-head-commit, and approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:model-roster-question-needs-both-families:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/05a0d54831ad6ec974b5bfa1c24e070516bdcb54/model-roster-question-needs-both-families.md",
+      "rev": "sha256:3021ba3a53d7e0c31360f3bc414535b81b377d8207bd1e15d291a3aea20b48b0",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of model-roster-question-needs-both-families, PR #765, head c2643dae831f9685166b7cd564d8d885e88a3f21, in the batch 12 sitting.\nSufficiency: a roster naming Opus resolves and real children ran at Opus high, a low control, Sol xhigh and Astra xhigh, each finish reaching FO after its last turn, in native-runs/final/README.md; the question asks only when Paseo, Codex and Claude are all available.\nNecessity: the files are the question, the recommended set, the resolver, one shared list reader and the ADR; three list-parsing defects became failing mutations in test_sd_dispatch.py.\nExternal rounds: 3.\nSecond reviewer: Copilot because the PR changes merge or review rules. The copilot outcome is review:5734678752, heading \"🟡 Changes recommended\", one line comment, declined below.\nCodex review: no major issues on this head, comment:6574003283.\nDeclined: a deeper-indented block item read as a list entry (review:5734678752 on workflow_extensions.py: FO judges it unreachable because template-generated workflows write one flat list, and validation-3 shows no harm; a hand-edited malformed list could be misread); the installed 0.34.0 Claude checker refusing six saved final-reply lines (validation-3 F5: release effect; the candidate accepts all eight records in validation-3/evidence.md)."
+    }
+  ]
+}
