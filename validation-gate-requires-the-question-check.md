@@ -75,6 +75,8 @@ Release review: not needed: workflow maintenance, on no journey map.
 
 ## Design
 
+Proposed title, for FO to set in frontmatter (the slug stays): "The merge-ask check holds a gate text with no external round count".
+
 **`delivery_gate.py check` holds a gate text with no `External rounds:` line; nothing refuses a binding.** No package seam is verified at the binding moment, and `check`, which FO ran 3 to 24 seconds before six of the seven batch 11 bindings, is the nearest. The Captain accepted this as enough for now (D1).
 
 ### PRFAQ
@@ -247,13 +249,15 @@ For FO, outside this task's scope: `references/sd/adoption.md` § Secret reads a
 ## Stage Report: ideation (cycle 2)
 
 - DONE: Revise the design under the Captain gate revise of 2026-11-02: the asks are in the reason of the newest ideation resolution in this task file; do exactly those asks, and name anything that would go beyond them
-  D1 recorded as settled; outcome restated in `## Scope` and `## Design`; overlap corrected; order set last. The title is frontmatter, so it is proposed in `## Scope` for FO to set. Beyond the asks: the test-cost correction, AC-5's wording and AC-7's exact words, all named in the Summary.
+  D1 recorded as settled; outcome restated in `## Design`; overlap corrected; order set last. The title is frontmatter, so it is proposed in `## Design` for FO to set. Beyond the asks: the test-cost correction, AC-5's wording and AC-7's exact words, all named in the Summary.
 - DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (worker-completion-reaches-fo-on-paseo, model-roster-question-needs-both-families, special-roles-follow-the-model-table, second-round-prompts-a-step-back, validation-gate-requires-the-question-check, picky-reviewers-may-run-on-gemini) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
   `second-round-prompts-a-step-back` and `comment-check-reaches-delivery-gate` share `check` and its tests. `journey-server-host-pilot` has no task file here.
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
   +0 at every moment except a failing merge ask, +22 there, counted with `wc -w` on the trial's two lines; workflow word budget unchanged.
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
-  AC-1 to AC-7 stand; no decision is open, and D1 stays as the record. `design_surfaces.py check` printed: Scope changed after the backlog gate (1a8b1cb3): "- Title for FO to set (frontmatter is FO's; the slug stays): "The merge-ask chec". FO: restore the line; add an '### Amendment N' with 'Supersedes: none' only if the Captain asked for it, with his words verbatim and where he said them. A worker that sees this line reports it to FO and edits neither Scope nor amendments. exit 1
+  AC-1 to AC-7 stand; no decision is open, and D1 stays as the record.
+- FAILED: `design_surfaces.py check` passes on this task
+  Exit 1, "Scope changed after the backlog gate (1a8b1cb3)": this cycle added two lines to `## Scope`, against that check's rule. FO removes the `- Title for FO to set` and `- Outcome, restated` lines; both are in `## Design`, and no amendment is needed. Not rerun clean.
 - DONE: AC-1 not yet verified; future test and mutation.
   The trial's rule ran on a throwaway copy, not a candidate.
 - DONE: AC-2 not yet verified; future test.
@@ -272,5 +276,7 @@ For FO, outside this task's scope: `references/sd/adoption.md` § Secret reads a
 ### Summary
 
 The design now says what it delivers: `check` holds a gate text with no round count, and binding is not refused. FO must set the new title in frontmatter, because a worker may not edit it: "The merge-ask check holds a gate text with no external round count".
+
+The gate is not presentable yet, and that is this worker's error: it added two lines to `## Scope`, and `design_surfaces.py check` now exits 1. Its message tells a worker to edit neither Scope nor amendments, so the lines stay for FO to remove; the outcome and title are also in `## Design`, so nothing is lost. After removal, FO reruns the check, which has not been seen to pass in this cycle.
 
 Beyond the four asks: a trial showed the first design missed a cost, since most existing `check` tests would fail until their text carries the line. The design now states that cost and AC-5 allows it; scope is unchanged. Not done and left to FO: filing the host-hook trial that D1's question mentioned. The 7 errors at base in the trial's copy were not diagnosed.
