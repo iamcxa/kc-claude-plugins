@@ -3,6 +3,17 @@ title: A stage worker's completion reaches the FO on Paseo, whichever model it r
 status: backlog
 variant: kc-dev-flow-2
 profile: pilot
+gates:
+    version: 1
+    records:
+        - id: gate:worker-completion-reaches-fo-on-paseo:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:worker-completion-reaches-fo-on-paseo-backlog-1
+              briefing:
+                id: briefing:worker-completion-reaches-fo-on-paseo:backlog:attempt-1:revision-1
+                digest: sha256:e39b39adb2befc3f2f821036ee16d19f1a11e4ab321863ef1bf565d72a777797
+                room-ref: ./worker-completion-reaches-fo-on-paseo/review/backlog/briefing-1
 ---
 
 ## Scope

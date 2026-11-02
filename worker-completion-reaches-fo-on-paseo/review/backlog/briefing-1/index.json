@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-completion-reaches-fo-on-paseo:backlog:attempt-1:revision-1",
+  "question": "「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」",
+  "artifacts": [
+    {
+      "id": "artifact:worker-completion-reaches-fo-on-paseo:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e26a5b17501a68f72f19ae7c74851dd499ebc3d0/worker-completion-reaches-fo-on-paseo.md",
+      "rev": "sha256:0a58c05e574b428b57e2e4d614bbd14af2b4da0335a0286058e10336c10b629f",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 sitting; recommended approve to enter ideation under pilot."
+    }
+  ]
+}
