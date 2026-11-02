@@ -448,3 +448,42 @@ This complete report supersedes the previous implementation report, correcting i
 
 The exact candidate satisfies AC-1 through AC-9 and AC-10's pre-merge boundary with independent native, history, mutation and dispatch evidence; the six-step acceptance script passes. This scoped PASSED recommendation does not certify the integrated stack, and preserves FO's #765 integration/review and post-merge seed-retirement obligations; candidate code is unchanged and the detached validation checkout is removed before handback.
 
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #764 head 8eed70b2 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 8eed70b260346811a1f2aa035ca1354a2d735576 for pre-merge scope; bounded recheck under the next checklist item, with native/unchanged judgments explicitly carried. No new findings in the four disposition classes; special-roles-follow-the-model-table/validation-2/details.md.
+- DONE: Stacked on PR #763. This head only merges PR #763's repair into the head you passed, 562b1a871: confirm that and carry forward your judgements if their inputs are unchanged
+  Parents 562b1a87198d97bb2ae1d87b72884e390b20e146 and fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf; full delta exactly matches the sibling's two-file repair; 159 unchanged tracked inputs verified in carry-forward-inputs.json.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation-2/acceptance.sh: six steps, fresh /bin/bash --noprofile --norc, exit 0; acceptance-output.log. Required ADR command at pinned origin/main 146727ded0d4ce8014ea0b41a45dc3409d6b269b with --require 0049: 48 files/0 legacy, exit 0; loaded Codex package command also passes.
+- DONE: AC-1 and AC-2 — model recognition and both chief-engineer floors
+  Fresh 27 role tests pass; no-Astra, leading-word and no-floor mutations fail 2, 4 and 4 cases respectively; mutations.log.
+- DONE: AC-3 — current pinned history and real waived-case falsifier
+  184 tasks at state 0c56419a56c6c5ff078f17b4e112222ca8c03910: 0 changed exit results; real peer-policy task without waiver base 1/candidate 0; Sol returns 1. Prior message-change adjudication carried; replay.log and replay-results.json.
+- DONE: AC-4 — both-family output and consuming checks
+  Fresh role suite plus 248 PR-watch/delivery-gate tests pass; reverting both-family wording fails 6 cases; pr-watch-delivery-tests.log and mutations.log.
+- DONE: AC-5 — carry native model/effort evidence with unchanged inputs
+  Four agent files/probe inputs unchanged; nine saved candidate/base/mutant transcript hashes reverified. Prior Opus/xhigh, Sonnet/high, four base warnings and reasoning-field medium falsifier stand; carried-native-hashes.json. No fresh native agents launched.
+- DONE: AC-6 and AC-7 — table agreement, permitted overrides and fixed workflow budget
+  Fresh lint, 47 lint tests, seven-row/family fixture checks pass at 5781 words; removed table check fails, dropped director yields a gap, all-workers gives count 0. Explicit max/ultra resolver proof carried unchanged.
+- DONE: AC-8 — carry stage-model dispatch and removal controls
+  Template, fixture and integration inputs unchanged; validation-1's six stamped builds and two Sonnet/from-defaults falsifiers stand. Prior observed dispatches are not represented as fresh runs.
+- DONE: AC-9 — required rulings and missing-record check
+  ADR 0026/0049 unchanged and consistent with accepted rulings; changed/all ADR lint passes. Empty-folder --require 0049 yields only required-record-missing, exit 1; adr-missing-only.log.
+- DONE: AC-10 — release-walk boundary before merge
+  Required origin/main diff empty; hosted PR remains OPEN/Draft and director seed remains backlog, so retirement is not yet due.
+- SKIPPED: AC-10 — post-merge retirement and after-merge falsifier
+  Explicit FO action after merge; no future pass or task-state mutation claimed.
+- DONE: Inherited repair, regression and negative controls
+  Dispatch suite 100 tests: 99 pass/1 optional builder skip; laws suite 63: 62 pass/1 optional corpus skip. Five completion mutations detected; restoring old extension parser produces exactly 3 failures. repair-falsifier.log and suite logs.
+- DONE: Guards, document dispositions, dispatch records and hosted checks
+  Number guard PASS at stack base fef0ae5fa; comments 3.2% <=5%; seven document dispositions unchanged. Candidate accepts all six records and current --names --strict; installed 0.34.0 rejects four newer completion records. Exact head has five SUCCESS hosted checks.
+- DONE: Implementation limits and retained integration ownership
+  Recorded effort is not quality; manual Codex/stage-effort limits stand; costs unmeasured and CI triggers unchanged. The #765 default-roster discrepancy and integrated re-review remain with FO; no clean integrated-delivery verdict. Prior full CI proof carried where inputs are unchanged.
+- SKIPPED: Fresh native probes, full CI replay, local review and publication
+  Narrow merge recheck carries unchanged native/integration/full-suite evidence; changed and consuming suites rerun. No repair, product push, PR mutation or gate transition.
+
+### Summary
+
+This second validation report recommends PASSED at 8eed70b260346811a1f2aa035ca1354a2d735576, replacing the earlier head-specific recommendation while retaining its unchanged judgments and limits. The merge contains only the verified sibling repair, the final six-step acceptance script passes, and candidate product bytes remain unchanged; FO retains #765 integration/review, delivery and post-merge retirement.

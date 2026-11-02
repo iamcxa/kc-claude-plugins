@@ -1,0 +1,113 @@
+{
+  "adr-required-dispatch": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "146727ded0d4ce8014ea0b41a45dc3409d6b269b",
+      "--require",
+      "0049"
+    ],
+    "exit": 0,
+    "output": "48 ADR file(s) checked, 0 legacy\n"
+  },
+  "adr-candidate": {
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/adr_lint.py",
+      "docs/adr"
+    ],
+    "exit": 0,
+    "output": "48 ADR file(s) checked, 0 legacy; changed records not checked (no --since or --require)\n"
+  },
+  "number-guard": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-8eed70b2",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-roles-follow-the-model-table.md",
+      "--base",
+      "fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf",
+      "--head",
+      "8eed70b260346811a1f2aa035ca1354a2d735576"
+    ],
+    "exit": 0,
+    "output": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase fef0ae5fa79a head 8eed70b26034 merge-base fef0ae5fa79a\n"
+  },
+  "comments": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf",
+      "8eed70b260346811a1f2aa035ca1354a2d735576",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "output": "code lines 63, comment lines 2, 3.2%\n   1/   8 kc-dev-flow-2/scripts/lint-skills.py\n   1/  10 kc-dev-flow-2/scripts/role_triggers.py\nmaximum 5% (package default) met\n"
+  },
+  "docs": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf",
+      "8eed70b260346811a1f2aa035ca1354a2d735576"
+    ],
+    "exit": 0,
+    "output": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md\treview\tkc-dev-flow-2/scripts/lint-skills.py\ndocs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md\treview\tkc-dev-flow-2/scripts/lint-skills.py\ndocs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md\tupdated\tkc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/role_triggers.py\nkc-dev-flow-2/README.md\tupdated\tkc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_sd_dispatch.py\nkc-dev-flow-2/references/sd/adoption.md\treview\tkc-dev-flow-2/scripts/test_sd_dispatch.py\nkc-dev-flow-2/skills/maintain-flow/SKILL.md\treview\tkc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_lint_skills.py\nlearning.md\treview\tkc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_sd_dispatch.py\n7 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+  },
+  "design": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-roles-follow-the-model-table.md"
+    ],
+    "exit": 0,
+    "output": "special-roles-follow-the-model-table.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  },
+  "dispatch-installed": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-roles-follow-the-model-table"
+    ],
+    "exit": 1,
+    "output": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\nimplementation-1.md: needs a scope-notes line naming main as the completion recipient\nvalidation-1.md: needs a scope-notes line naming main as the completion recipient\nvalidation-2.md: needs a scope-notes line naming main as the completion recipient\n"
+  },
+  "dispatch-candidate": {
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-roles-follow-the-model-table"
+    ],
+    "exit": 0,
+    "output": "6 dispatch record(s) complete\n"
+  },
+  "dispatch-current": {
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/dispatch_records.py",
+      "--names",
+      "--strict",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-roles-follow-the-model-table/dispatch/validation-2.md"
+    ],
+    "exit": 0,
+    "output": ""
+  }
+}

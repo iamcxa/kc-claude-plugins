@@ -1,0 +1,12 @@
+AC7 drop director => reviewer-record missing 1 required phrase
+AC7 restore all workers => implementation-worker phrase count 0
+AC9 remove ADR 0049 => exit 1
+0037-workers-check-shared-work-and-return-to-fo-early.md: kc-dev-flow-2/scripts/lint-skills.py has no pointer; add a comment line 'see .validation-evidence-8eed70b2/missing-adr/0037-workers-check-shared-work-and-return-to-fo-early.md'
+0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md: kc-dev-flow-2/extensions/codex/codex_review.py has no pointer; add a comment line 'see .validation-evidence-8eed70b2/missing-adr/0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md'
+0041-seed-admission-enforces-required-fields.md: kc-dev-flow-2/scripts/design_surfaces.py has no pointer; add a comment line 'see .validation-evidence-8eed70b2/missing-adr/0041-seed-admission-enforces-required-fields.md'
+0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md: kc-dev-flow-2/scripts/delivery_gate.py has no pointer; add a comment line 'see .validation-evidence-8eed70b2/missing-adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md'
+0045-validation-reruns-require-a-later-recorded-captain-ruling.md: kc-dev-flow-2/scripts/dispatch_records.py has no pointer; add a comment line 'see .validation-evidence-8eed70b2/missing-adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md'
+0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md: kc-dev-flow-2/scripts/model_roster.py has no pointer; add a comment line 'see .validation-evidence-8eed70b2/missing-adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md'
+0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md: kc-dev-flow-2/scripts/dispatch_records.py has no pointer; add a comment line 'see .validation-evidence-8eed70b2/missing-adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md'
+required ADR 0049 does not exist
+

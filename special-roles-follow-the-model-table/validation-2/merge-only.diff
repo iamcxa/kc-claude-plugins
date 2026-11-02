@@ -1,0 +1,51 @@
+diff --git a/kc-dev-flow-2/scripts/dispatch_records.py b/kc-dev-flow-2/scripts/dispatch_records.py
+index aa79a64d9..39fe8e786 100755
+--- a/kc-dev-flow-2/scripts/dispatch_records.py
++++ b/kc-dev-flow-2/scripts/dispatch_records.py
+@@ -542,7 +542,9 @@ def main(argv=None, package=PACKAGE):
+         return 1
+     readme = readme or find_readme(folder)
+     # see docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md
+-    paseo = bool(readme and "paseo" in re.findall(r"[\w-]+", frontmatter(readme).get("extensions", "")))
++    extension_list = re.match(r"\[([^\]]*)\]", frontmatter(readme).get("extensions", "")) if readme else None
++    listed = [item.strip().strip("'\"") for item in extension_list[1].split(",")] if extension_list else []
++    paseo = "paseo" in listed
+     errors = []
+     for path in records:
+         text = path.read_text()
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_records.py b/kc-dev-flow-2/scripts/test_dispatch_records.py
+index dc30abc58..8252e840d 100644
+--- a/kc-dev-flow-2/scripts/test_dispatch_records.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_records.py
+@@ -305,11 +305,16 @@ class DispatchRecordTests(unittest.TestCase):
+ 
+     def test_paseo_completion_passes_only_with_the_listed_extension(self):
+         text = COMPLETE.replace(MAIN_LINE, PASEO_LINE + "\n")
+-        listed = "---\nentity-type: task\nextensions: [peers, paseo]\n---\n"
+-        code, out = self.check({"implementation-1.md": text}, readme=listed)
+-        self.assertEqual((code, out), (0, "1 dispatch record(s) complete\n"))
++        for value in ("[peers, paseo]", "[peers, 'paseo'] # listed", '[peers, "paseo"] # listed'):
++            listed = "---\nentity-type: task\nextensions: " + value + "\n---\n"
++            with self.subTest(value=value):
++                code, out = self.check({"implementation-1.md": text}, readme=listed)
++                self.assertEqual((code, out), (0, "1 dispatch record(s) complete\n"))
+         for readme in (NO_EXTENSIONS, LISTS_ROBOREV, None,
+-                       "---\nentity-type: task\nextensions: [paseo-other]\n---\n"):
++                       "---\nentity-type: task\nextensions: [paseo-other]\n---\n",
++                       "---\nentity-type: task\nextensions: [learn, peers] # paseo intentionally disabled\n---\n",
++                       "---\nentity-type: task\nextensions: [] # paseo intentionally disabled\n---\n",
++                       "---\nentity-type: task\nextensions: ['paseo disabled', peers]\n---\n"):
+             with self.subTest(readme=readme):
+                 code, out = self.check({"implementation-1.md": text}, readme=readme)
+                 self.assertEqual(code, 1)
+@@ -511,6 +516,10 @@ NOTES_WITH_BOTH = COMPLETE.replace("Package root:", "ADR: 0020\nMigration: 0007\
+ class PaseoCompletionMutationTests(unittest.TestCase):
+     def test_completion_boundary_falsifiers_fail_without_caches(self):
+         cases = (
++            ("comment-membership", "scripts/dispatch_records.py",
++             'paseo = "paseo" in listed',
++             'paseo = bool(readme and "paseo" in re.findall(r"[\\w-]+", frontmatter(readme).get("extensions", "")))',
++             "test_paseo_completion_passes_only_with_the_listed_extension"),
+             ("unlisted", "scripts/dispatch_records.py", 'and paseo and PASEO_COMPLETION.search(text)',
+              'and PASEO_COMPLETION.search(text)', "test_paseo_completion_passes_only_with_the_listed_extension"),
+             ("no-branch", "scripts/dispatch_records.py", 'part == COMPLETION_PART and paseo',
