@@ -227,6 +227,10 @@ None open.
 - Alternative: hold this task for a hook trial first. That reaches the binding moment on Claude if the trial passes, with Codex depending on the user trusting the hook, at the cost of the package's first hook, one call per Bash command wherever the plugin is enabled, and a defect class that stays open meanwhile.
 - Past rulings read: ADR 0027 (followed), ADR 0044 (amended by this), ADR 0003 (its rejection covers secret reads; the hook trial would reopen it). `git grep -n 'Override:'` on the state branch, filtered for hooks, `gate prepare` and the question check, shows no past override against this recommendation.
 
+## Number guards
+
+ADR: 0051
+
 ## Stage Report: ideation
 
 - DONE: A design for this task's Scope: the earliest moment a package check can see a bound validation briefing; read Spacedock's gate prepare and hooks first and report what it offers
