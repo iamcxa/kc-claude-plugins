@@ -65,6 +65,17 @@ gates:
                 id: briefing:special-roles-follow-the-model-table:validation:attempt-1:revision-1
                 digest: sha256:257d2f7677994032d065eb55a2368458b60ed9909c33d5fe4cf0c55f9daac26e
                 room-ref: ./special-roles-follow-the-model-table/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:special-roles-follow-the-model-table:validation:1
+                briefing: briefing:special-roles-follow-the-model-table:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-02T08:20:40.234428Z"
+                decision: approve
+                reason: The Captain 「照建議」 (chat, 2026-11-02), answering the batch 12 sitting 「決定：四件事都照建議嗎？要改哪件直接說。」, whose item 1 merges this PR, as amended by FO to wait for Codex, which then found no major issues; a regular merge as that sitting said.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-02T04:40:41Z
 worktree: .worktrees/spacedock-ensign-special-roles-follow-the-model-table
 pr: iamcxa/kc-claude-plugins#764
