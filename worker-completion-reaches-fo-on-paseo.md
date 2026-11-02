@@ -1,6 +1,6 @@
 ---
 title: A stage worker's completion reaches the FO on Paseo, whichever model it runs on
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 gates:
@@ -24,7 +24,7 @@ gates:
                 reason: The Captain 「可以」 (chat, 2026-11-02), answering 「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」; approves Pilot, this outcome and these bounds.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
