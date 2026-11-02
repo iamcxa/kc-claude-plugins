@@ -1,6 +1,6 @@
 ---
 title: The merge-ask check holds a gate text with no external round count
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 gates:
