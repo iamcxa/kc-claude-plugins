@@ -299,3 +299,40 @@ The design makes Paseo's finish callback the completion signal: `create_agent` w
 ### Summary
 
 The bounded Pilot implementation is locally committed with prepared PR text: Paseo stage workers finish by final reply, while the dispatch checker gates that instruction on the listed extension and other hosts retain main. Structural tests and their falsifiers pass; native callback/placement acceptance, RoboRev, publication and hosted CI remain FO-owned and are not claimed complete. Split-root report sync is the worker's handoff obligation; no task frontmatter or product remote was changed.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #763 head c129cb21 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at c129cb215c2630d08853eeffae0fd5a2ee7e40c6, base 146727ded0d4ce8014ea0b41a45dc3409d6b269b; detached checks completed and throwaway worktree removed. Local falsifiers rerun; native falsifiers reviewed only under the no-spawn instruction. Full evidence: worker-completion-reaches-fo-on-paseo/validation/evidence-1.md.
+- DONE: AC-1, AC-2 and AC-5 use FO's real runs in native-runs/README.md and its logs, and the real dispatch of worker bc46043b; judge them as FO's record, name any gap, and do not start agents yourself. Hosted CI is on PR #763
+  Independently matched FO transcript calls, tool results and notifications; saved bounded excerpts in validation/native-record-1.json. All five hosted checks succeeded at the exact head. No agents started or permissions answered.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four steps in validation/acceptance-1.md, executable copy acceptance-1.sh; bash --noprofile --norc ran unchanged, exit 0. Both dispatched Claude-cache and loaded Codex-cache ADR lint commands exit 0, requiring 0048, 47 records; no native completion claim.
+- FAILED: AC-1 — real Claude and Codex stage-worker completion on the candidate
+  FO's Claude f33b5aa3 and Codex e48b1442 callbacks are real, with no worker send attempt, but both only read CLAUDE.md: no generated stage dispatch, fetched Signal or ensign completion block. Native README explicitly calls them probes; the real stage worker bc46043b is Codex and was still running at inspection. Historical CLI refusal/no-callback falsifier was read, not respawned.
+- DONE: AC-2 — non-Done finish, cancellation and permission callbacks reach FO
+  FO transcript lines 75388/75402/75436 show errored cancellation, finished without Done and permission-required respectively; the failed permission attempts are excluded. Historical CLI negative arm remains recorded evidence, not a validator-run native falsifier.
+- DONE: AC-3 — final-reply instruction is accepted only with listed paseo
+  Listed/unlisted/missing/similar-name README cases pass; removing the paseo guard or disabling the acceptance branch each raises AssertionError in cache-free mutation runs.
+- DONE: AC-4 — documented completion instruction equals the checked constant
+  Literal/document/constant test passes; changing final to last in either checker or extension fails the assertion in a fresh python3 -B subprocess.
+- DONE: AC-5 — same-command registration, next-host-action creation and correct worktree
+  Successful FO retry at 04:40:35–47Z is followed directly by create_agent at 04:40:51Z; worker session pwd and git root match its assigned worktree, with one registered worktree. Omitted-workspaceId probe results instead resolve to FO's colombo directory. README's 04:40:24Z entry describes a failed first attempt; the successful retry is the proof.
+- DONE: AC-6 — workflow budget and non-Paseo main-line behavior stay unchanged
+  Workflow, lint-skills.py and test_sd_dispatch.py are byte-identical to base; lint reports 5781/5781. Real Spacedock fixtures pass, including non-Paseo main dispatch and both main-line mutation pins; skill/model execution is outside that fixture proof.
+- DONE: AC-7 — independently counted reading stays within the accepted bound
+  Extension 713 -> 819 words; workflow 5781 -> 5781; canonical scope instruction 35 words. Adding one extension word yields 820 and is refused by the <=819 assertion.
+- DONE: AC-8 — ADR 0048 records the accepted words, questions and widening of ADR 0042
+  Required-label lint passes; removing **Words:** returns exit 1. Read both Captain questions, D1/D2 and the explicit ADR 0042 widening; lint alone does not prove their meaning.
+- FAILED: Saved validation dispatch passes the required dispatch-record check
+  Both installed and candidate checkers exit 1 on validation-1.md: needs a scope-notes line naming main as the completion recipient. Replacing only its paraphrase with the canonical sentence in a disposable copy yields exit 0, 4 records complete; live records left unchanged.
+- DONE: Ancillary checks, affected documents and implementation limits
+  100 dispatch tests pass without skips; archive proof 25 tests plus four completion mutations, word-limit mutation and missing-label mutation pass. Number guards/design surfaces pass; comments 1/75, 1.3% <=5%; only new comment links ADR 0048. ADR 0048 updated; ADR 0045 and learning.md unaffected for the stated reasons. CI unchanged, cost per PR not measured.
+- DONE: FO-owned publication and review limits reconciled
+  PR #763 is OPEN/DRAFT at the candidate. Existing RoboRev job 1396 matches base..head, done/P, output SEVERITY_THRESHOLD_MET under a High/Critical-only filter; lower severities are not cleared by that review. Native stage completion remains unproven; Codex FO receiver and cross-host delivery remain unverified/outside this proof.
+- F1 Needs decision: AC-1 does not authorize substituting cheap probes for real stage workers. FO should supply the requested Claude/Codex stage records; accepting the probes instead needs a Captain amendment. This is missing acceptance evidence, not an observed callback defect.
+- F2 Material: FO's normal validation dispatch currently fails mandatory preflight (observable harm: exit 1). Protected boundary: contract[kc-dev-flow-2/references/sd/workflow.md#stages] requires complete records before dispatch. Trigger: validation-1.md paraphrases the exact extension sentence; the disposable one-line correction returns exit 0. This is a dispatch-record correction for FO, not a product-code repair.
+
+### Summary
+
+REJECTED at c129cb215c2630d08853eeffae0fd5a2ee7e40c6: local behavior and hosted checks pass, but the accepted real-stage completion outcome is not yet demonstrated and the live validation record fails preflight. Every retained product change maps to the goal, its falsifier or the required ADR/publication obligation; no unrelated expansion found. Product bytes, branch and frontmatter are unchanged; FO owns evidence completion, dispatch correction and the next gate decision.
