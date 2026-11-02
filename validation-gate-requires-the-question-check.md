@@ -57,6 +57,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-02T06:35:12Z
+worktree: .worktrees/spacedock-ensign-validation-gate-requires-the-question-check
 ---
 
 ## Scope
