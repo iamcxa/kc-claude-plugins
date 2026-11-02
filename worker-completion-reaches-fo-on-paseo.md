@@ -1,6 +1,6 @@
 ---
 title: A stage worker's completion reaches the FO on Paseo, whichever model it runs on
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 gates:
