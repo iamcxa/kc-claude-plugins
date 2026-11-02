@@ -20,3 +20,5 @@ AC-5 dispatch command, 2026-11-02T04:40:24Z, one shell command: impl1.py (dispat
 AC-5 real stage dispatch: special-roles-follow-the-model-table implementation-1, worker bc46043b. create_agent returned cwd .worktrees/spacedock-ensign-special-roles-follow-the-model-table with workspaceId wks_00a7078b0a0e1dc6. Falsifier seen on the probes above: with no workspaceId the worker's cwd is the FO's workspace. pwd and git top-level are in that worker's first actions; read its timeline.
 
 Real Codex stage worker bc46043b: event finished, reply ends `Done: special-roles-follow-the-model-table completed implementation.` No send tool row: 0.
+
+Real Claude stage worker 5c429108 (validation-2, claude-opus-5-5, thinking high): FO received event finished, message-id 4ee9c9ee-a3b6-4f8b-af54-dca1cc225d4b; its reply ends `Done: worker-completion-reaches-fo-on-paseo completed validation`. Send-tool rows in its log: 0.
