@@ -356,3 +356,46 @@ D1 to D3 now stand as the Captain ruled them, and the design says plainly that i
 ### Summary
 
 The approved questions now reach idle and merge checks at the second occurrence, and the third owes the model-qualified chief-engineer call with the approved clearing rules. Local candidate and PR text are ready; parent test repair, exact-head RoboRev, publication and hosted CI remain with FO, so the full-suite criterion is not green.
+
+## Stage Report: implementation
+
+- DONE: Follow dispatch/implementation-1-message-1.md; rerun the whole CI suite at the repaired head without a product commit
+  Candidate: 1c0dbb540f354300b75dba5a119d2614c8fb0c02; 26/26 CI-listed commands exit 0 (1,018 unittest cases, zero failures, seven skips); logs: `<CODE worktree>/.context/second-round-proof/corrected-1c0dbb540/`; product HEAD and tracked working tree unchanged throughout.
+- DONE: Implement the approved Pilot design, D1 to D3, changing only the seven named files without version bumps
+  CODE worktree `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back`; branch `spacedock-ensign/second-round-prompts-a-step-back`; integrated parent/base `3c49c24a3eba3d90093f330c051b682a3335ae23`; the seven task files are byte-identical to original implementation 92dbf1d32, with parent repairs merged by FO.
+- DONE: One Draft PR stacked on PR #765, with Conventional Commit title scoped to the plugin
+  FO published https://github.com/iamcxa/kc-claude-plugins/pull/766; live query confirms OPEN/Draft, base `spacedock-ensign/model-roster-question-needs-both-families`, head 1c0dbb540f354300b75dba5a119d2614c8fb0c02; prepared title/body: `/tmp/impl-second-round-prompts-a-step-back-pr.md`.
+- DONE: AC-1 Two failed validations print the reminder; fewer print nothing
+  Current-head real revisions e0dc64f88/1e17be9a0/c03f77631 pass; StepBackTest excludes passing reports, multiple bullets per report, fences and Deferred risk; counting headings makes its test exit 1 and c03f77631 wrongly print the reminder.
+- DONE: AC-2 Two replacing amendments print the reminder; Supersedes: none does not count
+  Current-head revisions 95c1ecc8b/ff2063c53 print one advisory; StepBackTest excludes Design-only replacements and mixed 1+1 counts; reusing events' Design count makes the fixture fail, exit 1.
+- DONE: AC-3 The idle check surfaces the reminder without inventing a hold
+  TasksTests.test_second_failed_validation_is_advisory_live_and_silent_archived runs the real script through tasks, checks exit 0 and live/first/archive behavior; restoring exit-1-only forwarding makes it fail, exit 1.
+- DONE: AC-4 The merge check surfaces the reminder without holding
+  OwedRoleCallTests checks the real script, reminder before record, ASK last, another problem retained and identical first-occurrence output; dropping exit-0 forwarding or treating the advisory as a problem each makes it fail, exit 1.
+- DONE: AC-5 The third time owes a chief-engineer call carrying the three questions, and holds the merge ask
+  Current-head revisions 0e5b6f59a/7d203d562 exit 1; StepBackTest covers dated call/waiver clearance, early/sonnet refusal, Astra acceptance, fourth occurrence and combined repair/review facts; delivery tests require committed clearance; any-call mutation fails and wrongly clears 7d203d562.
+- DONE: AC-6 Nothing changes below the threshold and FO's standing text does not grow
+  Three historical base/candidate byte comparisons pass; workflow/mod diff against integrated parent 3c49c24a3 is empty; added-mod-line mutation yields diff exit 1; printed lines remain 51 advisory, 68 amendment-call, 73 validation-call (79/84 including the merge problem), also counted with wc -w on the unchanged original task files.
+- DONE: AC-6 The package's complete test suite passes
+  26/26 CI-listed commands exit 0 (1,018 unittest cases, zero failures, seven skips); test_poc_readme.py now passes all nine tests. Native dispatch additionally passes with CI's exact plugin-source commit 4d158a484ec73e184861067f8ed1e20087fdc26a and installed Spacedock CLI 0.27.2 (darwin/arm64); hosted CI covers ubuntu-latest.
+- DONE: AC-7 ADR 0026 records the new events with the Captain's words
+  Unchanged amendment quotes 「可以」 and 「照建議」 with both gate questions, D1 to D3 and precedents; omitted-amendment copy exposes the missing ruling in manual gate/code comparison (not a machine verdict); current-head adr_lint.py docs/adr --since 3c49c24a3 --require 0026 exits 0, 49 records.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs)
+  Current-head exit 0; workflow remains 5781/5781 words inherited from the parent; no workflow word-budget raise or standing mod change.
+- DONE: number_guards.py check exit 0 and comment_ratio.py within its maximum
+  Installed 0.34.0 scripts, base 3c49c24a3, explicit workflow/task, head 1c0dbb540: PASS no findings; comment_ratio.py reports 185 code lines, 0 comment lines, 0.0%, maximum 5% met.
+- DONE: Design surfaces and affected-document checks
+  Current-head design_surfaces.py check exits 0; doc_impact.py 3c49c24a3 HEAD lists ADR 0044 unaffected: optional question/summary contract unchanged, and ADR 0049 unaffected: model floor/defaults reused unchanged; new role events remain recorded in ADR 0026.
+- DONE: Exercise every named falsifier and compare committed task outputs
+  Re-executed verify.py against current head/integrated parent, directing logs to `corrected-1c0dbb540/`: eight historical replays, three byte comparisons, six rejected behavioral mutants using python3 -B and cache-free copies, mod difference and manual ADR omission; corpus at state 0c56419a56c6c5ff078f17b4e112222ca8c03910: 186 tasks, 12 changed outputs, all at approved thresholds.
+- DONE: Read hosted CI at the exact candidate and state the measured-cost limit
+  PR #766 live head 1c0dbb540 shows all five check runs SUCCESS, including unit tests (python3), run 41405815562; CI cost per PR was not measured, and existing CI triggers are unchanged.
+- SKIPPED: roborev evidence= line at the repaired head
+  FO owns exact-head RoboRev under the dispatched Paseo exception; not run by this report-only follow-up. The earlier 92dbf1d32 attempt returned exit 3, `incomplete: the roborev daemon is not running`, which is not review evidence for 1c0dbb540.
+- SKIPPED: Worker product commit, push, PR mutation, approval and merge
+  This follow-up authorizes a corrected report only; no product commit, product push or PR edit was made by this worker. Split-root report commit and sync follow the original ensign contract.
+
+### Summary
+
+This complete report supersedes the earlier implementation report: the inherited README test failure is repaired, and the entire CI suite now passes locally at 1c0dbb540f354300b75dba5a119d2614c8fb0c02. Behavior proofs and required checks were refreshed without changing product bytes; exact-head RoboRev and further workflow decisions remain with FO.
