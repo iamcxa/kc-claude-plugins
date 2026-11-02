@@ -214,7 +214,7 @@ Verified by: `lint-skills.py` and `test_sd_dispatch.py` exit 0 with `git diff` s
 Verified by: the validator's own count over the candidate's `EXTENSION.md`. Falsifier: a candidate over 819 fails unless the Captain names a rise.
 
 **AC-8** A new ADR with the design's short title records the Captain's words and the question asked, and states it widens ADR 0042.
-Verified by: `adr_lint.py` on the candidate and reading the file. Falsifier: removing the `Asked:` line fails the lint.
+Verified by: `adr_lint.py` on the candidate, which checks the `**Words:**` and `**Options considered:**` labels, and reading the file for the question asked and the ADR 0042 sentence, which no script checks. Falsifier: removing the `**Words:**` label fails the lint.
 
 ## Stage Report: ideation
 
