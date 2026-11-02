@@ -242,6 +242,13 @@ Verified by: `adr_lint.py` on the candidate, which checks the `**Words:**` and `
 
 ADR: 0048
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-02, chat
+Captain: 「可以」 (chat, 2026-11-02)
+Asked: 「決定：#763 用 Claude Opus / high 重新驗證，可以嗎？」, which FO had stated as: 「**建議不放寬條件：** 重新驗證 #763 時，驗證者改用 Claude Opus / high，它本身就是一個真實的 Claude 階段工作者，它的完成通知就是證據。」
+Supersedes: none
+
 ## Stage Report: ideation
 
 - DONE: A design for this task's Scope, with real evidence from one Claude and one Codex worker of what the FO actually receives
