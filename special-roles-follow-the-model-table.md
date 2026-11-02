@@ -1,6 +1,6 @@
 ---
 title: Special roles follow the Captain's model table, and the trigger check recognizes Codex models
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 gates:
@@ -56,7 +56,7 @@ gates:
                 reason: The Captain 「照建議」 (chat, 2026-11-02), answering 「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」; accepts the recommendations stated in that sitting, including D5 for the roster and D1 and D2 for completion.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
