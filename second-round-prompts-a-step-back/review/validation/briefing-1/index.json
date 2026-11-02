@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:second-round-prompts-a-step-back:validation:attempt-1:revision-1",
+  "question": "「決定：合併 #766 嗎？」 Regular merge with --match-head-commit, and approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:second-round-prompts-a-step-back:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9c106a6588c1d0962c72710544d36588e45f42eb/second-round-prompts-a-step-back.md",
+      "rev": "sha256:b9308c6c2404e587cefc0aab2910dca9bf7e99e1257a17ad380cac39f5fb9349",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of second-round-prompts-a-step-back, PR #766, head 0d8cb2b13be65d6cd8917d343797e8fa515e155f, in the batch 12 sitting.\nSufficiency: two failed validations or two replacing amendments print the reminder at the idle and merge checks, the third holds the merge ask until chief-engineer is called, and each count reports at its own threshold, shown by replays and mutations in the validation report.\nNecessity: the seven files are the counts, the two surfaces, ADR 0026's record and their tests; workflow words do not change.\nExternal rounds: 3.\nSecond reviewer: Copilot because the PR changes merge or review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5734975425\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: no major issues on this head, comment:6574650418."
+    }
+  ]
+}
