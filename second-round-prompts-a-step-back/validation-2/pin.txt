@@ -1,0 +1,3 @@
+Source: https://api.github.com/repos/spacedock-dev/spacedock/tarball/4d158a484ec73e184861067f8ed1e20087fdc26a
+Archive root: spacedock-dev-spacedock-4d158a4
+CLI: /Users/kent/.local/bin/spacedock 0.27.2 darwin/arm64

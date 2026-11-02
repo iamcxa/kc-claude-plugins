@@ -1,0 +1,14 @@
+Corpus at 438554d2f89b6d125cf41413e7dc44bf290446e4: 186 committed live/archive tasks, 13 changed outputs; every change reaches an approved threshold.
+delivery-gate-verdict-form: validations=0 replacements=2 exit=1->1
+fo-batch-sittings: validations=0 replacements=2 exit=0->0
+fo-interviews-extension: validations=2 replacements=2 exit=0->0
+kc-decision-log-cli: validations=0 replacements=5 exit=0->1
+model-roster-question-needs-both-families: validations=2 replacements=0 exit=0->0
+ops-inbox-r1-setup-and-isolation: validations=0 replacements=3 exit=1->1
+paseo-codex-dispatch-practice: validations=4 replacements=0 exit=0->1
+peer-status-reaches-fresh: validations=2 replacements=3 exit=0->1
+peers-paseo-rule-matches-practice: validations=2 replacements=3 exit=0->1
+prod-security-review-gates: validations=0 replacements=2 exit=1->1
+read-adr-honors-adr-folder: validations=1 replacements=2 exit=0->0
+release-acceptance: validations=0 replacements=2 exit=0->0
+seed-check-requires-schema-fields: validations=3 replacements=2 exit=0->0

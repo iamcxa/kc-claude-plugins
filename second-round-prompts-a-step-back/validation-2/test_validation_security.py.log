@@ -1,0 +1,6 @@
+COMMAND: python3 kc-dev-flow-2/scripts/test_validation_security.py
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.826s
+
+OK

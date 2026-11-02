@@ -1,0 +1,6 @@
+COMMAND: python3 kc-dev-flow-2/scripts/test_observer_check.py
+...................
+----------------------------------------------------------------------
+Ran 19 tests in 5.902s
+
+OK

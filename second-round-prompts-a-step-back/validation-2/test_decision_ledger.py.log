@@ -1,0 +1,7 @@
+COMMAND: python3 kc-dev-flow-2/scripts/test_decision_ledger.py
+...not a directory: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpq6pj9t55/nope
+.....
+----------------------------------------------------------------------
+Ran 8 tests in 0.045s
+
+OK

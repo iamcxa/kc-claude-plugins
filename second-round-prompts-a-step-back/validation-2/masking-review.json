@@ -1,0 +1,1 @@
+{"body":"`max(...) == 2` 会让一个计数屏蔽另一个计数的提醒。例如，已有 3 次失败验证且 chief-engineer 调用已清除该事件，随后出现第 2 个替换性 amendment（engineering-reviewer 调用也已记录），此处会返回普通成功信息，idle 和 merge 检查都不再显示三问；反向组合也一样。两个计数应独立触发第二次提醒，请分别判断是否为 2，仅在已输出携带三问的欠调用提示时去重。","commit_id":"1c0dbb540f354300b75dba5a119d2614c8fb0c02","line":null,"path":"kc-dev-flow-2/scripts/role_triggers.py"}

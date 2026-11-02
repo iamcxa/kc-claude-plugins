@@ -1,0 +1,7 @@
+validation-masked: mutant rejected, exit 1
+replacement-masked: mutant rejected, exit 1
+original-max: mutant rejected, exit 1
+original-max-reverse: mutant rejected, exit 1
+duplicate-questions: mutant rejected, exit 1
+StepBackTest.test_two_replacements_still_remind_after_validation_event_is_cleared: original bug reproduced at 1c0dbb540, exit 1
+StepBackTest.test_two_failed_validations_still_remind_after_replacement_event_is_cleared: original bug reproduced at 1c0dbb540, exit 1

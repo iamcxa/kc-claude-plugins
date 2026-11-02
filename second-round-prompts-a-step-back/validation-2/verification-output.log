@@ -1,0 +1,9 @@
+Historical replays: 8 passed; first-occurrence byte comparisons: 3 passed.
+AC-1: c03f77631 wrongly prints the reminder under the headings mutation.
+AC-2-design-count: test rejected mutation, exit 1
+AC-3-idle-drop: test rejected mutation, exit 1
+AC-4-merge-drop: test rejected mutation, exit 1
+AC-4-merge-hold: test rejected mutation, exit 1
+AC-5: 7d203d562 wrongly clears chief-engineer under the undated-call mutation.
+Mutations: six behavioral changes rejected; standing-text difference and ADR omission exercised.
+Corpus at 438554d2f89b6d125cf41413e7dc44bf290446e4: 186 committed live/archive tasks, 13 changed outputs; every change reaches an approved threshold.

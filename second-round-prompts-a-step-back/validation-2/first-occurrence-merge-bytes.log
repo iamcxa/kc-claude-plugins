@@ -1,0 +1,2 @@
+Base 84e3e492e vs candidate 0d8cb2b13, first failed validation: identical exit and stdout bytes
+[0, "PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n"]

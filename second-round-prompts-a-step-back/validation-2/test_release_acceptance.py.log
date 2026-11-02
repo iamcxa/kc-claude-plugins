@@ -1,0 +1,7 @@
+COMMAND: python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py
+not run: node or journey-accept.mjs missing, or its yaml dependency is not installed
+.................................................s............................
+----------------------------------------------------------------------
+Ran 78 tests in 1.016s
+
+OK (skipped=1)

@@ -1,0 +1,133 @@
+[
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "origin/main",
+      "--require",
+      "0026"
+    ],
+    "exit": 0,
+    "stdout": "49 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back/.context/validation-2-candidate/kc-dev-flow-2/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "origin/main"
+    ],
+    "exit": 0,
+    "stdout": "49 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "84e3e492e512efad6e8b5b5b9764e4b13eb8a445",
+      "0d8cb2b13be65d6cd8917d343797e8fa515e155f",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "stdout": "code lines 219, comment lines 0, 0.0%\nmaximum 5% (package default) met\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back/.context/validation-2-candidate",
+      "--base",
+      "84e3e492e512efad6e8b5b5b9764e4b13eb8a445",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/second-round-prompts-a-step-back.md",
+      "--head",
+      "0d8cb2b13be65d6cd8917d343797e8fa515e155f"
+    ],
+    "exit": 0,
+    "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 84e3e492e512 head 0d8cb2b13be6 merge-base 84e3e492e512\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/second-round-prompts-a-step-back.md"
+    ],
+    "exit": 0,
+    "stdout": "second-round-prompts-a-step-back.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "84e3e492e512efad6e8b5b5b9764e4b13eb8a445",
+      "0d8cb2b13be65d6cd8917d343797e8fa515e155f"
+    ],
+    "exit": 0,
+    "stdout": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md\treview\tkc-dev-flow-2/scripts/delivery_gate.py\ndocs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md\treview\tkc-dev-flow-2/scripts/role_triggers.py\n2 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/second-round-prompts-a-step-back"
+    ],
+    "exit": 0,
+    "stdout": "7 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back/.context/validation-2-candidate/kc-dev-flow-2/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/second-round-prompts-a-step-back"
+    ],
+    "exit": 0,
+    "stdout": "7 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back/.context/validation-2-candidate",
+      "diff",
+      "--stat",
+      "origin/main",
+      "--",
+      "kc-dev-flow-2/references/sd/workflow.md",
+      "kc-dev-flow-2/references/sd/mods/kc-dev-flow-2.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back/.context/validation-2-candidate",
+      "merge-base",
+      "--is-ancestor",
+      "84e3e492e512efad6e8b5b5b9764e4b13eb8a445",
+      "0d8cb2b13be65d6cd8917d343797e8fa515e155f"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

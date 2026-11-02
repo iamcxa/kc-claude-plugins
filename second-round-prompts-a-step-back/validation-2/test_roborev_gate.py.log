@@ -1,0 +1,6 @@
+COMMAND: python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 1.958s
+
+OK

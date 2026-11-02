@@ -1,0 +1,358 @@
+$ git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back status --short --branch
+## spacedock-ensign/second-round-prompts-a-step-back
+
+$ git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back rev-parse HEAD origin/main
+0d8cb2b13be65d6cd8917d343797e8fa515e155f
+84e3e492e512efad6e8b5b5b9764e4b13eb8a445
+
+$ git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back worktree list --porcelain
+worktree /Users/kent/Project/kc-claude-workspace/kc-claude-plugins
+HEAD 3935988eb2cc4fe245b447096d8497877b3cfce4
+branch refs/heads/kc-pr-flow/review-only-daemon
+
+worktree /private/tmp/roster-adopt
+HEAD d5a565214a77dff58dde73437d1f877f271583a6
+branch refs/heads/chore/dev2-model-roster
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/agent-native-pr-review-runtime-prep
+HEAD 914458dbddd079e2bb543c56a38cbbf02c0a86ac
+branch refs/heads/iamcxa/agent-native-pr-review-runtime
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/agent-native-pr-review-runtime-prep/.claude/worktrees/002-agent-native-pr-review-runtime
+HEAD 22f04047b75a10f289cf94ee41668335eca70b51
+branch refs/heads/iamcxa/agent-native-pr-review-shadow
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-evidence-intake
+HEAD 5294632d210c0b7e2137e44fc1eaff8bd4887c2d
+branch refs/heads/iamcxa/kc-dev-flow-evidence-intake
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-modular-distribution
+HEAD ae519f0fa703f063c9e8ba5d043654ea079f255f
+branch refs/heads/codex/dev-flow-modular-distribution
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-pressure-main
+HEAD 5018deae9b614ae1b2a23e08580cd8b7a8f308dd
+detached
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-round1-eval
+HEAD 5018deae9b614ae1b2a23e08580cd8b7a8f308dd
+detached
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-round2-eval
+HEAD 5018deae9b614ae1b2a23e08580cd8b7a8f308dd
+detached
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-round3-eval
+HEAD 5018deae9b614ae1b2a23e08580cd8b7a8f308dd
+detached
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-round4-eval
+HEAD 22fe4e173fa98e4a781e15b2d5507a73a56a1190
+detached
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/dev-flow-test-strengthening
+HEAD d1ca2177cf0599607e3a28faabefc5b2872bbaaf
+branch refs/heads/iamcxa/kc-dev-flow-test-strengthening
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/e2e-browser-profile-lifecycle
+HEAD a219ca13e84566ac306be3cbd7d5c32ef357e536
+branch refs/heads/main
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/e2e-issue-promotion
+HEAD b85126a1c27e9de3335257c3b7e9061708be45cb
+branch refs/heads/feat/e2e-issue-promotion
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/fix-e2e-browser-runtime-isolation
+HEAD de2609cabafd70db04882bfe26697017e72c57ce
+branch refs/heads/fix/e2e-browser-runtime-isolation
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/fix-e2e-flow-managed-auth
+HEAD eba572a138bac96d66411db812feb2fcc6d286d3
+branch refs/heads/fix/e2e-flow-managed-auth
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/fix-e2e-runtime-ownership-services
+HEAD 02dedd85db154f66b120669a4c7891bf2b6121ac
+branch refs/heads/fix/e2e-runtime-ownership-services
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/fix-e2e-trace-finalization
+HEAD 83077f855163f5fc30cffe7da191a3da634984de
+branch refs/heads/fix/e2e-trace-finalization
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/fix-pr-185-policy-mod-selection
+HEAD 3d2e086a6105f56127f4d3e63a4e2a600f93969b
+branch refs/heads/iamcxa/fix-pr-185-policy-mod-selection
+
+worktree /Users/kent/.config/superpowers/worktrees/kc-claude-plugins/review-pr-193
+HEAD 9fc5878ffa7c30bd3dc8f12370d66c100aa083a1
+branch refs/heads/codex/fix-pr-193-review
+
+worktree /Users/kent/.paseo/worktrees/2cmr9mcu/kc-ops-inbox
+HEAD 0a1d59ce976c1e7b7483b4f1b5f791c6ffa8a962
+branch refs/heads/iamcxa/kc-ops-inbox
+
+worktree /Users/kent/conductor/repos/kc-claude-plugins-dev2-validation-uat
+HEAD 813d505e81a36dbbe65ffc0aa9076be475e294df
+branch refs/heads/feat/dev2-validation-uat
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins-journey-map
+HEAD 671a9a83b9fb6469aaef3b12955f58f07c5a9c6a
+branch refs/heads/kc-team-ops/journey-map
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/.harvest-journey-slicing
+HEAD ee9a5ac2d77c891bcd2316d749a760986473c406
+branch refs/heads/iamcxa/kc-dev-flow-journey-slicing
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/.wt-backlog-bar
+HEAD 10e48261c79b0401e8337f400d2665f1ddb805c9
+branch refs/heads/fix/kc-dev-flow-fo-relay-licence
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/.wt-dev2-adr
+HEAD 8cba4355099622636e5a8325b3815dce5fdb3683
+branch refs/heads/feat/dev2-decision-records
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/.wt-kernel-iterate
+HEAD da0eae84d37fefa66f85d679e911590c1b729999
+branch refs/heads/iamcxa/kernel-integrate-early
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/.wt-source-binding
+HEAD 254b2d2f169de0ea13df4e0234b2bcfc7ffb220b
+branch refs/heads/iamcxa/kernel-scope-spacedock
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/.wt-verify-binding
+HEAD 9826fd4a6d0dc2ccf52db59d3083dff34febfe22
+branch refs/heads/iamcxa/verify-binding
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/codex-model-policy
+HEAD 0ced054c1c927c5836c4e28a7f62d02f254c979f
+branch refs/heads/iamcxa/dev2-codex-model-policy
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+HEAD 4f6405504d9def9f8b5b7665c6accc91f281a716
+branch refs/heads/iamcxa/trim-kc-dev-flow-third
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/accept-run
+HEAD e4307131366c5573c02fc6f2d3db00c197964a11
+branch refs/heads/iamcxa/dev2-run-acceptance-script
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/dev2-docfix
+HEAD 9a11c24c5b729ba72c9a4784fcc84e9091ba189f
+branch refs/heads/iamcxa/dev2-dispatchable-and-adoption-discoverability
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/learning-a22107a3
+HEAD 32cd8890dbfb733d757ab2cd13fcaa57c69d383d
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/learning-efee0619
+HEAD 21057d5a64983f534cdbc4dd73b9454f956a454e
+branch refs/heads/learning/efee0619799d0c728a8fd9bd41ecc5fdcd97fbbfb4c8df6b326efa5c53c2b78a
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree
+HEAD 146727ded0d4ce8014ea0b41a45dc3409d6b269b
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-adr-required-statement
+HEAD b73a69c28b9f5e76137470e4d1e8fc101968571e
+branch refs/heads/spacedock-ensign/adr-required-statement
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-ops-inbox-r1-setup-and-isolation
+HEAD 7aa5ccad2b631400bd6ec8239f6c6c2f1d929d41
+branch refs/heads/spacedock-ensign/ops-inbox-r1-setup-and-isolation
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back
+HEAD 0d8cb2b13be65d6cd8917d343797e8fa515e155f
+branch refs/heads/spacedock-ensign/second-round-prompts-a-step-back
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check
+HEAD 0c06ae4e3883fa2876bd4effb73e4279ca378119
+branch refs/heads/spacedock-ensign/validation-gate-requires-the-question-check
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state
+HEAD 438554d2f89b6d125cf41413e7dc44bf290446e4
+branch refs/heads/spacedock-state/dev2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-poc-route
+HEAD a11707d5ec19ee34777c7bdeac4c4d100bc84857
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-poc-route/docs/dev2-poc/.spacedock-state
+HEAD 34732bd6f90ebe7bf4a2d02ea34d95e1e0db70d7
+branch refs/heads/spacedock-state/dev2-poc
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/kc-dev-flow-simplification/implementation-candidate
+HEAD 5de5778af340387c9d2a0dc76aa9950121690a0f
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/kc-dev-flow-simplification/learning-candidate
+HEAD 1e145b44cf8a60cb1838cb2e6cd73c29ae52d123
+branch refs/heads/feat/kc-dev-flow-2-local-learning
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/kc-dev-flow-simplification/learning-loop-candidate
+HEAD dd5845fa55d44dec6420bf29727cdb192fb4f97e
+branch refs/heads/feat/kc-dev-flow-2-learning-loop
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/kc-dev-flow-simplification/loader-test-prototype
+HEAD 19670c0d5904fdd1e4c5dcac7fe91fa4d442f432
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/kc-dev-flow-simplification/mechanism-candidate
+HEAD 2998121760905e6fc9dc1d64dc544cba32101cd9
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/kc-dev-flow-simplification/merged-candidate
+HEAD 2b9e1b221141d6129d8605b37af1f5178509304a
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/kc-dev-flow-simplification/package-candidate
+HEAD 9a71e611234b4cc79fe64aac1b27c9cc2caafcb8
+branch refs/heads/feat/kc-dev-flow-2-experimental
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/kc-dev-flow-simplification/survivor-evidence/migration-prototype
+HEAD e193829585226f5f15b40f5e24348d8a3e9f6272
+detached
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/paseo-fo-board
+HEAD dbee7baf562d16b1336d94294cdd783ffcda953d
+branch refs/heads/iamcxa/paseo-fo-board-relay
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/peers-ext
+HEAD 9931e449193e4b71a3408c8cb2ee648af0108e66
+branch refs/heads/iamcxa/dev2-peers-extension
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/dev-flow-382-repair
+HEAD dc4c8b13c0d86d81e4d79679d8ccb735117a9e52
+branch refs/heads/fix/kc-dev-flow-stage-pin-continuation
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/dev2-docs-site
+HEAD 75103df82b13fe346378325b4d714f380192ea29
+branch refs/heads/iamcxa/dev2-docs-site
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/fwd-bridge
+HEAD 3e1f5d82bc1693615f7fb18a1c6210cf887aced5
+branch refs/heads/feat/journey-forward-questions-docs
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/fwd-bridge-lib
+HEAD 9819cb08fbe72c1a5d87176c245618890edeb773
+branch refs/heads/feat/journey-forward-questions-lib
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/human-led-spine
+HEAD f3d93ab1f72f40c3f584b98782b02a9d513f5b8f
+branch refs/heads/feature/human-led-review-story-spine
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/journey-add-story
+HEAD c6b83aae28a39b958e78948a60e559bed2f228bc
+branch refs/heads/feat/journey-add-story
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/journey-page-index
+HEAD 5499760a2e9ec19f281fd6395ac3763cad632916
+branch refs/heads/fix/journey-map-release-page-index
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/journey-question-cards
+HEAD 03572e776475a3ffe6bfa10fe51e984701717b21
+branch refs/heads/feat/journey-question-cards
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-capability-pilot
+HEAD 0d2e3164ccd2d60006688c5443717b818825a305
+branch refs/heads/feature/kc-pr-review-capability-protocol-pilot
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-speed
+HEAD 8d9018416c4783d17ad7456f9264318cc46b0142
+branch refs/heads/feature/kc-pr-review-delta-fast-path
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr1
+HEAD 5ad8133d1ce123c8ee22aa2f9655e6cdd537f644
+branch refs/heads/feature/kc-pr-review-runtime-authority
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr1-r2
+HEAD 826a278b2d3ffc31aacb200dcc9bf2c58460ff16
+branch refs/heads/feature/kc-pr-review-runtime-authority-r2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr1-repin
+HEAD d266f0d6de9f8e7be9ce3fa15e99f241eea5e427
+branch refs/heads/feature/kc-pr-review-runtime-authority-repin
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr2
+HEAD ff7f44e9a7ca41494914bc75b9bd299d19b7362f
+branch refs/heads/feature/kc-pr-review-delta-routing
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr2-r2
+HEAD 0b7be45758aa62441db8863d2b3a464d75f79e06
+branch refs/heads/feature/kc-pr-review-delta-routing-r2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr2-repin
+HEAD 37343fc198ea7083c15f7471ea8d1b88f0c4c213
+branch refs/heads/feature/kc-pr-review-delta-routing-repin
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr3
+HEAD 3441a3f44db1e392f422ee5c233e09cef6612edc
+branch refs/heads/feature/kc-pr-review-evaluation
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr3-r2
+HEAD eed9f4f651c1829017ea0b64f995051eb61ee028
+branch refs/heads/feature/kc-pr-review-evaluation-r2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr3-repair
+HEAD e77d8c4fe6b5353ca5919344b06f02a1a9799d69
+branch refs/heads/feature/kc-pr-review-evaluation-rebuilt
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr3-repin
+HEAD 786056f63c9b66b80a232757b960c89133f2bcbe
+branch refs/heads/feature/kc-pr-review-evaluation-repin
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr4
+HEAD f4d8b36ac5f68cf96bda5cb7c105981ef19e464f
+branch refs/heads/feature/kc-pr-review-skill-slimming
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr4-historical
+HEAD 26de054685526e58e9e96f8649ff3d01250c8a56
+branch refs/heads/archive/kc-pr-review-skill-slimming-26de0546
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr4-r2
+HEAD 1bc473ff471dbce21aef9c0e1212be5c66856a7e
+branch refs/heads/feature/kc-pr-review-skill-slimming-r2
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr4-repair
+HEAD 9e57700a9c330f80b54ed273131177cd32ad863d
+branch refs/heads/feature/kc-pr-review-skill-slimming-rebuilt
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/kc-pr-review-stack-pr4-repin
+HEAD 39c8c080e94b6615e43fef3cf58be5684a440960
+branch refs/heads/feature/kc-pr-review-skill-slimming-repin
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v2
+HEAD 6bf62d1d7d3c343a97c973a7abd7424d03676437
+branch refs/heads/iamcxa/pr-review-flow-progress
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v2/.worktrees/spacedock-ensign-pr-review-lite-value-pilot
+HEAD 6bf62d1d7d3c343a97c973a7abd7424d03676437
+branch refs/heads/spacedock-ensign/pr-review-lite-value-pilot
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/plan-flow-392
+HEAD 61d366850edd698fc6314d8955eaebdb6dd0bcbe
+branch refs/heads/fix/ship-state-branch-from-the-checkout
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/pr384-contract-repair
+HEAD 408fd12bf2f1093efabe6e38e828a865464aa86b
+branch refs/heads/fix/kc-ship-flow-manifest-contract-pr384
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/rules-review-skill
+HEAD 126a1e55e25d478521565024402d7d8907e42f73
+branch refs/heads/iamcxa/workflow-scope-plugin-dev
+
+worktree /Users/kent/conductor/workspaces/kc-claude-plugins/wt-devflow-trunk-clause
+HEAD 5e939c7fd98d04b3854f126754a333185deabc53
+branch refs/heads/iamcxa/dev-flow-audit-trunk-target
+
+worktree /Users/kent/conductor/workspaces/subspace-relay/dhaka/.context/worktrees/kc-journey-map-xrepo
+HEAD a6696d9760ce9edb3503d0518265bb6d6623f044
+branch refs/heads/iamcxa/journey-map-cross-repo-evidence
+
+worktree /Users/kent/Project/kc-claude-workspace/.worktrees/kc-pr-review-architecture-diagrams
+HEAD 454d4ecbf47149da8b6e6729780515bf38a0171f
+branch refs/heads/feat/kc-pr-review-architecture-diagrams
+
+worktree /Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.worktrees/fix-resolve-state-slug
+HEAD e97b349b7bfc3d6cb88bbac288a7bebb283f7652
+branch refs/heads/fix/kc-pr-review-resolve-state-file-slug
+
+
+Validation and acceptance detached worktrees removed; assigned branch/head and tracked tree unchanged.

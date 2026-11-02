@@ -487,3 +487,42 @@ PASSED: candidate 1c0dbb540f354300b75dba5a119d2614c8fb0c02 satisfies AC-1 throug
 ### Summary
 
 This complete report supersedes both earlier implementation reports: Copilot's masking finding is reproduced and repaired under Captain amendment 1, with each count reaching its own advisory threshold and only one copy of the three questions when an owed line already carries them. One local follow-up commit contains the bounded repair and its tests; the full suite and refreshed proofs pass at 65e8f5a95bdb4cdc53235a862208caaded2ff403, while publication, exact-head review and fresh validation remain with FO.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #766 head 0d8cb2b1 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 0d8cb2b13be65d6cd8917d343797e8fa515e155f against fetched origin/main 84e3e492e512efad6e8b5b5b9764e4b13eb8a445; no Review-finding disposition findings; criterion evidence and limits: second-round-prompts-a-step-back/validation-2/details.md.
+- DONE: Base is main; #763, #764 and #765 are merged and this head contains main. Captain amendment 1 in the task file asked for the masking repair: judge it with its mutations. Re-judge the literal origin/main comparison in AC-6 as written, which a sibling's validator read differently, and run the whole suite CI runs. Do not start agents you were not asked to
+  Live PR/base/merged parents confirmed; main is an ancestor; literal standing-text diff is empty; 26/26 CI commands exit 0 (1,021 unittest cases, zero failures, seven skips), native CLI/source match CI 0.27.2; no agents spawned.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Six steps in validation-2/acceptance.sh executed unchanged by /bin/bash --noprofile --norc, exit 0; complete commands/expected/observed output in details.md. Loaded Codex package root takes precedence: its adr_lint.py docs/adr --since origin/main --require 0026 exits 0, 49 records; candidate literal AC-7 command also exits 0.
+- DONE: AC-1 — Two failed validations print the reminder; fewer print nothing
+  Three named historical commands and fenced/Deferred-risk controls pass; heading-count mutation fails and wrongly reminds at c03f77631; replays.log and AC-1-headings.log.
+- DONE: AC-2 — Two replacing amendments print the reminder; Supersedes: none does not count
+  Both named historical commands pass; Design-only/mixed-count controls pass; broad-event mutation fails, exit 1; AC-2-design-count.log.
+- DONE: AC-3 — The idle check surfaces the reminder without inventing a hold
+  Real checker through tasks passes live/first/archive fixtures and both repaired masking combinations; removing exit-0 forwarding fails, exit 1; test_pr_watch.py.log, consumer-replays.log and AC-3-idle-drop.log.
+- DONE: AC-4 — The merge check surfaces the reminder without holding
+  Real checker preserves reminder before record/ASK, ASK last and other problems; actual main/candidate first-occurrence output matches bytes; removing forwarding or turning advice into a problem each fails; test_delivery_gate.py.log and first-occurrence-merge-bytes.log.
+- DONE: AC-5 — The third time owes a chief-engineer call carrying the three questions, and holds the merge ask
+  Both named third-event revisions exit 1; date/model/waiver/fourth-event, one-line and committed-clearance cases pass; any-call mutation fails and wrongly clears 7d203d562; AC-5-undated-call.log.
+- DONE: Captain amendment 1 — independently trigger each count and deduplicate only emitted three-question lines
+  Both regressions fail on actual pre-repair 1c0dbb540; five repair mutations fail; counts 3/4 preserve the other count's second-occurrence reminder, and both consumers pass; masking-mutations.log and consumer-replays.log.
+- DONE: AC-6 — Nothing changes below the threshold and FO's standing text does not grow
+  Literal origin/main comparison is empty at this head, rather than inherited-parent substitution; three historical byte controls match; mod-line falsifier differs; wc -w gives 51/68/73 words, 79/84 with merge problem; checks.json and word-count logs.
+- DONE: AC-7 — ADR 0026 records the new events with the Captain's words
+  Both ideation replies/questions and D1–D3 match the gate; repair paragraph matches amendment 1; removing the paragraphs leaves these events unruled in manual comparison, distinct from structural ADR lint; details.md.
+- DONE: Required checks, affected documents, and retained-change necessity
+  Comment ratio 219 code / 0 comment / 0.0%; number guards and design surfaces pass; installed/candidate dispatch checkers each report seven complete records; ADR 0044/0049 unaffected for recorded reasons, ADR 0026 updated; all seven changed files serve behavior, falsifiers or the ruling.
+- DONE: Committed-task comparison and hosted evidence
+  State 438554d2f89b6d125cf41413e7dc44bf290446e4: 186 tasks, 13 changed outputs, all intended at approved thresholds; exact-head hosted checks all five SUCCESS; CI triggers unchanged, cost per PR not measured; corpus.log and pr-766.json.
+- SKIPPED: Exact-head RoboRev, natural FO behavior, gate approval and product delivery
+  RoboRev remains delegated to FO; old-head daemon failures provide no current verdict. Real human response/dispatch quality, adoption and merge are outside the proved script/fixture boundary; accepted limitations are re-judged in details.md.
+- DONE: Preserve product bytes and remove the detached throwaway checkout
+  Original branch/head and tracked tree unchanged; validation and acceptance detached worktrees removed; no shared git configuration writes or product mutations; cleanup.log.
+
+### Summary
+
+PASSED at 0d8cb2b13be65d6cd8917d343797e8fa515e155f: AC-1 through AC-7 and Captain amendment 1 are met at the accepted Pilot depth, including the literal main comparison, full suite and independent masking falsifiers. This second validation replaces the old-head conclusion for the current candidate; FO retains exact-head review, gate and delivery authority.
+

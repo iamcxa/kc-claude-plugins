@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_two_failed_reports_count_once_each_and_passing_reports_do_not_count (__main__.StepBackTest.test_two_failed_reports_count_once_each_and_passing_reports_do_not_count) (findings=('- F1 Material: gap\n- F2 Needs decision: another gap', '- DONE: passed', '- DONE: passed'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back/.context/validation-2-evidence/mutations/AC-1-headings/scripts/test_role_triggers.py", line 358, in test_two_failed_reports_count_once_each_and_passing_reports_do_not_count
+    self.assertEqual(code, 0, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : next: some-task has 3 validations with a Material or Needs decision finding; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.780s
+
+FAILED (failures=1)

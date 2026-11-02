@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_two_replacements_still_remind_after_validation_event_is_cleared (__main__.StepBackTest.test_two_replacements_still_remind_after_validation_event_is_cleared)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back/.context/validation-2-evidence/masking-mutations/before-repair/test_role_triggers.py", line 397, in test_two_replacements_still_remind_after_validation_event_is_cleared
+    self.assertIn("before the next step", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'before the next step' not found in 'role triggers: 3 event(s) read at HEAD, each with a call or a waiver.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.180s
+
+FAILED (failures=1)

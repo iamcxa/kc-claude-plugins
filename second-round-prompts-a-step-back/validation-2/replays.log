@@ -1,0 +1,25 @@
+paseo-codex-dispatch-practice e0dc64f886cf80e7579551a4002a05b4c603f1c9 exit=0 words=[51]
+next: paseo-codex-dispatch-practice has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?
+
+paseo-codex-dispatch-practice 1e17be9a0734eb1b122b83335bb7ff96a3a331cb exit=0 words=[]
+role triggers: 0 event(s) read at 1e17be9a0734eb1b122b83335bb7ff96a3a331cb, each with a call or a waiver.
+
+adr-reserved-when-design-names-one c03f77631e6fa06afdaa275ecb3f05559314f9c6 exit=0 words=[]
+role triggers: 0 event(s) read at c03f77631e6fa06afdaa275ecb3f05559314f9c6, each with a call or a waiver.
+
+read-adr-honors-adr-folder 95c1ecc8b1f0477c8c986ee2895b00e8d105b69e exit=0 words=[51]
+next: read-adr-honors-adr-folder has 1 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?
+
+peers-paseo-rule-matches-practice ff2063c539a2fbf8c446797d7051fc34c406aff9 exit=0 words=[51]
+next: peers-paseo-rule-matches-practice has 1 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?
+
+paseo-codex-dispatch-practice 0e5b6f59a8e5a067b2739bf1b78863d96399240f exit=1 words=[73]
+next: paseo-codex-dispatch-practice has 3 validations with a Material or Needs decision finding; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.
+
+peers-paseo-rule-matches-practice 7d203d562789a107d651f3169b6a89b153024d33 exit=1 words=[68]
+next: peers-paseo-rule-matches-practice has 3 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.
+
+peers-paseo-rule-matches-practice f0203ee02 exit=0 words=[]
+role triggers: 0 event(s) read at f0203ee02, each with a call or a waiver.
+
+First-occurrence bytes equal base in three historical replays.

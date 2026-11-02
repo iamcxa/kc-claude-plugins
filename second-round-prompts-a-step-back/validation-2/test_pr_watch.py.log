@@ -1,0 +1,9 @@
+COMMAND: python3 kc-dev-flow-2/scripts/test_pr_watch.py
+................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+                        {add,check,wait,tasks} [args ...]
+test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+..................................................................................................
+----------------------------------------------------------------------
+Ran 130 tests in 82.779s
+
+OK
