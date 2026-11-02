@@ -12,9 +12,9 @@ waiver clears, as before.
 Engineering-reviewer is owed for each `### Amendment N` under `## Captain amendments` whose `Supersedes:` or
 `Design:` value does not start with `none`; one line per task, on fable when the frontmatter says `profile: prod`
 or the `Surfaces:` line under `## FO alignment` lists `db`, else on opus. Fenced blocks are skipped everywhere.
-A call is `Reviewer: <agent> <model> <date> — <question>` whatever the question says. A chief-engineer call or
-waiver clears the repair event, with no date test: a stage-report heading has no date. For engineering-reviewer a call dated no earlier than an amendment, on a model
-ranked haiku < sonnet < opus < fable by its leading word and no lower than the one required, or a waiver
+A call is `Reviewer: <agent> <model> <date> — <question>` whatever the question says. A chief-engineer call at opus rank or above, or a
+waiver, clears the repair event with no date test: a stage-report heading has no date. For engineering-reviewer a call dated no earlier than an amendment, on a model
+ranked haiku < sonnet < opus < fable = astra by its first recognized word and no lower than the one required, or a waiver
 `Reviewer: <agent> not run <date>: <reason>` dated no earlier than it, clears that amendment.
 Records count only under `## FO alignment` and its subheadings; a call written under another heading leaves the
 event owed and adds a `next:` line naming that heading.
@@ -46,7 +46,8 @@ SURFACES_DB = re.compile(r"^Surfaces:.*\bdb\b", re.M)
 MARK = r"(?:-[ \t]+)?Reviewer:[ \t]*(?:kc-dev-flow-2:)?"
 REPAIRS, REVIEW_ROUNDS = 4, 2
 ROUND_DATE = re.compile(rf"^{DATE.pattern}(?=T)")
-RANK = {"haiku": 0, "sonnet": 1, "opus": 2, "fable": 3}
+# see docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md
+RANK = {"haiku": 0, "sonnet": 1, "opus": 2, "fable": 3, "astra": 3}
 
 QUESTION = {
     "chief-engineer": "what is the smallest next step, given the findings so far?",
@@ -174,8 +175,7 @@ def records(lines, agent):
 
 
 def rank(model):
-    word = re.match(r"[a-z]+", model.lower())
-    return RANK.get(word.group(0), -1) if word else -1
+    return next((RANK[word] for word in re.findall(r"[a-z]+", model.lower()) if word in RANK), -1)
 
 
 def misplaced(lines, agent):
@@ -214,6 +214,7 @@ def check(state, slug, rev, rounds=None, drift=None):
     if repairs >= REPAIRS or (rounds or 0) >= REVIEW_ROUNDS:
         seen += 1
         calls, waivers = records(kept, "chief-engineer")
+        calls = [(model, made) for model, made in calls if rank(model) >= RANK["opus"]]
         dated = [made for _, made in calls] + [waived for waived in waivers if waived]
         repair_owed = repairs >= REPAIRS and not (calls or waivers)
         rounds_owed = (rounds or 0) >= REVIEW_ROUNDS and not (
@@ -222,7 +223,7 @@ def check(state, slug, rev, rounds=None, drift=None):
             found = [f"{repairs} repair passes"] * repair_owed + [f"{rounds} review rounds"] * rounds_owed
             if rounds_owed and drift:
                 found[-1] += f", the newest on {drift}"
-            owed.append(owed_line(slug, "chief-engineer", "has " + " and ".join(found), waived=" <date>" if drift else ""))
+            owed.append(owed_line(slug, "chief-engineer", "has " + " and ".join(found), "on opus or gpt-6-astra ", waived=" <date>" if drift else ""))
             owed += [hint(slug, "chief-engineer", h) for h in [misplaced(lines, "chief-engineer")] if h]
     if amendments:
         seen += len(amendments)
@@ -236,10 +237,10 @@ def check(state, slug, rev, rounds=None, drift=None):
                 open_numbers.append(str(number))
         if open_numbers:
             basis = ", ".join(name for name, on in zip(("profile prod", "Surfaces db"), strong) if on)
-            where = f"on {need}{f' ({basis})' if basis else ''} "
+            where = f"on {need} or gpt-6-astra{f' ({basis})' if basis else ''} "
             plural = "s" * (len(open_numbers) > 1)
             happened = f"has replacing amendment{plural} {', '.join(open_numbers)}"
-            owed.append(owed_line(slug, "engineering-reviewer", happened, where, need, " <date>"))
+            owed.append(owed_line(slug, "engineering-reviewer", happened, where, waived=" <date>"))
             owed += [hint(slug, "engineering-reviewer", h) for h in [misplaced(lines, "engineering-reviewer")] if h]
     if owed:
         return 1, "\n".join(owed)

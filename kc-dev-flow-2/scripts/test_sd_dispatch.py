@@ -310,12 +310,15 @@ FIXES = {
         swaps=((r"A decision an accepted ADR already settles is not asked again:.*?never a `Precedent:` line\. ", ""),)),
     "reviewer-record": dict(
         need=("`Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.",
-              "`kc-dev-flow-2:observer` run on the model and reasoning their agent files declare"),
+              "`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer`, `kc-dev-flow-2:design-director` and `kc-dev-flow-2:observer` run on its `## Model table` row, never cheaper.",
+              "use a different family from implementation workers or ask the Captain"),
         old=("FO never dispatches them on a cheaper model",),
-        swaps=((r"`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and `kc-dev-flow-2:observer` run on.*?<date> — <question>`; `<package>/scripts/role_triggers\.py` lists calls owed\.",
+        swaps=((r"`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer`, `kc-dev-flow-2:design-director` and `kc-dev-flow-2:observer` run on.*?<date> — <question>`; `<package>/scripts/role_triggers\.py` lists calls owed\.",
                 "`kc-dev-flow-2:chief-engineer` and `kc-dev-flow-2:engineering-reviewer` run on the "
                 "model and reasoning their agent files declare; FO never dispatches them on a "
-                "cheaper model, because their value is a stronger second judgment."),)),
+                "cheaper model, because their value is a stronger second judgment."),
+               (r"use a different family from implementation workers or ask the Captain",
+                "use a different family from all workers or ask the Captain"))),
     "adr-recommended": dict(
         file="skills/implementation/principles.md",
         need=("the options considered and the option recommended inside Decision",

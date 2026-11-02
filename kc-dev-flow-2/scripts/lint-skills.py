@@ -193,16 +193,22 @@ def lint_tree(root, basic_lint=BASIC_LINT):
         if set(rows) != set(PROFILES):
             errors.append(f"{stage}: profile coverage must be poc, pilot, prod")
 
+    # see docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md
+    roster = read(root / "references/model-roster.md")
+    table = re.search(r"^## Model table\n(.*?)(?=^## |\Z)", roster, re.M | re.S)
+    cells = dict(re.findall(r"^\| ([a-z-]+) \| ([^|]+?) \|[^\n]*\|$", table[1], re.M)) if table else {}
     for role, policy in AGENT_MODELS.items():
+        if cells.get(role) != f"{policy[0].title()} / {policy[1]}":
+            errors.append(f"model table: {role} Claude cell differs from agent policy")
         body = read(root / "agents" / f"{role}.md")
-        fields = dict(re.findall(r"^(skills|model|reasoning): (.+)$", body, re.MULTILINE))
+        fields = dict(re.findall(r"^(skills|model|effort): (.+)$", body, re.MULTILINE))
         try:
             calls = json.loads(fields.get("skills", "null"))
         except json.JSONDecodeError:
             calls = None
         if calls != [f"{VARIANT}:{role}"]:
             errors.append(f"{role} agent: expected exact variant skill binding")
-        if (fields.get("model"), fields.get("reasoning")) != policy:
+        if (fields.get("model"), fields.get("effort")) != policy:
             errors.append(f"{role} agent: existing {policy[0]}/{policy[1]} policy changed")
     errors += workflow_size_and_duplicates(root)
     errors += chat_only_errors(root)

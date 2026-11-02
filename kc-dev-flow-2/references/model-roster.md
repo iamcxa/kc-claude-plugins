@@ -1,5 +1,24 @@
 # Repository stage workers
 
+## Model table
+
+<!-- see docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md -->
+
+| Role | On Claude | On Codex |
+|---|---|---|
+| implementation | Sonnet / high | Sol / xhigh |
+| chief-engineer | Opus / xhigh | Astra / xhigh |
+| engineering-reviewer | Opus / xhigh | Astra / xhigh |
+| design-director | Sonnet / high | Sol / xhigh |
+| ideation | Opus / high | Astra / xhigh |
+| validation | Opus / high | Astra / xhigh |
+| observer | Sonnet / high | Sol / high |
+
+For Codex, pass the model and Paseo `settings.thinkingOptionId` by hand.
+Chief-engineer and engineering-reviewer run on a family other than the
+implementation workers'. Stage-worker effort has no Spacedock dispatch field;
+`dispatch-sets-reasoning-effort` owns that remaining seam.
+
 ## Adoption and introducing sync
 
 Preserve an existing `.dev2/model-roster.json`; startup and ordinary sync do not
@@ -74,5 +93,5 @@ alone is insufficient. Missing decisive evidence returns to FO.
 
 FO and special roles retain current model floors, triggers and delivery duties,
 including the Paseo worker-local commit and FO publication/review split. This
-slice adds no personal store, capacity automation, new law, special-role hosting,
+slice adds no personal store, capacity automation, new law,
 native adapter or additional provider.

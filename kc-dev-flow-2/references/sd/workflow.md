@@ -18,6 +18,7 @@ stages:
       initial: true
       gate: true
     - name: ideation
+      model: opus
       gate: true
       context-sections:
         - Dispatch facts
@@ -31,6 +32,7 @@ stages:
         - Affected documents
         - Number guards
     - name: validation
+      model: opus
       worktree: true
       fresh: true
       feedback-to: implementation
@@ -78,14 +80,12 @@ At each next gate, wait for every member's sufficient committed evidence, then p
 
 `<package>/scripts/pr_watch.py tasks` sitting hints remain subject to this boundary; stage alone joins neither unrelated tasks nor incomplete batches. Unbatched tasks retain ordinary gates.
 
-When requested, chief-engineer reviews the complete package/process batch before briefing bindings; engineering-reviewer handles contested hard-to-reverse claims. Give committed task files/artifact links, not FO's suspicions/conclusions. Record reviewer/model/evidence; use a different family from all workers or ask the Captain. Review advises, without approval authority.
+When requested, chief-engineer reviews the complete package/process batch before briefing bindings; engineering-reviewer handles contested hard-to-reverse claims. Give committed task files/artifact links, not FO's suspicions/conclusions. Record reviewer/model/evidence; use a different family from implementation workers or ask the Captain. Review advises, without approval authority.
 
 ## Stages
 
 Stage workers follow `<package>/references/model-roster.md`; absence retains README defaults.
-`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and
-`kc-dev-flow-2:observer` run on the model and reasoning their agent files declare, never
-a cheaper one. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
+`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer`, `kc-dev-flow-2:design-director` and `kc-dev-flow-2:observer` run on its `## Model table` row, never cheaper. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
 `Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.
 
 `concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an
