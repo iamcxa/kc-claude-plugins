@@ -1,0 +1,56 @@
+[
+  {
+    "name": "adr",
+    "command": "python3 '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py' docs/adr --since '3c49c24a3eba3d90093f330c051b682a3335ae23' --require 0026",
+    "chunk_id": "2cec30",
+    "wall_time_seconds": 0.415835083,
+    "exit_code": 0,
+    "original_token_count": 9,
+    "output": "49 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "docs",
+    "command": "python3 '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py' '3c49c24a3eba3d90093f330c051b682a3335ae23' '1c0dbb540f354300b75dba5a119d2614c8fb0c02'",
+    "chunk_id": "189db4",
+    "wall_time_seconds": 0.453684167,
+    "exit_code": 0,
+    "original_token_count": 85,
+    "output": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md\treview\tkc-dev-flow-2/scripts/delivery_gate.py\ndocs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md\treview\tkc-dev-flow-2/scripts/role_triggers.py\n2 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+  },
+  {
+    "name": "design",
+    "command": "python3 '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py' check '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/second-round-prompts-a-step-back.md'",
+    "chunk_id": "590cb7",
+    "wall_time_seconds": 0.346611083,
+    "exit_code": 0,
+    "original_token_count": 30,
+    "output": "second-round-prompts-a-step-back.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  },
+  {
+    "name": "comments",
+    "command": "python3 '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py' '3c49c24a3eba3d90093f330c051b682a3335ae23' '1c0dbb540f354300b75dba5a119d2614c8fb0c02' --workflow-dir '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2'",
+    "chunk_id": "8c0bc2",
+    "wall_time_seconds": 0.362634333,
+    "exit_code": 0,
+    "original_token_count": 18,
+    "output": "code lines 185, comment lines 0, 0.0%\nmaximum 5% (package default) met\n"
+  },
+  {
+    "name": "numbers",
+    "command": "python3 '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py' check --repo '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back/.context/validation-1-worktree' --workflow-dir '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2' --task '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/second-round-prompts-a-step-back.md' --base '3c49c24a3eba3d90093f330c051b682a3335ae23' --head '1c0dbb540f354300b75dba5a119d2614c8fb0c02'",
+    "chunk_id": "04b7b9",
+    "wall_time_seconds": 0.448353333,
+    "exit_code": 0,
+    "original_token_count": 33,
+    "output": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 3c49c24a3eba head 1c0dbb540f35 merge-base 3c49c24a3eba\n"
+  },
+  {
+    "name": "dispatch",
+    "command": "python3 '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py' '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/second-round-prompts-a-step-back'",
+    "chunk_id": "55ce30",
+    "wall_time_seconds": 0.35811025,
+    "exit_code": 1,
+    "original_token_count": 66,
+    "output": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\nimplementation-1.md: needs a scope-notes line naming main as the completion recipient\nvalidation-1.md: needs a scope-notes line naming main as the completion recipient\n"
+  }
+]

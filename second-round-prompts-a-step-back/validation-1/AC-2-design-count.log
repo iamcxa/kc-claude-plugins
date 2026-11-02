@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_only_superseding_amendments_count_and_the_two_counts_stay_separate (__main__.StepBackTest.test_only_superseding_amendments_count_and_the_two_counts_stay_separate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back/.context/validation-1-evidence/mutations/AC-2-design-count/scripts/test_role_triggers.py", line 378, in test_only_superseding_amendments_count_and_the_two_counts_stay_separate
+    self.assertEqual("before the next step" in out, expected, out)
+AssertionError: True != False : next: some-task has 0 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.307s
+
+FAILED (failures=1)

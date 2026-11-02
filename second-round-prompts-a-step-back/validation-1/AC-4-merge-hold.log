@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_second_failure_prints_questions_before_ask_without_holding_and_with_other_problems (__main__.OwedRoleCallTests.test_second_failure_prints_questions_before_ask_without_holding_and_with_other_problems)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back/.context/validation-1-evidence/mutations/AC-4-merge-hold/scripts/test_delivery_gate.py", line 1390, in test_second_failure_prints_questions_before_ask_without_holding_and_with_other_problems
+    self.assertEqual(result.code, 0, result.out)
+AssertionError: 1 != 0 : next: task has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.285s
+
+FAILED (failures=1)

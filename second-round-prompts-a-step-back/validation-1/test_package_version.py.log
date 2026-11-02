@@ -1,0 +1,6 @@
+COMMAND: python3 kc-dev-flow-2/scripts/test_package_version.py
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.003s
+
+OK

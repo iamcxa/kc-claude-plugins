@@ -1,0 +1,24 @@
+F
+======================================================================
+FAIL: test_second_failed_validation_is_advisory_live_and_silent_archived (__main__.TasksTests.test_second_failed_validation_is_advisory_live_and_silent_archived)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-second-round-prompts-a-step-back/.context/validation-1-evidence/mutations/AC-3-idle-drop/scripts/test_pr_watch.py", line 1467, in test_second_failed_validation_is_advisory_live_and_silent_archived
+    self.assertEqual((code, len(lines)), (0, 1), lines)
+AssertionError: Tuples differ: (0, 0) != (0, 1)
+
+First differing element 1:
+0
+1
+
+- (0, 0)
+?     ^
+
++ (0, 1)
+?     ^
+ : []
+
+----------------------------------------------------------------------
+Ran 1 test in 1.001s
+
+FAILED (failures=1)

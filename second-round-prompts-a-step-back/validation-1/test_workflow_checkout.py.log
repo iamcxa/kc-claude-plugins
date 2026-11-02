@@ -1,0 +1,6 @@
+COMMAND: python3 kc-dev-flow-2/scripts/test_workflow_checkout.py
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 7.258s
+
+OK

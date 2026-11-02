@@ -1,0 +1,10 @@
+Candidate: 1c0dbb540f354300b75dba5a119d2614c8fb0c02
+Stack base: 3c49c24a3eba3d90093f330c051b682a3335ae23
+Original task bytes: 92dbf1d32c7142e010fad6a7d9807a17ae0ce240
+docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md
+kc-dev-flow-2/scripts/delivery_gate.py
+kc-dev-flow-2/scripts/pr_watch.py
+kc-dev-flow-2/scripts/role_triggers.py
+kc-dev-flow-2/scripts/test_delivery_gate.py
+kc-dev-flow-2/scripts/test_pr_watch.py
+kc-dev-flow-2/scripts/test_role_triggers.py

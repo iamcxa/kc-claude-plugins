@@ -1,0 +1,27 @@
+Preparing worktree (detached HEAD 1c0dbb540)
+HEAD is now at 1c0dbb540 Merge remote-tracking branch 'origin/spacedock-ensign/model-roster-question-needs-both-families' into spacedock-ensign/second-round-prompts-a-step-back
+STEP 1 PASS: exact candidate and integrated parent
+next: paseo-codex-dispatch-practice has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?
+STEP 2 PASS: exit 0
+next: peers-paseo-rule-matches-practice has 1 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?
+STEP 3 PASS: exit 0
+next: peers-paseo-rule-matches-practice has 3 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.
+STEP 4 PASS: exit 1 is the expected hold
+......
+----------------------------------------------------------------------
+Ran 6 tests in 5.173s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.734s
+
+OK
+..
+----------------------------------------------------------------------
+Ran 2 tests in 2.019s
+
+OK
+STEP 5 PASS: thresholds and both consumers
+49 ADR file(s) checked, 0 legacy
+STEP 6 PASS: ADR, standing text, clean candidate

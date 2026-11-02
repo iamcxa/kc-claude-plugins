@@ -399,3 +399,41 @@ The approved questions now reach idle and merge checks at the second occurrence,
 ### Summary
 
 This complete report supersedes the earlier implementation report: the inherited README test failure is repaired, and the entire CI suite now passes locally at 1c0dbb540f354300b75dba5a119d2614c8fb0c02. Behavior proofs and required checks were refreshed without changing product bytes; exact-head RoboRev and further workflow decisions remain with FO.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #766 head 1c0dbb54 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 1c0dbb540f354300b75dba5a119d2614c8fb0c02; no findings under Review-finding disposition; per-criterion evidence and accepted limits: second-round-prompts-a-step-back/validation-1/details.md.
+- DONE: Stacked on PR #765 at its current head. Run the whole suite the CI job runs. Do not start agents you were not asked to
+  Live parent 3c49c24a3eba3d90093f330c051b682a3335ae23 is integrated; detached candidate: 26/26 CI commands exit 0, 1,018 unittest cases, zero failures, seven skips, plus native dispatch/recovery on CI's 0.27.2 pin; no agents started; exact commands/logs: validation-1/run-suite.py and suite-results.txt.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Six steps in validation-1/acceptance.sh, run unchanged by /bin/bash --noprofile --norc, exit 0; full commands/expected/observed output in details.md. Loaded Codex package root takes precedence over the dispatch's Claude cache: adr_lint.py docs/adr --since 3c49c24a3 --require 0026 exits 0, 49 records; literal --since origin/main also exits 0.
+- DONE: AC-1 — Two failed validations print the reminder; fewer print nothing
+  Three named historical revisions and fenced/Deferred-risk fixtures pass; heading-count mutant fails and wrongly reminds at c03f77631; replays.log and AC-1-headings.log.
+- DONE: AC-2 — Two replacing amendments print the reminder; Supersedes: none does not count
+  Both named replacing-amendment replays pass; Design-only/mixed-count controls pass; broad-events mutant fails, exit 1; AC-2-design-count.log.
+- DONE: AC-3 — The idle check surfaces the reminder without inventing a hold
+  Real role checker through tasks passes live/first/archive cases, exit 0; dropping exit-0 forwarding fails, exit 1; test_pr_watch.py.log and AC-3-idle-drop.log.
+- DONE: AC-4 — The merge check surfaces the reminder without holding
+  Real checker keeps advisory before record/ASK, preserves other problems and first-occurrence output; dropping forwarding or turning advisory into a problem each fails; test_delivery_gate.py.log and AC-4-merge-*.log.
+- DONE: AC-5 — The third time owes a chief-engineer call carrying the three questions, and holds the merge ask
+  Both named third-event replays exit 1; date/model/waiver/fourth-event and committed-clearance cases pass; undated-amendment-call mutant fails and wrongly clears 7d203d562; AC-5-undated-call.log.
+- DONE: AC-6 — Nothing changes below the threshold and FO's standing text does not grow
+  Three base/candidate byte comparisons pass; workflow/mod unchanged against parent; added-mod-line control differs; wc -w gives 51/68/73 (79/84 with merge problem). Literal origin/main contains eight inherited workflow lines, not changes from this task.
+- DONE: AC-7 — ADR 0026 records the new events with the Captain's words
+  Manually matched both Captain replies/questions and the three decisions to the final amendment; omitted-amendment copy leaves new events unruled, as expected; ADR lint is structural, not proof of that semantic comparison.
+- DONE: Required checks, affected documents, and every retained change's purpose
+  comments 185 code / 0 comment / 0.0%; number guards and design surfaces exit 0; ADR 0044/0049 unaffected for recorded reasons, ADR 0026 updated; seven files serve event counting, both consumers, falsifiers, and the decision record.
+- DONE: Corpus comparison and current hosted evidence
+  State 4b7b297dfd1000f9cb3d0ec59e952533287eeb89: 186 tasks, 12 changed outputs, all at approved thresholds; PR #766 exact head and parent each have five SUCCESS checks; CI trigger unchanged, cost per PR not measured.
+- DONE: Reconcile installed-tool compatibility with the accepted stack
+  Installed 0.34.0 dispatch checker exits 1 on three final-reply records; the candidate's ADR-0048-aware checker exits 0, five records complete. This old-package limit is not a candidate defect; checks.json and candidate-dispatch-records.log.
+- SKIPPED: Exact-head RoboRev, natural FO behavior, approval and product delivery
+  RoboRev remains delegated to FO; the older daemon failure is not current evidence. Script/fixture proof does not establish answer quality, a real reviewer asking the questions, merge or adoption.
+- DONE: Preserve product bytes and remove the detached throwaway checkout
+  Original branch/head and tracked files unchanged; validation and acceptance worktrees removed. Only this entity's report/evidence is committed through the dispatched state helper.
+
+### Summary
+
+PASSED: candidate 1c0dbb540f354300b75dba5a119d2614c8fb0c02 satisfies AC-1 through AC-7 at the approved Pilot depth; goal sufficiency and minimal necessity are supported by the same replay and mutation evidence. Accepted count/clearance limits and local-versus-hosted boundaries are detailed in validation-1/details.md; FO retains exact-head review, gate and delivery decisions.
+

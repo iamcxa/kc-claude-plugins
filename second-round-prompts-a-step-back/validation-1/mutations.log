@@ -1,0 +1,10 @@
+AC-1-headings: test rejected mutation, exit 1
+AC-1: c03f77631 wrongly prints the reminder under the headings mutation.
+AC-2-design-count: test rejected mutation, exit 1
+AC-3-idle-drop: test rejected mutation, exit 1
+AC-4-merge-drop: test rejected mutation, exit 1
+AC-4-merge-hold: test rejected mutation, exit 1
+AC-5-undated-call: test rejected mutation, exit 1
+AC-5: 7d203d562 wrongly clears chief-engineer under the undated-call mutation.
+AC-6: a mod-line mutation yields a nonempty diff, exit 1; candidate standing-text diff is empty against assigned base.
+AC-7: omitted-amendment copy lacks the new event ruling; manual comparison against the two ideation gate records detects it (not a machine verdict).

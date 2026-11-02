@@ -1,0 +1,6 @@
+COMMAND: python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py
+.......................
+----------------------------------------------------------------------
+Ran 23 tests in 0.206s
+
+OK
