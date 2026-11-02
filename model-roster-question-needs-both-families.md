@@ -507,3 +507,48 @@ This complete report supersedes the earlier implementation report and corrects i
 
 Validation cycle 2 rejects exact head 520173225 for incomplete AC-6 evidence, with no demonstrated scoped product defect. Parent ancestry, the literal origin/main condition and quoted-block repair are now verified; local checks and the five-step acceptance pass. Product bytes stayed unchanged, the detached validation checkout was removed, and FO retains the evidence, gate and delivery decisions.
 
+
+## Stage Report: implementation
+
+- DONE: Captain amendment 2 — one shared extensions-list reader for model_roster.py and dispatch_records.py, covering inline/block lists, quotes and trailing comments.
+  `workflow_extensions.readme_extensions` (shared parser for workflow extension lists) is imported by the roster question and both dispatch membership sites, including extension-instruction checks. The one new module uses only stdlib and the existing decision-ledger helpers; no dependency was added.
+- DONE: Three known defects become failing mutations: inline comment naming paseo, quoted block item, and trailing comment on a block item.
+  `/tmp/roster-list-reader-repair/mutations.log`: each mutation fails the roster CLI matrix and makes the dispatch checker return the wrong verdict. All run with python3 -B and copied caches excluded; raw evidence/results: `/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/shared-extension-mutations-zyw3yotb`.
+- DONE: Empty list and no key are controls; both callers exercise the supported list forms and unchanged files.
+  Public subprocess tests cover all bare/single/double-quoted inline/block forms with/without comments, exact names, hash/comma inside quoted names, empty/no-key controls, legacy/final-reply completion and roborev instruction membership. Manifest comparisons pass; empty/no-key controls also pass under all three mutants.
+- DONE: Run the whole suite the CI job runs.
+  All 26 commands from `.github/workflows/kc-dev-flow-2-tests.yml` exit 0: `/tmp/roster-list-reader-repair/ci/results.json` and per-script logs. Local Darwin CLI 0.27.2 and plugin source pinned by CI at `4d158a484ec73e184861067f8ed1e20087fdc26a`; tested digests match the committed source.
+- SKIPPED: Seven cases disabled by existing suite environment conditions.
+  Four amendment-corpus/history cases, one Node/yaml bridge, one optional dispatch-builder case, and one external-obligation corpus case; 1009 unittest cases reported including those skips. No skip condition or CI trigger changed.
+- DONE: One follow-up commit on the assigned branch, only the amended file list, without a version bump or product push.
+  Repair base `52017322520dea243f982a015efa7747f8c05c9f`; candidate `c2643dae831f9685166b7cd564d8d885e88a3f21`; branch `spacedock-ensign/model-roster-question-needs-both-families`. Four files changed: workflow_extensions.py, model_roster.py, dispatch_records.py and test_sd_dispatch.py under kc-dev-flow-2/scripts; product tree clean.
+- DONE: Reproduce the missing behavior before fixing it.
+  `/tmp/roster-list-reader-repair/red.log`: current code rejects a valid inline list with a trailing comment, test exit 1. `green.log`: both caller matrix and complete roster replay pass, exit 0; the three mutations above independently restore the known defects.
+- DONE: AC-1 and AC-7 — conditional question and absence compatibility remain green locally.
+  The original eight prerequisite combinations, no-write manifests, malformed/empty/unavailable inputs, existing/absent/deleted/linked rosters and both family-wording mutations pass; the shared-reader matrix adds the repaired list/comment forms without changing roster settings.
+- DONE: AC-2 to AC-5 — provider/model/effort validation, recommendation, option IDs and author-family behavior retain their local coverage.
+  Committed subprocess fixtures still check all six efforts, wrong pairings/Sonnet refusal, Opus/high + Sol/xhigh + Astra/xhigh, ultra-to-ultracode/null absence, OpenAI/Anthropic/mixed/unknown authors and Claude headers. Earlier live capability evidence is retained; no new child-runtime claim is made.
+- DONE: AC-8 — ADR 0050 and the superseded 0047 pointer remain valid.
+  Package ADR lint against main `e891e83582ac10936ffd67fb083b530b009ad847`, requiring 0050: exit 0, 49 records. No ADR, reservation, protected pointer or human ruling changed in this repair.
+- DONE: AC-9 — local package gates pass and the literal origin/main workflow diff is empty.
+  Main pin e891e835; `git diff --stat origin/main HEAD -- kc-dev-flow-2/references/sd/workflow.md` is empty, skill lint stays 5781/5781 words, release parity exits 0. All required CI commands ran after the final source change.
+- DONE: AC-11 — provider-host builds retain the model/bootstrap and D5 text assertions.
+  The CI-pinned Spacedock replay emits opus/Claude bootstrap for ideation and null/Codex bootstrap for implementation/validation, and runs the two D5 text mutations. No workflow or dispatch envelope was edited.
+- SKIPPED: AC-6 — the four real agents and matched runtime/completion evidence requested by amendment 2.
+  FO owns those reruns and fresh validation at this new candidate; this implementation worker started no agents. Parent merge ancestry remains present through e891e835; neither old native summaries nor this local suite substitutes for the required new runtime/control/receipt evidence.
+- SKIPPED: AC-10 — FO's released-package update of #762 and Captain merge request remain post-release work.
+  No release, predicted version, consumer edit or merge request is claimed.
+- DONE: Captain amendments 1 and 2 retain the original acceptance conditions.
+  Both say `Supersedes: none`; no criterion was moved or relaxed. Amendment 2 authorizes the shared module and dispatch_records.py; its native rerun and independent-validation obligations remain with FO.
+- DONE: Compare the changed dispatch-checker mode against main on committed task files, per learning.md.
+  Main e891e835 versus this candidate's folder mode, using state commit `dee92bdc0cad3f9a546c39f7820053c20f3dc2b4`: 190 tasks, zero changed exit codes/messages. `/tmp/roster-list-reader-repair/corpus.log`; raw results `/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/extension-record-corpus-2zvjwezx/results.json`.
+- DONE: Required guards and affected documents are accounted for.
+  Number/design guards exit 0; comments 1/268, 0.4% <= 5%. Seven doc-impact entries unaffected: ADR 0045 (rerun check untouched), 0047/0050 (roster ruling unchanged), 0048 (same selected-extension completion rule), README/adoption (same commands/intended behavior), learning.md (no practice change; corpus practice applied).
+- SKIPPED: A clean exact-head RoboRev result, product publication, PR updates and hosted revalidation.
+  Required package gate at candidate c2643dae and main e891e835 exits 3: `incomplete: the roborev daemon is not running` (`/tmp/roster-list-reader-repair/roborev.log`). #765 is OPEN against main at hosted head 520173225 when inspected; no product push or GitHub write was made. FO owns review, publication and revalidation.
+- DONE: Scope and reading/CI boundaries are preserved.
+  The new reader, three replaced parsing sites and caller tests map to amendment 2 and its named falsifiers. No workflow, instruction, version, dependency or CI trigger changed; FO reading counts stay as previously recorded. CI cost per PR and model spend were not measured.
+
+### Summary
+
+This complete report supersedes earlier implementation reports and records the shared-reader repair at c2643dae831f9685166b7cd564d8d885e88a3f21. All 26 CI commands pass locally, all three defect mutations fail in both callers, and 190 committed-task verdicts agree with main; FO retains the four-agent native rerun, review, publication, hosted revalidation and post-release work.
