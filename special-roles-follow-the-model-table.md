@@ -1,6 +1,6 @@
 ---
 title: Special roles follow the Captain's model table, and the trigger check recognizes Codex models
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 gates:
