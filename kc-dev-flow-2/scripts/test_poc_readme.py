@@ -81,7 +81,8 @@ class DeriveTests(unittest.TestCase):
         end = lines.index("### `implementation`")
         after = next(i for i in range(entry + 1, len(lines)) if not lines[i].startswith("      "))
         expected = lines[:entry] + lines[after:start] + lines[end:]
-        self.assertEqual(lines[entry + 1], "      gate: true")
+        self.assertIn("      model: opus", lines[entry + 1:after])
+        self.assertIn("      gate: true", lines[entry + 1:after])
         self.assertEqual(poc.derive(SOURCE), "\n".join(expected))
 
     def test_the_derived_poc_readme_carries_the_migration_rule_to_both_worker_stages(self):
