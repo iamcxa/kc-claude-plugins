@@ -300,3 +300,45 @@ The design now says what it delivers: `check` holds a gate text with no round co
 The gate is not presentable yet, and that is this worker's error: it added two lines to `## Scope`, and `design_surfaces.py check` now exits 1. Its message tells a worker to edit neither Scope nor amendments, so the lines stay for FO to remove; the outcome and title are also in `## Design`, so nothing is lost. After removal, FO reruns the check, which has not been seen to pass in this cycle.
 
 Beyond the four asks: a trial showed the first design missed a cost, since most existing `check` tests would fail until their text carries the line. The design now states that cost and AC-5 allows it; scope is unchanged. Not done and left to FO: filing the host-hook trial that D1's question mentioned. The 7 errors at base in the trial's copy were not diagnosed.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria in only the files its implementation section names; no version bump.
+  Candidate `2b471f41497483b32397a8286e494c3797ae9ac1`, branch `spacedock-ensign/validation-gate-requires-the-question-check`, base `6cea11d5ce4c8e3dc0d6711f13233b211fd94668` (PR #766); only delivery_gate.py, test_delivery_gate.py and ADR 0051 changed. Worktree root/branch and clean status verified.
+- DONE: ADR 0051 records the ruling the design names, quoting the Captain's words from the task file and its gate records.
+  `docs/adr/0051-the-merge-ask-check-requires-the-round-count.md` quotes both 「可以」 with its exact question and 「照建議」 with its question, amends ADR 0044, and records supplied-text, ordering, count-truth and already-answered limits; ADR 0023/0027/0044 remain Accepted at the base.
+- DONE: AC-1 missing top-level rounds text holds, prints the problem and next step, and saves no ask record.
+  `CheckRoundCountTests.test_missing_fenced_or_malformed_count_holds_without_saving_an_ask` covers absent/fenced/bulleted/invalid/duplicate counts. Removing the new call fails the assertions (mutation exit 1, no import errors).
+- DONE: AC-2 zero and count-with-detail forms pass.
+  `CheckRoundCountTests.test_zero_and_detail_counts_preserve_the_complete_text_output` accepts 0, 2, 003, 1., 2. detail and 1; detail with unchanged success output and one record; requiring nonzero fails the target assertion.
+- DONE: AC-3 replay the seven batch 11 briefing texts from state commit 99e8bb36 and show the base falsifier.
+  `python3 -B /tmp/validation-gate-prove.py` uses each index.json question plus artifact summaries, unedited; synthetic task/provider/role controls isolate supplied-text behavior, with the four saved Copilot refusals read from that state commit.
+  batch10-after-release-obligations 1, peers-paseo-rule-matches-practice 1, names-check-says-what-it-skipped 1, peer-status-reaches-fresh 1: base 0 -> candidate 1; each prints `summary needs one top-level External rounds: N line (nonnegative integer)` and `next: hold the ask; record the external round count in the summary.`, with no ask record.
+  paseo-human-surfaces-visible-and-reachable 1: base 1 -> candidate 1, identical output: `second reviewer declaration must name copilot because <nonempty trigger>, or not triggered`; briefing 2 and model-roster-per-repo 1: 0 -> 0, identical output, no added problem.
+- SKIPPED: AC-4 the real command on this task's own PR head, with gh reading its real PR.
+  Deferred to validation after FO publishes the Draft PR; this worker has no product push/PR grant. Run both supplied-text forms on that PR; name Draft/base/dispatch or CI holds separately from the new rounds problem.
+- DONE: AC-5 question is unchanged in both forms and complete check output is unchanged.
+  124 delivery tests pass with existing question inputs unedited; question/text_problems AST equals base and complete check stdout equals base. Moving the new rule into text_problems makes the new legacy-no-count question test fail. All three mutations ran on disposable copies using python3 -B with caches cleared; /tmp/validation-gate-evidence/proof-results.json and mutation logs retain results.
+- DONE: AC-6 this change leaves workflow/mods and WORKFLOW_BUDGET_STEPS unchanged; repository skill lint passes.
+  `git diff --stat 6cea11d5ce4c8e3dc0d6711f13233b211fd94668 HEAD -- kc-dev-flow-2/references/sd/` is empty; lint-skills.py is unchanged from that base and exits 0. Startup/idle/archive, pre-binding instructions and clean-ask output add 0 words; missing-count output adds 22 (10 problem + 12 next).
+- SKIPPED: AC-6's literal empty origin/main reference-document comparison.
+  The required stacked base already changes adoption.md (4 lines) and workflow.md (8 lines) versus origin/main; this candidate adds none. Those inherited edits belong to earlier approved PRs, so they were preserved.
+- DONE: AC-7 and the required ADR lint on the committed candidate.
+  `python3 <package>/scripts/adr_lint.py docs/adr --since 6cea11d5ce4c8e3dc0d6711f13233b211fd94668 --require 0051`: exit 0, 50 ADR files checked, 0 legacy; removing Words/Asked/Recommended or the protected code pointer would fail its structural contract.
+- DONE: Run the whole suite the CI job runs before reporting, including the repository lint-skills.py.
+  `python3 -B /tmp/validation-gate-run-ci.py`: all 26 commands in .github/workflows/kc-dev-flow-2-tests.yml exit 0, including test_sd_dispatch.py and test_observer_recovery.py; /tmp/validation-gate-evidence/ci-results.json and per-command logs retain output. Baseline delivery suite was 121/121; candidate is 124/124.
+- SKIPPED: Exact CI-pinned Spacedock plugin source for the dispatch integration run.
+  Installed binary is 0.27.2; --sd-plugin-root used /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3. Fetching pinned 4d158a484ec73e184861067f8ed1e20087fdc26a failed with DNS errors and the GitHub connector also failed. This local run does not prove the pinned-source CI run.
+- DONE: Number guards, comment ratio, design surfaces and affected-document checks.
+  <package> is /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0. number_guards.py check with --repo, --workflow-dir, --task and --base 6cea11d5ce4c8e3dc0d6711f13233b211fd94668: exit 0, PASS no findings; no migrations-path. comment_ratio.py <base> HEAD --workflow-dir <workflow>: exit 0, 38 code lines/1 comment, 2.6%, maximum 5% met. design_surfaces.py check: exit 0, presentable; git diff --check: exit 0.
+  doc_impact.py <base> HEAD: ADR 0044 unaffected: immutable historical ruling, explicitly amended by ADR 0051 without changing question compatibility; ADR 0051 updated: the new bounded decision and code pointer. Both listed documents have dispositions.
+- SKIPPED: RoboRev evidence= line and hosted CI; FO owns review/publication.
+  Ran <package>/extensions/roborev/roborev_gate.py --repo <assigned worktree> --base 6cea11d5ce4c8e3dc0d6711f13233b211fd94668 after committing: exit 3, `incomplete: the roborev daemon is not running`; no clean verdict. No hosted CI read or product push performed. CI cost per PR not measured; workflow triggers unchanged.
+- DONE: Commit locally and prepare the PR title/body for FO, stacked on PR #766.
+  /tmp/impl-validation-gate-requires-the-question-check-pr.md starts `fix(kc-dev-flow-2): require round counts at merge asks`, names base branch spacedock-ensign/second-round-prompts-a-step-back and exact candidate/base; no product push, reviews, comments, ready mark or merge performed.
+- SKIPPED: One Draft PR and every acceptance criterion green.
+  FO publishes the prepared candidate, opens the Draft PR, runs its real-PR AC-4 checks and pinned-source CI, and obtains RoboRev evidence. Local implementation proof is complete within this worker's publication boundary; those checks remain unverified.
+
+### Summary
+
+The committed three-file change holds missing-round merge-ask text without altering question compatibility or the workflow budget; seven historical supplied texts and three failing mutations exercise the intended difference. FO still owns publication, the real-PR acceptance runs, exact CI-pinned-source proof and RoboRev; this report grants no delivery or gate approval.
