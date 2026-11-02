@@ -542,7 +542,9 @@ def main(argv=None, package=PACKAGE):
         return 1
     readme = readme or find_readme(folder)
     # see docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md
-    paseo = bool(readme and "paseo" in re.findall(r"[\w-]+", frontmatter(readme).get("extensions", "")))
+    extension_list = re.match(r"\[([^\]]*)\]", frontmatter(readme).get("extensions", "")) if readme else None
+    listed = [item.strip().strip("'\"") for item in extension_list[1].split(",")] if extension_list else []
+    paseo = "paseo" in listed
     errors = []
     for path in records:
         text = path.read_text()
