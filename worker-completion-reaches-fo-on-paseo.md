@@ -65,7 +65,7 @@ gates:
                 state: pending
 started: 2026-11-02T04:30:20Z
 worktree: .worktrees/spacedock-ensign-worker-completion-reaches-fo-on-paseo
-pr: iamcxa/kc-claude-plugins#763
+pr: pr-merge:763
 ---
 
 ## Scope
