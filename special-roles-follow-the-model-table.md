@@ -256,6 +256,10 @@ Recommended order: worker-completion-reaches-fo-on-paseo, model-roster-question-
 
 **AC-10** Release-walk passes stay and the seed is retired (D4). Verified by: `git diff --stat origin/main -- kc-dev-flow-2/scripts/release_acceptance.py kc-dev-flow-2/extensions/release-acceptance` is empty; `spacedock status` lists `design-director-model-follows-task` no longer in backlog once FO retires it. Falsifier: the seed still at `backlog` after this task's merge fails it.
 
+## Number guards
+
+ADR: 0049
+
 ## Stage Report: ideation
 
 - DONE: A design for this task's Scope: the Reviewer rank for Codex models, each agent file against the table, and the workflow sentence that names them
