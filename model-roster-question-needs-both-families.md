@@ -46,6 +46,17 @@ gates:
                 id: briefing:model-roster-question-needs-both-families:ideation:attempt-2:revision-1
                 digest: sha256:fff8879d3a9f22e5258141d28dddbf88a91ae476df5d1a16a235deeea091fc2b
                 room-ref: ./model-roster-question-needs-both-families/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:model-roster-question-needs-both-families:ideation:2
+                briefing: briefing:model-roster-question-needs-both-families:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-02T04:29:44.687244Z"
+                decision: approve
+                reason: The Captain 「照建議」 (chat, 2026-11-02), answering 「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」; accepts the recommendations stated in that sitting, including D5 for the roster and D1 and D2 for completion.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
