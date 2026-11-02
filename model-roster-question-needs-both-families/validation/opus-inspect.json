@@ -1,0 +1,25 @@
+{
+  "Id": "a2d90652-f276-4dad-bdbd-b2b3811dfa61",
+  "Name": "ensign b12: model table ideation (opus high)",
+  "Provider": "claude",
+  "Model": "claude-opus-5-5",
+  "Thinking": "high",
+  "Status": "closed",
+  "Archived": false,
+  "ArchivedAt": null,
+  "Mode": "auto",
+  "Cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo",
+  "CreatedAt": "2026-11-01T17:48:24.384Z",
+  "UpdatedAt": "2026-11-01T18:03:16.929Z",
+  "LastUsage": null,
+  "Capabilities": {
+    "Streaming": false,
+    "Persistence": true,
+    "DynamicModes": false,
+    "McpServers": false
+  },
+  "AvailableModes": [],
+  "PendingPermissions": [],
+  "Worktree": null,
+  "ParentAgentId": "2e87a82e-a8a9-4e41-973a-7483aa46e39d"
+}

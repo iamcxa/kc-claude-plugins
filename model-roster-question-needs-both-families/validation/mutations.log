@@ -1,0 +1,17 @@
+{"name": "missing-claude-condition", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "flat-model-list", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "xhigh-cap", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "unmapped-claude-ultra", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "fixed-openai-family", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "mixed-family-lie", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "absent-effort-fabricated", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "old-recommended-ideation", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "question-effort-drift", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "question-condition-removed", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "adoption-follow-removed", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "launch-follow-removed", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "provider-host-removed", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "alias-exception-removed", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "two-accepted-adrs", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+{"name": "workflow-changed", "exit": 1, "cache": "python3 -B; fresh archive without caches"}
+Evidence: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validator-falsifiers-38q9687e

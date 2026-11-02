@@ -1,0 +1,42 @@
+{
+  "observed": "2026-11-02 Asia/Taipei",
+  "source": "Paseo list_models MCP",
+  "models": [
+    {
+      "provider": "claude",
+      "model": "claude-opus-5-5",
+      "options": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultracode"
+      ]
+    },
+    {
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "options": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ]
+    },
+    {
+      "provider": "codex",
+      "model": "gpt-6-astra",
+      "options": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ]
+    }
+  ]
+}

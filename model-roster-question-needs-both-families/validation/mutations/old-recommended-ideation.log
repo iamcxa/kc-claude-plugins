@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validator-falsifiers-38q9687e/check.py", line 6, in <module>
+    if sys.argv[3] == 'behavior': t.exercise_model_roster(Path(sys.argv[2]))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validator-falsifiers-38q9687e/repo/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 503, in exercise_model_roster
+    assert recommendation["stages"] == expected_rows, recommendation
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'schema_version': 1, 'selected_from': '0.33.1', 'decision': 'replace-with-explicit-adoption-answer-reference', 'stages': {'ideation': {'provider': 'claude', 'model': 'gpt-6-astra', 'effort': 'high', 'host': 'paseo'}, 'implementation': {'provider': 'codex', 'model': 'gpt-6.1-sol', 'effort': 'xhigh', 'host': 'paseo'}, 'validation': {'provider': 'codex', 'model': 'gpt-6-astra', 'effort': 'xhigh', 'host': 'paseo'}}}

@@ -375,3 +375,48 @@ The design now takes the Captain's four rulings: Opus only, publication and comp
 ### Summary
 
 The approved local implementation is committed at e2eb2fb5a9629f52ab540fac1e274c287913cfac with behavior, mutation and package checks. Native runtime/completion proof, upstream merge ancestry, RoboRev, publication, hosted CI, independent validation and the after-release #762 update remain with FO; no product push or PR was made.
+
+## Stage Report: validation
+
+- FAILED: Independent verdict on PR #765 head 57321c0b against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at 57321c0b4e9006c2a80c72b4afb1aa368e1ec2a2: AC-6 native proof incomplete; AC-9 literal diff unmet. AC-6/AC-10 native/release falsifiers not rerun; 16 local mutations detected. Full matrix: [evidence](model-roster-question-needs-both-families/validation/evidence.md).
+- DONE: Stacked on PR #764. Base spacedock-ensign/special-roles-follow-the-model-table. Hosted CI is green at this head. AC-6's real Opus high, Sol xhigh and Astra xhigh runs are this batch's real dispatches: read their spawn settings with paseo agent inspect for a2d90652 (Opus), 8a750bcc (Sol) and this validator (Astra). A roster-resolved dispatch from a committed repository roster stays owed after delivery. Judge and classify
+  Stack base 562b1a87198d97bb2ae1d87b72884e390b20e146; five hosted checks SUCCESS. All three settings inspected, but echo is not runtime proof. FO message e3223f76 withdrew its unauthorized timing statement; AC-6 remains due as written, findings F1–F3.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  [Five exact steps](model-roster-question-needs-both-families/validation/acceptance.md), [observed output](model-roster-question-needs-both-families/validation/acceptance-output.txt): fresh env/bash, exit 0. Skill-resolved Codex 0.34.0 package adr_lint --since stack base, with/without --require 0050: exit 0, 49 records, 0 legacy.
+- DONE: AC-1 — conditional question, read-only behavior and negative inputs.
+  Full subprocess matrix and identical manifests pass; missing-Claude mutation asks in a forbidden combination and fails exit 1.
+- DONE: AC-2 — provider/model pairings and all six efforts.
+  Three models resolve six efforts from committed fixtures; wrong pairs/Sonnet refuse. Flat-list and xhigh-cap mutations fail; exact-base Opus refusal reproduced.
+- DONE: AC-3 — the three recommended rows and displayed question agree.
+  Opus/high, Sol/xhigh, Astra/xhigh resolve; independent defaults/question mutations fail exit 1.
+- DONE: AC-4 — option IDs, retained tuple and absence.
+  Every effort exercised; live list_models accepts emitted IDs. Unmapped Claude ultra and fabricated absent effort fail exit 1.
+- DONE: AC-5 — truthful author-family comparison and record parsing.
+  OpenAI/Anthropic/mixed/unknown cases and Claude Roster headers pass; fixed-family and mixed-family mutations fail exit 1.
+- FAILED: AC-6 — integrated real dispatch, runtime/control evidence, completion receipts and dependency merge ancestry.
+  Settings inspected for Opus a2d90652, Sol 8a750bcc and Astra 0602ec7c; no bound roster-to-runtime/control run. Opus uses a historical manual send; this validator's receipt is future. #763 remains OPEN, mergeCommit null; candidate ancestry is not merge ancestry.
+- DONE: AC-7 — no-roster compatibility and family wording.
+  Existing absence/deletion/linked-root cases retain null effort and unchanged manifests; both follow-family text mutations fail.
+- DONE: AC-8 — ADR 0050 and superseded ADR 0047.
+  Record content and pointer checked; reserved-number ADR lint exit 0; restoring 0047 Accepted fails exit 1.
+- FAILED: AC-9 — literal origin/main workflow diff.
+  Lint, dispatch suite and parity exit 0; 5781-word budget unchanged. Origin/main diff is inherited 4+/4- from #764; exact stack-base diff empty. Added-word falsifier fails lint. F4.
+- SKIPPED: AC-10 — released-package adoption on #762.
+  Explicitly post-delivery; no release or consumer update claimed, and no predicted-version proof accepted.
+- DONE: AC-11 — provider-specific host builds and omitted-host falsifier.
+  Actual template builds emit opus/Claude bootstrap and null/Codex bootstrap; omitted host under Claude emits implementation sonnet. Both D5 sentence mutations fail.
+- DONE: Other package gates, affected documents, reading cost and implementation limits.
+  Guards/design/comment checks exit 0; comments 1/165 (0.6% <= 5%); all five doc-impact results accounted for. Publication/CI now verified; exact-head RoboRev still unverified. Roster 760->873 words, adoption 2241->2242, workflow 5781 unchanged; CI/model cost unmeasured, no trigger changed.
+- FAILED: Installed dispatch-record check; candidate check passes.
+  Installed 0.34.0 rejects final-reply scope lines in implementation-1 and validation-1; candidate reports four complete records, exit 0. Version drift is F5, not a reason to rewrite historical dispatches.
+- F1 Needs decision: AC-6 roster-resolved runtime and low-control proof is missing; settings echo does not establish the promised integrated journey. No current code malfunction shown; four disposition fields in evidence.md.
+- F2 Needs decision: AC-6 lacks compliant matched completion receipts; supplied historical Opus sent manually, and this validator cannot observe its own later callback. No current callback loss asserted.
+- F3 Needs decision: AC-6 requires #763's merge commit in the base; only its candidate is an ancestor while the PR remains open. Stack dependency, no product repair proposed.
+- F4 Needs decision: AC-9 explicitly compares origin/main; inherited approved parent wording makes it nonempty. Assigned-base equality does not silently replace that criterion.
+- F5 Polish: installed checker lacks the candidate's final-reply grammar; candidate records pass. Preserve sent records and report tool-version drift.
+
+### Summary
+
+REJECTED at 57321c0b4e9006c2a80c72b4afb1aa368e1ec2a2 for incomplete accepted evidence, with no demonstrated scoped product-code defect. Local behavior, negative controls, host builds and five-step acceptance pass; the Pilot journey still needs AC-6 proof and the two stack-related requirements reconciled. Product bytes are unchanged; FO retains evidence, gate, review and delivery decisions.
+

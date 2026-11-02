@@ -1,0 +1,37 @@
+{
+  "argv": [
+    "/Users/kent/.local/bin/spacedock",
+    "dispatch",
+    "build",
+    "--workflow-dir",
+    "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-claude-implementation/docs/dev2"
+  ],
+  "stdin": {
+    "schema_version": 2,
+    "entity_path": "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-claude-implementation/docs/dev2/.spacedock-state/df2-08a7296373-pilot-claude-implementation.md",
+    "workflow_dir": "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-claude-implementation/docs/dev2",
+    "stage": "implementation",
+    "checklist": [
+      "Omitted-host falsifier; no worker execution"
+    ]
+  },
+  "environment": {
+    "CLAUDECODE": "1",
+    "CODEX_THREAD_ID": "unset",
+    "PI_CODING_AGENT_DIR": "unset"
+  },
+  "exit": 0,
+  "envelope": {
+    "schema_version": 2,
+    "subagent_type": "spacedock:ensign",
+    "description": "Synthetic CLI fixture, not product acceptance: implementation",
+    "fetch_commands": [
+      "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-claude-implementation/docs/dev2 --stage implementation"
+    ],
+    "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-df2-08a7296373-pilot-clau-implementation.md",
+    "prompt": "Skill(skill=\"spacedock:ensign\"); then Read /tmp/spacedock-dispatch/spacedock-ensign-df2-08a7296373-pilot-clau-implementation.md and treat its content as your assignment.",
+    "model": "sonnet",
+    "name": "spacedock-ensign-df2-08a7296373-pilot-clau-implementation",
+    "run_in_background": true
+  }
+}

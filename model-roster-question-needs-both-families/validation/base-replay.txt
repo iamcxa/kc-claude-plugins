@@ -1,0 +1,2 @@
+model-roster: stages.ideation.provider: expected codex
+exit=1

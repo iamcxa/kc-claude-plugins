@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validator-falsifiers-38q9687e/check.py", line 6, in <module>
+    if sys.argv[3] == 'behavior': t.exercise_model_roster(Path(sys.argv[2]))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validator-falsifiers-38q9687e/repo/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 491, in exercise_model_roster
+    assert absent["thinking_option_id"] is None, absent
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'commit': 'c85d2fe71426ee0418fc0d96a201950cb2d7a0ed', 'digest': None, 'path': '.dev2/model-roster.json', 'role': 'implementation', 'source': 'readme-default', 'thinking_option_id': 'high', 'tuple': None}

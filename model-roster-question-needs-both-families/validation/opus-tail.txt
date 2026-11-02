@@ -1,0 +1,2 @@
+`main` points back at this session, so I'm sending the completion signal to the First Officer that dispatched me, using its Paseo agent id.
+[Send message] {"agentId":"2e87a82e-a8a9-4e41-973a-7483aa46e39d","prompt":"Done: Special roles follow the Captain's model table, and the trigger check recognizes Codex models completed ideation. Report written to /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-roles-follow-the-model-table.md.","notifyOnFinish":false}

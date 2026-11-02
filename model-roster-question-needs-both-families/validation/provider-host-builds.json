@@ -1,0 +1,134 @@
+[
+  {
+    "stage": "pilot-claude-ideation",
+    "model": "opus",
+    "prompt": "Skill(skill=\"spacedock:ensign\"); then Read /tmp/spacedock-dispatch/spacedock-ensign-df2-08a7296373-pilot-claude-ideation-ideation.md and treat its content as your assignment.",
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-claude-ideation/docs/dev2",
+      "--entity-path",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-claude-ideation/docs/dev2/.spacedock-state/df2-08a7296373-pilot-claude-ideation.md",
+      "--stage",
+      "ideation",
+      "--host",
+      "claude",
+      "--checklist-file",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/transport-checklist.txt",
+      "--scope-notes-file",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/transport-scope-notes.txt",
+      "--stamp"
+    ]
+  },
+  {
+    "stage": "pilot-claude-ideation",
+    "model": "opus",
+    "prompt": "Advancing to next stage: ideation.\n\nRead /tmp/spacedock-dispatch/spacedock-ensign-df2-08a7296373-pilot-claude-ideation-ideation-advance.md and treat its content as your next-stage assignment.",
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-claude-ideation/docs/dev2",
+      "--entity-path",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-claude-ideation/docs/dev2/.spacedock-state/df2-08a7296373-pilot-claude-ideation.md",
+      "--stage",
+      "ideation",
+      "--host",
+      "claude",
+      "--checklist-file",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/transport-checklist.txt",
+      "--advance"
+    ]
+  },
+  {
+    "stage": "pilot-codex-implementation",
+    "model": null,
+    "prompt": "$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-df2-08a7296373-pilot-code-implementation.md and treat its content as your assignment.",
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-codex-implementation/docs/dev2",
+      "--entity-path",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-codex-implementation/docs/dev2/.spacedock-state/df2-08a7296373-pilot-codex-implementation.md",
+      "--stage",
+      "implementation",
+      "--host",
+      "codex",
+      "--checklist-file",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/transport-checklist.txt",
+      "--scope-notes-file",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/transport-scope-notes.txt",
+      "--stamp"
+    ]
+  },
+  {
+    "stage": "pilot-codex-implementation",
+    "model": null,
+    "prompt": "Advancing to next stage: implementation.\n\nRead /tmp/spacedock-dispatch/spacedock-ensign-df2-08a7296373-pilot-code-implementation-advance.md and treat its content as your next-stage assignment.",
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-codex-implementation/docs/dev2",
+      "--entity-path",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-codex-implementation/docs/dev2/.spacedock-state/df2-08a7296373-pilot-codex-implementation.md",
+      "--stage",
+      "implementation",
+      "--host",
+      "codex",
+      "--checklist-file",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/transport-checklist.txt",
+      "--advance"
+    ]
+  },
+  {
+    "stage": "pilot-codex-validation",
+    "model": null,
+    "prompt": "$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-df2-08a7296373-pilot-codex-va-validation.md and treat its content as your assignment.",
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-codex-validation/docs/dev2",
+      "--entity-path",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-codex-validation/docs/dev2/.spacedock-state/df2-08a7296373-pilot-codex-validation.md",
+      "--stage",
+      "validation",
+      "--host",
+      "codex",
+      "--checklist-file",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/transport-checklist.txt",
+      "--scope-notes-file",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/transport-scope-notes.txt",
+      "--stamp"
+    ]
+  },
+  {
+    "stage": "pilot-codex-validation",
+    "model": null,
+    "prompt": "Advancing to next stage: validation.\n\nRead /tmp/spacedock-dispatch/spacedock-ensign-df2-08a7296373-pilot-codex-va-validation-advance.md and treat its content as your next-stage assignment.",
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-codex-validation/docs/dev2",
+      "--entity-path",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/pilot-codex-validation/docs/dev2/.spacedock-state/df2-08a7296373-pilot-codex-validation.md",
+      "--stage",
+      "validation",
+      "--host",
+      "codex",
+      "--checklist-file",
+      "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-jgbr7a1j/transport-checklist.txt",
+      "--advance"
+    ]
+  }
+]
