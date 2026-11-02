@@ -1,6 +1,6 @@
 ---
 title: Model roster question asks only when Paseo, Codex and Claude are all available, and offers Claude models
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 gates:
