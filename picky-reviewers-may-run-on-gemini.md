@@ -14,6 +14,17 @@ gates:
                 id: briefing:picky-reviewers-may-run-on-gemini:backlog:attempt-1:revision-1
                 digest: sha256:a4f46fda7b74cf046f55add81715ac4393dc096ecdd9cc8ff9903abc1d110d86
                 room-ref: ./picky-reviewers-may-run-on-gemini/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:picky-reviewers-may-run-on-gemini:backlog:1
+                briefing: briefing:picky-reviewers-may-run-on-gemini:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-02T03:30:41.220002Z"
+                decision: approve
+                reason: The Captain 「可以」 (chat, 2026-11-02), answering 「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」; approves Pilot, this outcome and these bounds.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
