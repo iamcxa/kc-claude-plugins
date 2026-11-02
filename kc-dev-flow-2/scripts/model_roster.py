@@ -11,6 +11,7 @@ import stat
 import subprocess
 import sys
 
+from decision_ledger import unquote
 from laws_check import Cannot, readme_extensions
 
 ROSTER = ".dev2/model-roster.json"
@@ -103,7 +104,7 @@ def code_root(root):
 
 def question(root, readme, providers):
     root = code_root(root)
-    if "paseo" not in readme_extensions(readme):
+    if "paseo" not in {unquote(name) for name in readme_extensions(readme)}:
         return "skip: paseo extension not listed"
     if (root / ROSTER).exists() or (root / ROSTER).is_symlink():
         return "skip: roster already exists"

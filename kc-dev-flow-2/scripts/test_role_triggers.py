@@ -387,6 +387,42 @@ class StepBackTest(Fixture):
         self.assert_questions(out)
         self.assertNotIn("before the next step", out)
 
+    def test_two_replacements_still_remind_after_validation_event_is_cleared(self):
+        extra = call(CE, "gpt-6-astra", "2026-01-01") + "\n" + call(ER, "opus", "2026-10-20")
+        for count in (3, 4):
+            self.put(task(amendments=self.amendments[:2], extra=extra) + validations(*([self.failed] * count)))
+            code, out = run(self.state, SLUG)
+            self.assertEqual(code, 0, out)
+            self.assertEqual(len(out.splitlines()), 1, out)
+            self.assertIn("before the next step", out)
+            self.assert_questions(out)
+
+    def test_two_failed_validations_still_remind_after_replacement_event_is_cleared(self):
+        extra = call(CE, "gpt-6-astra", "2026-10-20") + "\n" + call(ER, "opus", "2026-10-20")
+        for count in (3, 4):
+            self.put(task(amendments=self.amendments[:count], extra=extra) + validations(self.failed, self.failed))
+            code, out = run(self.state, SLUG)
+            self.assertEqual(code, 0, out)
+            self.assertEqual(len(out.splitlines()), 1, out)
+            self.assertIn("before the next step", out)
+            self.assert_questions(out)
+
+    def test_a_third_event_deduplicates_only_a_call_line_carrying_the_three_questions(self):
+        for failures, replacements in ((3, 2), (2, 3)):
+            self.put(task(amendments=self.amendments[:replacements], extra=call(ER, "opus", "2026-10-20"))
+                     + validations(*([self.failed] * failures)))
+            code, out = run(self.state, SLUG)
+            self.assertEqual((code, len(out.splitlines())), (1, 1), out)
+            self.assert_questions(out)
+            self.assertIn(f"dispatch {CE}", out)
+            self.assertNotIn("before the next step", out)
+        self.put(task(repairs=4) + validations(self.failed, self.failed))
+        code, out = run(self.state, SLUG)
+        self.assertEqual((code, len(out.splitlines())), (1, 2), out)
+        self.assertIn("has 4 repair passes", out)
+        self.assertIn("before the next step", out)
+        self.assertEqual(out.count(self.questions[0]), 1, out)
+
     def test_failure_calls_need_the_model_floor_but_no_date_floor_and_waivers_clear(self):
         for extra, expected in (("", 1), (call(CE, "sonnet", "2026-10-20"), 1),
                 (call(CE, "gpt-6-astra", "2026-01-01"), 0), (call(CE, "opus", "2026-01-01"), 0),

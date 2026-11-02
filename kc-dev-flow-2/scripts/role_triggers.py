@@ -10,7 +10,8 @@ review-round event only when dated no earlier than it, so a call about something
 round leaves it owed. A call made earlier on the same date as that round still clears it. Without it, any call or
 waiver clears, as before.
 Two validations with a Material or Needs decision F bullet, or two amendments with non-none Supersedes, print
-three step-back questions without a hold. Either count at three owes chief-engineer with those questions;
+three step-back questions without a hold, independently even when the other event has already cleared at three.
+An owed line carrying those questions suppresses a duplicate reminder. Either count at three owes chief-engineer;
 the third amendment's date clears that event, while the validation event has no date test. Counts stay separate.
 Engineering-reviewer is owed for each `### Amendment N` under `## Captain amendments` whose `Supersedes:` or
 `Design:` value does not start with `none`; one line per task, on fable when the frontmatter says `profile: prod`
@@ -285,7 +286,7 @@ def check(state, slug, rev, rounds=None, drift=None):
             owed += [hint(slug, "engineering-reviewer", h) for h in [misplaced(lines, "engineering-reviewer")] if h]
     reminder = [f"next: {slug} has {failures} validations with a Material or Needs decision finding and "
                 f"{len(replacements)} replacing amendments: before the next step, answer: {STEP_BACK}"] \
-        if max(failures, len(replacements)) == 2 else []
+        if 2 in (failures, len(replacements)) and not any(STEP_BACK in line for line in owed) else []
     if owed or reminder:
         return int(bool(owed)), "\n".join(owed + reminder)
     return 0, f"role triggers: {seen} event(s) read at {rev}, each with a call or a waiver."
