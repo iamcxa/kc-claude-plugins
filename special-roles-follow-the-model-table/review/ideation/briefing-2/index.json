@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:special-roles-follow-the-model-table:ideation:attempt-2:revision-1",
+  "question": "「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:special-roles-follow-the-model-table:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/6dd518d782303f987bcbbc64386fc7642451121b/special-roles-follow-the-model-table.md",
+      "rev": "sha256:73b2f18ae04a2490773112a3a2773b35bfacca5b92fed93a9b62eccd3931af6d",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 ideation sitting. Chief-engineer reviewed the first four designs; the completion and Gemini designs had no separate batch review."
+    }
+  ]
+}

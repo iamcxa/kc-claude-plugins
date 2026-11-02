@@ -41,6 +41,11 @@ gates:
                 at: "2026-11-02T03:30:56.911148Z"
                 decision: revise
                 reason: 'The Captain 「可以」 (chat, 2026-11-02), answering 「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」; accepts the direction and asks: D1 an Astra call clears the Fable floor; D2 a chief-engineer call needs opus rank; D3 yes, the template moves ideation and validation to Opus; D4 yes, retire design-director-model-follows-task and leave release-walk passes; D5 a family other than the implementation workers, changing all workers to implementation workers in references/sd/workflow.md at zero words; correct the claim that no log shows effort, because subagent transcripts carry perTurnEffort, and make AC-5 assert xhigh; correct line 81; order before second-round-prompts-a-step-back.'
+            - id: gate-attempt:special-roles-follow-the-model-table-ideation-2
+              briefing:
+                id: briefing:special-roles-follow-the-model-table:ideation:attempt-2:revision-1
+                digest: sha256:1833b337ceee43c359355beed816a7e173714071e639b613574dbab08d429163
+                room-ref: ./special-roles-follow-the-model-table/review/ideation/briefing-2
 ---
 
 ## Scope
