@@ -173,7 +173,7 @@ Ask which recommended or optional rows to add once, before the Captain reviews t
 2. Put one multi-select to the Captain through the host's structured Ask UI, or in plain chat
    when none is available: the required rows shown as already on, `journey-map` with
    `release-acceptance` as one choice that writes both names, `codex`, `roborev`, and `copilot`
-   unchecked and marked quota-limited, and `paseo` unchecked for its Paseo Codex worker handoff. Confirmed
+   unchecked and marked quota-limited, and `paseo` unchecked for its Paseo worker handoff. Confirmed
    Paseo peer asks and replies already belong to peers. Offer `fo-feedback` unchecked for the interviewing
    maintainer only; show its prerequisite results without enabling dependencies.
 3. Write the chosen names after the required ones. Never list a row whose probe failed; report

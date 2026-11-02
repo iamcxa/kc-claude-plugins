@@ -41,6 +41,8 @@ Send your completion message to `main` (the README's Dispatch facts: `team-lead`
 
 
 MAIN_LINE = "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).\n"
+PASEO_LINE = ("Your final reply is your completion message: Paseo delivers it to FO when your turn ends. "
+              "End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.")
 
 
 NO_EXTENSIONS = "---\nentity-type: task\n---\n"
@@ -301,6 +303,38 @@ class DispatchRecordTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertIn("a-1.md: needs a scope-notes line naming main as the completion recipient", out)
 
+    def test_paseo_completion_passes_only_with_the_listed_extension(self):
+        text = COMPLETE.replace(MAIN_LINE, PASEO_LINE + "\n")
+        listed = "---\nentity-type: task\nextensions: [peers, paseo]\n---\n"
+        code, out = self.check({"implementation-1.md": text}, readme=listed)
+        self.assertEqual((code, out), (0, "1 dispatch record(s) complete\n"))
+        for readme in (NO_EXTENSIONS, LISTS_ROBOREV, None,
+                       "---\nentity-type: task\nextensions: [paseo-other]\n---\n"):
+            with self.subTest(readme=readme):
+                code, out = self.check({"implementation-1.md": text}, readme=readme)
+                self.assertEqual(code, 1)
+                self.assertIn("implementation-1.md: needs a scope-notes line naming main as the completion recipient", out)
+
+    def test_paseo_completion_requires_the_exact_line_inside_scope_notes(self):
+        listed = "---\nentity-type: task\nextensions: [peers, paseo]\n---\n"
+        missing = COMPLETE.replace(MAIN_LINE, "")
+        for text in (COMPLETE.replace(MAIN_LINE, PASEO_LINE.replace("final", "last") + "\n"),
+                     missing.replace("## Checklist\n", PASEO_LINE + "\n\n## Checklist\n"),
+                     missing + "\n## Other\n\n" + PASEO_LINE + "\n"):
+            with self.subTest(text=text):
+                code, out = self.check({"implementation-1.md": text}, readme=listed)
+                self.assertEqual(code, 1)
+                self.assertIn("needs a scope-notes line naming main as the completion recipient", out)
+        self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme=listed)[0], 0)
+
+    def test_paseo_extension_and_checker_share_the_completion_instruction(self):
+        extension = Path(records.__file__).parents[1] / "extensions/paseo/EXTENSION.md"
+        line = re.search(r'In scope notes and follow-ups, replace the main line with: "([^"]+)"',
+                         extension.read_text())
+        self.assertIsNotNone(line)
+        self.assertEqual(line[1], PASEO_LINE)
+        self.assertEqual(records.PASEO_COMPLETION_LINE, PASEO_LINE)
+
     def test_the_package_root_line_must_be_absolute_and_inside_the_scope_notes(self):
         moved = COMPLETE.replace("Package root: /abs/kc-dev-flow-2\n", "").replace("## Checklist\n", "Package root: /abs/kc-dev-flow-2\n## Checklist\n")
         for label, text in (
@@ -472,6 +506,38 @@ GUARDS = "\n## Number guards\n\nADR: 0020\nMigration: 0007\n"
 AMENDMENTS = ("\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nSupersedes: none\n\n"
               "### Amendment 2 \u2014 2026-10-18, chat\nCaptain: y\nSupersedes: none\n")
 NOTES_WITH_BOTH = COMPLETE.replace("Package root:", "ADR: 0020\nMigration: 0007\nPackage root:")
+
+
+class PaseoCompletionMutationTests(unittest.TestCase):
+    def test_completion_boundary_falsifiers_fail_without_caches(self):
+        cases = (
+            ("unlisted", "scripts/dispatch_records.py", 'and paseo and PASEO_COMPLETION.search(text)',
+             'and PASEO_COMPLETION.search(text)', "test_paseo_completion_passes_only_with_the_listed_extension"),
+            ("no-branch", "scripts/dispatch_records.py", 'part == COMPLETION_PART and paseo',
+             'False and paseo', "test_paseo_completion_passes_only_with_the_listed_extension"),
+            ("checker-word", "scripts/dispatch_records.py", 'Your final reply is your completion message:',
+             'Your last reply is your completion message:', "test_paseo_extension_and_checker_share_the_completion_instruction"),
+            ("extension-word", "extensions/paseo/EXTENSION.md", 'Your final reply is your completion message:',
+             'Your last reply is your completion message:', "test_paseo_extension_and_checker_share_the_completion_instruction"),
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            package = Path(tmp) / "package"
+            shutil.copytree(Path(records.__file__).parents[1], package,
+                            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+            for label, name, old, new, target in cases:
+                with self.subTest(mutation=label):
+                    path = package / name
+                    original = path.read_text()
+                    self.assertIn(old, original)
+                    path.write_text(original.replace(old, new, 1))
+                    done = subprocess.run([sys.executable, "-B", "-m", "unittest",
+                                           "test_dispatch_records.DispatchRecordTests." + target, "-q"],
+                                          cwd=package / "scripts", capture_output=True, text=True,
+                                          env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
+                    path.write_text(original)
+                    self.assertNotEqual(done.returncode, 0, label + done.stdout + done.stderr)
+                    self.assertIn("AssertionError", done.stderr, label + done.stderr)
+                    self.assertFalse(list(package.rglob("*.pyc")))
 
 
 class TaskFactTests(unittest.TestCase):
