@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf",
+  "model": "not run",
+  "necessity": "the six files are that rule, its checker, its ADR and its tests; validation-3 judged the extensions repair and carried the rest.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F3 Deferred risk: a Claude'",
+    "point: deferred: '- F3 Deferred risk: carried unchanged;'",
+    "point: deferred: '- F4 Deferred risk: RoboRev 1403'",
+    "point: deferred: 'Declined: RoboRev job 1403, refuse the'",
+    "point: amendment: 'Amendment 1 dated 2026-11-02'",
+    "point: path: 'docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-t'",
+    "point: path: 'kc-dev-flow-2/extensions/paseo/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/adoption.md'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_records.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#763",
+  "sufficiency": "real Claude and Codex stage workers delivered completion through Paseo's finish callback with no send attempted, and cancel, permission and no-Done cases each reached FO, in native-runs/README.md.",
+  "time": "2026-11-02T08:13:41Z",
+  "verdict": "ask"
+}
