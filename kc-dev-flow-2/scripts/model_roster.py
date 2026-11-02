@@ -11,9 +11,11 @@ import stat
 import subprocess
 import sys
 
+from workflow_extensions import readme_extensions
+
 ROSTER = ".dev2/model-roster.json"
 STAGES = ("ideation", "implementation", "validation")
-MODELS = ("gpt-6.1-sol", "gpt-6-astra")
+MODELS = {"codex": ("gpt-6.1-sol", "gpt-6-astra"), "claude": ("claude-opus-5-5",)}
 EFFORTS = ("low", "medium", "high", "xhigh", "max", "ultra")
 FIELDS = {"provider", "model", "effort", "host"}
 
@@ -55,10 +57,12 @@ def validate(data):
     keys(data["stages"], set(STAGES), "stages")
     for stage, row in data["stages"].items():
         keys(row, FIELDS, f"stages.{stage}")
-        for field, allowed in (("provider", ("codex",)), ("model", MODELS),
-                               ("effort", EFFORTS), ("host", ("paseo",))):
+        for field, allowed in (("provider", tuple(MODELS)), ("effort", EFFORTS),
+                               ("host", ("paseo",))):
             if row[field] not in allowed:
                 raise Invalid(f"stages.{stage}.{field}: expected {', '.join(allowed)}")
+        if row["model"] not in MODELS[row["provider"]]:
+            raise Invalid(f"stages.{stage}.model: expected {', '.join(MODELS[row['provider']])}")
     return data
 
 
@@ -76,8 +80,8 @@ def author(path):
             if fields.get("source") != "repository" or fields.get("role") not in ("implementation", "repair"):
                 return result
             row = {key: fields.get(key) for key in FIELDS}
-            if (row["provider"] == "codex" and row["host"] == "paseo"
-                    and row["model"] in MODELS and row["effort"] in EFFORTS):
+            if (row["provider"] in MODELS and row["host"] == "paseo"
+                    and row["model"] in MODELS[row["provider"]] and row["effort"] in EFFORTS):
                 result["tuple"] = row
         elif not lines or lines == ["absent; source README default"]:
             models = re.findall(r"^Model: (gpt-6\.1-sol|gpt-6-astra) \(Codex via Paseo, thinking (low|medium|high|xhigh|max|ultra)(?:[;,)])", text, re.M)
@@ -88,14 +92,39 @@ def author(path):
     return result
 
 
-def resolve(root, stage, records):
-    if stage not in (*STAGES, "repair"):
-        raise Invalid(f"stage: unsupported {stage!r}")
+def code_root(root):
     if not root.is_absolute():
         raise Invalid("code-root: expected absolute Git worktree root")
     root = root.resolve()
     if Path(git(root, "rev-parse", "--show-toplevel").decode().strip()).resolve() != root:
         raise Invalid("code-root: expected exact Git worktree root")
+    return root
+
+
+def question(root, readme, providers):
+    root = code_root(root)
+    if "paseo" not in readme_extensions(readme):
+        return "skip: paseo extension not listed"
+    if (root / ROSTER).exists() or (root / ROSTER).is_symlink():
+        return "skip: roster already exists"
+    raw = sys.stdin.read() if providers == "-" else Path(providers).read_text()
+    rows = json.loads(raw, object_pairs_hook=unique) if raw.strip() else []
+    if not isinstance(rows, list) or any(
+            not isinstance(row, dict) or any(not isinstance(row.get(key), str)
+                                             for key in ("provider", "status", "enabled")) for row in rows):
+        raise Invalid("providers: expected paseo provider ls --json array")
+    available = {row["provider"] for row in rows
+                 if row["status"] == "available" and row["enabled"] == "Enabled"}
+    for provider in MODELS:
+        if provider not in available:
+            return f"skip: {provider} provider unavailable"
+    return "ask"
+
+
+def resolve(root, stage, records):
+    if stage not in (*STAGES, "repair"):
+        raise Invalid(f"stage: unsupported {stage!r}")
+    root = code_root(root)
     commit = git(root, "rev-parse", "HEAD").decode().strip()
     path = root / ROSTER
     if path.parent.is_symlink() or path.is_symlink():
@@ -110,7 +139,7 @@ def resolve(root, stage, records):
     if not entry:
         if path.exists():
             raise Invalid(f"{ROSTER}: present but not committed")
-        # see docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md
+        # see docs/adr/0050-stage-roster-question-needs-codex-and-claude-and-offers-opus.md
         result = {"source": "readme-default", "role": stage, "tuple": None,
                   "path": ROSTER, "commit": commit, "digest": None}
     else:
@@ -123,11 +152,17 @@ def resolve(root, stage, records):
         role = "implementation" if stage == "repair" else stage
         result = {"source": "repository", "role": role, "tuple": data["stages"][role],
                   "path": ROSTER, "commit": commit, "digest": "sha256:" + hashlib.sha256(raw).hexdigest()}
+    row = result["tuple"]
+    result["thinking_option_id"] = ("ultracode" if row["provider"] == "claude" and row["effort"] == "ultra"
+                                    else row["effort"]) if row else None
     if stage == "validation":
         authors = [author(path) for path in records]
         result["authors"] = authors
-        result["family"] = ("same-family: openai" if result["tuple"] and authors and all(a["tuple"] for a in authors)
-                            else "unverified")
+        result["family"] = "unverified"
+        if row and authors and all(a["tuple"] for a in authors):
+            family = {"codex": "openai", "claude": "anthropic"}[row["provider"]]
+            result["family"] = (f"same-family: {family}" if all(a["tuple"]["provider"] == row["provider"] for a in authors)
+                                else "different-family")
     return result
 
 
@@ -138,8 +173,16 @@ def main():
     command.add_argument("--code-root", type=Path, required=True)
     command.add_argument("--stage", required=True)
     command.add_argument("--author-record", type=Path, action="append", default=[])
+    command = sub.add_parser("question")
+    command.add_argument("--code-root", type=Path, required=True)
+    command.add_argument("--readme", type=Path, required=True)
+    command.add_argument("--providers", required=True)
     args = parser.parse_args()
     try:
+        if args.command == "question":
+            result = question(args.code_root, args.readme, args.providers)
+            print(result)
+            return 0 if result == "ask" else 3
         result = resolve(args.code_root, args.stage, args.author_record)
     except (Invalid, OSError, UnicodeError, ValueError) as error:
         print(f"model-roster: {error}", file=sys.stderr)
