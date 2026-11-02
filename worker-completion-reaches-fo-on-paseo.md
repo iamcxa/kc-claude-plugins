@@ -52,6 +52,17 @@ gates:
                 id: briefing:worker-completion-reaches-fo-on-paseo:validation:attempt-1:revision-1
                 digest: sha256:e1788a39a519c2361d758405e69f037b70c05761ec29d9c5bb7429df1d0b08ce
                 room-ref: ./worker-completion-reaches-fo-on-paseo/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-completion-reaches-fo-on-paseo:validation:1
+                briefing: briefing:worker-completion-reaches-fo-on-paseo:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-02T08:14:21.430717Z"
+                decision: approve
+                reason: The Captain 「照建議」 (chat, 2026-11-02), answering the batch 12 sitting 「決定：四件事都照建議嗎？要改哪件直接說。」, whose item 1 merges this PR and whose item 4 accepts the RoboRev 1403 decline; a regular merge as that sitting said.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-02T04:30:20Z
 worktree: .worktrees/spacedock-ensign-worker-completion-reaches-fo-on-paseo
 pr: iamcxa/kc-claude-plugins#763
