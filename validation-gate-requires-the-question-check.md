@@ -25,6 +25,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:validation-gate-requires-the-question-check:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:validation-gate-requires-the-question-check-ideation-1
+              briefing:
+                id: briefing:validation-gate-requires-the-question-check:ideation:attempt-1:revision-1
+                digest: sha256:a0e4264e791b82bb525385cafe31bed7c9dc5acea0f5c7ff0f815169a58c5608
+                room-ref: ./validation-gate-requires-the-question-check/review/ideation/briefing-1
 ---
 
 ## Scope

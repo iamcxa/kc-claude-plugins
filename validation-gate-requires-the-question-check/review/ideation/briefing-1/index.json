@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-gate-requires-the-question-check:ideation:attempt-1:revision-1",
+  "question": "「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」",
+  "artifacts": [
+    {
+      "id": "artifact:validation-gate-requires-the-question-check:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/591562abc8dc4af8ef8728d97dff460e7b76964e/validation-gate-requires-the-question-check.md",
+      "rev": "sha256:79a6577a8a9ff6971bd19f94f6e5f21cfae898e15f43461d5b61d716f175d638",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 sitting; chief-engineer reviewed all four. Recommended revise with the decisions the sitting named, then a second presentation."
+    }
+  ]
+}
