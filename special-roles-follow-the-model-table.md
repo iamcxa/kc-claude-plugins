@@ -25,6 +25,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:special-roles-follow-the-model-table:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:special-roles-follow-the-model-table-ideation-1
+              briefing:
+                id: briefing:special-roles-follow-the-model-table:ideation:attempt-1:revision-1
+                digest: sha256:b05649e7beaf13b68e0bf9a99390db658ea137c77a7ff9986bdb62cff917c696
+                room-ref: ./special-roles-follow-the-model-table/review/ideation/briefing-1
 ---
 
 ## Scope

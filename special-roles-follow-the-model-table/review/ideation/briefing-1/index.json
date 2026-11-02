@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:special-roles-follow-the-model-table:ideation:attempt-1:revision-1",
+  "question": "「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」",
+  "artifacts": [
+    {
+      "id": "artifact:special-roles-follow-the-model-table:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/efe03a527bd92668fa7359b2cf9e00369d4697a4/special-roles-follow-the-model-table.md",
+      "rev": "sha256:a7799f84be9951181ed07ce899376cfcea28f4eec7c85fddd3f1ac41179299ed",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 sitting; chief-engineer reviewed all four. Recommended revise with the decisions the sitting named, then a second presentation."
+    }
+  ]
+}
