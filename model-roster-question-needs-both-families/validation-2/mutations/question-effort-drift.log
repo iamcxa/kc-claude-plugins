@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation2-evidence/roster-validator-falsifiers-wv046c_0/check.py", line 6, in <module>
+    if sys.argv[3] == 'behavior': t.exercise_model_roster(Path(sys.argv[2]))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation2-evidence/roster-validator-falsifiers-wv046c_0/repo/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 513, in exercise_model_roster
+    assert phrase in quoted, phrase
+           ^^^^^^^^^^^^^^^^
+AssertionError: ideation Opus/high on Claude

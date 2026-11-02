@@ -1,0 +1,46 @@
+[
+  {
+    "commit": "93d26ce989d652a1d882e433988f52ccc73c15ce",
+    "digest": "sha256:c7e2c4f601eaa98b88c585198c15889cd9b4fe882e64a86d4c78809456a78260",
+    "path": ".dev2/model-roster.json",
+    "role": "ideation",
+    "source": "repository",
+    "thinking_option_id": "high",
+    "tuple": {
+      "effort": "high",
+      "host": "paseo",
+      "model": "claude-opus-5-5",
+      "provider": "claude"
+    }
+  },
+  {
+    "commit": "93d26ce989d652a1d882e433988f52ccc73c15ce",
+    "digest": "sha256:c7e2c4f601eaa98b88c585198c15889cd9b4fe882e64a86d4c78809456a78260",
+    "path": ".dev2/model-roster.json",
+    "role": "implementation",
+    "source": "repository",
+    "thinking_option_id": "xhigh",
+    "tuple": {
+      "effort": "xhigh",
+      "host": "paseo",
+      "model": "gpt-6.1-sol",
+      "provider": "codex"
+    }
+  },
+  {
+    "authors": [],
+    "commit": "93d26ce989d652a1d882e433988f52ccc73c15ce",
+    "digest": "sha256:c7e2c4f601eaa98b88c585198c15889cd9b4fe882e64a86d4c78809456a78260",
+    "family": "unverified",
+    "path": ".dev2/model-roster.json",
+    "role": "validation",
+    "source": "repository",
+    "thinking_option_id": "xhigh",
+    "tuple": {
+      "effort": "xhigh",
+      "host": "paseo",
+      "model": "gpt-6-astra",
+      "provider": "codex"
+    }
+  }
+]

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation2-evidence/roster-validator-falsifiers-wv046c_0/check.py", line 6, in <module>
+    if sys.argv[3] == 'behavior': t.exercise_model_roster(Path(sys.argv[2]))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation2-evidence/roster-validator-falsifiers-wv046c_0/repo/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 544, in exercise_model_roster
+    assert result["thinking_option_id"] == expected, result
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'commit': 'dbc964b941ceaf7bcf654e226967cc1e18841d0d', 'digest': 'sha256:9d23d7a4cf01f0deea7161a549464432efaf4838a55bc1884f8c2184b3a9633c', 'path': '.dev2/model-roster.json', 'role': 'ideation', 'source': 'repository', 'thinking_option_id': 'ultra', 'tuple': {'effort': 'ultra', 'host': 'paseo', 'model': 'claude-opus-5-5', 'provider': 'claude'}}

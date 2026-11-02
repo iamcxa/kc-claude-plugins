@@ -1,0 +1,24 @@
+.......s................/tmp/roster-v2-fixtures-3l9cs12t/tmp6q8pre2s/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+......../tmp/roster-v2-fixtures-3l9cs12t/tmp4jifusjk/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+../tmp/roster-v2-fixtures-3l9cs12t/tmpsyzmlvdf/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/roster-v2-fixtures-3l9cs12t/tmpdv1vt7dp/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/roster-v2-fixtures-3l9cs12t/tmphoutvp8g/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/roster-v2-fixtures-3l9cs12t/tmpydli34pd/task/dispatch/ideation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/roster-v2-fixtures-3l9cs12t/tmp72yjtxy8/task/elsewhere/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/tmp/roster-v2-fixtures-3l9cs12t/tmpw4pznreo/task/dispatch/validation-x.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/roster-v2-fixtures-3l9cs12t/tmplxln42v4/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/roster-v2-fixtures-3l9cs12t/tmpkgacl9f4/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/roster-v2-fixtures-3l9cs12t/tmpi5_xzin9/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/roster-v2-fixtures-3l9cs12t/tmp8b6pllhv/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/roster-v2-fixtures-3l9cs12t/tmppdxk8eas/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/roster-v2-fixtures-3l9cs12t/tmp3nxnv00s/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+./tmp/roster-v2-fixtures-3l9cs12t/tmpvv8spui_/r.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./tmp/roster-v2-fixtures-3l9cs12t/tmpjv7gji2k/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/tmp/roster-v2-fixtures-3l9cs12t/tmp18a9h9pw/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/tmp/roster-v2-fixtures-3l9cs12t/tmpskm2xrof/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+............................................................../tmp/roster-v2-fixtures-3l9cs12t/tmpzkf7ivwq/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+..
+----------------------------------------------------------------------
+Ran 100 tests in 90.313s
+
+OK (skipped=1)

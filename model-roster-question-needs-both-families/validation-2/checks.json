@@ -1,0 +1,166 @@
+[
+  {
+    "name": "fetch",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation-52017322",
+      "fetch",
+      "origin",
+      "main"
+    ],
+    "exit": 255
+  },
+  {
+    "name": "ancestry-completion",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation-52017322",
+      "merge-base",
+      "--is-ancestor",
+      "52e8eba7bf3746fd93d9132548a8163c66a7a26b",
+      "e891e83582ac10936ffd67fb083b530b009ad847"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "ancestry-main",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation-52017322",
+      "merge-base",
+      "--is-ancestor",
+      "e891e83582ac10936ffd67fb083b530b009ad847",
+      "52017322520dea243f982a015efa7747f8c05c9f"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "workflow-diff",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation-52017322",
+      "diff",
+      "--exit-code",
+      "origin/main",
+      "52017322520dea243f982a015efa7747f8c05c9f",
+      "--",
+      "kc-dev-flow-2/references/sd/workflow.md"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "adr-since",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "e891e83582ac10936ffd67fb083b530b009ad847"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "adr",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "e891e83582ac10936ffd67fb083b530b009ad847",
+      "--require",
+      "0050"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation-52017322",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-question-needs-both-families.md",
+      "--base",
+      "e891e83582ac10936ffd67fb083b530b009ad847"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "comments",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "e891e83582ac10936ffd67fb083b530b009ad847",
+      "52017322520dea243f982a015efa7747f8c05c9f",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "design",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-question-needs-both-families.md"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "e891e83582ac10936ffd67fb083b530b009ad847",
+      "52017322520dea243f982a015efa7747f8c05c9f"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-question-needs-both-families"
+    ],
+    "exit": 1
+  },
+  {
+    "name": "candidate-dispatch-records",
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation-52017322/kc-dev-flow-2/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/model-roster-question-needs-both-families"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "parity",
+    "command": [
+      "bash",
+      "scripts/version-parity-check.sh"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "roborev",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/roborev_gate.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation-52017322",
+      "--base",
+      "e891e83582ac10936ffd67fb083b530b009ad847"
+    ],
+    "exit": 3
+  }
+]

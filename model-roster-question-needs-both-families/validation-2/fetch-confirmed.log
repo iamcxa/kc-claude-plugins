@@ -1,0 +1,3 @@
+git fetch origin main: exit 0 after sandbox escalation.
+FETCH_HEAD = origin/main = e891e83582ac10936ffd67fb083b530b009ad847
+Literal workflow diff exit 0, empty.

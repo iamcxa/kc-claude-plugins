@@ -1,0 +1,61 @@
+{
+  "source": "FO extracted record only; no new child run",
+  "control_distinct": true,
+  "records": [
+    {
+      "agent_prefix": "5cbc07b9",
+      "label": "AC-6 Opus high",
+      "models": [
+        "claude-fable-5-1",
+        "claude-opus-5-5"
+      ],
+      "efforts": [
+        "high"
+      ]
+    },
+    {
+      "agent_prefix": "d241e97a",
+      "label": "AC-6 Opus low",
+      "models": [
+        "claude-fable-5-1",
+        "claude-opus-5-5"
+      ],
+      "efforts": [
+        "low"
+      ]
+    },
+    {
+      "agent_prefix": "b5491f32",
+      "label": "AC-6 Sol xhigh",
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "efforts": [
+        "xhigh"
+      ]
+    },
+    {
+      "agent_prefix": "4199a1c9",
+      "label": "AC-6 Astra xhigh",
+      "models": [
+        "gpt-6-astra"
+      ],
+      "efforts": [
+        "xhigh"
+      ]
+    }
+  ],
+  "files": {
+    "native-runs/4199a1c9.log": "4833c83a12b011dea53a59d6d660bbb20273450329668de1c8eeacfbb6ab8513",
+    "native-runs/5cbc07b9.log": "df3f2e151ff54f9a0c9e6771abad10171420e38d7a0b9124fdacc5cb323ada11",
+    "native-runs/README.md": "99178b1beb399ffd6b46562a3017c8103ce28094136bcb547ed2a46a24a14bda",
+    "native-runs/b5491f32.log": "09ed7d87814e22de54904e85776143bb40190f57e14874660c89ddb9feae29f1",
+    "native-runs/d241e97a.log": "013e41d47f31847299c5238ed95615578ab30cf5eba09b7b4dea7ed5a7b52179",
+    "native-runs/runtime.json": "d0ff0e4f8f00243db03836f2b80726096c14f204286c830f58c30130fe52b9ec"
+  },
+  "missing_from_supplied_bundle": [
+    "process arguments",
+    "full resolver/spawn records and fixture commit",
+    "inbound event timestamps matched to last-turn timestamps"
+  ]
+}

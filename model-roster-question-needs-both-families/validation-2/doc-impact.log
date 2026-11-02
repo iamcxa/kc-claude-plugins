@@ -1,0 +1,6 @@
+docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md	updated	kc-dev-flow-2/scripts/model_roster.py
+docs/adr/0050-stage-roster-question-needs-codex-and-claude-and-offers-opus.md	updated	kc-dev-flow-2/scripts/model_roster.py
+kc-dev-flow-2/README.md	review	kc-dev-flow-2/scripts/test_sd_dispatch.py
+kc-dev-flow-2/references/sd/adoption.md	updated	kc-dev-flow-2/scripts/test_sd_dispatch.py
+learning.md	review	kc-dev-flow-2/scripts/test_sd_dispatch.py
+5 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

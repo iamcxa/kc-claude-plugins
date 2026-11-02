@@ -1,0 +1,17 @@
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 1.719s
+
+OK
+POC README matches the five-stage README without ideation
+--- derived
++++ /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-model-roster-question-needs-both-families/.context/roster-validation2-evidence/fixtures/tmpm6ub9kk2/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false

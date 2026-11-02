@@ -468,3 +468,37 @@ REJECTED at 57321c0b4e9006c2a80c72b4afb1aa368e1ec2a2 for incomplete accepted evi
 ### Summary
 
 This complete report supersedes the earlier implementation report and corrects its missing quoted-block coverage. The single local repair commit is bc882e6483ab2ee6a0944bbdcf6d86f20ae8aef1; all 26 CI commands pass locally, while native AC-6 proof, review, publication, hosted revalidation and post-release work remain with FO.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #765 head 52017322 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at `52017322520dea243f982a015efa7747f8c05c9f`: AC-6 remains incomplete. [Criterion matrix and finding evidence](model-roster-question-needs-both-families/validation-2/evidence.md); 17 local mutations detected, native/release falsifiers explicitly not rerun.
+- DONE: This rerun's ruling is Captain amendment 1 in the task file, which keeps the criteria and recheck after the parents merged: #763 and #764 are merged and this head contains main. Re-judge F1 to F5 of validation-1 and the block-list repair. FO's AC-6 run is native-runs/README.md, runtime.json and the child logs; judge it as FO's record and name any gap. Do not start agents yourself
+  Amendment 1 retains all criteria. F3/F4 resolved by actual merge ancestry and the empty origin/main workflow diff; quoted-block repair passes its failing mutation. F1/F2 remain incomplete evidence; F5 remains tool-version drift. No agent started.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  [Five exact steps and observed output](model-roster-question-needs-both-families/validation-2/acceptance.md), fresh bash exit 0. Installed ADR lint --since e891e83582ac10936ffd67fb083b530b009ad847, with/without --require 0050: exit 0, 49 records, 0 legacy.
+- DONE: AC-1 through AC-5 — prerequisite matrix, provider/model/effort validation, recommendation, option mapping and family comparison.
+  Committed subprocess fixtures pass; all six quoted/unquoted list forms preserve manifests. Missing-Claude, flattened-pairing, effort-cap, defaults/question drift, unmapped-ultra and family-lie mutations each fail. Fresh list_models supports all emitted options.
+- FAILED: AC-6 — complete roster-to-runtime and matched completion proof at the accepted boundary.
+  FO's supplied record reports Opus/high vs low and Sol/Astra xhigh; process arguments and timestamped inbound receipts are not retained there. Current resolution agrees and parents are merged; those facts do not supply the missing process/receipt evidence.
+- DONE: AC-7 and AC-8 — absence compatibility and ADR succession.
+  Absent/deleted/linked fixtures retain readme-default/null and unchanged files; both follow-family text mutations fail. ADR 0047 points to 0050; restoring Accepted fails.
+- DONE: AC-9 and AC-11 — package gates, unchanged workflow and provider-host build behavior.
+  All 26 CI commands exit 0 (1009 unittest cases, 7 existing skips), plus release parity. Literal origin/main workflow diff is empty at e891e835; four real disposable builds emit opus/null/null, with omitted-host sonnet as the falsifier; workflow/D5 text mutations fail.
+- SKIPPED: AC-10 and fresh native/release falsifiers.
+  AC-10 remains explicitly post-release with FO; this dispatch prohibits spawning agents. No synthetic assertion substitutes for a new real-child completion/control run.
+- DONE: Required guards, affected documents, reading cost and hosted candidate status.
+  Number/design/comment checks pass (1/172 comments, 0.6% <= 5%); all five doc-impact entries accounted for. Roster 760->873, adoption 2241->2242, workflow 5781 unchanged. Five hosted checks SUCCESS at 520173225; CI/model cost unmeasured and triggers unchanged.
+- FAILED: Installed dispatch-record check; candidate checker passes.
+  Installed 0.34.0 rejects final-reply wording in four records; candidate accepts all six. Historical records are preserved; F5 is Polish.
+- SKIPPED: A clean exact-head RoboRev result, product publication and delivery.
+  RoboRev exit 3: `incomplete: the roborev daemon is not running`. No product push, PR mutation, release or #762 update; FO retains those obligations.
+- F1 Needs decision: AC-6 process/runtime proof remains incomplete in FO's supplied bundle; high/low control and current tuple agreement narrow the earlier gap but do not replace the required process record.
+- F2 Needs decision: AC-6's inbound receipts are summarized without the events/timestamps needed to compare against each child's last turn; no callback loss is asserted.
+- F5 Polish: installed checker grammar predates the merged final-reply route; the candidate validates all six saved dispatch records.
+
+### Summary
+
+Validation cycle 2 rejects exact head 520173225 for incomplete AC-6 evidence, with no demonstrated scoped product defect. Parent ancestry, the literal origin/main condition and quoted-block repair are now verified; local checks and the five-step acceptance pass. Product bytes stayed unchanged, the detached validation checkout was removed, and FO retains the evidence, gate and delivery decisions.
+

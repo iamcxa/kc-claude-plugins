@@ -1,0 +1,49 @@
+{
+  "observed_at": "2026-11-02T08:38:44.747Z",
+  "source": "Paseo list_models (read live by validator)",
+  "providers": [
+    {
+      "provider": "codex",
+      "models": [
+        {
+          "id": "gpt-6.1-sol",
+          "options": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max",
+            "ultra"
+          ]
+        },
+        {
+          "id": "gpt-6-astra",
+          "options": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max",
+            "ultra"
+          ]
+        }
+      ]
+    },
+    {
+      "provider": "claude",
+      "models": [
+        {
+          "id": "claude-opus-5-5",
+          "options": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max",
+            "ultracode"
+          ]
+        }
+      ]
+    }
+  ]
+}

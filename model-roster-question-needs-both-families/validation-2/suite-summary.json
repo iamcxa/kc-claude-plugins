@@ -1,0 +1,138 @@
+{
+  "commands": 26,
+  "all_exit_zero": true,
+  "cases": 1009,
+  "skipped": 7,
+  "counts": [
+    {
+      "script": "kc-dev-flow-2/scripts/lint-skills.py",
+      "cases": 0,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_lint_skills.py",
+      "cases": 47,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "cases": 202,
+      "skipped": 4
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+      "cases": 9,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_poc_readme.py",
+      "cases": 9,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+      "cases": 14,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_number_guards.py",
+      "cases": 28,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+      "cases": 35,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+      "cases": 5,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+      "cases": 15,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+      "cases": 23,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "cases": 78,
+      "skipped": 1
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "cases": 100,
+      "skipped": 1
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+      "cases": 119,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_validation_security.py",
+      "cases": 5,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "cases": 129,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+      "cases": 8,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+      "cases": 8,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_package_version.py",
+      "cases": 6,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+      "cases": 13,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_observer_check.py",
+      "cases": 19,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_role_triggers.py",
+      "cases": 27,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_laws_check.py",
+      "cases": 63,
+      "skipped": 1
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_learning.py",
+      "cases": 47,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "cases": 0,
+      "skipped": 0
+    },
+    {
+      "script": "kc-dev-flow-2/scripts/test_observer_recovery.py",
+      "cases": 0,
+      "skipped": 0
+    }
+  ]
+}

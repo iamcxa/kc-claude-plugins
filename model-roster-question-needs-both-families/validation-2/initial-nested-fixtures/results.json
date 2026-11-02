@@ -1,0 +1,145 @@
+[
+  {
+    "script": "kc-dev-flow-2/scripts/lint-skills.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "seconds": 0.18
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_lint_skills.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "seconds": 10.87
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "env": {},
+    "exit": 1,
+    "seconds": 14.39
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "env": {},
+    "exit": 1,
+    "seconds": 1.55
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "seconds": 1.84
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "seconds": 7.01
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_number_guards.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "seconds": 15.94
+  },
+  {
+    "script": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "seconds": 0.18
+  },
+  {
+    "script": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "seconds": 2.71
+  },
+  {
+    "script": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "seconds": 0.08
+  },
+  {
+    "script": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "seconds": 0.29
+  },
+  {
+    "script": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "seconds": 1.78
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "env": {},
+    "exit": 1,
+    "seconds": 92.54
+  }
+]

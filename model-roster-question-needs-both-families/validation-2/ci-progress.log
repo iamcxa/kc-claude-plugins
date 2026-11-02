@@ -1,0 +1,27 @@
+{"index": 1, "total": 26, "script": "kc-dev-flow-2/scripts/lint-skills.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/lint-skills.py"], "env": {}, "exit": 0, "seconds": 0.18}
+{"index": 2, "total": 26, "script": "kc-dev-flow-2/scripts/test_lint_skills.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_lint_skills.py"], "env": {}, "exit": 0, "seconds": 10.86}
+{"index": 3, "total": 26, "script": "kc-dev-flow-2/scripts/test_design_surfaces.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_design_surfaces.py"], "env": {}, "exit": 0, "seconds": 10.13}
+{"index": 4, "total": 26, "script": "kc-dev-flow-2/scripts/test_adr_doc_checks.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_adr_doc_checks.py"], "env": {}, "exit": 0, "seconds": 1.05}
+{"index": 5, "total": 26, "script": "kc-dev-flow-2/scripts/test_poc_readme.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_poc_readme.py"], "env": {}, "exit": 0, "seconds": 1.63}
+{"index": 6, "total": 26, "script": "kc-dev-flow-2/scripts/test_comment_ratio.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_comment_ratio.py"], "env": {}, "exit": 0, "seconds": 6.91}
+{"index": 7, "total": 26, "script": "kc-dev-flow-2/scripts/test_number_guards.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_number_guards.py"], "env": {}, "exit": 0, "seconds": 15.3}
+{"index": 8, "total": 26, "script": "kc-dev-flow-2/extensions/codex/test_codex_review.py", "command": ["python3", "-B", "kc-dev-flow-2/extensions/codex/test_codex_review.py"], "env": {}, "exit": 0, "seconds": 0.13}
+{"index": 9, "total": 26, "script": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py", "command": ["python3", "-B", "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"], "env": {}, "exit": 0, "seconds": 2.02}
+{"index": 10, "total": 26, "script": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py", "command": ["python3", "-B", "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"], "env": {}, "exit": 0, "seconds": 0.07}
+{"index": 11, "total": 26, "script": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py", "command": ["python3", "-B", "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"], "env": {}, "exit": 0, "seconds": 0.29}
+{"index": 12, "total": 26, "script": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", "command": ["python3", "-B", "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"], "env": {}, "exit": 0, "seconds": 1.53}
+{"index": 13, "total": 26, "script": "kc-dev-flow-2/scripts/test_dispatch_records.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_dispatch_records.py"], "env": {}, "exit": 0, "seconds": 90.47}
+{"index": 14, "total": 26, "script": "kc-dev-flow-2/scripts/test_delivery_gate.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_delivery_gate.py"], "env": {}, "exit": 0, "seconds": 64.0}
+{"index": 15, "total": 26, "script": "kc-dev-flow-2/scripts/test_validation_security.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_validation_security.py"], "env": {}, "exit": 0, "seconds": 0.55}
+{"index": 16, "total": 26, "script": "kc-dev-flow-2/scripts/test_pr_watch.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_pr_watch.py"], "env": {}, "exit": 0, "seconds": 49.88}
+{"index": 17, "total": 26, "script": "kc-dev-flow-2/scripts/test_replay_dispatch.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_replay_dispatch.py"], "env": {}, "exit": 0, "seconds": 4.33}
+{"index": 18, "total": 26, "script": "kc-dev-flow-2/scripts/test_decision_ledger.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_decision_ledger.py"], "env": {}, "exit": 0, "seconds": 0.09}
+{"index": 19, "total": 26, "script": "kc-dev-flow-2/scripts/test_package_version.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_package_version.py"], "env": {}, "exit": 0, "seconds": 0.08}
+{"index": 20, "total": 26, "script": "kc-dev-flow-2/scripts/test_workflow_checkout.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_workflow_checkout.py"], "env": {}, "exit": 0, "seconds": 6.57}
+{"index": 21, "total": 26, "script": "kc-dev-flow-2/scripts/test_observer_check.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_observer_check.py"], "env": {}, "exit": 0, "seconds": 6.44}
+{"index": 22, "total": 26, "script": "kc-dev-flow-2/scripts/test_role_triggers.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_role_triggers.py"], "env": {}, "exit": 0, "seconds": 18.66}
+{"index": 23, "total": 26, "script": "kc-dev-flow-2/scripts/test_laws_check.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_laws_check.py"], "env": {}, "exit": 0, "seconds": 77.4}
+{"index": 24, "total": 26, "script": "kc-dev-flow-2/scripts/test_learning.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_learning.py"], "env": {}, "exit": 0, "seconds": 45.74}
+{"index": 25, "total": 26, "script": "kc-dev-flow-2/scripts/test_sd_dispatch.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_sd_dispatch.py", "--sd-plugin-root", "/tmp/roster-repair-ci/spacedock-4d158a484ec73e184861067f8ed1e20087fdc26a"], "env": {}, "exit": 0, "seconds": 46.99}
+{"index": 26, "total": 26, "script": "kc-dev-flow-2/scripts/test_observer_recovery.py", "command": ["python3", "-B", "kc-dev-flow-2/scripts/test_observer_recovery.py"], "env": {"SPACEDOCK_BIN": "/Users/kent/.local/bin/spacedock"}, "exit": 0, "seconds": 2.71}
+SUITE EXIT: 0
