@@ -25,6 +25,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:worker-completion-reaches-fo-on-paseo:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:worker-completion-reaches-fo-on-paseo-ideation-1
+              briefing:
+                id: briefing:worker-completion-reaches-fo-on-paseo:ideation:attempt-1:revision-1
+                digest: sha256:a86db04be765194a1318c6d748b4bcbbd2e20a7fe4c25ba8d2ffc4845aa71f13
+                room-ref: ./worker-completion-reaches-fo-on-paseo/review/ideation/briefing-1
 ---
 
 ## Scope

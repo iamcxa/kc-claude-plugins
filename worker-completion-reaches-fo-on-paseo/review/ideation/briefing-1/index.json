@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-completion-reaches-fo-on-paseo:ideation:attempt-1:revision-1",
+  "question": "「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:worker-completion-reaches-fo-on-paseo:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/43190638f9949c6af51c51faf2bca3386dc59f3c/worker-completion-reaches-fo-on-paseo.md",
+      "rev": "sha256:a0986ec1573fff3c56f92e5e83b00fbacf239df19cb3b26ae2497eddf114e6af",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 ideation sitting. Chief-engineer reviewed the first four designs; the completion and Gemini designs had no separate batch review."
+    }
+  ]
+}
