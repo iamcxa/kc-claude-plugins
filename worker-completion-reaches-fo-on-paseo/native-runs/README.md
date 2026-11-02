@@ -15,3 +15,6 @@ Failed attempts at the permission case: b489a552 ran `date` with no prompt; ea3b
 Limits: the Claude body repeated part of the prompt after the Done line, so "Done" is not the last word and a strict line match would need care. A `finished` event also fires when a worker pauses for a background job (ca686dda, 2026-11-02), so FO checks the task file before treating it as completion.
 
 Send-attempt check: in f33b5aa3.log and e48b1442.log the only match for SendMessage or send_agent_prompt is the prompt line itself; no `[Send message]` tool row appears.
+AC-5 dispatch command, 2026-11-02T04:40:24Z, one shell command: impl1.py (dispatch build --stamp) && paseo workspace create --isolation local --path <worktree> --background --json; next host action create_agent.
+
+AC-5 real stage dispatch: special-roles-follow-the-model-table implementation-1, worker bc46043b. create_agent returned cwd .worktrees/spacedock-ensign-special-roles-follow-the-model-table with workspaceId wks_00a7078b0a0e1dc6. Falsifier seen on the probes above: with no workspaceId the worker's cwd is the FO's workspace. pwd and git top-level are in that worker's first actions; read its timeline.
