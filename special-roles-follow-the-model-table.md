@@ -57,6 +57,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-02T04:40:41Z
+worktree: .worktrees/spacedock-ensign-special-roles-follow-the-model-table
 ---
 
 ## Scope
