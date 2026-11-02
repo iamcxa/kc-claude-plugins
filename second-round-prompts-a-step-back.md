@@ -133,7 +133,7 @@ Checked 2026-11-02 with a one-off read-only reader over `*.md` task files, live 
 | Repair events (implementation headings minus one) | not the same event | `paseo-codex-dispatch-practice` failed three validations with one implementation report, so 0 repair passes |
 | `--drift-date` | not a count | It dates external review rounds on an open PR, and `delivery_gate.py` runs without it. Its clear rule is reused above |
 | Validation headings | 54 of 96 here | Most re-checks pass |
-| A validation heading followed by an implementation heading | 77 of 217 | Same false fires, and misses `paseo-codex-dispatch-practice` |
+| A validation heading followed by an implementation heading | 77 of 217 (first pass, not re-counted) | Same false fires, and misses `paseo-codex-dispatch-practice` |
 | Summary says REJECTED without PASSED | 13 of 221 | Conflicts with two rulings (D1) |
 | F bullet (chosen) | 7 of 221 | Reads a required form; misses reports written without it (D1) |
 
