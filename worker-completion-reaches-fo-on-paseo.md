@@ -44,6 +44,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-02T04:30:20Z
+worktree: .worktrees/spacedock-ensign-worker-completion-reaches-fo-on-paseo
 ---
 
 ## Scope
