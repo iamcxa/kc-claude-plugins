@@ -1453,6 +1453,25 @@ class TasksTests(unittest.TestCase):
         self.fourth_repair("some-task", archived=True)
         self.assertEqual(self.tasks({}), (0, []))
 
+    def test_second_failed_validation_is_advisory_live_and_silent_archived(self):
+        self.readme("roborev")
+        report = "\n## Stage Report: validation\n\n- F1 Material: gap\n"
+        self.task("some-task", worktree=False, body=report.encode())
+        record = self.record("some-task", "## Checklist\n\n- one\n", commit=False)
+        record.rename(record.with_name("validation-1.md"))
+        self.git(self.state, "add", "some-task/dispatch")
+        self.git(self.state, "commit", "-qm", "validation dispatch")
+        self.assertEqual(self.tasks({}), (0, []))
+        self.task("some-task", worktree=False, body=(report * 2).encode())
+        code, lines = self.tasks({})
+        self.assertEqual((code, len(lines)), (0, 1), lines)
+        self.assertIn("before the next step, answer: is what I am solving still the outcome first asked for", lines[0])
+        self.assertNotIn("dispatch kc-dev-flow-2:chief-engineer", lines[0])
+        (self.state / "_archive").mkdir()
+        self.git(self.state, "mv", "some-task.md", "_archive/some-task.md")
+        self.git(self.state, "commit", "-qm", "archive")
+        self.assertEqual(self.tasks({}), (0, []))
+
     def test_a_task_the_role_check_cannot_read_is_reported_with_exit_2(self):
         self.readme("roborev")
         self.fourth_repair("some-task", commit=False)
