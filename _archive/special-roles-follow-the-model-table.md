@@ -1,6 +1,6 @@
 ---
 title: Special roles follow the Captain's model table, and the trigger check recognizes Codex models
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 gates:
@@ -75,10 +75,13 @@ gates:
                 reason: The Captain 「照建議」 (chat, 2026-11-02), answering the batch 12 sitting 「決定：四件事都照建議嗎？要改哪件直接說。」, whose item 1 merges this PR, as amended by FO to wait for Codex, which then found no major issues; a regular merge as that sitting said.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-02T04:40:41Z
 worktree: .worktrees/spacedock-ensign-special-roles-follow-the-model-table
 pr: pr-merge:764
+verdict: PASSED
+completed: 2026-11-02T08:26:04Z
+archived: 2026-11-02T08:26:04Z
 ---
 
 ## Scope
