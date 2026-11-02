@@ -1,0 +1,23 @@
+F.
+======================================================================
+FAIL: test_plain_copy_skips_only_new_predicate_independent_of_cwd (test_dispatch_records.LiveValidationRulingTests.test_plain_copy_skips_only_new_predicate_independent_of_cwd)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1306, in test_plain_copy_skips_only_new_predicate_independent_of_cwd
+    self.assertEqual(self.cli(copied, cwd=cwd), (0, ""))
+AssertionError: Tuples differ: (2, '/Users/kent/conductor/workspaces/kc-c[303 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/tmp/tmpbkmwtv6f/plain/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: uncommitted-report; hold dispatch and '
+-  'report the missing history to FO\n')
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.484s
+
+FAILED (failures=1)

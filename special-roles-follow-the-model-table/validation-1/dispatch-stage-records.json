@@ -1,0 +1,170 @@
+[
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-ideation/docs/dev2",
+      "--entity-path",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-ideation/docs/dev2/.spacedock-state/df2-f4f44ae08d-pilot-claude-ideation.md",
+      "--stage",
+      "ideation",
+      "--host",
+      "claude",
+      "--checklist-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-checklist.txt",
+      "--scope-notes-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-scope-notes.txt",
+      "--stamp"
+    ],
+    "cwd": "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-ideation/docs/dev2",
+    "stdin": null,
+    "exit": 0,
+    "runtime_markers": [
+      "CODEX_THREAD_ID"
+    ],
+    "stdout": "{\n  \"schema_version\": 2,\n  \"subagent_type\": \"spacedock:ensign\",\n  \"description\": \"Synthetic CLI fixture, not product acceptance: ideation\",\n  \"fetch_commands\": [\n    \"/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-ideation/docs/dev2 --stage ideation\"\n  ],\n  \"dispatch_file_path\": \"/tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-claude-ideation-ideation.md\",\n  \"prompt\": \"Skill(skill=\\\"spacedock:ensign\\\"); then Read /tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-claude-ideation-ideation.md and treat its content as your assignment.\",\n  \"model\": \"opus\",\n  \"name\": \"spacedock-ensign-df2-f4f44ae08d-pilot-claude-ideation-ideation\",\n  \"run_in_background\": true\n}\n",
+    "stderr": "[build] effective_model=opus (from stage) \u2192 Agent model=opus\n"
+  },
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-ideation/docs/dev2",
+      "--entity-path",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-ideation/docs/dev2/.spacedock-state/df2-f4f44ae08d-pilot-codex-ideation.md",
+      "--stage",
+      "ideation",
+      "--host",
+      "codex",
+      "--checklist-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-checklist.txt",
+      "--scope-notes-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-scope-notes.txt",
+      "--stamp"
+    ],
+    "cwd": "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-ideation/docs/dev2",
+    "stdin": null,
+    "exit": 0,
+    "runtime_markers": [
+      "CODEX_THREAD_ID"
+    ],
+    "stdout": "{\n  \"schema_version\": 2,\n  \"subagent_type\": \"spacedock:ensign\",\n  \"description\": \"Synthetic CLI fixture, not product acceptance: ideation\",\n  \"fetch_commands\": [\n    \"/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-ideation/docs/dev2 --stage ideation\"\n  ],\n  \"dispatch_file_path\": \"/tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-codex-ideation-ideation.md\",\n  \"prompt\": \"$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-codex-ideation-ideation.md and treat its content as your assignment.\",\n  \"model\": null,\n  \"name\": \"spacedock-ensign-df2-f4f44ae08d-pilot-codex-ideation-ideation\"\n}\n",
+    "stderr": "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+  },
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-implementation/docs/dev2",
+      "--entity-path",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-implementation/docs/dev2/.spacedock-state/df2-f4f44ae08d-pilot-claude-implementation.md",
+      "--stage",
+      "implementation",
+      "--host",
+      "claude",
+      "--checklist-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-checklist.txt",
+      "--scope-notes-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-scope-notes.txt",
+      "--stamp"
+    ],
+    "cwd": "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-implementation/docs/dev2",
+    "stdin": null,
+    "exit": 0,
+    "runtime_markers": [
+      "CODEX_THREAD_ID"
+    ],
+    "stdout": "{\n  \"schema_version\": 2,\n  \"subagent_type\": \"spacedock:ensign\",\n  \"description\": \"Synthetic CLI fixture, not product acceptance: implementation\",\n  \"fetch_commands\": [\n    \"/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-implementation/docs/dev2 --stage implementation\"\n  ],\n  \"dispatch_file_path\": \"/tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-clau-implementation.md\",\n  \"prompt\": \"Skill(skill=\\\"spacedock:ensign\\\"); then Read /tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-clau-implementation.md and treat its content as your assignment.\",\n  \"model\": \"sonnet\",\n  \"name\": \"spacedock-ensign-df2-f4f44ae08d-pilot-clau-implementation\",\n  \"run_in_background\": true\n}\n",
+    "stderr": "[build] effective_model=sonnet (from defaults) \u2192 Agent model=sonnet\n"
+  },
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-implementation/docs/dev2",
+      "--entity-path",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-implementation/docs/dev2/.spacedock-state/df2-f4f44ae08d-pilot-codex-implementation.md",
+      "--stage",
+      "implementation",
+      "--host",
+      "codex",
+      "--checklist-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-checklist.txt",
+      "--scope-notes-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-scope-notes.txt",
+      "--stamp"
+    ],
+    "cwd": "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-implementation/docs/dev2",
+    "stdin": null,
+    "exit": 0,
+    "runtime_markers": [
+      "CODEX_THREAD_ID"
+    ],
+    "stdout": "{\n  \"schema_version\": 2,\n  \"subagent_type\": \"spacedock:ensign\",\n  \"description\": \"Synthetic CLI fixture, not product acceptance: implementation\",\n  \"fetch_commands\": [\n    \"/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-implementation/docs/dev2 --stage implementation\"\n  ],\n  \"dispatch_file_path\": \"/tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-code-implementation.md\",\n  \"prompt\": \"$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-code-implementation.md and treat its content as your assignment.\",\n  \"model\": null,\n  \"name\": \"spacedock-ensign-df2-f4f44ae08d-pilot-code-implementation\"\n}\n",
+    "stderr": "[build] declared model 'sonnet' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+  },
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-validation/docs/dev2",
+      "--entity-path",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-validation/docs/dev2/.spacedock-state/df2-f4f44ae08d-pilot-claude-validation.md",
+      "--stage",
+      "validation",
+      "--host",
+      "claude",
+      "--checklist-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-checklist.txt",
+      "--scope-notes-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-scope-notes.txt",
+      "--stamp"
+    ],
+    "cwd": "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-validation/docs/dev2",
+    "stdin": null,
+    "exit": 0,
+    "runtime_markers": [
+      "CODEX_THREAD_ID"
+    ],
+    "stdout": "{\n  \"schema_version\": 2,\n  \"subagent_type\": \"spacedock:ensign\",\n  \"description\": \"Synthetic CLI fixture, not product acceptance: validation\",\n  \"fetch_commands\": [\n    \"/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/tmp/dev-flow-2-sd-wkzd78bn/pilot-claude-validation/docs/dev2 --stage validation\"\n  ],\n  \"dispatch_file_path\": \"/tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-claude-v-validation.md\",\n  \"prompt\": \"Skill(skill=\\\"spacedock:ensign\\\"); then Read /tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-claude-v-validation.md and treat its content as your assignment.\",\n  \"model\": \"opus\",\n  \"name\": \"spacedock-ensign-df2-f4f44ae08d-pilot-claude-v-validation\",\n  \"run_in_background\": true\n}\n",
+    "stderr": "[build] effective_model=opus (from stage) \u2192 Agent model=opus\n"
+  },
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-validation/docs/dev2",
+      "--entity-path",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-validation/docs/dev2/.spacedock-state/df2-f4f44ae08d-pilot-codex-validation.md",
+      "--stage",
+      "validation",
+      "--host",
+      "codex",
+      "--checklist-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-checklist.txt",
+      "--scope-notes-file",
+      "/private/tmp/dev-flow-2-sd-wkzd78bn/transport-scope-notes.txt",
+      "--stamp"
+    ],
+    "cwd": "/private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-validation/docs/dev2",
+    "stdin": null,
+    "exit": 0,
+    "runtime_markers": [
+      "CODEX_THREAD_ID"
+    ],
+    "stdout": "{\n  \"schema_version\": 2,\n  \"subagent_type\": \"spacedock:ensign\",\n  \"description\": \"Synthetic CLI fixture, not product acceptance: validation\",\n  \"fetch_commands\": [\n    \"/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/tmp/dev-flow-2-sd-wkzd78bn/pilot-codex-validation/docs/dev2 --stage validation\"\n  ],\n  \"dispatch_file_path\": \"/tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-codex-va-validation.md\",\n  \"prompt\": \"$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-df2-f4f44ae08d-pilot-codex-va-validation.md and treat its content as your assignment.\",\n  \"model\": null,\n  \"name\": \"spacedock-ensign-df2-f4f44ae08d-pilot-codex-va-validation\"\n}\n",
+    "stderr": "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+  }
+]

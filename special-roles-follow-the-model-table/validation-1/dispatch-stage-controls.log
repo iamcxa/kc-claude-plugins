@@ -1,0 +1,8 @@
+AC8 claude ideation model=opus [build] effective_model=opus (from stage) → Agent model=opus
+AC8 codex ideation model=None [build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null
+AC8 claude implementation model=sonnet [build] effective_model=sonnet (from defaults) → Agent model=sonnet
+AC8 codex implementation model=None [build] declared model 'sonnet' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null
+AC8 claude validation model=opus [build] effective_model=opus (from stage) → Agent model=opus
+AC8 codex validation model=None [build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null
+AC8 remove ideation model: opus => [build] effective_model=sonnet (from defaults) → Agent model=sonnet
+AC8 remove validation model: opus => [build] effective_model=sonnet (from defaults) → Agent model=sonnet

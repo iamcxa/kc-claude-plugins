@@ -1,0 +1,16 @@
+test_only_the_ideation_entry_and_section_are_removed (test_poc_readme.DeriveTests.test_only_the_ideation_entry_and_section_are_removed) ... FAIL
+
+======================================================================
+FAIL: test_only_the_ideation_entry_and_section_are_removed (test_poc_readme.DeriveTests.test_only_the_ideation_entry_and_section_are_removed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_poc_readme.py", line 86, in test_only_the_ideation_entry_and_section_are_removed
+    self.assertEqual(poc.derive(SOURCE), "\n".join(expected))
+AssertionError: '---\[358 chars]n      model: opus\n    - name: implementation[36732 chars]e.\n' != '---\[358 chars]n    - name: implementation\n      worktree: t[36713 chars]e.\n'
+Diff is 37651 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)
+Expected failure: mutant retains the removed ideation model; real derivation test rejected it.

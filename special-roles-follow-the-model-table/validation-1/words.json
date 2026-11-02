@@ -1,0 +1,32 @@
+[
+  {
+    "path": "kc-dev-flow-2/references/sd/workflow.md",
+    "base_words": 5781,
+    "candidate_words": 5781
+  },
+  {
+    "path": "kc-dev-flow-2/references/model-roster.md",
+    "base_words": 634,
+    "candidate_words": 760
+  },
+  {
+    "path": "kc-dev-flow-2/agents/chief-engineer.md",
+    "base_words": 129,
+    "candidate_words": 122
+  },
+  {
+    "path": "kc-dev-flow-2/agents/engineering-reviewer.md",
+    "base_words": 188,
+    "candidate_words": 179
+  },
+  {
+    "path": "kc-dev-flow-2/agents/design-director.md",
+    "base_words": 118,
+    "candidate_words": 122
+  },
+  {
+    "path": "kc-dev-flow-2/agents/observer.md",
+    "base_words": 135,
+    "candidate_words": 139
+  }
+]

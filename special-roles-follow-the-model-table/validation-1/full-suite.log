@@ -1,0 +1,208 @@
+1/26 exit=0 tests=None kc-dev-flow-2/scripts/lint-skills.py
+2/26 exit=0 tests=47 kc-dev-flow-2/scripts/test_lint_skills.py
+3/26 exit=1 tests=202 kc-dev-flow-2/scripts/test_design_surfaces.py
+values
+scope check not run: no frontmatter
+task.md: '## FO alignment' needs a 'Visible change:' line
+scope check not run: no frontmatter
+task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+scope check not run: no frontmatter
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+scope check not run: no frontmatter
+task.md: surface 'ui' needs a 'UI proposal:' line with text
+scope check not run: no frontmatter
+task.md: surface 'ui' Preview 'missing.html' does not exist
+scope check not run: no frontmatter
+task.md: surface 'db' needs a 'Migration source:' line with a value
+scope check not run: no frontmatter
+task.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table
+scope check not run: no frontmatter
+task.md: design surfaces presentable
+scope check not run: no frontmatter
+task.md: seed fields and FO alignment recorded
+task.md: seed fields and FO alignment recorded
+task.md: seed fields and FO alignment recorded
+task.md: surface 'ui' needs a 'UI proposal:' line with text
+task.md: surface 'ui' needs a 'Preview:' line
+scope check not run: no frontmatter
+task.md: missing '## FO alignment' section
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: '## FO alignment' needs a 'Visible change:' line
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+task.md: 'Surfaces:' has unknown value(s) api
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+ssss.................................................................................................................F....................................................................................
+======================================================================
+FAIL: test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it (__main__.ScopeCheckTests.test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1720, in test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it
+    self.assertEqual(ds.scope_hold(plain / "t.md"), ("not run", "not in a git checkout"))
+AssertionError: Tuples differ: ('not run', 'backlog sha not readable by git') != ('not run', 'not in a git checkout')
+
+First differing element 1:
+'backlog sha not readable by git'
+'not in a git checkout'
+
+- ('not run', 'backlog sha not readable by git')
++ ('not run', 'not in a git checkout')
+
+----------------------------------------------------------------------
+Ran 202 tests in 9.321s
+
+FAILED (failures=1, skipped=4)
+
+4/26 exit=1 tests=9 kc-dev-flow-2/scripts/test_adr_doc_checks.py
+1 ADR file(s) checked, 0 legacy; changed records not checked (no --since or --require)
+required ADR 2: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+2 ADR file(s) checked, 0 legacy
+1 ADR file(s) checked, 0 legacy
+0002-first.md: Decision needs a '**Words:**' line
+0002-first.md: Decision needs a '**Options considered:**' line
+0002-first.md: sections must be exactly Status, Context, Decision, Consequences in that order
+0002-first.md: section 'Context' is empty
+0002-first.md: status 'Done' is not Proposed, Accepted, Deprecated or 'Superseded by NNNN'
+0002-first.md: superseded by 0009, which does not exist
+0002-first.md: first line must be '# 2. <title>'
+0002-first.md: needs a 'Date: YYYY-MM-DD' line before the first section
+2-first.md: file name must be NNNN-short-title.md
+0002-second.md: number 2 is also used by 0002-first.md
+2 ADR file(s) checked, 1 legacy
+required ADR 1 is a legacy record; a new ruling needs its own file
+required ADR 3 does not exist
+1 ADR file(s) checked, 0 legacy
+......F..
+======================================================================
+FAIL: test_since_requires_every_record_changed_after_the_base_and_no_other (__main__.AdrLintTests.test_since_requires_every_record_changed_after_the_base_and_no_other)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_adr_doc_checks.py", line 90, in test_since_requires_every_record_changed_after_the_base_and_no_other
+    self.assertEqual(self.lint_output([d, "--since", "HEAD"])[0], 2)
+AssertionError: 0 != 2
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.918s
+
+FAILED (failures=1)
+
+5/26 exit=0 tests=9 kc-dev-flow-2/scripts/test_poc_readme.py
+6/26 exit=0 tests=14 kc-dev-flow-2/scripts/test_comment_ratio.py
+7/26 exit=0 tests=28 kc-dev-flow-2/scripts/test_number_guards.py
+8/26 exit=0 tests=35 kc-dev-flow-2/extensions/codex/test_codex_review.py
+9/26 exit=0 tests=5 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py
+10/26 exit=0 tests=15 kc-dev-flow-2/extensions/copilot/test_copilot_review.py
+11/26 exit=0 tests=23 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py
+12/26 exit=0 tests=78 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py
+13/26 exit=1 tests=100 kc-dev-flow-2/scripts/test_dispatch_records.py
+40/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/tmp/tmpf93nan30/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+.................................F........F.................../Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/tmp/tmpwtlpq1qt/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+..
+======================================================================
+FAIL: test_plain_copy_skips_only_new_predicate_independent_of_cwd (__main__.LiveValidationRulingTests.test_plain_copy_skips_only_new_predicate_independent_of_cwd)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1306, in test_plain_copy_skips_only_new_predicate_independent_of_cwd
+    self.assertEqual(self.cli(copied, cwd=cwd), (0, ""))
+AssertionError: Tuples differ: (2, '/Users/kent/conductor/workspaces/kc-c[303 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/tmp/tmpynrdkrdb/plain/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: uncommitted-report; hold dispatch and '
+-  'report the missing history to FO\n')
+
+======================================================================
+FAIL: test_a_task_without_records_exits_clean_and_an_unreadable_state_exits_2 (__main__.NewestTests.test_a_task_without_records_exits_clean_and_an_unreadable_state_exits_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_dispatch_records.py", line 904, in test_a_task_without_records_exits_clean_and_an_unreadable_state_exits_2
+    self.assertEqual(code, 2)
+AssertionError: 0 != 2
+
+----------------------------------------------------------------------
+Ran 100 tests in 96.615s
+
+FAILED (failures=2, skipped=1)
+
+14/26 exit=1 tests=119 kc-dev-flow-2/scripts/test_delivery_gate.py
+..................................................................F....................................................
+======================================================================
+FAIL: test_a_state_that_is_not_a_git_work_tree_holds_with_exit_2_and_the_scripts_message (__main__.OwedRoleCallTests.test_a_state_that_is_not_a_git_work_tree_holds_with_exit_2_and_the_scripts_message)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1411, in test_a_state_that_is_not_a_git_work_tree_holds_with_exit_2_and_the_scripts_message
+    self.assertIn("is not a git work tree. Hold and report the cause.", result.out)
+AssertionError: 'is not a git work tree. Hold and report the cause.' not found in 'cannot tell whether a chief-engineer or engineering-reviewer call is owed: no task file for task at HEAD in /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/tmp/tmp6g6ir00_. Hold and report the cause.\nnext: hold the ask and show the Captain these lines.\n'
+
+----------------------------------------------------------------------
+Ran 119 tests in 81.962s
+
+FAILED (failures=1)
+
+15/26 exit=0 tests=5 kc-dev-flow-2/scripts/test_validation_security.py
+16/26 exit=1 tests=129 kc-dev-flow-2/scripts/test_pr_watch.py
+................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+                        {add,check,wait,tasks} [args ...]
+test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+................................................F................................................
+======================================================================
+FAIL: test_an_unreadable_state_with_a_dispatch_folder_is_reported_with_exit_2 (__main__.TasksTests.test_an_unreadable_state_with_a_dispatch_folder_is_reported_with_exit_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_pr_watch.py", line 1428, in test_an_unreadable_state_with_a_dispatch_folder_is_reported_with_exit_2
+    self.assertRegex(lines[0], r"^next: report some-task to the Captain: .*git cannot read the dispatch records")
+AssertionError: Regex didn't match: '^next: report some-task to the Captain: .*git cannot read the dispatch records' not found in 'next: report some-task to the Captain: cannot tell whether a chief-engineer or engineering-reviewer call is owed: no task file for some-task at HEAD in /Users/.'
+
+----------------------------------------------------------------------
+Ran 129 tests in 65.524s
+
+FAILED (failures=1)
+
+17/26 exit=0 tests=8 kc-dev-flow-2/scripts/test_replay_dispatch.py
+18/26 exit=0 tests=8 kc-dev-flow-2/scripts/test_decision_ledger.py
+19/26 exit=0 tests=6 kc-dev-flow-2/scripts/test_package_version.py
+20/26 exit=0 tests=13 kc-dev-flow-2/scripts/test_workflow_checkout.py
+21/26 exit=0 tests=19 kc-dev-flow-2/scripts/test_observer_check.py
+22/26 exit=0 tests=27 kc-dev-flow-2/scripts/test_role_triggers.py
+23/26 exit=1 tests=63 kc-dev-flow-2/scripts/test_laws_check.py
+...................................F........................s..
+======================================================================
+FAIL: test_live_ruling_predicate_is_skipped_by_real_historical_snapshot_caller (__main__.L2Test.test_live_ruling_predicate_is_skipped_by_real_historical_snapshot_caller)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_laws_check.py", line 335, in test_live_ruling_predicate_is_skipped_by_real_historical_snapshot_caller
+    self.assertEqual(code, 0, out)
+AssertionError: 2 != 0 : L1 observer-before-sentinel: 0 events judged in 911539c143a9..b53308fe35cc, 0 violated
+L3 amendment-append-only: 0 events judged in 911539c143a9..b53308fe35cc, 0 violated
+L2 dispatch-record-complete: cannot judge: dispatch_records.py exited 2: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/tmp/tmpkdc4cqt2/t/dispatch/validation-2.md:1: cannot verify validation ruling order: uncommitted-report; hold dispatch and report the missing history to FO
+
+
+----------------------------------------------------------------------
+Ran 63 tests in 132.041s
+
+FAILED (failures=1, skipped=1)
+
+24/26 exit=0 tests=47 kc-dev-flow-2/scripts/test_learning.py
+25/26 exit=1 tests=None kc-dev-flow-2/scripts/test_sd_dispatch.py
+option/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 1228, in <module>
+    main()
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 1217, in main
+    exercise(base, str(Path(binary).resolve()), args.sd_plugin_root.resolve())
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 675, in exercise
+    result = run([binary, "dispatch", "build", "--workflow-dir", repo,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 607, in run
+    raise AssertionError(f"{args}: exit {result.returncode}\n{result.stderr}")
+AssertionError: ['/Users/kent/.local/bin/spacedock', 'dispatch', 'build', '--workflow-dir', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/tmp/dev-flow-2-sd-hsvsq3zx/pilot-claude-ideation/docs/dev2'), '--entity-path', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/tmp/dev-flow-2-sd-hsvsq3zx/pilot-claude-ideation/docs/dev2/.spacedock-state/df2-4d1f4de3d2-pilot-claude-ideation.md'), '--stage', 'ideation', '--host', 'claude', '--checklist-file', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/tmp/dev-flow-2-sd-hsvsq3zx/transport-checklist.txt'), '--scope-notes-file', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/tmp/dev-flow-2-sd-hsvsq3zx/transport-scope-notes.txt'), '--stamp']: exit 1
+error: entity_path must be a project-root absolute path; got worktree path '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/tmp/dev-flow-2-sd-hsvsq3zx/pilot-claude-ideation/docs/dev2/.spacedock-state/df2-4d1f4de3d2-pilot-claude-ideation.md'. Pass the project-root location (e.g. '/repo/docs/plans/{slug}.md'), not the worktree copy. The helper derives the worktree read target internally.
+
+
+26/26 exit=0 tests=None kc-dev-flow-2/scripts/test_observer_recovery.py
+TOTAL 26 commands; 1009 unit tests; 7 failed commands; 590.72 seconds

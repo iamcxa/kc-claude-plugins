@@ -1,0 +1,21 @@
+FF
+======================================================================
+FAIL: test_a_call_below_the_required_model_does_not_clear (test_role_triggers.RoleTriggersTest.test_a_call_below_the_required_model_does_not_clear) (profile='pilot', model='gpt-6-astra')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_role_triggers.py", line 262, in test_a_call_below_the_required_model_does_not_clear
+    self.assertEqual(self.owed()[0], expected)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_a_call_below_the_required_model_does_not_clear (test_role_triggers.RoleTriggersTest.test_a_call_below_the_required_model_does_not_clear) (profile='prod', model='gpt-6-astra')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_role_triggers.py", line 262, in test_a_call_below_the_required_model_does_not_clear
+    self.assertEqual(self.owed()[0], expected)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 3.304s
+
+FAILED (failures=2)

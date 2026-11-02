@@ -1,0 +1,6 @@
+AC1-no-astra: exit=1; FAILED (failures=2)
+AC1-leading-word: exit=1; FAILED (failures=4)
+AC2-no-floor: exit=1; FAILED (failures=4)
+AC4-one-family: exit=1; FAILED (failures=6)
+AC6-no-table-check: exit=1; FAILED (failures=1)
+All five code mutations were detected; -B, no cache directories in mutant inputs.

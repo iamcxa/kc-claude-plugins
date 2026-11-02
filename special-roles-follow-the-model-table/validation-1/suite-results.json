@@ -1,0 +1,291 @@
+[
+  {
+    "script": "kc-dev-flow-2/scripts/lint-skills.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "unittest_count": null,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/lint-skills.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_lint_skills.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "exit": 0,
+    "unittest_count": 47,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_lint_skills.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "exit": 1,
+    "unittest_count": 202,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_design_surfaces.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "exit": 1,
+    "unittest_count": 9,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_adr_doc_checks.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "exit": 0,
+    "unittest_count": 9,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_poc_readme.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "exit": 0,
+    "unittest_count": 14,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_comment_ratio.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_number_guards.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "exit": 0,
+    "unittest_count": 28,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_number_guards.log"
+  },
+  {
+    "script": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "exit": 0,
+    "unittest_count": 35,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_codex_review.log"
+  },
+  {
+    "script": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "exit": 0,
+    "unittest_count": 5,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_roborev_gate.log"
+  },
+  {
+    "script": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "exit": 0,
+    "unittest_count": 15,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_copilot_review.log"
+  },
+  {
+    "script": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "exit": 0,
+    "unittest_count": 23,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_map_footprint.log"
+  },
+  {
+    "script": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "exit": 0,
+    "unittest_count": 78,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_release_acceptance.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "exit": 1,
+    "unittest_count": 100,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_dispatch_records.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "exit": 1,
+    "unittest_count": 119,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_delivery_gate.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_validation_security.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "exit": 0,
+    "unittest_count": 5,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_validation_security.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "exit": 1,
+    "unittest_count": 129,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_pr_watch.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "exit": 0,
+    "unittest_count": 8,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_replay_dispatch.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "exit": 0,
+    "unittest_count": 8,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_decision_ledger.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_package_version.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "exit": 0,
+    "unittest_count": 6,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_package_version.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "exit": 0,
+    "unittest_count": 13,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_workflow_checkout.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "exit": 0,
+    "unittest_count": 19,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_observer_check.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "exit": 0,
+    "unittest_count": 27,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_role_triggers.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_laws_check.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "exit": 1,
+    "unittest_count": 63,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_laws_check.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_learning.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "exit": 0,
+    "unittest_count": 47,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_learning.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/tmp/special-roles-ci-repair/spacedock",
+      "--keep"
+    ],
+    "exit": 1,
+    "unittest_count": null,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_sd_dispatch.log"
+  },
+  {
+    "script": "kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "exit": 0,
+    "unittest_count": null,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/test_observer_recovery.log"
+  }
+]

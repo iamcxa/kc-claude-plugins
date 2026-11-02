@@ -406,3 +406,45 @@ The approved role settings, model-floor behavior, table/workflow text and ADRs a
 ### Summary
 
 This complete report supersedes the previous implementation report, correcting its incomplete suite count and its stale no-PR observation. The CI defect was a positional test assertion; the derivation behavior is unchanged and all 26 local CI commands pass (1002 unit tests pass and 7 conditional tests are skipped). FO retains product push/hosted CI, independent validation, the recorded recommendation finding and old director seed retirement; no clean delivery gate is claimed.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #764 head 562b1a87 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 562b1a87198d97bb2ae1d87b72884e390b20e146 for pre-merge task scope; no new findings in the workflow's four disposition classes. Per-criterion proof, limits and known external ownership: special-roles-follow-the-model-table/validation-1/details.md.
+- DONE: Stacked on PR #763. Base spacedock-ensign/worker-completion-reaches-fo-on-paseo. Hosted CI is green at this head. The earlier RoboRev High on model-roster-defaults.json is owned by PR #765. Do not start agents you were not asked to
+  Base c129cb215c2630d08853eeffae0fd5a2ee7e40c6 verified; PR #764 remains Draft/open at the candidate with five SUCCESS checks. Only the explicitly required native role probes ran; no other agents started.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation-1/acceptance.sh: six steps, fresh /bin/bash --noprofile --norc, exit 0; full output in acceptance-output.log. Required ADR command with the base above and --require 0049: exit 0, 48 files/0 legacy; resolved Codex package command also passes.
+- DONE: AC-1: Engineering-reviewer model recognition and floors
+  27 role tests pass; Astra removal fails 2 cases and leading-word restoration fails 4. No candidate product bytes changed; mutations.log.
+- DONE: AC-2: Chief-engineer floor on both event paths
+  Sonnet/Sol remain owed, Opus/Astra/waiver clear; removing the floor fails 4 cases; mutations.log.
+- DONE: AC-3: Historical replay and the real waived case
+  184 tasks at state fbf834f07625a7ce05a9393bc64aaa1b6cfe83d8: 0 exit changes, 16 approved wording changes, 0 unexpected changes. Actual peer-policy task without waiver: base 1/candidate 0; Sol falsifier 1; replay-results.json and replay-messages.json.
+- DONE: AC-4: Both-family owed lines and open model template
+  Role, PR-watch and delivery-gate tests exercised the real script; reverting wording fails 6 cases; mutation and corrected suite logs.
+- DONE: AC-5: Actual Claude settings for all four roles
+  Session 9531c3e0-bf87-4e67-adf0-5ca975635f5c: Opus/xhigh for engineer/reviewer, Sonnet/high for director/observer, four calls without model arguments, no warnings. Fresh base: four medium/four warnings; reasoning-field mutation: medium/one warning; native-turns.json.
+- DONE: AC-6: Seven rows, table/agent drift, explicit effort overrides
+  Lint and 47 lint tests pass, changed cell/effort refused, removed table check detected; real committed-roster resolver accepts max and ultra; acceptance-output.log, mutations.log and roster-effort-controls.log.
+- DONE: AC-7: Four roles, family sentence and fixed workflow budget
+  5781->5781 words, no budget-step change, family phrase counts 1/0; real reviewer-record fixture passes. Removing director yields a gap; restoring all-workers yields count 0; controls.log and words.json.
+- DONE: AC-8: Stage defaults reach real dispatch
+  Six builds: Claude ideation/validation opus, implementation sonnet; Codex null for each. Removing either opus setting produces sonnet/from defaults; dispatch-stage-controls.log and dispatch-stage-records.json.
+- DONE: AC-9: Rulings and missing-record check
+  ADR 0026 amendment and ADR 0049 quotes match recorded rulings; candidate/all and installed/changed ADR lint pass. Missing required 0049 returns 1; adr-missing-only.log.
+- DONE: AC-10: Release-walk implementation remains unchanged
+  Required origin/main diff is empty; PR #764 is still open and the old director seed is backlog, so retirement's after-merge condition is not yet due.
+- SKIPPED: AC-10: Post-merge seed retirement and its after-merge falsifier
+  Explicit FO obligation after merge; no task-state mutation or future pass claimed.
+- DONE: Whole CI command set, repair regression, guards and document dispositions
+  26 commands run; reconciled 1009 unit tests = 1002 pass/7 existing skips, plus real dispatch/recovery. Seven initial fixture-isolation command failures were corrected without product changes; suite-reconciled.json. POC retained-model mutation fails. Number guard PASS; comment ratio 3.2% <= 5%; all seven document dispositions verified.
+- DONE: Judge implementation limits and prerequisite versions
+  Native effort is recorded behavior, not quality; model overrides/manual Codex/stage-effort limits stand. Installed 0.34.0 dispatch checker rejects the new completion records; candidate's inherited #763 checker accepts all five. No CI trigger changed; costs unmeasured.
+- SKIPPED: Clean integrated-delivery verdict, local review rerun and publication
+  Saved exact-head RoboRev 1400 High remains assigned to #765 by dispatch; FO retains sibling integration/re-review and delivery. No product push, PR mutation, repair or gate transition performed.
+
+### Summary
+
+The exact candidate satisfies AC-1 through AC-9 and AC-10's pre-merge boundary with independent native, history, mutation and dispatch evidence; the six-step acceptance script passes. This scoped PASSED recommendation does not certify the integrated stack, and preserves FO's #765 integration/review and post-merge seed-retirement obligations; candidate code is unchanged and the detached validation checkout is removed before handback.
+

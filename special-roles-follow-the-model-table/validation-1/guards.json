@@ -1,0 +1,56 @@
+[
+  {
+    "name": "adr",
+    "command": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py' docs/adr --since c129cb215c2630d08853eeffae0fd5a2ee7e40c6 --require 0049",
+    "chunk_id": "5ecc4c",
+    "wall_time_seconds": 0.393397583,
+    "exit_code": 0,
+    "original_token_count": 9,
+    "output": "48 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "number",
+    "command": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py' check --repo '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87' --workflow-dir '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2' --task '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-roles-follow-the-model-table.md' --base c129cb215c2630d08853eeffae0fd5a2ee7e40c6 --head 562b1a87198d97bb2ae1d87b72884e390b20e146",
+    "chunk_id": "180459",
+    "wall_time_seconds": 0.429714334,
+    "exit_code": 0,
+    "original_token_count": 33,
+    "output": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase c129cb215c26 head 562b1a87198d merge-base c129cb215c26\n"
+  },
+  {
+    "name": "comments",
+    "command": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py' c129cb215c2630d08853eeffae0fd5a2ee7e40c6 HEAD --workflow-dir '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2'",
+    "chunk_id": "634842",
+    "wall_time_seconds": 0.340098291,
+    "exit_code": 0,
+    "original_token_count": 42,
+    "output": "code lines 63, comment lines 2, 3.2%\n   1/   8 kc-dev-flow-2/scripts/lint-skills.py\n   1/  10 kc-dev-flow-2/scripts/role_triggers.py\nmaximum 5% (package default) met\n"
+  },
+  {
+    "name": "documents",
+    "command": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py' c129cb215c2630d08853eeffae0fd5a2ee7e40c6 HEAD",
+    "chunk_id": "26c01c",
+    "wall_time_seconds": 0.405627125,
+    "exit_code": 0,
+    "original_token_count": 230,
+    "output": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md\treview\tkc-dev-flow-2/scripts/lint-skills.py\ndocs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md\treview\tkc-dev-flow-2/scripts/lint-skills.py\ndocs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md\tupdated\tkc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/role_triggers.py\nkc-dev-flow-2/README.md\tupdated\tkc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_sd_dispatch.py\nkc-dev-flow-2/references/sd/adoption.md\treview\tkc-dev-flow-2/scripts/test_sd_dispatch.py\nkc-dev-flow-2/skills/maintain-flow/SKILL.md\treview\tkc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_lint_skills.py\nlearning.md\treview\tkc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_sd_dispatch.py\n7 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+  },
+  {
+    "name": "design",
+    "command": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py' check '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-roles-follow-the-model-table.md'",
+    "chunk_id": "dd4b0b",
+    "wall_time_seconds": 0.322344833,
+    "exit_code": 0,
+    "original_token_count": 31,
+    "output": "special-roles-follow-the-model-table.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  },
+  {
+    "name": "dispatch-records",
+    "command": "python3 -B '/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py' '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-roles-follow-the-model-table'",
+    "chunk_id": "515bd7",
+    "wall_time_seconds": 0.341624125,
+    "exit_code": 1,
+    "original_token_count": 66,
+    "output": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\nimplementation-1.md: needs a scope-notes line naming main as the completion recipient\nvalidation-1.md: needs a scope-notes line naming main as the completion recipient\n"
+  }
+]

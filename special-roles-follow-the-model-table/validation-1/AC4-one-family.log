@@ -1,0 +1,53 @@
+FFFFFF
+======================================================================
+FAIL: test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires (test_role_triggers.RoleTriggersTest.test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires) (profile='prod', surfaces='none')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_role_triggers.py", line 236, in test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires
+    self.assertIn(f"dispatch {ER} {expected}", lines[0])
+AssertionError: 'dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (profile prod)' not found in 'next: some-task has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on fable (profile prod) with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.'
+
+======================================================================
+FAIL: test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires (test_role_triggers.RoleTriggersTest.test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires) (profile='pilot', surfaces='db')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_role_triggers.py", line 236, in test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires
+    self.assertIn(f"dispatch {ER} {expected}", lines[0])
+AssertionError: 'dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (Surfaces db)' not found in 'next: some-task has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on fable (Surfaces db) with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.'
+
+======================================================================
+FAIL: test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires (test_role_triggers.RoleTriggersTest.test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires) (profile='prod', surfaces='db')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_role_triggers.py", line 236, in test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires
+    self.assertIn(f"dispatch {ER} {expected}", lines[0])
+AssertionError: 'dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (profile prod, Surfaces db)' not found in 'next: some-task has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on fable (profile prod, Surfaces db) with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.'
+
+======================================================================
+FAIL: test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires (test_role_triggers.RoleTriggersTest.test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires) (profile='pilot', surfaces='none')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_role_triggers.py", line 236, in test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires
+    self.assertIn(f"dispatch {ER} {expected}", lines[0])
+AssertionError: 'dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra ' not found in 'next: some-task has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.'
+
+======================================================================
+FAIL: test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires (test_role_triggers.RoleTriggersTest.test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires) (profile='pilot', surfaces='ui, db')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_role_triggers.py", line 236, in test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires
+    self.assertIn(f"dispatch {ER} {expected}", lines[0])
+AssertionError: 'dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (Surfaces db)' not found in 'next: some-task has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on fable (Surfaces db) with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.'
+
+======================================================================
+FAIL: test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires (test_role_triggers.RoleTriggersTest.test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-562b1a87/kc-dev-flow-2/scripts/test_role_triggers.py", line 239, in test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires
+    self.assertIn("on opus or gpt-6-astra ", self.owed()[1][0])
+AssertionError: 'on opus or gpt-6-astra ' not found in 'next: some-task has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.819s
+
+FAILED (failures=6)

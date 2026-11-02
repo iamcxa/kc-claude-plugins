@@ -1,0 +1,926 @@
+{
+  "state": "fbf834f07625a7ce05a9393bc64aaa1b6cfe83d8",
+  "rows": [
+    {
+      "path": "_archive/adr-protected-path-guard.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/adr-reserved-when-design-names-one.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/agent-reads-governing-adr.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/amendment-form-check.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/batch-reaches-each-gate-together.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/batch10-after-release-obligations.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/board-optout.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/canvas-document-popup.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/captain-amendment-form-checked.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/captain-question-load.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/chat-only-evidence-observer-blind.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/codex-reader-counts-code-review-only.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/codex-reader-reads-receipt-marker.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/codex-reader-resolved-mark-adr.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/codex-reader-same-head-unresolved.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/codex-review-hang-detected.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/codex-review-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/commissioned-by-names-spacedock.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/copilot-not-run-line-carries-quote.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/copilot-quota-refusal-is-not-a-review.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/db-surface-without-migrations.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/delivery-gate-candidate-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/delivery-gate-reads-folder-tasks.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/delivery-gate-settles-skipped-checks-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/delivery-gate-settles-skipped-checks.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/delivery-gate-verdict-form.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/design-director-runs-ui-design-review.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/dev2-laws-check.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/dispatch-and-report-hygiene.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/extension-defaults-and-install-choice.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/extension-instruction-reaches-dispatch.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/fo-batch-sittings.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/fo-interviews-extension.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/fo-lifecycle-mod.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/fo-record-checks.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/fo-write-checks-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/fo-write-checks.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/fo-write-rules-checked.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/fo-written-lines-checked-before-dispatch.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/followup-dispatch-records-checked.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/followup-dispatch-records-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/gate-requires-recorded-reviews.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/ideation-gaps.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/idle-hook-names-merged-tasks-without-learn.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/idle-names-failing-seeds.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/journey-map-dev2-contract.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/journey-probe-finds-nested-maps.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/journey-render-keeps-annotations.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/kc-adr-format-source.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/kc-adr-tools-with-dev2-copy.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/kc-decision-log-cli.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/laws-check-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/learn-delivery-follow-through.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/learn-delivery-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/learning-serialize-evaluation.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/merge-ask-holds-missing-clauses.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/merge-gatekeeper-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/merge-gatekeeper.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/migration-and-number-guards.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/model-roster-per-repo.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/names-check-before-dispatch.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/names-check-says-what-it-skipped.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/new-work-starts-from-a-story-map.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/number-guards-readme-shrink-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/number-guards-readme-shrink.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/observer-before-merge-guard.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/observer-check-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/ops-metric-event-protocol.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/override-reaches-gate-and-criteria-wait.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/paseo-codex-dispatch-practice.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/paseo-human-surfaces-visible-and-reachable.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/patch-0102.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/patch-0103.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/peer-status-reaches-fresh.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/peers-paseo-host-binding.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/peers-paseo-rule-matches-practice.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/peers-rules-name-each-host-binding.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/poc-no-migrations.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/pr-watch-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/pr-watch-state-per-session.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/pr-watch-tasks-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/prod-security-review-gates.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/prod-security-validation-gate-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/prod-security-validation-gate.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/read-adr-honors-adr-folder.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/read-adr-reporting-rule-followup.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/reflow-order.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/release-please-exclude-paths.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/release-review-staleness-held-at-dispatch.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/release-review.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/release-walk-picky-reviewers-and-director.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/replay-control-arm-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/reused-worker-dispatch-leaves-a-record.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/review-cadence.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/review-followups-0102.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/role-triggers-owe-ce-on-review-drift.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/seed-check-requires-schema-fields.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/special-role-calls-fire-when-needed.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/special-role-triggers-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/special-role-triggers.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "_archive/stage-report-correction-path.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/ui-design-review-in-ideation.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/ui-design-review-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/validation-rerun-waits-for-captain-ruling.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/worker-completion-goes-to-main.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/worker-knows-the-team-and-asks-early.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/worker-loads-declared-package.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/workflow-budget-ratchet-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/workflow-budget-ratchet.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/workflow-checkout-must-match-trunk-readme.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "_archive/workflow-gaps-from-qnow-1270.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "adoption-asks-which-extensions.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "adr-required-statement.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "adr-silent-undo-probe.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "agents-md-holds-instructions.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "amendment-form-check-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "archive-waits-for-observer-report.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "autopilot-l3-dogfood-spacedock-bridge.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "built-screen-check-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "captain-ruling-sources-checked.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "chat-only-evidence-observer-blind-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "claims-name-their-source.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "codex-picky-reviewers.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "comment-check-reaches-delivery-gate.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "deprecate-kc-dev-flow-v1.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "design-director-model-follows-task.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "design-director-runs-where-it-pays.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "design-surfaces-task-dir-crash.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "dispatch-carries-reserved-adr-number.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "dispatch-sets-reasoning-effort.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "extension-instruction-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "fo-asks-to-raise-concurrency.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "fo-narrates-outward-writes.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "fo-tries-what-it-asks-the-captain.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "fo-write-checks-parse-top-level.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "gate-presentation-asks-one-thing-plainly.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "gate-summary-names-each-decline.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "gemini-skill-agy-default-truth.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "gpt-partner-extension-proposal.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "ideation-preview-is-one-static-file.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "interrogation-strangers-isolated.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "journey-canvas-hosted-poc.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "journey-card-notes.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "journey-fold-answers-open-placeholders.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "journey-map-contract-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "journey-map-progress-and-provenance.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "journey-review-check-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "journey-server-host-pilot/index.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "kc-adr-dev2-sharing-better-way.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "kc-decision-log-handoff-trial.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "learn-names-agents-md-candidates.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "merge-check-reads-two-pr-tasks.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "merge-guard-stops-unasked-merges.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "model-roster-question-needs-both-families.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "names-check-newest-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "new-work-checks-what-exists-first.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "observer-check-learn-only-when-listed.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "ops-inbox-r1-setup-and-isolation.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "override-recorded-when-captain-departs.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "paseo-fo-board.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "picky-reviewers-may-run-on-gemini.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "pr-review-lite-value-pilot.md",
+      "base": 1,
+      "candidate": 1
+    },
+    {
+      "path": "pr-watch-tasks-foreign-worktree.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "prod-security-check-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "prod-split-owes-chief-engineer-route-review.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "product-review-path-before-backlog.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "published-ui-docs-checked-on-screen-change.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "relay-rr-replay-in-paseo.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "release-walk-due-trigger.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "repair-dispatch-asks-for-sibling-sites.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "retire-task-with-unconsumed-approval.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "review-briefing-links-repeated-in-chat.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "reviewer-negative-claim-shows-reach.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "rewalk-binds-prior-and-carries-complaints.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "second-round-prompts-a-step-back.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "seed-check-requires-alignment-result.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "special-role-calls-fire-when-needed-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "special-roles-follow-the-model-table.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "superseded-criterion-without-dispatch-caught.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "validation-gate-requires-the-question-check.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "worker-completion-reaches-fo-on-paseo.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "worker-loads-declared-package-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "workflow-checkout-round3-followups.md",
+      "base": 0,
+      "candidate": 0
+    },
+    {
+      "path": "workflow-readme-in-invocation-test.md",
+      "base": 0,
+      "candidate": 0
+    }
+  ],
+  "changes": []
+}

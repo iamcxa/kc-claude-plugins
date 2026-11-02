@@ -1,0 +1,93 @@
+{
+  "candidate-native": {
+    "session": "9531c3e0-bf87-4e67-adf0-5ca975635f5c",
+    "turns": {
+      "chief-engineer": [
+        "claude-opus-5-5",
+        "xhigh"
+      ],
+      "design-director": [
+        "claude-sonnet-5-5",
+        "high"
+      ],
+      "engineering-reviewer": [
+        "claude-opus-5-5",
+        "xhigh"
+      ],
+      "observer": [
+        "claude-sonnet-5-5",
+        "high"
+      ]
+    },
+    "transcripts": {
+      "chief-engineer": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/9531c3e0-bf87-4e67-adf0-5ca975635f5c/subagents/agent-a45dc7ac81e28ba0b.jsonl",
+      "design-director": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/9531c3e0-bf87-4e67-adf0-5ca975635f5c/subagents/agent-a433b2aa8c3307cba.jsonl",
+      "engineering-reviewer": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/9531c3e0-bf87-4e67-adf0-5ca975635f5c/subagents/agent-af85367329d995c52.jsonl",
+      "observer": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/9531c3e0-bf87-4e67-adf0-5ca975635f5c/subagents/agent-a83c66b7ad1aec1e0.jsonl"
+    },
+    "agent_calls_without_model": [
+      "kc-dev-flow-2:chief-engineer",
+      "kc-dev-flow-2:engineering-reviewer",
+      "kc-dev-flow-2:design-director",
+      "kc-dev-flow-2:observer"
+    ],
+    "warnings": []
+  },
+  "base-native": {
+    "session": "37c1a991-7bd4-4dfd-84de-b3c8cc93edca",
+    "turns": {
+      "engineering-reviewer": [
+        "claude-opus-5-5",
+        "medium"
+      ],
+      "design-director": [
+        "claude-sonnet-5-5",
+        "medium"
+      ],
+      "chief-engineer": [
+        "claude-opus-5-5",
+        "medium"
+      ],
+      "observer": [
+        "claude-sonnet-5-5",
+        "medium"
+      ]
+    },
+    "transcripts": {
+      "engineering-reviewer": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/37c1a991-7bd4-4dfd-84de-b3c8cc93edca/subagents/agent-a2318e303668c4fb1.jsonl",
+      "design-director": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/37c1a991-7bd4-4dfd-84de-b3c8cc93edca/subagents/agent-aa02e54e83c432ca5.jsonl",
+      "chief-engineer": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/37c1a991-7bd4-4dfd-84de-b3c8cc93edca/subagents/agent-a80c7aa7a10af2f23.jsonl",
+      "observer": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/37c1a991-7bd4-4dfd-84de-b3c8cc93edca/subagents/agent-ac23755f947101e5b.jsonl"
+    },
+    "agent_calls_without_model": [
+      "kc-dev-flow-2:chief-engineer",
+      "kc-dev-flow-2:engineering-reviewer",
+      "kc-dev-flow-2:design-director",
+      "kc-dev-flow-2:observer"
+    ],
+    "warnings": [
+      "2026-11-02T06:35:45.382Z [WARN] Plugin agent file /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/native-base/kc-dev-flow-2/agents/chief-engineer.md has a frontmatter key Claude Code does not recognize or apply: \"reasoning\"",
+      "2026-11-02T06:35:45.382Z [WARN] Plugin agent file /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/native-base/kc-dev-flow-2/agents/observer.md has a frontmatter key Claude Code does not recognize or apply: \"reasoning\"",
+      "2026-11-02T06:35:45.383Z [WARN] Plugin agent file /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/native-base/kc-dev-flow-2/agents/design-director.md has a frontmatter key Claude Code does not recognize or apply: \"reasoning\"",
+      "2026-11-02T06:35:45.384Z [WARN] Plugin agent file /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/native-base/kc-dev-flow-2/agents/engineering-reviewer.md has a frontmatter key Claude Code does not recognize or apply: \"reasoning\""
+    ]
+  },
+  "mutant-native": {
+    "session": "cd4502c3-e8d5-49bc-9b07-a4fdcecb0657",
+    "turns": {
+      "chief-engineer": [
+        "claude-opus-5-5",
+        "medium"
+      ]
+    },
+    "transcripts": {
+      "chief-engineer": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/cd4502c3-e8d5-49bc-9b07-a4fdcecb0657/subagents/agent-af4b44d047f38a458.jsonl"
+    },
+    "agent_calls_without_model": [
+      "kc-dev-flow-2:chief-engineer"
+    ],
+    "warnings": [
+      "2026-11-02T06:35:49.195Z [WARN] Plugin agent file /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-roles-follow-the-model-table/.validation-evidence/native-mutant/agents/chief-engineer.md has a frontmatter key Claude Code does not recognize or apply: \"reasoning\""
+    ]
+  }
+}

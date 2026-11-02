@@ -1,0 +1,197 @@
+{
+  "candidate-native": {
+    "session": "9531c3e0-bf87-4e67-adf0-5ca975635f5c",
+    "agent_calls": [
+      {
+        "description": "Probe chief-engineer",
+        "subagent_type": "kc-dev-flow-2:chief-engineer",
+        "prompt": "Runtime-settings probe only; reply PROBE_OK immediately, do not invoke skills, read files, use tools, or make changes."
+      },
+      {
+        "description": "Probe engineering-reviewer",
+        "subagent_type": "kc-dev-flow-2:engineering-reviewer",
+        "prompt": "Runtime-settings probe only; reply PROBE_OK immediately, do not invoke skills, read files, use tools, or make changes."
+      },
+      {
+        "description": "Probe design-director",
+        "subagent_type": "kc-dev-flow-2:design-director",
+        "prompt": "Runtime-settings probe only; reply PROBE_OK immediately, do not invoke skills, read files, use tools, or make changes."
+      },
+      {
+        "description": "Probe observer",
+        "subagent_type": "kc-dev-flow-2:observer",
+        "prompt": "Runtime-settings probe only; reply PROBE_OK immediately, do not invoke skills, read files, use tools, or make changes."
+      }
+    ],
+    "roles": {
+      "chief-engineer": {
+        "path": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/9531c3e0-bf87-4e67-adf0-5ca975635f5c/subagents/agent-a45dc7ac81e28ba0b.jsonl",
+        "sha256": "4c039395140686e014efef61a0daf641ed2ae6193434923e0847e8b881dae9d4",
+        "turns": [
+          {
+            "uuid": "dc7f42b9-8049-40e0-9e74-4cb88e0b1a46",
+            "model": "claude-opus-5-5",
+            "perTurnEffort": "xhigh"
+          },
+          {
+            "uuid": "09b3f7f4-3c14-4fc3-9c2d-23e7c9d036b3",
+            "model": "claude-opus-5-5",
+            "perTurnEffort": "xhigh"
+          }
+        ]
+      },
+      "design-director": {
+        "path": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/9531c3e0-bf87-4e67-adf0-5ca975635f5c/subagents/agent-a433b2aa8c3307cba.jsonl",
+        "sha256": "c70625f3fe155c011fa3d5757a5fbebe437455354904da500f96b046f886be6e",
+        "turns": [
+          {
+            "uuid": "9082409b-b847-4c6d-ad6e-8657f6805a9a",
+            "model": "claude-sonnet-5-5",
+            "perTurnEffort": "high"
+          }
+        ]
+      },
+      "engineering-reviewer": {
+        "path": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/9531c3e0-bf87-4e67-adf0-5ca975635f5c/subagents/agent-af85367329d995c52.jsonl",
+        "sha256": "de4d8064ec995ec6fcd1d6bd3c8e4a396e4c850dff258236bde0db8338f24cf7",
+        "turns": [
+          {
+            "uuid": "56831af0-28c7-4d71-ab27-11731a7633e6",
+            "model": "claude-opus-5-5",
+            "perTurnEffort": "xhigh"
+          },
+          {
+            "uuid": "ef0c6382-5570-4552-acca-1bc5a745bb1d",
+            "model": "claude-opus-5-5",
+            "perTurnEffort": "xhigh"
+          }
+        ]
+      },
+      "observer": {
+        "path": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/9531c3e0-bf87-4e67-adf0-5ca975635f5c/subagents/agent-a83c66b7ad1aec1e0.jsonl",
+        "sha256": "952cbea49ce92d878d03a479dd4940e7464ef10da9169bf0a0ae61a7c8474d47",
+        "turns": [
+          {
+            "uuid": "297b7276-36cc-4c8a-af0a-7ded04069170",
+            "model": "claude-sonnet-5-5",
+            "perTurnEffort": "high"
+          },
+          {
+            "uuid": "809866f3-3550-47d8-bea9-1fd6bc4020d9",
+            "model": "claude-sonnet-5-5",
+            "perTurnEffort": "high"
+          },
+          {
+            "uuid": "cbdbc0f6-fe1c-4834-995c-5a272930279b",
+            "model": "claude-sonnet-5-5",
+            "perTurnEffort": "high"
+          }
+        ]
+      }
+    }
+  },
+  "base-native": {
+    "session": "37c1a991-7bd4-4dfd-84de-b3c8cc93edca",
+    "agent_calls": [
+      {
+        "description": "Probe chief-engineer",
+        "subagent_type": "kc-dev-flow-2:chief-engineer",
+        "prompt": "Runtime-settings probe only; reply PROBE_OK immediately, do not invoke skills, read files, use tools, or make changes."
+      },
+      {
+        "description": "Probe engineering-reviewer",
+        "subagent_type": "kc-dev-flow-2:engineering-reviewer",
+        "prompt": "Runtime-settings probe only; reply PROBE_OK immediately, do not invoke skills, read files, use tools, or make changes."
+      },
+      {
+        "description": "Probe design-director",
+        "subagent_type": "kc-dev-flow-2:design-director",
+        "prompt": "Runtime-settings probe only; reply PROBE_OK immediately, do not invoke skills, read files, use tools, or make changes."
+      },
+      {
+        "description": "Probe observer",
+        "subagent_type": "kc-dev-flow-2:observer",
+        "prompt": "Runtime-settings probe only; reply PROBE_OK immediately, do not invoke skills, read files, use tools, or make changes."
+      }
+    ],
+    "roles": {
+      "engineering-reviewer": {
+        "path": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/37c1a991-7bd4-4dfd-84de-b3c8cc93edca/subagents/agent-a2318e303668c4fb1.jsonl",
+        "sha256": "62edda52051a4a8b5465e2cf1c4f34c8a552c6d2703c0ae63a7ff2b3e2c1c41b",
+        "turns": [
+          {
+            "uuid": "2d8492fa-8451-4d3d-9b48-36c08d9bfde9",
+            "model": "claude-opus-5-5",
+            "perTurnEffort": "medium"
+          }
+        ]
+      },
+      "design-director": {
+        "path": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/37c1a991-7bd4-4dfd-84de-b3c8cc93edca/subagents/agent-aa02e54e83c432ca5.jsonl",
+        "sha256": "d9d689ac0216f2437e8b3fe2092c15f304135aaecebc232502a354eee49d795b",
+        "turns": [
+          {
+            "uuid": "3c6fcaec-3182-4e7e-aaed-9230a96adcb4",
+            "model": "claude-sonnet-5-5",
+            "perTurnEffort": "medium"
+          }
+        ]
+      },
+      "chief-engineer": {
+        "path": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/37c1a991-7bd4-4dfd-84de-b3c8cc93edca/subagents/agent-a80c7aa7a10af2f23.jsonl",
+        "sha256": "11232ca1c0fe793be824ad30746334debadf72d824f987b384c9e1604b690c64",
+        "turns": [
+          {
+            "uuid": "2f9ceffa-0808-4df8-af9a-6db1182b7aed",
+            "model": "claude-opus-5-5",
+            "perTurnEffort": "medium"
+          }
+        ]
+      },
+      "observer": {
+        "path": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/37c1a991-7bd4-4dfd-84de-b3c8cc93edca/subagents/agent-ac23755f947101e5b.jsonl",
+        "sha256": "7a5e520b8c9abb515372d46346ebe91aa3fcb2fafd30b8f8299443d0b21ed90d",
+        "turns": [
+          {
+            "uuid": "1563fb04-f6ee-4bd0-95a2-86b8866bd027",
+            "model": "claude-sonnet-5-5",
+            "perTurnEffort": "medium"
+          }
+        ]
+      }
+    }
+  },
+  "mutant-native": {
+    "session": "cd4502c3-e8d5-49bc-9b07-a4fdcecb0657",
+    "agent_calls": [
+      {
+        "description": "Runtime-settings probe",
+        "subagent_type": "kc-dev-flow-2:chief-engineer",
+        "prompt": "Runtime-settings probe only; reply PROBE_OK immediately, do not invoke skills, read files, use tools, or make changes.",
+        "run_in_background": false
+      }
+    ],
+    "roles": {
+      "chief-engineer": {
+        "path": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo--context-dev2-adoption-worktree--worktrees-spacedock-ensign-special-roles-follow-the-model-table--validation-562b1a87/cd4502c3-e8d5-49bc-9b07-a4fdcecb0657/subagents/agent-af4b44d047f38a458.jsonl",
+        "sha256": "b70878b36c99be291fe1c28bfbe87381fe83c8f018a4dcd058439e9307b310e0",
+        "turns": [
+          {
+            "uuid": "e0a688fc-8d2e-483d-b5f0-697fcd26bf90",
+            "model": "claude-opus-5-5",
+            "perTurnEffort": "medium"
+          }
+        ]
+      }
+    }
+  },
+  "candidate": {
+    "head": "562b1a87198d97bb2ae1d87b72884e390b20e146",
+    "agents": {
+      "kc-dev-flow-2/agents/design-director.md": "2715666e074ac3b3430563b23d93596afbb4dfc71565483bc7d2b806d0082fc7",
+      "kc-dev-flow-2/agents/observer.md": "1f5e465f13e492e80c80cdc495d90153f49c6da98333d56acf6af5453b42b889",
+      "kc-dev-flow-2/agents/chief-engineer.md": "3528fc336effb3f6d5c11dd516d05cbb91fed53158655ea152bd310eea331b3b",
+      "kc-dev-flow-2/agents/engineering-reviewer.md": "58a3245a58949e89f55e1d52f6a80033a075cba44889152b23bb061ccc95e465"
+    }
+  }
+}
