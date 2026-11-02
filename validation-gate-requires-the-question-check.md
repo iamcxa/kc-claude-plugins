@@ -41,6 +41,11 @@ gates:
                 at: "2026-11-02T03:30:53.847365Z"
                 decision: revise
                 reason: 'The Captain 「可以」 (chat, 2026-11-02), answering 「決定：多開「完成通知」和「挑剔使用者可用 Gemini」兩張票，先前五件事照建議，可以嗎？」; accepts the direction and asks: D1 yes, the text check at check is enough for now; retitle and restate the outcome so it does not say binding is refused; correct the overlap with second-round-prompts-a-step-back on delivery_gate.py check; last in the batch order.'
+            - id: gate-attempt:validation-gate-requires-the-question-check-ideation-2
+              briefing:
+                id: briefing:validation-gate-requires-the-question-check:ideation:attempt-2:revision-1
+                digest: sha256:024e40326752b268359cf216765242fc5b9f8ddf76d33d0911c25ca799df1592
+                room-ref: ./validation-gate-requires-the-question-check/review/ideation/briefing-2
 ---
 
 ## Scope

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-gate-requires-the-question-check:ideation:attempt-2:revision-1",
+  "question": "「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:validation-gate-requires-the-question-check:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/63e54cd4c7ed88665438e0b263f1a197eb4764e8/validation-gate-requires-the-question-check.md",
+      "rev": "sha256:1d4e2a3f35e1ff8deba3042f75923a71a98a711418c6489cf211912ad9be8b8c",
+      "mediaType": "text/markdown",
+      "summary": "Batch 12 ideation sitting. Chief-engineer reviewed the first four designs; the completion and Gemini designs had no separate batch review."
+    }
+  ]
+}
