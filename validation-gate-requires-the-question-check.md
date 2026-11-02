@@ -1,5 +1,5 @@
 ---
-title: A validation gate cannot be bound before the delivery question check passes
+title: The merge-ask check holds a gate text with no external round count
 status: ideation
 variant: kc-dev-flow-2
 profile: pilot
@@ -45,8 +45,6 @@ gates:
 
 ## Scope
 
-- Title for FO to set (frontmatter is FO's; the slug stays): "The merge-ask check holds a gate text with no external round count".
-- Outcome, restated under the Captain's ideation revise of 2026-11-02: `delivery_gate.py check` holds the ask on a gate text with no `External rounds:` line. Binding is not refused: `spacedock gate prepare` runs no package check.
 - Source: Batch 12 backlog sitting: the Captain 「可以，但不用寫了就報錯，接受 `max` 和 `ultra`沒關係，等於就是不建議，但使用者真的想要也可以」 (chat, 2026-11-02), answering 「決定：五件事都照建議，第 5 項用這張表，並把 xhigh 上限寫進設定檔檢查，可以嗎？」, item 2: 開候選「`gate prepare` 要先擋下沒跑 `delivery_gate question` 的情況」.
 - Bite: batch 11, 2026-11-01. FO bound four validation briefings without running `delivery_gate.py question`, and bound #757's on text that had failed it. Only the observers found this, after merge (`_archive/*/observer.md`).
 - Consumer: every FO binding a validation gate.
