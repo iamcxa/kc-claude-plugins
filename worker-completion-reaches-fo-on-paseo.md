@@ -33,6 +33,17 @@ gates:
                 id: briefing:worker-completion-reaches-fo-on-paseo:ideation:attempt-1:revision-1
                 digest: sha256:a86db04be765194a1318c6d748b4bcbbd2e20a7fe4c25ba8d2ffc4845aa71f13
                 room-ref: ./worker-completion-reaches-fo-on-paseo/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-completion-reaches-fo-on-paseo:ideation:1
+                briefing: briefing:worker-completion-reaches-fo-on-paseo:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-02T04:29:29.518885Z"
+                decision: approve
+                reason: The Captain 「照建議」 (chat, 2026-11-02), answering 「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」; accepts the recommendations stated in that sitting, including D5 for the roster and D1 and D2 for completion.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
