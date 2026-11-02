@@ -452,8 +452,14 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
                 rows = [p for p, enabled in zip(providers, (codex, claude)) if enabled]
                 eligible = paseo and codex and claude
                 ask(rows, 0 if eligible else 3, "ask" if eligible else "skip:")
-    readme.write_text("---\nextensions:\n  - paseo\n---\n")
-    ask(providers, 0, "ask")
+    for quote in ("{}", "'{}'", '"{}"'):
+        for listing in ("extensions: [{}]", "extensions:\n  - {}"):
+            readme.write_text("---\n" + listing.format(quote.format("paseo")) + "\n---\n")
+            ask(providers, 0, "ask")
+            ask(providers[:1], 3, "claude provider unavailable")
+            ask(providers[1:], 3, "codex provider unavailable")
+            readme.write_text("---\n" + listing.format(quote.format("not-paseo")) + "\n---\n")
+            ask(providers, 3, "paseo extension not listed")
     for malformed in ("no frontmatter", "---\nextensions: paseo\n---\n"):
         readme.write_text(malformed)
         ask(providers, 1, "model-roster:")
