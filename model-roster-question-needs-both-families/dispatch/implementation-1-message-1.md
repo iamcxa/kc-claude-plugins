@@ -5,7 +5,7 @@ Model: gpt-6.1-sol (Codex via Paseo, thinking xhigh; the same worker as implemen
 
 ## Checklist
 
-Repair review:5733419844 and Captain amendment on PR #765: readme_extensions in kc-dev-flow-2/scripts/model_roster.py keeps quotes on YAML block-list items, so a block list naming 'paseo' reads as {"'paseo'"} and the roster question can skip wrongly; read block and inline lists the same way, with a failing mutation
+Repair review:5733419844 and Captain amendment 1 on PR #765: readme_extensions in kc-dev-flow-2/scripts/model_roster.py keeps quotes on YAML block-list items, so a block list naming 'paseo' reads as {"'paseo'"} and the roster question can skip wrongly; read block and inline lists the same way, with a failing mutation
 Run the whole suite the CI job runs; one follow-up commit on your branch, no push; append a complete corrected stage report
 
 ## Scope notes
