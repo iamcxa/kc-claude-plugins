@@ -5,7 +5,7 @@ Model: gpt-6.1-sol (Codex via Paseo, thinking xhigh; the same worker as implemen
 
 ## Checklist
 
-Repair review:5733422448 and Captain amendment on PR #766: role_triggers.py compares max(failures, len(replacements)) == 2, so one count can mask the other; report each count at its own threshold, with a failing mutation for each masking case; read Copilot's comment on PR #766 for its exact claim and confirm it first
+Repair review:5733422448 and Captain amendment 1 on PR #766: kc-dev-flow-2/scripts/role_triggers.py compares max(failures, len(replacements)) == 2, so one count can mask the other; report each count at its own threshold, with a failing mutation for each masking case; read Copilot's comment on PR #766 for its exact claim and confirm it first
 Run the whole suite the CI job runs; one follow-up commit on your branch, no push; append a complete corrected stage report
 
 ## Scope notes
