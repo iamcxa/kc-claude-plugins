@@ -267,6 +267,10 @@ Verified by: after the release tag exists, the released `model_roster.py resolve
 
 **AC-11** Under D5, each recommended row builds on its provider's host with no conflict. Verified by: `spacedock dispatch build --host <row provider>` on a disposable copy of the candidate's template emits `opus` and the `Skill(` bootstrap for ideation, and `null` and the `$spacedock:ensign` bootstrap for implementation and validation. A case in `test_sd_dispatch.py` pins the two sentences through a mutation spec. Falsifier: leaving out `--host` on a Claude host emits `sonnet` for implementation, as observed 2026-11-02.
 
+## Number guards
+
+ADR: 0050
+
 ## Stage Report: ideation
 
 - DONE: A design for this task's Scope: the condition, the recommended set and the accepted models; verify a real Claude child takes Opus high through Paseo before relying on it
