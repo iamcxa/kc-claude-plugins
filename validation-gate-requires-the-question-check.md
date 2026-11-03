@@ -234,6 +234,13 @@ None open.
 
 ADR: 0051
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-02, chat
+Captain: 「照建議」 (chat, 2026-11-02)
+Asked: 「決定：四件事都照建議嗎？要改哪件直接說。」, which FO had stated as: 「#765、#767 的條件不放寬，等前面合併後再驗」
+Supersedes: none
+
 ## Stage Report: ideation
 
 - DONE: A design for this task's Scope: the earliest moment a package check can see a bound validation briefing; read Spacedock's gate prepare and hooks first and report what it offers
