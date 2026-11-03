@@ -33,6 +33,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:diagnosis-rounds-count-toward-step-back:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:diagnosis-rounds-count-toward-step-back-ideation-1
+              briefing:
+                id: briefing:diagnosis-rounds-count-toward-step-back:ideation:attempt-1:revision-1
+                digest: sha256:619770a1929dd9ba43a8b7d2c33598c1896f559712aac960066ed67096eb4c5e
+                room-ref: ./diagnosis-rounds-count-toward-step-back/review/ideation/briefing-1
 profile: pilot
 ---
 

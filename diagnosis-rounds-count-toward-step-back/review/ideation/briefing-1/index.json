@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:diagnosis-rounds-count-toward-step-back:ideation:attempt-1:revision-1",
+  "question": "「決定：七張設計都照各自寫下的建議進實作嗎（含 A 的 D1：祕密包裝器執行與任務自己的暫存檔刪除由 FO 批准；兩處各加 55 字；來源標註跑 24 次重播）？要改哪件直接說。」 Approving accepts every recommendation each design states for its decisions.",
+  "artifacts": [
+    {
+      "id": "artifact:diagnosis-rounds-count-toward-step-back:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7802df6079e4332378319e970631e83402a9dce9/diagnosis-rounds-count-toward-step-back.md",
+      "rev": "sha256:e39ed5c202d19ba56de2b423dfb0a5cfc53f6201e51462916264d70f7a14230f",
+      "mediaType": "text/markdown",
+      "summary": "Batch 13 ideation sitting, seven designs; recommended approve to enter implementation under pilot with each design's stated recommendations."
+    }
+  ]
+}
