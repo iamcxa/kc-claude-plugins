@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:rewritten-criteria-checked-against-captain-words:ideation:attempt-1:revision-1",
+  "question": "「決定：七張設計都照各自寫下的建議進實作嗎（含 A 的 D1：祕密包裝器執行與任務自己的暫存檔刪除由 FO 批准；兩處各加 55 字；來源標註跑 24 次重播）？要改哪件直接說。」 Approving accepts every recommendation each design states for its decisions.",
+  "artifacts": [
+    {
+      "id": "artifact:rewritten-criteria-checked-against-captain-words:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9c8dbe40d04e13648376597658bac9626a0373d6/rewritten-criteria-checked-against-captain-words.md",
+      "rev": "sha256:ab55a60c1ddb47c2fdf14cbeab5c6bfb51a09e14aca4f46659ef9e9000e14584",
+      "mediaType": "text/markdown",
+      "summary": "Batch 13 ideation sitting, seven designs; recommended approve to enter implementation under pilot with each design's stated recommendations."
+    }
+  ]
+}

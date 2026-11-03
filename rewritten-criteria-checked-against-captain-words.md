@@ -33,6 +33,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:rewritten-criteria-checked-against-captain-words:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:rewritten-criteria-checked-against-captain-words-ideation-1
+              briefing:
+                id: briefing:rewritten-criteria-checked-against-captain-words:ideation:attempt-1:revision-1
+                digest: sha256:5edbab2122bf39c90075ce96d9cf880bcdb25a3a5ad5c95833c150aa136b35a6
+                room-ref: ./rewritten-criteria-checked-against-captain-words/review/ideation/briefing-1
 profile: pilot
 ---
 
