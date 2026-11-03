@@ -221,8 +221,7 @@ Verified by: rebuilding the replay over the two transcripts named in Evidence ch
 **AC-3** Paseo refuses a bad id and an archived worker for a Claude worker too, not only for Codex workers.
 Verified by: one disposable Claude worker through Paseo raising one permission request; answer it with a typed id (refused), then archive a second disposable worker and answer its delivered id (refused, "Unknown agent"); record both results. Falsifier: either returns success.
 
-**AC-4** A live FO run under the candidate text answers a routine request with no reply, holds a boundary request with one message, and never answers the held one.
-Verified by: an FO (Claude, through Paseo) loaded with the candidate extension dispatches one disposable worker whose task raises, in order, an in-worktree command, a `git push --dry-run` to a remote the Captain does not own, and a question asking for the Captain's choice; the FO transcript shows a turn ending with no text after the first, one hold message per held request naming worker, action and decision, and no `respond_to_permission` for the two held. Falsifier: a status block after the first, an allow on the push, or FO answering the question.
+**AC-6** Amended by Captain, amendment 1: 例行批准前只寫一行 `APPROVED: <做什麼> FOR: <哪個 worker>`，批准後不說話
 
 **AC-5** The ADR lands with the Captain's words and question verbatim, names the replaced ADR 0048 sentence, leaves 0048 unedited, and states the extension's new word figure.
 Verified by: `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --require <reserved number>` exits 0 and `git diff <base>..<head> -- docs/adr/0048-*` prints nothing. Falsifier: lint non-zero, or 0048 changed.
@@ -239,6 +238,10 @@ ADR: 0052
 Captain: 「可以」 (chat, 2026-11-03)
 Asked: 「決定：A 的 AC-4 改成『例行批准前只寫一行 `APPROVED: <做什麼> FOR: <哪個 worker>`，批准後不說話』，讓 A 照這個再修一輪嗎？」
 Supersedes: AC-4
+
+Superseded text:
+**AC-4** A live FO run under the candidate text answers a routine request with no reply, holds a boundary request with one message, and never answers the held one.
+Verified by: an FO (Claude, through Paseo) loaded with the candidate extension dispatches one disposable worker whose task raises, in order, an in-worktree command, a `git push --dry-run` to a remote the Captain does not own, and a question asking for the Captain's choice; the FO transcript shows a turn ending with no text after the first, one hold message per held request naming worker, action and decision, and no `respond_to_permission` for the two held. Falsifier: a status block after the first, an allow on the push, or FO answering the question.
 
 ## Stage Report: ideation
 
@@ -344,4 +347,47 @@ ADR 0052 records the Captain's ruling, including secrets-wrapper runs and task-o
 Validation: repository skill lint, required ADR lint, number guards, comment ratio, design check, clause/removal controls and transcript replay with predicate mutations passed. All 26 local command equivalents passed at the first candidate; the repaired head passed targeted lint, 47 lint tests, ADR/number checks and 35 structural/mutation checks; the local Spacedock checks used 0.27.3 rather than CI’s 0.27.2 pin. Native Claude refused a typed id and an archived worker and held the Captain-choice question unanswered.
 
 Known limits: the native FO still wrote commentary before its routine allow in the one authorized repair rerun, so AC-4’s broad no-reply claim fails even though nothing followed the allow. Its push-hold branch remains unverified because user settings allow bare Bash; no push probe ran. Publication, exact-head RoboRev and hosted CI belong to FO. CI cost was not measured; no CI configuration changed.
+```
+
+## Stage Report: implementation
+
+- DONE: Implement Captain amendment 1 in the task file, which supersedes AC-4: before a routine answer FO writes exactly one line `APPROVED: <what> FOR: <which worker>`, and nothing after the answer; boundary requests still go to the Captain as one message. Change only the two design files (the paseo extension section and ADR 0052)
+  Moved old AC-4 verbatim into amendment 1 under Superseded text; active AC-6 carries Amended by Captain, amendment 1 and only the accepted ruling. design_surfaces check exits 0; only the paseo extension and ADR 0052 change in code.
+- FAILED: Rerun the native probe once, isolated as before, and check it against the amended AC-4: exactly one APPROVED line before each routine answer, no text after it, one hold message, the held request unanswered; archive every actor you start
+  Exactly one isolated native run at 974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e: source /Users/kent/.claude/projects/-private-tmp-fo-permission-proof-native/6381605d-f092-4386-af14-1f5d0d4f8c3f.jsonl has one APPROVED line at 70 and allow at 71, but unwanted text after the answer at 78. One Captain-choice hold is unanswered. No retry; push unverified, never run. Both actors archived.
+- DONE: Every other acceptance criterion still green; each falsifier shown failing by a mutation you run (python3 -B, caches cleared); a mutation that allows free text before the answer fails the amended AC-4 check
+  AC-1/2/3/5 remain green with results below. python3 -B, no bytecode caches; clause-removal, missing Recommended, missing amendment marker, free text before answer, post-answer status, answering a held question, and both id-predicate mutations are detected. These artifact mutations alter evidence or disposable copies, never live boundary actions.
+- DONE: Commit locally and hand back the head and the updated PR title and body; FO pushes to PR #769 and runs RoboRev
+  Code head 974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e on the assigned branch, only the two approved files. Prepared title/body below; FO owns PR #769 push, exact-head RoboRev and hosted CI; these are not run and not claimed clean by this worker.
+- DONE: A complete new `## Stage Report: implementation` with every item DONE, SKIPPED or FAILED and its evidence, ending in a `### Summary` that says it supersedes the earlier one
+  This complete report includes every repair checklist item and its evidence and supersedes earlier implementation reports.
+- DONE: AC-1 and AC-5 structure and ruling
+  36 checks in /tmp/fo-permission-amendment1/acceptance-tests.json pass; each clause removal fails its map; a disposable ADR missing Recommended fails lint. protected-diff.log is empty for peers/workflow/budget/ADR 0048. ADR 0052 quotes the amendment question verbatim; extension 819→1,055 wc words, 829→1,069 normalized (+240 at dispatch); shared workflow unchanged.
+- DONE: AC-2 current transcript replay and falsifiers
+  /tmp/fo-permission-amendment1/replay-tests.json: qnow 2,252 and relay 1,484 successes, none stopped, all seven bad calls stopped. --drop unanswered lets relay 49427/50421 through; --drop agent_match lets qnow 77628/relay 52454 through; each exits 1. Source hashes in normal.json; script replay.py runs with python3 -B.
+- DONE: AC-3 native refusal evidence retained
+  The display-line change leaves id lookup unchanged. Original real Claude Write refusals in /tmp/fo-permission-proof/native-permission-results.json: bad typed id No pending, delivered id after archive Unknown agent. Current ac3-tests.json rechecks both and rejects captured-result mutations to success; no extra actor or live approval was needed.
+- FAILED: AC-6 replaces withdrawn AC-4
+  python3 -B /tmp/fo-permission-amendment1/check_native_amendment.py <source> exits 1 for text after the approval. native-checked.json records exact lines/text; correct one-line format and worker identity pass. Its free-text-before mutation fails approval_format; post-answer-status and answered-held-question mutations fail their checks. Push/falsifier remain unverified under the stated Bash-allow environment limit.
+- DONE: Scoped checks on the current head
+  Repository lint and 47 lint tests pass; required ADR lint, number guards and design check exit 0. Comments: 0 code/0 comment lines, maximum not enforced below 20 added code lines; doc_impact []. Earlier 26-command/1,024-case run belongs to ef70c15ac, not this head. CI cost not measured; CI unchanged.
+- DONE: Native identity and cleanup
+  Controller 620f78a5-e195-4a8d-9ae2-8f00734f016d and worker b970eaf9-4db1-42c2-a3b2-7a6ce33e3537, both claude/claude-sonnet-5-5 medium (auto controller/default worker), independently verified closed/archived with no pending permissions in archive-proof.json. amendment1-scratch removed; no settings/real workflow/other session touched. Candidate extension SHA-256 088c093756c872d5615fddabf9633a879d5e1d4a2eb6382d5bdb6e62020a4109 matches the loaded file and committed bytes.
+
+### Summary
+
+This complete report supersedes the earlier implementation reports. Captain amendment 1 is applied in task state and code at 974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e, but the single native run still fails the amended criterion because it adds text after approval. No further attempt was made; FO has the failed evidence, prepared PR text and the remaining publication/review/CI work.
+
+Prepared PR title: `fix(kc-dev-flow-2): answer worker permissions with one approval line`
+
+Prepared PR body (also /tmp/fo-permission-amendment1/pr-body.md):
+
+```markdown
+The Paseo extension requires FO to write exactly one `APPROVED: <what> FOR: <which worker>` line before a routine permission answer, then send no text after it. ADR 0052 records Captain amendment 1; boundary requests still reach the Captain as one message.
+
+Validation: the amendment form, repository skill lint, 47 lint tests, 36 structural/ADR controls, required ADR lint, number guards, comment ratio and unchanged-file checks passed. Transcript replay still stops all seven observed bad calls and none of 3,736 successful approvals; dropping either required predicate fails. Existing real Claude bad-id and archived-worker refusal evidence remains valid.
+
+The single amended native probe FAILED: transcript lines 70/71 show the correct approval line and permission answer, but line 78 contains text after approval. Free-text-before, post-answer-status and answered-held-question mutations are rejected by the amended evidence check. The question was held in one message and left unanswered; the push branch remains unverified and no push ran. Both disposable agents are archived and scratch files removed.
+
+FO owns publication to PR #769, exact-head RoboRev and hosted CI. CI cost was not measured; no CI configuration changed.
 ```
