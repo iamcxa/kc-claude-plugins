@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-tries-what-it-asks-the-captain:validation:attempt-1:revision-1",
+  "question": "「決定：照順序合併 #771、#772、#773 嗎？（#769、#770、#774、#775、#777 這次不合併）」 Regular merges with --match-head-commit, in the order #771, #772, #773, as part of the batch 13 validation sitting. Approval also covers later external-review rounds on these PRs, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-tries-what-it-asks-the-captain:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5ef7c2cc70c0d753b4f8e782d15788dd8bd65f79/fo-tries-what-it-asks-the-captain.md",
+      "rev": "sha256:37f82164590b7736f1daf8df885a8e6cec545219a018d306e75213a94d94092e",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of fo-tries-what-it-asks-the-captain, PR #773, in the batch 13 validation sitting.\nSufficiency: `delivery_gate.py steps` and `question` hold an ask whose fenced commands or links lack a recorded run, and pass one whose steps FO ran, shown on the relay #412 and qnow handbook replays and red-to-green tests.\nNecessity: the changed files are delivery_gate.py and its tests, the workflow passage (+55 words), lint-skills.py, the observer list, two test fixtures and ADR 0054.\nExternal rounds: 6.\nSecond reviewer: Copilot because the PR changes merge or review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5757060435\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: round 6 review:5755251019 on this head left one P2 (comment 4457041237), declined below.\nDeclined: Polish, Codex round 6 P2 comment 4457041237: a path an acceptance step deliberately removes is held as missing (a sixth-round P2, below the P1 that blocks every round).\nDeclined: Deferred risk, validation-1 F2 and F3: prose asks and inline code are not detected (the approved design excludes them; waived by Captain amendment 1).\nDeclined: Deferred risk, engineering-reviewer limits: a fence inside a quote, on a list-marker line, or a 4-space indented block stays undetected (stated in the PR body as known limits)."
+    }
+  ]
+}
