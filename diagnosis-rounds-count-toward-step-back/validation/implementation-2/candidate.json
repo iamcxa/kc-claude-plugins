@@ -1,0 +1,11 @@
+{
+  "candidate": "97cf87965ec052a1c9f2d40a1a1d0ca83e8d2244",
+  "base": "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb",
+  "branch": "spacedock-ensign/diagnosis-rounds-count-toward-step-back",
+  "product_changed": false,
+  "reported_job": "1418 (FO routing message)",
+  "finding": "not reproduced",
+  "gate_attempts": 1,
+  "gate_exit": 3,
+  "gate_output": "incomplete: the roborev daemon is not running"
+}

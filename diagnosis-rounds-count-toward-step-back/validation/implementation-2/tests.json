@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Original nested-checkout regression",
+    "status": "passed",
+    "message": "Unchanged candidate test passes"
+  },
+  {
+    "name": "Direct nested show, cat-file, ls-tree and role checker",
+    "status": "passed",
+    "message": "All reads succeed; three dispatches owe chief-engineer"
+  },
+  {
+    "name": "Remove ./ from revision paths",
+    "status": "passed",
+    "message": "Mutated nested test fails with exit 2 instead of 1"
+  },
+  {
+    "name": "Full role-trigger test module",
+    "status": "passed",
+    "message": "41 tests, no failures"
+  }
+]
