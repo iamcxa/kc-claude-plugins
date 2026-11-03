@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_committed_second_symptom_round_is_forwarded_at_idle (test_pr_watch.TasksTests.test_committed_second_symptom_round_is_forwarded_at_idle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/diagnosis-rounds/mutants/8/kc-dev-flow-2/scripts/test_pr_watch.py", line 727, in test_committed_second_symptom_round_is_forwarded_at_idle
+    self.assertEqual(sum('next: diagnosis has 2 implementation dispatches on symptom "page freeze"' in line
+AssertionError: 0 != 1 : []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.684s
+
+FAILED (failures=1)

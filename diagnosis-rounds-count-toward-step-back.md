@@ -235,3 +235,43 @@ Follow-up (proposal, not in scope): the bite also shows the idle hook unrun for 
 ### Summary
 
 The qnow freeze bite holds in shape and is corrected in detail against its transcript. The count that already existed owed chief-engineer throughout the chase. FO never ran the idle hook, but it ran `dispatch_records.py .` before 17 dispatches. So the design records `Symptom:` on each dispatch record, counts per stage and symptom in `role_triggers.py`, and prints the step-back questions on stderr at the dispatch check from round 2 (laws_check-safe), with chief-engineer owed at round 3. No README words. `design_surfaces.py check` (0.34.0 package): `design surfaces presentable`, exit 0. Two decisions for the Captain: D1 and D2.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design, Symptom: line, dispatch-check reminder and ADR 0026 amendment; only the seven named files, with D1 and D2 as recommended.
+  Candidate `97cf87965ec052a1c9f2d40a1a1d0ca83e8d2244`, branch `spacedock-ensign/diagnosis-rounds-count-toward-step-back`, base `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb` (fetched origin/main, fast-forwarded before edits); clean code worktree. Evidence below is in `diagnosis-rounds-count-toward-step-back/validation/implementation-1/`; `candidate.json` and `product-hashes.json` bind it to the candidate.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins, with a Conventional Commit title scoped to the plugin.
+  FO's 2026-11-03 dispatch reply confirms ADR 0042/0048 and the listed paseo exception: FO publishes the local candidate. Prepared title/body: `pr.md`; worker did not push code or open a PR. No version bump.
+- DONE: Every acceptance criterion green with the evidence each names; package tests as python3 -B -m unittest discover -s kc-dev-flow-2/scripts.
+  `full-suite.log`: 879 tests, 0 failures, 6 skips, exit 0; `suite.json` retains the result. The seven product hashes remained identical throughout the final tests and commit.
+- DONE: AC-1, AC-2 and AC-3: second same-stage symptom dispatch reminds on stderr; normalized groups stay separate; named-record cutoff and strict missing-header hold.
+  `SymptomDispatchTests` and `SymptomRoundsTest` exercise folder/--names/--strict, first-record exemption, none, case/space folding, distinct stages, fenced/body/duplicate headers, numeric ordering and message continuations. Counting record 1, removing stage, moving stderr to stdout, holding folder mode or requiring record 1's header fails the corresponding mutant.
+- DONE: AC-4: idle and merge count committed records, and a dated call clears them.
+  `SymptomRoundsTest` exercises two/three rounds, uncommitted and deleted disk records, --rev, archived/index/nested state layouts, old/low-model calls, dated/undated waivers, undated third records, fourth-round clearing and independent event reminders. Disk reads or removal of the date test fail the mutants.
+- DONE: AC-5: replay the qnow freeze with record hashes.
+  `replay.json` binds source state revision `290b47a39` and each original record's SHA-256; 14 candidate/base runs (k=14..27) first remind at 16, none through 15 or for distinct symptoms 22/23/27. Base never reminds; stdout and exit codes stay equal.
+- DONE: AC-6: laws_check.py L2 parses unchanged.
+  Unmodified `test_laws_check.py`: 63 tests, exit 0 (one skip), `laws-tests.log`; `laws.json` runs the real checker over repeated/missing headers and records identical verdicts and semantic L2 violations (commit ids/line offsets normalized). Moving hints/reminders to stdout makes the probe fail with Cannot.
+- DONE: AC-7: pr_watch.py tasks and delivery_gate.py forward lines without production changes to either file.
+  Added integration tests run real committed-state role_triggers: idle forwards the round-two advisory; round three holds merge and saves no ask. Removing the advisory's next: prefix fails the idle mutant.
+- DONE: AC-8: per-moment word limits, unchanged workflow and WORKFLOW_BUDGET.
+  Independent CLI comparison in `words.json`: added words clean dispatch 0, repeat 48, missing hint 21 (<=26), idle/merge round two 47, round three 74; startup/after-archive additions 0 by unchanged entry/template and inactive archived-task path. Workflow 5781 -> 5781; workflow.md and lint-skills.py byte-identical to base. Added STEP_BACK words fail the count mutant.
+- DONE: AC-9: ADR 0026 carries this task's dated Captain amendment, counts, dated clearing, stderr placement citing ADR 0027 and measured words.
+  Changed ADRs: 0026 only. test_adr_doc_checks.py passes within the full suite; cached-package `adr_lint.py docs/adr --since <base> --require 26`: 50 records checked, exit 0 (`adr-lint.log`).
+- DONE: Each named falsifier is exercised by a mutation (python3 -B, caches cleared).
+  `mutations.json` and `mutation-0.log`..`mutation-9.log`: ten mutations rejected by assertions, plus the base-script replay counterexample for AC-5. `proof.py` retains the reproducible probes; DIAGNOSIS_CODE_ROOT and DIAGNOSIS_EVIDENCE_DIR select a fresh candidate checkout/output; DIAGNOSIS_QNOW_STATE selects the task-declared qnow source.
+- DONE: Repository lint-skills.py, package number_guards.py check and comment_ratio.py meet their bars.
+  `checks.json`: all exit 0; number guards base 713d4e6ed638/head 97cf87965ec0 PASS (migration guard inapplicable, no migrations-path); comments 0 / 262 code lines = 0%, maximum 5%; workflow lint 5781/5781. Full commands and output are retained in their logs.
+- DONE: Goal check, shared-work check and committed-corpus regression evidence.
+  Every product addition maps to the accepted counter/check path, tests or ADR; removing the change leaves the replay silent. No new product scaffolding or dependency. Direct overlap with adoption-asks-which-extensions and rewritten-criteria was checked and returned to FO; FO orders integration. `corpus.json` at state `d7af6b4b7f72ad8a2652e9b9530b47184cd0c210`: 101 task folders, 443 base/candidate folder/plain/strict checks, zero stdout/unexpected changes, 66 intended new strict holds for missing Symptom headers; historical fixtures retain their bytes and compare stdout separately from allowed hints.
+- DONE: design_surfaces.py check and doc_impact.py <base> <candidate>, with a verdict for each listed document.
+  `design.log`: presentable, exit 0. `doc-impact.json`: docs/adr/0045 unaffected: later-ruling predicate/recovery/stdout unchanged; docs/adr/0048 unaffected: paseo completion and publication boundary unchanged; docs/adr/0049 unaffected: model ranks/floors unchanged; learning.md unaffected: existing recorded lessons remain accurate. ADR 0026 updated as designed.
+- SKIPPED: roborev evidence= line.
+  Not run by worker: FO owns exact-base/head RoboRev under ADR 0042/0048 and its explicit dispatch reply; no evidence= or incomplete: output was fabricated. It remains required on this exact head before the dependent step.
+- SKIPPED: CI green on the PR head; CI cost measured or stated as not measured.
+  Hosted CI is not run: FO must publish the Draft PR, run exact-head RoboRev and verify CI before fresh validation. CI cost per PR was not measured; no CI configuration changed.
+
+### Summary
+
+This Pilot candidate counts same-symptom diagnosis dispatches through the existing dispatch, idle and merge checks, with D1/D2 implemented and all nine local acceptance criteria exercised. The code worktree is clean at `97cf87965ec052a1c9f2d40a1a1d0ca83e8d2244`; no version or workflow-budget change. FO still owns publication, exact-head RoboRev, hosted CI and fresh independent validation; these are not claimed clean.

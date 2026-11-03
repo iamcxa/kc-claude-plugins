@@ -1,0 +1,10 @@
+{
+  "with_symptom": {
+    "code": 1,
+    "out": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 4 events judged in 6bb6b3d897ed..e899c06be24b, 4 violated\nviolation: L2 dispatch-record-complete record=t/dispatch/implementation-1.md commit=e899c06be24b bare package script name adr_lint.py (line 6)\nviolation: L2 dispatch-record-complete record=t/dispatch/implementation-2.md commit=e899c06be24b bare package script name adr_lint.py (line 7)\nviolation: L2 dispatch-record-complete record=t/dispatch/implementation-3.md commit=e899c06be24b bare package script name adr_lint.py (line 7)\nviolation: L2 dispatch-record-complete record=t/dispatch/implementation-4.md commit=e899c06be24b bare package script name adr_lint.py (line 6)\nL3 amendment-append-only: 0 events judged in 6bb6b3d897ed..e899c06be24b, 0 violated\n"
+  },
+  "without_symptom": {
+    "code": 1,
+    "out": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 4 events judged in 6bb6b3d897ed..25a81c6423d0, 4 violated\nviolation: L2 dispatch-record-complete record=t/dispatch/implementation-1.md commit=25a81c6423d0 bare package script name adr_lint.py (line 6)\nviolation: L2 dispatch-record-complete record=t/dispatch/implementation-2.md commit=25a81c6423d0 bare package script name adr_lint.py (line 6)\nviolation: L2 dispatch-record-complete record=t/dispatch/implementation-3.md commit=25a81c6423d0 bare package script name adr_lint.py (line 6)\nviolation: L2 dispatch-record-complete record=t/dispatch/implementation-4.md commit=25a81c6423d0 bare package script name adr_lint.py (line 6)\nL3 amendment-append-only: 0 events judged in 6bb6b3d897ed..25a81c6423d0, 0 violated\n"
+  }
+}
