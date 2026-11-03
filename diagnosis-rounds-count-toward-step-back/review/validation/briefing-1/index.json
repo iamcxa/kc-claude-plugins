@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:diagnosis-rounds-count-toward-step-back:validation:attempt-1:revision-1",
+  "question": "「決定：照順序合併 #771、#772、#773 嗎？（#769、#770、#774、#775、#777 這次不合併）」 Regular merges with --match-head-commit, in the order #771, #772, #773, as part of the batch 13 validation sitting. Approval also covers later external-review rounds on these PRs, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:diagnosis-rounds-count-toward-step-back:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f907046bf71f0e9e225bf05b862048bc24b6b969/diagnosis-rounds-count-toward-step-back.md",
+      "rev": "sha256:e843f7b41a70b27b547a1cb5fb01ae3d013386ced69f7169fa91c30823b40041",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of diagnosis-rounds-count-toward-step-back, PR #771, in the batch 13 validation sitting.\nSufficiency: the second round on one symptom, counting follow-up message records, prints the step-back reminder at the dispatch check and the third owes a chief-engineer call, shown on a replay of the qnow records and the three-record fixture.\nNecessity: the seven files are the Symptom line reader, the counts, the dispatch and role checks, their tests and the ADR 0026 amendment.\nExternal rounds: 2.\nSecond reviewer: Copilot because the PR changes merge or review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5757059887\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: no major issues on this head, comment:6608407075."
+    }
+  ]
+}

@@ -52,6 +52,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:diagnosis-rounds-count-toward-step-back:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:diagnosis-rounds-count-toward-step-back-validation-1
+              briefing:
+                id: briefing:diagnosis-rounds-count-toward-step-back:validation:attempt-1:revision-1
+                digest: sha256:258d5c0169928899c2da2f0a3f5557239a48d7276c0b7b83a0a9514409bbd031
+                room-ref: ./diagnosis-rounds-count-toward-step-back/review/validation/briefing-1
 profile: pilot
 started: 2026-11-03T10:20:59Z
 worktree: .worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back
