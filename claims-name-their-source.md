@@ -353,4 +353,3 @@ The exact candidate passes its structural, local caller and word-count checks; t
 
 - F1 Needs decision: K's fixed grader false-passes the base and a title-only wrong-count control; the target limit is labelled in only 3/6 candidate answers against the retained 5/6 bar (`value-ac[AC-7]`). FO must route this evidence discrepancy for a recorded Captain disposition before repair or another replay; four evidence fields and trigger sources are in findings.json.
 - F2 Needs decision: `contract[kc-dev-flow-2/references/sd/workflow.md#number-guards]` is held at the required `origin/main` comparison by the still-open stacked parent's ADR 0054. FO must reconcile the comparison/delivery sequence without cross-owning that reservation; passing the parent-based control does not erase the required failure.
-
