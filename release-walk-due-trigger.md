@@ -234,6 +234,11 @@ Captain: 「可以」 (chat, 2026-11-03)
 Asked: 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」
 Supersedes: none
 
+
+## Number guards
+
+ADR: 0056
+
 ## Stage Report: ideation
 
 - DONE: Start from release-walk-picky-reviewers-and-director's Part B, its D4 options and the moved AC-11; design the due subcommand, the README journeys: key and the /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/pr_watch.py line, and how this fits release-walk-off-production-before-release in this batch
