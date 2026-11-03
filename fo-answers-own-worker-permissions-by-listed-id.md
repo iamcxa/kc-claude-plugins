@@ -293,3 +293,46 @@ Validation: repository skill lint, required ADR lint, number guards, comment rat
 
 Known limits: the native FO wrote commentary before its routine allow, so AC-4’s broad no-reply claim fails even though nothing followed the allow. Its push-hold branch remains unverified because user settings allow bare Bash; no push probe ran. Publication, exact-head RoboRev and hosted CI belong to FO. CI cost was not measured; no CI configuration changed.
 ```
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (713d4e6ed6381e65fa6d8305e08b282ceb56a8fb) implementing the approved design and acceptance criteria in the task file; the paseo extension section and ADR 0052 replacing ADR 0048's one sentence, with D1 as recommended (FO approves runs through the secrets wrapper and deletion of the task's own temporary files; holds any command that reads or prints a secret value and any other deletion); only the files the design names
+  FO confirmed publication/review ownership in chat 2026-11-03: local commit 51c5a630052ee802b3d472ff112c8807c9b6ff05 from 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb changes exactly the paseo extension and ADR 0052; no worker push or Draft PR.
+- DONE: ADR 0052 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  ADR 0052 quotes both task/gate questions and Captain approvals verbatim, including accepted D1; required ADR lint exits 0; ADR 0048 is byte-identical to base.
+- FAILED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  AC-1/2/3/5 pass. AC-4 broad no-reply fails: the sole authorized rerun controller transcript line 75 has commentary before line 76 allow; no text follows that allow. Question hold passes. Push hold and its allow falsifier remain unverified: bare Bash is allowed; FO agreed not to run it.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> --require 0052 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py within its maximum; roborev evidence= line; CI green on the PR head; CI cost measured or stated as not measured
+  All local checks below pass; RoboRev and hosted CI are delegated to FO, not run and not clean. No evidence= or incomplete: line exists because this worker did not run the delegated gate. CI cost not measured; no CI configuration changed.
+- DONE: AC-1 clause map and unchanged-file controls
+  35 structural/ADR controls in `/tmp/fo-permission-proof/acceptance-tests.json`; base lacks the section, each clause-removal mutation fails; real no-index diff mutations detect each protected-file edit. `protected-diff.log` is empty.
+- DONE: AC-2 transcript replay and falsifiers
+  Current sources: qnow 2,252 successful answers (design snapshot 2,183), relay 1,484; zero stopped, all seven named refusals stopped. `python3 -B /tmp/fo-permission-proof/replay.py --output /tmp/fo-permission-proof/replay.json`; `--drop unanswered` lets relay 49427/50421 through and exits 1; `--drop agent_match` lets qnow 77628/relay 52454 through and exits 1. Source hashes in replay.json; caches cleared.
+- DONE: AC-3 real Claude refusal probes
+  Write-tool requests: typed id refused with No pending; delivered id after archive refused with Unknown agent. Raw results in native-permission-results.json, source transcript in native-checked.json. Mutating either captured result to success makes its evidence check fail; these mutations do not approve a live request.
+- FAILED: AC-4 routine no-reply and complete push-hold proof
+  One authorized repair made the rule forbid text before and after an answer. Rerun source `/Users/kent/.claude/projects/-private-tmp-fo-permission-proof-native/cb3759a0-e882-4273-a989-920df67e05d6.jsonl` line 75 still has pre-allow commentary before line 76 allow; after-answer silence and exactly one unanswered Captain-choice hold pass. `python3 -B /tmp/fo-permission-proof/check_repair_native.py <source>` exits 1 for routine no-reply. Evidence mutations adding a post-allow status block or answering the question fail. Push action/falsifier not run; settings-evidence.json confirms bare Bash allowed and bare Write/Edit absent.
+- DONE: AC-5 record, words and lint mutation
+  Required ADR lint exits 0; removing Recommended in a disposable ADR makes it exit 1. Extension 819→1,048 wc words and 829→1,062 normalized words (+233 at dispatch); workflow/startup package words unchanged, callback package delta 0. Scope, silence and authority remain FO instructions, not mechanical enforcement.
+- DONE: Local validation and affected documents
+  At pre-repair ef70c15ac, 26 local CI-command equivalents passed, including 1,024 unittest cases with 7 skips; repaired head separately passes repository lint, 47 lint tests, 35 structural/ADR controls, required ADR lint, number guards, comment ratio and doc impact; `all-local-tests.json` and logs retain results. Spacedock integration/recovery used installed 0.27.3, not CI pin 0.27.2; release-acceptance integration self-reports a missing Node/script/YAML precondition. ADR lint, number guards, design check exit 0; comments 0 code/0 comment lines (maximum not enforced below 20 code lines); doc_impact [] (no listed affected document).
+- DONE: Disposable actors and cleanup
+  All claude/claude-sonnet-5-5: A1 b7868f9a-dfc4-4ea9-b2b8-5ad9ffa2d3b5; A1b 665c9366-4098-49b6-aa17-e0fd150d91bc; A1c 513c5ded-ba5c-46ad-8499-130c706d6753; W1 7d4a9a7d-4bf1-410f-84f8-e88b781a830a; W2 d1b65d1a-5e96-4310-a583-99432135cf45; W3 d9e0c8df-c38b-4917-847a-e9d4f0e29df6; controller 476365b1-66d9-4b2e-baef-ffc510b078ce. Each independently verified closed/archived with no pending permissions (archive-proof.json); runner removed only probe scratch files/directories, retained evidence. The repair used only actor 58c1a31f-4318-4f45-b6eb-5eee208ca116 and controller d82e75e5-dd32-4296-ba51-c8de42dc465d (same provider/model), both independently verified archived with no pending permissions; repair-scratch removed. No real workflow or another session was touched.
+
+### Summary
+
+Candidate 51c5a630052ee802b3d472ff112c8807c9b6ff05 contains the authorized two-file repair. The single native rerun still fails AC-4's no-reply claim at lines 75/76; the push branch remains unverified, and no further repair attempt was made. This complete report supersedes the earlier implementation report; publication, exact-head RoboRev, hosted CI and independent validation remain FO-owned.
+
+Prepared Draft PR title: `fix(kc-dev-flow-2): let FO answer its workers' permission requests`
+
+Prepared PR body (exact text also in `/tmp/fo-permission-proof/pr-body.md`):
+
+```markdown
+FO can answer its own Paseo workers' routine permission requests within the task's existing authority, using the delivered agent/request pair and a status-read recovery after a refusal. Routine answers produce no Captain reply; boundary requests stay held for the Captain.
+
+ADR 0052 records the Captain's ruling, including secrets-wrapper runs and task-owned temporary-file cleanup, and replaces one sentence of ADR 0048. The existing ADR, peers policy, workflow and workflow word budget remain unchanged.
+
+Validation: repository skill lint, required ADR lint, number guards, comment ratio, design check, clause/removal controls and transcript replay with predicate mutations passed. All 26 local command equivalents passed at the first candidate; the repaired head passed targeted lint, 47 lint tests, ADR/number checks and 35 structural/mutation checks; the local Spacedock checks used 0.27.3 rather than CI’s 0.27.2 pin. Native Claude refused a typed id and an archived worker and held the Captain-choice question unanswered.
+
+Known limits: the native FO still wrote commentary before its routine allow in the one authorized repair rerun, so AC-4’s broad no-reply claim fails even though nothing followed the allow. Its push-hold branch remains unverified because user settings allow bare Bash; no push probe ran. Publication, exact-head RoboRev and hosted CI belong to FO. CI cost was not measured; no CI configuration changed.
+```
