@@ -726,13 +726,16 @@ def inspect_steps(record_path, message):
     steps = [(number, dict(STEP_FIELD.findall(body))) for number, body in zip(chunks[1::2], chunks[2::2])]
     if not steps:
         problems.append("record has no Step 1")
+    texts = [message]
     commands = fenced_steps(message)
     markdown = [Path(re.sub(r":\d+(?::\d+)?$", "", value)).expanduser() for value in
                 re.findall(r"(?<![\w:/])(?:[~./\w-]+/)?[\w.-]+\.md(?::\d+(?::\d+)?)?", URL.sub(" ", message))]
     for path in dict.fromkeys(absolute_paths(message) + markdown):
         if path.suffix.lower() == ".md" and path.is_file() and path.resolve() != record_path.resolve():
-            commands += fenced_steps(path.read_text())
-    expanded = message + "\n" + "\n".join(commands)
+            card = path.read_text()
+            texts.append(card)
+            commands += fenced_steps(card)
+    expanded = "\n".join(texts)
     asked = [normalized(fields.get("Asked", "")) for _, fields in steps]
     left = 0
     for number, fields in steps:
@@ -759,7 +762,8 @@ def inspect_steps(record_path, message):
             problems.append(f"message S4: missing path {path}")
     observed = {normalized(fields["Observed"]) for _, fields in steps if fields.get("Observed", "").strip()}
     required_commands = [body for body in commands if normalized(body) not in observed]
-    coverage_text = FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], message)
+    coverage_text = "\n".join(FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], text)
+                              for text in texts)
     coverage_text += "\n" + "\n".join(required_commands)
     for item in required_commands + links(coverage_text):
         if not any(normalized(item) in request for request in asked):

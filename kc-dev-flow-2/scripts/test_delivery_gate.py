@@ -1354,6 +1354,28 @@ class CaptainStepFixture(unittest.TestCase):
 
 
 class CaptainStepsTests(CaptainStepFixture):
+    def test_named_card_prose_link_matches_asked_and_holds_when_unrecorded(self):
+        instruction = "Open https://preview.example.test/owner"
+        card = self.root / "card.md"
+        card.write_text(instruction + "\n")
+        message = f"Read this note.\nRun the steps in {card}\n"
+        for recorded in (True, False):
+            with self.subTest(recorded=recorded):
+                body = self.step("Read this note.")
+                if recorded:
+                    body += self.step(instruction, observed="owner preview opened",
+                                      ran="real browser, 2026-11-03T00:00:00Z", number=2)
+                code, out = self.run_steps(body, message)
+                self.assertEqual(code, 0 if recorded else 1, out)
+                if recorded:
+                    self.assertNotIn("S1: Asked text is not in the message", out)
+                else:
+                    self.assertIn("S5: unrecorded command or link", out)
+                    self.assertIn("https://preview.example.test/owner", out)
+                run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", str(self.saved), "--text-file", str(self.message)],
+                                     capture_output=True, text=True)
+                self.assertEqual(run.returncode, code, run.stdout)
+
     def test_a_longer_closing_fence_still_requires_a_step(self):
         command = "printf unrecorded"
         for marker in ("`", "~"):
@@ -1440,11 +1462,22 @@ class CaptainStepsTests(CaptainStepFixture):
     def test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links(self):
         command, output = "printf preview", "https://preview.example.test/result"
         body = self.step(command, observed=output)
-        shown = f"```sh\n{command}\n```\n```\n{output}\n```\n"
-        self.assertEqual(self.run_steps(body, shown)[0], 0)
-        code, out = self.run_steps(body, shown + f"Open {output}\n")
-        self.assertEqual(code, 1, out)
-        self.assertIn("S5: unrecorded command or link", out)
+        for named_card in (False, True):
+            with self.subTest(named_card=named_card):
+                contents = f"```sh\n{command}\n```\n```\n{output}\n```\n"
+                shown = contents
+                if named_card:
+                    card = self.root / "captain-card.md"
+                    card.write_text(contents)
+                    shown = f"Run the steps in {card}"
+                self.assertEqual(self.run_steps(body, shown)[0], 0)
+                if named_card:
+                    card.write_text(contents + f"Open {output}\n")
+                else:
+                    shown += f"Open {output}\n"
+                code, out = self.run_steps(body, shown)
+                self.assertEqual(code, 1, out)
+                self.assertIn("S5: unrecorded command or link", out)
 
     def test_ran_is_required_even_with_an_observed_output(self):
         missing = self.step("Run the check").replace("Ran: fresh shell, 2026-11-03T00:00:00Z\n", "")
