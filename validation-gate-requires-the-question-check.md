@@ -65,6 +65,17 @@ gates:
                 id: briefing:validation-gate-requires-the-question-check:validation:attempt-1:revision-1
                 digest: sha256:beb870f3085919cd8917c484f1ed99e1a19c01f186765ca76bcc13b77bbe228c
                 room-ref: ./validation-gate-requires-the-question-check/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:validation-gate-requires-the-question-check:validation:1
+                briefing: briefing:validation-gate-requires-the-question-check:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-03T04:43:16.660243Z"
+                decision: approve
+                reason: 'The Captain 「合併」 (chat, 2026-11-03), answering 「決定：合併 #767 嗎？」.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-02T06:35:12Z
 worktree: .worktrees/spacedock-ensign-validation-gate-requires-the-question-check
 pr: iamcxa/kc-claude-plugins#767
