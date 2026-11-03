@@ -13,6 +13,10 @@ gates:
                 id: briefing:fo-answers-own-worker-permissions-by-listed-id:backlog:attempt-1:revision-1
                 digest: sha256:a0980e15d318f3da5e9c3255e90ea4a61b21eae8905bdd1a2cd4d3bd5c96627f
                 room-ref: ./fo-answers-own-worker-permissions-by-listed-id/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-03T07:37:03.138084Z"
+                reason: The Captain added a boundary to the outcome (chat, 2026-11-03); the bound briefing predates it.
 ---
 
 ## Scope
