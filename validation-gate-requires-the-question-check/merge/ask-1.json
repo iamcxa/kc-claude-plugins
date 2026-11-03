@@ -1,0 +1,18 @@
+{
+  "class": "never",
+  "head": "6b680cf89125d75f062ecf198e37b13239cd16ea",
+  "model": "not run",
+  "necessity": "the three files are the check call, its tests and ADR 0051; workflow words do not change.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'docs/adr/0051-the-merge-ask-check-requires-the-round-count.md'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#767",
+  "sufficiency": "delivery_gate.py check holds a gate text with no top-level External rounds line and saves no ask, while zero and count-with-detail forms pass; four of seven historical batch 11 texts now hold, shown b",
+  "time": "2026-11-03T03:01:16Z",
+  "verdict": "ask"
+}
