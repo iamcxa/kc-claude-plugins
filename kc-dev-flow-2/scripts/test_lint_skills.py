@@ -107,6 +107,14 @@ class RouteMutationTests(unittest.TestCase):
         self.change("agents/design-director.md", "model: sonnet", "model: inherit")
         self.refuses("design-director agent: existing sonnet/high policy changed")
 
+    def test_model_table_cannot_drift_from_agent_policy(self):
+        self.change("references/model-roster.md", "| chief-engineer | Opus / xhigh |", "| chief-engineer | Sonnet / high |")
+        self.refuses("model table: chief-engineer Claude cell differs from agent policy")
+
+    def test_agent_effort_cannot_drift_from_policy(self):
+        self.change("agents/chief-engineer.md", "effort: xhigh", "effort: high")
+        self.refuses("chief-engineer agent: existing opus/xhigh policy changed")
+
     def test_design_director_needs_its_skill(self):
         shutil.rmtree(self.root / "skills/design-director")
         self.refuses("missing skills: design-director")

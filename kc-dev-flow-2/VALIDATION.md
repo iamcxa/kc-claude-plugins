@@ -449,3 +449,79 @@ included here. Existing stacked-base errors, when present, are additional and
 unchanged. No normal-path output, workflow-budget step or CI change was added.
 CI cost per PR was not measured. These local results do not establish hosted CI,
 RoboRev review, native model spawning, Captain acceptance or a merged delivery.
+
+## Unchanged amendment regions and inline validation history, 2026-10-30
+
+Base: `a6612948936a4f075625147b21aabd3b10b19eee` (0.33.1). L3 reads both
+committed UTF-8 blobs before parsing amendment grammar. `raw_amendment_regions`
+compares an ordered lexical view of headings, their owning section/occurrence,
+and complete entry content, preserving line endings and fenced content. Blank
+separators outside fences are excluded; an unclosed entry fence retains its
+uncertain tail. Equal nonempty views count as one checked event. Unequal views
+use the existing parser and append-only predicate; missing blobs and ambiguous
+task correspondence still refuse before the shortcut.
+
+This does not make malformed records well formed. The five complete pinned
+records below each pass two unrelated-edit replays (Scope insertion and report
+append), with their flat/archive paths retained. Their source hashes are asserted
+in `RealAmendmentTests`, and heading edits still refuse. Full form CLI checks
+still exit 1 for all five; the amendment-specific defect counts are 1/1/6/1/4.
+
+| Record | Pinned state commit | Released/candidate law exit |
+| --- | --- | --- |
+| `kc-decision-log-handoff-trial.md` | `af41b314b294bf4a802cb5df13b0c3e7786ace5c` | 0/0 |
+| `adr-required-statement.md` | same plugin commit | 0/0 |
+| `limit-telemetry-posthog.md` | `2019310178b25a3742ff8ec51bfda09aad634f2c` | 2/0 |
+| `_archive/branch-hours-generate-starts.md` | `eb250716ab9938dc80d83d45c7af1406dd3af538` | 0/0 |
+| `operator-secret-hardening.md` | same QNow commit | 2/0 |
+
+`RawAmendmentTests` makes parsing on the unchanged path raise an assertion.
+Known metadata, heading, whitespace, deletion, order and fence edits retain
+their earlier refusals; duplicate/malformed changed records retain exit 2.
+Moving a valid entry across sections invokes parsing, but preserves the existing
+law's result: section placement remains a form-check boundary. No owner-move
+refusal was added. The plugin's exact 150-commit L3 replay
+`a944a5ea98a267512c718a0ccce30356a61298f6..af41b314b294bf4a802cb5df13b0c3e7786ace5c`
+retains 17 events and zero violations, including the previously permitted
+container repair at `5f1674bef0de8464347266f8838fa625fb5a0112`.
+
+`dispatch_records.py --names` prefixes its four historical task candidates with
+the owning state directory relative to the Git root. The real CLI passes all
+eight split-root/nested-inline and flat/folder/live/archive combinations after
+a strictly later committed ruling. Released inline cases exit 2
+`uncommitted-report`; split-root cases remain silent exit 0. Foreign same-slug
+workflow rulings and uncommitted rulings cannot clear the owning report.
+Old/same-commit rulings, missing/rewritten/discontinuous/ambiguous reports,
+shallow/broken history and non-Git behavior retain their existing tests.
+
+Reproduce from this complete checkout with Python 3 and Git:
+
+```sh
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_laws_check.py -q
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_dispatch_records.py -q
+python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_design_surfaces.py -q
+```
+
+To include the object-dependent real replays, set `DEV2_OBLIGATION_SOURCES` to a
+JSON array of five `{state, rev, path}` rows for the table above (`state` is the
+read-only source checkout). Set `DEV2_OBLIGATION_BASE` to an exported base scripts
+directory for before/after assertions, and `DEV2_OBLIGATION_EVIDENCE` plus
+`DEV2_AMENDMENT_EVIDENCE` to an existing external output directory. Missing source
+configuration is an explicit real-record skip. Ordinary regressions and mutation
+controls run without these objects. Mutation copies exclude caches and run fresh
+Python `-B` processes; removing or delaying the shortcut, whole-file equality,
+normalization, deduplication, malformed-record skipping, foreign-history lookup,
+missing inline prefix and weakened ancestry each fail their behavioral assertion.
+
+Five ordinary lifecycle measurements use the same shipped watcher fixtures,
+Spacedock 0.27.3 passages and fixed provider payloads on base and candidate.
+Totals remain 6994 startup, 897 idle/open, 860 idle/merged, 418 after archive
+with the observer receipt missing, and 2435 merge ask. The archive total corrects
+the design's 401 forecast: executed watcher/observer outputs contribute 5+85
+words to 328 existing passage words. Ordinary output counts are 37/0/90/90;
+the full real relay/operator law diagnostics decrease from 46/40 to 27/27 words,
+and valid inline reruns decrease from 16 to zero diagnostic words.
+No workflow, skill, mod, CI trigger, manifest or form parser changed. Operational
+publication/pin/run, owner returns, first eligible worker startup, adopted delivery
+gate and archive reservation remain FO-owned receipts after this local repair.
+CI cost per PR is not measured; no CI trigger was added.

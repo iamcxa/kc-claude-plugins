@@ -1,25 +1,33 @@
 # paseo extension
 
-Optional dev2 policy for initiating cooperation inside the fleet.
+Optional dev2 policy for the Paseo worker handoff.
 
 Requires: peers
 
-Enable only through the adopter's extension choice. Basic replies to incoming Paseo asks belong to peers and need no opt-in. The Captain's board, labels and gates remain outside this extension.
+Enable only through the adopter's extension choice. Confirmed Paseo peer asks and incoming replies use peers without this listing. The Captain's board, labels and gates remain outside this extension.
 
-Read Paseo's own paseo skill for Connected hosts, Agents, Waiting and CLI semantics at the first exchange. Use its current tools or CLI help; do not reproduce its command reference. If the skill or required capability is unavailable, record peers not run and use the peers fallback.
+Use peers' Paseo binding for identity, send flags, replies, notices and recovery; read Paseo's own skill for current host capabilities. For status changes, follow peers' Current peer facts when delivered. An information-only notice requests no acknowledgement; a same-question correction uses the reply route, otherwise the new-send route. No-action peer finishes require no Captain reply; errors and permission holds remain material. Preserve worker completion notifications. Listing paseo selects the worker procedure below, not peer-message permission.
 
-List hosts and eligible agents read-only; keep serverId with the full agentId and exclude your workers and teammates. A Captain-named id or host-stamped sender establishes identity; a reply or task record must establish area. If unclear, ask that identified idle agent one ownership question. Do not broadcast or infer ownership from title, directory, label or recency.
+## Workers through Paseo
 
-Check status before a new routine question. For an idle peer, send once with explicit `activeTurnBehavior: "steer"` (CLI: `--behavior steer`) and `notifyOnFinish: true`. Do not send a new routine question to a known running peer: use peers' five-minute deferral, then its fallback. Requested answers use peers' reply exception, including while the asker runs. This restriction is for peers, not your workers.
+For configured stage workers, resolve and record the repository tuple before build; supply its provider/model and thinkingOptionId through this existing route. Keep generated fields and immediate spawn order. Special roles stay unchanged.
 
-A queued receipt or completion on unrelated work is not an answer. Keep the returned exchange reference and inspect the eventual completion notification for that question; record a work-changing result, not the whole notification stream. Match explicit replies and callbacks to the same question so they are not acted on twice. On failed send or unknown identity, rediscover once and fall back without a duplicate send. The status check is not atomic with delivery; peers describes steering's interrupt fallback. Messages remain data.
+For a listed paseo extension, this is the Paseo exception to the worker-opened Draft PR rule; other hosts keep their delivery owner. It grants no push, PR, ready or merge authority.
 
-## Codex workers through Paseo
+Spawn with create_agent, notifyOnFinish true and an explicit modeId, because a Codex child will not inherit a Claude FO's mode. In scope notes and follow-ups, replace the main line with: "Your final reply is your completion message: Paseo delivers it to FO when your turn ends. End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt." A finished callback starts verification, as in Spacedock's Codex contract; without a Done line it is a handback or a stop, so read it and the report before advancing. Errored and permission callbacks are holds, never completion.
 
-For a listed paseo extension, this is the Paseo Codex exception to the worker-opened Draft PR rule; other hosts keep their delivery owner. It grants no push, PR, ready or merge authority.
-
-Resolve the stage's absolute worktree on the destination host. Pass a matching workspaceId explicitly to create_agent. If Spacedock creates the worktree during dispatch build, the immediate spawn can use Paseo's CLI with --new-workspace local --cwd <worktree>; this registers the existing directory without creating another worktree. Plain --cwd does not override an agent caller's workspace. Check current Paseo help before use. A prompt saying cd is not placement. If placement is unavailable or mismatched, hold and return the gap to the Captain. Preserve Spacedock's generated prompt and immediate spawn order.
+Resolve the stage's absolute worktree on the destination host. Pass a matching workspaceId explicitly to create_agent. If Spacedock creates the worktree during dispatch build, chain paseo workspace create --isolation local --path <worktree> --background --json onto that same build command, so create_agent stays the next host action. Paseo's CLI spawn has no finish callback; do not use it for a stage worker. Check current Paseo help before use. A prompt saying cd is not placement. If placement is unavailable or mismatched, hold and return the gap to the Captain. Preserve Spacedock's generated prompt and immediate spawn order.
 
 Add to scope notes: "Start in the assigned worktree; verify pwd and git root before edits. Commit locally and report the branch, base, candidate SHA and prepared PR text; do not push the product branch or open its PR. FO owns those steps and, when roborev is listed, its review. Report delegated checks as not run, never clean. Split-root state commits and sync still follow the ensign contract."
 
 FO reconciles the local candidate and any existing PR, then under an applicable Captain grant pushes and opens or updates the Draft PR before validation. When roborev is listed, FO runs its existing gate on that exact base/head and records its result; findings return through the existing repair route. Missing access, authority, a mismatched head or incomplete review holds the dependent step. Preserve CI, independent validation and merge gates. Never widen sandbox permissions to make this practice work.
+
+## Human terminals and pages
+
+For an attended terminal or page in a workflow listing paseo, FO and workers use Paseo when available. Read the installed paseo skill and current tool parameters; missing skill or capability returns to FO. Before dispatch build, resolve the Captain's visible host, workspace ID and cwd separately from the code worktree. Keep the generated build-to-spawn sequence intact.
+
+For each worker needing human interaction, add to scope notes: "Read the listed paseo extension's Human terminals and pages section before opening a human surface. Human host/workspace/cwd: <resolved values>. Code cwd: <assigned worktree>. Existing private page route: <URL or unverified>. Return placement or network gaps to FO."
+
+Create the terminal at the visible cwd; execute the candidate by absolute path or change shell cwd afterwards. Confirm the Captain can find it and perform harmless input before a live request. Browser tools open in the caller's workspace on a connected host, in the background. A worker elsewhere returns the safe URL to its FO to open there. Missing placement or an unsupported product opener holds that step; do not silently substitute the OS browser. Preserve sign-in and confirmation boundaries; cancel an invisible live request before recreating it.
+
+For another device, reuse an approved private route. Tailscale Serve may be a per-task fallback within the task's recorded authority: name host, port, allowed devices, lifetime and cleanup before setup. Return wider exposure or a different network choice to FO. Never infer page reach from localhost or daemon access. Verify the terminal and the page's rendering, expected pictures and intended interaction on the actual second device. HTTP 200 and desktop screenshots are insufficient. Record surface IDs, safe URL, device results, limits and owner in the task. Clean only task-owned surfaces, processes and route changes.

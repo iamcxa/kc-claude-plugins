@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check a task's dispatch records: each needs a Dispatched line with a full SHA, a Model line,
 non-empty Checklist and Scope notes sections, a `Package root:` line with an absolute path inside Scope notes, a scope-notes
-line naming `main` as the completion recipient, and a checklist that is not only pointer lines (a record name plus only
+line naming `main` as the completion recipient (or the final-reply line when the README lists paseo), and a checklist that is not only pointer lines (a record name plus only
 words from POINTER_WORDS, as in "Same checklist as implementation-2."); a pointer worded outside that set, such as
 "Reuse the checklist of implementation-2.", passes.
 When the workflow README lists an extension whose EXTENSION.md has an `Instruction FO adds to the scope notes`
@@ -10,7 +10,7 @@ bullet, the first record of its `Joins:` stage (`implementation-1.md`) also need
 
 Usage: dispatch_records.py [--readme FILE] <task folder or task .md file>
        dispatch_records.py [--readme FILE] --coverage <task .md file> --stage <worker stage>
-       dispatch_records.py --names <record file>...
+       dispatch_records.py --names [--strict] <record file>...
        dispatch_records.py --newest <state checkout> <task slug>
 Exit 1 naming each record that lacks a part, or when the task has no dispatch records. The README is FILE, else the
 nearest README.md above the task folder with an `entity-type:` line; with neither, the run prints
@@ -31,7 +31,9 @@ for a `\\"` on a `Captain:` or `Asked:` amendment line outside a `Superseded tex
 --names refuses implementation records (including message continuations) for Pilot/Prod when the last unfenced
 `## Design` (also ` — title` or `: title`) contains `docs/adr/<placeholder>-title.md` and task_facts has no reserved ADR.
 Quoted/fenced paths and numbered citations do not signal this obligation; scope-copy checks stay first-record-only.
-A record whose task file is absent is not judged.
+A record whose task file is absent is not judged by task-fact checks.
+--names reports skipped context checks on stderr. --strict requires --names and at least one record;
+it exits 2 for a record outside task/dispatch or without an adjacent task file, after running the existing checks.
 --names also refuses a live validation rerun with open F-numbered Needs decision findings until a later
 committed native Captain validation resolution or Captain amendment exists (ADR 0045). It skips this predicate
 for non-git snapshots; missing or ambiguous required git history exits 2.
@@ -53,8 +55,14 @@ from delivery_gate import CANDIDATE, RECORD  # noqa: E402
 from design_surfaces import AMENDMENTS_HEADING, AMENDMENT_HEADER, amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
 from role_triggers import outside_fences  # noqa: E402
 from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
+from workflow_extensions import readme_extensions  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent.parent
+
+PASEO_COMPLETION_LINE = ("Your final reply is your completion message: Paseo delivers it to FO when your turn ends. "
+                         "End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.")
+COMPLETION_PART = "a scope-notes line naming main as the completion recipient"
+PASEO_COMPLETION = re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^" + re.escape(PASEO_COMPLETION_LINE) + r"$", re.M)
 
 PARTS = {
     "a 'Dispatched:' line with a full 40-character SHA": re.compile(r"^Dispatched:.*\b[0-9a-f]{40}\b", re.M),
@@ -63,7 +71,7 @@ PARTS = {
     "a non-empty '## Scope notes' section": re.compile(r"^## Scope notes[ \t]*\n(?:[ \t]*\n)*(?!## )\S", re.M),
     "a 'Package root:' line with an absolute path in its scope notes":
         re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^Package root:[ \t]*/\S", re.M),
-    "a scope-notes line naming main as the completion recipient":
+    COMPLETION_PART:
         re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?\bcompletion(?: message)? to [`']?main(?![\w-])", re.M | re.I),
 }
 
@@ -127,7 +135,7 @@ def instruction_error(record, name, paths):
 
 
 def extension_errors(folder, readme, package):
-    listed = re.findall(r"[\w-]+", frontmatter(readme).get("extensions", ""))
+    listed = readme_extensions(readme)
     errors = []
     for name, stage, paths in declared_instructions(package, listed):
         for record in [Path(folder, "dispatch", f"{stage}-1.md")]:
@@ -178,6 +186,23 @@ def check_candidates(files):
                   "then run this check again")
             found = True
     return 1 if found else 0
+
+
+def check_context(files):
+    status = 0
+    for file in files:
+        path = Path(file).resolve()
+        folder = path.parent.parent
+        if path.parent.name != "dispatch":
+            notice = ("Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; "
+                      "run on the saved record.")
+        elif not any(task.is_file() for task in (folder / "index.md", folder.parent / f"{folder.name}.md")):
+            notice = "task facts, validation ruling history; no adjacent task file; restore it before dispatch."
+        else:
+            continue
+        print(f"{file}:1: context checks not run: {notice}", file=sys.stderr)
+        status = 2
+    return status
 
 
 NUMBER = re.compile(r"\d+")
@@ -326,7 +351,12 @@ def later_captain_ruling(root, task, text, selected):
     if ruling_git(root, "rev-parse", "--is-shallow-repository") != "false":
         raise RulingHistoryError("shallow-history")
     slug = task.parent.name if task.name == "index.md" else task.stem
-    paths = [f"{prefix}{name}" for prefix in ("", "_archive/")
+    state = task.parent.parent if task.name == "index.md" else task.parent
+    if state.name == "_archive":
+        state = state.parent
+    state_prefix = state.relative_to(root).as_posix()
+    state_prefix = "" if state_prefix == "." else state_prefix + "/"
+    paths = [f"{state_prefix}{prefix}{name}" for prefix in ("", "_archive/")
              for name in (f"{slug}.md", f"{slug}/index.md")]
     _, current = captain_records(text, slug)
     pinned = task_snapshot(root, head, paths)
@@ -475,8 +505,18 @@ def check_coverage(args, readme):
 
 def main(argv=None, package=PACKAGE):
     args = sys.argv[1:] if argv is None else argv
-    if args[:1] == ["--names"] and len(args) > 1:
-        return max(check_names(args[1:], package), check_candidates(args[1:]), check_task_facts(args[1:]), check_validation_rulings(args[1:]))
+    if args[:1] == ["--names"]:
+        strict = "--strict" in args[1:]
+        files = [arg for arg in args[1:] if arg != "--strict"]
+        if not files:
+            print(__doc__.strip())
+            return 2
+        status = max(check_names(files, package), check_candidates(files), check_task_facts(files), check_validation_rulings(files))
+        context = check_context(files)
+        return max(status, context) if strict else status
+    if "--strict" in args:
+        print(__doc__.strip())
+        return 2
     if args[:1] == ["--newest"] and len(args) == 3:
         return check_newest(args[1], args[2], package)
     readme = None
@@ -501,9 +541,20 @@ def main(argv=None, package=PACKAGE):
     if not records:
         print(f"{folder}: no dispatch records under dispatch/")
         return 1
-    errors = [f"{path.name}: needs {part}" for path in records
-              for part, pattern in PARTS.items() if not pattern.search(path.read_text())]
     readme = readme or find_readme(folder)
+    # see docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md
+    try:
+        listed = readme_extensions(readme) if readme else []
+    except (OSError, UnicodeError, ValueError) as error:
+        print(f"{readme}: {error}")
+        return 2
+    paseo = "paseo" in listed
+    errors = []
+    for path in records:
+        text = path.read_text()
+        for part, pattern in PARTS.items():
+            if not pattern.search(text) and not (part == COMPLETION_PART and paseo and PASEO_COMPLETION.search(text)):
+                errors.append(f"{path.name}: needs {part}")
     if readme:
         errors += extension_errors(folder, readme, package)
     names = [path.stem for path in records]

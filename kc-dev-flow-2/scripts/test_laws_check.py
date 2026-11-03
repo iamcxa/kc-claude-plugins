@@ -828,10 +828,129 @@ class L3Test(Base):
             self.assertEqual(self.judge(repo, before)[0], 1)
 
 
+class RawAmendmentTests(Base):
+    history = L3Test.history
+    def test_equal_malformed_regions_do_not_call_the_parser(self):
+        from unittest.mock import patch
+        import laws_check as lc
+        broken = (AMENDED.replace("Amendment 1 — 2026-10-29", "Amendment original")
+                  + "\n## Scope\nUnrelated.\n")
+        for label, old in (("malformed", broken), ("unmatched", AMENDED.rsplit("````", 1)[0])):
+            repo, before = self.history(old, label=label)
+            event = repo.commit("scope only", t=old.replace("title: t", "title: updated"))
+            ctx = lc.Context(repo.path, "fixed", [(event, [("M", "t.md", "t.md")])], self.plain)
+            with patch("design_surfaces.parse_amendments", side_effect=AssertionError("parser called")):
+                self.assertEqual(lc.l3_amendment_append_only(ctx), (1, [], None, 0))
+
+    def test_context_order_duplicates_and_whitespace_cannot_use_equality(self):
+        duplicate = AMENDED + AMENDED.split("## Captain amendments\n", 1)[1]
+        fenced = AMENDED.replace("### Amendment", "```md\n### Amendment") + "```\n"
+        for label, old, new, status in (
+                ("fence", AMENDED, fenced, 1),
+                ("spaces", AMENDED.replace("words", "words  x"), AMENDED.replace("words", "words x"), 1),
+                ("duplicate", duplicate, AMENDED, 2),
+                ("malformed-edit", AMENDED.replace("Amendment 1", "Amendment original"),
+                 AMENDED.replace("Amendment 1", "Amendment revised"), 2)):
+            with self.subTest(label=label):
+                repo, before = self.history(old, label=label)
+                repo.commit("protected change", t=new)
+                code, out = self.judge(repo, before)
+                self.assertEqual(code, status, out)
+
+    def test_section_move_uses_the_existing_parser_without_a_new_refusal(self):
+        from unittest.mock import patch
+        import design_surfaces as forms
+        import laws_check as lc
+        for n, old in enumerate((AMENDED, AMENDED.replace("## Captain amendments", "## Notes"))):
+            moved = old.replace("## Captain amendments", "## Other notes").replace("## Notes", "## Other notes")
+            repo, before = self.history(old, label=f"owner-{n}")
+            event = repo.commit("section move", t=moved)
+            ctx = lc.Context(repo.path, "fixed", [(event, [("M", "t.md", "t.md")])], self.plain)
+            with patch("design_surfaces.parse_amendments", wraps=forms.parse_amendments) as parser:
+                self.assertEqual(lc.l3_amendment_append_only(ctx), (1, [], None, 0))
+                self.assertEqual(parser.call_count, 2)
+
+
+class RealAmendmentTests(Base):
+    def test_five_pinned_records_scope_and_report_edits_keep_form_debt(self):
+        import hashlib
+        import json
+        import design_surfaces as forms
+        sources = os.environ.get("DEV2_OBLIGATION_SOURCES")
+        if not sources:
+            self.skipTest("DEV2_OBLIGATION_SOURCES: JSON rows with state, rev, path; see VALIDATION.md")
+        expected = {
+            "kc-decision-log-handoff-trial.md": ("1ef6106d7ca0b82762dd4a27b463709005fa604c22584ecaa98f4455a9763571", 0),
+            "adr-required-statement.md": ("7da9ac22b26e4513cc9b87f0403a8fc091d524783e6025a560e5fc997ecc1115", 0),
+            "limit-telemetry-posthog.md": ("475b3efd443bc16ea41bacc3a55d4d1c5df2912433d82f2fa087aec1605499b8", 2),
+            "_archive/branch-hours-generate-starts.md": ("9bde3671a17cd4bd34a1d6ff9f667450f46d0d2694578f9af326a7c08ac1464d", 0),
+            "operator-secret-hardening.md": ("a2c115e3416132f1050b88d42211e5fb1a22130f6f562aea807224fb9ec1958b", 2),
+        }
+        rows = json.loads(sources)
+        self.assertEqual(sorted(row["path"] for row in rows), sorted(expected))
+        results = []
+        for n, row in enumerate(rows):
+            raw = subprocess.check_output(["git", "-C", row["state"], "show", row["rev"] + ":" + row["path"]])
+            digest, released = expected[row["path"]]
+            self.assertEqual(hashlib.sha256(raw).hexdigest(), digest)
+            body = raw.decode("utf-8")
+            defects = []
+            ids = forms.check_criteria(row["path"], body.splitlines(), defects)
+            forms.check_amendments(row["path"], body.splitlines(), ids, defects)
+            self.assertTrue(defects)
+            for mode in ("scope", "report"):
+                changed = (body.replace("## Scope\n", "## Scope\n\nUnrelated observation.\n", 1) if mode == "scope"
+                           else body + "\n## Stage Report: implementation\n\n- DONE: unrelated observation\n")
+                self.assertNotEqual(changed, body)
+                repo = Repo(self.tmp / f"real-{n}-{mode}")
+                name = row["path"][:-3].replace("/", "__")
+                before = repo.commit("pinned real task", **{name: body})
+                after = repo.commit("unrelated edit", **{name: changed})
+                code, out = self.judge(repo, before, after, readme=self.plain)
+                self.assertEqual(code, 0, out)
+                self.assertIn("L3 amendment-append-only: 1 events judged", out)
+                baseline = os.environ.get("DEV2_OBLIGATION_BASE")
+                base_result = self.judge(repo, before, after, readme=self.plain, runner=Path(baseline) / "laws_check.py") if baseline else None
+                if base_result:
+                    self.assertEqual(base_result[0], released, base_result[1])
+                results.append({**row, "sha256": digest, "edit": mode, "form_defects": defects,
+                                "base": base_result, "candidate": [code, out]})
+                entry = forms.parse_amendments(changed.split("\n"))[0][0]
+                bad = changed.replace(entry.header, entry.header + " changed", 1)
+                repo.commit("protected heading changed", **{name: bad})
+                self.assertNotEqual(self.judge(repo, after, readme=self.plain)[0], 0)
+        if os.environ.get("DEV2_OBLIGATION_EVIDENCE"):
+            Path(os.environ["DEV2_OBLIGATION_EVIDENCE"], "real-records.json").write_text(json.dumps(results, indent=2))
+
+
 class AmendmentMutationTests(Base):
     def test_each_named_regression_fails_its_behavioral_test_with_caches_absent(self):
         import json
         cases = (
+            ("no-raw-shortcut", "laws_check.py",
+             'if regions is not None and regions == raw_amendment_regions(after):', 'if False:',
+             "test_laws_check.RawAmendmentTests.test_equal_malformed_regions_do_not_call_the_parser"),
+            ("whole-file-only", "laws_check.py",
+             'if regions is not None and regions == raw_amendment_regions(after):', 'if before == after:',
+             "test_laws_check.RawAmendmentTests.test_equal_malformed_regions_do_not_call_the_parser"),
+            ("normalize-raw", "laws_check.py", 'return regions if not fence or regions else None',
+             'return repr(regions).replace("  ", " ") if not fence or regions else None',
+             "test_laws_check.RawAmendmentTests.test_context_order_duplicates_and_whitespace_cannot_use_equality"),
+            ("deduplicate-regions", "laws_check.py", 'return regions if not fence or regions else None',
+             'return sorted(set(regions), key=repr) if not fence or regions else None',
+             "test_laws_check.RawAmendmentTests.test_context_order_duplicates_and_whitespace_cannot_use_equality"),
+            ("ignore-owner-context", "laws_check.py", 'active = (i, owner)', 'active = (i, None)',
+             "test_laws_check.RawAmendmentTests.test_section_move_uses_the_existing_parser_without_a_new_refusal"),
+            ("no-state-prefix", "dispatch_records.py", 'f"{state_prefix}{prefix}{name}"', 'f"{prefix}{name}"',
+             "test_dispatch_records.LiveValidationRulingTests.test_split_and_inline_layouts_use_only_the_owning_workflow_history"),
+            ("borrow-workflow", "dispatch_records.py", 'paths = [f"{state_prefix}{prefix}{name}"',
+             'paths = [f"docs/foreign/{prefix}{name}"',
+             "test_dispatch_records.LiveValidationRulingTests.test_split_and_inline_layouts_use_only_the_owning_workflow_history"),
+            ("same-commit-ruling", "dispatch_records.py", 'c != report_commit and ancestor(report_commit, c)',
+             'ancestor(report_commit, c)',
+             "test_dispatch_records.LiveValidationRulingTests.test_inline_old_same_and_missing_reports_retain_refusals"),
+            ("skip-malformed", "laws_check.py", 'if ambiguous:', 'if ambiguous: return []\n    if ambiguous:',
+             "test_laws_check.RawAmendmentTests.test_context_order_duplicates_and_whitespace_cannot_use_equality"),
             ("first-section-only", "design_surfaces.py", 'if not AMENDMENTS_HEADING.match(owner or ""):', 'if False:',
              "test_design_surfaces.AmendmentStructureTests.test_section_ownership_duplicate_sections_numbers_and_malformed_headings"),
             ("substring-ids", "design_surfaces.py", 'if not SUPERSEDES_VALUE.fullmatch(value.strip()):', 'if False:',
@@ -852,6 +971,14 @@ class AmendmentMutationTests(Base):
              "test_laws_check.L3Test.test_l2_classifies_new_forms_and_materializes_index_task"),
             ("missing-evidence-green", "laws_check.py", 'if unavailable:', 'if False:',
              "test_laws_check.L3Test.test_missing_parent_object_is_not_a_green_law_and_other_results_print"))
+        if os.environ.get("DEV2_OBLIGATION_SOURCES"):
+            real_target = "test_laws_check.RealAmendmentTests.test_five_pinned_records_scope_and_report_edits_keep_form_debt"
+            cases += (("no-raw-real-records", "laws_check.py",
+                       'if regions is not None and regions == raw_amendment_regions(after):', 'if False:', real_target),
+                      ("parse-before-raw-real-records", "laws_check.py", 'regions = raw_amendment_regions(before)',
+                       'parsed_amendments(before, "premature parse")\n                regions = raw_amendment_regions(before)', real_target),
+                      ("whole-file-real-records", "laws_check.py",
+                       'if regions is not None and regions == raw_amendment_regions(after):', 'if before == after:', real_target))
         results = []
         for label, file, old, new, target in cases:
             with self.subTest(mutation=label):

@@ -103,6 +103,7 @@ def tagged(cls):
 
 
 CLAUSES = "Sufficiency: every acceptance criterion in the validation report was met.\nNecessity: the relay adopter reads it at each merge ask.\n"
+ROUNDS = "External rounds: 0\n"
 
 COPILOT_UNSTATED = ("Deliver #627 head 22d9cc94? Codex round 1 review:5500046230 found one P1. "
                     "Second reviewer: copilot because the change touches review rules; not requested: Copilot refused for quota.")
@@ -114,7 +115,7 @@ class DeliveryGateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             task_file, text_file = Path(d, "task.md"), Path(d, "gate.txt")
             task_file.write_text(task)
-            text_file.write_text((CLAUSES if clauses else "") + text)
+            text_file.write_text((CLAUSES if clauses else "") + ROUNDS + text)
             readme(d, front) if front else readme(d)
             if records is not None:
                 Path(d, "task", "dispatch").mkdir(parents=True)
@@ -290,7 +291,7 @@ class ProdSecurityReviewTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             task_file, text_file = Path(d, "task.md"), Path(d, "gate.txt")
             task_file.write_text(f"---\ntitle: x\nprofile: {profile}\n---\n\n## Stage Report: validation\n\n{review}")
-            text_file.write_text(CLAUSES + "Merge ask.")
+            text_file.write_text(CLAUSES + ROUNDS + "Merge ask.")
             Path(d, "task", "security").mkdir(parents=True)
             Path(d, "task", "dispatch").mkdir()
             for name, content in records.items():
@@ -357,7 +358,7 @@ class ProdSecurityReviewTests(unittest.TestCase):
                 Path(d, "task", "dispatch").mkdir(parents=True)
                 Path(d, "task", "dispatch", "validation-1.md").write_text(record(HEAD40))
                 Path(d, "task.md").write_text(task)
-                Path(d, "gate.txt").write_text(CLAUSES + "Merge ask.")
+                Path(d, "gate.txt").write_text(CLAUSES + ROUNDS + "Merge ask.")
                 readme(d)
                 out = io.StringIO()
                 with stubbed(d), contextlib.redirect_stdout(out), quiet_roles():
@@ -404,13 +405,13 @@ def variant_of(old, new):
 
 def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=None, readme_body="extensions: [roborev, codex]\n",
               records=RECORDS, setup=None, argv_head="same", stub_fail=None, workflow_dir_arg=None, runs=None, clauses=True, roles=False,
-              folder=False, arg_dir=False, siblings=(), adr=None):
+              folder=False, arg_dir=False, siblings=(), adr=None, rounds=ROUNDS):
     with tempfile.TemporaryDirectory() as d:
         readme(d, readme_body)
         entry = Path(d, "task", "index.md") if folder else Path(d, "task.md")
         entry.parent.mkdir(exist_ok=True)
         entry.write_text(task)
-        Path(d, "gate.txt").write_text((CLAUSES if clauses else "") + text)
+        Path(d, "gate.txt").write_text((CLAUSES if clauses else "") + rounds + text)
         for name, content in (records or {}).items():
             Path(d, "task", "dispatch").mkdir(parents=True, exist_ok=True)
             Path(d, "task", "dispatch", name).write_text(content)
@@ -447,6 +448,30 @@ def run_variant(module, **kwargs):
 
 def check_run(**over):
     return dict(__typename="CheckRun", name="unit", status="COMPLETED", conclusion="SUCCESS", **over)
+
+
+class CheckRoundCountTests(unittest.TestCase):
+    PROBLEM = "summary needs one top-level External rounds: N line (nonnegative integer)"
+    NEXT = "next: hold the ask; record the external round count in the summary."
+
+    def test_missing_fenced_or_malformed_count_holds_without_saving_an_ask(self):
+        for text in ("", "```text\nExternal rounds: 1\n```\n", "~~~\nExternal rounds: 1\n~~~\n",
+                     "- External rounds: 1\n", "External rounds: -1\n", "External rounds: one\n",
+                     "External rounds: 1\nExternal rounds: 2\n"):
+            with self.subTest(text=text):
+                result = run_check(rounds=text)
+                self.assertEqual(result.code, 1, result.out)
+                self.assertEqual(result.lines, [self.PROBLEM, self.NEXT, ""])
+                self.assertEqual(result.written, {})
+
+    def test_zero_and_detail_counts_preserve_the_complete_text_output(self):
+        complete = run_check()
+        self.assertEqual(complete.code, 0, complete.out)
+        for count in ("0", "2", "003", "1.", "2. two reviews read", "1; one review read"):
+            with self.subTest(count=count):
+                result = run_check(rounds=f"External rounds: {count}\n")
+                self.assertEqual((result.code, result.out), (0, complete.out))
+                self.assertEqual(len(result.written), 1)
 
 
 class HoldTests(unittest.TestCase):
@@ -490,7 +515,7 @@ class HoldTests(unittest.TestCase):
     def test_a_readme_without_a_trunk_holds_with_exit_2(self):
         with tempfile.TemporaryDirectory() as d, stubbed(d), contextlib.redirect_stdout(io.StringIO()) as out, quiet_roles():
             Path(d, "task.md").write_text(TASK)
-            Path(d, "gate.txt").write_text(CLAUSES)
+            Path(d, "gate.txt").write_text(CLAUSES + ROUNDS)
             Path(d, "README.md").write_text("---\nextensions: []\n---\n")
             Path(d, "task", "dispatch").mkdir(parents=True)
             Path(d, "task", "dispatch", "validation-1.md").write_text(record(HEAD40))
@@ -1309,6 +1334,10 @@ class QuestionTests(unittest.TestCase):
                 code = (module or gate).main(["question", str(entry), "--text-file", str(Path(d, "gate.txt"))])
             return code, out.getvalue()
 
+    def test_legacy_combined_text_still_accepts_no_round_count(self):
+        self.assertNotIn("External rounds:", CLAUSES)
+        self.assertEqual(self.ask("Deliver it."), (0, "gate text complete\n"))
+
     def test_a_question_that_names_the_merge_without_the_hold_out_clause_is_refused(self):
         code, out = self.ask(MERGE_ASK.format(tail="."))
         self.assertEqual(code, 1)
@@ -1382,6 +1411,36 @@ def on_disk(committed_text, disk_text):
 
 class OwedRoleCallTests(unittest.TestCase):
     """These run the real role_triggers.py: a test that patches owed_role_calls cannot fail when the call is removed."""
+
+    def test_second_failure_prints_questions_before_ask_without_holding_and_with_other_problems(self):
+        report = "\n## Stage Report: validation\n\n- F1 Material: gap\n"
+        text = ALIGNED + report * 2
+        result = run_check(task=text, setup=committed(text), roles=True)
+        self.assertEqual(result.code, 0, result.out)
+        self.assertIn("before the next step, answer: is what I am solving still the outcome first asked for", result.out)
+        self.assertLess(result.out.index("before the next step"), result.out.index("record:"))
+        self.assertEqual(result.out.splitlines()[-1], gate.ASK)
+        broken = run_check(task=text, setup=committed(text), roles=True, facts=dict(isDraft=True))
+        self.assertEqual(broken.code, 1, broken.out)
+        self.assertIn("the PR is a draft", broken.lines)
+        self.assertIn("before the next step", broken.out)
+        first = ALIGNED + report
+        self.assertEqual(run_check(task=first, setup=committed(first), roles=True).out,
+                         run_check(task=ALIGNED, setup=committed(ALIGNED), roles=True).out)
+
+    def test_third_failure_holds_until_the_call_is_committed(self):
+        text = ALIGNED + "\n## Stage Report: validation\n\n- F1 Needs decision: gap\n" * 3
+        called = text.replace("Alignment: not needed.", "Alignment: not needed.\n"
+                              "Reviewer: kc-dev-flow-2:chief-engineer gpt-6-astra 2026-10-20 — what next?")
+        for disk, setup, expected in ((text, committed(text), 1), (called, on_disk(text, called), 1),
+                                      (called, committed(called), 0)):
+            result = run_check(task=disk, setup=setup, roles=True)
+            self.assertEqual(result.code, expected, result.out)
+            self.assertEqual(gate.ASK in result.out, not expected, result.out)
+            if expected:
+                self.assertIn("dispatch kc-dev-flow-2:chief-engineer", result.out)
+                self.assertIn("what breaks if this criterion or process is deleted?", result.out)
+                self.assertNotIn("before the next step", result.out)
 
     def test_a_committed_amendment_with_no_call_holds_with_the_scripts_next_line(self):
         result = run_check(task=AMENDED, setup=committed(AMENDED), roles=True)
@@ -1531,7 +1590,7 @@ class ReviewerDeclarationTests(unittest.TestCase):
                 saved.parent.mkdir(parents=True, exist_ok=True)
                 saved.write_text(source)
             text_file = root / "gate.txt"
-            text_file.write_text(CLAUSES + text)
+            text_file.write_text(CLAUSES + (ROUNDS if command == "check" else "") + text)
             argv = [command, str(entry.parent if folder else entry), "--text-file", str(text_file)]
             summary_file = root / "summary.txt"
             if summary is not None:
@@ -1559,7 +1618,7 @@ class ReviewerDeclarationTests(unittest.TestCase):
                     text_file.write_text(CLAUSES + before_question)
                     self.assertEqual((module or gate).main(["question", str(entry), "--text-file", str(text_file)]), 0)
                     self.assertEqual(list((artifacts / "merge").glob("ask-*.json")), [])
-                    text_file.write_text(CLAUSES + text)
+                    text_file.write_text(CLAUSES + (ROUNDS if command == "check" else "") + text)
                 code = (module or gate).main(argv)
             calls = root / "stub/calls.log"
             calls = calls.read_text() if calls.exists() else ""

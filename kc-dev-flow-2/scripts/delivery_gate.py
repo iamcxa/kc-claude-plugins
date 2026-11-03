@@ -13,6 +13,7 @@ The PR head is compared, as a prefix, with each line; it passes when it matches 
 --text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each,
 at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token; `answer=review:<id>` is no review.
+The gate text also needs one top-level `External rounds: N` line outside fences, using the summary count form below.
 Both commands require exactly one configured second-reviewer declaration, including `not triggered` when applicable.
 Prod/db cannot claim `not triggered`. Listed Copilot refusals must copy the quote/id from
 `<task>/review/copilot-not-run.txt` and offer `Copilot retry: available when the Captain confirms quota is back.`
@@ -36,6 +37,7 @@ README cannot be read, or an input is unusable. Every problem is printed.
 A task whose committed state owes a chief-engineer or engineering-reviewer call also holds: `role_triggers.py` runs on the task folder and stem
 (no --review-rounds), reading the task as committed at HEAD of its state checkout, so an edit not yet state-committed is not seen; exit 1 from it
 adds one problem line and its `next:` lines, exit 2 holds with its message.
+Exit 0 from it forwards advisory `next:` lines before the record and ASK, without holding the ask.
 Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
 and one last `next:` line, the `ASK` line: merge when the approved question named the merge, else ask. The `class:` line ends
@@ -608,6 +610,14 @@ def check(args):
         nexts.extend(said)
     elif code:
         holds.extend(said or [f"role_triggers.py exited {code} with no message"])
+    else:
+        nexts.extend(line for line in said if line.startswith("next:"))
+
+    # see docs/adr/0051-the-merge-ask-check-requires-the-round-count.md
+    missing = summary_round_problems("\n".join(outside_fences(gate_text)))
+    problems += missing
+    if missing:
+        nexts.append("next: hold the ask; record the external round count in the summary.")
 
     emit(*problems, *holds)
     if problems:
@@ -616,6 +626,7 @@ def check(args):
     if holds:
         emit(*(dict.fromkeys(nexts) or ["next: hold the ask and show the Captain these lines."]))
         return 2
+    emit(*dict.fromkeys(nexts))
     emit(f"PR head {head} equals dispatched candidate {head}; no second reviewer outcome is missing", *sibling_notes)
     if security_note:
         emit(security_note)

@@ -76,7 +76,8 @@ class RoleTriggersTest(Fixture):
         code, lines = self.owed()
         self.assertEqual(code, 1)
         self.assertEqual(len(lines), 1)
-        self.assertIn(f"dispatch {CE} ", lines[0])
+        self.assertIn(f"dispatch {CE} on opus or gpt-6-astra ", lines[0])
+        self.assertIn(f"Reviewer: {CE} <model> <date>", lines[0])
         self.assertIn("has 4 repair passes", lines[0])
         self.assertLessEqual(len(lines[0].split()), 60)
         pr_lines = "".join(f"- PR #{n} merged\n" for n in (1, 2))
@@ -138,7 +139,7 @@ class RoleTriggersTest(Fixture):
         self.assertEqual((code, out.count("next:")), (1, 1))
         self.assertIn("has 3 review rounds, the newest on 2026-10-24;", out)
         self.assertIn("`Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>`", out)
-        self.assertLessEqual(len(out.split()), 56)
+        self.assertLessEqual(len(out.split()), 60)
         cleared = {"a call on the round's date": call(CE, "opus", "2026-10-24"), "a call after it": call(CE, "opus", "2026-10-25"),
                    "a dated waiver on it": f"Reviewer: {CE} not run 2026-10-24: Captain ordered it"}
         left = {"a call the day before": call(CE, "opus", "2026-10-23"), "an undated waiver": f"Reviewer: {CE} not run: Captain ordered it",
@@ -197,22 +198,25 @@ class RoleTriggersTest(Fixture):
                                   (4, "2026-10-16", "AC-9", "none"), (5, "2026-10-16", "AC-1", "x"),
                                   (6, "2026-10-16", "none", "x")]))
         code, lines = self.owed()
-        self.assertEqual((code, len(lines)), (1, 1))
-        self.assertIn("has replacing amendments 1, 2, 4, 5, 6", lines[0])
-        self.assertIn(f"dispatch {ER} on opus ", lines[0])
-        self.assertLessEqual(len(lines[0].split()), 60)
+        self.assertEqual((code, len(lines)), (1, 2))
+        self.assertIn("has 3 replacing amendments", lines[0])
+        self.assertIn("has replacing amendments 1, 2, 4, 5, 6", lines[1])
+        self.assertIn(f"Reviewer: {ER} <model> <date>", lines[1])
+        self.assertIn(f"dispatch {ER} on opus or gpt-6-astra ", lines[1])
+        self.assertLessEqual(len(lines[1].split()), 60)
 
     def test_an_amendment_is_cleared_by_a_call_or_a_dated_waiver_no_earlier_than_it(self):
         amendments = [(n, date, "AC-4", "none") for n, date in ((1, "2026-10-15"), (2, "2026-10-15"), (3, "2026-10-16"),
                                                                  (4, "2026-10-17"), (5, "2026-10-17"))]
-        listed = lambda lines: re.search(r"amendments? ([\d, ]+)", lines[0]).group(1)
+        listed = lambda lines: re.search(r"has replacing amendments? ([\d, ]+)", "\n".join(lines)).group(1)
+        cleared_ce = call(CE, "opus", "2026-10-16") + "\n"
         self.put(task(amendments=amendments, extra=call(ER, "opus", "2026-10-16")))
         self.assertEqual(listed(self.owed()[1]), "4, 5")
         self.put(task(amendments=amendments, extra=f"Reviewer: {ER} not run 2026-10-16: widened scope only"))
         self.assertEqual(listed(self.owed()[1]), "4, 5")
         self.put(task(amendments=amendments, extra=f"Reviewer: {ER} not run: widened scope only"))
         self.assertEqual(listed(self.owed()[1]), "1, 2, 3, 4, 5")
-        self.put(task(amendments=amendments, extra=call(ER, "opus", "2026-10-17")))
+        self.put(task(amendments=amendments, extra=cleared_ce + call(ER, "opus", "2026-10-17")))
         self.assertEqual(self.owed()[0], 0)
         self.put(task(amendments=amendments[:1], extra=call(ER, "opus", "2026-10-15", "an unrelated question about a bridge")))
         self.assertEqual(self.owed()[0], 0)
@@ -224,9 +228,9 @@ class RoleTriggersTest(Fixture):
 
     def test_a_replacing_amendment_names_the_model_the_profile_or_surface_requires(self):
         amendment = [(1, "2026-10-15", "AC-4", "none")]
-        cases = (("prod", "none", "on fable (profile prod)"), ("pilot", "db", "on fable (Surfaces db)"),
-                 ("prod", "db", "on fable (profile prod, Surfaces db)"), ("pilot", "none", "on opus "),
-                 ("pilot", "ui, db", "on fable (Surfaces db)"))
+        cases = (("prod", "none", "on fable or gpt-6-astra (profile prod)"), ("pilot", "db", "on fable or gpt-6-astra (Surfaces db)"),
+                 ("prod", "db", "on fable or gpt-6-astra (profile prod, Surfaces db)"), ("pilot", "none", "on opus or gpt-6-astra "),
+                 ("pilot", "ui, db", "on fable or gpt-6-astra (Surfaces db)"))
         for profile, surfaces, expected in cases:
             with self.subTest(profile=profile, surfaces=surfaces):
                 self.put(task(amendments=amendment, profile=profile).replace("Surfaces: none", f"Surfaces: {surfaces}"))
@@ -234,7 +238,7 @@ class RoleTriggersTest(Fixture):
                 self.assertIn(f"dispatch {ER} {expected}", lines[0])
                 self.assertLessEqual(len(lines[0].split()), 60)
         self.put(task(amendments=amendment, extra="```\nSurfaces: db\n```"))
-        self.assertIn("on opus ", self.owed()[1][0])
+        self.assertIn("on opus or gpt-6-astra ", self.owed()[1][0])
         self.put(task(repairs=4))
         self.assertNotIn("fable", self.owed()[1][0])
 
@@ -250,8 +254,32 @@ class RoleTriggersTest(Fixture):
                 self.assertEqual(code, expected)
                 if expected:
                     self.assertIn(f"on {'fable' if profile == 'prod' else 'opus'}", lines[0])
+        cases = (("pilot", "gpt-6-astra", 0), ("pilot", "claude-opus-5-5", 0),
+                 ("pilot", "gpt-6.1-sol", 1), ("pilot", "gpt-6.1-terra", 1), ("pilot", "gpt-6-luna", 1),
+                 ("pilot", "claude-sonnet-5-5", 1), ("prod", "gpt-6-astra", 0), ("prod", "fable", 0),
+                 ("prod", "claude-fable-5-1", 0), ("prod", "opus", 1), ("prod", "claude-opus-5-5", 1))
+        for profile, model, expected in cases:
+            with self.subTest(profile=profile, model=model):
+                self.put(task(amendments=amendment, profile=profile, extra=call(ER, model, "2026-10-18")))
+                self.assertEqual(self.owed()[0], expected)
         self.put(task(amendments=amendment, profile="prod", extra=f"Reviewer: {ER} not run 2026-10-18: widened only"))
         self.assertEqual(self.owed()[0], 0)
+
+    def test_chief_engineer_floor_applies_to_repairs_and_review_rounds(self):
+        for model, expected in (("sonnet", 1), ("gpt-6.1-sol", 1), ("opus", 0), ("gpt-6-astra", 0)):
+            for repairs, flags in ((4, ()), (0, ("--review-rounds", 2, "--drift-date", "2026-10-24"))):
+                with self.subTest(model=model, repairs=repairs):
+                    self.put(task(repairs=repairs, extra=call(CE, model, "2026-10-24")))
+                    self.assertEqual(run(self.state, SLUG, *flags)[0], expected)
+        for repairs, flags in ((4, ()), (0, ("--review-rounds", 2, "--drift-date", "2026-10-24"))):
+            self.put(task(repairs=repairs, extra=f"Reviewer: {CE} not run 2026-10-24: Captain waived"))
+            self.assertEqual(run(self.state, SLUG, *flags)[0], 0)
+
+    def test_astra_amendment_calls_clear_the_peer_policy_shape_without_its_waiver(self):
+        amendments = [(n, "2026-10-30", f"AC-{n}", "none") for n in (1, 2, 3)]
+        for model, expected in (("gpt-6-astra", 0), ("gpt-6.1-sol", 1)):
+            self.put(task(amendments=amendments, extra=call(CE, "opus", "2026-10-30") + "\n" + call(ER, model, "2026-10-30")))
+            self.assertEqual(self.owed()[0], expected)
 
     def test_fenced_text_is_not_an_event_and_a_fenced_line_clears_nothing(self):
         fence = "".join(f"## Stage Report: implementation\n" for _ in range(6))
@@ -303,6 +331,125 @@ class RoleTriggersTest(Fixture):
         git(self.state, "rm", "-q", f"_archive/{SLUG}.md")
         self.put(task(repairs=4), f"{SLUG}/index.md")
         self.assertEqual(self.owed()[0], 1)
+
+
+def validations(*findings):
+    return "".join(f"\n## Stage Report: validation (cycle {n})\n\n{finding}\n\n### Summary\n\nresult\n"
+                   for n, finding in enumerate(findings, 1))
+
+
+class StepBackTest(Fixture):
+    questions = ("is what I am solving still the outcome first asked for", "can this gap be tested now, or am I waiting",
+                 "what breaks if this criterion or process is deleted?")
+    failed = "- F1 Material: gap\n- F2 Needs decision: another gap"
+    amendments = [(n, f"2026-10-{15 + n}", "AC-1", "none") for n in (1, 2, 3, 4)]
+
+    def assert_questions(self, out):
+        for question in self.questions:
+            self.assertIn(question, out)
+
+    def test_two_failed_reports_count_once_each_and_passing_reports_do_not_count(self):
+        for findings, expected in (((), False), ((self.failed,), False),
+                                   ((self.failed, "- DONE: passed", "- DONE: passed"), False),
+                                   ((self.failed, self.failed), True)):
+            with self.subTest(findings=findings):
+                self.put(task() + validations(*findings))
+                code, out = run(self.state, SLUG)
+                self.assertEqual(code, 0, out)
+                self.assertEqual("before the next step" in out, expected, out)
+                if expected:
+                    self.assertEqual(len(out.splitlines()), 1)
+                    self.assert_questions(out)
+                    self.assertEqual(len(out.split()), 51)
+
+    def test_fenced_findings_and_nonblocking_findings_do_not_count(self):
+        for finding in (f"```md\n{self.failed}\n```", "- F2 Deferred risk: later", "- F3 Polish: wording"):
+            self.put(task() + validations(self.failed, finding))
+            self.assertNotIn("before the next step", run(self.state, SLUG)[1])
+
+    def test_only_superseding_amendments_count_and_the_two_counts_stay_separate(self):
+        er = call(ER, "opus", "2026-10-20")
+        for amendments, findings, expected in ((self.amendments[:2], (), True),
+                ((self.amendments[0], (2, "2026-10-17", "none", "a different design")), (), False),
+                (self.amendments[:1], (self.failed,), False)):
+            self.put(task(amendments=amendments, extra=er) + validations(*findings))
+            code, out = run(self.state, SLUG)
+            self.assertEqual(code, 0, out)
+            self.assertEqual("before the next step" in out, expected, out)
+            if expected:
+                self.assert_questions(out)
+
+    def test_third_failure_owes_one_call_with_the_questions_even_with_repairs_and_rounds(self):
+        self.put(task(repairs=4) + validations(*([self.failed] * 3)))
+        code, out = run(self.state, SLUG, "--review-rounds", 2)
+        self.assertEqual((code, len(out.splitlines())), (1, 1), out)
+        self.assertIn("4 repair passes and 2 review rounds and 3 validations", out)
+        self.assert_questions(out)
+        self.assertNotIn("before the next step", out)
+
+    def test_two_replacements_still_remind_after_validation_event_is_cleared(self):
+        extra = call(CE, "gpt-6-astra", "2026-01-01") + "\n" + call(ER, "opus", "2026-10-20")
+        for count in (3, 4):
+            self.put(task(amendments=self.amendments[:2], extra=extra) + validations(*([self.failed] * count)))
+            code, out = run(self.state, SLUG)
+            self.assertEqual(code, 0, out)
+            self.assertEqual(len(out.splitlines()), 1, out)
+            self.assertIn("before the next step", out)
+            self.assert_questions(out)
+
+    def test_two_failed_validations_still_remind_after_replacement_event_is_cleared(self):
+        extra = call(CE, "gpt-6-astra", "2026-10-20") + "\n" + call(ER, "opus", "2026-10-20")
+        for count in (3, 4):
+            self.put(task(amendments=self.amendments[:count], extra=extra) + validations(self.failed, self.failed))
+            code, out = run(self.state, SLUG)
+            self.assertEqual(code, 0, out)
+            self.assertEqual(len(out.splitlines()), 1, out)
+            self.assertIn("before the next step", out)
+            self.assert_questions(out)
+
+    def test_a_third_event_deduplicates_only_a_call_line_carrying_the_three_questions(self):
+        for failures, replacements in ((3, 2), (2, 3)):
+            self.put(task(amendments=self.amendments[:replacements], extra=call(ER, "opus", "2026-10-20"))
+                     + validations(*([self.failed] * failures)))
+            code, out = run(self.state, SLUG)
+            self.assertEqual((code, len(out.splitlines())), (1, 1), out)
+            self.assert_questions(out)
+            self.assertIn(f"dispatch {CE}", out)
+            self.assertNotIn("before the next step", out)
+        self.put(task(repairs=4) + validations(self.failed, self.failed))
+        code, out = run(self.state, SLUG)
+        self.assertEqual((code, len(out.splitlines())), (1, 2), out)
+        self.assertIn("has 4 repair passes", out)
+        self.assertIn("before the next step", out)
+        self.assertEqual(out.count(self.questions[0]), 1, out)
+
+    def test_failure_calls_need_the_model_floor_but_no_date_floor_and_waivers_clear(self):
+        for extra, expected in (("", 1), (call(CE, "sonnet", "2026-10-20"), 1),
+                (call(CE, "gpt-6-astra", "2026-01-01"), 0), (call(CE, "opus", "2026-01-01"), 0),
+                (f"Reviewer: {CE} not run: Captain waived", 0), (f"Reviewer: {CE} not run 2026-01-01: waived", 0)):
+            self.put(task(extra=extra) + validations(*([self.failed] * 3)))
+            code, out = run(self.state, SLUG)
+            self.assertEqual(code, expected, out)
+            if expected:
+                self.assert_questions(out)
+                self.assertLessEqual(len(out.split()), 73)
+
+    def test_third_replacement_dates_the_call_or_waiver_and_fourth_owes_no_second_call(self):
+        er = call(ER, "opus", "2026-10-20") + "\n"
+        for extra, expected in (("", 1), (call(CE, "opus", "2026-10-17"), 1),
+                (call(CE, "sonnet", "2026-10-18"), 1), (call(CE, "gpt-6-astra", "2026-10-18"), 0),
+                (call(CE, "opus", "2026-10-19"), 0), (f"Reviewer: {CE} not run: waived", 1),
+                (f"Reviewer: {CE} not run 2026-10-17: waived", 1), (f"Reviewer: {CE} not run 2026-10-18: waived", 0)):
+            for count in (3, 4):
+                with self.subTest(extra=extra, count=count):
+                    self.put(task(amendments=self.amendments[:count], extra=er + extra))
+                    code, out = run(self.state, SLUG)
+                    self.assertEqual(code, expected, out)
+                    self.assertNotIn("before the next step", out)
+                    if expected:
+                        self.assert_questions(out)
+                        self.assertEqual(len(out.splitlines()), 1)
+                        self.assertLessEqual(len(out.split()), 68)
 
 
 def forms(heading, trailing=True):
