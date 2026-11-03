@@ -48,10 +48,10 @@ no additional authority; ADR 0011's money and Captain-judgment boundaries remain
 
 ## Consequences
 
-The extension grows from 819 to 1,038 words by `wc -w`, and from 829 to 1,052 by
+The extension grows from 819 to 1,048 words by `wc -w`, and from 829 to 1,062 by
 `normalized_words` in `kc-dev-flow-2/scripts/lint-skills.py`. This replaces ADR
 0048's 819-word extension bound; the shared workflow and its word budget stay
-unchanged. Dispatch reads 223 more normalized words; callback package words do
+unchanged. Dispatch reads 233 more normalized words; callback package words do
 not increase. Routine answers produce no Captain reply; held requests produce
 one message each. Recovery adds a status read after a refusal or missing block,
 not before every answer.
