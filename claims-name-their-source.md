@@ -271,3 +271,28 @@ Replay preflight revision 3 (before attempt 4): FO authorizes normal HOME plus h
 ### Summary
 
 The written rule, advisory output, observer list, +55 ledger and ADR 0055 are implemented at the local candidate above. AC-3 is unverified after the authorized routes failed; FO owns the replay decision, publication, exact-head RoboRev and hosted CI, so this is a handback, not an all-green implementation claim.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved written rule printed by the two gate commands with no hold, in only the design's named files.
+  Carried from implementation-1, not redone: product head still `792c3c6847966824ab002d91ad41f7f164ee373c`, worktree clean (`git rev-parse HEAD`, `git status --short`, 2026-11-03); nothing in the product changed this round.
+- DONE: ADR 0055, AC-1, AC-2, AC-4 structural behavior with isolated mutations, AC-5 per-moment recount, AC-6 suite and checks.
+  Carried from implementation-1 (`validation/implementation-1/`: `proof.log`, `mutation-*.log`, `word-counts.json`, `full-suite-final.log`, `lint-final.log`); not re-run in this dispatch, which was scoped to AC-3.
+- DONE: AC-3 harness integrity before any call.
+  `validation/implementation-2/harness-sha256.txt`: replay.py, scenarios.json, protocol.json, grader-falsifiers.json byte-identical to implementation-1, workflow hashes equal protocol.json. Grader falsifiers re-run: P/K original FAIL, corrected PASS, 4 of 4.
+- DONE: AC-3 Claude half, 12 runs on claude-opus-5-5, `claude -p --safe-mode`, normal HOME, scratch cwd.
+  12 of 12 answered, 0 retries, signed in on the first probe (P-base-1). Per run `meta.json` records argv, init (no user skills), `instruction_isolation`, model_reported, and measured usage. Sum: 217,572 input (incl. cache), 10,545 output. No file-open trace exists, so "CLAUDE.md not loaded" rests on the documented `--safe-mode` (`claude-help.txt`).
+  Preregistered grader: P base 1/3, P candidate 3/3, K base 3/3, K candidate 3/3 (`replay-results.json`, `results.md`).
+- FAILED: AC-3 pass bar (candidate at least 5 of 6 per scenario) and the base-saturation test.
+  The bar needs the Codex half, so each scenario has only 3 candidate runs: not evaluable. By the grader the base README does not saturate (P base 1/3), so the "README raise not needed" branch is not triggered; n=3, so this is not a measured effect size.
+  Grader defect, not corrected: the K "attributed" branch passes all three K base answers because their title contains "Validation ... report" and their limits say "not re-run", yet they state two cells ("S6 Codex and S7 Codex") with no source label. Reading the answers, K base is 0/3 and K candidate 3/3 (every candidate answer labels claims "validation report, not run"). Per-run branch check in `results.md`. The falsifier run first could not expose this. FO decides whether to amend the rubric and regrade.
+- SKIPPED: AC-3 Codex half.
+  `codex exec --help` lists no supported way to skip ~/.codex/AGENTS.md while keeping the normal CODEX_HOME; no credential copied.
+- SKIPPED: Push, Draft PR, RoboRev, CI on the PR head.
+  FO's duties per the dispatch; none done or claimed. Attempts used: 4 earlier + 12 now = 16 of the hard stop 30.
+- DONE: Commit evidence to the state checkout.
+  `spacedock state commit claims-name-their-source --workflow-dir <workflow>` committed and pushed to spacedock-state/dev2 (first commit 491e7f1e9 carried the runs; a second carries this report).
+
+### Summary
+
+This supersedes the earlier `## Stage Report: implementation`; only its AC-3 item changes, and its other items stand as carried. The Claude half of AC-3 ran (12 of 12 answered): the candidate README and printed line passed 3 of 3 in both scenarios, while the base README passed P 1 of 3, and K 3 of 3 by the grader but 0 of 3 on a read of the answers because of a grader defect. AC-3's pass bar is not met or refuted: the Codex half cannot run and n=3 per cell.
