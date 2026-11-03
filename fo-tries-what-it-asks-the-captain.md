@@ -3,7 +3,7 @@ title: FO runs any step it asks the Captain to run or look at, as far as it goes
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
