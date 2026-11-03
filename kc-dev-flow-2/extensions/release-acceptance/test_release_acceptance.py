@@ -797,6 +797,60 @@ class AcceptedTests(Base):
             f.write(f"Prior walk: {self.walk / 'report.json'}\n")
         self.not_accepted("Prior walk chain is cyclic")
 
+    def test_third_walk_cannot_drop_inherited_unresolved_complaints(self):
+        self.close()
+        second = self.rewalk()
+        third = self.rewalk(previous=second, slug="r1-rewalk-inherited")
+        for who, status in (("o", "partly-fixed"), ("s", "deferred")):
+            path = second / f"walk/reviewer-{who}.json"
+            reviewer = read(path)
+            reviewer["marks"][0].update(status=status, reason="still needs work")
+            if status == "deferred":
+                reviewer["marks"][0]["release"] = "r2"
+            put(path, reviewer)
+        previous_report = second / "walk/report.json"
+        code, out = run("build", second, "--workflow-dir", self.wf, "--prior", self.walk / "report.json")
+        self.assertEqual(code, 0, out)
+        code, out = run("check", second, "--tier", "final", "--workflow-dir", self.wf,
+                        "--prior", self.walk / "report.json")
+        self.assertEqual(code, 0, out)
+        self.assertIn("clean: no", out)
+        report = read(third / "walk/report.json")
+        report["prior"]["digest"] = "sha256:" + hashlib.sha256(previous_report.read_bytes()).hexdigest()
+        put(third / "walk/report.json", report)
+        self.not_accepted("own prior complaint o2 left unmarked")
+        code, out = run("build", third, "--workflow-dir", self.wf, "--prior", previous_report)
+        self.assertEqual(code, 1, out)
+        for who in ("o", "s"):
+            path = third / f"walk/reviewer-{who}.json"
+            reviewer = read(path)
+            reviewer["marks"] = read(second / f"walk/reviewer-{who}.json")["marks"]
+            put(path, reviewer)
+            code, out = run("build", third, "--workflow-dir", self.wf, "--prior", previous_report)
+            self.assertEqual(code, 1 if who == "o" else 0, out)
+            if who == "o":
+                self.assertIn("own prior complaint s2 left unmarked", out)
+        code, out = run("check", third, "--tier", "final", "--workflow-dir", self.wf, "--prior", previous_report)
+        self.assertEqual(code, 0, out)
+        self.assertIn("clean: no", out)
+        rows = read(third / "walk/report.json")["complaint_rows"]
+        self.assertEqual({(r["complaint"], r["reviewer"], r["status"], r["reason"]) for r in rows},
+                         {("o2", "o", "partly-fixed", "still needs work"),
+                          ("s2", "s", "deferred:r2", "still needs work")})
+        rendered = run("render", third)[1]
+        self.assertIn("| o2 | o | none | partly-fixed | still needs work |", rendered)
+        self.assertIn("| s2 | s | none | deferred:r2 | still needs work |", rendered)
+        self.not_accepted("r1-rewalk-inherited is not clean")
+        path = third / "walk/reviewer-o.json"
+        reviewer = read(path)
+        reviewer["marks"][0].update(status="fixed", reason="verified fixed")
+        put(path, reviewer)
+        code, out = run("build", third, "--workflow-dir", self.wf, "--prior", previous_report)
+        self.assertEqual(code, 0, out)
+        code, out = self.accepted()
+        self.assertEqual(code, 0, out)
+        self.assertIn("by r1-rewalk-inherited (local-merge:", out)
+
     def test_disconnected_self_cycle_cannot_hide_an_unclean_rewalk(self):
         self.close()
         folder = self.rewalk()

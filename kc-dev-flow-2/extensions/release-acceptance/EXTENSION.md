@@ -38,8 +38,9 @@ listing `release-acceptance` under `extensions:` and a kc-journey-map file under
   Follow `release-doc`; dev2 releases nothing.
 - **Re-walk:** after fixes land, file another acceptance task with `Prior walk: <immediately preceding walk's report.json>`
   (absolute or state-relative). Relaunch that walk's reviewers with unchanged id/model/persona and their
-  own complaints. Each marks them `fixed`, `partly-fixed`, `deferred` with `release`, or `will-not-fix`,
-  with reasons; new complaints allowed. Use that same report for `--prior` in both `ra build` and `ra check`;
+  own complaints, including inherited `partly-fixed` and `deferred` marks. Each marks them `fixed`,
+  `partly-fixed`, `deferred` with `release`, or `will-not-fix`, with reasons; new complaints allowed.
+  Use that same report for `--prior` in both `ra build` and `ra check`;
   close as above. Each re-walk extends this chain.
 - **Read:** `record.md` opens with complaint/task/status/reason rows. `check` prints `environment:`,
   `reviewers: N (models: M)`, `route:`, `Captain decision: environment (<cause>)`, `clean: yes|no`;

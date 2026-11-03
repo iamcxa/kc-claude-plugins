@@ -344,7 +344,9 @@ def evidence_problems(folder, tag, files):
 def prior_owned(prior):
     owned = collections.defaultdict(list)
     for w in (prior or {}).get("walks", []):
-        owned[w["reviewer"]["id"]] += [c["id"] for c in w.get("complaints", [])]
+        ids = [c["id"] for c in w.get("complaints", [])]
+        ids += [m["complaint"] for m in w.get("marks", []) if m.get("status") in ("partly-fixed", "deferred")]
+        owned[w["reviewer"]["id"]] += list(dict.fromkeys(ids))
     return owned
 
 
