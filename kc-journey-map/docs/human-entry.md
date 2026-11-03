@@ -3,7 +3,7 @@
 This first-story Pilot candidate is off by default. It does not configure an
 identity provider, deploy a host, change existing credentials or authorize a
 cutover. [Accepted design](../../docs/journey/kc-journey-map/private-entry.md)
-owns product rules; [ADR 0026](../../docs/adr/0026-verified-human-entry-preserves-private-room-core.md)
+owns product rules; [ADR 0058](../../docs/adr/0058-verified-human-entry-preserves-private-room-core.md)
 owns the admission decision. Use synthetic rooms while validating.
 
 ## Operator configuration

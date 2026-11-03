@@ -53,7 +53,7 @@ then fresh pairing; ordinary network loss does not select that repair path.
 
 ## First-story implementation boundary
 
-[ADR 0026](../../adr/0026-verified-human-entry-preserves-private-room-core.md)
+[ADR 0058](../../adr/0058-verified-human-entry-preserves-private-room-core.md)
 records the shared admission decision. The first candidate adds opt-in human
 entry, versioned member/session/challenge metadata and transactional adapters.
 It preserves the room engine and legacy grants. Source presence, test simulation
