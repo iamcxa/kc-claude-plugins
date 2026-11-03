@@ -523,3 +523,75 @@ _archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: AC-10 (Ca
 ### Summary
 
 This report supersedes all earlier implementation reports. Candidate 8d94819b4bc6f50af1a5e91d086a46e639af8802 repairs the whitespace-token filter bypass and proves the slash-separated regression fails before the fix and when whitespace counting is restored; the original seven acceptance criteria and corpus boundary remain green locally. RoboRev was invoked once but is incomplete because the daemon is not running; FO owns pushes, the Draft PR, fresh exact-head review, hosted CI and independent validation.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design with D1 as recommended; repair external round 2, Codex review 5751624953 on PR #770, comment 4454223152 (P2), routed by FO.
+  Candidate 40ced2d65e9ee7b069154670bac8dcab29d0d93d, branch spacedock-ensign/rewritten-criteria-checked-against-captain-words; base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb; repair parent 8d94819b4bc6f50af1a5e91d086a46e639af8802. Repair changes design_surfaces.py and its two existing test files; cumulative scope remains the seven design files plus authorized ADR 0057, no version change.
+- DONE: Strip supported criterion declaration prefixes using DECLARATION_LINE before comparing requirement words.
+  Two regression methods fail first on the prior head: 19 prefix/label variants retain declaration tokens, and three bullet/numbered/quoted old-new pairs silently pass the list-form source/revision/time to source/revision/link rewrite. After reusing DECLARATION_LINE, all 20 normalization variants pass, strict dispatch names link in all three pairs, and unchanged controls pass. Restoring the old substitution fails the CLI test (mutation-12.log); paragraph/token-count regressions remain covered by mutation-10/11.log.
+- DONE: AC-1 — The #756 rewrite is held before its validation dispatch.
+  Exact b4e88ece4 task/dispatch snapshot: base --names --strict exits 0; candidate exits 1, one line naming AC-9, amendment 3, revision, link (41 words). Frozen-source CLI case passes; removing added_words fails it (mutation-1.log).
+- DONE: AC-2 — A rewrite that adds nothing to his words passes.
+  Snapshot deletion-only control has empty byte-identical base/candidate output, exit 0; renumber/marker/evidence-tail controls and the new paragraph-two clean control pass. Deleted-word/evidence-tail mutants fail (mutation-2/3.log).
+- DONE: AC-3 — His later words clear the hold.
+  Amendment 4 with Supersedes: none and Asked: revision, link clears the snapshot hold; Captain-line clearance also passes. Restricting comparison to amendment 3 fails (mutation-4.log).
+- DONE: AC-4 — The repair dispatch is not held.
+  Snapshot implementation-4-message-2.md has no added-words line; validation-2-message-1.md has one. Holding all records fails the repair-route test (mutation-5.log).
+- DONE: AC-5 — L2 reports the line as a violation, not a runner failure.
+  A real temporary Git state range reports AC-9 under violation: L2 dispatch-record-complete, exit 1; later words clear later events without rewriting the historical verdict. Removing the pattern gives exit 2 and fails the test (mutation-6.log).
+- DONE: AC-6 — The corpus bound and no regression.
+  State 9a3cb0fc342767f31bf494ecd04db23b6d858a8c: newest-added dispatch of each amended task gives 48 tasks, 10 held, 18 added diagnostics. All other stdout/stderr/exit behavior matches base. Complete added diagnostics below; filler/id/extra-output mutants fail (mutation-7/8/9.log).
+- DONE: AC-7 — FO reads no more words at any moment except a held pre-dispatch run.
+  README remains byte-identical at 5781→5781 words; clean strict output is empty/identical; startup, both idle moments, archive and merge ask add 0; replay hold adds 41. Workflow-sentence/clean-output mutations fail (mutation-readme/9.log). Prior measured laws 1255→1345 and dispatch docstring 686→712 remain unchanged by this repair.
+- DONE: Every acceptance criterion green locally with its reproducible evidence and falsifier; list-form/quoted/numbered regression added; earlier slash and paragraph regressions retained.
+  /tmp/criteria-check-external-2/{red.log,green.log,proof.json,mutations.json,mutation-*.log}: two red regression methods, 17 focused green tests, 13 assertion-rejected mutants with python3 -B and no pyc caches. Whole-new-sentence, evidence-tail and translation limits remain; independent validation is not claimed.
+- DONE: test_design_surfaces.py, test_dispatch_records.py, test_laws_check.py, repository lint-skills.py, ADR/number checks and comment ratio.
+  All 26 CI-listed check commands exit 0 locally; unittest summaries total 1042 tests and 7 skips, with other fixture runners reporting success. Fresh bash acceptance exits 0 with 18 focused checks, replay/corpus, 13 mutants, lint 5781/5781, ADR --since base --require 0057 (51/0 legacy), numbers PASS/no migration path, comments 221 code/3 comment lines=1.4% within 5%, and git diff --check. Logs/scripts: /tmp/criteria-check-external-2/ (full-suite.json, full-suite-summary.json and per-command logs). Spacedock CLI 0.27.2, installed plugin 0.27.3 on darwin/arm64; CI pins plugin v0.27.2, so this is local full-suite evidence, not a hosted Linux/pinned-dependency run.
+- DONE: Run the requested exact-head RoboRev command once after the local commit.
+  python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/roborev_gate.py --repo /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words --base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb exited 3: incomplete: the roborev daemon is not running. One invocation, no retry; roborev.log preserves the line.
+- DONE: Affected-document dispositions and CI-cost boundary.
+  doc_impact lists ADR 0057 updated in the cumulative candidate (unchanged/accurate for this repair); ADR 0041 unaffected: seed admission unchanged; ADR 0045 unaffected: ruling-history check unchanged; ADR 0048 unaffected: completion/publication unchanged; learning.md unaffected: its parser/corpus/word-count practices followed. CI cost per PR not measured; triggers unchanged.
+- SKIPPED: One Draft PR from the origin/main base; clean RoboRev evidence= proof; CI green on the PR head.
+  FO supplied PR #770 at prior head 8d94819b4 and assigns pushes to FO; no worker product push or PR action. Daemon absence leaves fresh review incomplete, not clean; hosted CI and independent validation remain with FO. Updated title/body for the existing PR is below.
+- DONE: Complete appended report and local split-root handoff.
+  Append this report without changing frontmatter, prior reports or Captain words; commit only this entity path in the shared state checkout. Earlier state push failed on DNS; remote sync is not claimed and pushes remain with FO under repair routing. Code worktree clean; task stage unchanged.
+
+### Prepared PR
+
+Title: fix(kc-dev-flow-2): hold widened amendment criteria before validation
+
+Body:
+When an amended acceptance criterion inserts words inside a retained sentence, validation dispatch now holds if the words are absent from the Captain's recorded amendment words. The comparison strips supported declaration prefixes for bullet, numbered and quoted criteria, includes later Markdown paragraphs and short slash-separated requirements, names the criterion/amendment/words, and is recognized by the state-history law; implementation follow-ups remain available. ADR 0057 records the accepted bounded comparison.
+
+Validation at 40ced2d65e9ee7b069154670bac8dcab29d0d93d: all 26 CI-listed checks passed locally (1042 tests in unittest summaries, 7 skips), 18 focused checks, historical replay, 48-task corpus with 18 intended diagnostics only, 13 rejected mutations including restoring the old declaration substitution, whitespace counting and the paragraph bypass, skill lint, ADR/number checks, 1.4% comment ratio and fresh-shell acceptance. External rounds: 2. README remains 5781 words. Whole new sentences remain unchecked; translations can be held. RoboRev ran once and returned incomplete because its daemon was unavailable; exact-head review/hosted CI remain pending. Spacedock CLI 0.27.2/plugin 0.27.3 used locally; hosted CI pins plugin v0.27.2 and remains unverified. CI cost per PR unmeasured; triggers unchanged.
+
+### Corpus diagnostic evidence
+
+Complete added diagnostics, with only the common temporary corpus prefix removed:
+
+```text
+_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-14 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: report, quoting, l2; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-18 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: one, run, per, push, tip, whose, names; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-19 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: d1; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-20 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: ci, job's; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/fo-interviews-extension/dispatch/validation-3.md:1: AC-8 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: retaining, their, predictions; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-8 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: package's, references, sd, mods, kc-dev-flow-2, md; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-14 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: through, pr_watch, slug, dispatch, attempted, then; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-15 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: one, file, sync; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-18 (Captain amendment 5) adds words in a sentence kept from the criterion it replaces that are not in his words: replay, plan, counted; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/kc-decision-log-cli/dispatch/validation-2.md:1: AC-12 (Captain amendment 6) adds words in a sentence kept from the criterion it replaces that are not in his words: shows, skills, read-adr, ac4, text_check, py, asserts, ac4, install-falsifiers, txt, 2026-10-22; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/new-work-starts-from-a-story-map/dispatch/validation-4.md:1: AC-13 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: replaces, arm, arm, alone, does, count, node, kc-journey-map, lib, journey-review, test, mjs; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/paseo-human-surfaces-visible-and-reachable/dispatch/validation-2.md:1: AC-10 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: must, pass; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/peers-paseo-rule-matches-practice/dispatch/validation-3.md:1: AC-9 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: steer, successful, true, actual, steer, notify, true, send, arguments, recipient-side, record, matching, finish, event, information-only, notice, notice, finish, callback, causes, another, action, treated, proof, understanding, amendments-2, 3, exact-head; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/peers-paseo-rule-matches-practice/dispatch/validation-3.md:1: AC-11 (Captain amendment 4) adds words in a sentence kept from the criterion it replaces that are not in his words: policy; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/prod-security-review-gates/dispatch/validation-4.md:1: AC-14 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: question, he, answered; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: AC-7 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: one, host; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: AC-8 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: absolute, without, absolute-path, conversion, unusable; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: AC-10 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: comparison; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+```
+
+### Summary
+
+This report supersedes all earlier implementation reports. Candidate 40ced2d65e9ee7b069154670bac8dcab29d0d93d repairs declaration tokens leaking into comparison, with list/numbered/quoted regressions failing before the fix and when the old substitution is restored; the original seven acceptance criteria and corpus boundary remain green locally. RoboRev was invoked once but is incomplete because the daemon is not running; FO owns pushes, the Draft PR, fresh exact-head review, hosted CI and independent validation.
