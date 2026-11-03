@@ -339,3 +339,60 @@ The extension and adoption instructions record three adopter-owned README keys a
 Validation: 91 release-acceptance tests passed; one existing journey-map interoperability test skipped because its YAML dependency is absent. Nine ADR tests, 11 native CLI checks, 18 acceptance/mutation checks, skill lint, ADR lint, number guards and comment ratio passed. Added comments are 0.8% against the 5% maximum. Hosted CI and exact-head RoboRev remain pending; CI cost was not measured and no CI configuration changed.
 
 This complete report supersedes the earlier implementation report; the only change is the recorded state-push DNS failure.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved README keys, ra check refusals and ra accepted, with production waiting on FO's word, the repository's release document and the newest clean closed walk.
+  Branch `spacedock-ensign/release-walk-off-production-before-release`; base `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb`; candidate `444e6e6429213c94252dba44c150204c95b43539`; five design-named files total, repairs limited to the two Python files; no version edits; clean code tree.
+- DONE: Repair the routed High findings from RoboRev 1414 and 1416 within the two authorized repair rounds.
+  1414: FO readiness accepted production/forged reports (AC-1/AC-5); five red-to-green tests now require shared final validation. 1416: an unclean re-walk hid in a disconnected cycle (AC-5); two red-to-green tests and the native probe now require all tasks in one acyclic chain. Commits bfcc46325 and 444e6e642.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins from the branch off origin/main.
+  ADR 0042/0048 and FO's routing assign product push and Draft PR to FO; neither attempted by this worker. Prepared title/body below; independent validation still belongs to FO.
+- DONE: ADR 0053 records the ruling the design names, quoting the Captain's words from the task file and gate records.
+  It extends 0031/0034 and records the three accepted recommendations; package adr_lint docs/adr --since base --require 0053 exits 0; no further ruling was written.
+- DONE: AC-1 production target is held at both tiers and cannot bypass acceptance.
+  RecordedEnvironmentTests/native base exits 0 versus candidate 1 with the specified REFUSED and clean:no; archived-production acceptance now exits 1; removing target refusal or shared final validation fails the tests.
+- DONE: AC-2 recorded non-production target passes and another staging target fails.
+  Staging/native exits 0 with `environment: staging (production: production)`; staging-2 exits 1; removing mismatch comparison fails its test.
+- DONE: AC-3 absent/blank keys point to the four questions and equal environment names hold.
+  Each key is removed/blanked and restored by RecordedEnvironmentTests; required-release-doc mutation fails its test.
+- DONE: AC-4 local walk needs its deployment limit and render shows it.
+  Local check/build/render retain the specified not deployed line; dropping it holds both tiers and accepted; removing either corresponding guard fails the regression.
+- DONE: AC-5 production waits for a valid newest clean closed walk on one acyclic chain.
+  AcceptedTests cover absent/live task, missing sentinel/report, malformed/unclean/forged/production report, ruling/rows/prior digest, newer dirty/live re-walk, parallel walks and disconnected self/two-walk cycles. Valid clean re-walk passes; omitted final validation/chain coverage fails seven new regressions.
+- DONE: AC-6 the report schema does not change.
+  Native schema prints `release-acceptance 1.0.0`, exit 0; FIELDS/contract-versions.json unchanged; adding a field makes schema exit 1.
+- DONE: AC-7 docs carry the route and workflow README does not move.
+  EXTENSION/adoption retain keys, four questions, local limit, gate clause, Production waits and blind spots; workflow.md diff empty; repository lint exits 0; adding one workflow word makes lint exit 1.
+- DONE: AC-8 normalized_words recount stays within each lifecycle moment's ceiling.
+  Startup/idle(open,merged)/archive/merge ask: workflow 5834->5834, pr_watch unchanged; adoption 2267->2372; filing/first dispatch EXTENSION 605->525 (512 whitespace words); check adds 4 words, gate clause 5, accepted output 10; both ceiling mutations exit 1.
+- DONE: AC-9 one reserved ADR lands and its falsifier fails.
+  Package ADR lint exits 0; removing 0053 makes --require 0053 exit 1; ADR-document tests pass.
+- DONE: AC-10 existing behaviour holds without changed base expectations.
+  Release suite: 99 run, 98 passed, 1 existing skip; AST comparison preserves all base test classes/helpers except build_world README keys; original schema test catches its bypass. New re-walk fixture builds a real report with prior digest/reviewer marks.
+- SKIPPED: Existing journey-map interoperability test requiring YAML.
+  Its declared YAML dependency is absent; no changed expectation or substitute interoperability claim.
+- DONE: Full package checks, repository lint, package number guards, comment ratio and document assessment.
+  All 26 CI-listed commands exit 0 on this head (active Spacedock 0.27.3, CI pins 0.27.2); guards/ADR lint/design_surfaces exit 0; 342 code lines, 2 comments, 0.6% <= 5%. doc_impact: ADR 0053 updated from base; unchanged in repairs because its rule already covers acceptance.
+- DONE: Exercise every acceptance falsifier and both routed review defects.
+  `/tmp/release-walk-proof/mutations.json`: 20 checks, python3 -B/caches cleared; 11 original native checks, seven first-repair native cases and cycle probe pass. `/tmp/release-walk-chain-shapes.json`: all 700 one-to-four-task graphs match independent complete-chain permutations. Scratch .context/release-walk-proof may be removed after validation.
+- DONE: Run the gate once on each authorized repair head and record the final outcome.
+  bfcc46325: exit 1, evidence=roborev:1416 (cycle, now repaired); final 444e6e642: exit 1, `findings on 444e6e642; evidence=roborev:1421`; `/tmp/release-walk-final-roborev.log`. Local review is not clean; stopped at the authorized second repair round.
+- SKIPPED: Add release-document existence and in-repository path checks requested by RoboRev 1421.
+  Needs decision: native missing-document probe confirms accepted exits 0, but approved Design D2 says `ra` "checks only that the key is set, not that the document answers the questions." No AC promises the requested file guard. `/tmp/release-walk-release-doc-probe.log`; left open for FO disposition, not silently declined.
+- SKIPPED: CI green on the PR head.
+  FO must publish/open Draft before independent validation; hosted CI unverified. CI cost not measured; no CI configuration changed.
+
+Prepared PR title: `feat(kc-dev-flow-2): hold production readiness for a clean release walk`
+Prepared PR body (verbatim):
+Release walks now refuse production, any target other than the recorded walk environment, missing environment keys, and local walks without a recorded deployment limit. The new `accepted JOURNEY/RELEASE` command requires every acceptance task to belong to one acyclic `Prior walk:` chain, and requires its newest archived walk to have a local-merge sentinel, a clean report and final-tier validation before FO announces production readiness.
+
+Acceptance rechecks the environment, report structure, evidence, director ruling, complaint rows and prior-walk digest. Both reviewed bypasses are repaired: a clean-looking production/minimal report and a disconnected cycle hiding an unclean re-walk. The adoption instructions record three adopter-owned README keys and the repository's release document; ADR 0053 records the Captain's ruling. Schema, workflow template and versions stay unchanged; production remains the repository's approved procedure.
+
+Validation: all 26 package check commands passed locally, using active Spacedock 0.27.3 for CLI tests (CI pins 0.27.2). Release-acceptance: 98 passed, one existing YAML-dependent interoperability skip. Seven regressions were observed failing before their repairs and fail again when the corresponding guard is removed; 20 mutation/acceptance checks, 11 original native checks, seven first-repair native cases and the cycle probe passed. All 700 prior-reference graphs with one to four tasks matched an independent complete-chain expectation. ADR lint, number guards and comment ratio passed; added comments are 0.6% against 5%.
+
+Local review is not clean: evidence=roborev:1421 on 444e6e6429213c94252dba44c150204c95b43539 asks for release-document existence/path validation. This is left for FO disposition: the approved D2 explicitly says `ra` checks only that the key is set, and FO ended this worker's repair budget after the second round. Hosted CI remains pending. CI cost was not measured; no CI configuration changed.
+
+### Summary
+
+Both routed High findings are repaired and all local package commands, regression tests and mutations pass, with the existing YAML-dependent skip. Final review 1421 still has the release-document finding above; it is not clean and needs FO disposition under the approved key-only design. This complete report supersedes both earlier implementation reports; FO owns product publication, Draft PR, hosted CI and independent validation.
