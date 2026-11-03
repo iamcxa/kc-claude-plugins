@@ -754,6 +754,16 @@ def cmd_accepted(args):
         if not newest:
             raise Refused("no newest walk; Prior walk chain is cyclic")
         task = newest[0]
+        chain = set()
+        cursor = (task.folder / "walk/report.json").resolve()
+        while cursor is not None:
+            if cursor in chain:
+                raise Refused("all acceptance tasks must form one acyclic Prior walk chain; cycle found")
+            chain.add(cursor)
+            cursor = priors.get(reports[cursor].slug)
+        if len(chain) != len(tasks):
+            raise Refused("all acceptance tasks must form one acyclic Prior walk chain; disconnected: "
+                          + ", ".join(t.slug for path, t in reports.items() if path not in chain))
         if task.path.parent != state / "_archive":
             raise Refused(f"{task.slug} is not archived")
         merged = task.fields.get("pr", "")

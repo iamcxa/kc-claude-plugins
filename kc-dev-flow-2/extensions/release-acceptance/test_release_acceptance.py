@@ -774,6 +774,31 @@ class AcceptedTests(Base):
             f.write(f"Prior walk: {self.walk / 'report.json'}\n")
         self.not_accepted("Prior walk chain is cyclic")
 
+    def test_disconnected_self_cycle_cannot_hide_an_unclean_rewalk(self):
+        self.close()
+        folder = self.rewalk()
+        path = folder / "walk/report.json"
+        report = read(path)
+        report["proof_line"]["result"] = "broken"
+        put(path, report)
+        task = folder.with_suffix(".md")
+        put(task, task.read_text().replace(str(self.walk / "report.json"), str(path)))
+        self.not_accepted("one acyclic Prior walk chain")
+
+    def test_disconnected_two_walk_cycle_cannot_hide_unclean_walks(self):
+        self.close()
+        first = self.rewalk()
+        second = first.parent / "r1-rewalk-again"
+        shutil.copytree(first, second)
+        for folder, prior in ((first, second), (second, first)):
+            path = folder / "walk/report.json"
+            report = read(path)
+            report["proof_line"]["result"] = "broken"
+            put(path, report)
+            put(folder.with_suffix(".md"), task_file({"release-acceptance": "book-pickup/r1", "pr": "local-merge:" + "b" * 40},
+                f"Prior walk: {prior / 'walk/report.json'}\n"))
+        self.not_accepted("one acyclic Prior walk chain")
+
     def test_other_releases_are_not_acceptance_and_bad_argument_is_usage(self):
         self.close()
         self.assertEqual(self.accepted("book-pickup/r2")[0], 1)
