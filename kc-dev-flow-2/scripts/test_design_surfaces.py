@@ -33,6 +33,14 @@ class AddedWordsTests(unittest.TestCase):
             with self.subTest(sentence):
                 self.assertEqual(ds.requirement_sentences(sentence), [sentence])
 
+    def test_supported_declaration_prefixes_do_not_become_requirement_words(self):
+        prefixes = ("", "- ", "* ", "+ ", "1. ", "2) ", "> ", "> - ", "> > 3) ", "\t+ ")
+        for prefix in prefixes:
+            for declaration in ("**AC-8**", "**AC-8 — old duty**"):
+                with self.subTest(prefix=prefix, declaration=declaration):
+                    self.assertEqual(ds.requirement_sentences(prefix + declaration + " Require source/revision/time."),
+                                     ["Require source/revision/time."])
+
     def test_similarity_threshold_includes_three_of_four_matching_words(self):
         old = "alpha bravo charlie delta."
         self.assertEqual(self.added("alpha bravo charlie echo.", old=old), [(3, "AC-9", ["echo"])])

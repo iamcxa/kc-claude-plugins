@@ -321,7 +321,7 @@ def criterion_blocks(lines):
 
 def requirement_sentences(block):
     text = re.split(r"Current evidence:", block)[0]
-    text = re.sub(r"^\s*\*\*AC-[A-Za-z0-9]+\*\*", "", text)
+    text = DECLARATION_LINE.sub("", text, count=1)
     text = re.sub(r"Amended by Captain, amendment \d+\.?", "", text)
     return [s.strip() for s in re.split(r"(?<=[.;:])\s+", text) if len(words_of(s)) >= 3]
 
