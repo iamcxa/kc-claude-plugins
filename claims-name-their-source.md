@@ -72,16 +72,16 @@ Each bite was re-read in its original transcript or state record on 2026-11-03.
 
 ### Written rule or checked one: replay
 
-A check sits where ADR 0027 puts FO-write checks, in the script FO already runs at the write: `delivery_gate.py question` reads the validation summary and `check` reads the merge-ask text. The candidate check holds any sentence that has a count token and no dated source in a bracket. Count tokens are `N of M`, `N/M`, or `N` followed by cells, runs, tests, files, findings, words, lines, PRs, tasks, commits, cases, records or steps. A dated source matches `\([^()]*\b20\d\d-\d\d-\d\d\b[^()]*\)`. Replayed read-only (`git show HEAD:<briefing>`) over every committed `review/validation/briefing-N/index.json` (question plus artifact summaries) in five dev2 state checkouts (kc-plugin dev2, relay, v0, web, qnow) on 2026-11-03T08:00Z:
+A check sits where ADR 0027 puts FO-write checks, in the script FO already runs at the write: `delivery_gate.py question` reads the validation summary and `check` reads the merge-ask text. The candidate check holds any sentence that has a count token and no dated source in a bracket. Count tokens are `N of M`, `N/M`, or `N` followed by cells, runs, tests, files, findings, words, lines, PRs, tasks, commits, cases, records or steps. A dated source matches `\([^()]*\b20\d\d-\d\d-\d\d\b[^()]*\)`. Replayed read-only (`git show HEAD:<briefing>`) over every committed `review/validation/briefing-N/index.json` (question plus artifact summaries) in five dev2 state checkouts (kc-plugin dev2, relay, v0, web, qnow) on 2026-11-03T08:00Z, each read at the last commit before that time (`git rev-list -1 --first-parent --before=2026-11-03T08:00:26Z HEAD`); a re-run pinned to those revisions gave the same counts:
 
-| State checkout | Validation briefings | Would hold |
-| --- | --- | --- |
-| kc-plugin dev2 | 119 | 88 |
-| relay | 122 | 65 |
-| v0 | 17 | 5 |
-| web | 69 | 46 |
-| qnow | 135 | 71 |
-| Total | 462 | 275 |
+| State checkout | Revision read | Validation briefings | Would hold |
+| --- | --- | --- | --- |
+| kc-plugin dev2 | 37d56950f | 119 | 88 |
+| relay | 54350ff14 | 122 | 65 |
+| v0 | a392c74af | 17 | 5 |
+| web | e009f7087 | 69 | 46 |
+| qnow | aa5bb2e38 | 135 | 71 |
+| Total | | 462 | 275 |
 
 On the kc-adr briefing, the check holds the true sentence ("AC-1 4/4 on final bytes ... falsifiers 32/32") and passes the wrong one ("S6/S7 Codex not re-run", which has no count token). Adding "(validation report, 2026-10-22)" clears the hold without fixing the count. The 10-22 relay happened in chat, which no package script reads (ADR 0024). Neither replay is caught by a word-match hold. This is the case the Captain ruled on in ADR 0027 D4: he chose no check because "matching words cannot stop that class of error". This design follows that ruling.
 
@@ -190,15 +190,13 @@ Recommended order: adr-required-statement, then fo-tries-what-it-asks-the-captai
 
 - DONE: First check the new observatory evidence against its source; then decide written rule versus checked one, naming the point that catches an unsourced number or claim before it reaches the Captain, a PR body or a gate summary, with replays of the 2026-10-22 relay and the kc-adr count
   The relay FO finding is confirmed (session b2d5814e, lines 50580 and 50602, 2026-11-01). The web FO finding is wrong on the source: the claim was sourced and flagged unverified, so it is a limit, not a bite. Decision: a written rule, printed by `delivery_gate.py question`/`check`, no hold. Replay over 462 committed validation briefings (5 checkouts, 2026-11-03T08:00Z): a count-pattern hold stops 275 and passes the kc-adr wrong line, and the 10-22 chat relay reaches no script. Follows ADR 0027 D4. `### Written rule or checked one: replay`.
-- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task and live task of other sessions that changes the same file or check, so FO can order implementation
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (fo-answers-own-worker-permissions-by-listed-id, diagnosis-rounds-count-toward-step-back, rewritten-criteria-checked-against-captain-words, release-walk-off-production-before-release, claims-name-their-source, fo-tries-what-it-asks-the-captain, release-walk-due-trigger) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, archive-waits-for-observer-report, captain-ruling-sources-checked, comment-check-reaches-delivery-gate, dispatch-carries-reserved-adr-number, fo-write-checks-parse-top-level, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, picky-reviewers-may-run-on-gemini, pr-review-lite-value-pilot, seed-check-requires-alignment-result (live tasks; read only)) that changes the same file or check, so FO can order implementation
   `### Batch overlap`: six files; fo-tries-what-it-asks-the-captain shares `workflow.md`, `delivery_gate.py` `question()`, tests and the observer list. Recommended order: adr-required-statement, fo-tries-what-it-asks-the-captain, this task. comment-check and fo-write-checks are closed.
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
   `### Words FO reads at each moment`: startup 5781+48 to 5836+48 (`wc -w`, origin/main 0.34.0, 2026-11-03); validation preparation and merge ask +27 each; idle, archive and ideation unchanged; chat gets the 18-word sentence at startup.
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
   AC-1 (README sentences + budget step): not yet built. AC-2 (printed line in `question` and `check`, exit codes unchanged): not yet built. AC-3 (behavioral replay, 24 runs, grader falsifier on the original and corrected texts): inputs located, no run yet. AC-4 (observer chat-only phrase, lint): not yet built. AC-5 (per-moment recount): base counted 5781+48, candidate not built. AC-6 (suite and adr_lint): not yet run. `## Needs decision` items 1 and 2.
-- DONE: `design_surfaces.py check` on the task
-  `python3 <package>/scripts/design_surfaces.py check claims-name-their-source.md` printed "claims-name-their-source.md: design surfaces presentable", exit 0 (2026-11-03).
 
 ### Summary
 
-All four bites were re-read at source. Three are confirmed. The web 4-worker case was sourced and disclosed, so it is out of scope. The design makes the rule a written one, carried by the package to Codex FOs and other adopters (`~/.codex/AGENTS.md` has none) and printed by the two gate scripts at the summary moments. A word-match hold is rejected by a 462-briefing replay and ADR 0027 D4. Because the same rule was already loaded in every Claude bite, AC-3 asks for a behavioral replay before shipping, and it lets the README raise drop if the base text already passes.
+All four bites were re-read at source. Three are confirmed. The web 4-worker case was sourced and disclosed, so it is out of scope. The design makes the rule a written one, carried by the package to Codex FOs and other adopters (`~/.codex/AGENTS.md` has none) and printed by the two gate scripts at the summary moments. A word-match hold is rejected by a 462-briefing replay and ADR 0027 D4. Because the same rule was already loaded in every Claude bite, AC-3 asks for a behavioral replay before shipping, and it lets the README raise drop if the base text already passes. `python3 <package>/scripts/design_surfaces.py check claims-name-their-source.md` printed "claims-name-their-source.md: design surfaces presentable", exit 0 (2026-11-03).
