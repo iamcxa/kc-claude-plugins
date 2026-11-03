@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-03T15:11:22Z
+worktree: .worktrees/spacedock-ensign-claims-name-their-source
 ---
 
 ## Scope
