@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-walk-off-production-before-release:ideation:attempt-1:revision-1",
+  "question": "「決定：七張設計都照各自寫下的建議進實作嗎（含 A 的 D1：祕密包裝器執行與任務自己的暫存檔刪除由 FO 批准；兩處各加 55 字；來源標註跑 24 次重播）？要改哪件直接說。」 Approving accepts every recommendation each design states for its decisions.",
+  "artifacts": [
+    {
+      "id": "artifact:release-walk-off-production-before-release:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3f3239280b1a8aff71103c6b645f4558650ae8f1/release-walk-off-production-before-release.md",
+      "rev": "sha256:2101695eb9b94f7131bc7f1d2248e7cfb3182f40d0eef357d3d4121677ab76d0",
+      "mediaType": "text/markdown",
+      "summary": "Batch 13 ideation sitting, seven designs; recommended approve to enter implementation under pilot with each design's stated recommendations."
+    }
+  ]
+}

@@ -33,6 +33,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:release-walk-off-production-before-release:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:release-walk-off-production-before-release-ideation-1
+              briefing:
+                id: briefing:release-walk-off-production-before-release:ideation:attempt-1:revision-1
+                digest: sha256:48067cd5579a322f76e906b7b0a02c2411ba52773a590f09aa3d5cc3b4da73b8
+                room-ref: ./release-walk-off-production-before-release/review/ideation/briefing-1
 profile: pilot
 ---
 
