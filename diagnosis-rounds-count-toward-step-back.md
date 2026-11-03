@@ -1,6 +1,6 @@
 ---
 title: Diagnosis rounds on one symptom count toward the step back
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 gates:
     version: 1
