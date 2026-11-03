@@ -595,3 +595,47 @@ _archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: AC-10 (Ca
 ### Summary
 
 This report supersedes all earlier implementation reports. Candidate 40ced2d65e9ee7b069154670bac8dcab29d0d93d repairs declaration tokens leaking into comparison, with list/numbered/quoted regressions failing before the fix and when the old substitution is restored; the original seven acceptance criteria and corpus boundary remain green locally. RoboRev was invoked once but is incomplete because the daemon is not running; FO owns pushes, the Draft PR, fresh exact-head review, hosted CI and independent validation.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #770 head 40ced2d6 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for the bounded criteria at 40ced2d65e9ee7b069154670bac8dcab29d0d93d against origin/main=713d4e6ed6381e65fa6d8305e08b282ceb56a8fb. F1 is Deferred risk and F2 is Polish; this is no delivery approval. Evidence: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-validation/validation.md.
+- DONE: AC-1 — The #756 rewrite is held before its validation dispatch.
+  Independently archived b4e88ece4 task/dispatch: base exit 0/empty; candidate exit 1, one AC-9/amendment 3 diagnostic naming revision, link. Removing added_words makes the frozen-source test fail (mutation-1.log).
+- DONE: AC-2 — A rewrite that adds nothing to his words passes.
+  Deletion-only replay returns byte-identical empty output/exit 0; renumber, marker and Current evidence controls pass. Counting deletions or evidence tails fails assertions (mutation-2/3.log).
+- DONE: AC-3 — His later words clear the hold.
+  Later amendment 4, Supersedes: none and Asked: revision, link clears the historical hold; Captain-line control passes. Ignoring later amendments fails clearance (mutation-4.log).
+- DONE: AC-4 — The repair dispatch is not held.
+  Historical implementation-4-message-2.md has no added-words line; validation-2-message-1.md does. Applying the comparison to all records fails the repair-route test (mutation-5.log).
+- DONE: AC-5 — L2 reports the line as a violation, not a runner failure.
+  Temporary Git events return violation: L2 dispatch-record-complete and exit 1; later clearance does not erase the earlier event. Removing the pattern fails with exit 2 (mutation-6.log).
+- DONE: AC-6 — The corpus bound and no regression.
+  State af175bc10bf862e01b708bf3faedbb88a77c21c3: 48 amended tasks' newest-added dispatch records, 10 held, 18 diagnostics; no other stdout/stderr/exit differences. Every line is retained in validation.md/corpus-lines.log. Filler/id/extra-output mutants fail (mutation-7/8/9.log).
+- DONE: AC-7 — FO reads no more words at any moment except a held pre-dispatch run.
+  Workflow bytes/budget unchanged, 5781 words; clean output identical; startup, both idle moments, archive and merge ask add zero; held replay adds 41. Added README sentence/clean-output mutations fail; laws 1255→1345 and dispatch docstring 686→712 are outside those clean lifecycle reads.
+- DONE: Judge FO's proposed decline of Codex comment 4455001433 on 40ced2d65 (external round 3, P2), including whether it is P1 in substance.
+  Support Deferred-risk decline on F1's evidence, not the claim that only P1 blocks round 3: README and ADR 0004/0010 say Material OR reviewer P1 blocks every round. Not P1 in substance: narrow constructed trigger, no observed affected task, no direct delivery/authority bypass. FO must commit the decline and name its separate backlog task.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run exactly as written in a fresh bash shell, with observed output.
+  Five steps: /bin/bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-validation/acceptance.sh exited 0 unchanged. Expected/observed: exact clean SHA; historical hold 0→1/41 words and clean 0/empty; 18 tests OK; lint 5781/5781, ADR 51/0 legacy, comments 1.4%; clean product and removed temporary clone. Full commands/output: validation.md and acceptance.log.
+- DONE: ADR lint, number guards, design check, document impact, comments and regression checks.
+  python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since origin/main --require 0057 exited 0; dispatched .claude/.../0.34.0/scripts/adr_lint.py docs/adr --since origin/main also exited 0. Numbers PASS/no migration path; design presentable; diff --check clean; all 26 CI-listed commands passed, 1042 unittest tests/7 existing skips; 13 mutations rejected by assertions.
+- DONE: Judge implementation limits, goal sufficiency, minimal necessity and affected documents.
+  Exercised whole-new-sentence/evidence-tail omissions and a faithful Chinese-to-English translation hold: all confirmed accepted limits. All eight changed files serve the comparison, caller, L2 parser, regressions or ADR/docs; without-call/parser/normalization probes justify them. doc_impact's five dispositions verified: 0057 updated; 0041 seed admission, 0045 ruling history, 0048 completion/publication and learning.md unaffected as reported.
+- FAILED: Dispatch-record completeness required by validation principles.
+  Installed Codex package and exact candidate both exit 1: implementation-1-message-1.md needs the full completion-recipient scope line. It has only the first Paseo sentence; the initial record has the full instruction and the continuation says it remains in force. F2 records the metadata defect without inventing a lost completion.
+- DONE: Check provider evidence and preserve publication boundaries.
+  PR #770 is open/Draft at the assigned SHA; four hosted workflows succeeded, including all unit-test steps on run 41639775407 with pinned Spacedock. Local CLI 0.27.2/plugin 0.27.3 differs from hosted pin; hosted proof is separately verified. CI triggers unchanged and cost per PR unmeasured.
+- SKIPPED: Fresh exact-head RoboRev proof, decline/backlog publication and delivery.
+  Implementation's exit 3 is incomplete; PR body cites clean evidence only at older 5e79f10eb, so no current-head clean claim. FO owns review verification and both dispositions; no review invoked, agent spawned, push, PR comment, ready or merge performed.
+
+### Summary
+
+All seven accepted criteria pass at 40ced2d65e9ee7b069154670bac8dcab29d0d93d with independent replay, corpus, full tests and falsifiers. The comparison meets its deliberately bounded goal; acceptance does not prove every semantic rewrite, translation or Markdown example, native delivery, adoption, or exact-head local review.
+
+### Findings
+
+- F1 Deferred risk: Codex comment 4455001433, design_surfaces.py:336. Released user/workflow: FO checks amended-task validation dispatches. Observable harm: adding a tilde-fenced duplicate AC-9 to the fixture changes strict dispatch and L2 from exit 1 to 0 while the live requirement stays unchanged; design check returns 0; backtick control stays held. Boundary: value-ac[AC-1] protects the historical widening, whose exact accepted replay still passes; the example variant threatens that protection if it enters a real task. Trigger: constructed fixture, but 0 of 191 committed task acceptance sections at af175bc1 use tilde fences. No accepted criterion or ruling promises this example variant; current evidence therefore does not establish normal-workflow Material harm or P1 urgency. Reclassify if a supported task carries this trigger or an accepted contract requires this fence coverage. Evidence: fence-probe.json/log and fence-corpus.json. Recommend a separate backlog task, not an in-scope repair.
+- F2 Polish: implementation-1-message-1.md lacks the full standalone completion sentence required by dispatch_records.py. Released user/workflow: FO resumes the existing worker by continuation. Observable harm: the record check fails, but no lost signal is demonstrated and the full initial instruction is explicitly inherited. Boundary: contract[docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md#decision] preserves final-reply completion and FO publication; no candidate change affects it. Trigger: actual committed record, reproduced by declared-package and candidate checks. FO must disposition this metadata defect; a later correction cannot rewrite the historical record.
+
