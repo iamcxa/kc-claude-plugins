@@ -10,7 +10,7 @@ Verdict: **PASSED** at `6b680cf89125d75f062ecf198e37b13239cd16ea`, against fetch
 - GitHub confirms parent PRs 763, 764, 765 and 766 are merged; their four merge commits are ancestors of this candidate. PR 767 is OPEN, ready rather than Draft, targets main and names the dispatched head. See `pr763.json` through `pr767.json`, `parent-ancestry.json` and `identity.json`.
 - Package root is `/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0`, resolved from the loaded validation skill. The dispatch's .claude path was not substituted for this root.
 - Pilot scope is checking the text supplied at the merge ask. No binding hook, forced ordering or truth of the review count is promised.
-- No agents or reviews were requested, and no product commit, push, PR comment, ready mark or merge occurred. State is committed locally as directed; the dispatch's explicit no-push instruction leaves remote synchronization with FO.
+- No agents or reviews were requested, and no product commit, push, PR comment, ready mark or merge occurred. The explicitly required `spacedock state commit` helper committed and automatically pushed state. No standalone push or product push was run; initial state commit `a283e2766eb1d612ade0655cbfe7882efa06f91f` contains only this task and its cycle-2 evidence.
 
 ## Previous findings re-judged
 
@@ -174,5 +174,5 @@ Executed script SHA-256: a29baeba66cb0afafefe75c9360d0c8a21a1f7f0b80953baf987c73
 
 ## Cleanup and handoff
 
-Only this validation's disposable worktrees, mutation copies and generated probe records are removed. The workflow-owned assigned worktree stays in place. `cleanup.json` records clean product state and removed paths; `agents.json` shows no other active agent in the assigned worktree. The actual task stays in validation and PR 767 remains open; FO still owns state publication, exact-head local review and the delivery decision.
+Only this validation's disposable worktrees, mutation copies and generated probe records are removed. The workflow-owned assigned worktree stays in place. `cleanup.json` records clean product state and removed paths; `agents.json` shows no other active agent in the assigned worktree. The actual task stays in validation and PR 767 remains open; FO still owns exact-head local review and the delivery decision. The complete corrected stage report records the state helper’s automatic push; the first cycle-2 report’s local-only wording was inaccurate.
 

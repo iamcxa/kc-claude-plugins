@@ -422,3 +422,43 @@ The supplied-text change is sufficient for the accepted nearest-check boundary a
 
 Cycle 2 supersedes the earlier verdict for the old head: PASSED at `6b680cf89125d75f062ecf198e37b13239cd16ea`, with prior F1 and F2 resolved by current evidence and no new open findings in any disposition class. The accepted nearest-check goal works on the real PR and historical failures; each of the three changed files is necessary for behavior, meaningful tests or its decision record. This report grants no gate or delivery approval.
 
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #767 head 6b680cf8 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED, cycle 2, head `6b680cf89125d75f062ecf198e37b13239cd16ea`, fetched main `820a3f0ef7db1e802f99c13d1608b4c849f400cf`; all seven criteria and implementation limits are assessed in [validation-2/details.md](validation-gate-requires-the-question-check/validation-2/details.md).
+- DONE: This rerun's ruling is Captain amendment 1 in the task file, which keeps the criteria and rechecks after the parents merged: all four parents are merged and this head contains main. Re-judge F1 and F2 of validation-1 and run the whole suite CI runs. Do not start agents you were not asked to
+  Amendment commit `163fa1181` follows prior report `189ccfb2c`; its criteria remain intact. GitHub and ancestry confirm all four parent merges. All 26 CI commands pass (1024 cases, seven skips), with pinned Spacedock source `4d158a48`; no agents started.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step [acceptance.sh](validation-gate-requires-the-question-check/validation-2/acceptance.sh) ran unchanged under fresh `/bin/bash --noprofile --norc`, exit 0; full commands/output in details.md. Resolved skill root is the .codex 0.34.0 package; its ADR lint with `--since 820a3f0ef7db1e802f99c13d1608b4c849f400cf --require 0051` exits 0, 50 records, 0 legacy.
+- DONE: AC-1 missing, fenced, bulleted, malformed and duplicate round counts hold without saving an ask.
+  The 124 delivery tests pass; removing the new call fails the count assertions with exit 1 and no import errors (`AC-1-remove-call.log`).
+- DONE: AC-2 zero and supported count-with-detail forms pass.
+  Zero, integer, leading-zero and detail forms save one record and retain complete stdout; requiring nonzero fails the zero assertion (`AC-2-require-nonzero.log`).
+- DONE: AC-3 all seven historical briefing texts give the accepted results.
+  Four missing-count texts change main 0 to candidate 1/no record; the invalid reviewer stays 1 and the other two stay 0 with identical output. Historical text is unedited; provider/history/role controls are fixtures (`proof-results.json`).
+- DONE: AC-4 real gh reads PR #767 and the actual command distinguishes the two supplied texts.
+  Detached actual task-state snapshot: missing exits 1/zero asks; present exits 0/one ask; removed-call control exits 0 with missing text. PR is now ready/main, so no Draft/stack hold; success remains an ask classification, not approval (`live-results.json`).
+- DONE: AC-5 question compatibility and complete-check stdout are unchanged.
+  question/text_problems syntax trees equal main, existing question inputs remain unchanged, and complete stdout equals main; moving the requirement into text_problems fails legacy no-count question (`AC-5-move-to-text-problems.log`).
+- DONE: AC-6 and prior F1's literal origin/main comparison now pass without a waiver.
+  Workflow/mod and lint-script diffs against fetched main are empty; lint passes at 5781/5781 words. One extra workflow word fails at 5782 (`AC6-added-workflow-word.log`); prior Needs decision F1 is resolved.
+- DONE: AC-7 the ADR carries the exact Captain answer/question and all four bounded limits.
+  Manual source comparison and required lint pass. Removing Words, Recommended or the code pointer fails; removing Asked alone passes, contrary to implementation's lint claim, so lint was not treated as proof of exact wording (`extra-probes.json`).
+- DONE: Prior F2 is resolved by the required installed dispatch check.
+  Installed and candidate checkers both exit 0, five records complete; installed dispatch_records.py is byte-identical to current main and candidate (`identity.json`). No package update or record rewrite was done here.
+- DONE: Number guards, comment ratio, document impact, design surfaces, dispatch authority and diff checks pass.
+  All exit 0; 38 code/1 comment = 2.6%, within 5%. ADR 0044 unaffected as the historical decision amended by updated ADR 0051; the only added comment is its required pointer (`checks.json`).
+- DONE: Exact-head hosted CI and accepted proof limits were checked.
+  [Run 41567649139](https://github.com/iamcxa/kc-claude-plugins/actions/runs/41567649139) succeeds including pinned install/integrations. Supplied-text/order/count-truth/chat-answer limits remain accurate; standing and clean-output words add 0, missing-count output adds 22. CI cost per PR not measured; triggers unchanged.
+- DONE: Preserve product bytes and remove only validation-owned disposable worktrees.
+  Candidate, acceptance and state-snapshot checkouts removed; assigned branch remains clean at the dispatched head and no live ask was saved (`cleanup.json`). Task remains validation; PR remains open.
+- DONE: Commit the stage report using the required Spacedock state helper.
+  The helper committed and automatically pushed state commit `a283e2766eb1d612ade0655cbfe7882efa06f91f`; only this entity and its validation-2 evidence were included. No product branch was pushed.
+- SKIPPED: FO-owned exact-head RoboRev review and delivery.
+  No review requested: its wrapper enqueues work and this dispatch forbids review requests. The PR body's older-head clean result is not current evidence. No product push, PR comment, ready mark or merge; FO owns review and delivery.
+
+### Summary
+
+Cycle 2, report correction: this complete report supersedes the preceding cycle-2 report solely to record that the required state helper also pushed state; the evidence and verdict are unchanged. It also supersedes the earlier verdict for the old head: PASSED at `6b680cf89125d75f062ecf198e37b13239cd16ea`, with prior F1 and F2 resolved by current evidence and no new open findings in any disposition class. The accepted nearest-check goal works on the real PR and historical failures; each of the three changed files is necessary for behavior, meaningful tests or its decision record. This report grants no gate or delivery approval.
+
