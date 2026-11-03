@@ -65,6 +65,17 @@ gates:
                 id: briefing:second-round-prompts-a-step-back:validation:attempt-1:revision-1
                 digest: sha256:2f28a0d75c44e16184e377071091cbe62e0b044fbe61d951ef67a3b9e78c56d9
                 room-ref: ./second-round-prompts-a-step-back/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:second-round-prompts-a-step-back:validation:1
+                briefing: briefing:second-round-prompts-a-step-back:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-03T02:40:46.562036Z"
+                decision: approve
+                reason: 'The Captain 「合併」 (chat, 2026-11-03), answering 「決定：合併 #766 嗎？」.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-02T06:02:41Z
 worktree: .worktrees/spacedock-ensign-second-round-prompts-a-step-back
 pr: iamcxa/kc-claude-plugins#766
