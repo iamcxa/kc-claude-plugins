@@ -617,3 +617,57 @@ Local review: clean on 606781cbe; evidence=roborev:1454. This repairs the post-v
 ### Summary
 
 The routed post-validation finding is repaired: live and archived folder-form tasks participate in the same acceptance chain as flat tasks, and the newer unclean archived re-walk now holds production readiness. Local proof and review results above bind the committed head; FO publication, hosted checks and task D revalidation remain pending. This complete report supersedes all earlier implementation reports.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #772 head 606781cb against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for AC-1–AC-10 at `606781cbec3f684af5e7f9a74c90026e49c3e0a1`; checked `origin/main` = `e1bee223c47a1cd534a665a47776b683375b34fc`, merge-base = `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb`. Exact detached checkout verified and removed; product branch/bytes unchanged. No Material finding; F1–F3 remain for FO disposition.
+- DONE: AC-1–AC-4 environment refusal, restoration and local-limit behavior independently replayed.
+  RecordedEnvironmentTests (5) and native CLI prove production held at both tiers, recorded staging passes/other staging fails, each absent/blank key and equal names hold, restoration passes, and local limits survive build/render; guard-removal mutations fail each corresponding test. Base production commands exit 0, candidate exits 1. Evidence: `/tmp/release-walk-validation-606781cb/native`, `mutations/AC1-*` through `AC4-*`, `acceptance.log`.
+- DONE: AC-5 only the newest valid clean closed walk admits readiness, including the repaired folder forms.
+  AcceptedTests (20) plus FolderTaskTests pass; no task/live/no sentinel/dirty latest/parallel/cyclic/invalid report/ruling/rows/digest/local-limit cases hold and a clean complete chain passes. All 700 graph shapes match independent complete-chain permutations; 21 real CLI calls cover archived dirty-to-clean folder re-walk, live folder re-walk and every shared caller with flat/index/duplicate tasks. Four folder mutations and five readiness mutations fail their controls; removing discovery makes both regressions falsely accept the older walk. Evidence: `folder-native/`, `chain-shapes.json`, `mutations/` under the evidence directory above.
+- DONE: AC-6–AC-9 unchanged schema, retained routes, word ceilings and reserved ADR checked with falsifiers.
+  Schema remains 1.0.0; schema/workflow/pr_watch/lint-budget diffs from origin/main are empty. Docs preserve keys, four questions, local limit, gate, production and blind spots; independent normalized_words recount: workflow 5834→5834, adoption 2267→2372 (≤2375), extension 605→544 (≤740); check/gate/readiness add 4/5/10 words. Field insertion, an extra workflow word, each exceeded ceiling and missing ADR 0053 all exit 1. ADR quotes D1–D3 and names 0031/0034. Evidence: `words.json`, `mutations/`, `acceptance.log`.
+- DONE: AC-10 original behavior and expectations hold; complete package commands independently rerun.
+  All 26 CI-listed commands exit 0: 1050 tests run, 7 existing skips; release suite 104 run, 103 passed, one existing YAML interoperability skip. AST comparison preserves every base test/helper except the specified build_world README keys, and bypassing the original schema validation fails its existing regression. All 28 mutation/structural checks pass and source bytes are restored. Evidence: `suite/tests.json`, `suite/summary.json`, `mutations/mutations.json`.
+- DONE: Required decision, number, design, affected-document, comment and dispatch checks run against the candidate.
+  Loaded Codex-package and explicitly assigned Claude-package `adr_lint.py docs/adr --since origin/main --require 0053` both exit 0 (51 records, 0 legacy); number/design/diff checks exit 0. doc_impact names only ADR 0053: updated by this candidate, still accurate after the repair. Both added comments are ADR citations; 474 code lines/2 comments = 0.4%, below 5%. dispatch_records exits 1 solely on the earlier abbreviated follow-up (F1); the new repair dispatch passes. Evidence: `checks.json` and the corresponding logs.
+- DONE: Revalidation after a post-validation repair: RoboRev found that state_tasks() read only flat tasks, so accepted ignored folder-form re-walks; judge the repair and every criterion at this head, and carry the earlier F2 (RoboRev 1421) and F3 judgments forward if they still hold. Do not start agents you were not asked to
+  Repair is effective and necessary by the native and mutation evidence above. F2 key-only release-doc boundary and F3 frozen schema wording reproduce unchanged. Existing RoboRev job 1454 is done for merge-base..606781cb, verdict 1, `SEVERITY_THRESHOLD_MET` (threshold assurance only); read-only Codex reader exits 0, `evidence=summary:6602560193@606781cbe`. Hosted checks: six successful including GitGuardian, one expected deploy skip, none pending. No agent or review was started.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step script below ran unchanged with `/bin/bash --noprofile --norc /tmp/release-walk-validation-606781cb/acceptance.sh`, exit 0; full observed output is `acceptance.log` in that directory. Both requested ADR invocations exit 0. Findings use the four evidence fields below.
+- DONE: Judge every implementation limit and retain delivery authority.
+  Fixture/CLI proof does not verify live environment identity, reviewer/model execution, deployment behavior, adoption execution or pipeline enforcement; these match approved D1/D2 and the documented blind spots. Explicit deferrals retain existing clean semantics. YAML interoperability remains unverified; local CLI is 0.27.2 with plugin 0.27.3, whereas hosted CI pins both to 0.27.2 and passes. CI cost was not measured; CI configuration unchanged. Product publication, gate and delivery remain FO/Captain-owned; no product push, PR comment, review request, ready/merge or production action performed.
+- F1 Polish: the earlier follow-up dispatch still abbreviates completion instructions. Released user/workflow: FO delivering implementation-1-message-1; observable harm: record checker exits 1, but the parent supplies the full completion contract and no lost delivery is shown; boundary: `contract[kc-dev-flow-2/skills/validation/principles.md#validation-principles]` requires complete dispatch records; trigger: `dispatch/implementation-1-message-1.md:22`, `dispatch_records.log`. FO owns a record correction or disposition; no product repair is justified.
+- F2 Deferred risk: retain RoboRev 1421's release-document existence/path concern. Released user/workflow: an adopter with a reviewed release document; observable harm: none observed on that supported route, while a nonexistent fixture path still prints accepted; boundary: none, approved D2 checks only a nonempty key; trigger: `release-doc-boundary.log`. Recommend decline within D2; becomes Material if runtime document validation is promised or a supported adoption loses its required document.
+- F3 Polish: retain the schema table's stale description of `prior` as the first walk's report. Released user/workflow: operator reading `schema`; observable harm: confusing text, with no demonstrated loss following EXTENSION's immediate-predecessor route; boundary: `value-ac[AC-6]` freezes this table and field shape; trigger: `release_acceptance.py:46`, `acceptance.log`, and `three-walk-native/` proving the old first-report route is refused. Record the limitation; no silent schema/hash edit.
+
+### Summary
+
+The exact repaired candidate meets the accepted Pilot outcome and minimum necessary scope: environment guards, final validation, chain/complaint continuity and folder discovery each have a failing without-it control; the five changed files serve those behaviors, their adoption route or ADR 0053. This cycle-2 report supersedes the earlier validation report; FO still owns the three finding dispositions, its fresh-shell replay and the Captain's delivery decision.
+
+### Minimal acceptance script
+
+No application screen changes. This exercises the committed package fixtures and CLI, not a deployed site, real reviewers or production enforcement. Requires Python 3, the named checkout at this exact head and the explicitly named installed package; the schema's complete field table is expected output.
+
+```bash
+set -euo pipefail
+# Step 1: Pin the reviewed checkout. Expect exactly 606781cbec3f684af5e7f9a74c90026e49c3e0a1.
+WT="/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-off-production-before-release"
+cd "$WT"
+test "$(git -C "$WT" rev-parse HEAD)" = "606781cbec3f684af5e7f9a74c90026e49c3e0a1"
+git -C "$WT" rev-parse HEAD
+# Step 2: Check production refusal, staging and local limits. Expect 5 tests, OK.
+python3 -B kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py RecordedEnvironmentTests -v
+# Step 3: Check closure, folder tasks, walk chains and inherited complaints. Expect 21 tests, OK.
+python3 -B kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py AcceptedTests FolderTaskTests -v
+# Step 4: Check the unchanged schema and workflow. Expect release-acceptance 1.0.0 and its table; no diff output.
+python3 -B kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py schema release-acceptance
+git -C "$WT" diff --exit-code e1bee223c47a1cd534a665a47776b683375b34fc HEAD -- kc-dev-flow-2/extensions/release-acceptance/contract-versions.json kc-dev-flow-2/references/sd/workflow.md
+# Step 5: Check package rules and the reserved decision record. Expect PASS; 51 ADR files, 0 legacy.
+python3 -B kc-dev-flow-2/scripts/lint-skills.py
+python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since e1bee223c47a1cd534a665a47776b683375b34fc --require 0053
+
+```
+
+Observed, every step exits 0: (1) exact head 606781cbec3f684af5e7f9a74c90026e49c3e0a1; (2) 5 environment tests, OK; (3) 21 closure/folder tests, OK; (4) release-acceptance 1.0.0 and field table, empty diff; (5) package PASS, workflow lint 5781 of 5781 body words, 51 ADR files checked and 0 legacy. Full output: /tmp/release-walk-validation-606781cb/acceptance.log.
