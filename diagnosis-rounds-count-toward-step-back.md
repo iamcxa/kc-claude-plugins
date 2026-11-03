@@ -22,6 +22,17 @@ gates:
                 id: briefing:diagnosis-rounds-count-toward-step-back:backlog:attempt-2:revision-1
                 digest: sha256:0dc4d82e27a0cb325611c5e1b7795119a251282a6259cc481217ce51ff653c43
                 room-ref: ./diagnosis-rounds-count-toward-step-back/review/backlog/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:diagnosis-rounds-count-toward-step-back:backlog:2
+                briefing: briefing:diagnosis-rounds-count-toward-step-back:backlog:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-03T07:44:30.807123Z"
+                decision: approve
+                reason: The Captain 「進」 (chat, 2026-11-03), answering the batch 13 sitting 「決定：這批七張（A 權限、B 同症狀計數、C 改寫條件比對原話、D release 驗收不在正式站、來源標註、FO 先自己試、release 驗收到期提醒）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？要改哪張直接說。」; approves Pilot, these outcomes and bounds.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
