@@ -168,11 +168,11 @@ class RouteMutationTests(unittest.TestCase):
         self.refuses("skills/read-adr/writing.md: package path must be <package>/scripts/NAME")
 
     def test_a_chat_only_rule_the_workflow_no_longer_says_is_named(self):
-        self.change("references/sd/workflow.md", "presents\n  every step in full beside its observed output", "shows\n  each step with its output")
-        self.refuses("chat-only rule 'presents every step in full beside its observed output' is not in references/sd/workflow.md")
+        self.change("references/sd/workflow.md", "FO answers a question the Captain asks at a gate", "FO ignores a question the Captain asks at a gate")
+        self.refuses("chat-only rule 'FO answers a question the Captain asks at a gate' is not in references/sd/workflow.md")
 
     def test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines(self):
-        self.change("references/sd/workflow.md", "presents\n  every step", "presents every\n  step")
+        self.change("references/sd/workflow.md", "FO answers a question", "FO answers\n  a question")
         self.assertEqual(lint.lint_tree(self.root), [])
 
     def test_the_chat_only_list_must_exist(self):

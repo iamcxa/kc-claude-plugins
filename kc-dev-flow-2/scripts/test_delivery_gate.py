@@ -25,6 +25,17 @@ def record(*heads, body="## Checklist\n\n- one\n"):
     return f"# validation dispatch\n\nDispatched: {'a' * 40}\nModel: sonnet\n{lines}\n{body}"
 
 
+def captain_record(entry, head=HEAD40):
+    folder = gate.task_folder(entry)
+    (folder / "dispatch").mkdir(parents=True, exist_ok=True)
+    (folder / "dispatch/validation-1.md").write_text(record(head))
+    path = folder / "captain-steps/1.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(f"Candidate: {head}\n\n### Step 1\nAsked: Review this candidate.\n"
+                    "Ran: fresh shell, 2026-11-03T00:00:00Z\nObserved: checks passed\n")
+    return f"\nReview this candidate.\nCaptain steps: {path}\n"
+
+
 OUTPUTS = []
 STUB_GH = f"""#!{sys.executable}
 import glob, json, os, sys
@@ -1317,6 +1328,194 @@ HOLD_OUT_TAIL = {"unless he says he merges or holds": ", unless he says he merge
                  "unless you say you merge or hold": ", unless you say you merge or hold."}
 
 
+class CaptainStepFixture(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.saved = self.root / "steps.md"
+        self.message = self.root / "message.txt"
+
+    def step(self, asked, observed="worked", ran="fresh shell, 2026-11-03T00:00:00Z", only=None, number=1):
+        text = f"### Step {number}\nAsked: {asked}\nRan: {ran}\n"
+        if observed is not None:
+            text += f"Observed: {observed}\n"
+        if only is not None:
+            text += f"Only he can: {only}\n"
+        return text
+
+    def run_steps(self, body, message, module=None, head="none"):
+        self.saved.write_text(f"Candidate: {head}\n\n{body}")
+        self.message.write_text(message)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = (module or gate).main(["steps", str(self.saved), "--text-file", str(self.message)])
+        return code, out.getvalue()
+
+
+class CaptainStepsTests(CaptainStepFixture):
+    def test_unobserved_steps_hold_even_when_ran_none_has_no_captain_reason(self):
+        for ran in ("fresh shell, 2026-11-03T00:00:00Z", "none — his phone"):
+            code, out = self.run_steps(self.step("Run the check", observed=None, ran=ran), "Run the check")
+            self.assertEqual(code, 1, out)
+            self.assertIn("step 1 S2", out)
+        mutant = variant_of('if not fields.get("Observed", "").strip() and not (', 'if False and not (')
+        for ran in ("fresh shell", "none — his phone"):
+            self.assertEqual(self.run_steps(self.step("Run", observed=None, ran=ran), "Run", mutant)[0], 0)
+
+    def test_qnow_card_replay_checks_archived_path_and_unrecorded_fence(self):
+        rel = "schedule-settings-match-design/validation-6/seed-captain-fixtures.py"
+        archived = self.root / "_archive" / rel
+        archived.parent.mkdir(parents=True)
+        archived.write_text("print('fixture created')\n")
+        missing = self.root / rel
+        command = f"python3 {missing}"
+        card = self.root / "captain-card.md"
+        card.write_text(f"# Captain card\n\n```sh\n{command}\n```\n")
+        message = f"Run the card at {card}:13"
+        body = self.step(command)
+        code, out = self.run_steps(body, message)
+        self.assertEqual(code, 1, out)
+        self.assertIn(f"step 1 S4: missing path {missing}", out)
+        no_paths = variant_of('for path in absolute_paths(fields.get("Asked", "")):', 'for path in []:')
+        self.assertEqual(self.run_steps(body, message, no_paths)[0], 0)
+        code, out = self.run_steps(self.step(message), message)
+        self.assertEqual(code, 1, out)
+        self.assertIn("S5: unrecorded command", out)
+        no_commands = variant_of('for item in commands + links(expanded):', 'for item in links(message):')
+        self.assertEqual(self.run_steps(self.step(message), message, no_commands)[0], 0)
+        missing.parent.mkdir(parents=True)
+        missing.write_text(archived.read_text())
+        self.assertEqual(self.run_steps(body, message), (0, "captain steps complete: 1 steps, 0 left to him\n"))
+
+    def test_message_commands_and_links_each_need_a_step(self):
+        command, link = "printf checked", "https://preview.example.test/owner"
+        message = f"```sh\n{command}\n```\nOpen {link}"
+        code, out = self.run_steps(self.step(command), message)
+        self.assertEqual(code, 1, out)
+        self.assertIn(link, out)
+        no_links = variant_of('for item in commands + links(expanded):', 'for item in commands:')
+        self.assertEqual(self.run_steps(self.step(command), message, no_links)[0], 0)
+        body = self.step(command) + "\n" + self.step(f"Open {link}", number=2)
+        self.assertEqual(self.run_steps(body, message)[0], 0)
+        self.assertEqual(self.run_steps(body, message + ".")[0], 0)
+        code, out = self.run_steps(self.step(f"Open {link}"), message)
+        self.assertEqual(code, 1, out)
+        self.assertIn(command, out)
+
+    def test_a_captain_only_step_requires_its_reason(self):
+        for reason in ("sign in", "sign in — account", ""):
+            code, out = self.run_steps(self.step("Sign in", only=reason), "Sign in")
+            self.assertEqual(code, 1, out)
+            self.assertIn("step 1 S3", out)
+        no_reason = variant_of('if not reason or len(reason[1].split()) < 2:', 'if False:')
+        self.assertEqual(self.run_steps(self.step("Sign in", only="sign in"), "Sign in", no_reason)[0], 0)
+        self.assertEqual(self.run_steps(self.step("Sign in", only="sign in — his WorkOS account"), "Sign in")[0], 0)
+        self.assertEqual(self.run_steps(self.step("Sign in", observed=None, ran="none — his phone",
+                                                 only="sign in — his phone"), "Sign in")[0], 0)
+
+    def test_three_exercised_steps_pass_and_report_the_one_captain_step(self):
+        requests = ["Run the fixture", "Open the preview", "Sign in"]
+        body = "\n".join(self.step(asked, number=i, only=("enter his password at the sign-in page — his account" if i == 3 else None))
+                          for i, asked in enumerate(requests, 1))
+        self.assertEqual(self.run_steps(body, "\n".join(asked + " — observed: worked" for asked in requests)),
+                         (0, "captain steps complete: 3 steps, 1 left to him\n"))
+
+    def test_asked_text_is_matched_with_whitespace_normalized(self):
+        body = self.step("Run\n  the fixture")
+        self.assertEqual(self.run_steps(body, "Run the\nfixture")[0], 0)
+        self.assertIn("step 1 S1", self.run_steps(body, "Run something else")[1])
+        no_match = variant_of('if not request or request not in normalized(expanded):', 'if False:')
+        self.assertEqual(self.run_steps(body, "Run something else", no_match)[0], 0)
+
+    def test_paths_drop_line_suffixes_skip_placeholders_and_expand_home(self):
+        file = self.root / "exists.txt"
+        file.touch()
+        for path in (str(file) + ":13", str(file) + ":13:2", "<package>/scripts/check.py", "/tmp/<placeholder>/check.py"):
+            asked = f"Run {path}"
+            self.assertEqual(self.run_steps(self.step(asked), asked)[0], 0)
+        with mock.patch.dict(os.environ, HOME=str(self.root)):
+            self.assertEqual(self.run_steps(self.step("Read ~/exists.txt:13"), "Read ~/exists.txt:13")[0], 0)
+            self.assertIn("S4", self.run_steps(self.step("Read ~/missing.txt"), "Read ~/missing.txt")[1])
+        body = self.step("Read the file")
+        self.assertIn("message S4", self.run_steps(body, f"Read the file {self.root}/missing.txt")[1])
+
+    def test_relative_markdown_card_is_read_by_the_real_cli(self):
+        card = self.root / "card.md"
+        card.write_text("```sh\nprintf checked\n```\n")
+        self.run_steps(self.step("Read card.md:13"), "Read card.md:13")
+        run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", str(self.saved), "--text-file", str(self.message)],
+                             cwd=self.root, capture_output=True, text=True)
+        self.assertEqual(run.returncode, 1, run.stdout)
+        self.assertIn("S5: unrecorded command", run.stdout)
+
+    def test_unreadable_inputs_are_exit_two_and_empty_or_bad_records_hold(self):
+        for body, head in (("", "none"), (self.step("Run"), "bad-head")):
+            self.assertEqual(self.run_steps(body, "Run", head=head)[0], 1)
+        self.run_steps(self.step("Run"), "Run")
+        self.saved.unlink()
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(gate.main(["steps", str(self.saved), "--text-file", str(self.message)]), 2)
+
+
+class CaptainGateTests(CaptainStepFixture):
+    def setUp(self):
+        super().setUp()
+        readme(self.root)
+        self.task = self.root / "task.md"
+        self.task.write_text(TASK)
+        self.head = "b7732d43" + "0" * 32
+        captain_record(self.task, self.head)
+
+    def ask_gate(self, body=None, candidate=None, module=None, summary=False, declaration=True):
+        self.saved.write_text(f"Candidate: {candidate or self.head}\n\n" + (body or self.step("Open the preview")))
+        text = CLAUSES + "\nOpen the preview\n"
+        clause = f"Captain steps: {self.saved}\n" if declaration else ""
+        self.message.write_text(text + ("" if summary else clause))
+        argv = ["question", str(self.task), "--text-file", str(self.message)]
+        if summary:
+            file = self.root / "summary.txt"
+            file.write_text("External rounds: 0\n" + clause)
+            argv += ["--summary-file", str(file)]
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = (module or gate).main(argv)
+        return code, out.getvalue()
+
+    def test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head(self):
+        for summary in (False, True):
+            code, out = self.ask_gate(summary=summary, declaration=False)
+            self.assertEqual(code, 1, out)
+            self.assertEqual(len(out.splitlines()), 2, out)
+            self.assertIn("Captain steps:", out)
+            self.assertTrue(out.splitlines()[1].startswith("next:"))
+            code, out = self.ask_gate(candidate="e623efd2" + "0" * 32, summary=summary)
+            self.assertEqual(code, 1, out)
+            self.assertIn("differs from latest dispatched Candidate", out)
+            self.assertEqual(self.ask_gate(summary=summary), (0, "gate text complete\n"))
+        no_clause = variant_of('missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)', 'missing = []')
+        self.assertEqual(self.ask_gate(declaration=False, module=no_clause)[0], 0)
+        no_binding = variant_of('if candidate not in candidates:', 'if False:')
+        self.assertEqual(self.ask_gate(candidate="e623efd2" + "0" * 32, module=no_binding)[0], 0)
+
+    def test_gate_checks_record_against_latest_validation_report_and_returns_input_errors(self):
+        self.task.write_text(TASK + "\n## Stage Report: validation\nhttps://old.example.test/owner\n"
+                             "\n## Stage Report: validation\nhttps://preview.example.test/owner\n")
+        code, out = self.ask_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("https://preview.example.test/owner", out)
+        body = self.step("Open the preview") + "\n" + self.step("https://preview.example.test/owner", number=2)
+        self.assertEqual(self.ask_gate(body=body)[0], 0)
+        no_report = variant_of('report = (VALIDATION_SECTION.findall(task.read_text()) or [""])[-1]', 'report = ""')
+        self.assertEqual(self.ask_gate(module=no_report)[0], 0)
+        self.task.write_text(TASK)
+        self.assertIn("S2", self.ask_gate(body=self.step("Open the preview", observed=None))[1])
+        self.assertEqual(self.ask_gate()[0], 0)
+        self.saved.unlink()
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(gate.main(["question", str(self.task), "--text-file", str(self.message)]), 2)
+
+
 class QuestionTests(unittest.TestCase):
     def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False):
         with tempfile.TemporaryDirectory() as d:
@@ -1328,7 +1527,7 @@ class QuestionTests(unittest.TestCase):
             else:
                 entry = Path(d, "task.md")
                 entry.write_text(task)
-            Path(d, "gate.txt").write_text((CLAUSES if clauses else "") + text)
+            Path(d, "gate.txt").write_text((CLAUSES if clauses else "") + text + captain_record(entry))
             out = io.StringIO()
             with contextlib.redirect_stdout(out):
                 code = (module or gate).main(["question", str(entry), "--text-file", str(Path(d, "gate.txt"))])
@@ -1582,6 +1781,7 @@ class ReviewerDeclarationTests(unittest.TestCase):
             entry.parent.mkdir(parents=True, exist_ok=True)
             entry.write_text(task)
             artifacts = gate.task_folder(entry)
+            captain_steps = captain_record(entry)
             dispatch = artifacts / "dispatch"
             dispatch.mkdir(parents=True, exist_ok=True)
             (dispatch / "validation-1.md").write_text(record(HEAD40))
@@ -1590,11 +1790,12 @@ class ReviewerDeclarationTests(unittest.TestCase):
                 saved.parent.mkdir(parents=True, exist_ok=True)
                 saved.write_text(source)
             text_file = root / "gate.txt"
-            text_file.write_text(CLAUSES + (ROUNDS if command == "check" else "") + text)
+            text_file.write_text(CLAUSES + (ROUNDS if command == "check" else "") + text +
+                                 (captain_steps if summary is None else ""))
             argv = [command, str(entry.parent if folder else entry), "--text-file", str(text_file)]
             summary_file = root / "summary.txt"
             if summary is not None:
-                summary_file.write_text(summary)
+                summary_file.write_text(summary + captain_steps)
                 argv += ["--summary-file", str(summary_file)]
             if command == "check":
                 argv += ["--pr", "o/r#9", "--head", head_arg]
@@ -1615,7 +1816,7 @@ class ReviewerDeclarationTests(unittest.TestCase):
                     mock.patch.object(module or gate, "owed_role_calls", return_value=(0, []),
                                       side_effect=AssertionError("question must not count role calls") if command == "question" else None):
                 if before_question is not None:
-                    text_file.write_text(CLAUSES + before_question)
+                    text_file.write_text(CLAUSES + before_question + captain_steps)
                     self.assertEqual((module or gate).main(["question", str(entry), "--text-file", str(text_file)]), 0)
                     self.assertEqual(list((artifacts / "merge").glob("ask-*.json")), [])
                     text_file.write_text(CLAUSES + (ROUNDS if command == "check" else "") + text)
