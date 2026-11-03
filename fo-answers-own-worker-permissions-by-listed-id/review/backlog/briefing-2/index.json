@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-answers-own-worker-permissions-by-listed-id:backlog:attempt-2:revision-1",
+  "question": "「決定：A、B、C、D 四張都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？要改哪張直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:fo-answers-own-worker-permissions-by-listed-id:backlog:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/c9216a8cf84357c3df31938f97fd7a3e471b1aa5/fo-answers-own-worker-permissions-by-listed-id.md",
+      "rev": "sha256:084a8a2dce482aaee23db1d42988ff813d2fb49344c82a96a9fd18fd971bddc2",
+      "mediaType": "text/markdown",
+      "summary": "Batch 13 backlog sitting; recommended approve to enter ideation under pilot. Outcome carries the Captain's boundary of 2026-11-03."
+    }
+  ]
+}
