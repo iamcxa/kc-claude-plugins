@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Full scripts-directory unittest discovery",
+    "status": "passed",
+    "message": "882 tests, 6 skips, zero failures, exit 0",
+    "command": "python3 -B -m unittest discover -s kc-dev-flow-2/scripts"
+  }
+]

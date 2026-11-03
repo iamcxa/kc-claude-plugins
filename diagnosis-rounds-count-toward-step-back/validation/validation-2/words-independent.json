@@ -1,0 +1,37 @@
+[
+  {
+    "name": "clean dispatch",
+    "before": 12,
+    "after": 12,
+    "added": 0,
+    "limit": 0
+  },
+  {
+    "name": "repeat dispatch",
+    "before": 12,
+    "after": 60,
+    "added": 48,
+    "limit": 48
+  },
+  {
+    "name": "missing header",
+    "before": 12,
+    "after": 33,
+    "added": 21,
+    "limit": 26
+  },
+  {
+    "name": "idle and merge advisory",
+    "before": 0,
+    "after": 47,
+    "added": 47,
+    "limit": 47
+  },
+  {
+    "name": "idle and merge owed",
+    "before": 0,
+    "after": 74,
+    "added": 74,
+    "limit": 74
+  }
+]

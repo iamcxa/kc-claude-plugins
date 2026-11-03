@@ -1,0 +1,33 @@
+Preparing worktree (detached HEAD 7aad89135)
+HEAD is now at 7aad89135 fix(kc-dev-flow-2): count follow-up messages as diagnosis rounds
+STEP 1: candidate 7aad891353a973c7fbda2ad4214a3aadea71d2a6
+test_different_stages_symptoms_none_fences_and_body_do_not_repeat (test_dispatch_records.SymptomDispatchTests.test_different_stages_symptoms_none_fences_and_body_do_not_repeat) ... ok
+test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass (test_dispatch_records.SymptomDispatchTests.test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass) ... ok
+test_named_record_excludes_later_records_and_folder_checks_only_each_stages_newest (test_dispatch_records.SymptomDispatchTests.test_named_record_excludes_later_records_and_folder_checks_only_each_stages_newest) ... ok
+test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks (test_dispatch_records.SymptomDispatchTests.test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks) ... ok
+test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict (test_dispatch_records.SymptomDispatchTests.test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.995s
+
+OK
+STEP 2: dispatch checks passed
+test_archived_folder_records_and_nested_state_checkout (test_role_triggers.SymptomRoundsTest.test_archived_folder_records_and_nested_state_checkout) ... ok
+test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated (test_role_triggers.SymptomRoundsTest.test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated) ... ok
+test_date_model_and_waiver_clear_the_third_record_once (test_role_triggers.SymptomRoundsTest.test_date_model_and_waiver_clear_the_third_record_once) ... ok
+test_groups_normalize_but_keep_stages_and_symptoms_separate (test_role_triggers.SymptomRoundsTest.test_groups_normalize_but_keep_stages_and_symptoms_separate) ... ok
+test_message_numbers_order_the_third_round_date_numerically (test_role_triggers.SymptomRoundsTest.test_message_numbers_order_the_third_round_date_numerically) ... ok
+test_one_plain_and_two_message_records_remind_then_owe_a_dated_call (test_role_triggers.SymptomRoundsTest.test_one_plain_and_two_message_records_remind_then_owe_a_dated_call) ... ok
+test_second_advises_third_owes_and_only_committed_records_count (test_role_triggers.SymptomRoundsTest.test_second_advises_third_owes_and_only_committed_records_count) ... ok
+test_committed_second_symptom_round_is_forwarded_at_idle (test_pr_watch.TasksTests.test_committed_second_symptom_round_is_forwarded_at_idle) ... ok
+test_third_committed_symptom_round_holds_merge_ask (test_delivery_gate.OwedRoleCallTests.test_third_committed_symptom_round_holds_merge_ask) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 10.333s
+
+OK
+STEP 3: committed-state and forwarding checks passed
+STEP 4: three symptom records, counted=3, reminder=True, exit=0
+Follow-up message records count, as required by Captain amendment 1.
+50 ADR file(s) checked, 0 legacy
+STEP 5: ADR lint passed; candidate clean; temporary checkout will be removed

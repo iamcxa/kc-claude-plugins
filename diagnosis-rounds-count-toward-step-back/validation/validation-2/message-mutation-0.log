@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_one_plain_and_two_message_records_remind_then_owe_a_dated_call (test_role_triggers.SymptomRoundsTest.test_one_plain_and_two_message_records_remind_then_owe_a_dated_call)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-message-mutants/0/kc-dev-flow-2/scripts/test_role_triggers.py", line 528, in test_one_plain_and_two_message_records_remind_then_owe_a_dated_call
+    self.assertIn('2 implementation dispatches on symptom "page freeze"', out)
+AssertionError: '2 implementation dispatches on symptom "page freeze"' not found in 'role triggers: 0 event(s) read at HEAD, each with a call or a waiver.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.653s
+
+FAILED (failures=1)

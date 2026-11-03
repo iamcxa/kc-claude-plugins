@@ -1,0 +1,15 @@
+{
+  "candidate": "7aad891353a973c7fbda2ad4214a3aadea71d2a6",
+  "origin_main": "e1bee223c47a1cd534a665a47776b683375b34fc",
+  "merge_base": "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb",
+  "state": "3f2da193a3035e78148ce6edf3c0af0561fc9364",
+  "files": {
+    "docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md": "787b60a7c07afbe96ccbe381b6bde9cbd91101f475bfaffa1b1135107f39606f",
+    "kc-dev-flow-2/scripts/dispatch_records.py": "c7720bfb70738dbec1284f1004a3ba4426aab22e35596238bf912d59c0903433",
+    "kc-dev-flow-2/scripts/role_triggers.py": "f1f0451777416b5a43eddfc8a77b45fe34a04ab5be0cb509cc8066239fe165c0",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "f0bef458e7e0105b0b09c8cc386010e8b35099dc48b7bb65904f74259f38d71f",
+    "kc-dev-flow-2/scripts/test_dispatch_records.py": "94d31a0b4b22f4ed10ec4358c6bb6f05654ecc90d927f38b1995dbf301ad09bc",
+    "kc-dev-flow-2/scripts/test_pr_watch.py": "b36a29e85be6bd7db28f6bf6082c122c30349e997a4a6f77c7e5b925a74d77fb",
+    "kc-dev-flow-2/scripts/test_role_triggers.py": "3989c4e6b417b779c687ca1274e3fd931dc87b7bc964efd441912427bd7e31fa"
+  }
+}

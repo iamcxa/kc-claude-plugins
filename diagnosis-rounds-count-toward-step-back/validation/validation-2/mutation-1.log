@@ -1,0 +1,28 @@
+F
+======================================================================
+FAIL: test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict (test_dispatch_records.SymptomDispatchTests.test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-mutants/1/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3267, in test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict
+    self.assertEqual((done.returncode, done.stdout), (0, "3 dispatch record(s) complete\n"))
+AssertionError: Tuples differ: (0, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00[357 chars]e\n') != (0, '3 dispatch record(s) complete\n')
+
+First differing element 1:
+'/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00[356 chars]te\n'
+'3 dispatch record(s) complete\n'
+
+- (0,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpnjp26myc/task/dispatch/implementation-3.md:1: '
+-  'step back: 2 implementation dispatches name symptom "validation-1 f1 page '
+-  'freeze"; before you send this one, answer: is what I am solving still the '
+-  'outcome first asked for; can this gap be tested now, or am I waiting; what '
+-  'breaks if this criterion or process is deleted?\n'
+-  '3 dispatch record(s) complete\n')
++ (0, '3 dispatch record(s) complete\n')
+? +++
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.205s
+
+FAILED (failures=1)

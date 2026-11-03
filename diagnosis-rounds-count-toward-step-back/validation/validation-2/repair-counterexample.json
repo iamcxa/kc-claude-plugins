@@ -1,0 +1,16 @@
+{
+  "parent": "97cf87965ec052a1c9f2d40a1a1d0ca83e8d2244",
+  "candidate": "7aad891353a973c7fbda2ad4214a3aadea71d2a6",
+  "command": [
+    "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "test_dispatch_records.SymptomDispatchTests.test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks",
+    "test_role_triggers.SymptomRoundsTest.test_one_plain_and_two_message_records_remind_then_owe_a_dated_call",
+    "test_role_triggers.SymptomRoundsTest.test_message_numbers_order_the_third_round_date_numerically"
+  ],
+  "parent_exit": 1,
+  "parent_failures": 3,
+  "candidate_pass_evidence": "acceptance.log"
+}

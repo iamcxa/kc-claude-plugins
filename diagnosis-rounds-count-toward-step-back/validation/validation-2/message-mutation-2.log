@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks (test_dispatch_records.SymptomDispatchTests.test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-message-mutants/2/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3249, in test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks
+    self.assertIn("step back: 2 implementation", self.cli().stderr)
+AssertionError: 'step back: 2 implementation' not found in ''
+
+----------------------------------------------------------------------
+Ran 1 test in 0.150s
+
+FAILED (failures=1)

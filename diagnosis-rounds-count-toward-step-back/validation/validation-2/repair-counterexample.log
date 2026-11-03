@@ -1,0 +1,1 @@
+All three new follow-up tests reject the pre-repair parent with assertion failures; the same tests pass at the candidate.

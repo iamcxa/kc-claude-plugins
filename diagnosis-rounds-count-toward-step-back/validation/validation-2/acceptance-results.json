@@ -1,0 +1,112 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "cells": {
+      "Result": {
+        "status": "passed",
+        "note": "Second same-symptom dispatch reminds on stderr, stdout/exit unchanged.",
+        "evidence": "acceptance.log; mutation-0.log; mutation-1.log"
+      }
+    }
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "cells": {
+      "Result": {
+        "status": "passed",
+        "note": "Stages, symptoms, none, fences and body lines stay separate; names normalize.",
+        "evidence": "acceptance.log; mutation-2.log"
+      }
+    }
+  },
+  {
+    "name": "AC-3",
+    "status": "passed",
+    "cells": {
+      "Result": {
+        "status": "passed",
+        "note": "Named numeric cutoff and strict-only missing-header hold; first record exempt.",
+        "evidence": "acceptance.log; mutation-3.log; mutation-4.log; message-mutation-3.log"
+      }
+    }
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "cells": {
+      "Result": {
+        "status": "passed",
+        "note": "Only committed rounds count; correct date/model/waiver clears; nested/archive paths work.",
+        "evidence": "acceptance.log; mutation-5.log; mutation-6.log; message-mutation-0.log; message-mutation-1.log"
+      }
+    }
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "cells": {
+      "Result": {
+        "status": "passed",
+        "note": "Pinned qnow replay first reminds at 16, never at 14/15 or for distinct symptoms; base silent.",
+        "evidence": "replay.json; origin-main/replay.json"
+      }
+    }
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "cells": {
+      "Result": {
+        "status": "passed",
+        "note": "Repeated/missing symptom headers leave real L2 verdicts equal, without Cannot.",
+        "evidence": "laws.json; mutation-7.log"
+      }
+    }
+  },
+  {
+    "name": "AC-7",
+    "status": "passed",
+    "cells": {
+      "Result": {
+        "status": "passed",
+        "note": "Real role checker feeds idle advisory and holds the merge ask with no ask saved.",
+        "evidence": "acceptance.log; mutation-8.log"
+      }
+    }
+  },
+  {
+    "name": "AC-8",
+    "status": "passed",
+    "cells": {
+      "Result": {
+        "status": "passed",
+        "note": "Measured reading cost fits every limit; lifecycle/template budget unchanged.",
+        "evidence": "words-independent.json; origin-main/words.json; archive-moment.json; mutation-9.log"
+      }
+    }
+  },
+  {
+    "name": "AC-9",
+    "status": "passed",
+    "cells": {
+      "Result": {
+        "status": "passed",
+        "note": "Dated ADR amendment and Captain clarification present; required-record checks pass.",
+        "evidence": "adr-origin-main.log; adr-dispatch-package.log; adr-falsifiers.json"
+      }
+    }
+  },
+  {
+    "name": "Captain amendment 1",
+    "status": "passed",
+    "cells": {
+      "Result": {
+        "status": "passed",
+        "note": "Plain and follow-up message records count in both readers, with numeric message order.",
+        "evidence": "message-records.json; acceptance.log; message-mutations.json"
+      }
+    }
+  }
+]

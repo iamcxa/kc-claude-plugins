@@ -1,0 +1,98 @@
+[
+  {
+    "name": "clean dispatch",
+    "before": 12,
+    "after": 12,
+    "added": 0,
+    "limit": 0,
+    "better": "lower",
+    "base_lines": [
+      "extensions not checked: no workflow README above /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmplbuch2_b/task",
+      "2 dispatch record(s) complete"
+    ],
+    "candidate_lines": [
+      "extensions not checked: no workflow README above /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmplbuch2_b/task",
+      "2 dispatch record(s) complete"
+    ]
+  },
+  {
+    "name": "repeat dispatch",
+    "before": 12,
+    "after": 60,
+    "added": 48,
+    "limit": 48,
+    "better": "lower",
+    "base_lines": [
+      "extensions not checked: no workflow README above /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpwqqz2m_3/task",
+      "3 dispatch record(s) complete"
+    ],
+    "candidate_lines": [
+      "extensions not checked: no workflow README above /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpwqqz2m_3/task",
+      "3 dispatch record(s) complete",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpwqqz2m_3/task/dispatch/implementation-3.md:1: step back: 2 implementation dispatches name symptom \"validation-4 f1 phone-width freeze\"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?"
+    ]
+  },
+  {
+    "name": "missing header",
+    "before": 12,
+    "after": 33,
+    "added": 21,
+    "limit": 26,
+    "better": "lower",
+    "base_lines": [
+      "extensions not checked: no workflow README above /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpqzrqb_qn/task",
+      "2 dispatch record(s) complete"
+    ],
+    "candidate_lines": [
+      "extensions not checked: no workflow README above /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpqzrqb_qn/task",
+      "2 dispatch record(s) complete",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpqzrqb_qn/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'"
+    ]
+  },
+  {
+    "name": "idle and merge advisory",
+    "before": 0,
+    "after": 47,
+    "added": 47,
+    "limit": 47,
+    "better": "lower",
+    "base_lines": [],
+    "candidate_lines": [
+      "next: task has 2 implementation dispatches on symptom \"validation-4 f1 phone-width freeze\": before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?"
+    ]
+  },
+  {
+    "name": "idle and merge owed",
+    "before": 0,
+    "after": 74,
+    "added": 74,
+    "limit": 74,
+    "better": "lower",
+    "base_lines": [],
+    "candidate_lines": [
+      "next: task has 3 implementation dispatches on symptom \"validation-4 f1 phone-width freeze\"; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead."
+    ]
+  },
+  {
+    "name": "startup",
+    "before": 0,
+    "after": 0,
+    "added": 0,
+    "limit": 0,
+    "better": "lower"
+  },
+  {
+    "name": "after archive",
+    "before": 0,
+    "after": 0,
+    "added": 0,
+    "limit": 0,
+    "better": "lower"
+  },
+  {
+    "name": "workflow template",
+    "before": 5781,
+    "after": 5781,
+    "better": "lower"
+  }
+]

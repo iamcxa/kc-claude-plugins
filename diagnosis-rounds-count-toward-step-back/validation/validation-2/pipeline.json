@@ -1,0 +1,30 @@
+[
+  {
+    "name": "adr-path-check",
+    "status": "success"
+  },
+  {
+    "name": "build",
+    "status": "success"
+  },
+  {
+    "name": "multi-profile route gate (live Spacedock)",
+    "status": "success"
+  },
+  {
+    "name": "unit tests (python3)",
+    "status": "success"
+  },
+  {
+    "name": "version parity (plugin.json / marketplace.json / codex / README)",
+    "status": "success"
+  },
+  {
+    "name": "deploy",
+    "status": "skipped"
+  },
+  {
+    "name": "GitGuardian Security Checks",
+    "status": "success"
+  }
+]

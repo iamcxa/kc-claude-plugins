@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict (test_dispatch_records.SymptomDispatchTests.test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-mutants/0/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3264, in test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict
+    self.assertEqual(self.cli().stderr, "")
+AssertionError: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00[325 chars]d?\n' != ''
+- /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp2u_1o0bd/task/dispatch/implementation-2.md:1: step back: 2 implementation dispatches name symptom "validation-1 f1 page freeze"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.083s
+
+FAILED (failures=1)

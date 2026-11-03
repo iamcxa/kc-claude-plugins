@@ -1,0 +1,124 @@
+[
+  {
+    "name": "adr-origin-main",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "origin/main",
+      "--require",
+      "26"
+    ],
+    "exit": 0,
+    "message": "50 ADR file(s) checked, 0 legacy"
+  },
+  {
+    "name": "adr-dispatch-package",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "origin/main",
+      "--require",
+      "26"
+    ],
+    "exit": 0,
+    "message": "50 ADR file(s) checked, 0 legacy"
+  },
+  {
+    "name": "number-guards-origin",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--base",
+      "origin/main",
+      "--head",
+      "HEAD",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/diagnosis-rounds-count-toward-step-back.md"
+    ],
+    "exit": 0,
+    "message": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase e1bee223c47a head 7aad891353a9 merge-base 713d4e6ed638"
+  },
+  {
+    "name": "design",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/diagnosis-rounds-count-toward-step-back.md"
+    ],
+    "exit": 0,
+    "message": "diagnosis-rounds-count-toward-step-back.md: design surfaces presentable\nscope check not run: stage is validation, not ideation"
+  },
+  {
+    "name": "dispatch-records",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/diagnosis-rounds-count-toward-step-back"
+    ],
+    "exit": 0,
+    "message": "5 dispatch record(s) complete"
+  },
+  {
+    "name": "comment-ratio-origin",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "origin/main",
+      "HEAD",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "message": "code lines 311, comment lines 0, 0.0%\nmaximum 5% (package default) met"
+  },
+  {
+    "name": "doc-impact-origin",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "origin/main",
+      "HEAD",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+      "--json"
+    ],
+    "exit": 0,
+    "message": "[\n {\n  \"doc\": \"docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/dispatch_records.py\"\n  ]\n },\n {\n  \"doc\": \"docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/dispatch_records.py\"\n  ]\n },\n {\n  \"doc\": \"docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/role_triggers.py\"\n  ]\n },\n {\n  \"doc\": \"learning.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/dispatch_records.py\"\n  ]\n }\n]"
+  },
+  {
+    "name": "diff-check",
+    "status": "passed",
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "origin/main...HEAD"
+    ],
+    "exit": 0,
+    "message": ""
+  }
+]

@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass (test_dispatch_records.SymptomDispatchTests.test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-mutants/3/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3288, in test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass
+    self.assertEqual(self.cli("--names", "--strict", first).returncode, 0)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.089s
+
+FAILED (failures=1)
