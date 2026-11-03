@@ -210,6 +210,11 @@ Recommended order: after `seed-check-requires-alignment-result`, `fo-write-check
 
 Limits: a requirement written as a whole new sentence passes; the words after `Current evidence:` are not compared; a faithful English rendering of his Chinese words is held until removed or confirmed. These are bounds of a word-matching check, stated so the gate does not read AC-1..AC-7 as "every added requirement is caught".
 
+
+## Number guards
+
+ADR: 0057
+
 ## Stage Report: ideation
 
 - DONE: First check the evidence against its source; then design where a rewritten acceptance criterion is compared with the Captain's words before dispatch, what counts as an added requirement, and how the #756 rewrite is caught
