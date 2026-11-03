@@ -560,3 +560,60 @@ python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.3
 ```
 
 Observed, all steps exit 0: (1) `7144840845b83ab5d1b7fabd640d9c13c81d4d6a`; (2) five named environment tests, `OK`; (3) eighteen named acceptance tests, `OK`; (4) `release-acceptance 1.0.0` and its field table, no diff; (5) package `PASS`, workflow lint `5781 of 5781 words` (body count; whole-file normalized count is 5834), `51 ADR file(s) checked, 0 legacy`.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved environment keys, walk refusals and production readiness from the newest clean closed walk.
+  Branch `spacedock-ensign/release-walk-off-production-before-release`; base `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb`; candidate `606781cbec3f684af5e7f9a74c90026e49c3e0a1`; five design-named files total, this repair only release_acceptance.py and its test; no versions changed.
+- DONE: Repair the routed folder-form discovery finding and keep every existing caller test green.
+  dispatch/implementation-1-message-2.md routes the #772 defect surfaced during #775 review. state_tasks reads live/archived flat and index forms; Task preserves slug/folder and accepted checks the normalized archive location. The new archived/live regressions first failed from false acceptance; clean archived folder acceptance and shared-caller parity now pass.
+- SKIPPED: Push the repaired head and update the existing PR #772.
+  ADR 0042/0048 and FO routing reserve product publication to FO; neither attempted. Prepared PR title/body below; fresh hosted checks and task D revalidation remain with FO.
+- DONE: ADR 0053 records the Captain's ruling and the reserved number is checked.
+  The record extends 0031/0034 and holds the three approved recommendations; package adr_lint docs/adr --since base --require 0053 exits 0; this repair adds no ruling or ADR.
+- DONE: AC-1 production walks are held at both tiers and at acceptance.
+  RecordedEnvironmentTests/AcceptedTests and native base/candidate comparisons hold; removing production refusal or accepted's shared final validation fails its regression.
+- DONE: AC-2 the recorded non-production target passes, another staging name does not.
+  Staging check exits 0 with its environment line; staging-2 exits 1; bypassing the mismatch comparison fails its test.
+- DONE: AC-3 missing/blank keys hold with the adoption pointer; equal environment names hold.
+  Every key is removed/blanked and restored in RecordedEnvironmentTests; removing required-release-doc enforcement fails its test.
+- DONE: AC-4 local walks record and render their deployment limit.
+  Check/build/render retain the specified not deployed line; dropping it holds check/accepted, and bypassing either guard fails its regression.
+- DONE: AC-5 only the newest valid clean closed walk on one acyclic chain admits readiness, including live and archived folder-form tasks.
+  AcceptedTests retain report/chain/inherited-mark safeguards and now reject the newer unclean archived index walk and a live index walk; restoring the archived walk to clean accepts its own slug. The flat-only scan mutation restores false acceptance and fails both regressions; folder path/slug/archive mutations also fail their controls.
+- DONE: AC-6 schema unchanged.
+  Schema remains release-acceptance 1.0.0; FIELDS/contract-versions.json unchanged from base; a field-addition mutation makes schema exit 1.
+- DONE: AC-7 docs carry the route and workflow README does not move.
+  EXTENSION preserves the immediate-predecessor instruction and inherited unresolved marks; keys/questions/local limit/gate/production/blind spots remain. workflow.md diff empty; repository lint exits 0; one added workflow word makes lint exit 1.
+- DONE: AC-8 independent normalized_words recount stays within lifecycle ceilings.
+  Startup/idle(open,merged)/archive/merge ask workflow 5834->5834, pr_watch unchanged; adoption 2267->2372; filing/first dispatch EXTENSION 605->544 (529 whitespace words); check +4 words, gate clause +5, accepted output 10. Both ceiling mutations exit 1; no budget raise.
+- DONE: AC-9 the single reserved ADR lands and missing-record control fails.
+  Package ADR lint exits 0; removing 0053 makes --require 0053 exit 1; ADR-document tests pass.
+- DONE: AC-10 original behavior and expectations hold.
+  Release suite: 104 run, 103 passed, 1 existing skip; AST comparison retains every base test class/helper except build_world README keys. New FolderTaskTests compares every state_tasks caller across flat/index representations and duplicate pairs; existing schema and clean-semantics tests remain unchanged.
+- SKIPPED: Existing journey-map interoperability test requiring YAML.
+  The declared dependency is absent; no expectation changed and no substitute interoperability claim.
+- DONE: Full package commands, repository lint, number guards, comment ratio and affected documents checked.
+  All 26 CI-listed commands exit 0 on this head (active Spacedock 0.27.3; CI pins 0.27.2); five required checks exit 0; 474 code lines, 2 comments, 0.4% <= 5%. doc_impact names ADR 0053: its policy still holds; the existing EXTENSION instructions still hold, no documentation or diagram changed in this repair.
+- DONE: Every acceptance falsifier and the external finding exercised.
+  /tmp/release-walk-folder-proof/mutations.json: 28 checks, python3 -B/caches cleared and source restored; /tmp/release-walk-folder-red.log records both false acceptances before repair. /tmp/release-walk-folder-native: 21 real CLI calls across three new cases; five existing native/chain probes, including all 700 graph shapes, pass. Scratch .context/release-walk-proof is ignored and may be removed after validation.
+- DONE: Run the requested RoboRev gate once against the pinned base and committed new head.
+  Exit 0: `clean on 606781cbe; evidence=roborev:1454`; /tmp/release-walk-folder-roborev.log. Exactly one gate run on the committed repair head against the pinned base; no unassigned policy change.
+- SKIPPED: Hosted CI green on the repaired PR head.
+  FO must push the local head to PR #772 and obtain fresh-head checks/review and revalidate D. CI cost not measured; CI configuration unchanged.
+
+Prepared PR title: `feat(kc-dev-flow-2): hold production readiness for a clean release walk`
+Prepared PR body (verbatim):
+Release walks refuse production, a target other than the recorded walk environment, missing environment keys and local walks without a deployment limit. `accepted JOURNEY/RELEASE` requires one acyclic chain of acceptance tasks and final-tier validation of its newest clean, archived, locally closed walk before FO announces production readiness.
+
+Task discovery now includes both `<slug>.md` and `<slug>/index.md` at the state root and under `_archive/`. Folder tasks retain their slug, walk/dispatch folder and archive classification; a flat/index pair in one folder is counted once, preferring index.md. A newer unclean archived folder-form re-walk holds readiness instead of disappearing behind an older clean flat walk. A live folder-form re-walk also holds readiness, while a valid clean archived folder walk can be accepted.
+
+Each re-walk names the immediately preceding report in `Prior walk:` and uses the same report for build/check `--prior`. Inherited partly-fixed and deferred complaints retain their reviewer and remain required in later walks. ADR 0053 records the accepted policy; schema, workflow template and versions are unchanged. Production remains the repository's own procedure; release-doc validation remains the approved key-only check.
+
+Validation: all 26 package commands passed locally using active Spacedock 0.27.3 for CLI tests (CI pins 0.27.2). Release-acceptance: 103 passed and one existing YAML-dependent interoperability skip. All 28 acceptance/mutation checks passed, including a flat-only discovery mutation that restores false acceptance and fails both folder-walk regressions. The three new cases also pass through 21 real CLI calls. The caller comparison preserves deferred findings, story owners, complaint links, director-model selection, built reports and final checks across flat, folder and duplicate representations. Existing native environment/final-validation/repeated-walk probes and all 700 one-to-four-task chain shapes pass. Skill lint, ADR lint, number guards, design checks and comment ratio pass: two comments in 474 code lines, 0.4% against 5%.
+
+Local review: clean on 606781cbe; evidence=roborev:1454. This repairs the post-validation finding routed in dispatch/implementation-1-message-2.md, surfaced while reviewing PR #775 and affecting PR #772. FO must publish this head and revalidate task D; hosted checks and independent validation remain pending. CI cost was not measured; CI configuration did not change.
+
+### Summary
+
+The routed post-validation finding is repaired: live and archived folder-form tasks participate in the same acceptance chain as flat tasks, and the newer unclean archived re-walk now holds production readiness. Local proof and review results above bind the committed head; FO publication, hosted checks and task D revalidation remain pending. This complete report supersedes all earlier implementation reports.
