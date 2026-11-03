@@ -78,7 +78,7 @@ gates:
                 state: pending
 started: 2026-11-02T06:02:41Z
 worktree: .worktrees/spacedock-ensign-second-round-prompts-a-step-back
-pr: iamcxa/kc-claude-plugins#766
+pr: pr-merge:766
 ---
 
 ## Scope
