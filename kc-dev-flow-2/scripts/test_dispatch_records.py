@@ -3281,6 +3281,18 @@ class RewrittenCriterionTests(unittest.TestCase):
         clean = self.run_rewrite(text.replace('include source revision/link.', 'include source.'))
         self.assertEqual((clean.returncode, clean.stdout), (0, ''), clean.stderr)
 
+    def test_short_slash_separated_requirement_is_held(self):
+        text = ("## Acceptance criteria\n\n**AC-9** Amended by Captain, amendment 3. Require source/revision/link.\n\n"
+                "## Captain amendments\n\n### Amendment 3 — 2026-11-03, chat\nCaptain: remove time\n"
+                "Asked: remove the timestamp\nSupersedes: AC-8\n\nSuperseded text:\n"
+                "**AC-8** Require source/revision/time.\n")
+        done = self.run_rewrite(text)
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn('AC-9 (Captain amendment 3) adds words', done.stdout)
+        self.assertIn('words: link;', done.stdout)
+        clean = self.run_rewrite(text.replace('source/revision/link.', 'source/revision/time.'))
+        self.assertEqual((clean.returncode, clean.stdout), (0, ''), clean.stderr)
+
     def test_later_asked_or_captain_words_clear_the_hold(self):
         for field in ('Asked', 'Captain'):
             later = ('\n### Amendment 4 — 2026-11-03, chat\nCaptain: 「可以」\n'

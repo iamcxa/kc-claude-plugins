@@ -28,6 +28,11 @@ class AddedWordsTests(unittest.TestCase):
         self.assertEqual(self.added("The worker must include source revision/link."), [(3, "AC-9", ["revision", "link"])])
         self.assertEqual(self.added("The worker must include source/revision."), [(3, "AC-9", ["revision"])])
 
+    def test_short_slash_separated_requirements_use_comparison_tokens(self):
+        for sentence in ("Require source/revision/time.", "Require source/revision/link."):
+            with self.subTest(sentence):
+                self.assertEqual(ds.requirement_sentences(sentence), [sentence])
+
     def test_similarity_threshold_includes_three_of_four_matching_words(self):
         old = "alpha bravo charlie delta."
         self.assertEqual(self.added("alpha bravo charlie echo.", old=old), [(3, "AC-9", ["echo"])])

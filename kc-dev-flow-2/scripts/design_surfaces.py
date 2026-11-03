@@ -323,7 +323,7 @@ def requirement_sentences(block):
     text = re.split(r"Current evidence:", block)[0]
     text = re.sub(r"^\s*\*\*AC-[A-Za-z0-9]+\*\*", "", text)
     text = re.sub(r"Amended by Captain, amendment \d+\.?", "", text)
-    return [s.strip() for s in re.split(r"(?<=[.;:])\s+", text) if len(s.split()) >= 3]
+    return [s.strip() for s in re.split(r"(?<=[.;:])\s+", text) if len(words_of(s)) >= 3]
 
 
 def words_of(text):
