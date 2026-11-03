@@ -42,7 +42,8 @@ is on disk: exit 0 when it is clean or the task has no record, 1 when a name is 
 --coverage checks presence for a declared ideation, implementation or validation stage after an unfenced report:
 exit 0 when not due or covered, 1 when missing, 2 for invalid input or read errors. A positive-numbered stage
 record or stage message record covers repeated reports; contents and historical send timing are not checked.
-Folder mode checks each stage's newest implementation/validation record; --names checks the named record.
+Folder mode checks each stage's newest implementation/validation record, including follow-up messages;
+--names checks the named record. Record number, then message number, orders the records numerically.
 From the second same-stage Symptom: header, stderr prints step-back questions before dispatch. Record N >= 2
 without that header gets a stderr hint; only --names --strict holds it. The first record needs no header.
 """
@@ -56,7 +57,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from decision_ledger import split_task, gate_entries
 from delivery_gate import CANDIDATE, RECORD  # noqa: E402
 from design_surfaces import AMENDMENTS_HEADING, AMENDMENT_HEADER, amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
-from role_triggers import DIAGNOSIS_RECORD, STEP_BACK, outside_fences, symptom_name, symptom_rounds  # noqa: E402
+from role_triggers import DIAGNOSIS_RECORD, STEP_BACK, diagnosis_order, outside_fences, symptom_name, symptom_rounds  # noqa: E402
 from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
 from workflow_extensions import readme_extensions  # noqa: E402
 
@@ -221,7 +222,7 @@ def check_symptoms(files):
                   "'Symptom: <failure, named the same way each time>' or 'Symptom: none'", file=sys.stderr)
             missing = True
         dispatches = [(p.name, p.read_text()) for p in path.parent.glob(f"{record[1]}-*.md")
-                      if (match := DIAGNOSIS_RECORD.fullmatch(p.name)) and int(match[2]) <= int(record[2])]
+                      if (match := DIAGNOSIS_RECORD.fullmatch(p.name)) and diagnosis_order(match) <= diagnosis_order(record)]
         group = symptom_rounds(dispatches).get((record[1], symptom), [])
         if symptom and any(number == int(record[2]) for number, _ in group) and len(group) >= 2:
             print(f'{file}:1: step back: {len(group)} {record[1]} dispatches name symptom "{symptom}"; '
@@ -591,8 +592,8 @@ def main(argv=None, package=PACKAGE):
     newest = {}
     for path in records:
         record = DIAGNOSIS_RECORD.fullmatch(path.name)
-        if record and int(record[2]) > newest.get(record[1], (0, None))[0]:
-            newest[record[1]] = (int(record[2]), path)
+        if record and diagnosis_order(record) > newest.get(record[1], ((0, 0), None))[0]:
+            newest[record[1]] = (diagnosis_order(record), path)
     check_symptoms([path for _, path in newest.values()])
     if not readme:
         print(f"extensions not checked: no workflow README above {folder}")

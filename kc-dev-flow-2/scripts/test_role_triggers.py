@@ -510,11 +510,42 @@ class HeadingFormsTest(Fixture):
 
 
 class SymptomRoundsTest(Fixture):
-    def dispatch(self, number, symptom="page freeze", stage="implementation", date="2026-11-03", base=""):
-        path = self.state / f"{base}{SLUG}/dispatch/{stage}-{number}.md"
+    def dispatch(self, number, symptom="page freeze", stage="implementation", date="2026-11-03", base="", message=None):
+        suffix = f"-message-{message}" if message is not None else ""
+        path = self.state / f"{base}{SLUG}/dispatch/{stage}-{number}{suffix}.md"
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(f"Dispatched: {date} {'a' * 40}\nSymptom: {symptom}\n## Checklist\nwork\n")
         return path
+
+    def test_one_plain_and_two_message_records_remind_then_owe_a_dated_call(self):
+        self.dispatch(2)
+        self.put(task())
+        self.assertNotIn("next:", run(self.state, SLUG)[1])
+        self.dispatch(2, message=1)
+        self.put(task())
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 0, out)
+        self.assertIn('2 implementation dispatches on symptom "page freeze"', out)
+        self.dispatch(2, message=2, date="2026-11-05")
+        self.assertEqual(run(self.state, SLUG), (code, out))
+        self.put(task())
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 1, out)
+        self.assertIn('3 implementation dispatches on symptom "page freeze"', out)
+        self.assertIn("what breaks if this criterion or process is deleted?", out)
+        self.put(task(extra=call(CE, "opus", "2026-11-04")))
+        self.assertEqual(run(self.state, SLUG)[0], 1)
+        self.put(task(extra=call(CE, "opus", "2026-11-05")))
+        self.assertEqual(run(self.state, SLUG)[0], 0)
+
+    def test_message_numbers_order_the_third_round_date_numerically(self):
+        self.dispatch(2, date="2026-11-01")
+        self.dispatch(2, message=10, date="2026-11-10")
+        self.dispatch(2, message=2, date="2026-11-02")
+        self.put(task(extra=call(CE, "opus", "2026-11-09")))
+        self.assertEqual(run(self.state, SLUG)[0], 1)
+        self.put(task(extra=call(CE, "opus", "2026-11-10")))
+        self.assertEqual(run(self.state, SLUG)[0], 0)
 
     def test_second_advises_third_owes_and_only_committed_records_count(self):
         self.dispatch(2)
@@ -568,7 +599,7 @@ class SymptomRoundsTest(Fixture):
         groups = symptom_rounds(reversed(rows))
         self.assertEqual(groups[("implementation", "validation-1 f1 page freeze")], [(2, None), (10, None)])
         self.assertEqual(groups[("validation", "validation-1 f1 page freeze")], [(3, None)])
-        self.assertEqual(groups[("implementation", "b")], [(3, None)])
+        self.assertEqual(groups[("implementation", "b")], [(3, None), (8, None)])
         self.assertEqual(len(groups), 4)
 
     def test_archived_folder_records_and_nested_state_checkout(self):

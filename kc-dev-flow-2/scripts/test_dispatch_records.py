@@ -3241,6 +3241,24 @@ class SymptomDispatchTests(unittest.TestCase):
         return subprocess.run([sys.executable, "-B", records.__file__, *map(str, args or (self.folder,))],
                               capture_output=True, text=True)
 
+    def test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks(self):
+        (self.dispatch / "implementation-1.md").unlink()
+        plain = self.put(2, "page freeze")
+        self.assertEqual(self.cli().stderr, "")
+        first = self.put(2, "page freeze", suffix="-message-1")
+        self.assertIn("step back: 2 implementation", self.cli().stderr)
+        self.assertEqual(self.cli("--names", plain).stderr, "")
+        second = self.put(2, "page freeze", suffix="-message-2")
+        done = self.cli()
+        self.assertEqual((done.returncode, done.stdout), (0, "3 dispatch record(s) complete\n"))
+        self.assertIn("step back: 3 implementation", done.stderr)
+        self.assertIn(records.STEP_BACK, done.stderr)
+        self.assertIn("step back: 2 implementation", self.cli("--names", first).stderr)
+        self.assertIn("step back: 3 implementation", self.cli("--names", "--strict", second).stderr)
+        self.put(2, "different failure", suffix="-message-10")
+        self.assertEqual(self.cli().stderr, "")
+        self.assertIn("step back: 3 implementation", self.cli("--names", second).stderr)
+
     def test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict(self):
         self.put(2, "validation-1 F1 page freeze")
         self.assertEqual(self.cli().stderr, "")
@@ -3263,7 +3281,7 @@ class SymptomDispatchTests(unittest.TestCase):
         self.assertIn("step back: 3 implementation", self.cli().stderr)
         self.put(10, "B")
         self.put(11, "A", suffix="-message-1")
-        self.assertEqual(self.cli().stderr, "")
+        self.assertIn("step back: 4 implementation", self.cli().stderr)
 
     def test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass(self):
         first = self.dispatch / "implementation-1.md"

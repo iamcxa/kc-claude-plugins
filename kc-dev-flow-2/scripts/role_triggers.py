@@ -13,7 +13,7 @@ Two validations with a Material or Needs decision F bullet, or two amendments wi
 three step-back questions without a hold, independently even when the other event has already cleared at three.
 An owed line carrying those questions suppresses a duplicate reminder. Either count at three owes chief-engineer;
 the third amendment's date clears that event, while the validation event has no date test. Counts stay separate.
-Dispatch records also count by stage and normalized Symptom: header: two remind, three owe chief-engineer.
+Plain and follow-up message dispatch records count by stage and normalized Symptom: header: two remind, three owe chief-engineer.
 The third record's Dispatched: date dates that event; a qualifying call or waiver clears later rounds too.
 Engineering-reviewer is owed for each `### Amendment N` under `## Captain amendments` whose `Supersedes:` or
 `Design:` value does not start with `none`; one line per task, on fable when the frontmatter says `profile: prod`
@@ -63,7 +63,7 @@ QUESTION = {
 }
 STEP_BACK = ("is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; "
              "what breaks if this criterion or process is deleted?")
-DIAGNOSIS_RECORD = re.compile(r"^(implementation|validation)-([1-9][0-9]*)\.md$")
+DIAGNOSIS_RECORD = re.compile(r"^(implementation|validation)-([1-9][0-9]*)(?:-message-([1-9][0-9]*))?\.md$")
 
 
 class Unverifiable(Exception):
@@ -149,6 +149,10 @@ def symptom_name(text):
     return " ".join(match[1].split()).casefold() if match else None
 
 
+def diagnosis_order(record):
+    return int(record[2]), int(record[3] or 0)
+
+
 def symptom_rounds(dispatches):
     groups = {}
     for name, text in dispatches:
@@ -157,8 +161,8 @@ def symptom_rounds(dispatches):
         if record and symptom and not symptom.startswith("none"):
             dispatched = re.search(r"^Dispatched:([^\n]*)", dispatch_header(text), re.M)
             date = DATE.search(dispatched[1]) if dispatched else None
-            groups.setdefault((record[1], symptom), []).append((int(record[2]), date[0] if date else None))
-    return {key: sorted(rounds) for key, rounds in groups.items()}
+            groups.setdefault((record[1], symptom), []).append((diagnosis_order(record), date[0] if date else None))
+    return {key: [(order[0], date) for order, date in sorted(rounds)] for key, rounds in groups.items()}
 
 
 def read_records(state, slug, rev):
