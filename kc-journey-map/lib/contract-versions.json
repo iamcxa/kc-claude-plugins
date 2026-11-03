@@ -11,5 +11,11 @@
     "versions": {
       "1.0.0": "441cd6a5dc1ed95fb80220dea11e0bb39a9ef5ecb797b4fb8bfd209da76aa8fa"
     }
+  },
+  "journey-progress": {
+    "current": "1.0.0",
+    "versions": {
+      "1.0.0": "c1739ca7b53bdc1c2d530fbe39ba099d558121dc8a07de627446336a9329dd38"
+    }
   }
 }
