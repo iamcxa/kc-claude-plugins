@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-03T13:15:01Z
+worktree: .worktrees/spacedock-ensign-release-walk-due-trigger
 ---
 
 ## Scope
