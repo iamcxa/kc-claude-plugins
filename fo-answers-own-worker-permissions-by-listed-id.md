@@ -221,7 +221,7 @@ Verified by: rebuilding the replay over the two transcripts named in Evidence ch
 **AC-3** Paseo refuses a bad id and an archived worker for a Claude worker too, not only for Codex workers.
 Verified by: one disposable Claude worker through Paseo raising one permission request; answer it with a typed id (refused), then archive a second disposable worker and answer its delivered id (refused, "Unknown agent"); record both results. Falsifier: either returns success.
 
-**AC-6** Amended by Captain, amendment 1: 例行批准前只寫一行 `APPROVED: <做什麼> FOR: <哪個 worker>`，批准後不說話
+**AC-7** Amended by Captain, amendment 2: 例行批准前一行 APPROVED，批准後不附狀態區塊、不寫給我的回報
 
 **AC-5** The ADR lands with the Captain's words and question verbatim, names the replaced ADR 0048 sentence, leaves 0048 unedited, and states the extension's new word figure.
 Verified by: `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --require <reserved number>` exits 0 and `git diff <base>..<head> -- docs/adr/0048-*` prints nothing. Falsifier: lint non-zero, or 0048 changed.
@@ -238,6 +238,9 @@ ADR: 0052
 Captain: 「好」 (chat, 2026-11-03), after his 「退一步想一下，AC4 到底是怎樣」
 Asked: 「決定：A 的 AC-4 改成『例行批准前一行 APPROVED，批准後不附狀態區塊、不寫給我的回報』，用第二次實測的結果進驗證嗎？」
 Supersedes: AC-6
+
+Superseded text:
+**AC-6** Amended by Captain, amendment 1: 例行批准前只寫一行 `APPROVED: <做什麼> FOR: <哪個 worker>`，批准後不說話
 
 
 ### Amendment 1 — 2026-11-03, chat
@@ -396,4 +399,37 @@ Validation: the amendment form, repository skill lint, 47 lint tests, 36 structu
 The single amended native probe FAILED: transcript lines 70/71 show the correct approval line and permission answer, but line 78 contains text after approval. Free-text-before, post-answer-status and answered-held-question mutations are rejected by the amended evidence check. The question was held in one message and left unanswered; the push branch remains unverified and no push ran. Both disposable agents are archived and scratch files removed.
 
 FO owns publication to PR #769, exact-head RoboRev and hosted CI. CI cost was not measured; no CI configuration changed.
+```
+
+## Stage Report: implementation
+
+- DONE: Move Captain amendment 2 in the task file into `## Acceptance criteria`: replace AC-6 with AC-7 carrying "Amended by Captain, amendment 2" and his ruling's words only, so `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py check <task file>` reports no amendment-form problem
+  AC-6 moved verbatim under amendment 2 Superseded text; AC-7 carries the required marker and only the Captain’s accepted wording. Frontmatter unchanged; design_surfaces.py check exits 0 with no amendment-form errors.
+- DONE: Judge AC-7 against the existing second native run (source /Users/kent/.claude/projects/-private-tmp-fo-permission-proof-native/6381605d-f092-4386-af14-1f5d0d4f8c3f.jsonl): exactly one APPROVED line before the routine answer, no status block and no Captain-directed report after it, one hold message, the held request unanswered; run no new probe
+  AC-7 PASSED for the named existing recording: one APPROVED line at 70, routine answer at 71 (success result 72); line 78 is worker-callback waiting narration, with no status block or Captain-directed approval/result report in that routine turn before the next callback at 83. Question callback 97 has one hold message at 104; no answer to its request exists. No new native run.
+- DONE: No product change unless AC-7 needs one; the head stays 974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e if none
+  No product change needed: existing product instructions are stricter than AC-7; product head remains 974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e and its working tree is clean. This verdict does not claim the stronger no-any-text-after instruction was followed; earlier failed verdicts remain historical evidence of the withdrawn criteria.
+- DONE: A complete new `## Stage Report: implementation` with every item DONE, SKIPPED or FAILED and its evidence, ending in a `### Summary` that says it supersedes the earlier one, with the head and the PR title and body for FO
+  Complete report below with exact head, current PR title/body and limits; supersedes earlier implementation reports for the active criteria. FO retains publication/review/CI ownership.
+- DONE: Evidence scope and falsifiers
+  /tmp/fo-permission-amendment2/ac7-assessment.json retains the source hash, full routine text and full separate hold message; assess_ac7.py is read-only. All 8 source/evidence checks pass under python3 -B, including mutations adding a post-answer status block or Captain-directed report, removing the approval line or answering the held question. Waiting-narration classification is a manual judgment of the exact named sentence, not a general semantic classifier.
+- DONE: Retained validation and material limits
+  Product head is unchanged from implementation-2; its previously recorded AC-1/2/3/5, lint/ADR/number/comment checks remain attached to the same bytes. They were not rerun for this state-only criterion move. Push branch remains unverified, never run; RoboRev and hosted CI delegated to FO, not run or claimed clean here. CI cost unmeasured; no CI change or new agents.
+
+### Summary
+
+This complete report supersedes the earlier implementation reports for the active criteria. AC-7 passes against the specifically named existing run, scoped to its routine permission turn; line 104 belongs to the separate held-question callback, and its full content is retained. Product head 974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e is unchanged, with no product edit or new probe; FO retains the remaining publication, independent validation, review and CI work.
+
+Prepared PR title: `fix(kc-dev-flow-2): answer worker permissions with one approval line`
+
+Prepared PR body (also /tmp/fo-permission-amendment2/pr-body.md):
+
+```markdown
+The Paseo extension requires one `APPROVED: <what> FOR: <which worker>` line before a routine permission answer, and keeps boundary requests as one Captain message. ADR 0052 records the worker-permission ruling and approval-line amendment.
+
+Captain amendment 2 changes the acceptance test to one approval line before the answer, then no status block or Captain-directed report. AC-7 passes against the specified existing native recording: approval line 70, allow 71, waiting narration 78, next callback 83; the separate question callback 97 has one hold message at 104 and was never answered. The narration at 78 is worker-control waiting text, not a Captain report. The stronger instruction against any text after an answer was not obeyed; this verdict is limited to AC-7.
+
+Product head remains `974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e`; no new probe or product change was needed. The amendment-form check and read-only evidence checks pass; evidence mutations adding a status block, Captain approval report, missing approval line or an answered held question are rejected.
+
+The push branch remains unverified and no push ran. FO owns publication to PR #769, exact-head RoboRev and hosted CI. CI cost was not measured; CI configuration is unchanged.
 ```
