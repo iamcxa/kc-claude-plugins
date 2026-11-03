@@ -3,7 +3,7 @@ title: A number or factual claim in a gate summary, PR body or Captain message n
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
