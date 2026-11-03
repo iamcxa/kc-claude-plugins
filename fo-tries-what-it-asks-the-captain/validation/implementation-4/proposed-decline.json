@@ -1,0 +1,16 @@
+{
+  "finding": "RoboRev 1419 finding 1 (High)",
+  "status": "proposed decline; Captain decision pending",
+  "reproduction": {
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n",
+    "message": "Read this note.\nSign in on the preview using your own account.\nThen run `printf inline`.\n",
+    "record": "Candidate: 066b074718e1602e75941ab39ea91fd90a712d54\n\n### Step 1\nAsked: Read this note.\nRan: fresh shell, 2026-11-03T00:00:00Z\nObserved: note read\n"
+  },
+  "design_quote": "A prose ask with no command, link or file in it (\"sign in on the preview\"), unless FO lists it as a step.",
+  "design_section": "Design / PRFAQ / What does this not catch?",
+  "reason": "S5 enumerates fenced commands, HTTP(S) links and fences in named Markdown files. An explicit outgoing-message step list with Asked fields is a new format absent from the approved design; no such format was implemented.",
+  "residual_harm": "FO can omit a plain-language instruction or an inline-code instruction from its record and still pass; these remain undetected under the routed scope.",
+  "candidate": "066b074718e1602e75941ab39ea91fd90a712d54",
+  "new_cost": "An unrecorded diagram or evidence fence in an ask holds until recorded or moved; no fence tag is exempt."
+}

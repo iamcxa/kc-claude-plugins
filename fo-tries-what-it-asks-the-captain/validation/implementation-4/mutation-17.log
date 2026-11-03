@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links (test_delivery_gate.CaptainStepsTests.test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp1ff3q1vs/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1410, in test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links
+    self.assertEqual(self.run_steps(body, shown)[0], 0)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

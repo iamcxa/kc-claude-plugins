@@ -1,0 +1,10 @@
+{
+  "candidate": "066b074718e1602e75941ab39ea91fd90a712d54",
+  "tests": 886,
+  "skipped": 6,
+  "mutations": 20,
+  "report_lines": 50,
+  "roborev_exit": 1,
+  "roborev": "findings on 066b07471; evidence=roborev:1428\n## Review Findings\n\n- **Severity**: High\n- **Location**: `kc-dev-flow-2/scripts/delivery_gate.py:675`\n- **Problem**: The fence matcher requires a closing fence identical in length to its opener. Valid Markdown permits a longer closing fence, so a command inside ```` ```sh ... ```` is not collected or required in a Captain-step record, bypassing the new coverage gate.\n- **Fix**: Parse closing fences of the same character with length at least the opener length, and add coverage for longer closing fences.\n\n---\n\n## Summary\n\nAdds recorded Captain-step validation and binds validation-gate records to the dispatched candidate.",
+  "remaining": "RoboRev 1428 longer-closing-fence High; prior prose/inline-code proposed decline; FO publication/review/CI"
+}

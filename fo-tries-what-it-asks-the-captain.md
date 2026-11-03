@@ -441,3 +441,53 @@ RoboRev 1419 finding 1 remains a separate proposed decline awaiting the Captain'
 FO authorized `scripts/test_lint_skills.py` and `scripts/test_poc_readme.py` outside the original design list to update obsolete fixtures and checked-summary forwarding. This repair changes only `scripts/delivery_gate.py` and `scripts/test_delivery_gate.py`.
 
 Validation at `a83430cb840f934b38cce6dbd49b5d62ba8e1ffb`: full package suite passed 885 tests with 6 existing skips; 17 focused Captain tests, 19 isolated mutations, fresh-shell acceptance, real execution of the reported command and both CLI output-fence routes passed. Lint is 5,836 of 5,836 words; ADR, number, comment-ratio and design checks passed. The one requested RoboRev attempt exited 3: `incomplete: the roborev daemon is not running`. FO owns publication and fresh hosted review/CI. CI cost per PR was not measured; no workflow or trigger changed.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria, D1 (FO-run chat checks), D2 (+55 words), D3 (reverse ADR 0024 D3), with the third authorized fence-shape repair.
+  Candidate `066b074718e1602e75941ab39ea91fd90a712d54`, branch `spacedock-ensign/fo-tries-what-it-asks-the-captain`, base `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb`; prior head `a83430cb840f934b38cce6dbd49b5d62ba8e1ffb`. This repair changes only delivery_gate.py and test_delivery_gate.py; no version bump. Evidence: `fo-tries-what-it-asks-the-captain/validation/implementation-4/`.
+- DONE: Repair RoboRev 1427 on a83430cb8: remove the unapproved fence-tag list and all_blocks parameter.
+  `fence-tags-red.log` reproduces four false passes (python, node, mermaid, text). `captain-green.log` passes 18 tests: every nonempty fence is checked; unrecorded ones hold, Asked-recorded ones and matching Observed output pass, including real CLI routes. No exempt-tag list was added.
+  Restoring the old tag list fails the new regression (`mutation-19.log`, `mutation-results.json`). Earlier observed-output classification, independent-link and unrecorded-command regressions still pass. `positive-cli.json` binds actual fresh-shell result 2 and message/card CLI passes to this head.
+- DONE: Every acceptance criterion has current local evidence; the routed RoboRev 1427 shape defect is repaired in full.
+  AC-1 observations, AC-2 archived qnow path/card, AC-3 command/link coverage, AC-4 Captain reason, AC-5 relay gate/head, and prior Ran/context/UTC/calendar checks: `mutation-tests.log`, `mutation-results.json`, 20 isolated expected failures from source with caches cleared. Each removed check fails its own test.
+  AC-6: actual fresh-shell commands and required 3-step/1-Captain success line in `positive-cli.json`. AC-7: `acceptance.log` shows 5836/5836 words; restoring the old observer chat-only phrase fails (`observer-mutation.json`). ADR 0054 and the Captain-quoted +55 ledger entry remain.
+  AC-8: `python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py'` exits 0: 886 tests, 6 existing skips (`full-suite.log`); POC recipe record and forwarding coverage retained.
+  AC-9: independent `word-counts.json`: base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb has 5781 workflow words; candidate has 5836 (+55), mod 48, validation passage 64→33, section 86; idle/archive/merge unchanged. Pass line is 9 words, correcting the descriptive table's 8 as FO confirmed. Adding one word fails lint. Five-step `acceptance.sh` passes in a fresh shell.
+- SKIPPED: Implement the outgoing-message structured step list proposed in RoboRev 1419 finding 1; its proposed decline still needs the Captain's validation-gate ruling.
+  Design / PRFAQ: “A prose ask with no command, link or file in it ("sign in on the preview"), unless FO lists it as a step.” S5 names fences, links and named-card fences, not the proposed format. Prose asks and inline code remain undetected; `proposed-decline.json` replays both omissions at this head. This is not a decline of RoboRev 1427.
+  New cost: a diagram or evidence fence in an ask now holds until recorded or moved. No exempt-tag list, prose parser or inline-code detection was added. Form checks do not prove truthfulness or catch chat that bypasses the gate.
+- DONE: Run repository lint, ADR 0054 lint, number guards, comment-ratio and design checks on the new candidate.
+  `acceptance.log`, `adr-lint.log` (`--since 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb --require 0054`), `number-guards.log`, `comment-ratio.log` (5% maximum) and `design-check.log` exit 0. `manifest.json` binds source hashes; task frontmatter unchanged.
+- SKIPPED: Obtain a clean exact-head RoboRev verdict from the one requested command.
+  `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/roborev_gate.py --repo <assigned worktree> --base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb` ran once. Exit 1 (findings); complete output in `roborev.log`, status in `roborev-exit.txt`. No retry, daemon startup or clean-review claim beyond the returned verdict. `findings on 066b07471; evidence=roborev:1428`. RoboRev 1428, High at delivery_gate.py:675: a valid closing fence longer than its opener is not collected. This is unresolved and handed to FO; the routed exact scope does not authorize another repair round.
+- SKIPPED: Push the repaired head, update PR #773, obtain fresh hosted review and green CI.
+  FO owns publication under ADR 0042/0048. No worker code push, PR comment, review request, ready or merge action. CI cost per PR not measured; no trigger changed. No successful state-sync receipt is claimed by this report while it is being written.
+- DONE: Record each affected document's disposition and the authorized file exceptions.
+  `doc-dispositions.json`: ADR 0020 unaffected (budget ledger retained); ADR 0037 unaffected (Team rule unchanged); ADR 0044 unaffected (summary/legacy rules retained); ADR 0049 unaffected (model lint unchanged); ADR 0051 unaffected (merge round-count check unchanged).
+  Package README unaffected (entry/adoption retained); maintain-flow skill unaffected (same lint/test commands); learning.md unaffected (recount practice followed). Workflow/observer/ADR 0054 retain the approved implementation.
+  Prior FO-authorized files outside the design list: test_lint_skills.py replaces the obsolete phrase with a retained chat-only rule; test_poc_readme.py updates the recipe fixture and forwarding expectations. A POC recipe's question with no Captain steps record now holds. This repair adds no out-of-design file.
+- DONE: Prepare the updated exact PR title and body for FO.
+  `pr-title.txt`, `pr-body.md` in implementation-4; exact text follows below.
+
+### Summary
+
+This complete report supersedes earlier implementation reports at `066b074718e1602e75941ab39ea91fd90a712d54`. The fence-tag defect is locally repaired; RoboRev 1428's longer-closing-fence High finding, the earlier prose/inline-code proposed decline, and FO's publication/review/CI remain. No clean review is claimed.
+
+PR title: feat(kc-dev-flow-2): check Captain steps before an ask
+
+PR body (exact):
+
+The Captain-step check could ignore a top-level fence tagged `python`, `node`, `mermaid` or `text`, allowing an unrecorded step through. Every nonempty fence is now checked, without a tag list or an `all_blocks` switch. Every detected fence and link needs a recorded `Asked:` step unless the fence content matches a recorded `Observed:` value, with whitespace normalized. This repairs RoboRev 1427 on `a83430cb8`.
+
+The new regression holds unrecorded fences for all four tags, passes each recorded fence, and passes matching observed output through the real CLI. Restoring the old tag filter fails that test. The earlier Codex review 5751409840 / comment 4454090538 (P2) repair remains: fenced `2` output for `python3 -c 'print(1 + 1)'` passes in the message and a named Markdown card; unrecorded command fences and independent links still hold.
+
+`delivery_gate.py steps` checks observations against the outgoing message, including named Markdown cards and missing absolute paths. `question` requires a passing record at a latest dispatched validation candidate. Every step needs `Ran:`; executed runs name a fresh shell or real browser and a valid UTC timestamp. The approved justified `none — <reason>` plus `Only he can:` exception remains.
+
+ADR 0054 records the approved 55-word increase (5,781 at base `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb` to 5,836) and reversal of ADR 0024 D3. The observer can read observations. Form and coverage checks do not establish truthful observations or intercept chat that skips them.
+
+RoboRev 1419 finding 1 remains a proposed decline awaiting the Captain's validation gate: the approved design excludes “A prose ask with no command, link or file in it ("sign in on the preview"), unless FO lists it as a step.” An explicit outgoing-message step list would add a format the design does not name. Prose asks and inline code remain undetected as part of that same known limit. The new cost is that a diagram or evidence fence in an ask now holds until recorded or moved; no fence tag is exempt. These limits are stated separately from the repaired RoboRev 1427 finding.
+
+FO authorized two files outside the design's original list: `kc-dev-flow-2/scripts/test_lint_skills.py` replaces the obsolete acceptance-step phrase fixture with a retained chat-only rule; `kc-dev-flow-2/scripts/test_poc_readme.py` updates the recipe fixture and checked-summary forwarding expectations. The revealed behavior change is that a POC recipe's `question` with no Captain steps record now holds. This repair changes only `kc-dev-flow-2/scripts/delivery_gate.py` and `kc-dev-flow-2/scripts/test_delivery_gate.py`.
+
+Validation at `066b074718e1602e75941ab39ea91fd90a712d54`: full package suite passed 886 tests with 6 existing skips; 18 focused Captain tests, 20 isolated mutations, fresh-shell acceptance, real execution of the reported command and both CLI output-fence routes passed. Lint is 5,836 of 5,836 words; ADR, number, comment-ratio and design checks passed. The one requested RoboRev attempt exited 1 (findings); its complete result is saved in `roborev.log`. RoboRev 1428 reports a High finding at delivery_gate.py:675: a valid Markdown closing fence longer than its opener bypasses coverage. This new finding is unresolved; the authorized round ended after the single review attempt. FO owns publication and fresh hosted review/CI. CI cost per PR was not measured; no workflow or trigger changed.

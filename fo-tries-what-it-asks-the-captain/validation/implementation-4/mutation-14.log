@@ -1,0 +1,23 @@
+FF
+======================================================================
+FAIL: test_ran_records_execution_context_and_a_valid_utc_timestamp (test_delivery_gate.CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp) (ran='fresh shell, 2026-02-30T00:00:00Z')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdylslwjr/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1435, in test_ran_records_execution_context_and_a_valid_utc_timestamp
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_records_execution_context_and_a_valid_utc_timestamp (test_delivery_gate.CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp) (ran='real browser, 2026-11-03T25:00:00Z')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdylslwjr/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1435, in test_ran_records_execution_context_and_a_valid_utc_timestamp
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.011s
+
+FAILED (failures=2)

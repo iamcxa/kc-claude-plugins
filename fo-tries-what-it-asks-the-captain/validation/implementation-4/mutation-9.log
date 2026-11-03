@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_asked_text_is_matched_with_whitespace_normalized (test_delivery_gate.CaptainStepsTests.test_asked_text_is_matched_with_whitespace_normalized)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp0ij5j6z2/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1512, in test_asked_text_is_matched_with_whitespace_normalized
+    self.assertIn("step 1 S1", self.run_steps(body, "Run something else")[1])
+AssertionError: 'step 1 S1' not found in 'captain steps complete: 1 steps, 0 left to him\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

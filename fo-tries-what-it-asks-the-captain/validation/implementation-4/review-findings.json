@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "high",
+    "title": "Longer closing fences bypass step coverage",
+    "file": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "line": 675,
+    "detail": "RoboRev 1428 on 066b07471: a valid Markdown closing fence longer than its opener is not collected. New finding; unresolved after this authorized round.",
+    "fix": "Parse same-character closing fences at least as long as their opener and add coverage.",
+    "status": "open"
+  }
+]

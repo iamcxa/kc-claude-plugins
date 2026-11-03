@@ -1,0 +1,41 @@
+FFFF
+======================================================================
+FAIL: test_non_shell_fences_need_a_recorded_step_unless_they_match_observed (test_delivery_gate.CaptainStepsTests.test_non_shell_fences_need_a_recorded_step_unless_they_match_observed) (language='python')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpgd0ovk2t/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1364, in test_non_shell_fences_need_a_recorded_step_unless_they_match_observed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_non_shell_fences_need_a_recorded_step_unless_they_match_observed (test_delivery_gate.CaptainStepsTests.test_non_shell_fences_need_a_recorded_step_unless_they_match_observed) (language='node')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpgd0ovk2t/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1364, in test_non_shell_fences_need_a_recorded_step_unless_they_match_observed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_non_shell_fences_need_a_recorded_step_unless_they_match_observed (test_delivery_gate.CaptainStepsTests.test_non_shell_fences_need_a_recorded_step_unless_they_match_observed) (language='mermaid')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpgd0ovk2t/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1364, in test_non_shell_fences_need_a_recorded_step_unless_they_match_observed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_non_shell_fences_need_a_recorded_step_unless_they_match_observed (test_delivery_gate.CaptainStepsTests.test_non_shell_fences_need_a_recorded_step_unless_they_match_observed) (language='text')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpgd0ovk2t/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1364, in test_non_shell_fences_need_a_recorded_step_unless_they_match_observed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (failures=4)
