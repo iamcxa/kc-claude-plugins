@@ -782,6 +782,74 @@ class TasksTests(unittest.TestCase):
             code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], **({"look": look} if look else {}), **({"clock": clock} if clock else {}))
         return code, out.getvalue().splitlines()
 
+    def test_release_walk_due_is_gated_by_listing_and_map_presence(self):
+        self.readme("")
+        (self.state / "built.md").write_text("---\ntitle: built\nstatus: done\njourney: demo\njourney-release: r1\n---\n")
+        self.git(self.state, "add", "built.md")
+        self.git(self.state, "commit", "-qm", "built task")
+        baseline = self.tasks({})
+        journey = self.repo / "docs/journey/nested/journey.yaml"
+        journey.parent.mkdir(parents=True)
+        journey.write_text("journey: demo\n")
+        progress = self.root / "journey-progress.mjs"
+        progress.write_text(json.dumps({"schema": "journey-progress/v1", "journey": "demo", "diagnostic": None,
+                                       "releases": [{"release": "r1", "acceptance": "pending delivery acceptance"}]}))
+        node = self.root / "bin/node"
+        node.write_text(f"#!{sys.executable}\nimport sys\nfrom pathlib import Path\nprint(Path(sys.argv[1]).read_text())\n")
+        node.chmod(0o755)
+        calls = []
+        real_run = subprocess.run
+        line = ("next: release demo/r1 has every story built and no walk claimed; "
+                "file its acceptance task per release-acceptance's \"File the task\", with release-acceptance: demo/r1 in frontmatter.")
+        def invoke(argv, **kwargs):
+            if "due" in argv:
+                calls.append(argv)
+            return real_run(argv, **kwargs)
+        with mock.patch.object(watch.subprocess, "run", side_effect=invoke), \
+                mock.patch.object(watch, "journey_progress", return_value=progress):
+            self.assertEqual(self.tasks({}), baseline)
+            self.assertEqual(calls, [])
+            self.readme("release-acceptance")
+            code, out = self.tasks({})
+            self.assertEqual(code, 0, out)
+            self.assertEqual(out.count(line), 1)
+            self.assertEqual(calls, [[sys.executable, str(watch.SCRIPTS.parent / "extensions/release-acceptance/release_acceptance.py"),
+                                     "due", "--workflow-dir", str(self.workflow.resolve()), "--progress", str(progress), str(journey.resolve())]])
+            journey.unlink(); calls.clear()
+            self.assertEqual(self.tasks({}), baseline)
+            self.assertEqual(calls, [])
+
+    def test_release_walk_due_errors_are_reported(self):
+        self.readme("release-acceptance")
+        journey = self.repo / "docs/journey/journey.yaml"
+        journey.parent.mkdir(parents=True)
+        journey.write_text("journey: demo\n")
+        real_run = subprocess.run
+        def invoke(argv, **kwargs):
+            if "due" in argv:
+                return subprocess.CompletedProcess(argv, 2, "", "bad usage")
+            return real_run(argv, **kwargs)
+        with mock.patch.object(watch.subprocess, "run", side_effect=invoke):
+            code, out = self.tasks({})
+        self.assertEqual(code, 2)
+        self.assertEqual(out, ["next: report release-acceptance due to the Captain: bad usage."])
+
+    def test_progress_locator_prefers_direct_then_highest_cached_version(self):
+        scripts = self.root / "cache/kc-dev-flow-2/0.34.0/scripts"
+        scripts.mkdir(parents=True)
+        with mock.patch.object(watch, "SCRIPTS", scripts):
+            self.assertIsNone(watch.journey_progress())
+            paths = []
+            for version in ("1.9.0", "1.10.0"):
+                path = self.root / f"cache/kc-journey-map/{version}/lib/journey-progress.mjs"
+                path.parent.mkdir(parents=True)
+                path.write_text("stub")
+                paths.append(path)
+            self.assertEqual(watch.journey_progress(), paths[-1])
+            direct = scripts.parent.parent / "kc-journey-map/lib/journey-progress.mjs"
+            direct.parent.mkdir(parents=True)
+            direct.write_text("stub")
+            self.assertEqual(watch.journey_progress(), direct)
 
     def test_coverage_without_directory_or_pr_and_with_provider_failure(self):
         self.readme("")

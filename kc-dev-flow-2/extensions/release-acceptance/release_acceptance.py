@@ -2,6 +2,7 @@
 """Build, check and render a release walk: picky-user reviewer reports, the design director's ruling, one record.
 
   deferred JOURNEY/RELEASE --workflow-dir D     list findings earlier tasks of the release deferred
+  due --workflow-dir D [--progress SCRIPT] MAP... print unclaimed releases whose stories are built
   accepted JOURNEY/RELEASE --workflow-dir D     require the newest walk to be clean and closed before production
   check FOLDER --tier walk|final --workflow-dir D [--prior REPORT]
                                                 exit 1 when the walk cannot be accepted as it stands
@@ -17,7 +18,9 @@ import argparse
 import collections
 import hashlib
 import json
+import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -166,6 +169,69 @@ def state_dir(workflow_dir):
     workflow_dir = Path(workflow_dir)
     state = frontmatter(workflow_dir / "README.md").get("state", "")
     return workflow_dir / state if state else workflow_dir
+
+
+def cmd_due(args):
+    # see docs/adr/0056-the-idle-look-prompts-unclaimed-release-walks-from-versioned-progress.md
+    maps = []
+    for name in args.maps:
+        path = Path(name)
+        try:
+            match = re.search(r"^journey:[ \t]*(.+)$", path.read_text(), re.M)
+            if match:
+                maps.append((path, match.group(1).strip().strip("'\"")))
+        except (OSError, UnicodeError) as error:
+            print(f"release-acceptance not run: {path}: {str(error).splitlines()[0][:120]}")
+    if not maps:
+        return 0
+    if not args.progress or not Path(args.progress).is_file():
+        print("release-acceptance not run: kc-journey-map not found")
+        return 0
+    try:
+        state = state_dir(args.workflow_dir)
+        records = [Task(path).fields for root in (state, state / "_archive")
+                   for path in sorted([*root.glob("*.md"), *root.glob("*/index.md")])
+                   if path.name != "README.md"]
+        claimed = {row["release-acceptance"] for row in records if row.get("release-acceptance")}
+        candidates = {(row.get("journey"), row.get("journey-release")) for row in records
+                      if row.get("status") == "done" and row.get("journey") and row.get("journey-release")
+                      and f"{row['journey']}/{row['journey-release']}" not in claimed}
+    except (OSError, UnicodeError, ValueError) as error:
+        for path, _ in maps:
+            print(f"release-acceptance not run: {path}: {str(error).splitlines()[0][:120]}")
+        return 0
+    env = dict(os.environ)
+    if env.get("SPACEDOCK_BIN"):
+        env["PATH"] = str(Path(env["SPACEDOCK_BIN"]).resolve().parent) + os.pathsep + env.get("PATH", "")
+    for path, journey in maps:
+        if not any(j == journey for j, _ in candidates):
+            continue
+        try:
+            done = subprocess.run(["node", str(args.progress), str(path), "--workflow-dir", str(args.workflow_dir)],
+                                  capture_output=True, text=True, timeout=60, env=env)
+            if done.returncode not in (0, 1):
+                raise ValueError((done.stderr or done.stdout).strip() or f"producer exit {done.returncode}")
+            result = json.loads(done.stdout)
+            if not isinstance(result, dict) or result.get("schema") != "journey-progress/v1":
+                raise ValueError("expected journey-progress/v1")
+            if result.get("diagnostic") is not None:
+                raise ValueError(str(result["diagnostic"]))
+            if result.get("journey") != journey or not isinstance(result.get("releases"), list):
+                raise ValueError("invalid progress journey or releases")
+            releases = result["releases"]
+            if any(not isinstance(row, dict) or not isinstance(row.get("release"), str)
+                   or not isinstance(row.get("acceptance"), str) for row in releases):
+                raise ValueError("invalid progress release row")
+        except (OSError, UnicodeError, ValueError, subprocess.TimeoutExpired) as error:
+            print(f"release-acceptance not run: {path}: {str(error).splitlines()[0][:120]}")
+            continue
+        for row in releases:
+            pair = f"{journey}/{row['release']}"
+            if row["acceptance"] == "pending delivery acceptance" and pair not in claimed:
+                print(f"next: release {pair} has every story built and no walk claimed; "
+                      "file its acceptance task per release-acceptance's \"File the task\", "
+                      f"with release-acceptance: {pair} in frontmatter.")
+    return 0
 
 
 def state_tasks(workflow_dir):
@@ -910,6 +976,11 @@ def main(argv=None):
     p = sub.add_parser("schema")
     p.add_argument("name")
     p.set_defaults(run=cmd_schema)
+    p = sub.add_parser("due")
+    p.add_argument("--workflow-dir", required=True)
+    p.add_argument("--progress")
+    p.add_argument("maps", nargs="+")
+    p.set_defaults(run=cmd_due)
     p = sub.add_parser("deferred")
     p.add_argument("release")
     p.add_argument("--workflow-dir", required=True)
