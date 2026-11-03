@@ -700,6 +700,19 @@ def links(text):
     return [value.rstrip(".,;") for value in URL.findall(text)]
 
 
+def execution_recorded(ran):
+    if not re.search(r"\b(?:fresh\s+shell|real\s+browser)\b", ran, re.I):
+        return False
+    stamp = re.search(r"\b\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|\+00:00|[ \t]+UTC)(?![\w:+-])", ran)
+    if not stamp:
+        return False
+    try:
+        value = re.sub(r"[ \t]+UTC$", "+00:00", stamp[0]).replace("Z", "+00:00")
+        return datetime.datetime.fromisoformat(value).utcoffset() == datetime.timedelta(0)
+    except ValueError:
+        return False
+
+
 def inspect_steps(record_path, message):
     text = record_path.read_text()
     header = re.split(r"^### Step \d+[ \t]*$", text, maxsplit=1, flags=re.M)[0]
@@ -727,9 +740,12 @@ def inspect_steps(record_path, message):
             problems.append(f"step {number} S1: Asked text is not in the message")
         only = fields.get("Only he can", "").strip()
         left += bool(only)
-        if not fields.get("Observed", "").strip() and not (
-                re.fullmatch(r"none\s+[—–-]\s+\S.*", fields.get("Ran", "").strip()) and only):
-            problems.append(f"step {number} S2: no Observed output")
+        ran = fields.get("Ran", "").strip()
+        unrun = re.fullmatch(r"none\s+[—–-]\s+\S.*", ran)
+        if not ran or (not unrun and not execution_recorded(ran)):
+            problems.append(f"step {number}: Ran needs fresh shell or real browser and a valid UTC timestamp, or none — <reason>")
+        if (not fields.get("Observed", "").strip() or unrun) and not (unrun and only):
+            problems.append(f"step {number} S2: no Observed output or justified unrun step")
         if "Only he can" in fields:
             reason = re.fullmatch(r"\S.*?\s+[—–-]\s+(\S.*)", only, re.S)
             if not reason or len(reason[1].split()) < 2:

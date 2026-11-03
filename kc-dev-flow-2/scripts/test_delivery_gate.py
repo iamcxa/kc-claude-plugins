@@ -1354,13 +1354,40 @@ class CaptainStepFixture(unittest.TestCase):
 
 
 class CaptainStepsTests(CaptainStepFixture):
+    def test_ran_is_required_even_with_an_observed_output(self):
+        missing = self.step("Run the check").replace("Ran: fresh shell, 2026-11-03T00:00:00Z\n", "")
+        for body in (missing, self.step("Run the check", ran=""), self.step("Run the check", ran="   ")):
+            with self.subTest(body=body):
+                code, out = self.run_steps(body, "Run the check")
+                self.assertEqual(code, 1, out)
+                self.assertIn("step 1", out)
+                self.assertIn("Ran", out)
+        self.run_steps(missing, "Run the check")
+        run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", str(self.saved), "--text-file", str(self.message)],
+                             capture_output=True, text=True)
+        self.assertEqual(run.returncode, 1, run.stdout)
+        self.assertIn("Ran", run.stdout)
+
+    def test_ran_records_execution_context_and_a_valid_utc_timestamp(self):
+        for ran in ("done", "fresh shell", "2026-11-03T00:00:00Z", "fresh shell, 2026-11-03T08:00:00+08:00",
+                    "real browser, 2026-11-03T00:00:00", "fresh shell, 2026-02-30T00:00:00Z",
+                    "real browser, 2026-11-03T25:00:00Z", "none — his phone"):
+            with self.subTest(ran=ran):
+                code, out = self.run_steps(self.step("Run the check", ran=ran), "Run the check")
+                self.assertEqual(code, 1, out)
+                self.assertIn("step 1", out)
+        for ran in ("fresh shell, 2026-11-03T00:00:00Z", "real browser, 2026-11-03T00:00:00.125+00:00",
+                    "real browser, 2026-11-03 00:00:00 UTC"):
+            with self.subTest(ran=ran):
+                self.assertEqual(self.run_steps(self.step("Run the check", ran=ran), "Run the check")[0], 0)
+
     def test_unobserved_steps_hold_even_when_ran_none_has_no_captain_reason(self):
         for ran in ("fresh shell, 2026-11-03T00:00:00Z", "none — his phone"):
             code, out = self.run_steps(self.step("Run the check", observed=None, ran=ran), "Run the check")
             self.assertEqual(code, 1, out)
             self.assertIn("step 1 S2", out)
-        mutant = variant_of('if not fields.get("Observed", "").strip() and not (', 'if False and not (')
-        for ran in ("fresh shell", "none — his phone"):
+        mutant = variant_of('if (not fields.get("Observed", "").strip() or unrun) and not (unrun and only):', 'if False:')
+        for ran in ("fresh shell, 2026-11-03T00:00:00Z", "none — his phone"):
             self.assertEqual(self.run_steps(self.step("Run", observed=None, ran=ran), "Run", mutant)[0], 0)
 
     def test_qnow_card_replay_checks_archived_path_and_unrecorded_fence(self):
@@ -1502,6 +1529,13 @@ class CaptainGateTests(CaptainStepFixture):
         self.assertEqual(self.ask_gate(declaration=False, module=no_clause)[0], 0)
         no_binding = variant_of('if candidate not in candidates:', 'if False:')
         self.assertEqual(self.ask_gate(candidate="e623efd2" + "0" * 32, module=no_binding)[0], 0)
+
+    def test_gate_holds_a_record_with_observed_output_but_no_ran_field(self):
+        body = self.step("Open the preview").replace("Ran: fresh shell, 2026-11-03T00:00:00Z\n", "")
+        for summary in (False, True):
+            code, out = self.ask_gate(body=body, summary=summary)
+            self.assertEqual(code, 1, out)
+            self.assertIn("Ran", out)
 
     def test_gate_checks_record_against_latest_validation_report_and_returns_input_errors(self):
         self.task.write_text(TASK + "\n## Stage Report: validation\nhttps://old.example.test/owner\n"
