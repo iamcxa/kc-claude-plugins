@@ -1,6 +1,6 @@
 ---
 title: A rewritten acceptance criterion is checked against the Captain's words
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 gates:
     version: 1
