@@ -1084,7 +1084,8 @@ class LiveValidationRulingTests(unittest.TestCase):
         done = subprocess.run([sys.executable, "-B", str(Path(records.__file__)), mode,
                                *map(str, files or (self.record,))], capture_output=True, text=True, cwd=cwd,
                               env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
-        return done.returncode, done.stdout + done.stderr
+        self.assertTrue(all("no 'Symptom:' line" in line for line in done.stderr.splitlines()), done.stderr)
+        return done.returncode, done.stdout
 
     def assert_hold(self, code=1):
         result, out = self.cli()
@@ -2684,7 +2685,8 @@ class DesignAdrTests(unittest.TestCase):
         args = [mode, str(self.record)] if mode == "--names" else list(mode)
         done = subprocess.run([sys.executable, "-B", str(script or Path(records.__file__)), *args],
                               capture_output=True, text=True)
-        return done.returncode, done.stdout + done.stderr
+        self.assertTrue(all("no 'Symptom:' line" in line for line in done.stderr.splitlines()), done.stderr)
+        return done.returncode, done.stdout
 
     def assert_missing(self, only=True):
         code, out = self.cli()
@@ -3215,6 +3217,81 @@ RAW_ADR_RECORD = (
     '\n'
     "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).\n"
 )
+
+
+class SymptomDispatchTests(unittest.TestCase):
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        self.folder = self.root / "task"
+        self.dispatch = self.folder / "dispatch"
+        self.dispatch.mkdir(parents=True)
+        self.folder.with_suffix(".md").write_text("---\nprofile: pilot\n---\n")
+        (self.root / "README.md").write_text(NO_EXTENSIONS)
+        self.put(1)
+
+    def put(self, number, symptom=None, stage="implementation", suffix=""):
+        path = self.dispatch / f"{stage}-{number}{suffix}.md"
+        header = (f"Symptom: {symptom}\n" if symptom is not None else "") + f"Candidate: {HEAD}\n"
+        path.write_text(header + COMPLETE)
+        return path
+
+    def cli(self, *args):
+        return subprocess.run([sys.executable, "-B", records.__file__, *map(str, args or (self.folder,))],
+                              capture_output=True, text=True)
+
+    def test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict(self):
+        self.put(2, "validation-1 F1 page freeze")
+        self.assertEqual(self.cli().stderr, "")
+        self.put(3, "Validation-1  F1 Page freeze")
+        done = self.cli()
+        self.assertEqual((done.returncode, done.stdout), (0, "3 dispatch record(s) complete\n"))
+        self.assertIn('step back: 2 implementation dispatches name symptom "validation-1 f1 page freeze"', done.stderr)
+        self.assertIn(records.STEP_BACK, done.stderr)
+        self.put(2)
+        self.put(3)
+        baseline = self.cli()
+        self.assertEqual((done.returncode, done.stdout), (baseline.returncode, baseline.stdout))
+
+    def test_named_record_excludes_later_records_and_folder_checks_only_each_stages_newest(self):
+        second = self.put(2, "A")
+        third = self.put(3, "A")
+        self.put(4, "A")
+        self.assertEqual(self.cli("--names", second).stderr, "")
+        self.assertIn("step back: 2 implementation", self.cli("--names", "--strict", third).stderr)
+        self.assertIn("step back: 3 implementation", self.cli().stderr)
+        self.put(10, "B")
+        self.put(11, "A", suffix="-message-1")
+        self.assertEqual(self.cli().stderr, "")
+
+    def test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass(self):
+        first = self.dispatch / "implementation-1.md"
+        self.assertEqual(self.cli("--names", "--strict", first).returncode, 0)
+        second = self.put(2)
+        for args, expected in (((self.folder,), 0), (("--names", second), 0), (("--names", "--strict", second), 1)):
+            done = self.cli(*args)
+            self.assertEqual(done.returncode, expected, done.stdout)
+            self.assertIn("no 'Symptom:' line", done.stderr)
+            self.assertIn("named the same way each time", done.stderr)
+            self.assertLessEqual(len(done.stderr.split()), 26)
+        self.put(2, "none")
+        self.assertEqual(self.cli("--names", "--strict", second).returncode, 0)
+
+    def test_different_stages_symptoms_none_fences_and_body_do_not_repeat(self):
+        self.put(2, "A")
+        self.put(2, "A", stage="validation")
+        for symptom in ("B", "None", "none: new work"):
+            self.put(3, symptom)
+            self.assertEqual(self.cli().stderr, "")
+        path = self.put(3)
+        for text in ("```\nSymptom: A\n```\n" + COMPLETE, COMPLETE + "\nSymptom: A\n"):
+            path.write_text(text)
+            done = self.cli()
+            self.assertNotIn("step back:", done.stderr)
+            self.assertIn("no 'Symptom:' line", done.stderr)
+        path.write_text("Symptom: B\nSymptom: A\n" + COMPLETE)
+        self.assertEqual(self.cli().stderr, "")
 
 
 if __name__ == "__main__":

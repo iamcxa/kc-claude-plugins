@@ -509,5 +509,93 @@ class HeadingFormsTest(Fixture):
                     self.read_as(text, "## Stage Report: validation", spelled, expected)
 
 
+class SymptomRoundsTest(Fixture):
+    def dispatch(self, number, symptom="page freeze", stage="implementation", date="2026-11-03", base=""):
+        path = self.state / f"{base}{SLUG}/dispatch/{stage}-{number}.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f"Dispatched: {date} {'a' * 40}\nSymptom: {symptom}\n## Checklist\nwork\n")
+        return path
+
+    def test_second_advises_third_owes_and_only_committed_records_count(self):
+        self.dispatch(2)
+        self.put(task())
+        self.assertNotIn("next:", run(self.state, SLUG)[1])
+        self.dispatch(3)
+        self.put(task())
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 0)
+        self.assertIn('next: some-task has 2 implementation dispatches on symptom "page freeze"', out)
+        self.dispatch(4)
+        self.assertEqual(run(self.state, SLUG), (code, out))
+        self.put(task())
+        code, out = run(self.state, SLUG)
+        self.assertEqual((code, out.count("next:")), (1, 1))
+        self.assertIn('3 implementation dispatches on symptom "page freeze"', out)
+        self.assertIn("what breaks if this criterion or process is deleted?", out)
+        self.assertEqual(run(self.state, SLUG, "--rev", "HEAD~1")[0], 0)
+        for path in (self.state / SLUG / "dispatch").iterdir():
+            path.unlink()
+        self.assertEqual(run(self.state, SLUG), (code, out))
+
+    def test_date_model_and_waiver_clear_the_third_record_once(self):
+        for number in (2, 3, 4, 5):
+            self.dispatch(number, date="2026-11-04" if number == 5 else "2026-11-03")
+        for line, expected in ((call(CE, "opus", "2026-11-02"), 1), (call(CE, "sonnet", "2026-11-03"), 1),
+                               (call(CE, "opus", "2026-11-03"), 0), (call(CE, "gpt-6-astra", "2026-11-04"), 0),
+                               (f"Reviewer: {CE} not run: reason", 1),
+                               (f"Reviewer: {CE} not run 2026-11-02: reason", 1),
+                               (f"Reviewer: {CE} not run 2026-11-03: reason", 0)):
+            with self.subTest(line=line):
+                self.put(task(extra=line))
+                self.assertEqual(run(self.state, SLUG)[0], expected)
+                if not expected:
+                    self.assertNotIn("next:", run(self.state, SLUG)[1])
+        self.dispatch(4, date="")
+        self.put(task(extra=f"Reviewer: {CE} not run: reason"))
+        self.assertEqual(run(self.state, SLUG)[0], 0)
+
+    def test_groups_normalize_but_keep_stages_and_symptoms_separate(self):
+        from role_triggers import symptom_rounds
+        rows = [("implementation-2.md", "Symptom: Validation-1  F1 Page freeze\n"),
+                ("implementation-10.md", "Symptom: validation-1 f1 page freeze\n"),
+                ("validation-3.md", "Symptom: validation-1 f1 page freeze\n"),
+                ("implementation-3.md", "Symptom: B\n"),
+                ("implementation-4.md", "Symptom: None: new work\n"),
+                ("implementation-5.md", "```\nSymptom: B\n```\n"),
+                ("implementation-6.md", "## Checklist\nSymptom: B\n"),
+                ("implementation-7.md", "Symptom: C\nSymptom: B\n"),
+                ("implementation-8-message-1.md", "Symptom: B\n")]
+        groups = symptom_rounds(reversed(rows))
+        self.assertEqual(groups[("implementation", "validation-1 f1 page freeze")], [(2, None), (10, None)])
+        self.assertEqual(groups[("validation", "validation-1 f1 page freeze")], [(3, None)])
+        self.assertEqual(groups[("implementation", "b")], [(3, None)])
+        self.assertEqual(len(groups), 4)
+
+    def test_archived_folder_records_and_nested_state_checkout(self):
+        for number in (2, 3, 4):
+            self.dispatch(number, base="_archive/")
+        self.put(task(), f"_archive/{SLUG}/index.md")
+        self.assertEqual(run(self.state, SLUG)[0], 1)
+        nested = self.state / "nested"
+        nested.mkdir()
+        git(self.state, "mv", "_archive", "nested/_archive")
+        git(self.state, "commit", "-qm", "nested state")
+        self.assertEqual(run(nested, SLUG)[0], 1)
+
+    def test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated(self):
+        for number in (2, 3, 4):
+            self.dispatch(number)
+        report = "\n## Stage Report: validation\n- F1 Material: gap\n"
+        self.put(task(extra=call(CE, "opus", "2026-11-03")) + report * 2)
+        self.assertIn("before the next step", run(self.state, SLUG)[1])
+        for number in (5, 6):
+            self.dispatch(number, symptom="new failure")
+        self.put(task(extra=call(CE, "opus", "2026-11-03")))
+        self.assertIn('2 implementation dispatches on symptom "new failure"', run(self.state, SLUG)[1])
+        self.put(task() + report * 2)
+        out = run(self.state, SLUG)[1]
+        self.assertEqual(out.count("what breaks if this criterion or process is deleted?"), 1)
+
+
 if __name__ == "__main__":
     unittest.main()
