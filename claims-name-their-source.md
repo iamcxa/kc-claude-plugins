@@ -205,6 +205,11 @@ Recommended order: adr-required-statement, then fo-tries-what-it-asks-the-captai
 1. **Written rule printed at the two gate scripts, with no hold (recommended).** It follows ADR 0027 D4, which the Captain chose because "matching words cannot stop that class of error". The replay shows the same here: a hold stops 275 of 462 summaries and still passes the kc-adr wrong line. What gets worse: a wrong claim that FO honestly labels as someone else's report still reaches him, though visibly unchecked, and nothing but FO's own writing guards a chat claim. Approving also approves the README raise of 55 words required by ADR 0020; the gate question should say so. Alternative: the count-pattern hold in `delivery_gate.py question`, if he would rather have a deterministic stop. Its cost is 275 extra summary edits that the replay says add a bracket but no truth. The only past ruling that went the other way is the 2026-10-22 ADR-path ruling (`agent-reads-governing-adr`, `Override:` line), where he chose a deterministic refusal. That check fully separated good from bad; this one does not, so this design does not follow it.
 2. **Run the behavioral replay of AC-3: 24 runs, hard stop 30 (recommended).** It is the only evidence that the text changes what an FO writes, and the rule existed in the global instructions during every bite. What gets worse: token cost, not measured beforehand. The kc-adr task's 20-run harness is the nearest precedent. Alternative: ship on AC-1, AC-2 and AC-4 only. Cheaper, but it proves the text is present, not that it works, which is what the bites have already shown.
 
+
+## Number guards
+
+ADR: 0055
+
 ## Stage Report: ideation
 
 - DONE: First check the new observatory evidence against its source; then decide written rule versus checked one, naming the point that catches an unsourced number or claim before it reaches the Captain, a PR body or a gate summary, with replays of the 2026-10-22 relay and the kc-adr count
