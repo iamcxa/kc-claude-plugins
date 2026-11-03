@@ -87,6 +87,7 @@ Result: aligned at backlog: Batch 13 backlog sitting, the Captain 「進」 (cha
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-11-04 — do these amendments withdraw what the Captain approved, and what changes in the build? Answer: adjust; report review/engineering-reviewer-batch13.md.
 
 ## Stop condition
 - Each observed failure (a guessed id, a wrong or archived worker, a message per routine approval) is named and stopped at a point FO reaches before respond_to_permission, shown on a replay of the observed sequence.
