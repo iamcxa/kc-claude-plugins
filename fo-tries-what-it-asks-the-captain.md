@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-11-03T10:21:32Z
 worktree: .worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain
+pr: iamcxa/kc-claude-plugins#773
 ---
 
 ## Scope
