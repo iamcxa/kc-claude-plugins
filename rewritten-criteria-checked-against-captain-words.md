@@ -53,6 +53,8 @@ gates:
                 target-stage: implementation
                 state: consumed
 profile: pilot
+started: 2026-11-03T10:21:07Z
+worktree: .worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words
 ---
 
 ## Scope
