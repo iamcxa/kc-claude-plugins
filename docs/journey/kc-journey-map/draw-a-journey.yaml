@@ -186,20 +186,20 @@ steps:
           - id: q-r4-no-room-choice
             ask: With no room requested, should entry restore the last permitted room or use a configured first
               room?
-            answer: Explicit URL first; otherwise resume only the same member’s still-permitted last room.
-              Recheck current policy before opening.
-            doc: http://127.0.0.1:4759/docs/adr/LOCAL-entry-room-priority.md#decision
+            answer: >-
+              Explicit URL first; otherwise resume only the same member’s still-permitted last room. Recheck current policy before opening.
+              local review record: adr/LOCAL-entry-room-priority.md#decision (not published)
           - id: q-r4-no-eligible-history
             ask: On first use or no eligible history, accept a permitted-room chooser with no automatic A
               default?
-            answer: Show the registered permitted-room chooser on first use or stale history. Empty inventory
-              stays stopped; no automatic default.
-            doc: http://127.0.0.1:4759/docs/adr/LOCAL-entry-room-priority.md#first-use-and-denied-target-ruling
+            answer: >-
+              Show the registered permitted-room chooser on first use or stale history. Empty inventory stays stopped; no automatic default.
+              local review record: adr/LOCAL-entry-room-priority.md#first-use-and-denied-target-ruling (not published)
           - id: q-r4-legacy-day2-data
             ask: Must old Day2 links keep the existing qnow-day2 canvas?
-            answer: Preserve the original qnow-day2 ID, records and links. No replacement, copy, clear, implicit
-              empty creation or data migration.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-07
+            answer: >-
+              Preserve the original qnow-day2 ID, records and links. No replacement, copy, clear, implicit empty creation or data migration.
+              local review record: interrogation-v2-triage.md#theme-07 (not published)
     system:
       - "Current: server/host/policy.ts authenticate/exchange validates grants and creates 15-minute
         grant-backed cookies; it does not bind verified human accounts."
@@ -231,16 +231,15 @@ steps:
               a new frontend build. Catalog reads metadata, not document telemetry.
           - id: q-r4-partial-catalog-failure
             ask: Can an expired Day2 credential disable otherwise valid A and B?
-            answer: Independent room grants remain independent. One expired room cannot disable valid rooms;
-              policy/service failure stays explicit and fails closed.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-05
+            answer: >-
+              Independent room grants remain independent. One expired room cannot disable valid rooms; policy/service failure stays explicit and fails closed.
+              local review record: interrogation-v2-triage.md#theme-05 (not published)
           - id: q-r4-switch-failure
             ask: Which original context survives denied source confirmation, a failed target or concurrent
               coediting?
-            answer: Confirm source edits before switching; retain the original editor on failed confirmation or
-              target admission. A denied URL never selects another room automatically.
-              Revoked-source work stays frozen; another room requires an explicit new context.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-04
+            answer: >-
+              Confirm source edits before switching; retain the original editor on failed confirmation or target admission. A denied URL never selects another room automatically. Revoked-source work stays frozen; another room requires an explicit new context.
+              local review record: interrogation-v2-triage.md#theme-04 (not published)
     system:
       - "Current: server/client/RoomSelector.tsx RoomPageMenu integrates the room menu with the
         native canvas toolbar."
@@ -266,46 +265,38 @@ steps:
         questions:
           - id: q-r4-unsent-work-boundary
             ask: Do unconfirmed edits survive reload or have a guaranteed hosted export?
-            answer: Human browser drafts are accepted, separate from sync and agent process state. Only
-              acknowledged durable browser saves may claim local persistence; hosted export is not
-              guaranteed. Explicit verified restoration never silently overwrites cloud data.
-            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-human-local-draft-direction
+            answer: >-
+              Human browser drafts are accepted, separate from sync and agent process state. Only acknowledged durable browser saves may claim local persistence; hosted export is not guaranteed. Explicit verified restoration never silently overwrites cloud data.
+              local review record: design-brief.md#accepted-human-local-draft-direction (not published)
           - id: q-r4-history-isolation
             ask: Whose last-worked room is remembered across tabs and accounts, and when is it updated?
-            answer: History is local to origin/backend/member. Update it only after successful exact-room
-              admission; stale, denied or different-member history cannot substitute a room.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-06
+            answer: >-
+              History is local to origin/backend/member. Update it only after successful exact-room admission; stale, denied or different-member history cannot substitute a room.
+              local review record: interrogation-v2-triage.md#theme-06 (not published)
           - id: q-draft-local-ack
             ask: Which human edits survive reload, tab close or crash, and what happens when browser persistence
               fails or disappears?
-            answer: "Persist immutable human draft versions in IndexedDB transactions and acknowledge only after
-              durable completion. Failed saves retain the open tab and show failure;
-              eviction/private browsing/clearing remain explicit limits. No time expiry: retain
-              until verified restore plus cloud sync or manual deletion."
-            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-human-local-draft-direction
+            answer: >-
+              Persist immutable human draft versions in IndexedDB transactions and acknowledge only after durable completion. Failed saves retain the open tab and show failure; eviction/private browsing/clearing remain explicit limits. No time expiry: retain until verified restore plus cloud sync or manual deletion.
+              local review record: design-brief.md#accepted-human-local-draft-direction (not published)
           - id: q-draft-identity-recheck
             ask: Who may discover, review and restore a local draft after account/room change, revocation or
               later regrant?
-            answer: Before draft discovery/review and again before apply, require the original verified
-              person/backend/room and current permission. Regrant allows explicit review only, never
-              automatic resume or cloud write. A changed shared cookie cannot reconnect the old
-              context.
-            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-human-local-draft-direction
+            answer: >-
+              Before draft discovery/review and again before apply, require the original verified person/backend/room and current permission. Regrant allows explicit review only, never automatic resume or cloud write. A changed shared cookie cannot reconnect the old context.
+              local review record: design-brief.md#accepted-human-local-draft-direction (not published)
           - id: q-draft-multitab-isolation
             ask: How do multiple browser tabs preserve distinct acknowledged draft versions without
               cross-account leakage or overwriting one another?
-            answer: Use immutable backend/member/room/tab/version keys and atomic head updates. Separate tabs
-              retain distinct versions; metadata discovery never grants access. Do not merge or
-              overwrite other tabs/accounts.
-            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-human-local-draft-direction
+            answer: >-
+              Use immutable backend/member/room/tab/version keys and atomic head updates. Separate tabs retain distinct versions; metadata discovery never grants access. Do not merge or overwrite other tabs/accounts.
+              local review record: design-brief.md#accepted-human-local-draft-direction (not published)
           - id: q-draft-apply-receipt
             ask: How can explicit restoration handle changed cloud data or a partial/lost apply response without
               silent overwrite, duplicate retry or premature cleanup?
-            answer: Compare reviewed base/selected fingerprints with current cloud state before explicit apply.
-              Keep an attempt receipt and retain every draft on unknown or partial result; reconcile
-              readback before retry. Remove only the exact version after verified restoration and
-              cloud sync, or manual deletion.
-            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-human-local-draft-direction
+            answer: >-
+              Compare reviewed base/selected fingerprints with current cloud state before explicit apply. Keep an attempt receipt and retain every draft on unknown or partial result; reconcile readback before retry. Remove only the exact version after verified restoration and cloud sync, or manual deletion.
+              local review record: design-brief.md#accepted-human-local-draft-direction (not published)
     system:
       - "Current: server/client/App.tsx room navigation and confirm-room-switch.ts compare the
         local/remote document before leaving."
@@ -342,16 +333,14 @@ steps:
           - id: q-r6-denial-contract
             ask: How do browser and MCP clients distinguish expiry, revoked access, outage and known quota
               exhaustion?
-            answer: Separate normal expiry, revoked/disabled authority, provider/network outage, known quota
-              exhaustion and unknown mutation outcome. HTTP/MCP data routes use typed errors, never
-              provider HTML or blind mutation retry.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-03
+            answer: >-
+              Separate normal expiry, revoked/disabled authority, provider/network outage, known quota exhaustion and unknown mutation outcome. HTTP/MCP data routes use typed errors, never provider HTML or blind mutation retry.
+              local review record: interrogation-v2-triage.md#theme-03 (not published)
           - id: q-logout-unconfirmed
             ask: What must explicit browser logout do with unconfirmed work in the original tab?
-            answer: Allow cancel or explicit browser-session logout while retaining the original frozen local
-              work and close/reload warning. Logout does not revoke independent installations or
-              delete retained drafts.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-19
+            answer: >-
+              Allow cancel or explicit browser-session logout while retaining the original frozen local work and close/reload warning. Logout does not revoke independent installations or delete retained drafts.
+              local review record: interrogation-v2-triage.md#theme-19 (not published)
       - id: revoke-delegated-agent-access
         card: Revoke one agent or disable its authorizing member
         release: r6
@@ -359,30 +348,24 @@ steps:
         questions:
           - id: q-revoke-bound
             ask: What bounded behavior makes app revocation and provider-policy removal distinct?
-            answer: "Commit app denial/generation first; reject new operations and incoming writes immediately.
-              Later stream leases target an observed stop within 60 seconds and report confirmation
-              separately. Provider-only removal has no app-wide stop guarantee: app disable/revoke
-              first, provider removal second."
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-09
+            answer: >-
+              Commit app denial/generation first; reject new operations and incoming writes immediately. Later stream leases target an observed stop within 60 seconds and report confirmation separately. Provider-only removal has no app-wide stop guarantee: app disable/revoke first, provider removal second.
+              local review record: interrogation-v2-triage.md#theme-09 (not published)
           - id: q-audit-boundary
             ask: What minimal identity evidence is recorded without changing concurrency?
-            answer: "Record minimal operator-only lifecycle and mutation-batch admission/outcome receipts:
-              actor/authorizer/credential IDs, room or unknown, category and server time. No tokens,
-              digests, document payload or per-record event sourcing. Keep committed/receipt-pending
-              distinct from unknown outcome; 30-day receipts exclude security tombstones."
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-11
+            answer: >-
+              Record minimal operator-only lifecycle and mutation-batch admission/outcome receipts: actor/authorizer/credential IDs, room or unknown, category and server time. No tokens, digests, document payload or per-record event sourcing. Keep committed/receipt-pending distinct from unknown outcome; 30-day receipts exclude security tombstones.
+              local review record: interrogation-v2-triage.md#theme-11 (not published)
           - id: q-operator-lifecycle
             ask: Which bounded operator surface manages verified bindings, legacy revoke and member disable?
-            answer: Use the existing protected operator boundary for explicit exact verified bindings, room
-              grants, legacy revoke and member disable. No first-visitor owner, email/label
-              inference, invitation service or general admin platform.
-            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-legacy-connection-rollout-direction
+            answer: >-
+              Use the existing protected operator boundary for explicit exact verified bindings, room grants, legacy revoke and member disable. No first-visitor owner, email/label inference, invitation service or general admin platform.
+              local review record: design-brief.md#accepted-legacy-connection-rollout-direction (not published)
           - id: q-auth-backup-safety
             ask: How can recovery restore documents without reviving stale human or delegated authority?
-            answer: Document recovery must not restore old security authority. Preserve generations, revoked
-              families/sessions and original expiries through backup/rollback; remove/regrant or
-              disable/reenable never revives old authority.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-17
+            answer: >-
+              Document recovery must not restore old security authority. Preserve generations, revoked families/sessions and original expiries through backup/rollback; remove/regrant or disable/reenable never revives old authority.
+              local review record: interrogation-v2-triage.md#theme-17 (not published)
     system:
       - "Current: server/host/policy.ts currentGrant/authorize rejects expired/revoked grants and
         forbidden rooms."
@@ -435,10 +418,9 @@ steps:
         questions:
           - id: q-pair-human-binding
             ask: How is a pairing code bound to its initiating client and verified authorizer?
-            answer: Only a verified enabled human can approve an exact immutable requested room set within
-              current grants. Bind the one-shot request to its initiating verifier; a code or
-              self-reported agent label is not authority.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-18
+            answer: >-
+              Only a verified enabled human can approve an exact immutable requested room set within current grants. Bind the one-shot request to its initiating verifier; a code or self-reported agent label is not authority.
+              local review record: interrogation-v2-triage.md#theme-18 (not published)
           - id: q-pair-supported-client
             ask: Do current Claude and Codex clients support the proposed pairing flow?
             answer: Use the bounded installation helper for stable native stdio and protected endpoint
@@ -446,34 +428,26 @@ steps:
               runtime obligations; no universal OAuth/client support is claimed.
           - id: q-pair-lifetime-policy
             ask: When do proposed lifetimes begin, and which interruptions require fresh human consent?
-            answer: "Approved defaults: pairing 5 minutes, local handoff 60 seconds, access 15 minutes, human
-              sign-in at most 7 non-sliding days. Persistent installation consent lasts until
-              revoke; short-access expiry normally renews automatically. Human age does not force
-              agent re-pairing."
-            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-persistent-installation-renewal-direction
+            answer: >-
+              Approved defaults: pairing 5 minutes, local handoff 60 seconds, access 15 minutes, human sign-in at most 7 non-sliding days. Persistent installation consent lasts until revoke; short-access expiry normally renews automatically. Human age does not force agent re-pairing.
+              local review record: design-brief.md#accepted-persistent-installation-renewal-direction (not published)
           - id: q-pair-atomic-retry
             ask: How are atomic redemption, lost replies and agent-to-human-session escalation prevented?
-            answer: Consume one initiating verifier once in a metadata transaction that creates one family and
-              returns secrets once. Lost pairing reply permits only revoke/cancel reconciliation
-              before a fresh request; agent/legacy credentials cannot mint humans or approve
-              pairing.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-15
+            answer: >-
+              Consume one initiating verifier once in a metadata transaction that creates one family and returns secrets once. Lost pairing reply permits only revoke/cancel reconciliation before a fresh request; agent/legacy credentials cannot mint humans or approve pairing.
+              local review record: interrogation-v2-triage.md#theme-15 (not published)
           - id: q-agent-renewal-family
             ask: What permits automatic renewal, and how do family revoke, lost membership and compromised
               secrets affect an installation?
-            answer: Effective delegation is the intersection of current authorizer room grants and approved
-              installation scope. Rotating refresh preserves persistent consent without inactivity
-              expiry. Revoked family, member disable and room-generation loss deny renewal/access;
-              secure helper storage and revocation proof are required.
-            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-persistent-installation-renewal-direction
+            answer: >-
+              Effective delegation is the intersection of current authorizer room grants and approved installation scope. Rotating refresh preserves persistent consent without inactivity expiry. Revoked family, member disable and room-generation loss deny renewal/access; secure helper storage and revocation proof are required.
+              local review record: design-brief.md#accepted-persistent-installation-renewal-direction (not published)
           - id: q-agent-refresh-races
             ask: How will refresh rotation detect replay and handle concurrent requests or a lost response
               without minting duplicates or reviving authority?
-            answer: Single-flight helper refresh plus atomic spent-digest rotation prevents duplicate branches.
-              Authenticated replay revokes; random guesses cannot revoke. Unknown refresh/lost reply
-              or failed secure save pauses that installation, confirms revoke-only reconciliation,
-              then requires fresh human pairing. Ordinary network loss alone is not repair.
-            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-persistent-installation-renewal-direction
+            answer: >-
+              Single-flight helper refresh plus atomic spent-digest rotation prevents duplicate branches. Authenticated replay revokes; random guesses cannot revoke. Unknown refresh/lost reply or failed secure save pauses that installation, confirms revoke-only reconciliation, then requires fresh human pairing. Ordinary network loss alone is not repair.
+              local review record: design-brief.md#accepted-persistent-installation-renewal-direction (not published)
       - id: collaborate-in-my-permitted-room
         card: Work with my authorized agent in the same room
         release: r5
@@ -485,24 +459,20 @@ steps:
               and delegated rooms; independent legacy grants retain only original scopes/expiry.
           - id: q-r4-browser-agent-store
             ask: Which path proves the browser and native agents use the same existing canvas?
-            answer: Verify browser and each native agent against the same backend, original room/record IDs and
-              authorized read/write path using synthetic sentinels. Local simulation, connector
-              configuration or a login page alone is not full native/hosted proof.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-13
+            answer: >-
+              Verify browser and each native agent against the same backend, original room/record IDs and authorized read/write path using synthetic sentinels. Local simulation, connector configuration or a login page alone is not full native/hosted proof.
+              local review record: interrogation-v2-triage.md#theme-13 (not published)
           - id: q-agent-data-authority
             ask: Should delegated room read/write include whole-document replacement and enabled Node
               capabilities, or be explicitly narrowed?
-            answer: Retain existing room read/write powers, including delete and whole-document replacement,
-              with explicit exact-scope consent disclosure. Node save/checkout apply only when
-              configured and granted. Do not silently add read-only/per-action narrowing or a
-              concurrency redesign.
-            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-delegated-capability-scope
+            answer: >-
+              Retain existing room read/write powers, including delete and whole-document replacement, with explicit exact-scope consent disclosure. Node save/checkout apply only when configured and granted. Do not silently add read-only/per-action narrowing or a concurrency redesign.
+              local review record: design-brief.md#accepted-delegated-capability-scope (not published)
           - id: q-agent-attribution
             ask: How can a human identify stateless agent activity without claiming fabricated live presence?
-            answer: Show server-derived recent activity and installation identity separately from self-reported
-              labels. Stateless tool calls are not fabricated online/model presence; no
-              cryptographic per-record model attribution is added.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-14
+            answer: >-
+              Show server-derived recent activity and installation identity separately from self-reported labels. Stateless tool calls are not fabricated online/model presence; no cryptographic per-record model attribution is added.
+              local review record: interrogation-v2-triage.md#theme-14 (not published)
     system:
       - "Current: server/host/policy.ts Grant has a principalId label and room list; transport.ts
         exposes native /mcp; neither proves a verified human binding."
@@ -530,11 +500,9 @@ steps:
         questions:
           - id: q-host-parity
             ask: Which host obligations must match while keeping Cloudflare Free?
-            answer: Preserve the shared document/admission/lifecycle/error contract and explicit host capability
-              differences. Cloudflare must stay Free; actual account eligibility,
-              sockets/alarms/reads/writes/CPU/storage and representative workload remain unmeasured
-              local-only proof. No paid upgrade or automatic scope expansion.
-            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-16
+            answer: >-
+              Preserve the shared document/admission/lifecycle/error contract and explicit host capability differences. Cloudflare must stay Free; actual account eligibility, sockets/alarms/reads/writes/CPU/storage and representative workload remain unmeasured local-only proof. No paid upgrade or automatic scope expansion.
+              local review record: interrogation-v2-triage.md#theme-16 (not published)
     system:
       - "Current: server/host/node.ts and cloudflare.ts adapt shared transport/policy/core."
       - "Proposed: extend shared admission metadata, retain room engine/data/concurrency; isolate
