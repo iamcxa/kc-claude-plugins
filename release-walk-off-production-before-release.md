@@ -507,3 +507,56 @@ Local review: clean on 714484084; evidence=roborev:1434. This repairs external-r
 ### Summary
 
 External round 2 is repaired: unresolved complaints, including inherited partly-fixed and deferred marks, retain ownership and remain required in later walks; the three-walk test proves false acceptance before repair and refusal afterward. Full local commands and the exact-head RoboRev gate pass, with the existing YAML-dependent skip; publication, hosted checks and independent validation remain with FO. This complete report supersedes all earlier implementation reports.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #772 head 71448408 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for AC-1–AC-10 at `7144840845b83ab5d1b7fabd640d9c13c81d4d6a`; `origin/main` = `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb`. Detached checkout verified and removed; product branch/bytes unchanged. No Material finding; F1–F3 below require FO disposition.
+- DONE: AC-1–AC-4 environment, missing-key and local-limit evidence independently replayed.
+  RecordedEnvironmentTests: production held at both tiers; recorded staging passes and staging-2 fails; each removed/blank key and equal environments hold; restored keys pass; local limit survives build/render and omission holds. Corresponding guard-removal mutations all fail their tests; base production commands exit 0 while candidate exits 1.
+- DONE: AC-5 closure, newest-walk chain and repeated-walk complaint continuity independently replayed.
+  AcceptedTests (18) pass; absence/live/no sentinel/dirty latest/parallel/cyclic/invalid report/ruling/rows/digest/local limit all hold, a clean closed chain passes. Native replays: 11 environment/schema commands, 7 repaired-case pairs, 4 three-walk checks, 15 inherited-complaint commands; all 700 graph shapes match independent complete-chain permutations. Five readiness mutations and both final-validation/chain-bypass mutations fail their tests.
+- DONE: AC-6–AC-9 schema, documents, lifecycle word counts and reserved ADR checked with falsifiers.
+  Schema remains 1.0.0; schema/workflow/pr_watch/budget diffs empty; docs retain every required route. Independent normalized_words: workflow 5834→5834, adoption 2267→2372 (≤2375), extension 605→544 (≤740), check +4/gate +5/readiness +10 words. Field insertion, extra workflow word, each exceeded ceiling and removed ADR all exit 1. Added comments are the two ADR citations; comment_ratio: 420 code / 2 comments, 0.5% ≤5%.
+- DONE: AC-10 existing expectations and complete package commands independently checked.
+  All 26 CI-listed commands exit 0 (1047 tests run, 7 skips); release suite 101 run, 100 pass, one YAML-dependent interoperability skip. AST comparison preserves every existing test/helper except the specified build_world README keys; original schema/consolidation regression catches the bypass. All 24 mutation/structural checks pass and sources are restored.
+- DONE: Required ADR, number, design, affected-document and dispatch checks run against this candidate.
+  Both loaded Codex-package and dispatch-specified Claude-package `adr_lint.py docs/adr --since origin/main --require 0053`: exit 0, 51 records/0 legacy. Number/design/comment/diff checks exit 0; doc_impact names only updated ADR 0053, whose policy remains accurate. Candidate/Codex dispatch checker exits 1 on the abbreviated follow-up (F1); the older supplied Claude cache instead fails four completion lines, so that cache result is not attributed to the product.
+- DONE: RoboRev 1421 (release-document existence) was listed as a proposed decline under approved D2; judge it on the current head, where RoboRev 1434 and 1436 are clean. Do not start agents you were not asked to
+  Absent release-doc still accepts, exactly the approved key-only D2 boundary (F2); recommend decline, not an implicit repair grant. Read-only RoboRev records 1434/1436 cover base..candidate and say SEVERITY_THRESHOLD_MET (High/Critical threshold, not all-severity assurance). Hosted checks 5/5 pass; current-head Codex reader exits 0: evidence=summary:6602560193@714484084. No agents/reviews were started.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step script below ran unchanged through `/bin/bash --noprofile --norc /tmp/release-walk-validation-772/acceptance.sh`, exit 0. Full observed output: `/tmp/release-walk-validation-772/acceptance.log`; all primary logs, mutations.json, suite/tests.json, words.json, checks.json and findings.json are under that evidence directory.
+- DONE: Implementation limits assessed at the candidate and delivery ownership retained.
+  Declared environment identity, real reviewer behavior and deployment quality remain unproven by fixture tests; FO readiness is advisory, not pipeline enforcement; named deferrals keep existing clean semantics. The YAML interoperability skip remains unverified; local tests used CLI 0.27.2 with plugin root 0.27.3, while hosted CI pins both to 0.27.2 and passes. CI cost not measured; configuration unchanged. No push/PR comment/review request/ready/merge or production action performed.
+- F1 Polish: follow-up dispatch completion sentence is incomplete for the checker. Released user/workflow: FO delivering the implementation follow-up; observable harm: parser exits 1, but parent dispatch already supplies final-reply completion and no lost delivery is shown; boundary: `contract[kc-dev-flow-2/skills/validation/principles.md#validation-principles]` requires complete dispatch records; trigger: `dispatch/implementation-1-message-1.md:22` abbreviates the literal sentence. FO owns a disposition or record correction; no product repair is justified by this observation.
+- F2 Deferred risk: release-doc existence/path validation from RoboRev 1421. Released user/workflow: an adopter with a reviewed release document; observable harm: none in that supported route, although a fixture with a nonexistent path still prints accepted; boundary: none, because approved D2 expressly checks only a nonempty key; trigger: `/tmp/release-walk-validation-772/release-doc-boundary.log`. It becomes Material only if runtime document verification is promised or supported adoption loses a required document; recommend declining within D2.
+- F3 Polish: schema table still describes `prior` as the first walk's report (`release_acceptance.py:46`). Released user/workflow: the operator reading `schema`; observable harm: no loss following EXTENSION's corrected immediate-predecessor route, but stale wording is confusing; boundary: AC-6 freezes this table, with no field-shape change; trigger: acceptance.log plus the native three-walk old-first-report refusal. Recommend recording the limitation within AC-6; no silent schema/hash change.
+
+### Summary
+
+The accepted Pilot goal is sufficient on this exact candidate: production and undeclared targets are refused, local limits survive the record, and only the newest valid clean closed walk admits readiness. Each retained code change has a failing without-it probe; the five changed files map to these behaviors, the adoption route or ADR 0053, and the compressed extension preserves its route. FO still owns finding dispositions and the delivery decision; validation does not authorize release.
+
+### Minimal acceptance script
+
+No application screen changes. This checks package CLI behavior using its committed fixtures, not a deployed site, actual reviewer operations, adoption execution or production enforcement. Requires the assigned checkout at the pinned head, Python 3 and the explicitly named installed package; the full schema table is expected output.
+
+```bash
+set -euo pipefail
+# Step 1: Pin the reviewed checkout. Expect the exact candidate SHA.
+WT="/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-off-production-before-release"
+cd "$WT"
+test "$(git -C "$WT" rev-parse HEAD)" = "7144840845b83ab5d1b7fabd640d9c13c81d4d6a"
+git -C "$WT" rev-parse HEAD
+# Step 2: Verify production refusal, staging and local limits. Expect five tests, OK.
+python3 -B kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py RecordedEnvironmentTests -v
+# Step 3: Verify closure, newest chain and inherited complaints. Expect eighteen tests, OK.
+python3 -B kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py AcceptedTests -v
+# Step 4: Verify the unchanged schema and workflow. Expect release-acceptance 1.0.0; no diff.
+python3 -B kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py schema release-acceptance
+git -C "$WT" diff --exit-code 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb HEAD -- kc-dev-flow-2/extensions/release-acceptance/contract-versions.json kc-dev-flow-2/references/sd/workflow.md
+# Step 5: Verify package rules and required decision record. Expect OK; 51 ADR files, 0 legacy.
+python3 -B kc-dev-flow-2/scripts/lint-skills.py
+python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb --require 0053
+```
+
+Observed, all steps exit 0: (1) `7144840845b83ab5d1b7fabd640d9c13c81d4d6a`; (2) five named environment tests, `OK`; (3) eighteen named acceptance tests, `OK`; (4) `release-acceptance 1.0.0` and its field table, no diff; (5) package `PASS`, workflow lint `5781 of 5781 words` (body count; whole-file normalized count is 5834), `51 ADR file(s) checked, 0 legacy`.
