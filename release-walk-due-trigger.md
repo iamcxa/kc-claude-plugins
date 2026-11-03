@@ -15,6 +15,17 @@ gates:
                 id: briefing:release-walk-due-trigger:backlog:attempt-1:revision-1
                 digest: sha256:7a1d6adea08b14ed68a7d8769122139335f3596f1be93106fe830c1ff44e31ff
                 room-ref: ./release-walk-due-trigger/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-walk-due-trigger:backlog:1
+                briefing: briefing:release-walk-due-trigger:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-03T07:44:58.900972Z"
+                decision: approve
+                reason: The Captain 「進」 (chat, 2026-11-03), answering the batch 13 sitting 「決定：這批七張（A 權限、B 同症狀計數、C 改寫條件比對原話、D release 驗收不在正式站、來源標註、FO 先自己試、release 驗收到期提醒）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？要改哪張直接說。」; approves Pilot, these outcomes and bounds.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
