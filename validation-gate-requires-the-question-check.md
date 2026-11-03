@@ -78,7 +78,7 @@ gates:
                 state: pending
 started: 2026-11-02T06:35:12Z
 worktree: .worktrees/spacedock-ensign-validation-gate-requires-the-question-check
-pr: iamcxa/kc-claude-plugins#767
+pr: pr-merge:767
 ---
 
 ## Scope
