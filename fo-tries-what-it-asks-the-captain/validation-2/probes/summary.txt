@@ -1,0 +1,2 @@
+External rounds: 0
+Captain steps: /tmp/fo-captain-validation-2/probes/observed-route-record.md

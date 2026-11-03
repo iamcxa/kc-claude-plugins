@@ -1,0 +1,16 @@
+{
+  "candidate": "128fe3e3fed70fa64ded8657f5a1b36933af3ced",
+  "scope": "Actual fresh-shell emission of a log line; no live HTTP endpoint was contacted",
+  "command": "python3 -B /private/tmp/fo-captain-validation-2/implementation-replays/emit_response.py",
+  "exit": 0,
+  "output": "GET /health 200",
+  "time": "2026-11-03T16:36:35Z",
+  "recorded_output_check": {
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  "unrecorded_path_check": {
+    "exit": 1,
+    "output": "message S4: missing path /private/tmp/fo-captain-validation-2/implementation-replays/unrecorded-path\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  }
+}

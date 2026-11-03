@@ -1,0 +1,89 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "e1bee223c47a1cd534a665a47776b683375b34fc",
+      "--require",
+      "0054"
+    ],
+    "exit": 0,
+    "log": "codex-adr-lint.log"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/fo-tries-what-it-asks-the-captain.md",
+      "--base",
+      "e1bee223c47a1cd534a665a47776b683375b34fc",
+      "--head",
+      "128fe3e3fed70fa64ded8657f5a1b36933af3ced"
+    ],
+    "exit": 0,
+    "log": "codex-number-guards.log"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "e1bee223c47a1cd534a665a47776b683375b34fc",
+      "128fe3e3fed70fa64ded8657f5a1b36933af3ced",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "log": "codex-comment-ratio.log"
+  },
+  {
+    "name": "design",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/fo-tries-what-it-asks-the-captain.md"
+    ],
+    "exit": 0,
+    "log": "codex-design.log"
+  },
+  {
+    "name": "dispatch",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/fo-tries-what-it-asks-the-captain"
+    ],
+    "exit": 1,
+    "log": "codex-dispatch.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "e1bee223c47a1cd534a665a47776b683375b34fc",
+      "128fe3e3fed70fa64ded8657f5a1b36933af3ced"
+    ],
+    "exit": 0,
+    "log": "codex-doc-impact.log"
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Full package suite: 890 tests, 6 skips",
+    "status": "passed",
+    "message": "Exact discovery command, exit 0; standard temporary directory."
+  },
+  {
+    "name": "Fresh-shell five-step acceptance",
+    "status": "passed",
+    "message": "Exact head, 22 focused tests, lint, ADR and route-output check."
+  },
+  {
+    "name": "28 falsifiers",
+    "status": "passed",
+    "message": "26 source mutations, observer restoration and legacy-record omission all failed as expected."
+  }
+]

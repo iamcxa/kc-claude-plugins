@@ -1,0 +1,17 @@
+...................................F........................s..
+======================================================================
+FAIL: test_live_ruling_predicate_is_skipped_by_real_historical_snapshot_caller (test_laws_check.L2Test.test_live_ruling_predicate_is_skipped_by_real_historical_snapshot_caller)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/kc-dev-flow-2/scripts/test_laws_check.py", line 335, in test_live_ruling_predicate_is_skipped_by_real_historical_snapshot_caller
+    self.assertEqual(code, 0, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : L1 observer-before-sentinel: 0 events judged in cce9b9fe8689..9623279d8275, 0 violated
+L3 amendment-append-only: 0 events judged in cce9b9fe8689..9623279d8275, 0 violated
+L2 dispatch-record-complete: cannot judge: dispatch_records.py exited 2: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmp4h9uz4ei/t/dispatch/validation-2.md:1: cannot verify validation ruling order: uncommitted-report; hold dispatch and report the missing history to FO
+
+
+----------------------------------------------------------------------
+Ran 63 tests in 91.462s
+
+FAILED (failures=1, skipped=1)

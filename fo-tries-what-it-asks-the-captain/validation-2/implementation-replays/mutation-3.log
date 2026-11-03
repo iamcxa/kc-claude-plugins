@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_qnow_card_replay_checks_archived_path_and_unrecorded_fence (test_delivery_gate.CaptainStepsTests.test_qnow_card_replay_checks_archived_path_and_unrecorded_fence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmp4amlfgwb/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1550, in test_qnow_card_replay_checks_archived_path_and_unrecorded_fence
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.013s
+
+FAILED (failures=1)

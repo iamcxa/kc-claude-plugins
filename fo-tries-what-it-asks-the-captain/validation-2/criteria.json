@@ -1,0 +1,56 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "note": "Missing observations and unjustified unrun steps hold, naming step 1.",
+    "falsifier": "mutation-1.log"
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "note": "Archived QNow script path and omitted card command each hold; restoring the named file passes.",
+    "falsifier": "mutation-2.log; mutation-3.log"
+  },
+  {
+    "name": "AC-3",
+    "status": "passed",
+    "note": "Unrecorded command or URL holds; recording both passes.",
+    "falsifier": "mutation-4.log"
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "note": "A Captain-only step needs a dash and at least two reason words.",
+    "falsifier": "mutation-5.log"
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "note": "Both question forms hold missing records and wrong heads; dispatched-head record passes.",
+    "falsifier": "mutation-6.log; mutation-7.log"
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "note": "Three executed harmless commands pass with one Captain field; real captured route output passes steps and both question inputs; independent missing paths hold.",
+    "falsifier": "mutation-8.log; mutation-24.log; mutation-25.log"
+  },
+  {
+    "name": "AC-7",
+    "status": "passed",
+    "note": "Approved +55 budget ledger and observer rule pass; restoring the former chat-only exclusion fails lint.",
+    "falsifier": "observer-mutation.json"
+  },
+  {
+    "name": "AC-8",
+    "status": "passed",
+    "note": "890 tests pass with 6 existing skips in the exact full-discovery command; removing the legacy Captain record fails its positive test.",
+    "falsifier": "ac8-falsifier.log"
+  },
+  {
+    "name": "AC-9",
+    "status": "passed",
+    "note": "Independent comparison to current origin/main confirms 5781 to 5836 workflow words, unchanged 48-word mod and idle/archive/merge behavior.",
+    "falsifier": "mutation-word-budget.log"
+  }
+]

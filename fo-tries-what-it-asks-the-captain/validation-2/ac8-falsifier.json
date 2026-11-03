@@ -1,0 +1,5 @@
+{
+  "mutation": "Remove Captain record from legacy question fixture",
+  "exit": 1,
+  "expected": "test assertion fails on new intentional hold"
+}

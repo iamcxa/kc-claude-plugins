@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_named_card_prose_link_matches_asked_and_holds_when_unrecorded (test_delivery_gate.CaptainStepsTests.test_named_card_prose_link_matches_asked_and_holds_when_unrecorded) (recorded=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmp5j65a29w/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1384, in test_named_card_prose_link_matches_asked_and_holds_when_unrecorded
+    self.assertEqual(code, 0 if recorded else 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.095s
+
+FAILED (failures=1)

@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_a_captain_only_step_requires_its_reason (test_delivery_gate.CaptainStepsTests.test_a_captain_only_step_requires_its_reason)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmpbg9_qaue/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1576, in test_a_captain_only_step_requires_its_reason
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 1 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

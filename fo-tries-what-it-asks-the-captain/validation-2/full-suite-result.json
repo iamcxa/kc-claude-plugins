@@ -1,0 +1,9 @@
+{
+  "command": "PYTHONDONTWRITEBYTECODE=1 TMPDIR=/tmp python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py'",
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate",
+  "exit": 0,
+  "tests": 890,
+  "skipped": 6,
+  "elapsed_seconds": 449.556,
+  "log": "full-suite-standard-temp.log"
+}

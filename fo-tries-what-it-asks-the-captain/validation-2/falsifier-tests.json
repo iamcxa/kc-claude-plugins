@@ -1,0 +1,168 @@
+[
+  {
+    "name": "AC-1 S2",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-1.log"
+  },
+  {
+    "name": "AC-2 S4",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-2.log"
+  },
+  {
+    "name": "AC-2 S5 command",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-3.log"
+  },
+  {
+    "name": "AC-3 S5 link",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-4.log"
+  },
+  {
+    "name": "AC-4 S3",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-5.log"
+  },
+  {
+    "name": "AC-5 clause",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-6.log"
+  },
+  {
+    "name": "AC-5 head",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-7.log"
+  },
+  {
+    "name": "AC-6 count",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-8.log"
+  },
+  {
+    "name": "S1 text",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-9.log"
+  },
+  {
+    "name": "Latest validation report",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-10.log"
+  },
+  {
+    "name": "Ran required",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-11.log"
+  },
+  {
+    "name": "Ran execution context",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-12.log"
+  },
+  {
+    "name": "Ran UTC timestamp",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-13.log"
+  },
+  {
+    "name": "Ran calendar validity",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-14.log"
+  },
+  {
+    "name": "Ran gate wiring",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-15.log"
+  },
+  {
+    "name": "Observed fence classification",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-16.log"
+  },
+  {
+    "name": "Observed fence links",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-17.log"
+  },
+  {
+    "name": "Unrecorded commands still held",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-18.log"
+  },
+  {
+    "name": "Every fence tag",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-19.log"
+  },
+  {
+    "name": "Longer closing fence",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-20.log"
+  },
+  {
+    "name": "Unclosed fence",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-21.log"
+  },
+  {
+    "name": "Named-card Asked text",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-22.log"
+  },
+  {
+    "name": "Named-card unfenced links",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-23.log"
+  },
+  {
+    "name": "Observed output excluded from path checks",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-24.log"
+  },
+  {
+    "name": "Unrecorded message paths still held",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-25.log"
+  },
+  {
+    "name": "AC-9 count",
+    "status": "passed",
+    "message": "Mutation caused the designated test to fail as expected.",
+    "file": "mutation-word-budget.log"
+  },
+  {
+    "name": "Observer chat-only restoration",
+    "status": "passed",
+    "message": "Restoring the obsolete observer exclusion makes lint fail."
+  },
+  {
+    "name": "Legacy question caller",
+    "status": "passed",
+    "message": "Omitting the Captain record makes the existing positive test fail."
+  }
+]

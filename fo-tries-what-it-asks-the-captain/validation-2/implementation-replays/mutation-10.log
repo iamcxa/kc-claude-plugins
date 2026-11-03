@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_gate_checks_record_against_latest_validation_report_and_returns_input_errors (test_delivery_gate.CaptainGateTests.test_gate_checks_record_against_latest_validation_report_and_returns_input_errors)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmpncy1xews/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1684, in test_gate_checks_record_against_latest_validation_report_and_returns_input_errors
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : gate text complete
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (failures=1)

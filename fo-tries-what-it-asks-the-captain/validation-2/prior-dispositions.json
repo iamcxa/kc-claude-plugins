@@ -1,0 +1,32 @@
+[
+  {
+    "id": "F1",
+    "classification": "Material P2",
+    "status": "fixed",
+    "evidence": "probes.json; implementation-replays/question-output-probe.json; mutation-24.log; mutation-25.log"
+  },
+  {
+    "id": "F2",
+    "classification": "Needs decision, reviewer High",
+    "status": "Captain waived",
+    "evidence": "Captain amendment 1; reproduced disclosed prose limit"
+  },
+  {
+    "id": "F3",
+    "classification": "Needs decision, reviewer High",
+    "status": "Captain waived",
+    "evidence": "Captain amendment 1; same excluded prose limit"
+  },
+  {
+    "id": "F4",
+    "classification": "Needs decision",
+    "status": "Captain accepted, nonblocking",
+    "evidence": "Captain amendment 1; dispatch.log; dispatch-checker-identities.json"
+  },
+  {
+    "id": "F5",
+    "classification": "Needs decision",
+    "status": "Captain accepted, nonblocking",
+    "evidence": "Captain amendment 1; dispatch-candidate.log"
+  }
+]

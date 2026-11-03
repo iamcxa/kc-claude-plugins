@@ -1,0 +1,11 @@
+128fe3e3fed70fa64ded8657f5a1b36933af3ced
+......................
+----------------------------------------------------------------------
+Ran 22 tests in 1.460s
+
+OK
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5836 of 5836 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+51 ADR file(s) checked, 0 legacy
+captain steps complete: 1 steps, 0 left to him

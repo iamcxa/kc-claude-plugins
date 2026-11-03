@@ -1,0 +1,83 @@
+[
+  {
+    "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: the exact-budget ledger and quoted-ruling contract is retained and used for +55",
+    "validated": true,
+    "validation_basis": "Read the retained contract at the candidate and checked its responsibility against the diff and existing regression coverage."
+  },
+  {
+    "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: worker early-handback rule and its budget entry are unchanged",
+    "validated": true,
+    "validation_basis": "Read the retained contract at the candidate and checked its responsibility against the diff and existing regression coverage."
+  },
+  {
+    "doc": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "disposition": "unaffected: reviewer summary and legacy combined-text checks remain, with the intended additional steps hold",
+    "validated": true,
+    "validation_basis": "Read the retained contract at the candidate and checked its responsibility against the diff and existing regression coverage."
+  },
+  {
+    "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: model-roster lint and stage defaults are unchanged",
+    "validated": true,
+    "validation_basis": "Read the retained contract at the candidate and checked its responsibility against the diff and existing regression coverage."
+  },
+  {
+    "doc": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "disposition": "unaffected: merge check() and its top-level External rounds contract are byte-identical",
+    "validated": true,
+    "validation_basis": "Read the retained contract at the candidate and checked its responsibility against the diff and existing regression coverage."
+  },
+  {
+    "doc": "kc-dev-flow-2/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: entry, capability boundaries and adoption instructions still apply; new rule and upgrade hold live in workflow.md and ADR 0054",
+    "validated": true,
+    "validation_basis": "Read the retained contract at the candidate and checked its responsibility against the diff and existing regression coverage."
+  },
+  {
+    "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "disposition": "unaffected: maintain-flow still runs repository lint and its tests; no command or route changed",
+    "validated": true,
+    "validation_basis": "Read the retained contract at the candidate and checked its responsibility against the diff and existing regression coverage."
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: independent lifecycle recount follows existing learning; no learning rule changed",
+    "validated": true,
+    "validation_basis": "Read the retained contract at the candidate and checked its responsibility against the diff and existing regression coverage."
+  }
+]

@@ -1,0 +1,23 @@
+FF
+======================================================================
+FAIL: test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links (test_delivery_gate.CaptainStepsTests.test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links) (named_card=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmp4q5tkiss/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1488, in test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links
+    self.assertEqual(self.run_steps(body, shown)[0], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links (test_delivery_gate.CaptainStepsTests.test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links) (named_card=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmp4q5tkiss/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1488, in test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links
+    self.assertEqual(self.run_steps(body, shown)[0], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (failures=2)

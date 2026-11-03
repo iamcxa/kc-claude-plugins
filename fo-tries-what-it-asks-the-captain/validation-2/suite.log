@@ -1,0 +1,21 @@
+test_adr_doc_checks 0 9
+test_comment_ratio 0 14
+test_decision_ledger 0 8
+test_delivery_gate 0 146
+test_design_surfaces 0 202
+test_dispatch_records 1 100
+test_laws_check 1 63
+test_learning 0 47
+test_lint_skills 0 47
+test_number_guards 0 28
+test_observer_check 0 19
+test_observer_recovery 5 0
+test_package_version 0 6
+test_poc_readme 0 9
+test_pr_watch 0 130
+test_replay_dispatch 0 8
+test_role_triggers 0 36
+test_sd_dispatch 5 0
+test_validation_security 0 5
+test_workflow_checkout 0 13
+{"tests": 890, "skipped": 4, "failed_modules": ["test_dispatch_records", "test_laws_check", "test_observer_recovery", "test_sd_dispatch"], "command_count": 20}

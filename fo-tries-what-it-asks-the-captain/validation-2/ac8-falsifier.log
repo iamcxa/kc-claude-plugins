@@ -1,0 +1,81 @@
+FFFF
+======================================================================
+FAIL: test_both_wordings_in_use_and_a_question_that_names_no_merge_pass (test_delivery_gate.QuestionTests.test_both_wordings_in_use_and_a_question_that_names_no_merge_pass) [unless he says he merges or holds]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmphpkdnou8/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1729, in test_both_wordings_in_use_and_a_question_that_names_no_merge_pass
+    self.assertEqual(self.ask(MERGE_ASK.format(tail=tail)), (0, "gate text complete\n"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (1, 'gate text needs one Captain steps: <r[128 chars].\n') != (0, 'gate text complete\n')
+
+First differing element 0:
+1
+0
+
++ (0, 'gate text complete\n')
+- (1,
+-  'gate text needs one Captain steps: <record path> line\n'
+-  'next: hold preparation; run the Captain steps, record the observations at '
+-  'the dispatched head, and check again.\n')
+
+======================================================================
+FAIL: test_both_wordings_in_use_and_a_question_that_names_no_merge_pass (test_delivery_gate.QuestionTests.test_both_wordings_in_use_and_a_question_that_names_no_merge_pass) [if the Captain says he merges or holds]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmphpkdnou8/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1729, in test_both_wordings_in_use_and_a_question_that_names_no_merge_pass
+    self.assertEqual(self.ask(MERGE_ASK.format(tail=tail)), (0, "gate text complete\n"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (1, 'gate text needs one Captain steps: <r[128 chars].\n') != (0, 'gate text complete\n')
+
+First differing element 0:
+1
+0
+
++ (0, 'gate text complete\n')
+- (1,
+-  'gate text needs one Captain steps: <record path> line\n'
+-  'next: hold preparation; run the Captain steps, record the observations at '
+-  'the dispatched head, and check again.\n')
+
+======================================================================
+FAIL: test_both_wordings_in_use_and_a_question_that_names_no_merge_pass (test_delivery_gate.QuestionTests.test_both_wordings_in_use_and_a_question_that_names_no_merge_pass) [unless you say you merge or hold]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmphpkdnou8/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1729, in test_both_wordings_in_use_and_a_question_that_names_no_merge_pass
+    self.assertEqual(self.ask(MERGE_ASK.format(tail=tail)), (0, "gate text complete\n"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (1, 'gate text needs one Captain steps: <r[128 chars].\n') != (0, 'gate text complete\n')
+
+First differing element 0:
+1
+0
+
++ (0, 'gate text complete\n')
+- (1,
+-  'gate text needs one Captain steps: <record path> line\n'
+-  'next: hold preparation; run the Captain steps, record the observations at '
+-  'the dispatched head, and check again.\n')
+
+======================================================================
+FAIL: test_both_wordings_in_use_and_a_question_that_names_no_merge_pass (test_delivery_gate.QuestionTests.test_both_wordings_in_use_and_a_question_that_names_no_merge_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmphpkdnou8/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1730, in test_both_wordings_in_use_and_a_question_that_names_no_merge_pass
+    self.assertEqual(self.ask("Admit the sample task?"), (0, "gate text complete\n"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (1, 'gate text needs one Captain steps: <r[128 chars].\n') != (0, 'gate text complete\n')
+
+First differing element 0:
+1
+0
+
++ (0, 'gate text complete\n')
+- (1,
+-  'gate text needs one Captain steps: <record path> line\n'
+-  'next: hold preparation; run the Captain steps, record the observations at '
+-  'the dispatched head, and check again.\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.008s
+
+FAILED (failures=4)

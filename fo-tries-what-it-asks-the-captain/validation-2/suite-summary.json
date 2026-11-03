@@ -1,0 +1,11 @@
+{
+  "tests": 890,
+  "skipped": 4,
+  "failed_modules": [
+    "test_dispatch_records",
+    "test_laws_check",
+    "test_observer_recovery",
+    "test_sd_dispatch"
+  ],
+  "command_count": 20
+}

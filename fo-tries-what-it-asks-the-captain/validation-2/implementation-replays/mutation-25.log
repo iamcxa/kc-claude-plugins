@@ -1,0 +1,25 @@
+FF
+======================================================================
+FAIL: test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold (test_delivery_gate.CaptainStepsTests.test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold) (output='GET /health 200')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmplnjh76nv/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1369, in test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold (test_delivery_gate.CaptainStepsTests.test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold) (output='GET /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmpuep8wf0j/unrecorded-path 200')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmplnjh76nv/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1369, in test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.162s
+
+FAILED (failures=2)

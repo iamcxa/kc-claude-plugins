@@ -1,0 +1,2 @@
+FAIL: repository frontmatter check missing: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmpi3hc3qo9/scripts/skill-frontmatter-lint.sh
+FAIL: references/sd/workflow.md: 5837 words exceeds the budget of 5836; move the added text out of the README, or add a raise step of 1 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS

@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_ran_records_execution_context_and_a_valid_utc_timestamp (test_delivery_gate.CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp) (ran='2026-11-03T00:00:00Z')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmpojdayq87/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1517, in test_ran_records_execution_context_and_a_valid_utc_timestamp
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.029s
+
+FAILED (failures=1)

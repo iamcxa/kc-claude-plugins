@@ -1,0 +1,11 @@
+{
+  "command": "/bin/bash --noprofile --norc /tmp/fo-captain-validation-2/acceptance.sh",
+  "env": {
+    "CAPTAIN_STEPS_WORKTREE": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TMPDIR": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp"
+  },
+  "exit": 0,
+  "log": "acceptance.log",
+  "script_sha256": "afcce1557c5f28779ab9bd6a87dada4d4d006b78ff4ade65df3a9246fb83ccc5"
+}

@@ -1,0 +1,45 @@
+FFFF
+======================================================================
+FAIL: test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step (test_delivery_gate.CaptainStepsTests.test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step) (output='printf unrecorded', named_card=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmp6l60ynye/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1472, in test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step (test_delivery_gate.CaptainStepsTests.test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step) (output='printf unrecorded', named_card=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmp6l60ynye/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1472, in test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step (test_delivery_gate.CaptainStepsTests.test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step) (output='unexpected output', named_card=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmp6l60ynye/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1472, in test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step (test_delivery_gate.CaptainStepsTests.test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step) (output='unexpected output', named_card=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.validation-2-candidate/.probe-tmp/tmp6l60ynye/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1472, in test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.006s
+
+FAILED (failures=4)

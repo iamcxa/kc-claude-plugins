@@ -1,0 +1,39 @@
+{
+  "base": "e1bee223c47a1cd534a665a47776b683375b34fc",
+  "mod_words": 48,
+  "moments": [
+    {
+      "name": "Workflow",
+      "before": 5781,
+      "after": 5836
+    },
+    {
+      "name": "Startup including mod",
+      "before": 5829,
+      "after": 5884
+    },
+    {
+      "name": "Validation passage",
+      "before": 64,
+      "after": 33
+    },
+    {
+      "name": "Captain steps section including heading",
+      "before": 0,
+      "after": 86
+    },
+    {
+      "name": "Steps success output",
+      "before": 0,
+      "after": 9
+    }
+  ],
+  "unchanged": [
+    "idle open PR",
+    "idle merged PR",
+    "archive",
+    "merge ask"
+  ],
+  "basis": "pr_watch and mod bytes, check/write_record AST and ASK literal unchanged",
+  "pass_line_correction": "9 words; design table says 8, implementation explicitly reports correction"
+}

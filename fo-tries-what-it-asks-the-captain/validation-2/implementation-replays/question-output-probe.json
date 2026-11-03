@@ -1,0 +1,34 @@
+{
+  "candidate": "128fe3e3fed70fa64ded8657f5a1b36933af3ced",
+  "scope": "Disposable gate fixtures at this Candidate, with actual locally emitted log output in the latest validation report; no live preview visit",
+  "cases": [
+    {
+      "summary_file": false,
+      "unrecorded_path": false,
+      "direct_exit": 0,
+      "cli_exit": 0,
+      "output": "gate text complete\n"
+    },
+    {
+      "summary_file": false,
+      "unrecorded_path": true,
+      "direct_exit": 1,
+      "cli_exit": 1,
+      "output": "Captain steps record fails: message S4: missing path /private/tmp/fo-captain-validation-2/implementation-replays/unrecorded-path\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+    },
+    {
+      "summary_file": true,
+      "unrecorded_path": false,
+      "direct_exit": 0,
+      "cli_exit": 0,
+      "output": "gate text complete\n"
+    },
+    {
+      "summary_file": true,
+      "unrecorded_path": true,
+      "direct_exit": 1,
+      "cli_exit": 1,
+      "output": "Captain steps record fails: message S4: missing path /private/tmp/fo-captain-validation-2/implementation-replays/unrecorded-path\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+    }
+  ]
+}

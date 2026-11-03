@@ -1,0 +1,402 @@
+[
+  {
+    "name": "test_adr_doc_checks",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_adr_doc_checks.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 9,
+    "skipped": 0,
+    "seconds": 1.376,
+    "log": "suite/test_adr_doc_checks.log"
+  },
+  {
+    "name": "test_comment_ratio",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_comment_ratio.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 14,
+    "skipped": 0,
+    "seconds": 8.457,
+    "log": "suite/test_comment_ratio.log"
+  },
+  {
+    "name": "test_decision_ledger",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_decision_ledger.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 8,
+    "skipped": 0,
+    "seconds": 0.126,
+    "log": "suite/test_decision_ledger.log"
+  },
+  {
+    "name": "test_delivery_gate",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_delivery_gate.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 146,
+    "skipped": 0,
+    "seconds": 84.624,
+    "log": "suite/test_delivery_gate.log"
+  },
+  {
+    "name": "test_design_surfaces",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_design_surfaces.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 202,
+    "skipped": 4,
+    "seconds": 12.046,
+    "log": "suite/test_design_surfaces.log"
+  },
+  {
+    "name": "test_dispatch_records",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_dispatch_records.py"
+    ],
+    "status": "failed",
+    "exit": 1,
+    "tests": 100,
+    "skipped": 0,
+    "seconds": 108.934,
+    "log": "suite/test_dispatch_records.log"
+  },
+  {
+    "name": "test_laws_check",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_laws_check.py"
+    ],
+    "status": "failed",
+    "exit": 1,
+    "tests": 63,
+    "skipped": 0,
+    "seconds": 91.578,
+    "log": "suite/test_laws_check.log"
+  },
+  {
+    "name": "test_learning",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_learning.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 47,
+    "skipped": 0,
+    "seconds": 54.847,
+    "log": "suite/test_learning.log"
+  },
+  {
+    "name": "test_lint_skills",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_lint_skills.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 47,
+    "skipped": 0,
+    "seconds": 12.387,
+    "log": "suite/test_lint_skills.log"
+  },
+  {
+    "name": "test_number_guards",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_number_guards.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 28,
+    "skipped": 0,
+    "seconds": 17.952,
+    "log": "suite/test_number_guards.log"
+  },
+  {
+    "name": "test_observer_check",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_observer_check.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 19,
+    "skipped": 0,
+    "seconds": 7.727,
+    "log": "suite/test_observer_check.log"
+  },
+  {
+    "name": "test_observer_recovery",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_observer_recovery.py"
+    ],
+    "status": "failed",
+    "exit": 5,
+    "tests": 0,
+    "skipped": 0,
+    "seconds": 0.099,
+    "log": "suite/test_observer_recovery.log"
+  },
+  {
+    "name": "test_package_version",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_package_version.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 6,
+    "skipped": 0,
+    "seconds": 0.101,
+    "log": "suite/test_package_version.log"
+  },
+  {
+    "name": "test_poc_readme",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_poc_readme.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 9,
+    "skipped": 0,
+    "seconds": 2.018,
+    "log": "suite/test_poc_readme.log"
+  },
+  {
+    "name": "test_pr_watch",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_pr_watch.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 130,
+    "skipped": 0,
+    "seconds": 56.071,
+    "log": "suite/test_pr_watch.log"
+  },
+  {
+    "name": "test_replay_dispatch",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_replay_dispatch.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 8,
+    "skipped": 0,
+    "seconds": 5.066,
+    "log": "suite/test_replay_dispatch.log"
+  },
+  {
+    "name": "test_role_triggers",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_role_triggers.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 36,
+    "skipped": 0,
+    "seconds": 28.118,
+    "log": "suite/test_role_triggers.log"
+  },
+  {
+    "name": "test_sd_dispatch",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_sd_dispatch.py"
+    ],
+    "status": "failed",
+    "exit": 5,
+    "tests": 0,
+    "skipped": 0,
+    "seconds": 0.13,
+    "log": "suite/test_sd_dispatch.log"
+  },
+  {
+    "name": "test_validation_security",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_validation_security.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 5,
+    "skipped": 0,
+    "seconds": 0.75,
+    "log": "suite/test_validation_security.log"
+  },
+  {
+    "name": "test_workflow_checkout",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_workflow_checkout.py"
+    ],
+    "status": "passed",
+    "exit": 0,
+    "tests": 13,
+    "skipped": 0,
+    "seconds": 7.842,
+    "log": "suite/test_workflow_checkout.log"
+  }
+]
