@@ -1,0 +1,11 @@
+**D-2: Screenshots at the gate**
+
+I recommend that we do not add an FO rule for screenshots now. The gate stays as text.
+
+**Why:** The design checker already prints the `Preview:` path, and the briefing now carries those lines. You can open each picture from that path. (Design worker's report, not run.) A rule that makes FO show pictures would need another `workflow.md` raise under ADR 0020. (Design worker's report, not run.)
+
+**What gets worse:** The gate will not put a picture in front of you. You see one only if you open the printed path.
+
+**Your choice:** Approve this recommendation, or ask for a picture rule. If you ask for the rule, I will bring the `workflow.md` raise to you as a separate decision.
+
+Approving accepts the recommendation for D-2. Say if you object.

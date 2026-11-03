@@ -1,0 +1,21 @@
+## Validation gate summary: read-adr reporting rule follow-up
+
+**Verdict:** PASSED on candidate `45dcf0931b150561bd944b9ec52b8fafecef3136`. The validator read the candidate only and did not re-run any agent scenario.
+
+**What changed:** One file changed, `kc-adr/skills/read-adr/SKILL.md` (+5/-3). It matches the approved design, plus the one sentence from Amendment 3. The frontmatter did not change.
+
+**Evidence:**
+- **AC-1:** 4 of 4 on both `5a2e901f` and `45dcf093`.
+- **S7 Claude placement:** 0 of 3 before the fix, 3 of 3 after it.
+- **Counts:** Falsifiers 32 of 32 ok. Ledger has 20 runs.
+- **ADR lint:** `adr_lint.py` exit 0. No ADR was added.
+- **Acceptance script:** The validator ran it, and all 8 steps passed. I have not yet run it in a fresh shell.
+
+**Limits:**
+- S6 Codex and S7 Codex were not re-run on the final bytes. The sentence's effect on Codex is not measured.
+- Each cell has one run, and S7 has only three, so the sample is small.
+- The control runs showed that the change caused the regression. They did not show which line.
+- The AC-2 grid mixes runs from both commits. It is not a fresh run.
+- The design asked for one commit, but there are two. A squash at merge fixes this.
+
+External rounds: 0, because there is no PR yet. Second reviewer: none configured.

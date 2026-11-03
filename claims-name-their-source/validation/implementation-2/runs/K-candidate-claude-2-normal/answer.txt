@@ -1,0 +1,19 @@
+**Validation gate: read-adr-reporting-rule-followup**
+
+Verdict: PASSED on `45dcf093` (validation report, not run).
+
+- The fix adds one sentence to routing question 3. Nothing else in the skill changed (validation report, `git diff cebd0ab9 45dcf093`, not run).
+- S7 Claude placement was 0 of 3 before the fix and 3 of 3 after (validation report, `score.py`, not run).
+- AC-1: S9 and S11 on Claude and Codex are 4 of 4 Y (validation report, `score.py --rule v3`, not run).
+- There were 7 new runs and 20 counted in total (implementation report, not run). The results-fix listing shows 7 `meta.json` files (listing supplied; producing command not recorded).
+- `acceptance.sh` passed 8 of 8 steps. `adr_lint` exited 0 (validation report, not run).
+
+**Measurement limits**
+- There is one run per cell, and S7 Claude has only 3 runs.
+- S6 and S7 Codex were not re-run on the final bytes. Their effect is not measured.
+- `compare.py` reads only rep 1. The final-bytes grid is derived, not a fresh run.
+- The line that caused the regression was never isolated.
+
+External rounds: 0 (no PR yet). Second reviewer: not configured.
+Captain steps: FO has not run them yet. The gate holds until FO runs `acceptance.sh` and records the result.
+Delivery: there is no push and no PR. The delivery decision is pending.

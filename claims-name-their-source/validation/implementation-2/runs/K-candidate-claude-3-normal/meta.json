@@ -1,0 +1,304 @@
+{
+  "id": "K-candidate-claude-3-normal",
+  "scenario": "K",
+  "arm": "candidate",
+  "provider": "claude",
+  "model_requested": "claude-opus-5-5",
+  "started": "2026-11-03T15:39:20.611473+00:00",
+  "prompt_sha256": "09a348eb5a88ed4b8b6979de859b5791a8e188aeadbf9667ebc75238250f9b1a",
+  "argv": [
+    "claude",
+    "-p",
+    "--safe-mode",
+    "--model",
+    "claude-opus-5-5",
+    "--setting-sources",
+    "",
+    "--strict-mcp-config",
+    "--tools",
+    "",
+    "--permission-mode",
+    "dontAsk",
+    "--no-session-persistence",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "<prompt.txt>"
+  ],
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 951,
+      "cacheReadInputTokens": 19592,
+      "cacheCreationInputTokens": 631,
+      "webSearchRequests": 0,
+      "costUSD": 0.027994400000000003,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 507,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 631,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "cost_usd": 0.027994400000000003,
+  "initialization": [
+    {
+      "type": "system",
+      "subtype": "session_state_changed",
+      "state": "running",
+      "uuid": "c8be6b56-d70d-43ab-a786-9760e09005f6",
+      "session_id": "8ced12b2-089f-4d26-9c9d-16aef2eae179"
+    },
+    {
+      "type": "system",
+      "subtype": "init",
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-3-normal/workspace",
+      "session_id": "8ced12b2-089f-4d26-9c9d-16aef2eae179",
+      "tools": [],
+      "mcp_servers": [],
+      "model": "claude-opus-5-5",
+      "permissionMode": "dontAsk",
+      "slash_commands": [
+        "deep-research",
+        "design",
+        "design-sync",
+        "dataviz",
+        "update-config",
+        "verify",
+        "debug",
+        "code-review",
+        "simplify",
+        "batch",
+        "fewer-permission-prompts",
+        "doctor",
+        "loop",
+        "schedule",
+        "claude-api",
+        "workflow-authoring",
+        "run",
+        "run-skill-generator",
+        "plugin-authoring",
+        "advisor",
+        "agents",
+        "auto-mode-setup",
+        "autocompact",
+        "clear",
+        "color",
+        "compact",
+        "config",
+        "output-style",
+        "context",
+        "effort",
+        "fast",
+        "focus",
+        "heapdump",
+        "init",
+        "mcp",
+        "import",
+        "model",
+        "__remote-workflow",
+        "workflow-launch-exec",
+        "reload-plugins",
+        "reload-skills",
+        "rename",
+        "ultrareview",
+        "security-review",
+        "usage-credits",
+        "extra-usage",
+        "usage",
+        "insights",
+        "recap",
+        "skill-doctor",
+        "goal",
+        "design-consent",
+        "design-revoke",
+        "list-agents",
+        "team-onboarding"
+      ],
+      "terminal_slash_commands": [
+        "doctor",
+        "color",
+        "focus",
+        "reload-plugins"
+      ],
+      "apiKeySource": "none",
+      "claude_code_version": "2.1.316",
+      "output_style": "default",
+      "agents": [
+        "claude",
+        "Explore",
+        "general-purpose",
+        "Plan"
+      ],
+      "skills": [
+        "deep-research",
+        "design",
+        "design-sync",
+        "dataviz",
+        "update-config",
+        "verify",
+        "debug",
+        "code-review",
+        "simplify",
+        "batch",
+        "fewer-permission-prompts",
+        "doctor",
+        "loop",
+        "schedule",
+        "claude-api",
+        "workflow-authoring",
+        "run",
+        "run-skill-generator",
+        "plugin-authoring"
+      ],
+      "plugins": [
+        {
+          "name": "cc-plugin-agents-md",
+          "path": "builtin",
+          "source": "cc-plugin-agents-md@builtin"
+        },
+        {
+          "name": "cc-plugin-telemetry",
+          "path": "builtin",
+          "source": "cc-plugin-telemetry@builtin"
+        },
+        {
+          "name": "cc-plugin-plugin-authoring",
+          "path": "builtin",
+          "source": "cc-plugin-plugin-authoring@builtin"
+        }
+      ],
+      "capabilities": [
+        "interrupt_receipt_v1",
+        "interrupt_cancel_queued_v1",
+        "interrupt_send_now_v1",
+        "interrupt_requeue_taken_v1",
+        "msg_lifecycle_v1",
+        "request_marker_lists_v1",
+        "ask_user_question_unanswered_v1",
+        "lifecycle_wakeup_source_v1",
+        "sdk_mcp_tools_list_changed",
+        "sdk_mcp_manifests",
+        "mcp_read_resource_v1",
+        "mcp_tool_ui_meta_v1",
+        "ui_surface_v1",
+        "mcp_call_result_not_for_model_v1"
+      ],
+      "analytics_disabled": false,
+      "product_feedback_disabled": false,
+      "uuid": "c9c710ff-052c-4fe5-81f5-89f2f6cd54cb",
+      "original_cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-3-normal/workspace",
+      "additional_directories": [],
+      "messaging_socket_path": "/tmp/cc-socks/46234.sock",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "per_turn_effort_active": true,
+      "ultrathink_available": false,
+      "view_mode": "default"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 50,
+      "estimated_tokens_delta": 50,
+      "session_id": "8ced12b2-089f-4d26-9c9d-16aef2eae179",
+      "uuid": "9d8f7850-906b-4d37-8be0-149f8d0b1bd2"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 100,
+      "estimated_tokens_delta": 50,
+      "session_id": "8ced12b2-089f-4d26-9c9d-16aef2eae179",
+      "uuid": "666c3a8e-ba66-4422-ad42-203120b0c36a"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 250,
+      "estimated_tokens_delta": 150,
+      "session_id": "8ced12b2-089f-4d26-9c9d-16aef2eae179",
+      "uuid": "6751f55d-37ff-408a-88e7-3b808a5333a8"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 350,
+      "estimated_tokens_delta": 100,
+      "session_id": "8ced12b2-089f-4d26-9c9d-16aef2eae179",
+      "uuid": "2c6d6dc8-fb52-483f-8f5b-aef243cb4efb"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 450,
+      "estimated_tokens_delta": 100,
+      "session_id": "8ced12b2-089f-4d26-9c9d-16aef2eae179",
+      "uuid": "d270c5f0-fa30-4340-87fb-6e77f27c55f0"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 534,
+      "estimated_tokens_delta": 84,
+      "session_id": "8ced12b2-089f-4d26-9c9d-16aef2eae179",
+      "uuid": "4d3822c8-79f7-476b-9f87-6e29f8b5e5c7"
+    },
+    {
+      "type": "system",
+      "subtype": "session_state_changed",
+      "state": "idle",
+      "uuid": "3e8eca55-41b7-4bd8-b124-96c6cbe75496",
+      "session_id": "8ced12b2-089f-4d26-9c9d-16aef2eae179"
+    }
+  ],
+  "instruction_isolation": {
+    "route": "normal HOME + --safe-mode",
+    "global_CLAUDE_md": "disabled by --safe-mode; help text and argv retained",
+    "evidence": "claude-help.txt lines 213-223 and this run argv/initialization; no file-open trace"
+  },
+  "exit_code": 0,
+  "seconds": 11.33,
+  "model_reported": [
+    "claude-opus-5-5"
+  ],
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 631,
+    "cache_read_input_tokens": 19592,
+    "output_tokens": 951,
+    "output_tokens_details": {
+      "thinking_tokens": 507
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 631,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 951,
+        "cache_read_input_tokens": 19592,
+        "cache_creation_input_tokens": 631,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 631
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "answered": true,
+  "passed": true
+}

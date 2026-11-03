@@ -1,0 +1,20 @@
+## Validation gate summary: read-adr reporting rule follow-up
+
+**Verdict:** PASSED on candidate `45dcf0931b150561bd944b9ec52b8fafecef3136` (validation report, not run).
+
+**What changed:** One file, `kc-adr/skills/read-adr/SKILL.md`. Amendment 3 added one sentence to routing question 3. Nothing else changed (validation report, `git diff --stat`, not run).
+
+**Results:**
+- AC-1: 4 of 4 on the fix (validation report, `score.py --rule v3`, not run).
+- S7 Claude placement: 0 of 3 before the fix and 3 of 3 after it (validation report, not run).
+- 20 runs counted. `results-fix/` holds 7 run folders (validation report; listing given to FO, not run).
+- `adr_lint.py` exit 0. Acceptance script: all 8 steps pass (validation report, not run).
+
+**Limits that remain:**
+- S6 Codex and S7 Codex were not re-run on the final bytes.
+- There is one run per cell, and S7 has only 3 runs.
+- The line that caused the regression was never isolated.
+
+**External rounds: 0.** second reviewer: not configured.
+
+**Captain steps:** FO has not run the acceptance script yet. The gate holds until FO runs it.

@@ -1,0 +1,20 @@
+**Validation gate summary: read-adr reporting rule follow-up (2026-10-22)**
+
+Verdict: PASSED on candidate `45dcf0931b150561bd944b9ec52b8fafecef3136` (validation report, not run).
+
+- The fix adds one sentence to routing question 3 and changes nothing else (implementation report, not run).
+- S7 Claude placement was 0 of 3 before the fix and 3 of 3 after it. The validator regraded this with `score.py` (validation report, not run).
+- AC-1 (S9 and S11, on Claude and Codex) is 4 of 4 again (validation report, `score.py --rule v3`, not run).
+- There are 7 fix runs in `results-fix/` (listing given to FO, not run) and 20 counted runs in total (validation report, not run).
+- `adr_lint.py` exited 0, and the acceptance script passed all 8 steps (validation report, not run).
+
+Measurement limits (validation report, not run):
+- S6 Codex and S7 Codex were not run again on the final bytes.
+- Each cell has one run, and S7 has only 3 runs.
+- The validator did not find which earlier line caused the bug.
+- `compare.py` reads rep 1 only, so the final grid is built from mixed runs.
+
+External rounds: 0. Second reviewer: not triggered (none configured).
+Captain steps: FO has not run the acceptance script yet, so the gate is held until it does.
+
+Your decision: deliver or hold. Nothing is pushed and no PR exists yet.

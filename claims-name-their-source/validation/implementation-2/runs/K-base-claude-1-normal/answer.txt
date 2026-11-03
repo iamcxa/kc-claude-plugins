@@ -1,0 +1,29 @@
+**Validation gate summary: read-adr reporting-rule follow-up**
+
+**Verdict:** PASSED on candidate `45dcf0931b150561bd944b9ec52b8fafecef3136`.
+
+**What changed:** One file, `kc-adr/skills/read-adr/SKILL.md`. It matches the approved design plus Amendment 3's one sentence in routing question 3. The frontmatter is unchanged.
+
+**Evidence:**
+- **AC-1:** 4 of 4 on both `5a2e901f` and `45dcf093`.
+- **S7 Claude placement:**
+  - 0 of 3 before the fix.
+  - 3 of 3 after the fix.
+  - The control on the shipped skill was also 3 of 3.
+- **Other checks:**
+  - Falsifiers 32 of 32 ok.
+  - Ledger has 20 runs.
+  - `adr_lint` exit 0; no ADR was added or changed.
+  - roborev clean.
+- **Acceptance script:** The validator ran it, with 8 of 8 steps passing. I have not yet run it myself in a fresh shell, so the gate waits until I do.
+
+**Limits:**
+- S6 Codex and S7 Codex were not re-run on the final bytes. A Codex placement change is unmeasured.
+- Each cell has one run, and S7 has three, so the samples are small.
+- `compare.py` reads rep 1 only. The final-bytes grid is mixed from two candidates, not a fresh run.
+- No test isolated which earlier line caused the story-map write.
+- The design asked for one commit, but there are two. Squashing at merge makes it one.
+
+**External rounds:** 0 (no PR yet). Second reviewer: none configured.
+
+**Pending:** Your delivery decision. Approval does not mean merge.

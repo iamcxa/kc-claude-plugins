@@ -1,0 +1,24 @@
+## Validation gate summary: read-adr-reporting-rule-followup
+
+**Verdict:** The validator gave PASSED on candidate `45dcf0931b150561bd944b9ec52b8fafecef3136`.
+
+**What changed:** One file, `kc-adr/skills/read-adr/SKILL.md`. It is the approved design plus one sentence from Amendment 3 in routing question 3. The frontmatter did not change.
+
+**Checks:**
+- The offline regrade confirms AC-1 at 4 of 4 on `45dcf093`.
+- The S7 Claude placement regression is fixed: 0 of 3 before the fix, 3 of 3 after.
+- The ledger has 20 counted runs. The `results-fix/` listing shows the 7 new runs.
+- The falsifiers pass 32 of 32.
+- `adr_lint` exits 0 and no ADR changed.
+- The validator ran `acceptance.sh` and all 8 steps passed. FO must still run it in a fresh shell before presenting this gate.
+
+**Measurement limits:**
+- S6 Codex and S7 Codex were not re-run on the final bytes.
+- Each cell has one run, and S7 has only 3, so the samples are small.
+- We do not know which original line caused the story-map write.
+- The AC-2 final grid is a mix built from stored runs, not a fresh run.
+- Claude was installed with `--plugin-dir`.
+
+**External rounds:** 0. **Second reviewer:** none configured.
+
+**Your decision:** Approve delivery. Push, the Draft PR and merge still need a separate grant.

@@ -1,0 +1,328 @@
+{
+  "id": "K-candidate-claude-2-normal",
+  "scenario": "K",
+  "arm": "candidate",
+  "provider": "claude",
+  "model_requested": "claude-opus-5-5",
+  "started": "2026-11-03T15:39:11.380775+00:00",
+  "prompt_sha256": "09a348eb5a88ed4b8b6979de859b5791a8e188aeadbf9667ebc75238250f9b1a",
+  "argv": [
+    "claude",
+    "-p",
+    "--safe-mode",
+    "--model",
+    "claude-opus-5-5",
+    "--setting-sources",
+    "",
+    "--strict-mcp-config",
+    "--tools",
+    "",
+    "--permission-mode",
+    "dontAsk",
+    "--no-session-persistence",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "<prompt.txt>"
+  ],
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 1734,
+      "cacheReadInputTokens": 1569,
+      "cacheCreationInputTokens": 18654,
+      "webSearchRequests": 0,
+      "costUSD": 0.1842338,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 1218,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 18654,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "cost_usd": 0.1842338,
+  "initialization": [
+    {
+      "type": "system",
+      "subtype": "session_state_changed",
+      "state": "running",
+      "uuid": "ec2c2177-63c1-4eeb-831b-e3a27e5da27b",
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d"
+    },
+    {
+      "type": "system",
+      "subtype": "init",
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-2-normal/workspace",
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d",
+      "tools": [],
+      "mcp_servers": [],
+      "model": "claude-opus-5-5",
+      "permissionMode": "dontAsk",
+      "slash_commands": [
+        "deep-research",
+        "design",
+        "design-sync",
+        "dataviz",
+        "update-config",
+        "verify",
+        "debug",
+        "code-review",
+        "simplify",
+        "batch",
+        "fewer-permission-prompts",
+        "doctor",
+        "loop",
+        "schedule",
+        "claude-api",
+        "workflow-authoring",
+        "run",
+        "run-skill-generator",
+        "plugin-authoring",
+        "advisor",
+        "agents",
+        "auto-mode-setup",
+        "autocompact",
+        "clear",
+        "color",
+        "compact",
+        "config",
+        "output-style",
+        "context",
+        "effort",
+        "fast",
+        "focus",
+        "heapdump",
+        "init",
+        "mcp",
+        "import",
+        "model",
+        "__remote-workflow",
+        "workflow-launch-exec",
+        "reload-plugins",
+        "reload-skills",
+        "rename",
+        "ultrareview",
+        "security-review",
+        "usage-credits",
+        "extra-usage",
+        "usage",
+        "insights",
+        "recap",
+        "skill-doctor",
+        "goal",
+        "design-consent",
+        "design-revoke",
+        "list-agents",
+        "team-onboarding"
+      ],
+      "terminal_slash_commands": [
+        "doctor",
+        "color",
+        "focus",
+        "reload-plugins"
+      ],
+      "apiKeySource": "none",
+      "claude_code_version": "2.1.316",
+      "output_style": "default",
+      "agents": [
+        "claude",
+        "Explore",
+        "general-purpose",
+        "Plan"
+      ],
+      "skills": [
+        "deep-research",
+        "design",
+        "design-sync",
+        "dataviz",
+        "update-config",
+        "verify",
+        "debug",
+        "code-review",
+        "simplify",
+        "batch",
+        "fewer-permission-prompts",
+        "doctor",
+        "loop",
+        "schedule",
+        "claude-api",
+        "workflow-authoring",
+        "run",
+        "run-skill-generator",
+        "plugin-authoring"
+      ],
+      "plugins": [
+        {
+          "name": "cc-plugin-agents-md",
+          "path": "builtin",
+          "source": "cc-plugin-agents-md@builtin"
+        },
+        {
+          "name": "cc-plugin-telemetry",
+          "path": "builtin",
+          "source": "cc-plugin-telemetry@builtin"
+        },
+        {
+          "name": "cc-plugin-plugin-authoring",
+          "path": "builtin",
+          "source": "cc-plugin-plugin-authoring@builtin"
+        }
+      ],
+      "capabilities": [
+        "interrupt_receipt_v1",
+        "interrupt_cancel_queued_v1",
+        "interrupt_send_now_v1",
+        "interrupt_requeue_taken_v1",
+        "msg_lifecycle_v1",
+        "request_marker_lists_v1",
+        "ask_user_question_unanswered_v1",
+        "lifecycle_wakeup_source_v1",
+        "sdk_mcp_tools_list_changed",
+        "sdk_mcp_manifests",
+        "mcp_read_resource_v1",
+        "mcp_tool_ui_meta_v1",
+        "ui_surface_v1",
+        "mcp_call_result_not_for_model_v1"
+      ],
+      "analytics_disabled": false,
+      "product_feedback_disabled": false,
+      "uuid": "47427975-7307-4980-85f6-c23975292d3a",
+      "original_cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-2-normal/workspace",
+      "additional_directories": [],
+      "messaging_socket_path": "/tmp/cc-socks/44789.sock",
+      "fast_mode_state": "off",
+      "fast_mode_disabled_reason": "sdk_opt_in_required",
+      "per_turn_effort_active": true,
+      "ultrathink_available": false,
+      "view_mode": "default"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 50,
+      "estimated_tokens_delta": 50,
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d",
+      "uuid": "85fcf21b-5146-479c-8502-608fa64c322e"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 100,
+      "estimated_tokens_delta": 50,
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d",
+      "uuid": "35633e87-357b-4f1e-945d-6cfb6395e21a"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 250,
+      "estimated_tokens_delta": 150,
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d",
+      "uuid": "8204f167-32b8-443a-a6c4-1443532e217b"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 450,
+      "estimated_tokens_delta": 200,
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d",
+      "uuid": "63a2b669-f66f-47d1-bf86-559820dadd47"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 600,
+      "estimated_tokens_delta": 150,
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d",
+      "uuid": "60a98247-8caf-4c28-bb9c-a5066271a691"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 700,
+      "estimated_tokens_delta": 100,
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d",
+      "uuid": "3b048be1-f9f0-46ab-b22d-3b58e55706ca"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 850,
+      "estimated_tokens_delta": 150,
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d",
+      "uuid": "e67299cf-d67b-4a20-a317-0d11d150336a"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 1000,
+      "estimated_tokens_delta": 150,
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d",
+      "uuid": "7d4f5146-c0d1-42bd-a227-17f45fe83317"
+    },
+    {
+      "type": "system",
+      "subtype": "thinking_tokens",
+      "estimated_tokens": 1150,
+      "estimated_tokens_delta": 150,
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d",
+      "uuid": "2b59a385-bbf0-4ffc-9627-df7eb7b2517f"
+    },
+    {
+      "type": "system",
+      "subtype": "session_state_changed",
+      "state": "idle",
+      "uuid": "f7982a36-212b-44fd-a3d5-2a0198050897",
+      "session_id": "61c85a4c-5180-493a-b68a-d7c726ab152d"
+    }
+  ],
+  "instruction_isolation": {
+    "route": "normal HOME + --safe-mode",
+    "global_CLAUDE_md": "disabled by --safe-mode; help text and argv retained",
+    "evidence": "claude-help.txt lines 213-223 and this run argv/initialization; no file-open trace"
+  },
+  "exit_code": 0,
+  "seconds": 19.97,
+  "model_reported": [
+    "claude-opus-5-5"
+  ],
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 18654,
+    "cache_read_input_tokens": 1569,
+    "output_tokens": 1734,
+    "output_tokens_details": {
+      "thinking_tokens": 1218
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18654,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1734,
+        "cache_read_input_tokens": 1569,
+        "cache_creation_input_tokens": 18654,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 18654
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "answered": true,
+  "passed": true
+}
