@@ -78,6 +78,7 @@ Result: aligned at backlog: Batch 13 backlog sitting, the Captain 「進」 (cha
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:chief-engineer opus 2026-11-04 — what is the smallest next step, given the findings so far? (batch 13 delivery review) Advice: merge #771 and #772; #770 merges main after #771 and adds Symptom fixtures, then revalidates; report review/chief-engineer-batch13.md.
 
 ## Stop condition
 - A replay of the #756 rewrite is held before dispatch with the added words named, and a rewrite that adds nothing to his words passes.

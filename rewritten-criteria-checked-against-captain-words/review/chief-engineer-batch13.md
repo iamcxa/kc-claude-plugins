@@ -1,0 +1,7 @@
+# chief-engineer, 2026-11-04 (kc-dev-flow-2:chief-engineer, claude-opus-5-5, effort xhigh), batch 13 delivery review
+
+- C (#770): repair, then revalidate. After combining with #771, #771's `--names --strict` Symptom hold (records numbered 2 or higher, implementation or validation) fails 10 of #770's RewrittenCriterionTests on a scratch tree of main plus all eight PRs (23 of 24 CI test commands passed; two needing the Spacedock binary skipped). Smallest step: after #771 merges, #770 merges main, adds Symptom lines to fixtures numbered 2 or higher, checks stdout where exit codes are shared; validation re-measures AC-1, AC-2 and AC-7; no parser repair; the tilde-fence P2 goes to backlog.
+- D (#772): merge. Its last validation at 606781cb found nothing Material; it merges cleanly in the proposed order; test_release_acceptance passes on the combined tree (122 OK). Later chain findings go to backlog unless a real walk shows them.
+- Batch: order holds (#770 after #771); #775 contains #772's head, #777 contains #773's; combined lint 5891 words (5781 + 55 + 55), both raises approved at ideation; #775 and #777 owe their main checks after retargeting; #774 adds a kc-journey-map bump to #768.
+- The release must not claim: production is blocked; every added requirement is caught; claim counts are reliably corrected (#777, 3/6); the push boundary on repositories the Captain does not own was checked live (#769).
+- Worse: C takes another pass and validation cycle; #768 waits on C; D ships walk-chain logic no real re-walk has exercised.
