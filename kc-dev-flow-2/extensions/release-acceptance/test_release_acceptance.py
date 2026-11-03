@@ -634,10 +634,12 @@ class AcceptedTests(Base):
         self.walk = self.folder / "walk"
         return self.folder.with_suffix(".md")
 
-    def rewalk(self, prior=True, archived=True):
+    def rewalk(self, prior=True, archived=True, previous=None, slug="r1-rewalk"):
+        previous = self.folder if previous is None else previous
+        previous_report = previous / "walk/report.json"
         parent = self.folder.parent if archived else self.folder.parent.parent
-        folder = parent / "r1-rewalk"
-        shutil.copytree(self.folder, folder)
+        folder = parent / slug
+        shutil.copytree(previous, folder)
         for path in (folder / "walk").glob("reviewer-*.json"):
             reviewer = read(path)
             reviewer["marks"] = [{"complaint": c["id"], "status": "fixed", "reason": "fixed on re-walk"}
@@ -648,10 +650,10 @@ class AcceptedTests(Base):
             put(path, reviewer)
         put(folder / "walk/ruling.json", {"items": [], "tasks": [], "deferred": [
             {"item": d, "ruling": "do-not-solve", "when": "never", "why": "settled"} for d in DEFERRED]})
-        code, out = run("build", folder, "--workflow-dir", self.wf, "--prior", self.walk / "report.json")
+        code, out = run("build", folder, "--workflow-dir", self.wf, "--prior", previous_report)
         self.assertEqual(code, 0, out)
         put(folder.with_suffix(".md"), task_file({"release-acceptance": "book-pickup/r1", "pr": "local-merge:" + "b" * 40},
-            f"Prior walk: {self.walk / 'report.json'}\n" if prior else ""))
+            f"Prior walk: {previous_report}\n" if prior else ""))
         return folder
 
     def test_no_task_and_live_task_hold_production(self):
@@ -764,6 +766,27 @@ class AcceptedTests(Base):
         with folder.with_suffix(".md").open("a") as f:
             f.write("Prior walk: _archive/r1-acceptance/walk/report.json\n")
         self.assertEqual(self.accepted()[0], 0)
+
+    def test_three_walks_point_to_the_immediately_preceding_report(self):
+        self.close()
+        second = self.rewalk()
+        third = self.rewalk(slug="r1-rewalk-again")
+        self.not_accepted("r1-rewalk, r1-rewalk-again are both newest")
+        shutil.rmtree(third)
+        third.with_suffix(".md").unlink()
+        third = self.rewalk(previous=second, slug="r1-rewalk-again")
+        previous_report = second / "walk/report.json"
+        code, out = run("check", third, "--tier", "final", "--workflow-dir", self.wf, "--prior", previous_report)
+        self.assertEqual(code, 0, out)
+        self.assertEqual(read(third / "walk/report.json")["prior"]["digest"],
+                         "sha256:" + hashlib.sha256(previous_report.read_bytes()).hexdigest())
+        code, out = self.accepted()
+        self.assertEqual(code, 0, out)
+        self.assertIn("by r1-rewalk-again (local-merge:", out)
+        code, out = run("check", third, "--tier", "final", "--workflow-dir", self.wf,
+                        "--prior", self.walk / "report.json")
+        self.assertEqual(code, 1, out)
+        self.assertIn("prior report's digest does not match", out)
 
     def test_foreign_release_and_cyclic_prior_are_refused(self):
         task = self.close()
