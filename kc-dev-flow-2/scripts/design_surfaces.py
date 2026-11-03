@@ -12,6 +12,7 @@ criterion that is still declared is an error only once a `dispatch/*.md` checkli
 `Override: recommended ...; Captain chose ...; area: ...` line in the body that no gate resolution reason carries is printed as a note, exit code unchanged.
 """
 import argparse
+import difflib
 import hashlib
 import json
 import re
@@ -297,6 +298,68 @@ def amendment_form(lines):
 def amendment_entries(lines):
     records, _ = parse_amendments(lines)
     return [entry.raw for entry in records if AMENDMENTS_HEADING.match(entry.owner or "")]
+
+
+REQUIREMENT_WORD = re.compile(r"[A-Za-z0-9][A-Za-z0-9'’_-]*")
+FILLER_WORDS = frozenset("a an the and or of to in on at by for with that this these those it its is are be been "
+                         "was were still remain remains also as from into not no".split())
+
+
+def criterion_blocks(lines):
+    blocks, current = {}, None
+    for line in lines:
+        found = DECLARATION_LINE.match(line)
+        if found:
+            current = found.group(1)
+            blocks[current] = [line]
+        elif current and line.strip() and not line.startswith("#"):
+            blocks[current].append(line)
+        else:
+            current = None
+    return {key: " ".join(value) for key, value in blocks.items()}
+
+
+def requirement_sentences(block):
+    text = re.split(r"Current evidence:", block)[0]
+    text = re.sub(r"^\s*\*\*AC-[A-Za-z0-9]+\*\*", "", text)
+    text = re.sub(r"Amended by Captain, amendment \d+\.?", "", text)
+    return [s.strip() for s in re.split(r"(?<=[.;:])\s+", text) if len(s.split()) >= 3]
+
+
+def words_of(text):
+    return [w.lower() for w in REQUIREMENT_WORD.findall(text)]
+
+
+def added_words(lines):
+    """Find inserted words in kept sentences of live amendment replacements."""
+    # see docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md
+    live = criterion_blocks(section(unfenced(lines), AC_HEADING) or [])
+    entries = [e for e in parse_amendments(lines)[0] if e.number is not None]
+    found = []
+    for entry in entries:
+        if entry.payload is None:
+            continue
+        his = set(words_of(" ".join(l for e in entries if e.number >= entry.number
+                                    for l in e.prefix.split("\n") if l.startswith(("Captain:", "Asked:")))))
+        old = [s for block in criterion_blocks(entry.moved).values() for s in requirement_sentences(block)]
+        marker = re.compile(rf"Amended by Captain, amendment {entry.number}(?!\d)")
+        for ident, block in live.items():
+            if not marker.search(block):
+                continue
+            added = []
+            for sentence in requirement_sentences(block):
+                if sentence in old or not old:
+                    continue
+                new = words_of(sentence)
+                best = max(old, key=lambda o: difflib.SequenceMatcher(None, words_of(o), new, autojunk=False).ratio())
+                match = difflib.SequenceMatcher(None, words_of(best), new, autojunk=False)
+                if match.ratio() < 0.75:
+                    continue
+                added += [w for op, _, _, j1, j2 in match.get_opcodes() if op in ("insert", "replace") for w in new[j1:j2]
+                          if w not in his and w not in FILLER_WORDS and not re.fullmatch(r"ac-[a-z0-9]+", w)]
+            if added:
+                found.append((entry.number, ident, added))
+    return found
 
 
 AMENDMENT_NAMED = re.compile(r"amendments?[ \t]+((?:\d+(?:[ \t]*(?:,[ \t]*(?:and|&)?|and|&|to|-)[ \t]*)?)+)", re.I)

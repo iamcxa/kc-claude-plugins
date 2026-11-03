@@ -28,6 +28,7 @@ for each `ADR: NNNN` or `Migration: NNNN` the task's `## Number guards` reserves
 `<file>:1: '## FO alignment' records alignment as needed with no 'Result:' line; ...` for an `ideation-<N>.md` whose task has an unfenced
 `Alignment: needed` line and no `Result: <text>` line, and `<file>:1: Captain amendment N <Captain|Asked> line holds a backslash-quote copied from JSON; ...`
 for a `\\"` on a `Captain:` or `Asked:` amendment line outside a `Superseded text:` block.
+Validation records and their message continuations also print `AC-N (Captain amendment N) adds words ...` for inserted words in kept sentences absent from his amendment words.
 --names refuses implementation records (including message continuations) for Pilot/Prod when the last unfenced
 `## Design` (also ` — title` or `: title`) contains `docs/adr/<placeholder>-title.md` and task_facts has no reserved ADR.
 Quoted/fenced paths and numbered citations do not signal this obligation; scope-copy checks stay first-record-only.
@@ -52,7 +53,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from decision_ledger import split_task, gate_entries
 from delivery_gate import CANDIDATE, RECORD  # noqa: E402
-from design_surfaces import AMENDMENTS_HEADING, AMENDMENT_HEADER, amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
+from design_surfaces import added_words, AMENDMENTS_HEADING, AMENDMENT_HEADER, amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
 from role_triggers import outside_fences  # noqa: E402
 from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
 from workflow_extensions import readme_extensions  # noqa: E402
@@ -262,6 +263,9 @@ def check_task_facts(files):
             lines.append(f"{file}:1: '## FO alignment' records alignment as needed with no 'Result:' line; record the Captain's alignment result as 'Result: <what he answered>' there, then run this check again")
         lines += [f"{file}:1: Captain amendment {NUMBER.search(title).group()} {key} line holds a backslash-quote copied from JSON; write his words as he said them, then run this check again"
                   for title, key in escaped_amendment_lines(text.split("\n")) if NUMBER.search(title)]
+        lines += [f"{file}:1: {ident} (Captain amendment {n}) adds words in a sentence kept from the criterion it replaces that are not in his "
+                  f"words: {', '.join(words)}; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+                  for n, ident, words in (added_words(text.split("\n")) if VALIDATION_RECORD.fullmatch(path.name) else [])]
         named = dispatched_amendments(folder)
         lines += [f"{file}:1: Captain amendment {n} named in no dispatch checklist; write 'Captain amendment {n}' "
                   "in a checklist line of this record, then run this check again"

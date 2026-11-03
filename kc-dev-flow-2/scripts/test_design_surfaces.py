@@ -16,6 +16,46 @@ spec = importlib.util.spec_from_file_location("design_surfaces", ROOT / "scripts
 ds = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ds)
 
+class AddedWordsTests(unittest.TestCase):
+    def added(self, replacement, old="The worker must include source/time.", metadata=""):
+        text = ("## Acceptance criteria\n\n**AC-9** — Amended by Captain, amendment 3. " + replacement
+                + "\n\n## Captain amendments\n\n### Amendment 3 — 2026-11-03, chat\nCaptain: remove time\n"
+                "Asked: remove the timestamp\nSupersedes: AC-8\n" + metadata
+                + "\nSuperseded text:\n**AC-8** — " + old + "\n")
+        return ds.added_words(text.splitlines())
+
+    def test_insertions_and_substitutions_in_kept_sentences(self):
+        self.assertEqual(self.added("The worker must include source revision/link."), [(3, "AC-9", ["revision", "link"])])
+        self.assertEqual(self.added("The worker must include source/revision."), [(3, "AC-9", ["revision"])])
+
+    def test_similarity_threshold_includes_three_of_four_matching_words(self):
+        old = "alpha bravo charlie delta."
+        self.assertEqual(self.added("alpha bravo charlie echo.", old=old), [(3, "AC-9", ["echo"])])
+        self.assertEqual(self.added("alpha bravo zebra echo.", old=old), [])
+
+    def test_deletions_whole_new_sentences_and_evidence_tails_are_not_compared(self):
+        for text in ("The worker must include source.", "The worker must include source/time. Require a new database service.",
+                     "The worker must include source/time. Current evidence: The worker must include source revision/link."):
+            with self.subTest(text):
+                self.assertEqual(self.added(text), [])
+
+    def test_filler_ids_and_amendment_markers_are_ignored(self):
+        self.assertEqual(self.added("The worker must include the source AC-99."), [])
+        self.assertEqual(self.added("The worker must include source/time."), [])
+
+    def test_fo_design_words_cannot_clear_a_hold(self):
+        self.assertEqual(self.added("The worker must include source/revision.", metadata="Design: revision\n"),
+                         [(3, "AC-9", ["revision"])])
+        self.assertEqual(self.added("The worker must include source/revision.", metadata="Asked: revision\n"), [])
+
+    def test_unmarked_replacement_missing_moved_text_and_fenced_live_example(self):
+        self.assertEqual(ds.added_words(["## Acceptance criteria", "**AC-9** — include source revision/link."]), [])
+        self.assertEqual(self.added("The worker must include source/revision.", old=""), [])
+        text = ["```", "## Acceptance criteria", "**AC-9** — Amended by Captain, amendment 3. include source revision/link.",
+                "```", "## Acceptance criteria", "**AC-10** — unchanged words here."]
+        self.assertEqual(ds.added_words(text), [])
+
+
 BASE = """# Design: seats remaining
 
 ## Scope

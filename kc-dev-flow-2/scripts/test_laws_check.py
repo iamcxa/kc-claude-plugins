@@ -302,6 +302,26 @@ class L1Test(Base):
 
 class L2Test(Base):
 
+    def test_rewritten_criterion_is_an_event_violation_and_later_clearance_is_not_retroactive(self):
+        from test_dispatch_records import REWRITTEN_CRITERION
+        repo = Repo(self.tmp / "l2-rewritten-criterion")
+        before = repo.commit("base", keep="x")
+        held = repo.commit("widened criterion dispatched", t=task(body=REWRITTEN_CRITERION),
+                           **{"t__dispatch__validation-2": record(candidate=True, checklist="- Captain amendment 3: validate")})
+        initial = self.judge(repo, before, held)
+        code, out = initial
+        self.assertEqual(code, 1, out)
+        self.assertRegex(out, rf"violation: L2 dispatch-record-complete record=t/dispatch/validation-2\.md commit={held[:12]} AC-9 \(Captain amendment 3\) adds words")
+        self.assertIn("words: revision, link", out)
+        self.assertNotIn("cannot judge", out)
+        self.assertNotIn("output this runner does not parse", out)
+        later = "\n### Amendment 4 — 2026-11-03, chat\nCaptain: revision, link\nSupersedes: none\n"
+        repo.commit("new confirmation", t=task(body=REWRITTEN_CRITERION + later),
+                    **{"t__dispatch__validation-3": record(candidate=True, checklist="- Captain amendments 3 and 4: validate")})
+        self.assertEqual(self.judge(repo, before, held), initial)
+        self.assertEqual(self.judge(repo, before)[0], 1)
+        self.assertEqual(self.judge(repo, held)[0], 0)
+
     def test_missing_design_adr_is_an_event_violation_even_after_later_repair(self):
         for index in (False, True):
             with self.subTest(index=index):
