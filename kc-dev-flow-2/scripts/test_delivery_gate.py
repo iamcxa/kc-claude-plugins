@@ -1383,6 +1383,36 @@ def on_disk(committed_text, disk_text):
 class OwedRoleCallTests(unittest.TestCase):
     """These run the real role_triggers.py: a test that patches owed_role_calls cannot fail when the call is removed."""
 
+    def test_second_failure_prints_questions_before_ask_without_holding_and_with_other_problems(self):
+        report = "\n## Stage Report: validation\n\n- F1 Material: gap\n"
+        text = ALIGNED + report * 2
+        result = run_check(task=text, setup=committed(text), roles=True)
+        self.assertEqual(result.code, 0, result.out)
+        self.assertIn("before the next step, answer: is what I am solving still the outcome first asked for", result.out)
+        self.assertLess(result.out.index("before the next step"), result.out.index("record:"))
+        self.assertEqual(result.out.splitlines()[-1], gate.ASK)
+        broken = run_check(task=text, setup=committed(text), roles=True, facts=dict(isDraft=True))
+        self.assertEqual(broken.code, 1, broken.out)
+        self.assertIn("the PR is a draft", broken.lines)
+        self.assertIn("before the next step", broken.out)
+        first = ALIGNED + report
+        self.assertEqual(run_check(task=first, setup=committed(first), roles=True).out,
+                         run_check(task=ALIGNED, setup=committed(ALIGNED), roles=True).out)
+
+    def test_third_failure_holds_until_the_call_is_committed(self):
+        text = ALIGNED + "\n## Stage Report: validation\n\n- F1 Needs decision: gap\n" * 3
+        called = text.replace("Alignment: not needed.", "Alignment: not needed.\n"
+                              "Reviewer: kc-dev-flow-2:chief-engineer gpt-6-astra 2026-10-20 — what next?")
+        for disk, setup, expected in ((text, committed(text), 1), (called, on_disk(text, called), 1),
+                                      (called, committed(called), 0)):
+            result = run_check(task=disk, setup=setup, roles=True)
+            self.assertEqual(result.code, expected, result.out)
+            self.assertEqual(gate.ASK in result.out, not expected, result.out)
+            if expected:
+                self.assertIn("dispatch kc-dev-flow-2:chief-engineer", result.out)
+                self.assertIn("what breaks if this criterion or process is deleted?", result.out)
+                self.assertNotIn("before the next step", result.out)
+
     def test_a_committed_amendment_with_no_call_holds_with_the_scripts_next_line(self):
         result = run_check(task=AMENDED, setup=committed(AMENDED), roles=True)
         self.assertEqual(result.code, 1, result.out)

@@ -7,6 +7,8 @@
   pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
   pr_watch.py [--state FILE] tasks WORKFLOW_DIR     read the workflow's tasks and print each next step
 
+Tasks forwards advisory step-back questions from role_triggers.py even when no role call is owed.
+
 Without --state the list is kept per session in ~/.local/state/kc-dev-flow-2/pr-watch/<id>.json, where id is
 $CLAUDE_CODE_SESSION_ID (shared by FO, its workers and its background commands), else a hash of the working
 directory; the older shared pr-watch.json is not read.
@@ -588,6 +590,8 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
             out += done.stdout.splitlines()
         elif done.returncode:
             errors.append(f"next: report {slug} to the Captain: {(done.stdout or done.stderr).strip()[:120]}.")
+        else:
+            out += [line for line in done.stdout.splitlines() if line.startswith("next:")]
     try:
         rows = ready_rows(workflow)
         out += sittings(rows)
