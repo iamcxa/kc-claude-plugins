@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-gate-requires-the-question-check:validation:attempt-1:revision-1",
+  "question": "「決定：合併 #767 嗎？」 Regular merge with --match-head-commit, and approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:validation-gate-requires-the-question-check:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1e8b5be3ad3c21fbe025a5e6c1f9feb9ad73d1b0/validation-gate-requires-the-question-check.md",
+      "rev": "sha256:fd90095a1ba6b24c1515ba6eb50a1a773c9ae6c787b56e5cb967b6d3da58f4a6",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of validation-gate-requires-the-question-check, PR #767, head 6b680cf89125d75f062ecf198e37b13239cd16ea, in the batch 12 sitting.\nSufficiency: delivery_gate.py check holds a gate text with no top-level External rounds line and saves no ask, while zero and count-with-detail forms pass; four of seven historical batch 11 texts now hold, shown by replays and mutations in validation report 2.\nNecessity: the three files are the check call, its tests and ADR 0051; workflow words do not change.\nExternal rounds: 2.\nSecond reviewer: Copilot because the PR changes merge or review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5746660297\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: no major issues on this head, comment:6594115960."
+    }
+  ]
+}

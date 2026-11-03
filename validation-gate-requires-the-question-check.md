@@ -57,6 +57,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:validation-gate-requires-the-question-check:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:validation-gate-requires-the-question-check-validation-1
+              briefing:
+                id: briefing:validation-gate-requires-the-question-check:validation:attempt-1:revision-1
+                digest: sha256:beb870f3085919cd8917c484f1ed99e1a19c01f186765ca76bcc13b77bbe228c
+                room-ref: ./validation-gate-requires-the-question-check/review/validation/briefing-1
 started: 2026-11-02T06:35:12Z
 worktree: .worktrees/spacedock-ensign-validation-gate-requires-the-question-check
 pr: iamcxa/kc-claude-plugins#767
