@@ -22,6 +22,10 @@ gates:
                 id: briefing:fo-answers-own-worker-permissions-by-listed-id:backlog:attempt-2:revision-1
                 digest: sha256:2fd09df20acdcff9d45e39f9cc840f5f3a2849975f1aedefb42b8a2174e65858
                 room-ref: ./fo-answers-own-worker-permissions-by-listed-id/review/backlog/briefing-2
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-03T07:38:56.594021Z"
+                reason: The Captain widened the batch 13 sitting to seven tasks (chat, 2026-11-03); the bound question named four.
 ---
 
 ## Scope
