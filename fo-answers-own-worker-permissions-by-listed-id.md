@@ -62,6 +62,8 @@ gates:
                 target-stage: implementation
                 state: consumed
 profile: pilot
+started: 2026-11-03T10:20:50Z
+worktree: .worktrees/spacedock-ensign-fo-answers-own-worker-permissions-by-listed-id
 ---
 
 ## Scope
