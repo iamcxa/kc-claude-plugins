@@ -224,6 +224,11 @@ Verified by: an FO (Claude, through Paseo) loaded with the candidate extension d
 **AC-5** The ADR lands with the Captain's words and question verbatim, names the replaced ADR 0048 sentence, leaves 0048 unedited, and states the extension's new word figure.
 Verified by: `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --require <reserved number>` exits 0 and `git diff <base>..<head> -- docs/adr/0048-*` prints nothing. Falsifier: lint non-zero, or 0048 changed.
 
+
+## Number guards
+
+ADR: 0052
+
 ## Stage Report: ideation
 
 - DONE: First check the observatory evidence for this task against its source (the qnow and relay FO session records) and say what holds; then design where FO's answer to its own worker's permission request is checked: the listed request id, a live worker, the boundary of what FO could do itself, and no routine Captain message
