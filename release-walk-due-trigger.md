@@ -232,7 +232,7 @@ Recommended order: release-walk-off-production-before-release, then this task; a
 ### Amendment 1 — 2026-11-03, chat
 Captain: 「可以」 (chat, 2026-11-03)
 Asked: 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」
-Supersedes: ## Budget "One package PR"; ### Decisions for the Captain D7 recommendation (read `journey-progress/v1` by schema string without registering it)
+Supersedes: none
 
 ## Stage Report: ideation
 
