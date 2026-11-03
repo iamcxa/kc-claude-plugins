@@ -1,0 +1,13 @@
+**D-2: Screenshots at the gate**
+
+You asked if ideation and validation gates should show you screenshots, not only text.
+
+**My recommendation:** Do not add an FO rule for pictures now.
+
+**Why:** The checker already prints the `Preview:` path, and the briefing now carries those lines (design worker's report, not run). A picture rule would need another `workflow.md` raise under ADR 0020 (design worker's report, not run).
+
+**What gets worse:** The gate stays text. You see a picture only if you open the printed path yourself.
+
+**If you want pictures in the gate:** Say so, and I will bring that change to you as its own task.
+
+Approving accepts this recommendation for D-2. Say if you object.

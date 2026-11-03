@@ -1,0 +1,13 @@
+**D-2: Should gates show you screenshots, not only text?**
+
+My answer: not now. I recommend we add no FO rule for pictures at this time.
+
+Why:
+- The checker already prints the `Preview:` path, and the briefing already carries those lines. (Source: design worker's report, not run.)
+- A picture rule would need another `workflow.md` raise under ADR 0020. (Source: design worker's report, not run.)
+
+The cost: the gate stays text only. You see a picture only if you open the printed path yourself.
+
+If you want pictures at the gate anyway, say so, and I will put the `workflow.md` raise to you as its own question.
+
+Approving this gate accepts the recommendation for D-2. Please say if you object.

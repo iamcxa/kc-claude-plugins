@@ -1,0 +1,21 @@
+**Validation gate: read-adr reporting-rule follow-up, candidate `45dcf0931b15`**
+
+Verdict: PASSED (validation report, not run). One file changed: `kc-adr/skills/read-adr/SKILL.md`, +5/-3 against `cebd0ab9`. One added sentence matches Amendment 3 (validation report, not run).
+
+- **AC-1:** 4 of 4 Y on the fixed bytes, for S9 and S11 on Claude and Codex (validation report, not run).
+- **S7 Claude placement:** 0 of 3 before the fix and 3 of 3 after (implementation and validation reports, not run).
+- **Runs:** 20 counted runs in total (validation report, not run). The `results-fix/` listing shows 7 fix runs (listing given to FO; command and date not recorded).
+- **Checks:** `adr_lint` and the acceptance script both exited 0 (validation report, not run).
+
+**Limits** (validation report, not run):
+
+- Each cell has one run. S7 Claude has only 3 runs.
+- S6 and S7 Codex were not run again on the final bytes, so the effect there is not measured.
+- The earlier line that caused the story-map write was never found.
+- The report half of AC-1 is helped by the prompt slots, and it has no control arm.
+
+**Review:** External rounds: 0 (no PR yet). Second reviewer: none configured.
+
+**Captain steps:** FO has not run the acceptance script yet, so this gate is held until FO runs it.
+
+**Your decision:** deliver, or send back. Approval is not a merge, and nothing has been pushed yet.

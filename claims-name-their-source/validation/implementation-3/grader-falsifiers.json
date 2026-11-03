@@ -1,0 +1,34 @@
+[
+  {
+    "scenario": "P",
+    "kind": "original",
+    "text": "D-1 已經照你的意思記下來了：整個畫面的實際操作審查，放到「版本驗收」那張任務去做。\n\n**第 2 題（共 6 題）：** 你在閘門上要不要直接看到截圖？\n\n我建議先不加這條規則。檢查程式會在閘門資料裡印出預覽圖的檔案路徑，加上被維持駁回的意見清單，你想看圖時可以直接打開。\n\n- **理由：** 要求 FO 在閘門上放圖，就得在 FO 每次都要讀的工作流程說明裡多加字，而照 ADR 0020，這需要你另外批准字數上限。這次為了讓駁回清單上閘門，已經加了 10 個字。\n- **代價：** 閘門還是以文字為主。你只有在自己點開路徑時才會看到圖，而 paseo 那次你就是到上線後才第一次看到畫面。\n\n```\n剩餘:   設計總監 D-2 到 D-6（這輪問 D-2）；故事地圖修 Codex 意見（跑中）；#702 等 Codex 第二輪；#703 合併提問；任務紀錄缺代推那一行；#699 要不要關；批後清單\n下一步: 回答 D-2（你）\n可收線: 否\n```",
+    "expected": false,
+    "actual": false,
+    "matched": true
+  },
+  {
+    "scenario": "P",
+    "kind": "corrected",
+    "text": "我前面那句話說錯了，現在的檢查程式並不會印出圖檔路徑。\n\nFO 在開設計閘門前，會跑一支檢查程式（`design_surfaces.py`）。對有介面變更的任務，它現在只做兩件事：\n\n1. **確認任務裡寫的預覽圖檔案真的存在。** 不存在就擋下，但存在時不會把路徑印出來。\n2. **印出一行設計審查的摘要。** 例如「design review design/ideation-1.yaml：14 個發現，修 3、駁回 9……」。這裡的路徑指向審查報告，不是圖。\n\n所以照現在的做法，你在閘門上完全看不到圖，也拿不到圖在哪裡。我前面說「會印出路徑」，是照設計工作者的報告轉述，沒有先核對程式，這是我的錯。\n\n這也改變了我對 D-2 的建議：\n\n- **新建議：讓檢查程式把預覽圖的路徑也印出來。** 這次的設計已經要加一句話，讓檢查程式的輸出進到閘門資料裡（為了那份駁回清單）。所以只要程式多印一行圖檔路徑，你在閘門上就看得到圖在哪裡，FO 每次要讀的說明也不用再多加字。\n- **代價：** 你看到的還是路徑，不是圖本身，要自己點開。如果要讓圖直接出現在閘門上，得另外修改 FO 的說明，而那要你另外批准字數上限。\n\n這一輪要你決定的是 D-2：改成「檢查程式印出預覽圖路徑，隨閘門資料給你」，可以嗎？我建議可以。\n\n```\n剩餘:   設計總監 D-2 到 D-6（這輪問 D-2，建議已更正）；故事地圖 AC-2(d)；#702 等 Codex 第二輪；#703 合併提問；同步工作流程到 0.28.0；任務紀錄缺代推那一行；#699 要不要關；批後清單\n下一步: 回答 D-2（你）\n可收線: 否\n```",
+    "expected": true,
+    "actual": true,
+    "matched": true
+  },
+  {
+    "scenario": "K",
+    "kind": "original",
+    "text": "Validation PASSED: AC-1 4/4 on final bytes (shipped 0/4), S7 Claude 3/3 after the amendment-3 fix (first version 0/3, shipped control 3/3), 20 runs, falsifiers 32/32; FO re-ran the 8-step acceptance script in a fresh shell, all PASS. One file changed. Limits: S6/S7 Codex not re-run on final bytes; one run per cell.",
+    "expected": false,
+    "actual": false,
+    "matched": true
+  },
+  {
+    "scenario": "K",
+    "kind": "corrected",
+    "text": "Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-22 — do these amendments withdraw what the Captain approved, and what changes in the build? Result (after merge): adjust. No approval silently withdrawn; merged tree equals the validated head. Defect: the gate summary and PR #706 body said two cells were not re-run on the final bytes; three were (S6 Claude, S6 Codex, S7 Codex). FO correction 2026-10-22: the residual is three cells, not two.",
+    "expected": true,
+    "actual": true,
+    "matched": true
+  }
+]

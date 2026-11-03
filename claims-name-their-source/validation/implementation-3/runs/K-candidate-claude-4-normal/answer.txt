@@ -1,0 +1,21 @@
+**Validation gate summary: read-adr-reporting-rule-followup**
+
+Verdict: PASSED on candidate `45dcf0931b150561bd944b9ec52b8fafecef3136` (validation report, not run).
+
+**Change:** One sentence added to routing question 3 in `kc-adr/skills/read-adr/SKILL.md`, as Amendment 3 asked (implementation report, not run).
+
+**Evidence:**
+- S7 Claude placement went from 0 of 3 before the fix to 3 of 3 after (validation report's `score.py` regrade, not run).
+- AC-1 is 4 of 4 on both `5a2e901f` and `45dcf093` (validation report, not run).
+- `adr_lint.py` and `acceptance.sh` both exit 0 (validation report, not run).
+- The results-fix listing holds 7 `meta.json` files.
+
+**Limits:**
+- S6 and S7 Codex were not re-run on the final bytes, so their result there is unmeasured.
+- There is one run per cell, and only 3 runs for S7.
+- We never found which older line caused the wrong write.
+- The report part of AC-1 is helped by the slots.
+
+External rounds: 0, because there is no PR yet.
+Second reviewer: none configured.
+Captain steps: FO has not run the acceptance script yet, so this gate waits for that record.
