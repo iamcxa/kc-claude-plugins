@@ -77,6 +77,7 @@ Result: aligned at backlog: Batch 13 backlog sitting, the Captain 「進」 (cha
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Delivery: two PRs per Captain amendment 1: iamcxa/kc-claude-plugins#774 (kc-journey-map registration, base main, merges first) and #775 (kc-dev-flow-2, stacked on #772); the `pr:` field names #775.
 
 ## Design
 
