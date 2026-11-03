@@ -1,4 +1,4 @@
-# 0028. Read room metadata and stage a target before leaving the source
+# 0059. Read room metadata and stage a target before leaving the source
 
 Date: 2026-10-20
 
