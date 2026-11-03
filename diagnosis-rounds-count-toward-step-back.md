@@ -55,6 +55,7 @@ gates:
 profile: pilot
 started: 2026-11-03T10:20:59Z
 worktree: .worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back
+pr: iamcxa/kc-claude-plugins#771
 ---
 
 ## Scope
