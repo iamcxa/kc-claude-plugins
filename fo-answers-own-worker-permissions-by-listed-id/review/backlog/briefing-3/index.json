@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-answers-own-worker-permissions-by-listed-id:backlog:attempt-3:revision-1",
+  "question": "「決定：這批七張（A 權限、B 同症狀計數、C 改寫條件比對原話、D release 驗收不在正式站、來源標註、FO 先自己試、release 驗收到期提醒）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？要改哪張直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:fo-answers-own-worker-permissions-by-listed-id:backlog:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/af58326b8d33f33c1c75faf6a39cbee9fc16a265/fo-answers-own-worker-permissions-by-listed-id.md",
+      "rev": "sha256:ad9de79471582006b91c9b15b8563fdf5a36e237233d06719464e75a5c04c25f",
+      "mediaType": "text/markdown",
+      "summary": "Batch 13 backlog sitting, seven tasks; recommended approve to enter ideation under pilot."
+    }
+  ]
+}
