@@ -1,6 +1,6 @@
 ---
 title: A release walk runs off production, and production waits for its acceptance
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 gates:
     version: 1
@@ -51,7 +51,7 @@ gates:
                 reason: The Captain 「可以」 (chat, 2026-11-03), answering 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」; accepts every recommendation each design states for its decisions, with the stated change to release-walk-due-trigger D7.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 profile: pilot
 ---
 
