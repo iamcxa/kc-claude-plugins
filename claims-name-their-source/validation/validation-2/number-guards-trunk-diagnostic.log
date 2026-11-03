@@ -1,0 +1,3 @@
+migration guard skipped: no migrations-path declared
+FAIL R4: docs/adr/0054-fo-runs-a-step-before-asking-the-captain-and-records-it.md: number 0054 is not in the task's ADR: lines
+base e1bee223c47a head f79711ca8d63 merge-base 713d4e6ed638

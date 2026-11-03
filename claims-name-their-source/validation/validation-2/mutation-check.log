@@ -1,0 +1,45 @@
+FFFF
+======================================================================
+FAIL: test_claim_source_reminder_on_pass_hold_and_unreadable_input (test_delivery_gate.DeliveryGateTests.test_claim_source_reminder_on_pass_hold_and_unreadable_input) (expected=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/validation-777-cycle2/.context/mutation/kc-dev-flow-2/scripts/test_delivery_gate.py", line 131, in test_claim_source_reminder_on_pass_hold_and_unreadable_input
+    self.assertEqual(out.splitlines().count(CLAIM_SOURCE), 1, out)
+AssertionError: 0 != 1 : PR head 40c714a6 equals dispatched candidate 40c714a6; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+
+
+======================================================================
+FAIL: test_claim_source_reminder_on_pass_hold_and_unreadable_input (test_delivery_gate.DeliveryGateTests.test_claim_source_reminder_on_pass_hold_and_unreadable_input) (expected=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/validation-777-cycle2/.context/mutation/kc-dev-flow-2/scripts/test_delivery_gate.py", line 131, in test_claim_source_reminder_on_pass_hold_and_unreadable_input
+    self.assertEqual(out.splitlines().count(CLAIM_SOURCE), 1, out)
+AssertionError: 0 != 1 : PR head 7679ab7a11111111111111111111111111111111 differs from dispatched candidate 40c714a600000000000000000000000000000000 (latest validation record validation-1.md)
+next: hold the ask; revalidate this head or tell the Captain the difference.
+
+
+======================================================================
+FAIL: test_claim_source_reminder_on_pass_hold_and_unreadable_input (test_delivery_gate.DeliveryGateTests.test_claim_source_reminder_on_pass_hold_and_unreadable_input) (expected=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/validation-777-cycle2/.context/mutation/kc-dev-flow-2/scripts/test_delivery_gate.py", line 131, in test_claim_source_reminder_on_pass_hold_and_unreadable_input
+    self.assertEqual(out.splitlines().count(CLAIM_SOURCE), 1, out)
+AssertionError: 0 != 1 : no latest validation dispatch record under /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpz5omzli8/task/dispatch has a 'Candidate: <40-hex head>' line
+next: hold the ask; dispatch validation of this head with a Candidate line, or tell the Captain.
+
+
+======================================================================
+FAIL: test_claim_source_reminder_on_pass_hold_and_unreadable_input (test_delivery_gate.DeliveryGateTests.test_claim_source_reminder_on_pass_hold_and_unreadable_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/validation-777-cycle2/.context/mutation/kc-dev-flow-2/scripts/test_delivery_gate.py", line 138, in test_claim_source_reminder_on_pass_hold_and_unreadable_input
+    self.assertIn(CLAIM_SOURCE, out.getvalue().splitlines())
+AssertionError: 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.' not found in ["cannot read input: [Errno 2] No such file or directory: '/nonexistent/task.md'"]
+
+----------------------------------------------------------------------
+Ran 1 test in 0.527s
+
+FAILED (failures=4)

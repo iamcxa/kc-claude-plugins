@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-03T17:22:59.944137+00:00",
+  "candidate": "f79711ca8d6325c1c14781342cf23855dd62b10a",
+  "origin_main": "e1bee223c47a1cd534a665a47776b683375b34fc",
+  "state_before": "851d877b7beb59b2d84e7bd64f400c13f02a2d4d",
+  "parent": "128fe3e3fed70fa64ded8657f5a1b36933af3ced",
+  "date_local": "2026-11-04 Asia/Taipei",
+  "acceptance": {
+    "command": "/bin/bash --noprofile --norc /tmp/opencode/claims-validation-2/acceptance.sh",
+    "exit": 0,
+    "sha256": "e35992ef5519aa11941fa25c0f95ab3f1a4ec10ddd9deb1b116e067dfcef1af7",
+    "coverage": "six local steps, no new provider run, no hosted review or merge"
+  },
+  "commands": {
+    "mutation_and_recount": "PYTHONDONTWRITEBYTECODE=1 python3 -B /tmp/opencode/claims-validation-2/prove.py",
+    "frozen_replay": "python3 -B /tmp/opencode/claims-validation-2/audit_replay.py /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/validation-777-cycle2",
+    "extra_proofs": "python3 -B /tmp/opencode/claims-validation-2/extra_proof.py",
+    "accepted_state": "python3 -B /tmp/opencode/claims-validation-2/accepted_state.py",
+    "suite": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py'"
+  },
+  "followup_commit": "6d31cbe9cffd41dd8cb1b52b966c8604951a807a",
+  "task_commit": "b06c45ed2f87d13cbcd8af6d9c1b50e0f799d96a",
+  "all_checks_exit_zero": true,
+  "suite": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py'",
+    "date": "2026-11-03T17:31:24.154178+00:00",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/validation-777-cycle2",
+    "exit": 0,
+    "tests": 892,
+    "skipped": 6,
+    "seconds": 471.176
+  },
+  "accepted_state_sha256": "e391f56175f6e90f6058a974e9ba22adef780c1a5a07d999f35330120fa54b9f"
+}

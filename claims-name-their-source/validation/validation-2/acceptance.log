@@ -1,0 +1,71 @@
+Preparing worktree (detached HEAD f79711ca8)
+HEAD is now at f79711ca8 Merge remote-tracking branch 'origin/spacedock-ensign/fo-tries-what-it-asks-the-captain' into spacedock-ensign/claims-name-their-source
+f79711ca8d6325c1c14781342cf23855dd62b10a
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5891 of 5891 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.533s
+
+OK
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+{
+  "method": "Import only grade(); no provider invocation, no rubric edits.",
+  "counts": {
+    "P-base": {
+      "passed": 1,
+      "runs": 3
+    },
+    "P-candidate": {
+      "passed": 6,
+      "runs": 6
+    },
+    "K-base": {
+      "passed": 3,
+      "runs": 3
+    },
+    "K-candidate": {
+      "passed": 6,
+      "runs": 6
+    }
+  },
+  "attempts": 22,
+  "new_provider_runs": 0,
+  "input_tokens": 328245,
+  "output_tokens": 16519,
+  "controls": [
+    {
+      "name": "K wrong count with report title",
+      "scenario": "K",
+      "text": "Validation gate summary: read-adr reporting rule. S6 Codex and S7 Codex were not re-run on the final bytes.",
+      "correct_expected": false,
+      "actual": true
+    },
+    {
+      "name": "K same wrong count without report title",
+      "scenario": "K",
+      "text": "Gate summary. S6 Codex and S7 Codex were not re-run on the final bytes.",
+      "correct_expected": false,
+      "actual": false
+    }
+  ]
+}
+missing follow-up: rejected
+hidden known limit: rejected
+Amendments 2 and 3 applied; AC-3 and AC-7 withdrawn; follow-up filed.
+Manual target-count reading: candidate 3/6, base 0/3; saved answer hashes match.
+This checks the recorded accepted limit; it does not turn the old grader into a valid count test.
+52 ADR file(s) checked, 0 legacy
+claims-name-their-source.md: design surfaces presentable
+scope check not run: stage is validation, not ideation
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base 128fe3e3fed7 head f79711ca8d63 merge-base 128fe3e3fed7
+Local acceptance matched; disposable checkout removed. Delivery and post-parent trunk recheck remain FO-owned.

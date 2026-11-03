@@ -1,0 +1,26 @@
+[
+  {
+    "severity": "low",
+    "title": "F1: count attribution remains an accepted known limitation",
+    "status": "confirmed",
+    "classification": "Deferred risk",
+    "detail": "Captain amendment 3 replaces AC-7 with AC-8. Existing outputs confirm K target-count labels in 3/6; the old grader false-passes. This settles validation-1 F1 rather than repairing the grader.",
+    "released_user_and_workflow": "First Officer writing a count-based validation summary from worker reports.",
+    "observable_harm": "An unqualified claim of successful count correction would overstate these saved outputs. No such broader claim is accepted in AC-8.",
+    "affected_boundary": "value-ac[AC-8]: record K 3/6 as a known limit and file the follow-up.",
+    "trigger_evidence": "semantic-read.json; replay-audit.json; accepted-state.log. Material if delivery claims count reliability or omits the accepted limit.",
+    "fix": "Keep the limit visible; counts-name-the-run-that-produced-them owns future count behavior."
+  },
+  {
+    "severity": "low",
+    "title": "F2: trunk number check remains a delivery prerequisite",
+    "status": "confirmed",
+    "classification": "Deferred risk",
+    "detail": "Captain amendment 2 permits the parent-head check now. It passes against 128fe3e3fed70fa64ded8657f5a1b36933af3ced. PR #773 is open; origin/main still reports parent ADR 0054.",
+    "released_user_and_workflow": "First Officer preparing the merge ask after the stacked parent lands.",
+    "observable_harm": "A trunk-green claim now would be false; this validation makes no such claim.",
+    "affected_boundary": "captain-ruling[2026-11-04]: compare with the parent now and origin/main after parent merge.",
+    "trigger_evidence": "number-guards-stacked.log; number-guards-trunk-diagnostic.log; pr-773.json. Material if merging proceeds without the later trunk check.",
+    "fix": "After #773 merges, fetch and rerun number guards on the actual candidate against origin/main before the merge ask."
+  }
+]

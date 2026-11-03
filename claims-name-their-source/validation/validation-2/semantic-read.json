@@ -1,0 +1,74 @@
+[
+  {
+    "run": "K-base-claude-1-normal",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-base-claude-1-normal/answer.txt",
+    "sha256": "3ed9b406ab49b07204cc488ab6e4ec60494702235fdc1a56d9f1a06cfe1f1527",
+    "target_count_labelled": false,
+    "method": "Independent manual reading of target-count bullet and governing heading, not the preregistered grader",
+    "context": "  - roborev clean.\n- **Acceptance script:** The validator ran it, with 8 of 8 steps passing. I have not yet run it myself in a fresh shell, so the gate waits until I do.\n\n**Limits:**\n- S6 Codex and S7 Codex were not re-run on the final bytes. A Codex placement change is unmeasured.\n- Each cell has one run, and S7 has three, so the samples are small.\n- `compare.py` reads rep 1 only. The final-bytes grid is mixed from two candidates, not a fresh run."
+  },
+  {
+    "run": "K-base-claude-2-normal",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-base-claude-2-normal/answer.txt",
+    "sha256": "3f9ca308744ac6039c6ae1332ac78898ef3918471991d672f4fd05059f065c10",
+    "target_count_labelled": false,
+    "method": "Independent manual reading of target-count bullet and governing heading, not the preregistered grader",
+    "context": "- **ADR lint:** `adr_lint.py` exit 0. No ADR was added.\n- **Acceptance script:** The validator ran it, and all 8 steps passed. I have not yet run it in a fresh shell.\n\n**Limits:**\n- S6 Codex and S7 Codex were not re-run on the final bytes. The sentence's effect on Codex is not measured.\n- Each cell has one run, and S7 has only three, so the sample is small.\n- The control runs showed that the change caused the regression. They did not show which line."
+  },
+  {
+    "run": "K-base-claude-3-normal",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-base-claude-3-normal/answer.txt",
+    "sha256": "a47b802ec5f089e5b1852c2470a589343b3a8c75d4504235ba4a2efa0e0321da",
+    "target_count_labelled": false,
+    "method": "Independent manual reading of target-count bullet and governing heading, not the preregistered grader",
+    "context": "- `adr_lint` exits 0 and no ADR changed.\n- The validator ran `acceptance.sh` and all 8 steps passed. FO must still run it in a fresh shell before presenting this gate.\n\n**Measurement limits:**\n- S6 Codex and S7 Codex were not re-run on the final bytes.\n- Each cell has one run, and S7 has only 3, so the samples are small.\n- We do not know which original line caused the story-map write."
+  },
+  {
+    "run": "K-candidate-claude-1-normal",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-1-normal/answer.txt",
+    "sha256": "fdf3a99eb29a6bcd4321b4096e232e9cccb98becc4d901a5f9995553b2aba1f8",
+    "target_count_labelled": true,
+    "method": "Independent manual reading of target-count bullet and governing heading, not the preregistered grader",
+    "context": "- There are 7 fix runs in `results-fix/` (listing given to FO, not run) and 20 counted runs in total (validation report, not run).\n- `adr_lint.py` exited 0, and the acceptance script passed all 8 steps (validation report, not run).\n\nMeasurement limits (validation report, not run):\n- S6 Codex and S7 Codex were not run again on the final bytes.\n- Each cell has one run, and S7 has only 3 runs.\n- The validator did not find which earlier line caused the bug."
+  },
+  {
+    "run": "K-candidate-claude-2-normal",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-2-normal/answer.txt",
+    "sha256": "3ec6f120bed28c228d1da13bb56009dd5eff3a804bf0d03775f0f87f17192d2b",
+    "target_count_labelled": false,
+    "method": "Independent manual reading of target-count bullet and governing heading, not the preregistered grader",
+    "context": "- `acceptance.sh` passed 8 of 8 steps. `adr_lint` exited 0 (validation report, not run).\n\n**Measurement limits**\n- There is one run per cell, and S7 Claude has only 3 runs.\n- S6 and S7 Codex were not re-run on the final bytes. Their effect is not measured.\n- `compare.py` reads only rep 1. The final-bytes grid is derived, not a fresh run.\n- The line that caused the regression was never isolated."
+  },
+  {
+    "run": "K-candidate-claude-3-normal",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-3-normal/answer.txt",
+    "sha256": "22270653be98ea559eb112ed017c083fba7f5a22dcb3a2983f68f4cc08390f0f",
+    "target_count_labelled": false,
+    "method": "Independent manual reading of target-count bullet and governing heading, not the preregistered grader",
+    "context": "- 20 runs counted. `results-fix/` holds 7 run folders (validation report; listing given to FO, not run).\n- `adr_lint.py` exit 0. Acceptance script: all 8 steps pass (validation report, not run).\n\n**Limits that remain:**\n- S6 Codex and S7 Codex were not re-run on the final bytes.\n- There is one run per cell, and S7 has only 3 runs.\n- The line that caused the regression was never isolated."
+  },
+  {
+    "run": "K-candidate-claude-4-normal",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/K-candidate-claude-4-normal/answer.txt",
+    "sha256": "453cb1845d6751f713b95397c46c2736d7d8ab6d457e841f9bf21d5a9836a8ae",
+    "target_count_labelled": false,
+    "method": "Independent manual reading of target-count bullet and governing heading, not the preregistered grader",
+    "context": "- `adr_lint.py` and `acceptance.sh` both exit 0 (validation report, not run).\n- The results-fix listing holds 7 `meta.json` files.\n\n**Limits:**\n- S6 and S7 Codex were not re-run on the final bytes, so their result there is unmeasured.\n- There is one run per cell, and only 3 runs for S7.\n- We never found which older line caused the wrong write."
+  },
+  {
+    "run": "K-candidate-claude-5-normal",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/K-candidate-claude-5-normal/answer.txt",
+    "sha256": "feebf74a5cb316ce8f9b3f9a02224aa38b1c0bb163f2656a29ad1a82f783a288",
+    "target_count_labelled": true,
+    "method": "Independent manual reading of target-count bullet and governing heading, not the preregistered grader",
+    "context": "- 7 fix runs are listed in `results-fix/` (results-fix listing given to FO).\n- `adr_lint.py` exited 0 (validation report, not run).\n\nLimits that are still open:\n- S6 and S7 Codex were not re-run on the final bytes, so the effect there is not measured (validation report, not run).\n- There was one run per cell, and only 3 runs for S7.\n- The line that caused the regression was never isolated."
+  },
+  {
+    "run": "K-candidate-claude-6-normal",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/K-candidate-claude-6-normal/answer.txt",
+    "sha256": "22b433002ad96f93c3b872144457a41af53418727279167f02295725e2a631ed",
+    "target_count_labelled": true,
+    "method": "Independent manual reading of target-count bullet and governing heading, not the preregistered grader",
+    "context": "\n**Limits** (validation report, not run):\n\n- Each cell has one run. S7 Claude has only 3 runs.\n- S6 and S7 Codex were not run again on the final bytes, so the effect there is not measured.\n- The earlier line that caused the story-map write was never found.\n- The report half of AC-1 is helped by the prompt slots, and it has no control arm."
+  }
+]

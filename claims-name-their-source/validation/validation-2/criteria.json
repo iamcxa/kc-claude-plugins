@@ -1,0 +1,38 @@
+[
+  {
+    "name": "AC-1: source rule and +55 ledger",
+    "status": "passed",
+    "note": "Repository lint 5891/5891; deleting the ledger step fails with required +55 raise.",
+    "evidence": "lint.log; mutation-budget.log"
+  },
+  {
+    "name": "AC-2: both gate reminders preserve exits",
+    "status": "passed",
+    "note": "Pass/hold/missing-input exits 0/1/2; removing check emit fails its assertion and leaves question control green.",
+    "evidence": "focused-tests.log; mutation-check.log; mutation-question-control.log"
+  },
+  {
+    "name": "AC-4: observer summary/chat boundary",
+    "status": "passed",
+    "note": "Observer exclusion contains only chat sentence; changing that sentence fails existing lint. Native observer execution is not claimed.",
+    "evidence": "lint.log; mutation-chat.log; task-only.diff"
+  },
+  {
+    "name": "AC-5: per-moment word changes",
+    "status": "passed",
+    "note": "Stacked parent: workflow 5836 to 5891; mod 48 unchanged; question +27, check +27. Rule deletion changes +55 to zero.",
+    "evidence": "word-counts.json; count-falsifier.json; wc-base.log; wc-candidate.log"
+  },
+  {
+    "name": "AC-6: callers and ADR",
+    "status": "passed",
+    "note": "Full discovery exit 0: 892 tests, 6 skips. Both ADR checks pass; missing required ADR fails.",
+    "evidence": "full-suite.log; adr-lint-dispatch-package.log; adr-missing-falsifier.log"
+  },
+  {
+    "name": "AC-8: accepted known limit and follow-up",
+    "status": "passed",
+    "note": "Manual target-count reading 3/6 candidate, 0/3 base; frozen grader remains 6/6 with known false-pass. Follow-up committed; missing-follow-up/hidden-limit controls reject.",
+    "evidence": "semantic-read.json; replay-audit.json; accepted-state.log; followup-before.md"
+  }
+]

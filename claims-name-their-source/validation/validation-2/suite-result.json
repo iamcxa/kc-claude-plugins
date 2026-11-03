@@ -1,0 +1,9 @@
+{
+  "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py'",
+  "date": "2026-11-03T17:31:24.154178+00:00",
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/validation-777-cycle2",
+  "exit": 0,
+  "tests": 892,
+  "skipped": 6,
+  "seconds": 471.176
+}

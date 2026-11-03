@@ -1,0 +1,32 @@
+[
+  {
+    "name": "mutation-budget",
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "mutation-check",
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "mutation-question-control",
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "mutation-chat",
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "lint-control",
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  }
+]
