@@ -42,6 +42,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:fo-answers-own-worker-permissions-by-listed-id:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:fo-answers-own-worker-permissions-by-listed-id-ideation-1
+              briefing:
+                id: briefing:fo-answers-own-worker-permissions-by-listed-id:ideation:attempt-1:revision-1
+                digest: sha256:a91dc1420154476581b73045da6a6aeeead8cec90d4ea38859efc2dbde605245
+                room-ref: ./fo-answers-own-worker-permissions-by-listed-id/review/ideation/briefing-1
 profile: pilot
 ---
 
