@@ -397,3 +397,58 @@ Local review is not clean: evidence=roborev:1421 on 444e6e6429213c94252dba44c150
 ### Summary
 
 Both routed High findings are repaired and all local package commands, regression tests and mutations pass, with the existing YAML-dependent skip. Final review 1421 still has the release-document finding above; it is not clean and needs FO disposition under the approved key-only design. This complete report supersedes both earlier implementation reports; FO owns product publication, Draft PR, hosted CI and independent validation.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved environment keys, walk refusals and production readiness from the newest clean closed walk.
+  Branch `spacedock-ensign/release-walk-off-production-before-release`; base `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb`; candidate `b4849e1e4716e74be4592f8bb78f3bf5cecc84c0`; five design-named files total, this repair only EXTENSION.md and test_release_acceptance.py; clean tree, no versions changed.
+- DONE: Repair the assigned external-round-1 finding, separate from the two earlier RoboRev repair rounds.
+  FO-routed PR #772, Codex review 5751336601/comment 4454043131 (P2): repeated re-walks following the first report produce two newest walks (AC-5). EXTENSION now requires the immediately preceding report for both Prior walk and --prior; the real three-walk fixture rejects the old branch and accepts the corrected chain.
+- SKIPPED: Push the repaired head and update the existing PR #772.
+  ADR 0042/0048 and FO's routing keep product publication with FO; neither attempted by this worker. Prepared PR title/body below; fresh hosted checks and independent validation remain with FO.
+- DONE: ADR 0053 records the Captain's ruling and the reserved number is checked.
+  The record extends 0031/0034 and holds the three approved recommendations; package adr_lint docs/adr --since base --require 0053 exits 0; this clarification adds no ruling or ADR.
+- DONE: AC-1 production walks are held at both tiers and at acceptance.
+  RecordedEnvironmentTests/AcceptedTests and the native base/candidate comparison hold; removing production refusal or accepted's shared final validation fails the corresponding regression.
+- DONE: AC-2 the recorded non-production target passes, another staging name does not.
+  Staging prints `environment: staging (production: production)` and exits 0; staging-2 exits 1; bypassing the mismatch comparison fails its test.
+- DONE: AC-3 missing/blank keys hold with the adoption pointer; equal environment names hold.
+  Every key is removed/blanked and restored in RecordedEnvironmentTests; removing required-release-doc enforcement fails its test.
+- DONE: AC-4 local walks record and render their deployment limit.
+  Check/build/render preserve the specified not deployed line; dropping it holds check/accepted, and bypassing either guard fails its regression.
+- DONE: AC-5 only the newest valid clean closed walk on one acyclic chain admits readiness, including repeated re-walks.
+  AcceptedTests cover absent/live/unsentinelled tasks, invalid reports/rulings/rows/digests, dirty/live re-walks, parallel walks and cycles. New three-walk test: old first-report branch exits 1; latest-report chain and final check exit 0; --prior first instead of second exits 1. Reverting its corrected fixture to first fails the test.
+- DONE: AC-6 schema unchanged.
+  Schema remains release-acceptance 1.0.0; FIELDS/contract-versions.json unchanged from base; the field-addition mutation makes schema exit 1.
+- DONE: AC-7 docs carry the route and workflow README does not move.
+  EXTENSION now says immediately preceding walk, same report for build/check --prior and extended chain; retained keys/questions/local limit/gate/production/blind spots remain. workflow.md diff empty; repository lint exits 0; one added workflow word makes lint exit 1.
+- DONE: AC-8 independent normalized_words recount stays within the lifecycle ceilings.
+  Startup/idle(open,merged)/archive/merge ask workflow 5834->5834, pr_watch unchanged; adoption 2267->2372; filing/first dispatch EXTENSION 605->538 (523 whitespace words); check +4 words, gate clause +5, accepted output 10. Both ceiling mutations exit 1; no budget raise step.
+- DONE: AC-9 the single reserved ADR lands and missing-record control fails.
+  Package ADR lint exits 0; removing 0053 makes --require 0053 exit 1; ADR-document tests pass.
+- DONE: AC-10 original behavior and expectations hold.
+  Release suite: 100 run, 99 passed, 1 existing skip; AST comparison retains all base test classes/helpers except build_world README keys. New fixture helper can name a predecessor; original callers keep their default. Existing schema test catches a validation bypass.
+- SKIPPED: Existing journey-map interoperability test requiring YAML.
+  The declared dependency is absent; no changed expectation or substitute interoperability claim.
+- DONE: Full package commands, repository lint, number guards, comment ratio and affected documents checked.
+  All 26 CI-listed commands exit 0 on this head (active Spacedock 0.27.3; CI pins 0.27.2); ADR/number/design checks exit 0; 364 code lines, 2 comments, 0.5% <= 5%. doc_impact repair delta is empty; the known affected EXTENSION claim is updated, no diagram changed.
+- DONE: Acceptance falsifiers and the external finding exercised, without changing runtime code in this repair.
+  `/tmp/release-walk-proof/mutations.json`: 21 checks, python3 -B/caches cleared; old first-report fixture mutation fails. `/tmp/release-walk-external-native/tests.json`: four real-command checks; 700 graph shapes match complete-chain permutations. Scratch .context/release-walk-proof may be removed after validation.
+- DONE: Run the requested RoboRev gate once against the pinned base and committed new head.
+  Exit 0: `clean on b4849e1e4; evidence=roborev:1424`; `/tmp/release-walk-external-roborev.log`. Earlier 1414/1416 were repaired; release-doc behavior stays key-only per approved D2, not a new file-existence guard.
+- SKIPPED: Hosted CI green on the repaired PR head.
+  FO must push the local head to PR #772 and obtain new-head checks/review/independent validation. CI cost not measured; CI configuration unchanged.
+
+Prepared PR title: `feat(kc-dev-flow-2): hold production readiness for a clean release walk`
+Prepared PR body (verbatim):
+Release walks now refuse production, a target other than the recorded walk environment, missing environment keys and local walks without a deployment limit. `accepted JOURNEY/RELEASE` requires one acyclic chain of acceptance tasks and final-tier validation of its newest clean, archived, locally closed walk before FO announces production readiness.
+
+Each re-walk now names the immediately preceding walk's report in `Prior walk:` and uses that same report for `--prior` in both build and check. A three-walk fixture demonstrates the old first-report branch being held as "both newest", then verifies the corrected chain passes and a mismatched `--prior` is rejected. The environment, report structure, ruling, complaint rows, prior digest and cycle safeguards remain intact. ADR 0053 records the accepted policy; schema, workflow template and versions are unchanged. Production remains the repository's own approved procedure, and release-doc validation remains the approved key-only check.
+
+Validation: all 26 package commands passed locally, using active Spacedock 0.27.3 for CLI tests (CI pins 0.27.2). Release-acceptance: 99 passed and one existing YAML-dependent interoperability skip. Twenty-one acceptance/mutation checks passed; changing the corrected fixture back to the first report fails its acceptance expectation. Four native three-walk checks and all 700 one-to-four-task chain shapes passed. Skill lint, ADR lint, number guards and comment ratio passed: two comments in 364 code lines, 0.5% against 5%.
+
+Local review: clean on b4849e1e4; evidence=roborev:1424. This repairs the assigned external-round-1 Codex comment 4454043131 from review 5751336601. Hosted checks and independent validation of this new head remain pending. CI cost was not measured; CI configuration did not change.
+
+### Summary
+
+The assigned external-round-1 finding is repaired: each re-walk links to its immediate predecessor and validates against that same report, so repeated walks form the required chain. Local commands and the exact-head RoboRev gate pass, with the existing YAML-dependent skip; publication, hosted checks and independent validation remain with FO. This complete report supersedes all earlier implementation reports.
