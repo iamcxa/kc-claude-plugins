@@ -58,6 +58,9 @@ Reads Captain step observations without executing commands. Missing observations
 unrecorded fenced commands or links (including fences in named Markdown files), missing absolute
 paths, and Captain-only steps without a reason hold the ask (exit 1). Unreadable input is exit 2.
 Candidate may be none outside a validation gate. The check trusts recorded observations.
+Prose asks, inline code, fences inside a > quote, fences starting on a list-marker line,
+and 4-space indented code blocks stay undetected. An unclosed fence in a named Markdown
+file becomes one large required step, through the end of the file.
 """
 import argparse
 import datetime
@@ -672,7 +675,7 @@ Ran: <what FO ran, where (fresh shell, real browser), UTC time>
 Observed: <the output, or a path in the task folder holding it>
 Only he can: <what is left> — <why: his credential, account, device or judgment>"""
 STEP_FIELD = re.compile(r"^(Asked|Ran|Observed|Only he can):[ \t]*(.*?)(?=^(?:Asked|Ran|Observed|Only he can):|\Z)", re.M | re.S)
-FENCE = re.compile(r"^[ \t]*(`{3,}|~{3,})([^\n]*)\n(.*?)^[ \t]*\1[ \t]*$", re.M | re.S)
+FENCE = re.compile(r"^[ \t]*(`{3,}|~{3,})([^\n]*)\n(.*?)(?:^[ \t]*\1[`~]*[ \t]*$|\Z)", re.M | re.S)
 URL = re.compile(r"https?://[^\s<>`\"')\]]+")
 ABS_PATH = re.compile(r'''(?<![\w:/>])(?:"(?:~/|/)[^"\n]+"|'(?:~/|/)[^'\n]+'|(?:~/|/)[^\s`"'()\[\]{}]+)''')
 

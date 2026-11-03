@@ -1354,6 +1354,40 @@ class CaptainStepFixture(unittest.TestCase):
 
 
 class CaptainStepsTests(CaptainStepFixture):
+    def test_a_longer_closing_fence_still_requires_a_step(self):
+        command = "printf unrecorded"
+        for marker in ("`", "~"):
+            for named_card in (False, True):
+                with self.subTest(marker=marker, named_card=named_card):
+                    shown = f"Read this note.\n{marker * 3}sh\n{command}\n{marker * 4}\n"
+                    if named_card:
+                        card = self.root / "captain-card.md"
+                        card.write_text(shown)
+                        shown = f"Read this note. Run the card at {card}"
+                    body = self.step("Read this note.")
+                    code, out = self.run_steps(body, shown)
+                    self.assertEqual(code, 1, out)
+                    self.assertIn("S5: unrecorded command or link", out)
+                    self.assertIn(command, out)
+                    self.assertEqual(self.run_steps(body + self.step(command, number=2), shown)[0], 0)
+
+    def test_an_unclosed_fence_still_requires_a_step(self):
+        command = "printf unrecorded"
+        for marker in ("`", "~"):
+            for named_card in (False, True):
+                with self.subTest(marker=marker, named_card=named_card):
+                    shown = f"Read this note.\n{marker * 3}sh\n{command}\n"
+                    if named_card:
+                        card = self.root / "captain-card.md"
+                        card.write_text(shown)
+                        shown = f"Read this note. Run the card at {card}"
+                    body = self.step("Read this note.")
+                    code, out = self.run_steps(body, shown)
+                    self.assertEqual(code, 1, out)
+                    self.assertIn("S5: unrecorded command or link", out)
+                    self.assertIn(command, out)
+                    self.assertEqual(self.run_steps(body + self.step(command, number=2), shown)[0], 0)
+
     def test_non_shell_fences_need_a_recorded_step_unless_they_match_observed(self):
         for language, content in (("python", "print(1 + 1)"), ("node", "console.log(1 + 1)"),
                                   ("mermaid", "graph LR; A-->B"), ("text", "Check the preview")):
