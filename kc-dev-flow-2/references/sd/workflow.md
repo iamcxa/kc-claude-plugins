@@ -265,6 +265,8 @@ records it in `<task>/captain-steps/<N>.md`.
 prints the record's form; nonzero holds the ask. The message shows each step beside
 its observed output and names the step only he can do, and why.
 
+Each number or factual claim in a gate summary or PR body names the command that produced it and the date, or the report it repeats as `<whose> report, not run`, and is not stated as settled. In a message to the Captain, a claim carries the same source after the sentence that answers him.
+
 ## Dispatch facts
 
 - **Team:** You are one worker in a team completing the project goal; your stage
