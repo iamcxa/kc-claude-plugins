@@ -220,6 +220,11 @@ Recommended order: comment-check-reaches-delivery-gate, then fo-write-checks-par
 2. **Raise the workflow word budget by 55 (5781 to 5836) under ADR 0020.** Recommend yes: the chat-ask moment has no script output, so the README at startup is the only text FO reads before it; the validation passage shrinks by 31 to pay part of it. Worse: every FO startup reads 55 more words. Alternative with no raise: rewrite only the validation bullet in its 64 words with the record line; chat asks stay uncovered and the qnow replay is not caught.
 3. **Reverse ADR 0024 D3 (Captain 「照建議」, 2026-10-19: the acceptance steps in full stay chat-only).** Recommend reversing it under that ADR's own reopen clause: the Captain found the rule broken on relay #412, and the record now has a reader (`question`, the observer), which D3 lacked. Worse: one more file per ask in each task folder, and every validation gate writes one.
 
+
+## Number guards
+
+ADR: 0054
+
 ## Stage Report: ideation
 
 - DONE: Start with the task's First ideation step (missing rule or unenforced one) and check the qnow handbook evidence against its source; then name the point that catches an untried step before the ask reaches the Captain
