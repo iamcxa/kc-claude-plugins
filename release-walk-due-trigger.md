@@ -226,6 +226,14 @@ Files this design would change: `kc-dev-flow-2/extensions/release-acceptance/rel
 
 Recommended order: release-walk-off-production-before-release, then this task; archive-waits-for-observer-report and diagnosis-rounds-count-toward-step-back in any order, rebasing the later; reserve the ADR number at implementation dispatch.
 
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-03, chat
+Captain: 「可以」 (chat, 2026-11-03)
+Asked: 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」
+Supersedes: ## Budget "One package PR"; ### Decisions for the Captain D7 recommendation (read `journey-progress/v1` by schema string without registering it)
+
 ## Stage Report: ideation
 
 - DONE: Start from release-walk-picky-reviewers-and-director's Part B, its D4 options and the moved AC-11; design the due subcommand, the README journeys: key and the /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/pr_watch.py line, and how this fits release-walk-off-production-before-release in this batch
