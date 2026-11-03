@@ -2,6 +2,17 @@
 title: FO answers its own Paseo workers' permission requests by their listed ids
 status: backlog
 variant: kc-dev-flow-2
+gates:
+    version: 1
+    records:
+        - id: gate:fo-answers-own-worker-permissions-by-listed-id:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:fo-answers-own-worker-permissions-by-listed-id-backlog-1
+              briefing:
+                id: briefing:fo-answers-own-worker-permissions-by-listed-id:backlog:attempt-1:revision-1
+                digest: sha256:a0980e15d318f3da5e9c3255e90ea4a61b21eae8905bdd1a2cd4d3bd5c96627f
+                room-ref: ./fo-answers-own-worker-permissions-by-listed-id/review/backlog/briefing-1
 ---
 
 ## Scope

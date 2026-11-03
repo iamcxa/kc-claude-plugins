@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-answers-own-worker-permissions-by-listed-id:backlog:attempt-1:revision-1",
+  "question": "「決定：A、B、C、D 四張都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？要改哪張直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:fo-answers-own-worker-permissions-by-listed-id:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1dcf39915c6ce895c1f927c5424a7d99b440f29a/fo-answers-own-worker-permissions-by-listed-id.md",
+      "rev": "sha256:80ec0bde95ba3a44bef3b6db4d7a96944fbf499c58fd554f7db00dce11ab8405",
+      "mediaType": "text/markdown",
+      "summary": "Batch 13 backlog sitting; recommended approve to enter ideation under pilot."
+    }
+  ]
+}
