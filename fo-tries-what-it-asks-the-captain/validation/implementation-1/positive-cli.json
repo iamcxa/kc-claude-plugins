@@ -1,0 +1,21 @@
+{
+  "candidate": "a916b3eea96b44cfa13fed91482d4782dc52dde8",
+  "runs": [
+    {
+      "command": "python3 -c 'print(\"fixture ready\")'",
+      "exit": 0,
+      "output": "fixture ready",
+      "time": "2026-11-03T10:42:50Z"
+    },
+    {
+      "command": "python3 -B /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/lint-skills.py",
+      "exit": 0,
+      "output": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5836 of 5836 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior",
+      "time": "2026-11-03T10:42:50Z"
+    }
+  ],
+  "steps_check": {
+    "exit": 0,
+    "output": "captain steps complete: 3 steps, 1 left to him\n"
+  }
+}

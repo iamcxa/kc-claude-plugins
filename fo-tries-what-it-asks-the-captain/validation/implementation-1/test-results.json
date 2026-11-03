@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Package suite: 879 tests (6 existing skips)",
+    "status": "passed"
+  },
+  {
+    "name": "Captain steps and gate replays: 11 tests",
+    "status": "passed"
+  },
+  {
+    "name": "Isolated mutations: 11 expected failing checks",
+    "status": "passed"
+  },
+  {
+    "name": "Fresh-shell five-step acceptance script",
+    "status": "passed"
+  },
+  {
+    "name": "Lint: 5836 of 5836 workflow words",
+    "status": "passed"
+  },
+  {
+    "name": "ADR 0054, number guards and design surfaces",
+    "status": "passed"
+  }
+]

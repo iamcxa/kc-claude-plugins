@@ -1,0 +1,14 @@
+{
+  "base": {
+    "exit": 0,
+    "output": "gate text complete\n"
+  },
+  "candidate": {
+    "exit": 1,
+    "output": "gate text needs one Captain steps: <record path> line\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  "base_steps_command": {
+    "exit": 2,
+    "stderr": "usage: delivery_gate.py [-h] {check,question} ...\ndelivery_gate.py: error: argument command: invalid choice: 'steps' (choose from 'check', 'question')\n"
+  }
+}
