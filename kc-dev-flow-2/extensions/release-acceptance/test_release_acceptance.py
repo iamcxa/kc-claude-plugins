@@ -137,7 +137,8 @@ def build_world(root, with_walk=True):
     """A workflow with split-root state, tasks of release r1 and r2, and one acceptance task folder with a walk."""
     wf = Path(root) / "wf"
     state = wf / ".spacedock-state"
-    put(wf / "README.md", "---\nentity-type: task\nstate: .spacedock-state\n---\n")
+    put(wf / "README.md", "---\nentity-type: task\nstate: .spacedock-state\n"
+        "walk-environment: staging\nproduction-environment: production\nrelease-doc: docs/releasing.md\n---\n")
     base = {"journey": "book-pickup", "journey-release": "r1", "profile": "pilot"}
     put(state / "t-reserve.md", task_file({**base, "journey-story": "reserve-copy"},
         validation("F1 Polish: the reserve button label is long", older=["F9 Deferred risk: an old finding"])))
@@ -252,6 +253,66 @@ class EnvironmentTests(Base):
         self.morning()
         self.edit_reviewer("o", lambda d: d["stories"][0].update(result="works", cause=None))
         self.assertIn("reviewers who did: 1", self.check("walk")[1])
+
+
+class RecordedEnvironmentTests(Base):
+    def target(self, name):
+        meta = read(self.walk / "meta.json")
+        meta["target"]["environment"] = name
+        put(self.walk / "meta.json", meta)
+        if (self.walk / "report.json").exists():
+            self.edit_report(lambda r: r["target"].update(environment=name))
+
+    def test_production_is_refused_at_both_tiers(self):
+        self.built()
+        self.target("production")
+        for tier in ("walk", "final"):
+            out = self.refused(tier, "REFUSED: the walk ran on production (production); walk on staging")
+            self.assertIn("clean: no", out)
+
+    def test_recorded_staging_passes_but_another_staging_does_not(self):
+        code, out = self.check()
+        self.assertEqual(code, 0, out)
+        self.assertIn("environment: staging (production: production)", out)
+        self.target("staging-2")
+        self.refused("walk", "the README records staging")
+
+    def test_each_missing_key_holds_and_restoring_it_passes(self):
+        readme = self.wf / "README.md"
+        original = readme.read_text()
+        for key in ("walk-environment", "production-environment", "release-doc"):
+            for replacement in ("", f"{key}:\n"):
+                with self.subTest(key=key, replacement=replacement):
+                    put(readme, re.sub(rf"^{key}:.*\n", replacement, original, flags=re.M))
+                    out = self.refused("walk", "environments not recorded")
+                    self.assertIn(key, out)
+                    self.assertIn("references/sd/adoption.md", out)
+                    put(readme, original)
+                    self.assertEqual(self.check()[0], 0)
+
+    def test_equal_environment_names_hold_even_when_target_matches(self):
+        readme = self.wf / "README.md"
+        put(readme, readme.read_text().replace("production-environment: production", "production-environment: staging"))
+        self.refused("walk", "walk-environment is production-environment (staging)")
+
+    def test_local_requires_the_limit_and_render_keeps_it(self):
+        readme = self.wf / "README.md"
+        put(readme, readme.read_text().replace("walk-environment: staging", "walk-environment: local"))
+        self.target("local")
+        self.refused("walk", "a local walk records its limit")
+        limit = "not deployed: served assets, headers and content types not seen"
+        meta = read(self.walk / "meta.json")
+        meta["not_tested"].append(limit)
+        put(self.walk / "meta.json", meta)
+        code, out = self.check()
+        self.assertEqual(code, 0, out)
+        self.assertIn("environment: local (not deployed)", out)
+        self.built()
+        code, out = run("render", self.folder)
+        self.assertEqual(code, 0, out)
+        self.assertIn(f"## Not tested\n\n- resize\n- {limit}", out)
+        self.edit_report(lambda r: r["not_tested"].remove(limit))
+        self.refused("final", "a local walk records its limit")
 
 
 class MalformedTests(Base):
@@ -549,6 +610,124 @@ class RulingTests(Base):
         self.assertFalse(ra.is_clean({**report, "stories": [dict(s, result="works") for s in report["stories"]],
                                       "proof_line": {"result": "works"}, "ruling": {"items": [
                                           {"real": "yes", "ruling": "solve", "when": "this-round", "class": "works-but-unusable"}]}}))
+
+
+class AcceptedTests(Base):
+    def accepted(self, release="book-pickup/r1"):
+        return run("accepted", release, "--workflow-dir", self.wf)
+
+    def not_accepted(self, needle):
+        code, out = self.accepted()
+        self.assertEqual(code, 1, out)
+        self.assertIn("not accepted: book-pickup/r1:", out)
+        self.assertIn(needle, out)
+
+    def close(self):
+        RulingTests.clean_world(self)
+        self.built()
+        self.assertEqual(self.check("final")[0], 0)
+        archive = self.folder.parent / "_archive"
+        put(archive / "r1-acceptance.md", task_file({"release-acceptance": "book-pickup/r1", "pr": "local-merge:" + "a" * 40}))
+        self.folder.with_suffix(".md").unlink()
+        shutil.move(self.folder, archive / "r1-acceptance")
+        self.folder = archive / "r1-acceptance"
+        self.walk = self.folder / "walk"
+        return self.folder.with_suffix(".md")
+
+    def rewalk(self, prior=True, archived=True):
+        parent = self.folder.parent if archived else self.folder.parent.parent
+        folder = parent / "r1-rewalk"
+        shutil.copytree(self.folder, folder)
+        put(folder.with_suffix(".md"), task_file({"release-acceptance": "book-pickup/r1", "pr": "local-merge:" + "b" * 40},
+            f"Prior walk: {self.walk / 'report.json'}\n" if prior else ""))
+        return folder
+
+    def test_no_task_and_live_task_hold_production(self):
+        self.not_accepted("r1-acceptance is not archived")
+        self.folder.with_suffix(".md").unlink()
+        self.not_accepted("no acceptance task")
+
+    def test_archive_needs_a_local_merge_sentinel(self):
+        task = self.close()
+        original = task.read_text()
+        for merged in ("", "local-merge:", "https://github.com/example/repo/pull/1", "pr-merge:" + "a" * 40):
+            put(task, task_file({"release-acceptance": "book-pickup/r1", "pr": merged}))
+            self.not_accepted("has no pr: local-merge:<sha>")
+        put(task, original)
+        self.assertEqual(self.accepted()[0], 0)
+
+    def test_clean_closed_walk_names_task_sentinel_and_release_document(self):
+        self.close()
+        code, out = self.accepted()
+        self.assertEqual(code, 0, out)
+        self.assertEqual(out, "accepted: book-pickup/r1 by r1-acceptance (local-merge:" + "a" * 40 +
+                         "); production release per docs/releasing.md\n")
+        readme = self.wf / "README.md"
+        put(readme, readme.read_text().replace("docs/releasing.md", "ops/production.md"))
+        self.assertIn("production release per ops/production.md", self.accepted()[1])
+
+    def test_missing_malformed_or_unclean_report_holds(self):
+        self.close()
+        path = self.walk / "report.json"
+        original = read(path)
+        for change in (lambda r: r["stories"][0].update(result="broken"),
+                       lambda r: r["proof_line"].update(result="broken"),
+                       lambda r: r["smoke"].update(result="failed"),
+                       lambda r: r["ruling"]["items"][0].update(when="this-round"),
+                       lambda r: r["walks"][0].update(marks=[{"status": "partly-fixed"}])):
+            report = copy.deepcopy(original)
+            change(report)
+            put(path, report)
+            self.not_accepted("is not clean")
+        path.unlink()
+        self.not_accepted("report.json is absent")
+        for content in ("not json", "{}", "null"):
+            put(path, content)
+            self.not_accepted("r1")
+        put(path, original)
+        self.assertEqual(self.accepted()[0], 0)
+
+    def test_newest_unclean_rewalk_overrides_older_clean_walk(self):
+        self.close()
+        folder = self.rewalk()
+        path = folder / "walk/report.json"
+        report = read(path)
+        report["stories"][0]["result"] = "broken"
+        put(path, report)
+        self.not_accepted("r1-rewalk is not clean")
+        report["stories"][0]["result"] = "works"
+        put(path, report)
+        code, out = self.accepted()
+        self.assertEqual(code, 0, out)
+        self.assertIn("by r1-rewalk (local-merge:", out)
+
+    def test_live_rewalk_holds_even_with_an_older_clean_archive(self):
+        self.close()
+        self.rewalk(archived=False)
+        self.not_accepted("r1-rewalk is not archived")
+
+    def test_parallel_walks_hold_until_prior_is_named(self):
+        self.close()
+        folder = self.rewalk(prior=False)
+        self.not_accepted("r1-acceptance, r1-rewalk are both newest; name the prior walk")
+        with folder.with_suffix(".md").open("a") as f:
+            f.write("Prior walk: _archive/r1-acceptance/walk/report.json\n")
+        self.assertEqual(self.accepted()[0], 0)
+
+    def test_foreign_release_and_cyclic_prior_are_refused(self):
+        task = self.close()
+        self.edit_report(lambda r: r["walk"].update(release="r2"))
+        self.not_accepted("report does not describe book-pickup/r1")
+        self.edit_report(lambda r: r["walk"].update(release="r1"))
+        with task.open("a") as f:
+            f.write(f"Prior walk: {self.walk / 'report.json'}\n")
+        self.not_accepted("Prior walk chain is cyclic")
+
+    def test_other_releases_are_not_acceptance_and_bad_argument_is_usage(self):
+        self.close()
+        self.assertEqual(self.accepted("book-pickup/r2")[0], 1)
+        for release in ("r1", "/r1", "book-pickup/", "book-pickup/r1/extra"):
+            self.assertEqual(self.accepted(release)[0], 2)
 
 
 class DirectorSkillTests(unittest.TestCase):

@@ -2,6 +2,7 @@
 """Build, check and render a release walk: picky-user reviewer reports, the design director's ruling, one record.
 
   deferred JOURNEY/RELEASE --workflow-dir D     list findings earlier tasks of the release deferred
+  accepted JOURNEY/RELEASE --workflow-dir D     require the newest walk to be clean and closed before production
   check FOLDER --tier walk|final --workflow-dir D [--prior REPORT]
                                                 exit 1 when the walk cannot be accepted as it stands
   director-model FOLDER --workflow-dir D        print the one model the design director runs on for this walk
@@ -167,14 +168,16 @@ def state_dir(workflow_dir):
     return workflow_dir / state if state else workflow_dir
 
 
+def state_tasks(workflow_dir):
+    state = state_dir(workflow_dir)
+    return [Task(path) for path in sorted([*state.glob("*.md"), *(state / "_archive").glob("*.md")], key=lambda p: p.stem)
+            if path.name != "README.md"]
+
+
 def release_tasks(workflow_dir, journey, release):
     """Live and archived tasks of the release, the acceptance tasks themselves excluded."""
-    state = state_dir(workflow_dir)
     tasks = []
-    for path in sorted([*state.glob("*.md"), *(state / "_archive").glob("*.md")], key=lambda p: p.stem):
-        if path.name == "README.md":
-            continue
-        task = Task(path)
+    for task in state_tasks(workflow_dir):
         fields = task.fields
         if fields.get("journey-release") == release and fields.get("journey", journey) in ("", journey) \
                 and "release-acceptance" not in fields:
@@ -632,6 +635,32 @@ def print_routes(report, workflow_dir, journey, release):
         print(f"route {item.get('id')}: {slugs[0]}" if len(slugs) == 1 else f"route {item.get('id')}: review-release")
 
 
+def check_environment(report, workflow_dir):
+    # see docs/adr/0053-a-release-walk-runs-off-production-and-production-waits-for-a-clean-closed-walk.md
+    readme = Path(workflow_dir) / "README.md"
+    fields = frontmatter(readme)
+    missing = [k for k in ("walk-environment", "production-environment", "release-doc") if not fields.get(k)]
+    if missing:
+        raise Refused(f"environments not recorded in {readme}: {', '.join(missing)}; "
+                      "ask the four questions (references/sd/adoption.md, Release environments)")
+    walk, production = fields["walk-environment"], fields["production-environment"]
+    if walk == production:
+        raise Refused(f"walk-environment is production-environment ({walk})")
+    actual = (report.get("target") or {}).get("environment")
+    if not text(actual):
+        return None
+    if actual == production:
+        raise Refused(f"the walk ran on production ({production}); walk on {walk}")
+    elif actual != walk:
+        raise Refused(f"the walk ran on {actual}; the README records {walk}")
+    if walk == "local":
+        limits = report.get("not_tested")
+        if not isinstance(limits, list) or not any(isinstance(s, str) and s.startswith("not deployed:") for s in limits):
+            raise Refused('a local walk records its limit as a not_tested entry starting "not deployed:"')
+        return "environment: local (not deployed)"
+    return f"environment: {walk} (production: {production})"
+
+
 def cmd_check(args):
     try:
         folder = Path(args.folder)
@@ -642,8 +671,9 @@ def cmd_check(args):
             report = read_json(folder / "walk" / "report.json")
         else:
             report = assemble(folder, walk_list)
+        environment = check_environment(report, args.workflow_dir)
         deferred_ids = [i for i, _ in deferred_items(args.workflow_dir, journey, release)]
-    except (Refused, KeyError, OSError) as error:
+    except (Refused, KeyError, OSError, TypeError, AttributeError) as error:
         print(f"REFUSED: {error}")
         print("clean: no")
         return 1
@@ -665,6 +695,7 @@ def cmd_check(args):
         print_environment(report)
         print("clean: no")
         return 1
+    print(environment)
     print(f"reviewers: {len(report['reviewers'])} (models: {len({r['model'] for r in report['reviewers']})})")
     if report["diversity"]["mode"] == "single-model":
         print("model consensus is not independent")
@@ -686,6 +717,52 @@ def cmd_deferred(args):
         print(f"{item_id}: {line}")
     if not items:
         print("deferred: none")
+    return 0
+
+
+def cmd_accepted(args):
+    # see docs/adr/0053-a-release-walk-runs-off-production-and-production-waits-for-a-clean-closed-walk.md
+    journey, _, release = args.release.partition("/")
+    if not journey or not release or "/" in release or len(args.release.split()) != 1:
+        print("usage: accepted JOURNEY/RELEASE", file=sys.stderr)
+        return 2
+    try:
+        state = state_dir(args.workflow_dir)
+        tasks = [t for t in state_tasks(args.workflow_dir) if t.fields.get("release-acceptance") == args.release]
+        if not tasks:
+            raise Refused("no acceptance task")
+        reports = {(t.folder / "walk/report.json").resolve(): t for t in tasks}
+        named = set()
+        for task in tasks:
+            prior = re.search(r"^Prior walk:[ \t]*(\S.*)$", task.text, re.M)
+            if prior:
+                path = Path(prior.group(1).strip())
+                path = (path if path.is_absolute() else state / path).resolve()
+                if path not in reports:
+                    raise Refused(f"{task.slug}: prior walk {path} is not an acceptance report of {args.release}")
+                named.add(path)
+        newest = [t for path, t in reports.items() if path not in named]
+        if len(newest) > 1:
+            raise Refused(f"{', '.join(t.slug for t in newest)} are both newest; name the prior walk")
+        if not newest:
+            raise Refused("no newest walk; Prior walk chain is cyclic")
+        task = newest[0]
+        if task.path.parent != state / "_archive":
+            raise Refused(f"{task.slug} is not archived")
+        merged = task.fields.get("pr", "")
+        if not merged.startswith("local-merge:") or not text(merged.removeprefix("local-merge:")):
+            raise Refused(f"{task.slug} has no pr: local-merge:<sha>")
+        report = read_json(task.folder / "walk/report.json")
+        if report.get("schema") != WIRE or report.get("walk", {}).get("journey") != journey \
+                or report.get("walk", {}).get("release") != release:
+            raise Refused(f"{task.slug}: report does not describe {args.release} ({WIRE})")
+        if not is_clean(report):
+            raise Refused(f"{task.slug} is not clean")
+        release_doc = frontmatter(Path(args.workflow_dir) / "README.md").get("release-doc", "docs/releasing.md")
+    except (Refused, OSError, KeyError, TypeError, AttributeError) as error:
+        print(f"not accepted: {args.release}: {error}")
+        return 1
+    print(f"accepted: {args.release} by {task.slug} ({merged}); production release per {release_doc}")
     return 0
 
 
@@ -815,6 +892,10 @@ def main(argv=None):
     p.add_argument("release")
     p.add_argument("--workflow-dir", required=True)
     p.set_defaults(run=cmd_deferred)
+    p = sub.add_parser("accepted")
+    p.add_argument("release")
+    p.add_argument("--workflow-dir", required=True)
+    p.set_defaults(run=cmd_accepted)
     p = sub.add_parser("check")
     p.add_argument("folder")
     p.add_argument("--tier", choices=("walk", "final"), required=True)
