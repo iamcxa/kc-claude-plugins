@@ -1,6 +1,6 @@
 ---
 title: A release walk runs off production, and production waits for its acceptance
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 gates:
     version: 1
