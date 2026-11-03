@@ -78,6 +78,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-11-03 — three review rounds on the step-detection surface each found a new gap (RoboRev 1419, Codex 4454090538, RoboRev 1427): is the shape the defect, and what is the smallest next step? Advice: adjust, delete the fence-tag list; report review/chief-engineer-1.md.
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-11-03 — after four review rounds on step detection at 066b07471: is the fence/link class closed, does the RoboRev 1428 decline hold? Answer: not closed; repair 1428 with the one-line closer, name the remaining shapes as limits; report review/engineering-reviewer-1.md.
 
 ## Design
 
