@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-03",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source",
+  "branch": "spacedock-ensign/claims-name-their-source",
+  "base": "4f08f008f9b117876ffe4b569210278e240d203d",
+  "head": "792c3c6847966824ab002d91ad41f7f164ee373c",
+  "files": {
+    "docs/adr/0055-a-claim-names-its-source-and-the-gate-scripts-print-the-rule.md": "871e03cb388a177c33c1568812769bd57e353d2cd3228dd91737fefcc3e7c43f",
+    "kc-dev-flow-2/references/sd/workflow.md": "7a8cb31473879310d7f4da50f267d0a1e6138b241dbe9693191426ab21b7d467",
+    "kc-dev-flow-2/scripts/delivery_gate.py": "51f6d3a7a17c5f1b440fd4905fde45e42f2c4c2bbed2898da090839207c88af8",
+    "kc-dev-flow-2/scripts/lint-skills.py": "78ccbe62e81ec5ba3b9327a47d45e744cda298f0b099292ba18eaffbc54c5d1e",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "f4ef762363ece95a8536ada239d6c5407ef44088386add2f7587e5e9871c1bfd",
+    "kc-dev-flow-2/skills/observer/SKILL.md": "1f9bf48b899c246c472c575f828847ddf3a0c627389276fb3cc6a77d0130cd7f"
+  },
+  "code_publication": "FO delegated, not run by worker",
+  "roborev": "FO delegated, not run, no evidence= claim",
+  "ci": "not run, no PR opened by worker",
+  "CI_cost_per_PR": "not measured; no CI trigger changed",
+  "commands": {
+    "full-suite-final.log": "python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py'",
+    "lint-final.log": "python3 -B kc-dev-flow-2/scripts/lint-skills.py",
+    "adr-lint-final.log": "python3 -B <package>/scripts/adr_lint.py docs/adr --since 4f08f008f9b117876ffe4b569210278e240d203d --require 0055",
+    "number-guards-final.log": "python3 -B <package>/scripts/number_guards.py check --repo <assigned worktree> --workflow-dir <shared workflow> --task <assigned entity> --base 4f08f008f9b117876ffe4b569210278e240d203d",
+    "comment-ratio.log": "python3 -B <package>/scripts/comment_ratio.py 4f08f008f9b117876ffe4b569210278e240d203d HEAD --workflow-dir <shared workflow>",
+    "doc-impact.txt": "python3 -B <package>/scripts/doc_impact.py 4f08f008f9b117876ffe4b569210278e240d203d HEAD",
+    "design-check.log": "python3 -B <package>/scripts/design_surfaces.py check <assigned entity>",
+    "proof.log": "python3 -B /tmp/claims-source-evidence/prove.py"
+  },
+  "package": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0",
+  "full_suite": {
+    "exit": 0,
+    "tests": 891,
+    "skipped": 6,
+    "log": "full-suite-final.log"
+  }
+}

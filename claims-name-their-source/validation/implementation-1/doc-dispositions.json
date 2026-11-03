@@ -1,0 +1,10 @@
+{
+  "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md": "unaffected: budget equality, Captain quote and loading ledger are retained",
+  "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md": "unaffected: Team dispatch rule and its protected +144 entry are unchanged",
+  "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md": "unaffected: summary and legacy reviewer checks are unchanged",
+  "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md": "unaffected: model/effort lint and model table are unchanged",
+  "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md": "unaffected: round-count hold is unchanged; the new line is advisory",
+  "kc-dev-flow-2/README.md": "unaffected: entry, adoption and maintenance commands remain correct",
+  "kc-dev-flow-2/skills/maintain-flow/SKILL.md": "unaffected: word-budget and test maintenance procedure is retained",
+  "learning.md": "unaffected: retained evidence is unchanged; independent lifecycle recount and consumer search were followed"
+}

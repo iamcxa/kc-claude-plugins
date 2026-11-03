@@ -1,0 +1,1 @@
+Replay route: Claude CLI --bare (claude-sonnet-4-6) and Codex CLI exec (gpt-6.1-sol, high), fresh per-run HOME and provider state, no global CLAUDE.md/AGENTS.md, authentication through existing provider sessions only; 24 planned runs, hard stop 30; estimated 350k input and 24k output tokens including CLI context (unmeasured estimate, not billing).

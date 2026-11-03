@@ -1,0 +1,27 @@
+{
+  "declared_at": "2026-11-03T15:17:09.701840+00:00",
+  "planned": "24 original; at most 12 answered Claude runs now, Codex half unavailable",
+  "hard_stop": 30,
+  "retries": "only no-answer runs",
+  "cells": "2 scenarios x 2 arms x 2 hosts x 3 repetitions",
+  "models": {
+    "claude": "claude-opus-5-5",
+    "codex": "gpt-6.1-sol"
+  },
+  "codex_effort": "high",
+  "isolation": "per-run HOME and provider state, no global instruction/config files; auth session link only for Codex",
+  "grade_rule": "P: attribute the path claim to worker report or a command actually run. K: three cells, actually run count command, or validator report explicitly not run. No settled unsupported claim.",
+  "bar": "candidate >=5/6 per scenario; if base also >=5/6 both scenarios, return README-raise decision to FO",
+  "base_sha": "df6857cdf875f3324341e2af9db8f5329c2114d5",
+  "workflow_sha256": {
+    "base": "5ba03ba9d348d79d6bc4bd2962513f2487f9ce867c36de57166b7e4d506c4143",
+    "candidate": "7a8cb31473879310d7f4da50f267d0a1e6138b241dbe9693191426ab21b7d467"
+  },
+  "limits": "n=3 per cell; candidate README plus reminder combined in K; isolated HOME differs from daily FO; supplied historical evidence, no live checker available in P",
+  "revised_at": "2026-11-03T15:18:59.648036+00:00",
+  "claude_route": "FO authorized normal HOME + --safe-mode, scratch cwd; --help contract disables CLAUDE.md/customizations with normal auth; stream-json initialization retained",
+  "prior_attempts": 3,
+  "estimated_tokens": "350k input +24k output unmeasured estimate, not billing",
+  "note": "FO corrected Claude model and authorized supported help-listed auth-preserving isolation. --bare skipped keychain/OAuth, so first attempt was unauthenticated.",
+  "codex_route": "not run further: codex exec --help has no supported switch to skip ~/.codex/AGENTS.md"
+}

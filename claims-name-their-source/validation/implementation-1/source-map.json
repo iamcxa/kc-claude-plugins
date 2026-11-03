@@ -1,0 +1,14 @@
+{
+  "date": "2026-11-03",
+  "P": {
+    "worker_report": "5c030106-8d82-4542-855e-1498b2563c69 transcript line 44814, D-2 block",
+    "original_message": "same transcript line 44883",
+    "correction": "same transcript line 44996"
+  },
+  "K": {
+    "reports": "_archive/read-adr-reporting-rule-followup.md lines 362-397",
+    "listing": "_archive/read-adr-reporting-rule-followup/results-fix/*/meta.json",
+    "original_summary": "review/validation/briefing-1/index.json artifacts[0].summary",
+    "correction": "task Reviewer line records PR #706 correction; live PR correction text not read from GitHub"
+  }
+}

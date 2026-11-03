@@ -1,0 +1,32 @@
+{
+  "command": "python3 -B prove.py; independent str.split() recount, source blobs read by git show",
+  "date": "2026-11-03",
+  "base": "4f08f008f9b117876ffe4b569210278e240d203d",
+  "workflow": {
+    "base": 5836,
+    "candidate": 5891
+  },
+  "mod": {
+    "base": 48,
+    "candidate": 48
+  },
+  "printed_reminder_words": 27,
+  "question": {
+    "base_words": 3,
+    "candidate_words": 30,
+    "exit": 0,
+    "base_exit": 0
+  },
+  "check": {
+    "base_words": 57,
+    "candidate_words": 84,
+    "exit": 0,
+    "base_exit": 0,
+    "ask_last": true
+  },
+  "unchanged_modes": {
+    "kc-dev-flow-2/scripts/pr_watch.py": true,
+    "kc-dev-flow-2/scripts/design_surfaces.py": true,
+    "kc-dev-flow-2/references/sd/mods/kc-dev-flow-2.md": true
+  }
+}

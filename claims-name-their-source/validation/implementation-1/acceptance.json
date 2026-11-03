@@ -1,0 +1,38 @@
+[
+  {
+    "name": "README and approved word increase",
+    "status": "passed"
+  },
+  {
+    "name": "Reminder on pass, hold and input errors",
+    "status": "passed"
+  },
+  {
+    "name": "24-run behavioral replay",
+    "status": "blocked",
+    "cells": {
+      "result": {
+        "status": "blocked",
+        "note": "4 attempts, no answers; authenticated route unavailable"
+      }
+    }
+  },
+  {
+    "name": "Observer phrase and independent word counts",
+    "status": "passed"
+  },
+  {
+    "name": "Package suite and required local checks",
+    "status": "passed"
+  },
+  {
+    "name": "RoboRev, Draft PR and hosted CI",
+    "status": "untested",
+    "cells": {
+      "result": {
+        "status": "untested",
+        "note": "FO owns these steps"
+      }
+    }
+  }
+]
