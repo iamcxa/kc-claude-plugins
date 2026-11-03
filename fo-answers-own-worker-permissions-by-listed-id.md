@@ -110,12 +110,15 @@ flowchart TD
     W -->|yes| R[FO reads the request]
     R --> B{What kind of action?}
     B -->|outside the task's scope| D[deny with the reason]
-    B -->|on the Captain's list, or FO's host refuses| H[hold: one Captain message naming worker, action, decision]
-    B -->|FO could do it itself| I[copy agentId and requestId from that block]
+    B -->|on the Captain's list| H[hold: one Captain message naming worker, action, decision]
+    B -->|FO could do it itself| C{Request block in this turn?}
+    C -->|yes| I[copy agentId and requestId from that block]
+    C -->|no| S
     I --> A[respond_to_permission allow, once per block]
     D --> E[turn ends with no reply or status block]
     A --> X{Paseo result}
     X -->|success| E
+    X -->|FO's own host refuses the approval| H
     X -->|No pending or Unknown agent| S[get_agent_status for that worker]
     S -->|a request pending| I2[answer that id once] --> E
     S -->|none pending| G[request gone] --> E
@@ -134,7 +137,7 @@ One package text change, one ADR; no script, hook, workflow README or peers chan
    > An answered request ends no unit of work: no reply or status block follows it. A hold is one Captain message naming the worker, the action and the decision asked.
 
    Two existing sentences change: "No-action peer finishes require no Captain reply; errors and permission holds remain material." becomes "No-action peer finishes and answered worker permission requests require no Captain reply; errors and requests held for the Captain remain material."; "Errored and permission callbacks are holds, never completion." becomes "Errored and permission callbacks never complete the stage."
-2. A new ADR, short title `fo-answers-its-own-paseo-workers-permission-requests`, number reserved by FO at implementation dispatch. **Words:** 「可以」 — Captain, chat, 2026-11-03. **Asked:** 「決定：A 的方向定為『FO 回應自己 ensign 的權限請求，只批它自己本來就能做的事；推送到別人的 repo、合併、祕密、刪除、對外寫入一律交給你』，可以嗎？」. It replaces ADR 0048's sentence "FO never answers the worker's permission on its behalf" and leaves the rest of 0048 in force, as 0048 widened ADR 0042 without superseding it; 0048 is not edited. Its Consequences state the extension's new word figure, since 0048 bounded it at 819. The hold list renders the Captain's five items and adds ADR 0011's never-delegated money and his-judgment questions (authority); the parenthetical readings of 「祕密」 and 「刪除」 are decision D1 below.
+2. A new ADR, short title `fo-answers-its-own-paseo-workers-permission-requests`, number reserved by FO at implementation dispatch. **Words:** 「可以」 — Captain, chat, 2026-11-03. **Asked:** 「決定：A 的方向定為『FO 回應自己 ensign 的權限請求，只批它自己本來就能做的事；推送到別人的 repo、合併、祕密、刪除、對外寫入一律交給你』，可以嗎？」. It replaces ADR 0048's sentence "FO never answers the worker's permission on its behalf" and leaves the rest of 0048 in force, as 0048 widened ADR 0042 without superseding it; 0048 is not edited. Its Consequences state the extension's new word figure in both counters, since 0048 bounded it at 819 by `wc -w` (base 819 by `wc -w`, 829 by `normalized_words`). The hold list renders the Captain's five items and adds ADR 0011's never-delegated money and his-judgment questions (authority); the parenthetical readings of 「祕密」 and 「刪除」 are decision D1 below.
 
 Enforcement points, bounded: Paseo refused all 7 bad id or worker pairs observed (all on Codex workers; a Claude-worker refusal is unobserved and is checked in AC-3). The boundary and the silence are FO judgment from the text, with FO's own host classifier as the only mechanical backstop on Claude FOs (it refused 2 qnow approvals). Nothing in this design checks them mechanically; AC-4 checks them on a live run.
 
@@ -157,6 +160,8 @@ Counted with `normalized_words` from `kc-dev-flow-2/scripts/lint-skills.py` at o
 This change adds 219 words to the dispatch moment and removes about 165 Captain-facing words per routine answer; across the two records that is about 380,000 words he did not need to read.
 
 ### Unresolved decisions for the Captain
+
+For awareness, not a decision: this design replaces ADR 0048's sentence "FO never answers the worker's permission on its behalf" (accepted 2026-11-02 under 「照建議」, whose question did not mention permissions) with your 2026-11-03 ruling 「可以」.
 
 **D1 — Do a command run through the secrets wrapper, and deleting the task's own temporary files, count as things FO may approve?** Your list says 「祕密」 and 「刪除」 go to you. In ten days qnow's workers ran 88 commands through `with-dev-secrets.sh`, which passes a secret to the command without anyone reading it, and relay's workers deleted 2 temporary folders the task had made. Recommended: FO approves both; it holds any command that reads or prints a secret value and any other deletion. Worse under it: FO may approve a wrapped command whose effect it did not fully read, and a deletion whose path it checked wrongly. The other reading sends about 90 more requests to you per ten days.
 
