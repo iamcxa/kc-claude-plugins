@@ -213,6 +213,14 @@ Recommended order: adr-required-statement, then fo-tries-what-it-asks-the-captai
 
 ADR: 0055
 
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-04, chat
+Captain: 「可以」 (chat, 2026-11-04)
+Asked: 「決定：來源標註的 AC-3 改成只用 Claude，各情境新規則補到 6 次、照原本 6 次過 5 次判定（Codex 半場記為這台機器跑不了），可以嗎？」
+Supersedes: AC-3
+
 ## Stage Report: ideation
 
 - DONE: First check the new observatory evidence against its source; then decide written rule versus checked one, naming the point that catches an unsourced number or claim before it reaches the Captain, a PR body or a gate summary, with replays of the 2026-10-22 relay and the kc-adr count
