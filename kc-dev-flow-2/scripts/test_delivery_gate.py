@@ -1354,6 +1354,46 @@ class CaptainStepFixture(unittest.TestCase):
 
 
 class CaptainStepsTests(CaptainStepFixture):
+    def test_fenced_observed_output_passes_in_message_and_named_card(self):
+        command = "python3 -c 'print(1 + 1)'"
+        for named_card, language in ((False, ""), (True, "text")):
+            with self.subTest(named_card=named_card, language=language):
+                shown = f"```sh\n{command}\n```\n```{language}\n2\n```\n"
+                if named_card:
+                    card = self.root / "captain-card.md"
+                    card.write_text(shown)
+                    shown = f"Run the card at {card}:13"
+                self.assertEqual(self.run_steps(self.step(command, observed="2"), shown)[0], 0)
+                run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", str(self.saved), "--text-file", str(self.message)],
+                                     capture_output=True, text=True)
+                self.assertEqual(run.returncode, 0, run.stdout)
+
+    def test_a_fence_that_does_not_match_observed_still_needs_a_recorded_step(self):
+        command = "python3 -c 'print(1 + 1)'"
+        body = self.step(command, observed="2")
+        for output in ("printf unrecorded", "unexpected output"):
+            for named_card in (False, True):
+                with self.subTest(output=output, named_card=named_card):
+                    shown = f"```sh\n{command}\n```\n```\n2\n```\n```sh\n{output}\n```\n"
+                    if named_card:
+                        card = self.root / "captain-card.md"
+                        card.write_text(shown)
+                        shown = f"Run the card at {card}"
+                    code, out = self.run_steps(body, shown)
+                    self.assertEqual(code, 1, out)
+                    self.assertIn("S5: unrecorded command or link", out)
+                    self.assertIn(output, out)
+                    self.assertNotIn("unrecorded command or link '2'", out)
+
+    def test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links(self):
+        command, output = "printf preview", "https://preview.example.test/result"
+        body = self.step(command, observed=output)
+        shown = f"```sh\n{command}\n```\n```\n{output}\n```\n"
+        self.assertEqual(self.run_steps(body, shown)[0], 0)
+        code, out = self.run_steps(body, shown + f"Open {output}\n")
+        self.assertEqual(code, 1, out)
+        self.assertIn("S5: unrecorded command or link", out)
+
     def test_ran_is_required_even_with_an_observed_output(self):
         missing = self.step("Run the check").replace("Ran: fresh shell, 2026-11-03T00:00:00Z\n", "")
         for body in (missing, self.step("Run the check", ran=""), self.step("Run the check", ran="   ")):
@@ -1409,7 +1449,7 @@ class CaptainStepsTests(CaptainStepFixture):
         code, out = self.run_steps(self.step(message), message)
         self.assertEqual(code, 1, out)
         self.assertIn("S5: unrecorded command", out)
-        no_commands = variant_of('for item in commands + links(expanded):', 'for item in links(message):')
+        no_commands = variant_of('for item in required_commands + links(coverage_text):', 'for item in links(message):')
         self.assertEqual(self.run_steps(self.step(message), message, no_commands)[0], 0)
         missing.parent.mkdir(parents=True)
         missing.write_text(archived.read_text())
@@ -1421,7 +1461,7 @@ class CaptainStepsTests(CaptainStepFixture):
         code, out = self.run_steps(self.step(command), message)
         self.assertEqual(code, 1, out)
         self.assertIn(link, out)
-        no_links = variant_of('for item in commands + links(expanded):', 'for item in commands:')
+        no_links = variant_of('for item in required_commands + links(coverage_text):', 'for item in required_commands:')
         self.assertEqual(self.run_steps(self.step(command), message, no_links)[0], 0)
         body = self.step(command) + "\n" + self.step(f"Open {link}", number=2)
         self.assertEqual(self.run_steps(body, message)[0], 0)

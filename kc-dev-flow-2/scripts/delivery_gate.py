@@ -756,7 +756,11 @@ def inspect_steps(record_path, message):
     for path in absolute_paths(message):
         if not path.exists():
             problems.append(f"message S4: missing path {path}")
-    for item in commands + links(expanded):
+    observed = {normalized(fields["Observed"]) for _, fields in steps if fields.get("Observed", "").strip()}
+    required_commands = [body for body in commands if normalized(body) not in observed]
+    coverage_text = FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], message)
+    coverage_text += "\n" + "\n".join(required_commands)
+    for item in required_commands + links(coverage_text):
         if not any(normalized(item) in request for request in asked):
             problems.append(f"message S5: unrecorded command or link {tok(item, words=10, chars=160)}")
     return problems, candidate, len(steps), left
