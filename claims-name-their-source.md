@@ -216,6 +216,12 @@ ADR: 0055
 
 ## Captain amendments
 
+### Amendment 3 — 2026-11-04, chat
+Captain: 「甲」 (chat, 2026-11-04)
+Asked: 「決定：來源標註照現狀出貨，K 情境 3/6 記成已知限制，另開一張專門處理數字附出處的追蹤任務，可以嗎？」
+Supersedes: AC-7
+
+
 ### Amendment 2 — 2026-11-04, chat
 Captain: 「可以」 (chat, 2026-11-04)
 Asked: 「決定：疊起來的 PR（#775、#777）先對上游 PR 驗、上游合併後再對 main 確認，F4 接受為紀錄格式問題，可以嗎？」
