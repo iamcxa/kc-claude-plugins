@@ -41,6 +41,17 @@ gates:
                 id: briefing:diagnosis-rounds-count-toward-step-back:ideation:attempt-1:revision-1
                 digest: sha256:619770a1929dd9ba43a8b7d2c33598c1896f559712aac960066ed67096eb4c5e
                 room-ref: ./diagnosis-rounds-count-toward-step-back/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:diagnosis-rounds-count-toward-step-back:ideation:1
+                briefing: briefing:diagnosis-rounds-count-toward-step-back:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-03T10:17:05.19782Z"
+                decision: approve
+                reason: The Captain 「可以」 (chat, 2026-11-03), answering 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」; accepts every recommendation each design states for its decisions, with the stated change to release-walk-due-trigger D7.
+              application:
+                target-stage: implementation
+                state: pending
 profile: pilot
 ---
 
