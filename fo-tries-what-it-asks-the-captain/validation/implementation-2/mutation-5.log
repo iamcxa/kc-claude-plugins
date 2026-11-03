@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_a_captain_only_step_requires_its_reason (test_delivery_gate.CaptainStepsTests.test_a_captain_only_step_requires_its_reason)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp8vs6zur7/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1436, in test_a_captain_only_step_requires_its_reason
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 1 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

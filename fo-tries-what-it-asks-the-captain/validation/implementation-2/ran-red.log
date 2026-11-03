@@ -1,0 +1,122 @@
+FFFFFFFFFFFFF.
+======================================================================
+FAIL: test_gate_holds_a_record_with_observed_output_but_no_ran_field (test_delivery_gate.CaptainGateTests.test_gate_holds_a_record_with_observed_output_but_no_ran_field)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1537, in test_gate_holds_a_record_with_observed_output_but_no_ran_field
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : gate text complete
+
+
+======================================================================
+FAIL: test_ran_is_required_even_with_an_observed_output (test_delivery_gate.CaptainStepsTests.test_ran_is_required_even_with_an_observed_output) (body='### Step 1\nAsked: Run the check\nObserved: worked\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1362, in test_ran_is_required_even_with_an_observed_output
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_is_required_even_with_an_observed_output (test_delivery_gate.CaptainStepsTests.test_ran_is_required_even_with_an_observed_output) (body='### Step 1\nAsked: Run the check\nRan: \nObserved: worked\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1362, in test_ran_is_required_even_with_an_observed_output
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_is_required_even_with_an_observed_output (test_delivery_gate.CaptainStepsTests.test_ran_is_required_even_with_an_observed_output) (body='### Step 1\nAsked: Run the check\nRan:    \nObserved: worked\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1362, in test_ran_is_required_even_with_an_observed_output
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_is_required_even_with_an_observed_output (test_delivery_gate.CaptainStepsTests.test_ran_is_required_even_with_an_observed_output)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1368, in test_ran_is_required_even_with_an_observed_output
+    self.assertEqual(run.returncode, 1, run.stdout)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_records_execution_context_and_a_valid_utc_timestamp (test_delivery_gate.CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp) (ran='done')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1377, in test_ran_records_execution_context_and_a_valid_utc_timestamp
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_records_execution_context_and_a_valid_utc_timestamp (test_delivery_gate.CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp) (ran='fresh shell')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1377, in test_ran_records_execution_context_and_a_valid_utc_timestamp
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_records_execution_context_and_a_valid_utc_timestamp (test_delivery_gate.CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp) (ran='2026-11-03T00:00:00Z')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1377, in test_ran_records_execution_context_and_a_valid_utc_timestamp
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_records_execution_context_and_a_valid_utc_timestamp (test_delivery_gate.CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp) (ran='fresh shell, 2026-11-03T08:00:00+08:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1377, in test_ran_records_execution_context_and_a_valid_utc_timestamp
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_records_execution_context_and_a_valid_utc_timestamp (test_delivery_gate.CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp) (ran='real browser, 2026-11-03T00:00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1377, in test_ran_records_execution_context_and_a_valid_utc_timestamp
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_records_execution_context_and_a_valid_utc_timestamp (test_delivery_gate.CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp) (ran='fresh shell, 2026-02-30T00:00:00Z')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1377, in test_ran_records_execution_context_and_a_valid_utc_timestamp
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_records_execution_context_and_a_valid_utc_timestamp (test_delivery_gate.CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp) (ran='real browser, 2026-11-03T25:00:00Z')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1377, in test_ran_records_execution_context_and_a_valid_utc_timestamp
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_ran_records_execution_context_and_a_valid_utc_timestamp (test_delivery_gate.CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp) (ran='none — his phone')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1377, in test_ran_records_execution_context_and_a_valid_utc_timestamp
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.097s
+
+FAILED (failures=13)

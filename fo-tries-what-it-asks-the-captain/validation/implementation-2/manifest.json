@@ -1,0 +1,27 @@
+{
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain",
+  "base": "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb",
+  "previous_candidate": "a916b3eea96b44cfa13fed91482d4782dc52dde8",
+  "candidate": "4f72f1bbbff11e9e4cab311d4409594702cff143",
+  "branch": "spacedock-ensign/fo-tries-what-it-asks-the-captain",
+  "changed_files": {
+    "docs/adr/0054-fo-runs-a-step-before-asking-the-captain-and-records-it.md": "23cee65f32c5b92f8ae06c39a8501c24002aec045b8ebca58e22ddc7ed4d0eb4",
+    "kc-dev-flow-2/references/sd/workflow.md": "221f1bee4c27cccc7b1b6d44e2f9f80b60454a48d46d5149b98be337808ebd73",
+    "kc-dev-flow-2/scripts/delivery_gate.py": "41f89674b9cf4d5e97edb2a7b44473be8787563ac294062a5331b04e15aebeae",
+    "kc-dev-flow-2/scripts/lint-skills.py": "8a0c4f90dd892a8f1281183e59a019649795d94607e1a211415303d35df1d9d7",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "ad5a3aef6574a8e695db6f4c38fe335ec38b83bd5817126e3b20481cc9b4b1f1",
+    "kc-dev-flow-2/scripts/test_lint_skills.py": "2d3b6d278c4d65dd401cae3a47fc8a39cf0b3282f156fe0c34089639d6cec0d5",
+    "kc-dev-flow-2/scripts/test_poc_readme.py": "1091e4daea66fbcfca1cab68bf70081955faa870af2896948c38cf2299cfe3d3",
+    "kc-dev-flow-2/skills/observer/SKILL.md": "b2f91ab7e5eb886e34188fc07d2e653ed5d2bd27f85706bd355b0f94be36bc8d"
+  },
+  "repair_files": [
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py"
+  ],
+  "review": "RoboRev 1419: finding 2 repaired; finding 1 proposed decline, Captain decision pending",
+  "review_retry": {
+    "attempts": 1,
+    "exit": 3,
+    "output": "incomplete: the roborev daemon is not running"
+  }
+}

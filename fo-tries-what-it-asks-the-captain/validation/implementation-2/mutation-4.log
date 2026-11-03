@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_message_commands_and_links_each_need_a_step (test_delivery_gate.CaptainStepsTests.test_message_commands_and_links_each_need_a_step)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4mne9kq0/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1422, in test_message_commands_and_links_each_need_a_step
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

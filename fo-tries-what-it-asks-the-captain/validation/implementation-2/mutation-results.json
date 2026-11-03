@@ -1,0 +1,174 @@
+[
+  {
+    "name": "AC-1 S2",
+    "test": "CaptainStepsTests.test_unobserved_steps_hold_even_when_ran_none_has_no_captain_reason",
+    "mutation": {
+      "before": "if (not fields.get(\"Observed\", \"\").strip() or unrun) and not (unrun and only):",
+      "after": "if False:"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-1.log"
+  },
+  {
+    "name": "AC-2 S4",
+    "test": "CaptainStepsTests.test_qnow_card_replay_checks_archived_path_and_unrecorded_fence",
+    "mutation": {
+      "before": "for path in absolute_paths(fields.get(\"Asked\", \"\")):",
+      "after": "for path in []:"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-2.log"
+  },
+  {
+    "name": "AC-2 S5 command",
+    "test": "CaptainStepsTests.test_qnow_card_replay_checks_archived_path_and_unrecorded_fence",
+    "mutation": {
+      "before": "for item in commands + links(expanded):",
+      "after": "for item in links(message):"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-3.log"
+  },
+  {
+    "name": "AC-3 S5 link",
+    "test": "CaptainStepsTests.test_message_commands_and_links_each_need_a_step",
+    "mutation": {
+      "before": "for item in commands + links(expanded):",
+      "after": "for item in commands:"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-4.log"
+  },
+  {
+    "name": "AC-4 S3",
+    "test": "CaptainStepsTests.test_a_captain_only_step_requires_its_reason",
+    "mutation": {
+      "before": "if not reason or len(reason[1].split()) < 2:",
+      "after": "if False:"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-5.log"
+  },
+  {
+    "name": "AC-5 clause",
+    "test": "CaptainGateTests.test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head",
+    "mutation": {
+      "before": "missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)",
+      "after": "missing = []"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-6.log"
+  },
+  {
+    "name": "AC-5 head",
+    "test": "CaptainGateTests.test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head",
+    "mutation": {
+      "before": "if candidate not in candidates:",
+      "after": "if False:"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-7.log"
+  },
+  {
+    "name": "AC-6 count",
+    "test": "CaptainStepsTests.test_three_exercised_steps_pass_and_report_the_one_captain_step",
+    "mutation": {
+      "before": "captain steps complete: {count} steps, {left} left to him",
+      "after": "captain steps complete: 0 steps, {left} left to him"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-8.log"
+  },
+  {
+    "name": "S1 text",
+    "test": "CaptainStepsTests.test_asked_text_is_matched_with_whitespace_normalized",
+    "mutation": {
+      "before": "if not request or request not in normalized(expanded):",
+      "after": "if False:"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-9.log"
+  },
+  {
+    "name": "Latest validation report",
+    "test": "CaptainGateTests.test_gate_checks_record_against_latest_validation_report_and_returns_input_errors",
+    "mutation": {
+      "before": "report = (VALIDATION_SECTION.findall(task.read_text()) or [\"\"])[-1]",
+      "after": "report = \"\""
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-10.log"
+  },
+  {
+    "name": "Ran required",
+    "test": "CaptainStepsTests.test_ran_is_required_even_with_an_observed_output",
+    "mutation": {
+      "before": "if not ran or (not unrun and not execution_recorded(ran)):",
+      "after": "if False:"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-11.log"
+  },
+  {
+    "name": "Ran execution context",
+    "test": "CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp",
+    "mutation": {
+      "before": "if not re.search(r\"\\b(?:fresh\\s+shell|real\\s+browser)\\b\", ran, re.I):",
+      "after": "if False:"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-12.log"
+  },
+  {
+    "name": "Ran UTC timestamp",
+    "test": "CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp",
+    "mutation": {
+      "before": "if not stamp:\n        return False",
+      "after": "if not stamp:\n        return True"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-13.log"
+  },
+  {
+    "name": "Ran calendar validity",
+    "test": "CaptainStepsTests.test_ran_records_execution_context_and_a_valid_utc_timestamp",
+    "mutation": {
+      "before": "return datetime.datetime.fromisoformat(value).utcoffset() == datetime.timedelta(0)",
+      "after": "return True"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-14.log"
+  },
+  {
+    "name": "Ran gate wiring",
+    "test": "CaptainGateTests.test_gate_holds_a_record_with_observed_output_but_no_ran_field",
+    "mutation": {
+      "before": "if not ran or (not unrun and not execution_recorded(ran)):",
+      "after": "if False:"
+    },
+    "exit": 1,
+    "result": "expected test failure",
+    "log": "mutation-15.log"
+  },
+  {
+    "name": "AC-9 count",
+    "mutation": "Add one workflow word",
+    "exit": 1,
+    "result": "expected lint failure",
+    "log": "mutation-word-budget.log"
+  }
+]

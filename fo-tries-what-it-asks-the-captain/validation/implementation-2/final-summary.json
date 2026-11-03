@@ -1,0 +1,9 @@
+{
+  "candidate": "4f72f1bbbff11e9e4cab311d4409594702cff143",
+  "tests": 882,
+  "skipped": 6,
+  "mutations": 16,
+  "report_lines": 46,
+  "review": "incomplete: the roborev daemon is not running",
+  "proposed_decline": "RoboRev 1419 finding 1; Captain decision pending"
+}
