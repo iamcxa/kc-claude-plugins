@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:claims-name-their-source:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:claims-name-their-source-ideation-1
+              briefing:
+                id: briefing:claims-name-their-source:ideation:attempt-1:revision-1
+                digest: sha256:7418662bb45e439c2416313cd09d02322974ca508dca757fdb97a6685c396648
+                room-ref: ./claims-name-their-source/review/ideation/briefing-1
 ---
 
 ## Scope
