@@ -14,6 +14,17 @@ status: backlog
 - Shape proposed by the relaying FO (its wording, not the Captain's): before FO asks the Captain to run or look at anything, it runs that step itself as far as it goes without his credentials (for a UI flow, a real browser up to the step that needs his account or token), shows the observed output, and names the one step only he can do and why.
 - First ideation step: check whether the miss is a missing rule or an unenforced one (the acceptance-script half is an existing rule FO did not follow), and where a check could catch it (the gate presentation, delivery_gate.py's ask text, the observer).
 - Upstream first: validation principles, the README's FO steps and Delivery authority, delivery_gate.py, the observer; relay's state record for the evidence.
+- Batch 13: the Captain 「可以」 (chat, 2026-11-03), answering 「決定：這批加入那 3 張，共 7 張一起進 backlog gate 嗎？」, which named this task.
+- Further bite: the agent-observatory report on the qnow FO, 2026-11-03 (sampled; not yet checked against the source): a handbook command the FO handed the Captain, seed-captain-fixtures.py, failed with No such file or directory.
+
+## Non-goals
+- FO using the Captain's own credentials or account to finish a step; a new stage.
+
+## Budget
+- One package PR. Workflow word budget unchanged unless the design names a raise for the Captain.
+
+## Stop condition
+- Replays of relay #412 and the qnow handbook step are caught before the ask reaches the Captain, and a step FO ran itself, shown with its observed output and the one step only he can do, passes.
 
 ## FO alignment
 
