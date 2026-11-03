@@ -213,6 +213,14 @@ Override check: `git -C <workflow dir>/.spacedock-state grep -n 'Override:'` on 
 
 Follow-up (proposal, not in scope): the bite also shows the idle hook unrun for 12 days on an adopter that carries it. Whether the dispatch check should also forward already-owed role-call lines is a separate reach question for FO to file or drop.
 
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-03, chat
+Captain: 「照你建議」 (chat, 2026-11-03)
+Asked: 「決定：B 照原設計修，讓追加指示紀錄也算進同症狀的輪數嗎？」
+Supersedes: none
+
 ## Stage Report: ideation
 
 - DONE: First check the qnow freeze evidence against its source; then design how a diagnosis round and its symptom are recorded so /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/role_triggers.py can count rounds on the same symptom, and where the reminder appears
