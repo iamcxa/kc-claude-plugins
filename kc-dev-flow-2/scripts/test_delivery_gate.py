@@ -1439,6 +1439,11 @@ class CaptainStepsTests(CaptainStepFixture):
             self.assertIn("S4", self.run_steps(self.step("Read ~/missing.txt"), "Read ~/missing.txt")[1])
         body = self.step("Read the file")
         self.assertIn("message S4", self.run_steps(body, f"Read the file {self.root}/missing.txt")[1])
+        spaced = self.root / "file with spaces.txt"
+        spaced.touch()
+        for quote in ('"', "'"):
+            asked = f"Read {quote}{spaced}{quote}"
+            self.assertEqual(self.run_steps(self.step(asked), asked)[0], 0)
 
     def test_relative_markdown_card_is_read_by_the_real_cli(self):
         card = self.root / "card.md"

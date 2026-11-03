@@ -674,7 +674,7 @@ Only he can: <what is left> — <why: his credential, account, device or judgmen
 STEP_FIELD = re.compile(r"^(Asked|Ran|Observed|Only he can):[ \t]*(.*?)(?=^(?:Asked|Ran|Observed|Only he can):|\Z)", re.M | re.S)
 FENCE = re.compile(r"^[ \t]*(`{3,}|~{3,})([^\n]*)\n(.*?)^[ \t]*\1[ \t]*$", re.M | re.S)
 URL = re.compile(r"https?://[^\s<>`\"')\]]+")
-ABS_PATH = re.compile(r"(?<![\w:/>])(?:~/|/)[^\s`\"'()\[\]{}]+")
+ABS_PATH = re.compile(r'''(?<![\w:/>])(?:"(?:~/|/)[^"\n]+"|'(?:~/|/)[^'\n]+'|(?:~/|/)[^\s`"'()\[\]{}]+)''')
 
 
 def normalized(text):
@@ -684,7 +684,7 @@ def normalized(text):
 def absolute_paths(text):
     paths = []
     for value in ABS_PATH.findall(URL.sub(" ", text)):
-        value = re.sub(r":\d+(?::\d+)?$", "", value.rstrip(".,;:"))
+        value = re.sub(r":\d+(?::\d+)?$", "", value.strip("\"'").rstrip(".,;:"))
         if "<" not in value and ">" not in value:
             paths.append(Path(value).expanduser())
     return list(dict.fromkeys(paths))
