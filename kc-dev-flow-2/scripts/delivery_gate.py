@@ -729,11 +729,13 @@ def inspect_steps(record_path, message):
     steps = [(number, dict(STEP_FIELD.findall(body))) for number, body in zip(chunks[1::2], chunks[2::2])]
     if not steps:
         problems.append("record has no Step 1")
+    observed = {normalized(fields["Observed"]) for _, fields in steps if fields.get("Observed", "").strip()}
+    path_text = FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], message)
     texts = [message]
     commands = fenced_steps(message)
     markdown = [Path(re.sub(r":\d+(?::\d+)?$", "", value)).expanduser() for value in
-                re.findall(r"(?<![\w:/])(?:[~./\w-]+/)?[\w.-]+\.md(?::\d+(?::\d+)?)?", URL.sub(" ", message))]
-    for path in dict.fromkeys(absolute_paths(message) + markdown):
+                re.findall(r"(?<![\w:/])(?:[~./\w-]+/)?[\w.-]+\.md(?::\d+(?::\d+)?)?", URL.sub(" ", path_text))]
+    for path in dict.fromkeys(absolute_paths(path_text) + markdown):
         if path.suffix.lower() == ".md" and path.is_file() and path.resolve() != record_path.resolve():
             card = path.read_text()
             texts.append(card)
@@ -760,10 +762,9 @@ def inspect_steps(record_path, message):
         for path in absolute_paths(fields.get("Asked", "")):
             if not path.exists():
                 problems.append(f"step {number} S4: missing path {path}")
-    for path in absolute_paths(message):
+    for path in absolute_paths(path_text):
         if not path.exists():
             problems.append(f"message S4: missing path {path}")
-    observed = {normalized(fields["Observed"]) for _, fields in steps if fields.get("Observed", "").strip()}
     required_commands = [body for body in commands if normalized(body) not in observed]
     coverage_text = "\n".join(FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], text)
                               for text in texts)

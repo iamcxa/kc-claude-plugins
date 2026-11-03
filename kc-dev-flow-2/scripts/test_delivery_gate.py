@@ -1369,6 +1369,21 @@ class CaptainStepFixture(unittest.TestCase):
 
 
 class CaptainStepsTests(CaptainStepFixture):
+    def test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold(self):
+        missing = self.root / "unrecorded-path"
+        for output in ("GET /health 200", f"GET {missing} 200"):
+            with self.subTest(output=output):
+                body = self.step("Check the service", observed=output)
+                shown = f"Check the service\n```text\n{output}\n```\n"
+                code, out = self.run_steps(body, shown)
+                self.assertEqual(code, 0, out)
+                run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", str(self.saved), "--text-file", str(self.message)],
+                                     capture_output=True, text=True)
+                self.assertEqual(run.returncode, 0, run.stdout)
+                code, out = self.run_steps(body, shown + f"Inspect {missing}\n")
+                self.assertEqual(code, 1, out)
+                self.assertIn(f"S4: missing path {missing}", out)
+
     def test_named_card_prose_link_matches_asked_and_holds_when_unrecorded(self):
         instruction = "Open https://preview.example.test/owner"
         card = self.root / "card.md"
