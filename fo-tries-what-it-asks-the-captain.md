@@ -230,6 +230,14 @@ Recommended order: comment-check-reaches-delivery-gate, then fo-write-checks-par
 
 ADR: 0054
 
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-04, chat
+Captain: 「准」 (chat, 2026-11-04)
+Asked: 「決定：#773 的 F2、F3 豁免（白話請求照設計不偵測），F4、F5 接受為紀錄與本機安裝問題、不擋重新驗證，可以嗎？」
+Supersedes: none
+
 ## Stage Report: ideation
 
 - DONE: Start with the task's First ideation step (missing rule or unenforced one) and check the qnow handbook evidence against its source; then name the point that catches an untried step before the ask reaches the Captain
