@@ -13,6 +13,10 @@ gates:
                 id: briefing:diagnosis-rounds-count-toward-step-back:backlog:attempt-1:revision-1
                 digest: sha256:2f1bf4de795fa1ef5f6c5c6a210df8e2a138270466f031373fa925a32549279f
                 room-ref: ./diagnosis-rounds-count-toward-step-back/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-03T07:39:00.446123Z"
+                reason: The Captain widened the batch 13 sitting to seven tasks (chat, 2026-11-03); the bound question named four.
 ---
 
 ## Scope
