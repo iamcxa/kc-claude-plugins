@@ -232,6 +232,14 @@ Verified by: `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --require <rese
 
 ADR: 0052
 
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-03, chat
+Captain: 「可以」 (chat, 2026-11-03)
+Asked: 「決定：A 的 AC-4 改成『例行批准前只寫一行 `APPROVED: <做什麼> FOR: <哪個 worker>`，批准後不說話』，讓 A 照這個再修一輪嗎？」
+Supersedes: AC-4
+
 ## Stage Report: ideation
 
 - DONE: First check the observatory evidence for this task against its source (the qnow and relay FO session records) and say what holds; then design where FO's answer to its own worker's permission request is checked: the listed request id, a live worker, the boundary of what FO could do itself, and no routine Captain message
