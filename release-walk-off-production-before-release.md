@@ -22,6 +22,17 @@ gates:
                 id: briefing:release-walk-off-production-before-release:backlog:attempt-2:revision-1
                 digest: sha256:2ddaa9b8e0e8f651a68695f4b5179b73d0a8be2876bfd15ff0398d81a18cbcf5
                 room-ref: ./release-walk-off-production-before-release/review/backlog/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-walk-off-production-before-release:backlog:2
+                briefing: briefing:release-walk-off-production-before-release:backlog:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-03T07:44:42.223956Z"
+                decision: approve
+                reason: The Captain 「進」 (chat, 2026-11-03), answering the batch 13 sitting 「決定：這批七張（A 權限、B 同症狀計數、C 改寫條件比對原話、D release 驗收不在正式站、來源標註、FO 先自己試、release 驗收到期提醒）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？要改哪張直接說。」; approves Pilot, these outcomes and bounds.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
