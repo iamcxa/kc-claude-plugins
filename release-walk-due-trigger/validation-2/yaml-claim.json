@@ -1,0 +1,36 @@
+{
+  "spacedock": {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow",
+      "--read",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow/.spacedock-state/r1-acceptance.md",
+      "--json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "{\"command\":\"read\",\"path\":\"/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow/.spacedock-state/r1-acceptance.md\",\"total_lines\":\"4\",\"frontmatter\":{\"release-acceptance\":\"book-pickup/r1\",\"title\":\"acceptance\"},\"headings\":[]}\n",
+    "stderr": "",
+    "seconds": 0.0129
+  },
+  "due": {
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-consumer/kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py",
+      "due",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow",
+      "--progress",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-producer/kc-journey-map/lib/journey-progress.mjs",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/journey.yaml"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "next: release book-pickup/r2 has every story built and no walk claimed; file its acceptance task per release-acceptance's \"File the task\", with release-acceptance: book-pickup/r2 in frontmatter.\n",
+    "stderr": "",
+    "seconds": 0.6929
+  }
+}

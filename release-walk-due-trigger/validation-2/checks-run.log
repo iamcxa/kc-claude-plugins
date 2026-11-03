@@ -1,0 +1,17 @@
+lint 0
+adr 0
+adr-literal-main 0
+numbers-stacked 0
+numbers-literal-main 1
+comments 0
+doc-impact 0
+design-surfaces 0
+dispatch 1
+diff-check 0
+scope-stacked 0
+scope-main 0
+producer-adr 0
+producer-comments 0
+producer-doc-impact 0
+producer-diff-check 0
+producer-scope 0

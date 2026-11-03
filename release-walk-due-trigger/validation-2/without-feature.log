@@ -1,0 +1,4 @@
+usage: release_acceptance_base.py [-h]
+                                  {schema,deferred,accepted,check,director-model,build,render}
+                                  ...
+release_acceptance_base.py: error: argument command: invalid choice: 'due' (choose from 'schema', 'deferred', 'accepted', 'check', 'director-model', 'build', 'render')

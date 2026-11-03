@@ -1,0 +1,2 @@
+release-acceptance not run: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp_w54djex/journey.yaml: Command 'node' timed out after 60 seconds
+PASS: timeout injected after successful native-shaped task query, at producer invocation.

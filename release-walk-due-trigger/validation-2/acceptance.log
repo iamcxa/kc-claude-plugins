@@ -1,0 +1,29 @@
+Exact consumer a3d9b00211929469c3b8cd8ccf63f95d2e261274; producer b026e0d7e497f7dc0ae0bae03fb1558810a36db3 exported
+✔ the table and version print and the recorded hash binds them (47.604792ms)
+✔ an edited table with an unchanged version exits 1 naming the schema (48.423875ms)
+✔ a bumped version with no recorded hash exits 1 (53.32425ms)
+✔ the printed history pointers name files that exist and a runnable command (151.014417ms)
+✔ release-walk prints its table and version, and an edited table with an unchanged version exits 1 (106.79175ms)
+✔ journey-progress registers its printed table and refuses an unversioned shape edit (113.27275ms)
+✔ the progress producer preserves the registered keys and acceptance meanings (734.3135ms)
+✔ the README and SKILL.md send a reader to the schema command, the CHANGELOG and the ADR, and say when (0.886458ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1326.447
+..................
+----------------------------------------------------------------------
+Ran 18 tests in 8.289s
+
+OK
+...
+----------------------------------------------------------------------
+Ran 3 tests in 1.114s
+
+OK
+PASS status comment: producer pending=2, due reminders=2, expected=2
+PASS claim comment: producer pending=2, due reminders=1, expected=1

@@ -465,3 +465,37 @@ The combined delivery is REJECTED at the named heads: producer registration pass
 ### Summary
 
 This complete report supersedes earlier implementation reports for the consumer head and current proof; it does not replace validation-1's verdict. F1 and F2 are repaired at a3d9b00211929469c3b8cd8ccf63f95d2e261274, with all 255 tests passing and raw-field/archived-query mutations caught. RoboRev remains incomplete with the quoted daemon result; FO retains F3/F4 disposition, publication, hosted evidence and fresh independent validation.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #775 head a3d9b002 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED under Captain amendments 1/2 at a3d9b00211929469c3b8cd8ccf63f95d2e261274; no new findings. Full primary evidence and limits: release-walk-due-trigger/validation-2/details.md.
+- DONE: This rerun's rulings are Captain amendment 2 (stacked PRs: judge AC-16 and the number guards against PR #772's head now and against origin/main after #772 merges; validation-1 F4, FO's shortened message record, accepted). Re-judge validation-1 F1 and F2 (repaired at this head by reading task fields through Spacedock) and F3 under amendment 2, and every criterion on both heads (#774 at b026e0d7e, #775 at this head). Do not start agents you were not asked to
+  F1/F2 fixed with native YAML replay and failing reverse mutation; F3 passes against #772 606781cbec3f684af5e7f9a74c90026e49c3e0a1 under amendment 2; F4 accepted as recorded. Producer b026e0d7e497f7dc0ae0bae03fb1558810a36db3 registration passes; no agents started.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four steps in validation-2/acceptance.sh run unchanged with /bin/bash --noprofile --norc, exit 0: 8/18/3 tests and both YAML regressions pass. Loaded Codex 0.34.0 package adr_lint.py docs/adr --since 606781cbec3f684af5e7f9a74c90026e49c3e0a1 --require 0056 exits 0 (52 records); loaded-package precedence and exact commands/output in details.md.
+- DONE: AC-11 — due output, claim suppression/removal, missing producer and listed idle integration.
+  Real producer and split-root new/status --set/state commit replay pass; deleting a persisted claim restores its line. F2 commented claim now silences r1; raw-field mutation repeats it and fails.
+- DONE: AC-12 — all live/archive flat/folder and empty claims.
+  Shipped shape cases and native archived-folder read pass; omitting --archived makes the native claim test fail. No raw-glob claim remains.
+- DONE: AC-13 — done-live candidates and no-done skip agree with the producer.
+  Real and recorded output agree; requiring archived instead of done fails. F1 status comment now returns both pending releases; reverting parsed fields fails status and quoting controls.
+- DONE: AC-14 — unlisted bytes, listed argv and no-map gating.
+  Unlisted base/candidate fixture output identical; real due with stub producer prints once; removing the listing gate fails. No other production parser of tasks output found in the package.
+- DONE: AC-15 — producer and task-read diagnostics, selected CLI, normal exit 1.
+  Error cases, map YAML and renamed-CLI tests pass; exit-1 rejection, ignored diagnostic, raw map ID and removed alias mutations fail. Timeout injected specifically at producer after a successful listing; incomplete listings diagnose.
+- DONE: AC-16 — amended stack weight, producer exception and sanitize check.
+  Seven consumer files only; workflow/extension bytes match #772, 5781/529 words; README names idle; no consumer version/CI/producer edit. Producer changes only three approved files. Word-cap mutation fails; sanitize conditional pass: 0 BLOCK/REJECT, 2 unchanged WARNs.
+- DONE: AC-17 — independently timed command-backed cost and missing-command falsifier.
+  One sample each: unmapped producer 7.5095 s/due 3.0040 s; mapped five-task producer 0.2777 s/due 0.5217 s. timings.json retains argv/output; removing argv is rejected. No large-map claim; CI cost per PR unmeasured, triggers unchanged.
+- DONE: Full relevant suites, registration falsifiers, retention, decision records and affected documents.
+  122 release-acceptance + 133 pr_watch + 8 producer tests pass, no live skips; 11 injected faults rejected. All 116 prior test names retained; prerequisite Task/state_tasks/cmd_accepted unchanged as ASTs. Lint, design, diff and stacked number checks pass; comments 1/491 (0.2%). ADR 0056 updated; ADR 0053 unaffected by this task.
+- DONE: Re-read both hosted candidates and judge known checker limits.
+  #774/#775 exact heads have five SUCCESS checks each; both open/draft. Literal-main number guard still exits 1 for prerequisite ADR 0053, and dispatch checker still exits 1 for the accepted F4 format. Both are recorded amendment-2 dispositions, not unreported clean checks.
+- SKIPPED: Later main-base integration check, current RoboRev verdict, product publication, release walk and delivery approval.
+  #772 remains open; FO owns the post-merge AC-16/number check and producer-first delivery. Recorded daemon failures prove no current local-review verdict. Cache activation, large-map performance and re-walk triggering remain outside accepted proof; CLI tested is Spacedock 0.27.2, not an inferred 0.27.3.
+
+### Summary
+
+This complete report supersedes validation-1's rejection for the two named candidates under Captain amendments 1/2: the two YAML defects are repaired, the stacked boundary is now authorized, and F4 is accepted. PASSED is scoped to these revisions and the stated base; FO retains later main verification, review disposition and delivery authority. Detached probe checkouts are removed, the assigned code branch is unchanged, and task status remains validation.

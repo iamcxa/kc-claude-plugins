@@ -1,0 +1,16 @@
+✔ the table and version print and the recorded hash binds them (52.316084ms)
+✔ an edited table with an unchanged version exits 1 naming the schema (77.419459ms)
+✔ a bumped version with no recorded hash exits 1 (153.582166ms)
+✔ the printed history pointers name files that exist and a runnable command (239.613708ms)
+✔ release-walk prints its table and version, and an edited table with an unchanged version exits 1 (117.881208ms)
+✔ journey-progress registers its printed table and refuses an unversioned shape edit (107.663166ms)
+✔ the progress producer preserves the registered keys and acceptance meanings (776.153625ms)
+✔ the README and SKILL.md send a reader to the schema command, the CHANGELOG and the ADR, and say when (0.687875ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1586.73725

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "release-acceptance: 122 tests, no skips",
+    "status": "passed"
+  },
+  {
+    "name": "pr_watch: 133 tests",
+    "status": "passed"
+  },
+  {
+    "name": "producer contract: 8 tests",
+    "status": "passed"
+  },
+  {
+    "name": "Fresh-shell four-step acceptance: 8 + 18 + 3 tests and two YAML regressions",
+    "status": "passed"
+  },
+  {
+    "name": "11 injected faults rejected; producer timeout and missing timing provenance controls passed",
+    "status": "passed"
+  }
+]

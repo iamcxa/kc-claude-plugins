@@ -1,0 +1,24 @@
+F
+======================================================================
+FAIL: test_release_walk_due_is_gated_by_listing_and_map_presence (__main__.TasksTests.test_release_walk_due_is_gated_by_listing_and_map_presence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-support/mutation/kc-dev-flow-2/scripts/test_pr_watch.py", line 816, in test_release_walk_due_is_gated_by_listing_and_map_presence
+    self.assertEqual(self.tasks({}), baseline)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0, ['next: release demo/r1 has every story bu[139 chars]r.']) != (0, [])
+
+First differing element 1:
+['next: release demo/r1 has every story bu[138 chars]er.']
+[]
+
++ (0, [])
+- (0,
+-  ['next: release demo/r1 has every story built and no walk claimed; file its '
+-   'acceptance task per release-acceptance\'s "File the task", with '
+-   'release-acceptance: demo/r1 in frontmatter.'])
+
+----------------------------------------------------------------------
+Ran 1 test in 0.997s
+
+FAILED (failures=1)

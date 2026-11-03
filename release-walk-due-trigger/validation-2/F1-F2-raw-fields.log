@@ -1,0 +1,32 @@
+FFF
+======================================================================
+FAIL: test_done_status_with_yaml_comment_does_not_hide_due_release (__main__.DueTests.test_done_status_with_yaml_comment_does_not_hide_due_release)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-support/mutation/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1256, in test_done_status_with_yaml_comment_does_not_hide_due_release
+    self.assertEqual(out.count("next:"), 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_claim_with_yaml_comment_silences_the_claimed_release (__main__.DueTests.test_claim_with_yaml_comment_silences_the_claimed_release)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-support/mutation/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1263, in test_claim_with_yaml_comment_silences_the_claimed_release
+    self.assertNotIn("release book-pickup/r1 ", out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release book-pickup/r1 ' unexpectedly found in 'next: release book-pickup/r1 has every story built and no walk claimed; file its acceptance task per release-acceptance\'s "File the task", with release-acceptance: book-pickup/r1 in frontmatter.\nnext: release book-pickup/r2 has every story built and no walk claimed; file its acceptance task per release-acceptance\'s "File the task", with release-acceptance: book-pickup/r2 in frontmatter.\n'
+
+======================================================================
+FAIL: test_every_due_frontmatter_value_uses_the_parsed_listing (__main__.DueTests.test_every_due_frontmatter_value_uses_the_parsed_listing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-support/mutation/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1279, in test_every_due_frontmatter_value_uses_the_parsed_listing
+    self.assertIn("release book-pickup/r2 ", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release book-pickup/r2 ' not found in ''
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.265s
+
+FAILED (failures=3)

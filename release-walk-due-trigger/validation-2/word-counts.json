@@ -1,0 +1,12 @@
+{
+  "kc-dev-flow-2/references/sd/workflow.md": {
+    "base_words": 5781,
+    "candidate_words": 5781,
+    "bytes_identical": true
+  },
+  "kc-dev-flow-2/extensions/release-acceptance/EXTENSION.md": {
+    "base_words": 529,
+    "candidate_words": 529,
+    "bytes_identical": true
+  }
+}

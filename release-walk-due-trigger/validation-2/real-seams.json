@@ -1,0 +1,263 @@
+[
+  {
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-consumer/kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py",
+      "due",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow",
+      "--progress",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-producer/kc-journey-map/lib/journey-progress.mjs",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/journey.yaml"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "next: release book-pickup/r1 has every story built and no walk claimed; file its acceptance task per release-acceptance's \"File the task\", with release-acceptance: book-pickup/r1 in frontmatter.\nnext: release book-pickup/r2 has every story built and no walk claimed; file its acceptance task per release-acceptance's \"File the task\", with release-acceptance: book-pickup/r2 in frontmatter.\n",
+    "stderr": "",
+    "seconds": 0.8249
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_",
+      "init",
+      "-q",
+      "-b",
+      "validation"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "",
+    "seconds": 0.0343
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow/.spacedock-state",
+      "init",
+      "-q",
+      "-b",
+      "spacedock-state/workflow"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "",
+    "seconds": 0.0268
+  },
+  {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "new",
+      "r1-acceptance",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "created: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow/.spacedock-state/r1-acceptance.md id=r1-acceptance\n",
+    "stderr": "",
+    "seconds": 0.0094
+  },
+  {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--set",
+      "r1-acceptance",
+      "release-acceptance=book-pickup/r1",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "release-acceptance:  -> book-pickup/r1\n",
+    "stderr": "",
+    "seconds": 0.0111
+  },
+  {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "state",
+      "commit",
+      "r1-acceptance",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "Committed r1-acceptance locally; no origin remote \u2014 state is local-only until an origin is configured.\n",
+    "stderr": "",
+    "seconds": 0.4162
+  },
+  {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow",
+      "--archived",
+      "--all-fields",
+      "--limit",
+      "0",
+      "--json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "{\"command\":\"status\",\"entities\":[{\"id\":\"build-check-ready\",\"slug\":\"build-check-ready\",\"status\":\"done\",\"title\":\"build-check-ready\",\"score\":\"\",\"journey\":\"book-pickup\",\"journey-mapping-complete\":\"true\",\"journey-release\":\"r1\",\"journey-required-tasks\":\"[\\\"build-check-ready\\\"]\",\"journey-story\":\"check-ready\",\"release-acceptance\":\"\"},{\"id\":\"build-choose-pickup-day\",\"slug\":\"build-choose-pickup-day\",\"status\":\"done\",\"title\":\"build-choose-pickup-day\",\"score\":\"\",\"journey\":\"book-pickup\",\"journey-mapping-complete\":\"true\",\"journey-release\":\"r2\",\"journey-required-tasks\":\"[\\\"build-choose-pickup-day\\\"]\",\"journey-story\":\"choose-pickup-day\",\"release-acceptance\":\"\"},{\"id\":\"build-collect-book\",\"slug\":\"build-collect-book\",\"status\":\"done\",\"title\":\"build-collect-book\",\"score\":\"\",\"journey\":\"book-pickup\",\"journey-mapping-complete\":\"true\",\"journey-release\":\"r1\",\"journey-required-tasks\":\"[\\\"build-collect-book\\\"]\",\"journey-story\":\"collect-book\",\"release-acceptance\":\"\"},{\"id\":\"build-receive-reminder\",\"slug\":\"build-receive-reminder\",\"status\":\"done\",\"title\":\"build-receive-reminder\",\"score\":\"\",\"journey\":\"book-pickup\",\"journey-mapping-complete\":\"true\",\"journey-release\":\"r2\",\"journey-required-tasks\":\"[\\\"build-receive-reminder\\\"]\",\"journey-story\":\"receive-reminder\",\"release-acceptance\":\"\"},{\"id\":\"build-reserve-copy\",\"slug\":\"build-reserve-copy\",\"status\":\"done\",\"title\":\"build-reserve-copy\",\"score\":\"\",\"journey\":\"book-pickup\",\"journey-mapping-complete\":\"true\",\"journey-release\":\"r1\",\"journey-required-tasks\":\"[\\\"build-reserve-copy\\\"]\",\"journey-story\":\"reserve-copy\",\"release-acceptance\":\"\"},{\"id\":\"r1-acceptance\",\"slug\":\"r1-acceptance\",\"status\":\"\",\"title\":\"r1 acceptance\",\"score\":\"\",\"journey\":\"\",\"journey-mapping-complete\":\"\",\"journey-release\":\"\",\"journey-required-tasks\":\"\",\"journey-story\":\"\",\"release-acceptance\":\"book-pickup/r1\"}],\"pagination\":{\"page\":\"1\",\"limit\":\"0\",\"total\":\"6\",\"start\":\"1\",\"end\":\"6\",\"has_next\":\"false\"}}\n",
+    "stderr": "",
+    "seconds": 0.0144
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow/.spacedock-state",
+      "show",
+      "HEAD:r1-acceptance.md"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "---\ntitle: r1 acceptance\nrelease-acceptance: book-pickup/r1\n---\n\nValidation fixture\n",
+    "stderr": "",
+    "seconds": 0.0294
+  },
+  {
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-consumer/kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py",
+      "due",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow",
+      "--progress",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-producer/kc-journey-map/lib/journey-progress.mjs",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/journey.yaml"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "next: release book-pickup/r2 has every story built and no walk claimed; file its acceptance task per release-acceptance's \"File the task\", with release-acceptance: book-pickup/r2 in frontmatter.\n",
+    "stderr": "",
+    "seconds": 0.5664
+  },
+  {
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-consumer/kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py",
+      "due",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow",
+      "--progress",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-producer/kc-journey-map/lib/journey-progress.mjs",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/journey.yaml"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "next: release book-pickup/r1 has every story built and no walk claimed; file its acceptance task per release-acceptance's \"File the task\", with release-acceptance: book-pickup/r1 in frontmatter.\nnext: release book-pickup/r2 has every story built and no walk claimed; file its acceptance task per release-acceptance's \"File the task\", with release-acceptance: book-pickup/r2 in frontmatter.\n",
+    "stderr": "",
+    "seconds": 0.5866
+  },
+  {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow",
+      "--read",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow/.spacedock-state/r1-acceptance.md",
+      "--json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "{\"command\":\"read\",\"path\":\"/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow/.spacedock-state/r1-acceptance.md\",\"total_lines\":\"4\",\"frontmatter\":{\"release-acceptance\":\"book-pickup/r1\",\"title\":\"acceptance\"},\"headings\":[]}\n",
+    "stderr": "",
+    "seconds": 0.0129
+  },
+  {
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-consumer/kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py",
+      "due",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow",
+      "--progress",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-producer/kc-journey-map/lib/journey-progress.mjs",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/journey.yaml"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "next: release book-pickup/r2 has every story built and no walk claimed; file its acceptance task per release-acceptance's \"File the task\", with release-acceptance: book-pickup/r2 in frontmatter.\n",
+    "stderr": "",
+    "seconds": 0.6929
+  },
+  {
+    "command": [
+      "/Users/kent/n/bin/node",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-producer/kc-journey-map/lib/journey-progress.mjs",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-consumer/docs/journey/kc-journey-map/draw-a-journey.yaml",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": null,
+    "exit": 1,
+    "stdout": "{\n  \"schema\": \"journey-progress/v1\",\n  \"journey\": \"draw-a-journey\",\n  \"source\": \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2\",\n  \"observedAt\": \"2026-11-03T17:44:06.142Z\",\n  \"diagnostic\": null,\n  \"orphans\": [],\n  \"stories\": [\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"name-the-steps-a-person-take\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r2\",\n      \"story\": \"cite-the-code-each-step-runs\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r2\",\n      \"story\": \"name-what-must-stay-true\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"ask-which-boards-to-draw\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"default-to-the-journey-alone\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"draw-the-journey-board-if-ask\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"get-a-story-map-and-an-journ\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"re-render-after-every-change\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"export-an-image-for-a-report\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r3\",\n      \"story\": \"see-updated-map-without-waiting\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r2\",\n      \"story\": \"generate-a-contract-per-release\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r2\",\n      \"story\": \"run-three-lints-that-can-fail\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": null,\n      \"story\": \"hand-someone-a-link-to-board\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"Missing or duplicate explicit journey/release/story identity\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": null,\n      \"story\": \"land-on-the-board-i-shared\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"Missing or duplicate explicit journey/release/story identity\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": null,\n      \"story\": \"share-without-edit-rights\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"Missing or duplicate explicit journey/release/story identity\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": null,\n      \"story\": \"know-a-link-i-sent-has-died\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"Missing or duplicate explicit journey/release/story identity\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"reorder-the-columns\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"reword-a-card\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"add-a-card-nobody-had-though\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"see-what-changed\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r1\",\n      \"story\": \"apply-the-wording-and-the-or\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r3\",\n      \"story\": \"start-from-a-journey-or-from\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r3\",\n      \"story\": \"name-one-command-per-step\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r3\",\n      \"story\": \"name-the-events-it-emits-inc\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r3\",\n      \"story\": \"name-the-state-it-changes-an\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r3\",\n      \"story\": \"see-a-third-page-command-eve\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": null,\n      \"story\": \"workshop-it-and-read-it-back\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"Missing or duplicate explicit journey/release/story identity\"\n    },\n    {\n      \"journey\": \"draw-a-journey\",\n      \"release\": \"r3\",\n      \"story\": \"hand-the-order-to-planning\",\n      \"status\": \"unverified\",\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"taskIds\": [],\n      \"diagnostic\": \"One confirmed complete mapping is required\"\n    }\n  ],\n  \"releases\": [\n    {\n      \"release\": \"r1\",\n      \"totalStories\": 12,\n      \"doneStories\": 0,\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"status\": \"unverified\",\n      \"acceptance\": \"delivery acceptance not established\"\n    },\n    {\n      \"release\": \"r2\",\n      \"totalStories\": 4,\n      \"doneStories\": 0,\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"status\": \"unverified\",\n      \"acceptance\": \"delivery acceptance not established\"\n    },\n    {\n      \"release\": \"r3\",\n      \"totalStories\": 7,\n      \"doneStories\": 0,\n      \"requiredTasks\": 0,\n      \"doneTasks\": 0,\n      \"status\": \"unverified\",\n      \"acceptance\": \"delivery acceptance not established\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "seconds": 7.5095
+  },
+  {
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-consumer/kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py",
+      "due",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--progress",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-producer/kc-journey-map/lib/journey-progress.mjs",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-consumer/docs/journey/kc-journey-map/draw-a-journey.yaml"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "",
+    "seconds": 3.004
+  },
+  {
+    "command": [
+      "/Users/kent/n/bin/node",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-producer/kc-journey-map/lib/journey-progress.mjs",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/journey.yaml",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "{\n  \"schema\": \"journey-progress/v1\",\n  \"journey\": \"book-pickup\",\n  \"source\": \"/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow\",\n  \"observedAt\": \"2026-11-03T17:44:09.428Z\",\n  \"diagnostic\": null,\n  \"orphans\": [],\n  \"stories\": [\n    {\n      \"journey\": \"book-pickup\",\n      \"release\": \"r1\",\n      \"story\": \"reserve-copy\",\n      \"status\": \"exists\",\n      \"requiredTasks\": 1,\n      \"doneTasks\": 1,\n      \"taskIds\": [\n        \"build-reserve-copy\"\n      ]\n    },\n    {\n      \"journey\": \"book-pickup\",\n      \"release\": \"r2\",\n      \"story\": \"choose-pickup-day\",\n      \"status\": \"exists\",\n      \"requiredTasks\": 1,\n      \"doneTasks\": 1,\n      \"taskIds\": [\n        \"build-choose-pickup-day\"\n      ]\n    },\n    {\n      \"journey\": \"book-pickup\",\n      \"release\": \"r1\",\n      \"story\": \"check-ready\",\n      \"status\": \"exists\",\n      \"requiredTasks\": 1,\n      \"doneTasks\": 1,\n      \"taskIds\": [\n        \"build-check-ready\"\n      ]\n    },\n    {\n      \"journey\": \"book-pickup\",\n      \"release\": \"r2\",\n      \"story\": \"receive-reminder\",\n      \"status\": \"exists\",\n      \"requiredTasks\": 1,\n      \"doneTasks\": 1,\n      \"taskIds\": [\n        \"build-receive-reminder\"\n      ]\n    },\n    {\n      \"journey\": \"book-pickup\",\n      \"release\": \"r1\",\n      \"story\": \"collect-book\",\n      \"status\": \"exists\",\n      \"requiredTasks\": 1,\n      \"doneTasks\": 1,\n      \"taskIds\": [\n        \"build-collect-book\"\n      ]\n    }\n  ],\n  \"releases\": [\n    {\n      \"release\": \"r1\",\n      \"totalStories\": 3,\n      \"doneStories\": 3,\n      \"requiredTasks\": 3,\n      \"doneTasks\": 3,\n      \"status\": \"exists\",\n      \"acceptance\": \"pending delivery acceptance\"\n    },\n    {\n      \"release\": \"r2\",\n      \"totalStories\": 2,\n      \"doneStories\": 2,\n      \"requiredTasks\": 2,\n      \"doneTasks\": 2,\n      \"status\": \"exists\",\n      \"acceptance\": \"pending delivery acceptance\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "seconds": 0.2777
+  },
+  {
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-consumer/kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py",
+      "due",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/workflow",
+      "--progress",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-producer/kc-journey-map/lib/journey-progress.mjs",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdff14vb_/journey.yaml"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "next: release book-pickup/r1 has every story built and no walk claimed; file its acceptance task per release-acceptance's \"File the task\", with release-acceptance: book-pickup/r1 in frontmatter.\nnext: release book-pickup/r2 has every story built and no walk claimed; file its acceptance task per release-acceptance's \"File the task\", with release-acceptance: book-pickup/r2 in frontmatter.\n",
+    "stderr": "",
+    "seconds": 0.5217
+  }
+]

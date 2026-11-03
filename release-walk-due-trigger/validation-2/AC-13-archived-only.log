@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_recorded_real_progress_exit_one_and_claim_removal (__main__.DueTests.test_recorded_real_progress_exit_one_and_claim_removal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-2-support/mutation/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1243, in test_recorded_real_progress_exit_one_and_claim_removal
+    self.assertEqual(out.count("next:"), 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.007s
+
+FAILED (failures=1)
