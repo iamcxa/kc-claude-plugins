@@ -638,6 +638,18 @@ class AcceptedTests(Base):
         parent = self.folder.parent if archived else self.folder.parent.parent
         folder = parent / "r1-rewalk"
         shutil.copytree(self.folder, folder)
+        for path in (folder / "walk").glob("reviewer-*.json"):
+            reviewer = read(path)
+            reviewer["marks"] = [{"complaint": c["id"], "status": "fixed", "reason": "fixed on re-walk"}
+                                 for c in reviewer["complaints"]]
+            reviewer["complaints"] = []
+            for story in reviewer["stories"]:
+                story["complaints"] = []
+            put(path, reviewer)
+        put(folder / "walk/ruling.json", {"items": [], "tasks": [], "deferred": [
+            {"item": d, "ruling": "do-not-solve", "when": "never", "why": "settled"} for d in DEFERRED]})
+        code, out = run("build", folder, "--workflow-dir", self.wf, "--prior", self.walk / "report.json")
+        self.assertEqual(code, 0, out)
         put(folder.with_suffix(".md"), task_file({"release-acceptance": "book-pickup/r1", "pr": "local-merge:" + "b" * 40},
             f"Prior walk: {self.walk / 'report.json'}\n" if prior else ""))
         return folder
@@ -665,6 +677,45 @@ class AcceptedTests(Base):
         readme = self.wf / "README.md"
         put(readme, readme.read_text().replace("docs/releasing.md", "ops/production.md"))
         self.assertIn("production release per ops/production.md", self.accepted()[1])
+
+    def test_clean_archived_production_walk_is_not_accepted(self):
+        self.close()
+        self.edit_report(lambda r: r["target"].update(environment="production"))
+        self.not_accepted("the walk ran on production")
+
+    def test_minimal_forged_clean_report_is_not_accepted(self):
+        self.close()
+        put(self.walk / "report.json", {"schema": "release-acceptance/v1",
+            "walk": {"journey": "book-pickup", "release": "r1"},
+            "target": {"environment": "staging", "ref": "abc"}, "stories": [],
+            "proof_line": {"result": "works"}, "smoke": {"result": "passed"}, "walks": []})
+        self.not_accepted("reviewers")
+
+    def test_clean_report_still_needs_valid_ruling_and_complaint_rows(self):
+        self.close()
+        original = read(self.walk / "report.json")
+        self.edit_report(lambda r: r["ruling"]["director"].update(model="sonnet"))
+        self.not_accepted("director.model")
+        put(self.walk / "report.json", original)
+        self.edit_report(lambda r: r["complaint_rows"].clear())
+        self.not_accepted("complaint_rows")
+
+    def test_clean_rewalk_still_needs_its_prior_digest(self):
+        self.close()
+        folder = self.rewalk()
+        self.assertEqual(self.accepted()[0], 0)
+        path = folder / "walk/report.json"
+        report = read(path)
+        report["prior"]["digest"] = "sha256:" + "0" * 64
+        put(path, report)
+        self.not_accepted("prior report's digest does not match")
+
+    def test_clean_local_walk_still_needs_its_recorded_limit(self):
+        self.close()
+        readme = self.wf / "README.md"
+        put(readme, readme.read_text().replace("walk-environment: staging", "walk-environment: local"))
+        self.edit_report(lambda r: r["target"].update(environment="local"))
+        self.not_accepted("a local walk records its limit")
 
     def test_missing_malformed_or_unclean_report_holds(self):
         self.close()

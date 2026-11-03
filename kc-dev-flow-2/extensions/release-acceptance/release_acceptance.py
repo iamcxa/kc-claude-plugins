@@ -661,34 +661,40 @@ def check_environment(report, workflow_dir):
     return f"environment: {walk} (production: {production})"
 
 
-def cmd_check(args):
-    try:
-        folder = Path(args.folder)
-        _, walk_list = loaded(folder)
-        journey, release = walk_list["journey"], walk_list["release"]["id"]
-        prior, prior_digest = prior_of(args.prior)
-        if args.tier == "final":
+def checked_report(folder, workflow_dir, tier, prior_path=None, report=None):
+    folder = Path(folder)
+    _, walk_list = loaded(folder)
+    journey, release = walk_list["journey"], walk_list["release"]["id"]
+    prior, prior_digest = prior_of(prior_path)
+    if report is None:
+        if tier == "final":
             report = read_json(folder / "walk" / "report.json")
         else:
             report = assemble(folder, walk_list)
-        environment = check_environment(report, args.workflow_dir)
-        deferred_ids = [i for i, _ in deferred_items(args.workflow_dir, journey, release)]
-    except (Refused, KeyError, OSError, TypeError, AttributeError) as error:
-        print(f"REFUSED: {error}")
-        print("clean: no")
-        return 1
+    environment = check_environment(report, workflow_dir)
+    deferred_ids = [i for i, _ in deferred_items(workflow_dir, journey, release)]
     try:
         problems = structure_problems(report, folder, walk_list, deferred_ids, prior)
         recorded = (report.get("prior") or {}).get("digest")
         if prior is None and recorded:
             problems.append("the report records a prior digest but no --prior report was given")
-        elif prior is not None and args.tier == "final" and recorded != prior_digest:
+        elif prior is not None and tier == "final" and recorded != prior_digest:
             problems.append("the prior report's digest does not match the digest the report records")
-        if args.tier == "final" and not problems:
-            problems += ruling_problems(report, args.workflow_dir, journey, release, deferred_ids, prior)
+        if tier == "final" and not problems:
+            problems += ruling_problems(report, workflow_dir, journey, release, deferred_ids, prior)
             problems += row_problems(report, prior)
     except (KeyError, TypeError, AttributeError) as error:
         problems = [f"malformed report: {type(error).__name__} {error}"]
+    return report, environment, problems
+
+
+def cmd_check(args):
+    try:
+        report, environment, problems = checked_report(args.folder, args.workflow_dir, args.tier, args.prior)
+    except (Refused, KeyError, OSError, TypeError, AttributeError) as error:
+        print(f"REFUSED: {error}")
+        print("clean: no")
+        return 1
     for p in problems:
         print(f"REFUSED: {p}")
     if problems:
@@ -702,7 +708,7 @@ def cmd_check(args):
     print(f"tier {args.tier}: ok")
     print_environment(report)
     if args.tier == "final":
-        print_routes(report, args.workflow_dir, journey, release)
+        print_routes(report, args.workflow_dir, report["walk"]["journey"], report["walk"]["release"])
         print(f"clean: {'yes' if is_clean(report) else 'no'}")
     return 0
 
@@ -732,7 +738,7 @@ def cmd_accepted(args):
         if not tasks:
             raise Refused("no acceptance task")
         reports = {(t.folder / "walk/report.json").resolve(): t for t in tasks}
-        named = set()
+        named, priors = set(), {}
         for task in tasks:
             prior = re.search(r"^Prior walk:[ \t]*(\S.*)$", task.text, re.M)
             if prior:
@@ -741,6 +747,7 @@ def cmd_accepted(args):
                 if path not in reports:
                     raise Refused(f"{task.slug}: prior walk {path} is not an acceptance report of {args.release}")
                 named.add(path)
+                priors[task.slug] = path
         newest = [t for path, t in reports.items() if path not in named]
         if len(newest) > 1:
             raise Refused(f"{', '.join(t.slug for t in newest)} are both newest; name the prior walk")
@@ -758,6 +765,9 @@ def cmd_accepted(args):
             raise Refused(f"{task.slug}: report does not describe {args.release} ({WIRE})")
         if not is_clean(report):
             raise Refused(f"{task.slug} is not clean")
+        _, _, problems = checked_report(task.folder, args.workflow_dir, "final", priors.get(task.slug), report)
+        if problems:
+            raise Refused(f"{task.slug}: final check failed: {'; '.join(problems)}")
         release_doc = frontmatter(Path(args.workflow_dir) / "README.md").get("release-doc", "docs/releasing.md")
     except (Refused, OSError, KeyError, TypeError, AttributeError) as error:
         print(f"not accepted: {args.release}: {error}")
