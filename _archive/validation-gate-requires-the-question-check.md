@@ -1,6 +1,6 @@
 ---
 title: The merge-ask check holds a gate text with no external round count
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 gates:
@@ -75,10 +75,13 @@ gates:
                 reason: 'The Captain 「合併」 (chat, 2026-11-03), answering 「決定：合併 #767 嗎？」.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-02T06:35:12Z
 worktree: .worktrees/spacedock-ensign-validation-gate-requires-the-question-check
 pr: pr-merge:767
+verdict: PASSED
+completed: 2026-11-03T04:49:47Z
+archived: 2026-11-03T04:49:47Z
 ---
 
 ## Scope
