@@ -31,6 +31,17 @@ gates:
                 id: briefing:fo-answers-own-worker-permissions-by-listed-id:backlog:attempt-3:revision-1
                 digest: sha256:97b677babe6419fab2ac19f090020da3315d13b827e321b8aeece83acc7732ba
                 room-ref: ./fo-answers-own-worker-permissions-by-listed-id/review/backlog/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-answers-own-worker-permissions-by-listed-id:backlog:3
+                briefing: briefing:fo-answers-own-worker-permissions-by-listed-id:backlog:attempt-3:revision-1
+                by: person:captain
+                at: "2026-11-03T07:44:24.599988Z"
+                decision: approve
+                reason: The Captain 「進」 (chat, 2026-11-03), answering the batch 13 sitting 「決定：這批七張（A 權限、B 同症狀計數、C 改寫條件比對原話、D release 驗收不在正式站、來源標註、FO 先自己試、release 驗收到期提醒）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？要改哪張直接說。」; approves Pilot, these outcomes and bounds.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
