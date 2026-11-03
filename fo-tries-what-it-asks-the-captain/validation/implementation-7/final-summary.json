@@ -1,0 +1,10 @@
+{
+  "candidate": "128fe3e3fed70fa64ded8657f5a1b36933af3ced",
+  "tests": 890,
+  "skipped": 6,
+  "mutations": 26,
+  "report_lines": 50,
+  "roborev_exit": 0,
+  "roborev": "clean on 128fe3e3f; evidence=roborev:1448",
+  "remaining": "known parser limits; validation F2-F5 with FO; publication/review/CI"
+}

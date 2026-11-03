@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_named_card_prose_link_matches_asked_and_holds_when_unrecorded (test_delivery_gate.CaptainStepsTests.test_named_card_prose_link_matches_asked_and_holds_when_unrecorded) (recorded=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpu4mppu60/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1384, in test_named_card_prose_link_matches_asked_and_holds_when_unrecorded
+    self.assertEqual(code, 0 if recorded else 1, out)
+AssertionError: 1 != 0 : step 2 S1: Asked text is not in the message
+Candidate: <40-hex head, or none>\n\n### Step 1\nAsked: <the step exactly as the message states it>\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\nObserved: <the output, or a path in the task folder holding it>\nOnly he can: <what is left> — <why: his credential, account, device or judgment>
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.074s
+
+FAILED (failures=1)

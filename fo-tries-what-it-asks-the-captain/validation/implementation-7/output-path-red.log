@@ -1,0 +1,25 @@
+FF
+======================================================================
+FAIL: test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold (test_delivery_gate.CaptainStepsTests.test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold) (output='GET /health 200')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1364, in test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : message S4: missing path /health
+Candidate: <40-hex head, or none>\n\n### Step 1\nAsked: <the step exactly as the message states it>\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\nObserved: <the output, or a path in the task folder holding it>\nOnly he can: <what is left> — <why: his credential, account, device or judgment>
+
+
+======================================================================
+FAIL: test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold (test_delivery_gate.CaptainStepsTests.test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold) (output='GET /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpg9w0h9zz/unrecorded-path 200')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1364, in test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : message S4: missing path /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpg9w0h9zz/unrecorded-path
+Candidate: <40-hex head, or none>\n\n### Step 1\nAsked: <the step exactly as the message states it>\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\nObserved: <the output, or a path in the task folder holding it>\nOnly he can: <what is left> — <why: his credential, account, device or judgment>
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.007s
+
+FAILED (failures=2)

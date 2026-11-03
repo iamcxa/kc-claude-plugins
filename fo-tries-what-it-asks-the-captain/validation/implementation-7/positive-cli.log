@@ -1,0 +1,2 @@
+captain steps complete: 3 steps, 1 left to him
+PASS: emitted GET /health 200 is accepted; an independent missing path is held

@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Package suite: 890 tests, 6 existing skips",
+    "status": "passed"
+  },
+  {
+    "name": "Captain tests: 22",
+    "status": "passed"
+  },
+  {
+    "name": "Isolated mutations: 26 expected failures",
+    "status": "passed"
+  },
+  {
+    "name": "Fresh-shell acceptance and real reported-command replay",
+    "status": "passed"
+  }
+]
