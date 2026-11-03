@@ -2,6 +2,17 @@
 title: A release walk runs off production, and production waits for its acceptance
 status: backlog
 variant: kc-dev-flow-2
+gates:
+    version: 1
+    records:
+        - id: gate:release-walk-off-production-before-release:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:release-walk-off-production-before-release-backlog-1
+              briefing:
+                id: briefing:release-walk-off-production-before-release:backlog:attempt-1:revision-1
+                digest: sha256:5105584c0647efba89f916911d52090abacd75cf43789548ff1f8845b5060017
+                room-ref: ./release-walk-off-production-before-release/review/backlog/briefing-1
 ---
 
 ## Scope
