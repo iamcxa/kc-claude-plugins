@@ -1,6 +1,6 @@
 ---
 title: The second round on a task prompts the FO to step back
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 gates:
@@ -75,10 +75,13 @@ gates:
                 reason: 'The Captain 「合併」 (chat, 2026-11-03), answering 「決定：合併 #766 嗎？」.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-02T06:02:41Z
 worktree: .worktrees/spacedock-ensign-second-round-prompts-a-step-back
 pr: pr-merge:766
+verdict: PASSED
+completed: 2026-11-03T02:47:04Z
+archived: 2026-11-03T02:47:04Z
 ---
 
 ## Scope
