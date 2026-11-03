@@ -1,0 +1,14 @@
+{
+  "candidate": {
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/dispatch_records.py",
+    "sha256": "3a7a4d171b3e10dfef4c4d99b70876a450d423bf3d9f1ef7fbb834cb770a8b21"
+  },
+  "required_install": {
+    "path": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+    "sha256": "f0ad624f5d64f993c973c25f13a7da79e6b0cdfb34897e14945f08c13c8f7178"
+  },
+  "codex_install": {
+    "path": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+    "sha256": "3a7a4d171b3e10dfef4c4d99b70876a450d423bf3d9f1ef7fbb834cb770a8b21"
+  }
+}

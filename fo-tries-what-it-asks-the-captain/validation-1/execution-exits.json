@@ -1,0 +1,9 @@
+{
+  "full-suite": 0,
+  "mutations": 0,
+  "falsifiers": 0,
+  "probes": 0,
+  "acceptance": 1,
+  "independent-checks": 0,
+  "candidate-dispatch": 1
+}

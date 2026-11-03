@@ -1,0 +1,12 @@
+4f08f008f9b117876ffe4b569210278e240d203d
+.....................
+----------------------------------------------------------------------
+Ran 21 tests in 1.021s
+
+OK
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5836 of 5836 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+51 ADR file(s) checked, 0 legacy
+message S4: missing path /health
+Candidate: <40-hex head, or none>\n\n### Step 1\nAsked: <the step exactly as the message states it>\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\nObserved: <the output, or a path in the task folder holding it>\nOnly he can: <what is left> — <why: his credential, account, device or judgment>

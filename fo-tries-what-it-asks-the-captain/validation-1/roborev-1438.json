@@ -1,0 +1,11 @@
+{
+  "id": 1438,
+  "git_ref": "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb..4f08f008f9b117876ffe4b569210278e240d203d",
+  "status": "done",
+  "agent": "codex",
+  "model": "gpt-5.6-terra",
+  "started_at": "2026-11-03T21:04:20+08:00",
+  "finished_at": "2026-11-03T21:05:43+08:00",
+  "output": "SEVERITY_THRESHOLD_MET",
+  "verdict_bool": 1
+}

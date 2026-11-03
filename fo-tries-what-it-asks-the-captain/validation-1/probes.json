@@ -1,0 +1,275 @@
+[
+  {
+    "name": "three-real-commands",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/three-real-commands-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/three-real-commands-message.md"
+    ],
+    "exit": 0,
+    "output": "captain steps complete: 3 steps, 1 left to him\n",
+    "expected_current_exit": 0
+  },
+  {
+    "name": "three-real-commands-card",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/three-real-commands-card-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/three-real-commands-card-message.md"
+    ],
+    "exit": 0,
+    "output": "captain steps complete: 3 steps, 1 left to him\n",
+    "expected_current_exit": 0
+  },
+  {
+    "name": "prose",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/prose-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/prose-message.md"
+    ],
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n",
+    "expected_current_exit": 0
+  },
+  {
+    "name": "inline",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/inline-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/inline-message.md"
+    ],
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n",
+    "expected_current_exit": 0
+  },
+  {
+    "name": "quote-fence",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/quote-fence-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/quote-fence-message.md"
+    ],
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n",
+    "expected_current_exit": 0
+  },
+  {
+    "name": "list-fence",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/list-fence-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/list-fence-message.md"
+    ],
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n",
+    "expected_current_exit": 0
+  },
+  {
+    "name": "indented-code",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/indented-code-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/indented-code-message.md"
+    ],
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n",
+    "expected_current_exit": 0
+  },
+  {
+    "name": "normal-fence",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/normal-fence-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/normal-fence-message.md"
+    ],
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n",
+    "expected_current_exit": 1
+  },
+  {
+    "name": "longer-closer",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/longer-closer-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/longer-closer-message.md"
+    ],
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n",
+    "expected_current_exit": 1
+  },
+  {
+    "name": "unclosed",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/unclosed-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/unclosed-message.md"
+    ],
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n",
+    "expected_current_exit": 1
+  },
+  {
+    "name": "diagram",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/diagram-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/diagram-message.md"
+    ],
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'graph LR; A-->B'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n",
+    "expected_current_exit": 1
+  },
+  {
+    "name": "output-file-fence",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/output-file-fence-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/output-file-fence-message.md"
+    ],
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'output text'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n",
+    "expected_current_exit": 1
+  },
+  {
+    "name": "observed-route",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/observed-route-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/observed-route-message.md"
+    ],
+    "exit": 1,
+    "output": "message S4: missing path /health\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n",
+    "expected_current_exit": 1
+  },
+  {
+    "name": "observed-route-control",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/observed-route-control-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/observed-route-control-message.md"
+    ],
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n",
+    "expected_current_exit": 0
+  },
+  {
+    "name": "observed-route-card",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "/tmp/pr773-validation-4f08f008/probes/observed-route-card-record.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/observed-route-card-message.md"
+    ],
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n",
+    "expected_current_exit": 0
+  },
+  {
+    "name": "gate-question",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/pr773-validation-4f08f008/probes/task.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/question.txt",
+      "--summary-file",
+      "/tmp/pr773-validation-4f08f008/probes/summary.txt"
+    ],
+    "exit": 1,
+    "output": "Captain steps record fails: message S4: missing path /health\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  {
+    "name": "gate-report",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/pr773-validation-4f08f008/probes/task.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/question.txt",
+      "--summary-file",
+      "/tmp/pr773-validation-4f08f008/probes/summary.txt"
+    ],
+    "exit": 1,
+    "output": "Captain steps record fails: message S4: missing path /health\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  {
+    "name": "gate-control",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/.context/validation-pr773/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/pr773-validation-4f08f008/probes/task.md",
+      "--text-file",
+      "/tmp/pr773-validation-4f08f008/probes/question.txt",
+      "--summary-file",
+      "/tmp/pr773-validation-4f08f008/probes/summary.txt"
+    ],
+    "exit": 0,
+    "output": "gate text complete\n"
+  }
+]

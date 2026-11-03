@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Package script suite",
+    "status": "passed",
+    "message": "Ran 889 tests in 503.083s; OK (skipped=6)"
+  },
+  {
+    "name": "Captain step and gate tests",
+    "status": "passed",
+    "message": "21 tests; see mutation-tests.log"
+  },
+  {
+    "name": "Fresh-shell acceptance",
+    "status": "failed",
+    "message": "Step 5: valid GET /health 200 output is treated as a missing local path; exit 1."
+  }
+]

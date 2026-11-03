@@ -1,0 +1,21 @@
+FF
+======================================================================
+FAIL: test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links (test_delivery_gate.CaptainStepsTests.test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links) (named_card=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmptyd7m667/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1473, in test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links
+    self.assertEqual(self.run_steps(body, shown)[0], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links (test_delivery_gate.CaptainStepsTests.test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links) (named_card=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmptyd7m667/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1473, in test_links_in_recorded_output_fences_do_not_hide_unrecorded_message_links
+    self.assertEqual(self.run_steps(body, shown)[0], 0)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=2)

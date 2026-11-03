@@ -1,0 +1,47 @@
+[
+  {
+    "name": "AC-1: observations required",
+    "status": "passed",
+    "evidence": "mutation-tests.log; mutation-1.log; no Observed and unjustified none both held"
+  },
+  {
+    "name": "AC-2: archived QNow fixture",
+    "status": "passed",
+    "evidence": "mutation-2.log and mutation-3.log; missing file and unrecorded card command held; restored path passes"
+  },
+  {
+    "name": "AC-3: commands and links recorded",
+    "status": "passed",
+    "evidence": "mutation-4.log; dropping link coverage changes required rejection"
+  },
+  {
+    "name": "AC-4: Captain-only reason",
+    "status": "passed",
+    "evidence": "mutation-5.log; missing or one-word reason rejected"
+  },
+  {
+    "name": "AC-5: relay gate candidate",
+    "status": "passed",
+    "evidence": "mutation-6.log and mutation-7.log; no clause and wrong head hold with problem and next line"
+  },
+  {
+    "name": "AC-6: exercised steps pass",
+    "status": "failed",
+    "evidence": "Literal three-step fixture and real harmless commands pass; valid recorded route output fails steps and question (F1)"
+  },
+  {
+    "name": "AC-7: rule, budget and observer",
+    "status": "passed",
+    "evidence": "lint.log; observer-mutation.json; +55 ledger matches Captain gate quote"
+  },
+  {
+    "name": "AC-8: existing callers",
+    "status": "passed",
+    "evidence": "full-suite.log: 889 tests, 6 skips, exit 0; ac8-falsifier.log rejects legacy fixture when record removed"
+  },
+  {
+    "name": "AC-9: words at each moment",
+    "status": "passed",
+    "evidence": "independent-word-counts.json; mutation-word-budget.log; startup +55, idle/archive/merge unchanged; required pass line is nine words"
+  }
+]

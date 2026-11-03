@@ -1,0 +1,82 @@
+[
+  {
+    "severity": "medium",
+    "title": "Recorded route output incorrectly blocks a valid ask",
+    "file": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "line": 760,
+    "status": "confirmed",
+    "class": "Material",
+    "id": "F1",
+    "priority": "P2; not P1 in substance",
+    "detail": "The real steps CLI rejects an exact Observed fence containing GET /health 200 with message S4: missing path /health. The same false hold reaches question through either gate text or the latest validation report.",
+    "fix": "Route through implementation feedback: exclude recognized observation fences from path validation while retaining checks for requested files.",
+    "fields": {
+      "user_workflow": "FO prepares an ordinary validation message showing a step beside its captured output, as required by the Captain steps rule.",
+      "harm": "A completed step and passing observation cannot be presented; gate preparation exits 1 with no missing requested file.",
+      "boundary": "value-ac[AC-6]: a step FO ran itself, shown with its observed output, passes; contract[kc-dev-flow-2/references/sd/workflow.md#captain-steps]: show each step beside observed output.",
+      "trigger": "probes/observed-route.log; probes/gate-question.log; probes/gate-report.log; controls pass when the output is moved into a named card or removed."
+    }
+  },
+  {
+    "severity": "medium",
+    "title": "RoboRev 1419 finding 1 needs a Captain waiver",
+    "file": "docs/adr/0004-review-rounds-stop-by-rule-and-comments-are-counted.md",
+    "status": "open",
+    "class": "Needs decision",
+    "id": "F2",
+    "priority": "Reviewer High maps to P1; no substantive P1 in accepted scope",
+    "detail": "The prose omission reproduces but is explicitly excluded by Design / PRFAQ. Recommend accepting that limit, not implementing a new structured message format. High is RoboRev's highest severity; ADR 0004 still requires a recorded Captain waiver.",
+    "fields": {
+      "user_workflow": "FO sends an unrecorded prose instruction alongside a recorded harmless sentence.",
+      "harm": "The prose instruction can be untried and undetected; residual harm is real.",
+      "boundary": "none: Design / PRFAQ explicitly excludes prose without a command, link or file unless recorded; this is outside the promised detector.",
+      "trigger": "probes/prose.log and primary stored review roborev-1419.json."
+    }
+  },
+  {
+    "severity": "medium",
+    "title": "RoboRev 1423 needs a Captain waiver",
+    "file": "docs/adr/0004-review-rounds-stop-by-rule-and-comments-are-counted.md",
+    "status": "open",
+    "class": "Needs decision",
+    "id": "F3",
+    "priority": "Reviewer High maps to P1; no substantive P1 in accepted scope",
+    "detail": "This repeats the excluded prose-coverage concern from 1419. Recommend accepting the stated limit; do not silently override its reviewer High label or substitute validator judgment for a Captain waiver.",
+    "fields": {
+      "user_workflow": "Same prose-only ask as F2.",
+      "harm": "Same untried-prose residual gap.",
+      "boundary": "none: the accepted detector excludes this trigger; an exhaustive structured list changes the accepted format.",
+      "trigger": "probes/prose.log and primary stored review roborev-1423.json."
+    }
+  },
+  {
+    "severity": "medium",
+    "title": "Required installed dispatch checker uses obsolete completion grammar",
+    "file": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+    "status": "open",
+    "class": "Needs decision",
+    "id": "F4",
+    "detail": "The mandated installed checker exits 1 for all four records, requiring main as recipient. Candidate and Codex-cache checker bytes agree and recognize Paseo final-reply completion. FO owns the installed-package reconciliation; no install changed.",
+    "fields": {
+      "user_workflow": "Validator runs the exact package checker required by its dispatched stage.",
+      "harm": "Required dispatch evidence cannot be declared green using the mandated install.",
+      "boundary": "contract[kc-dev-flow-2/skills/validation/principles.md]: run dispatch_records and report incomplete records; package-copy choice belongs to FO.",
+      "trigger": "dispatch.log; dispatch-checker-identities.json; dispatch-candidate.log."
+    }
+  },
+  {
+    "severity": "medium",
+    "title": "Follow-up dispatch shortens the required completion line",
+    "file": "fo-tries-what-it-asks-the-captain/dispatch/implementation-1-message-1.md",
+    "status": "open",
+    "class": "Needs decision",
+    "id": "F5",
+    "detail": "Even the candidate checker exits 1 on this follow-up. Its Scope notes omit the canonical suffix beginning End your turn with the Done line below. FO owns the record and correction; validation did not rewrite history.",
+    "fields": {
+      "user_workflow": "FO records a repair assignment to an implementation worker.",
+      "harm": "The recorded dispatch fails the current completion-contract check; actual implementation completion is present, so no lost handoff is established.",
+      "boundary": "contract[kc-dev-flow-2/skills/validation/principles.md]: missing or incomplete dispatch records are findings for FO.",
+      "trigger": "dispatch-candidate.log; compare the follow-up Scope notes to PASEO_COMPLETION_LINE in candidate dispatch_records.py."
+    }
+  }
+]

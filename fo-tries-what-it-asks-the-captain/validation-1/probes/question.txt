@@ -1,0 +1,4 @@
+Sufficiency: every acceptance criterion in the validation report was met.
+Necessity: the relay adopter reads it at each merge ask.
+
+Run the route smoke test.

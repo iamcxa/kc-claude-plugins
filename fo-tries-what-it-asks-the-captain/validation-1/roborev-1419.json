@@ -1,0 +1,11 @@
+{
+  "id": 1419,
+  "git_ref": "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb..a916b3eea96b44cfa13fed91482d4782dc52dde8",
+  "status": "done",
+  "agent": "codex",
+  "model": "gpt-5.6-terra",
+  "started_at": "2026-11-03T19:02:17+08:00",
+  "finished_at": "2026-11-03T19:09:26+08:00",
+  "output": "## Review Findings\n\n- **Severity**: High\n- **Location**: `kc-dev-flow-2/scripts/delivery_gate.py:743`\n- **Problem**: The gate only requires records for fenced commands and URLs. Any plain-language Captain instruction can be omitted from the record while a single harmless recorded sentence makes the gate pass, defeating the required \u201cevery step\u201d check.\n- **Fix**: Require an explicit, structured list of requested steps in the message and verify one recorded `Asked:` entry per listed step.\n\n---\n\n- **Severity**: High\n- **Location**: `kc-dev-flow-2/scripts/delivery_gate.py:730`\n- **Problem**: A step passes without a `Ran:` field; `Ran` is only consulted when `Observed` is absent. A record with `Asked` and arbitrary `Observed` can pass despite omitting the required execution context and timestamp.\n- **Fix**: Require a non-empty `Ran:` field for every step and validate its required execution context and UTC timestamp.\n\n## Summary\n\nThe change adds Captain-step gate records, but its validation can be bypassed for unstructured instructions and missing run evidence.",
+  "verdict_bool": 0
+}

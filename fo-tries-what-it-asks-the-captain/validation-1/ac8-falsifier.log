@@ -1,0 +1,77 @@
+FFFF
+======================================================================
+FAIL: test_both_wordings_in_use_and_a_question_that_names_no_merge_pass (test_delivery_gate.QuestionTests.test_both_wordings_in_use_and_a_question_that_names_no_merge_pass) [unless he says he merges or holds]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpufba6ocf/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1714, in test_both_wordings_in_use_and_a_question_that_names_no_merge_pass
+    self.assertEqual(self.ask(MERGE_ASK.format(tail=tail)), (0, "gate text complete\n"))
+AssertionError: Tuples differ: (1, 'gate text needs one Captain steps: <r[128 chars].\n') != (0, 'gate text complete\n')
+
+First differing element 0:
+1
+0
+
++ (0, 'gate text complete\n')
+- (1,
+-  'gate text needs one Captain steps: <record path> line\n'
+-  'next: hold preparation; run the Captain steps, record the observations at '
+-  'the dispatched head, and check again.\n')
+
+======================================================================
+FAIL: test_both_wordings_in_use_and_a_question_that_names_no_merge_pass (test_delivery_gate.QuestionTests.test_both_wordings_in_use_and_a_question_that_names_no_merge_pass) [if the Captain says he merges or holds]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpufba6ocf/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1714, in test_both_wordings_in_use_and_a_question_that_names_no_merge_pass
+    self.assertEqual(self.ask(MERGE_ASK.format(tail=tail)), (0, "gate text complete\n"))
+AssertionError: Tuples differ: (1, 'gate text needs one Captain steps: <r[128 chars].\n') != (0, 'gate text complete\n')
+
+First differing element 0:
+1
+0
+
++ (0, 'gate text complete\n')
+- (1,
+-  'gate text needs one Captain steps: <record path> line\n'
+-  'next: hold preparation; run the Captain steps, record the observations at '
+-  'the dispatched head, and check again.\n')
+
+======================================================================
+FAIL: test_both_wordings_in_use_and_a_question_that_names_no_merge_pass (test_delivery_gate.QuestionTests.test_both_wordings_in_use_and_a_question_that_names_no_merge_pass) [unless you say you merge or hold]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpufba6ocf/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1714, in test_both_wordings_in_use_and_a_question_that_names_no_merge_pass
+    self.assertEqual(self.ask(MERGE_ASK.format(tail=tail)), (0, "gate text complete\n"))
+AssertionError: Tuples differ: (1, 'gate text needs one Captain steps: <r[128 chars].\n') != (0, 'gate text complete\n')
+
+First differing element 0:
+1
+0
+
++ (0, 'gate text complete\n')
+- (1,
+-  'gate text needs one Captain steps: <record path> line\n'
+-  'next: hold preparation; run the Captain steps, record the observations at '
+-  'the dispatched head, and check again.\n')
+
+======================================================================
+FAIL: test_both_wordings_in_use_and_a_question_that_names_no_merge_pass (test_delivery_gate.QuestionTests.test_both_wordings_in_use_and_a_question_that_names_no_merge_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpufba6ocf/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1715, in test_both_wordings_in_use_and_a_question_that_names_no_merge_pass
+    self.assertEqual(self.ask("Admit the sample task?"), (0, "gate text complete\n"))
+AssertionError: Tuples differ: (1, 'gate text needs one Captain steps: <r[128 chars].\n') != (0, 'gate text complete\n')
+
+First differing element 0:
+1
+0
+
++ (0, 'gate text complete\n')
+- (1,
+-  'gate text needs one Captain steps: <record path> line\n'
+-  'next: hold preparation; run the Captain steps, record the observations at '
+-  'the dispatched head, and check again.\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.011s
+
+FAILED (failures=4)

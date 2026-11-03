@@ -1,0 +1,2 @@
+External rounds: 0
+Captain steps: /tmp/pr773-validation-4f08f008/probes/observed-route-record.md
