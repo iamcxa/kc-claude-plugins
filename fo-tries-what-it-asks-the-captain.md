@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:fo-tries-what-it-asks-the-captain:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:fo-tries-what-it-asks-the-captain-ideation-1
+              briefing:
+                id: briefing:fo-tries-what-it-asks-the-captain:ideation:attempt-1:revision-1
+                digest: sha256:cdfc1d6bf8b7c5697af96aaf29299a1f48199ac69dbd7caee4159761f37e202c
+                room-ref: ./fo-tries-what-it-asks-the-captain/review/ideation/briefing-1
 ---
 
 ## Scope
