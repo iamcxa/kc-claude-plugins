@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:release-walk-due-trigger:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:release-walk-due-trigger-backlog-1
+              briefing:
+                id: briefing:release-walk-due-trigger:backlog:attempt-1:revision-1
+                digest: sha256:7a1d6adea08b14ed68a7d8769122139335f3596f1be93106fe830c1ff44e31ff
+                room-ref: ./release-walk-due-trigger/review/backlog/briefing-1
 ---
 
 ## Scope
