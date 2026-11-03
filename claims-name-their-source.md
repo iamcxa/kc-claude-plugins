@@ -216,6 +216,12 @@ ADR: 0055
 
 ## Captain amendments
 
+### Amendment 2 — 2026-11-04, chat
+Captain: 「可以」 (chat, 2026-11-04)
+Asked: 「決定：疊起來的 PR（#775、#777）先對上游 PR 驗、上游合併後再對 main 確認，F4 接受為紀錄格式問題，可以嗎？」
+Supersedes: none
+
+
 ### Amendment 1 — 2026-11-04, chat
 Captain: 「可以」 (chat, 2026-11-04)
 Asked: 「決定：來源標註的 AC-3 改成只用 Claude，各情境新規則補到 6 次、照原本 6 次過 5 次判定（Codex 半場記為這台機器跑不了），可以嗎？」
