@@ -2,6 +2,17 @@
 title: Diagnosis rounds on one symptom count toward the step back
 status: backlog
 variant: kc-dev-flow-2
+gates:
+    version: 1
+    records:
+        - id: gate:diagnosis-rounds-count-toward-step-back:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:diagnosis-rounds-count-toward-step-back-backlog-1
+              briefing:
+                id: briefing:diagnosis-rounds-count-toward-step-back:backlog:attempt-1:revision-1
+                digest: sha256:2f1bf4de795fa1ef5f6c5c6a210df8e2a138270466f031373fa925a32549279f
+                room-ref: ./diagnosis-rounds-count-toward-step-back/review/backlog/briefing-1
 ---
 
 ## Scope

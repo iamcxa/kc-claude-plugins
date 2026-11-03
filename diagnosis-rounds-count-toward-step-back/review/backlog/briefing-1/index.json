@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:diagnosis-rounds-count-toward-step-back:backlog:attempt-1:revision-1",
+  "question": "「決定：A、B、C、D 四張都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？要改哪張直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:diagnosis-rounds-count-toward-step-back:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5859e7d06e352e7c2605749cc0d1071dbb26f9c7/diagnosis-rounds-count-toward-step-back.md",
+      "rev": "sha256:470b804909ae82d862ec7d8fb5d1ddad5b5444dcbbabb6d9292fee722a82f361",
+      "mediaType": "text/markdown",
+      "summary": "Batch 13 backlog sitting; recommended approve to enter ideation under pilot."
+    }
+  ]
+}
