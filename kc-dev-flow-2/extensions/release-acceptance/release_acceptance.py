@@ -20,8 +20,11 @@ import hashlib
 import json
 import os
 import re
+import shlex
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -171,15 +174,32 @@ def state_dir(workflow_dir):
     return workflow_dir / state if state else workflow_dir
 
 
+def progress_read(args, path, env):
+    with tempfile.TemporaryDirectory(prefix="release-acceptance-") as directory:
+        if env.get("SPACEDOCK_BIN"):
+            binary = shutil.which(env["SPACEDOCK_BIN"], path=env.get("PATH", ""))
+            if not binary:
+                raise FileNotFoundError(f"SPACEDOCK_BIN is not executable: {env['SPACEDOCK_BIN']}")
+            binary = Path(binary).absolute()
+            launcher = Path(directory) / "spacedock"
+            launcher.write_text("#!/bin/sh\nexec " + shlex.quote(str(binary)) + " \"$@\"\n")
+            launcher.chmod(0o755)
+            env = {**env, "PATH": directory + os.pathsep + str(binary.parent.resolve()) + os.pathsep + env.get("PATH", "")}
+        return subprocess.run(["node", str(args.progress), str(path), "--workflow-dir", str(args.workflow_dir)],
+                              capture_output=True, text=True, timeout=60, env=env)
+
+
 def cmd_due(args):
     # see docs/adr/0056-the-idle-look-prompts-unclaimed-release-walks-from-versioned-progress.md
     maps = []
     for name in args.maps:
         path = Path(name)
         try:
-            match = re.search(r"^journey:[ \t]*(.+)$", path.read_text(), re.M)
+            match = re.search(r"^journey:[ \t]*(.*)$", path.read_text(), re.M)
             if match:
-                maps.append((path, match.group(1).strip().strip("'\"")))
+                scalar = match.group(1).strip()
+                plain = re.fullmatch(r"[A-Za-z_][A-Za-z0-9_-]*", scalar) and scalar.lower() not in {"null", "true", "false"}
+                maps.append((path, scalar if plain else None))
         except (OSError, UnicodeError) as error:
             print(f"release-acceptance not run: {path}: {str(error).splitlines()[0][:120]}")
     if not maps:
@@ -201,14 +221,11 @@ def cmd_due(args):
             print(f"release-acceptance not run: {path}: {str(error).splitlines()[0][:120]}")
         return 0
     env = dict(os.environ)
-    if env.get("SPACEDOCK_BIN"):
-        env["PATH"] = str(Path(env["SPACEDOCK_BIN"]).resolve().parent) + os.pathsep + env.get("PATH", "")
     for path, journey in maps:
-        if not any(j == journey for j, _ in candidates):
+        if not candidates or (journey is not None and not any(j == journey for j, _ in candidates)):
             continue
         try:
-            done = subprocess.run(["node", str(args.progress), str(path), "--workflow-dir", str(args.workflow_dir)],
-                                  capture_output=True, text=True, timeout=60, env=env)
+            done = progress_read(args, path, env)
             if done.returncode not in (0, 1):
                 raise ValueError((done.stderr or done.stdout).strip() or f"producer exit {done.returncode}")
             result = json.loads(done.stdout)
@@ -216,8 +233,11 @@ def cmd_due(args):
                 raise ValueError("expected journey-progress/v1")
             if result.get("diagnostic") is not None:
                 raise ValueError(str(result["diagnostic"]))
-            if result.get("journey") != journey or not isinstance(result.get("releases"), list):
+            observed_journey = result.get("journey")
+            if not isinstance(observed_journey, str) or not observed_journey.strip() \
+                    or (journey is not None and observed_journey != journey) or not isinstance(result.get("releases"), list):
                 raise ValueError("invalid progress journey or releases")
+            journey = observed_journey
             releases = result["releases"]
             if any(not isinstance(row, dict) or not isinstance(row.get("release"), str)
                    or not isinstance(row.get("acceptance"), str) for row in releases):

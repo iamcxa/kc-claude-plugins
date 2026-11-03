@@ -6,6 +6,7 @@ import io
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -1260,13 +1261,56 @@ class DueTests(unittest.TestCase):
 
     def test_spacedock_bin_leads_path_and_producer_argv_is_explicit(self):
         binary = self.root / "selected/spacedock"
+        put(binary, "#!/bin/sh\nexit 0\n")
+        binary.chmod(0o755)
         with mock.patch.dict(os.environ, {"SPACEDOCK_BIN": str(binary)}):
             self.due()
         logged = read(self.log)
-        self.assertEqual(logged["PATH"].split(os.pathsep)[0], str(binary.resolve().parent))
+        search = logged["PATH"].split(os.pathsep)
+        self.assertEqual(search[1], str(binary.resolve().parent))
+        self.assertFalse(Path(search[0]).exists(), "the command alias must be removed after the producer exits")
         self.assertEqual(logged["argv"], [str(self.progress), str(self.map), "--workflow-dir", str(self.wf)])
 
-    def test_live_producer_keeps_done_but_live_release_and_agrees_on_unbuilt(self):
+    def test_missing_selected_spacedock_is_diagnostic_instead_of_using_path_fallback(self):
+        with mock.patch.dict(os.environ, {"SPACEDOCK_BIN": str(self.root / "missing/spacedock-preview")}):
+            code, out = self.due()
+        self.assertEqual(code, 0, out)
+        self.assertIn("SPACEDOCK_BIN is not executable:", out)
+        self.assertNotIn("next:", out)
+
+    def test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids(self):
+        for value in ("book-pickup # comment", "'book-pickup' # comment", '"book\\x2dpickup" # comment',
+                      ">-\n  book-pickup"):
+            with self.subTest(value=value):
+                put(self.map, "journey: " + value + "\n")
+                code, out = self.due()
+                self.assertEqual(code, 0, out)
+                self.assertEqual(out.count("next:"), 2, out)
+                self.assertTrue(self.log.is_file(), "the producer must read the YAML identity")
+                self.log.unlink()
+
+    def test_renamed_spacedock_bin_is_executed_instead_of_a_path_decoy(self):
+        binary = self.root / "selected tool's bin/spacedock-preview"
+        selected = self.root / "selected.json"
+        put(binary, f"#!{sys.executable}\nimport json,sys\nfrom pathlib import Path\n" +
+            f"Path({str(selected)!r}).write_text(json.dumps(sys.argv[1:]))\n" +
+            f"print({json.dumps(self.document)!r})\n")
+        binary.chmod(0o755)
+        decoy = binary.with_name("spacedock")
+        put(decoy, "#!/bin/sh\necho 'wrong spacedock' >&2\nexit 2\n")
+        decoy.chmod(0o755)
+        node = self.root / "bin/node"
+        put(node, f"#!{sys.executable}\nimport os,subprocess,sys\nfrom pathlib import Path\n" +
+            f"Path({str(self.log)!r}).write_text(os.environ['PATH'])\n" +
+            "r=subprocess.run(['spacedock','status','--json'],capture_output=True,text=True)\n" +
+            "print(r.stdout,end='')\nprint(r.stderr,end='',file=sys.stderr)\nsys.exit(r.returncode)\n")
+        with mock.patch.dict(os.environ, {"SPACEDOCK_BIN": str(binary)}):
+            code, out = self.due()
+        self.assertEqual(code, 0, out)
+        self.assertEqual(out.count("next:"), 2, out)
+        self.assertEqual(read(selected), ["status", "--json"])
+
+    def live_producer(self):
         node = shutil.which("node", path=os.environ["PATH"].split(os.pathsep, 1)[1])
         progress = REPO / "kc-journey-map/lib/journey-progress.mjs"
         probe = subprocess.run([node or "node", "--input-type=module", "-e", "await import('./lib/render.mjs')"],
@@ -1275,6 +1319,10 @@ class DueTests(unittest.TestCase):
             print("not run: node, kc-journey-map dependencies or spacedock missing")
             self.skipTest("node, kc-journey-map dependencies or spacedock missing")
         env = {**os.environ, "PATH": str(Path(node).parent) + os.pathsep + os.environ["PATH"].split(os.pathsep, 1)[1]}
+        return node, progress, env
+
+    def test_live_producer_keeps_done_but_live_release_and_agrees_on_unbuilt(self):
+        node, progress, env = self.live_producer()
         for status, pending in (("done", True), ("implementation", False)):
             self.populate(status)
             observed = subprocess.run([node, str(progress), str(self.map), "--workflow-dir", str(self.wf)],
@@ -1291,6 +1339,26 @@ class DueTests(unittest.TestCase):
             if pending:
                 doc.update(source="<workflow>", observedAt="2000-01-01T00:00:00.000Z")
                 self.assertEqual(doc, self.document)
+
+    def test_live_yaml_scalars_and_renamed_spacedock_use_the_real_producer(self):
+        _, progress, env = self.live_producer()
+        binary = self.root / "selected bin/spacedock-preview"
+        selected = self.root / "selected-calls.txt"
+        put(binary, "#!/bin/sh\n" + f"echo called >> {shlex.quote(str(selected))}\n" +
+            f"exec {shlex.quote(shutil.which('spacedock'))} \"$@\"\n")
+        binary.chmod(0o755)
+        decoy = binary.with_name("spacedock")
+        put(decoy, "#!/bin/sh\necho 'wrong spacedock' >&2\nexit 2\n")
+        decoy.chmod(0o755)
+        original = self.map.read_text()
+        for scalar in ("book-pickup # comment", '"book\\x2dpickup" # comment', ">-\n  book-pickup"):
+            put(self.map, original.replace("journey: book-pickup", "journey: " + scalar))
+            with self.subTest(scalar=scalar), mock.patch.dict(os.environ, {**env, "SPACEDOCK_BIN": str(binary)}):
+                code, out = run("due", "--workflow-dir", self.wf, "--progress", progress, self.map)
+                self.assertEqual(code, 0, out)
+                self.assertEqual(out.count("next:"), 2, out)
+                self.assertNotIn("not run:", out)
+                self.assertTrue(selected.is_file(), "the selected real CLI must be invoked")
 
 
 class ContractTests(unittest.TestCase):
