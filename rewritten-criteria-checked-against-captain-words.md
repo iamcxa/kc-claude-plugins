@@ -13,6 +13,10 @@ gates:
                 id: briefing:rewritten-criteria-checked-against-captain-words:backlog:attempt-1:revision-1
                 digest: sha256:0071150839bba7be2c56670417abcda8f7406167bd35083e793a2ba546b7a492
                 room-ref: ./rewritten-criteria-checked-against-captain-words/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-03T07:39:05.809614Z"
+                reason: The Captain widened the batch 13 sitting to seven tasks (chat, 2026-11-03); the bound question named four.
 ---
 
 ## Scope
