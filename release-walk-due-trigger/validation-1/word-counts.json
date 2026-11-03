@@ -1,0 +1,14 @@
+{
+  "kc-dev-flow-2/references/sd/workflow.md": {
+    "origin_main": 5781,
+    "candidate": 5781,
+    "equal_origin_main": true,
+    "equal_stack": true
+  },
+  "kc-dev-flow-2/extensions/release-acceptance/EXTENSION.md": {
+    "origin_main": 600,
+    "candidate": 529,
+    "equal_origin_main": false,
+    "equal_stack": true
+  }
+}

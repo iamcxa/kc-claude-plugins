@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_extension_md_stays_within_its_word_budget (__main__.ContractTests.test_extension_md_stays_within_its_word_budget)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-support/mutation/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1447, in test_extension_md_stays_within_its_word_budget
+    self.assertLessEqual(len((HERE / "EXTENSION.md").read_text().split()), 600)
+AssertionError: 1130 not less than or equal to 600
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

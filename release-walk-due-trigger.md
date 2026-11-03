@@ -377,3 +377,45 @@ This complete implementation report supersedes the earlier implementation report
 ### Summary
 
 This complete report supersedes earlier implementation reports for the consumer head, base and current verification. Merge candidate 442cfef4f4b9dca4046a128586b423cb95e521fd retains both parent histories and every test, with all 249 tests passing and both earlier reverse-fix mutations caught. RoboRev was attempted once and remains incomplete with the quoted daemon result; FO retains publication, exact-head review, hosted CI and independent validation.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #775 head 442cfef4 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED for consumer 442cfef4f4b9dca4046a128586b423cb95e521fd: F1/F2 reproduce supported YAML task-field failures; F3/F4 require FO disposition. Evidence: `release-walk-due-trigger/validation-1/details.md`.
+- DONE: This task delivers two PRs under Captain amendment 1: #774 (kc-journey-map registration of journey-progress/v1, base main, head b026e0d7e, merges first) and #775 (this head, stacked on #772); validate both heads against every criterion and the amendment. Do not start agents you were not asked to
+  Producer b026e0d7e497f7dc0ae0bae03fb1558810a36db3 PASSED its local registration scope (8 tests, shape/meaning mutations caught); both hosted heads match and all five listed checks per PR succeeded. Both remain draft/open; #774 must merge first. No agents started.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four steps in `validation-1/acceptance.sh`, run unchanged with `/bin/bash --noprofile --norc`: exit 1; 8/12/3 baseline tests pass, then status comment yields 0 reminders (expected 2) and claim comment yields 2 (expected 1). Exact commands/output are in details.md; loaded Codex 0.34.0 package ADR lint with `--since origin/main --require 0056` exits 0 (52 records).
+- FAILED: AC-11 — a pending unclaimed release is prompted and every claimed release is silent.
+  Ordinary claims/removal and real split-root new/status --set/state commit pass; F2's producer-readable comment defeats suppression. Missing producer diagnostic passes; removing an ordinary claim restores the line.
+- DONE: AC-12 — all live/archive flat/folder task shapes, empty claims, and its falsifier.
+  Existing cases pass; independently removing folder scanning makes the criterion's test fail. YAML value semantics remain the separate AC-11 finding.
+- FAILED: AC-13 — the scan never hides a due release.
+  Real done/unbuilt example cases and the archived-only scanner falsifier pass their expectations; F1's valid commented status still makes two producer-pending releases disappear.
+- DONE: AC-14 — unlisted output, listed invocation and no-map gate, with falsifier.
+  Same unlisted fixture produces identical output on origin/main and candidate; existing real-due/stub-producer tests verify argv and one line; removing the listing gate fails.
+- DONE: AC-15 — explicit failure diagnostics and selected CLI routing, with falsifiers.
+  Exit 2, invalid JSON/schema, diagnostic, timeout and non-map cases pass; rejecting exit 1 or ignoring diagnostic fails; the removed-alias and raw-map-ID mutations also fail.
+- FAILED: AC-16 — literal origin/main weight boundary.
+  Workflow stays 5781 words, but EXTENSION.md changes 600→529 through prerequisite #772; literal diff lists it and number guard exits 1 on ADR 0053 (F3). Against authorized stack 606781cbe, seven consumer files only, no extension/version/CI/producer edit, number guard passes. Word-cap mutation fails; sanitize is conditional pass, 0 BLOCK/REJECT, 2 unchanged WARNs.
+- DONE: AC-17 — independently observed command-backed timing and missing-command falsifier.
+  One run each: current unmapped workflow producer 4.9705s / due 0.1070s; mapped five-task scratch 0.2678s / 0.4691s. Full argv/stdout/exit in timings.json; removing argv provenance is rejected. No large-map estimate; CI cost per PR unmeasured, triggers unchanged.
+- DONE: Repository lint, decision records, affected documents, comments and merge retention.
+  Lint, design-surfaces, diff-check and ADR checks pass; producer ADR lint 50 records. Comment ratio origin/main 3/847 (0.4%), own stack 1/373 (0.3%), producer 0/73. ADR 0056 updated; ADR 0053 is the unchanged imported prerequisite in the consumer range. All 113/104 parent tests retain identical bodies (116 union).
+- FAILED: Required dispatch-record check.
+  Exit 1 on implementation-1-message-1.md's missing recognized completion scope line (F4); no task record repaired here.
+- SKIPPED: Product repair, publication, review requests, ready/merge actions and a new local RoboRev run.
+  Validation grants none of these; recorded daemon failures do not establish a current review verdict. Hosted CI was independently read; release delivery, enabled-cache producer identity, large-workflow performance and re-walk triggering remain outside this proof.
+
+### Findings
+
+- F1 Material: FO reading ordinary valid YAML task frontmatter loses a due reminder when every task says `status: done # completed`; the real producer reports two pending releases, `due` prints nothing. `value-ac[AC-13]`: never hide a due release. Trigger: `yaml-status.json`, acceptance step 4; new scanner uses Task's raw field values at release_acceptance.py:212–218.
+- F2 Material: FO receives another reminder for a filed walk when its claim says `release-acceptance: book-pickup/r1 # already filed`; Spacedock reads the correct claim while `due` prints it. `value-ac[AC-11]`: a claiming task silences its release. Trigger: `yaml-claim.json`, acceptance step 4; claim set at release_acceptance.py:215.
+- F3 Needs decision: accepted stacked ownership and AC-16's literal origin/main boundary currently differ; the mandatory origin/main number check also imports unreserved prerequisite ADR 0053. Preserve #772's work; FO must disposition the base boundary before claiming this criterion passed.
+- F4 Needs decision: `dispatch_records.py` rejects implementation-1-message-1.md; FO owns its missing recognized final-reply/Done scope record. No product harm claimed.
+
+### Summary
+
+The combined delivery is REJECTED at the named heads: producer registration passes, but the new consumer silently drops valid pending releases and repeats valid claimed walks when task frontmatter contains YAML comments. No candidate product bytes were repaired; both detached validation worktrees are removed after evidence capture, and the main assigned branch remains at 442cfef4. FO retains finding disposition, repair dispatch and producer-first delivery authority.
+

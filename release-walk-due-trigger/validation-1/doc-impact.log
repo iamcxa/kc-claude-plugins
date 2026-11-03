@@ -1,0 +1,3 @@
+docs/adr/0053-a-release-walk-runs-off-production-and-production-waits-for-a-clean-closed-walk.md	updated	check_environment, cmd_accepted, kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py
+docs/adr/0056-the-idle-look-prompts-unclaimed-release-walks-from-versioned-progress.md	updated	cmd_due, kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py
+2 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

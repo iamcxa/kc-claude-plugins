@@ -1,0 +1,14 @@
+[
+  {
+    "severity": "low",
+    "title": "WARN real_email",
+    "file": "kc-dev-flow-2/README.md",
+    "line": 37
+  },
+  {
+    "severity": "low",
+    "title": "WARN pr",
+    "file": "kc-dev-flow-2/skills/evaluate-learning/SKILL.md",
+    "line": 78
+  }
+]

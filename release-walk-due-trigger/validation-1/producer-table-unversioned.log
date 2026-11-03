@@ -1,0 +1,40 @@
+✔ the table and version print and the recorded hash binds them (49.972833ms)
+✔ an edited table with an unchanged version exits 1 naming the schema (58.458458ms)
+✔ a bumped version with no recorded hash exits 1 (131.333959ms)
+✔ the printed history pointers name files that exist and a runnable command (211.356625ms)
+✔ release-walk prints its table and version, and an edited table with an unchanged version exits 1 (125.590959ms)
+✖ journey-progress registers its printed table and refuses an unversioned shape edit (50.062125ms)
+✔ the progress producer preserves the registered keys and acceptance meanings (708.359083ms)
+✔ the README and SKILL.md send a reader to the schema command, the CHANGELOG and the ADR, and say when (0.899459ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1395.843792
+
+✖ failing tests:
+
+test at kc-journey-map/lib/schemas.test.mjs:73:1
+✖ journey-progress registers its printed table and refuses an unversioned shape edit (50.062125ms)
+  AssertionError [ERR_ASSERTION]: journey-progress: the field table changed but version 1.0.0 did not; bump current and record the new hash d9f438451efdcafd1d43e0e6f3edc5d7bf7a8c02cff93dac1d7b4fac33036931
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-support/mutation/kc-journey-map/lib/schemas.test.mjs:75:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

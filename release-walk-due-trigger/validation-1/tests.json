@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Release acceptance complete suite (116 tests, no skips)",
+    "status": "passed",
+    "message": "release-tests.log"
+  },
+  {
+    "name": "Idle watcher complete suite (133 tests)",
+    "status": "passed",
+    "message": "watch-tests.log"
+  },
+  {
+    "name": "Producer contract suite (8 tests, no skips)",
+    "status": "passed",
+    "message": "contract-tests.log"
+  },
+  {
+    "name": "Ten independent mutations",
+    "status": "passed",
+    "message": "mutations.json"
+  },
+  {
+    "name": "Four-step fresh-shell acceptance",
+    "status": "failed",
+    "message": "Exit 1; both valid task-frontmatter comment probes fail; baseline suites pass."
+  },
+  {
+    "name": "Required origin/main number check",
+    "status": "failed",
+    "message": "Inherited ADR 0053 is outside this task's reservation; stacked-base check passes."
+  },
+  {
+    "name": "Required dispatch record check",
+    "status": "failed",
+    "message": "implementation-1-message-1.md lacks recognized completion scope line."
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "command": [
+      "/Users/kent/n/bin/node",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-775/kc-journey-map/lib/journey-progress.mjs",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpuwc6j71y/journey.yaml",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpuwc6j71y/workflow"
+    ],
+    "exit": 0,
+    "stdout": "{\n  \"schema\": \"journey-progress/v1\",\n  \"journey\": \"book-pickup\",\n  \"source\": \"/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpuwc6j71y/workflow\",\n  \"observedAt\": \"2026-11-03T16:57:53.584Z\",\n  \"diagnostic\": null,\n  \"orphans\": [],\n  \"stories\": [\n    {\n      \"journey\": \"book-pickup\",\n      \"release\": \"r1\",\n      \"story\": \"reserve-copy\",\n      \"status\": \"exists\",\n      \"requiredTasks\": 1,\n      \"doneTasks\": 1,\n      \"taskIds\": [\n        \"build-reserve-copy\"\n      ]\n    },\n    {\n      \"journey\": \"book-pickup\",\n      \"release\": \"r2\",\n      \"story\": \"choose-pickup-day\",\n      \"status\": \"exists\",\n      \"requiredTasks\": 1,\n      \"doneTasks\": 1,\n      \"taskIds\": [\n        \"build-choose-pickup-day\"\n      ]\n    },\n    {\n      \"journey\": \"book-pickup\",\n      \"release\": \"r1\",\n      \"story\": \"check-ready\",\n      \"status\": \"exists\",\n      \"requiredTasks\": 1,\n      \"doneTasks\": 1,\n      \"taskIds\": [\n        \"build-check-ready\"\n      ]\n    },\n    {\n      \"journey\": \"book-pickup\",\n      \"release\": \"r2\",\n      \"story\": \"receive-reminder\",\n      \"status\": \"exists\",\n      \"requiredTasks\": 1,\n      \"doneTasks\": 1,\n      \"taskIds\": [\n        \"build-receive-reminder\"\n      ]\n    },\n    {\n      \"journey\": \"book-pickup\",\n      \"release\": \"r1\",\n      \"story\": \"collect-book\",\n      \"status\": \"exists\",\n      \"requiredTasks\": 1,\n      \"doneTasks\": 1,\n      \"taskIds\": [\n        \"build-collect-book\"\n      ]\n    }\n  ],\n  \"releases\": [\n    {\n      \"release\": \"r1\",\n      \"totalStories\": 3,\n      \"doneStories\": 3,\n      \"requiredTasks\": 3,\n      \"doneTasks\": 3,\n      \"status\": \"exists\",\n      \"acceptance\": \"pending delivery acceptance\"\n    },\n    {\n      \"release\": \"r2\",\n      \"totalStories\": 2,\n      \"doneStories\": 2,\n      \"requiredTasks\": 2,\n      \"doneTasks\": 2,\n      \"status\": \"exists\",\n      \"acceptance\": \"pending delivery acceptance\"\n    }\n  ]\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-775/kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py",
+      "due",
+      "--workflow-dir",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpuwc6j71y/workflow",
+      "--progress",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-775/kc-journey-map/lib/journey-progress.mjs",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpuwc6j71y/journey.yaml"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "severity": "high",
+    "title": "Material: valid status comments hide pending release walks",
+    "file": "kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py",
+    "line": 212,
+    "detail": "F1. A user maintaining valid YAML task frontmatter can write status: done # completed. Spacedock and the real producer read done and report two pending releases; the new prefilter emits no line. value-ac[AC-13]: the scan never hides a due release; also AC-11. Trigger: yaml-status.json and acceptance.log.",
+    "fix": "Route through implementation feedback; make the scan preserve Spacedock's YAML field semantics and retain this real-producer regression."
+  },
+  {
+    "severity": "medium",
+    "title": "Material: valid claim comments repeat an already claimed walk",
+    "file": "kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py",
+    "line": 215,
+    "detail": "F2. An acceptance task with release-acceptance: book-pickup/r1 # already filed is read by Spacedock as book-pickup/r1, but due prints its reminder again. value-ac[AC-11]: a live or archived claiming task must silence its release. Trigger: yaml-claim.json and acceptance.log.",
+    "fix": "Use the same field semantics for claims; do not treat the YAML comment as part of the claim."
+  },
+  {
+    "severity": "medium",
+    "title": "Needs decision: literal main comparison conflicts with stacked validation",
+    "file": "kc-dev-flow-2/extensions/release-acceptance/EXTENSION.md",
+    "line": 1,
+    "detail": "F3. AC-16 names origin/main, currently e1bee223c47a. That diff includes the prerequisite's EXTENSION.md and ADR 0053, and number_guards exits 1 for unreserved 0053. The explicitly authorized #772 stack at 606781cbe has no extension change and its number check passes. The validator cannot silently replace the literal criterion.",
+    "fix": "FO must disposition the prerequisite/base boundary; rerun on the final integrated candidate or obtain the required scope ruling."
+  },
+  {
+    "severity": "medium",
+    "title": "Needs decision: an earlier dispatch record fails the required checker",
+    "file": "release-walk-due-trigger/dispatch/implementation-1-message-1.md",
+    "line": 13,
+    "detail": "F4. dispatch_records.py exits 1: needs a scope-notes line naming main as the completion recipient. The record says final-reply completion but omits the recognized Done line; later implementation records have it. No product symptom is established.",
+    "fix": "FO owns the dispatch-record correction/disposition; preserve the Paseo final-reply completion route."
+  }
+]

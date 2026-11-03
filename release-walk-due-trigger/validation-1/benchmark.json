@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Unmapped current workflow: producer",
+    "metrics": {
+      "seconds": 4.9705
+    },
+    "status": "passed",
+    "context": "One observation; full argv and output in timings.json"
+  },
+  {
+    "name": "Unmapped current workflow: due",
+    "metrics": {
+      "seconds": 0.107
+    },
+    "status": "passed",
+    "context": "One observation; full argv and output in timings.json"
+  },
+  {
+    "name": "Mapped five-task scratch: producer",
+    "metrics": {
+      "seconds": 0.2678
+    },
+    "status": "passed",
+    "context": "One observation; full argv and output in timings.json"
+  },
+  {
+    "name": "Mapped five-task scratch: due",
+    "metrics": {
+      "seconds": 0.4691
+    },
+    "status": "passed",
+    "context": "One observation; full argv and output in timings.json"
+  }
+]

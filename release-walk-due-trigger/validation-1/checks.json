@@ -1,0 +1,87 @@
+[
+  {
+    "name": "release-tests.log",
+    "command": "python3 -B kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "exit": 0
+  },
+  {
+    "name": "watch-tests.log",
+    "command": "python3 -B kc-dev-flow-2/scripts/test_pr_watch.py",
+    "exit": 0
+  },
+  {
+    "name": "contract-tests.log",
+    "command": "node --test kc-journey-map/lib/schemas.test.mjs",
+    "exit": 0
+  },
+  {
+    "name": "lint.log",
+    "command": "python3 -B kc-dev-flow-2/scripts/lint-skills.py",
+    "exit": 0
+  },
+  {
+    "name": "adr.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since origin/main --require 0056",
+    "exit": 0
+  },
+  {
+    "name": "adr-dispatch-path.log",
+    "command": "python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since origin/main --require 0056",
+    "exit": 0
+  },
+  {
+    "name": "numbers.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py check --repo /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-775 --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2 --task /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/release-walk-due-trigger.md --base origin/main",
+    "exit": 1
+  },
+  {
+    "name": "comments.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py origin/main HEAD --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+    "exit": 0
+  },
+  {
+    "name": "doc-impact.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py origin/main HEAD",
+    "exit": 0
+  },
+  {
+    "name": "numbers-stacked.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py check --repo /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-775 --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2 --task /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/release-walk-due-trigger.md --base 606781cbec3f684af5e7f9a74c90026e49c3e0a1",
+    "exit": 0
+  },
+  {
+    "name": "comments-stacked.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py 606781cbec3f684af5e7f9a74c90026e49c3e0a1 HEAD --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+    "exit": 0
+  },
+  {
+    "name": "doc-impact-stacked.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py 606781cbec3f684af5e7f9a74c90026e49c3e0a1 HEAD",
+    "exit": 0
+  },
+  {
+    "name": "design-surfaces.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py check /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/release-walk-due-trigger.md",
+    "exit": 0
+  },
+  {
+    "name": "dispatch.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/release-walk-due-trigger",
+    "exit": 1
+  },
+  {
+    "name": "producer-adr.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since origin/main",
+    "exit": 0
+  },
+  {
+    "name": "producer-comments.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py origin/main HEAD --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+    "exit": 0
+  },
+  {
+    "name": "producer-doc-impact.log",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py origin/main HEAD",
+    "exit": 0
+  }
+]
