@@ -2,6 +2,17 @@
 title: A rewritten acceptance criterion is checked against the Captain's words
 status: backlog
 variant: kc-dev-flow-2
+gates:
+    version: 1
+    records:
+        - id: gate:rewritten-criteria-checked-against-captain-words:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:rewritten-criteria-checked-against-captain-words-backlog-1
+              briefing:
+                id: briefing:rewritten-criteria-checked-against-captain-words:backlog:attempt-1:revision-1
+                digest: sha256:0071150839bba7be2c56670417abcda8f7406167bd35083e793a2ba546b7a492
+                room-ref: ./rewritten-criteria-checked-against-captain-words/review/backlog/briefing-1
 ---
 
 ## Scope

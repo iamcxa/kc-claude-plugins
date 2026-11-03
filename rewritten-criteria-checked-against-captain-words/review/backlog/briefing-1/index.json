@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:rewritten-criteria-checked-against-captain-words:backlog:attempt-1:revision-1",
+  "question": "「決定：A、B、C、D 四張都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？要改哪張直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:rewritten-criteria-checked-against-captain-words:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/10583be4f2ff29fcaa1b369730747da6ee51f871/rewritten-criteria-checked-against-captain-words.md",
+      "rev": "sha256:ebe7949e5b306acd3ea2e2b367bbbf2294872dfa36a23e5bf5630f6a9b51102e",
+      "mediaType": "text/markdown",
+      "summary": "Batch 13 backlog sitting; recommended approve to enter ideation under pilot."
+    }
+  ]
+}
