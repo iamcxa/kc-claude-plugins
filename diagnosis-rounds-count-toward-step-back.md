@@ -17,6 +17,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-03T07:39:00.446123Z"
                 reason: The Captain widened the batch 13 sitting to seven tasks (chat, 2026-11-03); the bound question named four.
+            - id: gate-attempt:diagnosis-rounds-count-toward-step-back-backlog-2
+              briefing:
+                id: briefing:diagnosis-rounds-count-toward-step-back:backlog:attempt-2:revision-1
+                digest: sha256:0dc4d82e27a0cb325611c5e1b7795119a251282a6259cc481217ce51ff653c43
+                room-ref: ./diagnosis-rounds-count-toward-step-back/review/backlog/briefing-2
 ---
 
 ## Scope
