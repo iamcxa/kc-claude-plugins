@@ -64,6 +64,7 @@ gates:
 profile: pilot
 started: 2026-11-03T10:20:50Z
 worktree: .worktrees/spacedock-ensign-fo-answers-own-worker-permissions-by-listed-id
+pr: iamcxa/kc-claude-plugins#769
 ---
 
 ## Scope
