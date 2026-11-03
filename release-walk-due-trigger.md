@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:release-walk-due-trigger:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:release-walk-due-trigger-ideation-1
+              briefing:
+                id: briefing:release-walk-due-trigger:ideation:attempt-1:revision-1
+                digest: sha256:b6d032abb9132876866e78b605ef87b6a0d47144a719fdc89e193220517908f7
+                room-ref: ./release-walk-due-trigger/review/ideation/briefing-1
 ---
 
 ## Scope
