@@ -1,0 +1,21 @@
+FF
+======================================================================
+FAIL: test_fenced_observed_output_passes_in_message_and_named_card (test_delivery_gate.CaptainStepsTests.test_fenced_observed_output_passes_in_message_and_named_card) (named_card=False, language='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpsoeegk58/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1418, in test_fenced_observed_output_passes_in_message_and_named_card
+    self.assertEqual(self.run_steps(self.step(command, observed="2"), shown)[0], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_fenced_observed_output_passes_in_message_and_named_card (test_delivery_gate.CaptainStepsTests.test_fenced_observed_output_passes_in_message_and_named_card) (named_card=True, language='text')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpsoeegk58/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1418, in test_fenced_observed_output_passes_in_message_and_named_card
+    self.assertEqual(self.run_steps(self.step(command, observed="2"), shown)[0], 0)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=2)

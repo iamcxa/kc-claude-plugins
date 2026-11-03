@@ -1,0 +1,85 @@
+FFFFFFFF
+======================================================================
+FAIL: test_a_longer_closing_fence_still_requires_a_step (test_delivery_gate.CaptainStepsTests.test_a_longer_closing_fence_still_requires_a_step) (marker='`', named_card=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1369, in test_a_longer_closing_fence_still_requires_a_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_a_longer_closing_fence_still_requires_a_step (test_delivery_gate.CaptainStepsTests.test_a_longer_closing_fence_still_requires_a_step) (marker='`', named_card=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1369, in test_a_longer_closing_fence_still_requires_a_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_a_longer_closing_fence_still_requires_a_step (test_delivery_gate.CaptainStepsTests.test_a_longer_closing_fence_still_requires_a_step) (marker='~', named_card=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1369, in test_a_longer_closing_fence_still_requires_a_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_a_longer_closing_fence_still_requires_a_step (test_delivery_gate.CaptainStepsTests.test_a_longer_closing_fence_still_requires_a_step) (marker='~', named_card=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1369, in test_a_longer_closing_fence_still_requires_a_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_an_unclosed_fence_still_requires_a_step (test_delivery_gate.CaptainStepsTests.test_an_unclosed_fence_still_requires_a_step) (marker='`', named_card=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1386, in test_an_unclosed_fence_still_requires_a_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_an_unclosed_fence_still_requires_a_step (test_delivery_gate.CaptainStepsTests.test_an_unclosed_fence_still_requires_a_step) (marker='`', named_card=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1386, in test_an_unclosed_fence_still_requires_a_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_an_unclosed_fence_still_requires_a_step (test_delivery_gate.CaptainStepsTests.test_an_unclosed_fence_still_requires_a_step) (marker='~', named_card=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1386, in test_an_unclosed_fence_still_requires_a_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_an_unclosed_fence_still_requires_a_step (test_delivery_gate.CaptainStepsTests.test_an_unclosed_fence_still_requires_a_step) (marker='~', named_card=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1386, in test_an_unclosed_fence_still_requires_a_step
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.011s
+
+FAILED (failures=8)

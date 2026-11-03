@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head (test_delivery_gate.CaptainGateTests.test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpnqmrc61g/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1612, in test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : gate text complete
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)

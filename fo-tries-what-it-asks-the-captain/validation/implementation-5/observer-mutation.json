@@ -1,0 +1,9 @@
+{
+  "mutation": "Restore removed acceptance phrase in chat-only list",
+  "expected": "chat-only rule 'presents every step in full beside its observed output' is not in references/sd/workflow.md",
+  "errors": [
+    "repository frontmatter check missing: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpg5qdse7v/scripts/skill-frontmatter-lint.sh",
+    "skills/observer/SKILL.md: chat-only rule 'presents every step in full beside its observed output' is not in references/sd/workflow.md; reword the list or restore the rule"
+  ],
+  "status": "passed"
+}
