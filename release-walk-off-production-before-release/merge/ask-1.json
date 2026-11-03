@@ -1,0 +1,25 @@
+{
+  "class": "never",
+  "head": "606781cbec3f684af5e7f9a74c90026e49c3e0a1",
+  "model": "not run",
+  "necessity": "the five design files are the README keys, the extension and adoption text, release_acceptance.py, its tests and ADR 0053.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F2 Deferred risk: release-doc existence/path'",
+    "point: deferred: '- F2 Deferred risk: retain RoboRev'",
+    "point: deferred: 'Declined: Deferred risk, validation F2 and'",
+    "point: deferred: \"Declined: Polish, validation F1: FO's follow-up\"",
+    "point: deferred: 'Declined: Polish, validation F3: the schema'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'docs/adr/0053-a-release-walk-runs-off-production-and-production-waits-for-a-clea'",
+    "point: path: 'kc-dev-flow-2/extensions/release-acceptance/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py'",
+    "point: path: 'kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py'",
+    "point: path: 'kc-dev-flow-2/references/sd/adoption.md'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#772",
+  "sufficiency": "ra check refuses a production or unrecorded walk environment and `ra accepted` reports a release ready only when its newest walk on one acyclic chain, folder-form tasks included, is clean, shown by re",
+  "time": "2026-11-03T18:12:57Z",
+  "verdict": "ask"
+}
