@@ -759,6 +759,27 @@ class AcceptedTests(Base):
         self.rewalk(archived=False)
         self.not_accepted("r1-rewalk is not archived")
 
+    def test_newest_unclean_archived_folder_rewalk_holds_acceptance(self):
+        self.close()
+        folder = self.rewalk()
+        folder.with_suffix(".md").rename(folder / "index.md")
+        path = folder / "walk/report.json"
+        report = read(path)
+        report["proof_line"]["result"] = "broken"
+        put(path, report)
+        self.not_accepted("r1-rewalk is not clean")
+        report["proof_line"]["result"] = "works"
+        put(path, report)
+        code, out = self.accepted()
+        self.assertEqual(code, 0, out)
+        self.assertIn("by r1-rewalk (local-merge:", out)
+
+    def test_live_folder_rewalk_holds_acceptance(self):
+        self.close()
+        folder = self.rewalk(archived=False)
+        folder.with_suffix(".md").rename(folder / "index.md")
+        self.not_accepted("r1-rewalk is not archived")
+
     def test_parallel_walks_hold_until_prior_is_named(self):
         self.close()
         folder = self.rewalk(prior=False)
@@ -1153,6 +1174,37 @@ class RewalkTests(Base):
         o["marks"] = [{"complaint": "o1", "status": "fixed", "reason": "r"}]
         write_walk(self.folder, [o, reviewer_s()])
         self.refused("walk", "marks without a prior walk")
+
+
+class FolderTaskTests(Base):
+    def test_folder_tasks_preserve_all_state_task_callers(self):
+        put(self.folder.parent / "fix-complaint.md", task_file(
+            {"journey": "book-pickup", "journey-release": "r1", "profile": "poc"},
+            "Walk complaints: o1, s1\n"))
+
+        def snapshot():
+            report = self.built()
+            return {
+                "tasks": [(t.slug, t.folder, t.fields) for t in ra.state_tasks(self.wf)],
+                "deferred": run("deferred", "book-pickup/r1", "--workflow-dir", self.wf),
+                "director": run("director-model", self.folder, "--workflow-dir", self.wf),
+                "owners": {sid: [t.slug for t in tasks] for sid, tasks in
+                           ra.owners_by_story(self.wf, "book-pickup", "r1").items()},
+                "links": dict(ra.complaint_links(self.wf, "book-pickup", "r1")),
+                "report": report,
+                "final": self.check("final"),
+            }
+
+        flat = snapshot()
+        self.assertEqual(flat["final"][0], 0, flat["final"][1])
+        for task in ra.state_tasks(self.wf):
+            task.folder.mkdir(exist_ok=True)
+            task.path.rename(task.folder / "index.md")
+        self.assertEqual(snapshot(), flat)
+        for task in ra.state_tasks(self.wf):
+            put(task.folder.with_suffix(".md"), task.text)
+        self.assertEqual(snapshot(), flat)
+        self.assertTrue(all(t.path.name == "index.md" for t in ra.state_tasks(self.wf)))
 
 
 class ContractTests(unittest.TestCase):

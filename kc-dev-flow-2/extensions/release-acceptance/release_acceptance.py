@@ -147,8 +147,8 @@ def strings(value):
 class Task:
     def __init__(self, path):
         self.path = Path(path)
-        self.slug = self.path.stem
-        self.folder = self.path.with_suffix("")
+        self.folder = self.path.parent if self.path.name == "index.md" else self.path.with_suffix("")
+        self.slug = self.folder.name
         self.text = self.path.read_text()
         self.fields = {}
         match = re.match(r"---\n(.*?)\n---", self.text, re.S)
@@ -170,8 +170,14 @@ def state_dir(workflow_dir):
 
 def state_tasks(workflow_dir):
     state = state_dir(workflow_dir)
-    return [Task(path) for path in sorted([*state.glob("*.md"), *(state / "_archive").glob("*.md")], key=lambda p: p.stem)
-            if path.name != "README.md"]
+    tasks = {}
+    for root in (state, state / "_archive"):
+        for pattern in ("*.md", "*/index.md"):
+            for path in root.glob(pattern):
+                if path.name != "README.md":
+                    task = Task(path)
+                    tasks[task.folder] = task
+    return sorted(tasks.values(), key=lambda task: task.slug)
 
 
 def release_tasks(workflow_dir, journey, release):
@@ -766,7 +772,7 @@ def cmd_accepted(args):
         if len(chain) != len(tasks):
             raise Refused("all acceptance tasks must form one acyclic Prior walk chain; disconnected: "
                           + ", ".join(t.slug for path, t in reports.items() if path not in chain))
-        if task.path.parent != state / "_archive":
+        if task.folder.parent != state / "_archive":
             raise Refused(f"{task.slug} is not archived")
         merged = task.fields.get("pr", "")
         if not merged.startswith("local-merge:") or not text(merged.removeprefix("local-merge:")):
