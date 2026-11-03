@@ -234,3 +234,53 @@ ADR: 0053
 ### Summary
 
 The design records three adopter-owned README keys, makes `ra check` refuse a walk on production, off the recorded environment, or local without a `not deployed:` limit, and adds `ra accepted`, which says a release is ready for production only after its newest closed walk is clean. dev2 still deploys nothing; the production step stays the repository's own (D1). The report schema and the workflow README do not change. The base gap was observed: origin/main accepts a walk whose target is production. Three Captain decisions (D1 advisory wait, D2 `release-doc:` home, D3 clean-not-just-closed) carry recommendations. Order: before release-walk-due-trigger.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved three README keys, ra check refusals and ra accepted, with production waiting on FO's word, the repository's release document and the newest clean closed walk.
+  Branch `spacedock-ensign/release-walk-off-production-before-release`; base `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb`; candidate `6d998a29c01ebb5779943663c3ad30533b3856a4`; five changed design-named files; clean code worktree.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins from the branch off origin/main.
+  ADR 0042/0048 and FO's 2026-11-03 reply assign push, Draft PR and local review to FO; no product push or PR attempted. Prepared title/body below; no versions changed.
+- DONE: ADR 0053 records the ruling the design names, quoting the Captain's words from the task file and its gate records.
+  `docs/adr/0053-a-release-walk-runs-off-production-and-production-waits-for-a-clean-closed-walk.md` extends 0031/0034, records the three approved recommendations; package adr_lint --since base --require 0053: exit 0.
+- DONE: AC-1 production target is held at both tiers.
+  `RecordedEnvironmentTests.test_production_is_refused_at_both_tiers`; native base-production-{walk,final} exit 0 versus candidate exit 1 with the specified REFUSED and clean:no; removing its refusal makes the test fail.
+- DONE: AC-2 recorded non-production target passes and another staging target fails.
+  RecordedEnvironmentTests staging case and native staging exit 0 print `environment: staging (production: production)`; target staging-2 exits 1; bypassing the mismatch check fails the test.
+- DONE: AC-3 absent or blank keys hold and point at the four questions; equal environment names hold.
+  RecordedEnvironmentTests removes/blanks each key, asserts its name and adoption pointer, restores it to exit 0; removing release-doc from required keys makes this test fail.
+- DONE: AC-4 local walk passes only with its recorded deployment limit, and render shows it.
+  RecordedEnvironmentTests local case plus native local/build/render exit 0 with the specified limit; removing it holds both tiers; bypassing the limit check fails the test.
+- DONE: AC-5 production waits for the newest clean closed walk.
+  AcceptedTests covers absent/live task, archive without local-merge, missing/malformed/unclean report, clean acceptance, newer dirty/live re-walk and unnamed parallel walks; mutations allowing live, unsentinelled, unclean, older or parallel walks each fail; native acceptance/newest-dirty exits 0/1.
+- DONE: AC-6 the report schema does not change.
+  Native schema prints `release-acceptance 1.0.0`, exit 0; FIELDS and contract-versions.json unchanged from base; adding a field makes schema exit 1.
+- DONE: AC-7 docs carry the route and workflow README does not move.
+  EXTENSION.md retains the lifecycle and adds keys, four-question pointer, local limit, gate clause, Production waits and both blind spots; adoption.md adds Release environments and its Extensions pointer; workflow.md diff empty; repository lint exits 0; adding one workflow word makes lint exit 1.
+- DONE: AC-8 independent normalized_words recount is within each ceiling at each lifecycle moment.
+  Startup, idle(open/merged), archive and merge ask: workflow 5834->5834 and pr_watch unchanged; adoption 2267->2372; filing/first dispatch EXTENSION 605->525 (512 whitespace words, below existing 600 test); check adds 4 words, gate clause 5, accepted output 10; both ceiling mutations exit 1.
+- DONE: AC-9 one ADR lands, names 0031/0034 and the Captain's words for the three accepted recommendations.
+  Package ADR lint exits 0; temporarily removing 0053 makes --require 0053 exit 1; nine ADR-document tests pass.
+- DONE: AC-10 existing behaviour holds without changed expectations.
+  `python3 -B kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py`: 92 run, 91 passed, 1 skip; AST comparison proves every existing test/helper unchanged except build_world README keys; removing the existing schema check makes its original test fail.
+- SKIPPED: Existing journey-map interoperability test requiring YAML.
+  It skips because the declared YAML dependency is not installed in this worktree; no replacement proof or changed expectation; schema/native tests above still pass.
+- DONE: Repository lint, package number guards and comment ratio pass at the candidate.
+  lint-skills exit 0 (5781/5781 budget), number_guards exit 0 with base/head above, comment_ratio exit 0: 240 code lines, 2 comment lines, 0.8% <= 5%; design_surfaces exits 0.
+- DONE: Affected documents assessed and proof retained.
+  doc_impact lists only ADR 0053: updated; EXTENSION/adoption claims updated; no retained diagram changed. `/tmp/release-walk-proof/` holds 18 acceptance/mutation checks, 11 native checks, words and pinned-ruling digests; `.context/release-walk-proof/{mutations,native}.py` reproduces them (python3 -B, caches cleared); remove scratch after validation.
+- SKIPPED: RoboRev evidence= line and CI green on the PR head.
+  Not run/delegated to FO under ADR 0042/0048 and FO confirmation, not clean; FO must review exact base/candidate before fresh validation. CI cost not measured; no CI configuration changed.
+
+### Summary
+
+The candidate holds release walks off production and announces readiness only after the newest locally closed walk is clean; dev2 still deploys nothing. Local checks and falsifiers pass, with the existing YAML-dependent integration skip; FO owns publication, exact-head RoboRev and hosted CI.
+
+Prepared PR title: `feat(kc-dev-flow-2): hold production readiness for a clean release walk`
+
+Prepared PR body (verbatim):
+Release walks now refuse production, any target other than the repository's recorded walk environment, missing environment keys, and local walks without a recorded deployment limit. The new `accepted JOURNEY/RELEASE` command requires the newest walk, determined by `Prior walk:`, to be archived with a local-merge sentinel and a clean report before FO announces production readiness.
+
+The extension and adoption instructions record three adopter-owned README keys and the repository's own release document. ADR 0053 records the Captain's ruling. The schema, workflow template and versions are unchanged; production remains the repository's own approved procedure.
+
+Validation: 91 release-acceptance tests passed; one existing journey-map interoperability test skipped because its YAML dependency is absent. Nine ADR tests, 11 native CLI checks, 18 acceptance/mutation checks, skill lint, ADR lint, number guards and comment ratio passed. Added comments are 0.8% against the 5% maximum. Hosted CI and exact-head RoboRev remain pending; CI cost was not measured and no CI configuration changed.
