@@ -233,6 +233,12 @@ Recommended order: release-walk-off-production-before-release, then this task; a
 
 ## Captain amendments
 
+### Amendment 2 — 2026-11-04, chat
+Captain: 「可以」 (chat, 2026-11-04)
+Asked: 「決定：疊起來的 PR（#775、#777）先對上游 PR 驗、上游合併後再對 main 確認，F4 接受為紀錄格式問題，可以嗎？」
+Supersedes: none
+
+
 ### Amendment 1 — 2026-11-03, chat
 Captain: 「可以」 (chat, 2026-11-03)
 Asked: 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」
