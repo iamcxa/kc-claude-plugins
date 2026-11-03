@@ -314,3 +314,38 @@ This Pilot candidate counts same-symptom diagnosis dispatches through the existi
 ### Summary
 
 This complete report supersedes the earlier implementation report. RoboRev finding 1418 was not reproduced: the existing nested test and direct Git reads pass, and removing `./` reproduces the reported lookup failure and makes that test fail; candidate remains `97cf87965ec052a1c9f2d40a1a1d0ca83e8d2244`. The required one-shot local review is incomplete because its daemon is unavailable; FO owns review disposition, Draft PR publication, hosted CI and independent validation.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #771 head 97cf8796 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  **REJECTED** at `97cf87965ec052a1c9f2d40a1a1d0ca83e8d2244`, base `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb`; the nine literal AC fixtures pass, but the approved follow-up-message scope conflicts with the candidate (F1). Evidence: `diagnosis-rounds-count-toward-step-back/validation/validation-1/details.md`.
+- DONE: Judge the RoboRev 1418 decline from the reproduction evidence in the implementation report. Do not start agents you were not asked to
+  Decline supported: unchanged nested test and direct Git reads pass; removing `./` fails that test with 2 != 1. `reproduction.log` and `review-1418/reproduction.json` retain fresh commands/output; no agent or new review was started.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `acceptance.md` gives all five exact steps and full output; unchanged `acceptance.sh` ran in fresh `/bin/bash --noprofile --norc`, exit 0, visibly reproducing F1. Both dispatch-named and resolved Codex-package ADR lint ran with `--since 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb --require 26`: 50 records, zero legacy, exit 0.
+- DONE: AC-1, AC-2 and AC-3 — numbered-record dispatch behavior and decisive failure controls.
+  Real CLI tests preserve stderr/stdout, stage/symptom separation, normalization, named cutoff, strict-only missing-header hold and first-record exemption; five mutants fail assertions (`mutation-0.log` through `mutation-4.log`). F1 limits the claim to numbered records.
+- DONE: AC-4 — committed records, dated clearing and independent events.
+  Standalone role suite: 41 tests, exit 0; disk-read/date-removal mutants fail and the nested-path mutant fails (`role-tests.log`, `mutation-5.log`, `mutation-6.log`, `reproduction.log`).
+- DONE: AC-5 — independently rerun the pinned qnow replay and base counterexample.
+  `replay.json`: source 290b47a39 with full revision/record hashes, k=14..27; first reminder at 16, none through 15 or on distinct symptoms 22/23/27; base never reminds and stdout/exits match.
+- DONE: AC-6 and AC-7 — unchanged laws parsing and actual idle/merge forwarding.
+  Laws: 63 tests, one skip, exit 0; real repeated/missing-header probe retains the same L2 verdict. Real role checker feeds idle and holds merge without saving an ask; stdout and missing-next-prefix mutants fail (`laws.json`, `mutation-7.log`, `mutation-8.log`).
+- DONE: AC-8 — lifecycle word cost, unchanged workflow budget and counterexample.
+  Fresh outputs plus independent `wc -w`: added dispatch words 0/48/21, idle/merge 47/74, startup 0; real archive probe prints no line. Workflow 5781 -> 5781; extra-question-words mutant fails (`words-independent.json`, `archive-moment.json`, `mutation-9.log`).
+- DONE: AC-9 — dated ADR 0026 amendment and falsifiers.
+  Required contents and checks pass; the base without amendment fails the content check and deleting Recommended fails required-record lint (`adr-falsifiers.json`). The amendment's message-exclusion clause is not silently accepted; see F1.
+- DONE: Local suite, live PR/CI identity, retained documents, scope and implementation limits.
+  Full discovery: 879 tests, six skips, zero failures, exit 0; all four hosted checks green on the exact Draft PR head. Seven product hashes match; comment ratio 0/262, all structural checks pass; doc-impact verdicts and each stated limit are judged in details.md; CI cost was not measured.
+- DONE: Historical compatibility and goal/minimal-necessity checks.
+  Current committed corpus: 101 folders, 445 comparisons, zero stdout/unexpected changes, 66 intended strict holds. Base replay is silent, justifying the change; overall goal sufficiency is unresolved only for F1.
+- FAILED: Approved Design includes follow-up message records in a diagnosis round.
+  One numbered record plus two valid `implementation-2-message-N.md` records with the same symptom counts as one; folder/names/committed-state checks stay silent (`message-records.json`). The accepted definition at state `f9a78202d` includes these records; the candidate matcher and ADR exclude them.
+- SKIPPED: Requested `spacedock state commit` helper and state push.
+  The installed helper automatically publishes split-root state and has no no-push flag; the dispatch explicitly says not to push. Report/evidence are committed locally with path-scoped Git instead; FO owns later synchronization. No remote/config write or product change.
+- F1 Needs decision: Resolve whether follow-up message records count before repair or delivery.
+  Normal user/workflow: adopter FO continues diagnosis through supported message records; harm: repeated rounds miss reminders/escalation; `value-ac[AC-1]`: second same-stage dispatch reminds, with approved Design explicitly including messages; trigger: real three-record probe counts one. Exact findings and four evidence fields are in details.md; no repair authorization is inferred.
+
+### Summary
+
+The nine explicit numbered-record acceptance fixtures and their falsifiers pass at `97cf87965ec052a1c9f2d40a1a1d0ca83e8d2244`, and the RoboRev 1418 decline is independently supported. Verdict is **REJECTED** for the unresolved accepted-design mismatch F1; candidate/product bytes remain unchanged and temporary checkouts were removed.

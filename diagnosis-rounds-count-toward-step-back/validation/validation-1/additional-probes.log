@@ -1,0 +1,3 @@
+Three supported implementation records (two message continuations): no dispatch reminder; no owed role; one counted round.
+Independent wc -w recount agrees for all five emitted-output cases.
+AC-9: candidate amendment present; base without amendment rejected; required-statement deletion rejected by ADR lint.

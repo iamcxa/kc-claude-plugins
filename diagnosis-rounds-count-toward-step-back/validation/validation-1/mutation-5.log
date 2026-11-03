@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_second_advises_third_owes_and_only_committed_records_count (test_role_triggers.SymptomRoundsTest.test_second_advises_third_owes_and_only_committed_records_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/diagnosis-validation-771/mutants/5/kc-dev-flow-2/scripts/test_role_triggers.py", line 529, in test_second_advises_third_owes_and_only_committed_records_count
+    self.assertEqual(run(self.state, SLUG), (code, out))
+AssertionError: Tuples differ: (1, 'next: some-task has 3 implementation [471 chars].\n') != (0, 'next: some-task has 2 implementation [219 chars]?\n')
+
+First differing element 0:
+1
+0
+
+Diff is 1008 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.434s
+
+FAILED (failures=1)

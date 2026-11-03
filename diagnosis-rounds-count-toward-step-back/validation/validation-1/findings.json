@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "high",
+    "title": "Follow-up message records are excluded despite the approved design",
+    "file": "kc-dev-flow-2/scripts/role_triggers.py",
+    "line": 66,
+    "detail": "Needs decision: the approved round definition includes follow-up message records; the new matcher accepts only plain stage-N.md. A plain record plus two message continuations counts as one; dispatch and committed-state checks remain silent.",
+    "fix": "FO must disposition the accepted-design mismatch; repair requires explicit authorization, or a Captain amendment must explicitly narrow the scope.",
+    "status": "open"
+  }
+]

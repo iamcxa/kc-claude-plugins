@@ -1,0 +1,172 @@
+{
+  "source": "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state",
+  "revision": "290b47a397aa85ce768c48197e89b95578aef05b",
+  "hashes": {
+    "ideation-1.md": "8d79ce0e118df588db715c78385e39d6724e30e48ca93831a94b78126b17e968",
+    "ideation-2.md": "05609df4f971f5f34e2f79eac1e822cc665391f199ad7d5eee4fb281c06a0316",
+    "ideation-3.md": "5a5ebba76a58b609e8e654c4057637699fc6cd524896fa0ad17f37749b3107cb",
+    "implementation-1.md": "a02c90c08b5dc6af365215188f64c3b4fe3d7f733a89e4fcae59029aee1fc009",
+    "implementation-10.md": "9023bd3bbc7138f68a935581041c736220dfabeb6cf763b7c280480723cc72df",
+    "implementation-11.md": "ea06b9250f3c262b3db4ff0cd61bc5abd83cd90bdebef1db94ef1a4c1b071e12",
+    "implementation-12.md": "5f383c49f8e01112550a855ed72908bb9063b06ced68d31e4d94e5c0561dca2a",
+    "implementation-13.md": "f87f282a047f4402386ebc0da8c5b0bb36bcdce4bab2e398b245d24c9bcc952d",
+    "implementation-14.md": "e49f1acd620e2272f2cce028b493e3293548b19c6f60e55d714c0716e656aa89",
+    "implementation-15.md": "3af415f334bba1b4d3636322f2b10fc3ee91c6883560b29414e5ff461368e1aa",
+    "implementation-16.md": "64eff5e7a0583b4a96730371e3f3b03d9c6e361d7c1a69f6cdc1bd8c10b7a096",
+    "implementation-17.md": "861b21d5ce70d2a6f2fb410ba40b30db43c0fc440efcbc513961e829a255974b",
+    "implementation-18.md": "9231ab991a2e8c3a47633c8c11ec1a09d49ec8751773a24833b44b7d4998b398",
+    "implementation-19.md": "d96dfb1f390c2491576be4fcc5e231b76c6c3c7a0c1dc71bc068fc343a34bf40",
+    "implementation-2.md": "bd874bf0428cd603c233f85b605ec55f576a25cd645e0253dcc73b9b289aa62c",
+    "implementation-20.md": "2d704fb5468d8c65c610942a8fcdc71094500763a65bd70b7185480763373b3a",
+    "implementation-21.md": "0e78a6617cb9b838c9ffb77017c9291e16192421a25b127169f4431411314c4c",
+    "implementation-22.md": "b582b79c19897ae641a87112d8b1253ad2c9cc634a38003da29cc9d28185cb45",
+    "implementation-23.md": "0467d6912269a268012dc703c3722c6e1791e8ee9f90730437c8153cd52551e5",
+    "implementation-24.md": "f938b087e959fc5f1753920ae81fe7b75dec0c47828cf86a9dfb26334e3c54d0",
+    "implementation-25.md": "ca0ca3734ded4b8ddfedf4aa9daace6a85550f1092a17883b3272128c14c0280",
+    "implementation-26.md": "4f27b55daa6a755d46362f0c8a1cd1024ded1148e8e1ae56e530a938c11a2df4",
+    "implementation-27.md": "fb0e755e5f3d576319367565921b438e0b2ded9682bbe85327d673e113a42f8d",
+    "implementation-3.md": "11fa5e13921751b10d1b5a181f317f93bb9a3c015bef6c17577bb93540b74959",
+    "implementation-4.md": "1cf7ccba82a99e6ab0a171cda8b925d687d9648f3a737427abdbbc6962ac0883",
+    "implementation-5.md": "9eae946677bc53bcd524602a9116a3adb1813c88dcc38f4b5f5fd3ef86ad6db1",
+    "implementation-6.md": "cc2ac1db4934c5f997ea3c581e09a8336ad67f62f9dd7446f60341a82cc0b7a2",
+    "implementation-7.md": "1120d4fc39534727b48ef1c7e60ed1c9fa9937bc4e6c898931be9a61f81a3130",
+    "implementation-8.md": "ee0733e8b31ccd31da8fb18eb1020aa894ef5ad7eaa85516bd66838d7e1b70a3",
+    "implementation-9.md": "deaf21a72003cc1bb2af19c9163d5f4d720b75361ed5389ee16a8c012a9ae43a",
+    "validation-1.md": "4950f14d650de9d0f67644908fe61a2eda329124d26e3bbd93e74af6f3da92e0",
+    "validation-2.md": "a54ebfd52b458d5819ac16fdada3fd4694ce4cadac0187237522aa9e3c852ce1",
+    "validation-3.md": "e9fc2464fd8c5397a4cd2d6a23326b7760b3ab8c9350d93a6ba91ec0b99064a7",
+    "validation-4.md": "bee38b58ebf2f8a793a3884736ce2e85f808377682ae34b34f30d3c941ebc934",
+    "validation-5.md": "00a7b2f20daa03d20dffc14c5f36f6d74250727b2d1844529d96f07878d9588f",
+    "validation-6.md": "a559cd2961914cca9c423527e138696cfe93fef127f44fe0f4db6d757f7763fd",
+    "validation-7.md": "e3ee2c3be44fe8baf0b35663964734144207d11b2f2c548f6b9961b8daa8243a",
+    "validation-8.md": "03a044c7ef061e3e84a39ff18bd912a4af903d031f4301a8ce971cb7919a3ec2"
+  },
+  "runs": [
+    {
+      "k": 14,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n25 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/implementation-14.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n25 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 15,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n26 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n26 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 16,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n27 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/implementation-16.md:1: step back: 2 implementation dispatches name symptom \"validation-4 f1 phone-width freeze\"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n27 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 17,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n28 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/implementation-17.md:1: step back: 3 implementation dispatches name symptom \"validation-4 f1 phone-width freeze\"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n28 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 18,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n29 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/implementation-18.md:1: step back: 4 implementation dispatches name symptom \"validation-4 f1 phone-width freeze\"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n29 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 19,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n30 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/implementation-19.md:1: step back: 5 implementation dispatches name symptom \"validation-4 f1 phone-width freeze\"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n30 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 20,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n31 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/implementation-20.md:1: step back: 6 implementation dispatches name symptom \"validation-4 f1 phone-width freeze\"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n31 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 21,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n32 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/implementation-21.md:1: step back: 7 implementation dispatches name symptom \"validation-4 f1 phone-width freeze\"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n32 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 22,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n33 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n33 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 23,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n34 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n34 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 24,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n35 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/implementation-24.md:1: step back: 8 implementation dispatches name symptom \"validation-4 f1 phone-width freeze\"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n35 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 25,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n36 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/implementation-25.md:1: step back: 9 implementation dispatches name symptom \"validation-4 f1 phone-width freeze\"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n36 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 26,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n37 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/implementation-26.md:1: step back: 10 implementation dispatches name symptom \"validation-4 f1 phone-width freeze\"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n37 dispatch record(s) complete\n",
+      "base_stderr": ""
+    },
+    {
+      "k": 27,
+      "candidate_exit": 0,
+      "base_exit": 0,
+      "candidate_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n38 dispatch record(s) complete\n",
+      "candidate_stderr": "/private/tmp/opencode/diagnosis-validation-771/replay/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n",
+      "base_stdout": "extensions not checked: no workflow README above /private/tmp/opencode/diagnosis-validation-771/replay\n38 dispatch record(s) complete\n",
+      "base_stderr": ""
+    }
+  ]
+}

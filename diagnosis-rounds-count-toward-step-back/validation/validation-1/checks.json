@@ -1,0 +1,156 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb",
+      "--require",
+      "26"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "status": "passed",
+    "stdout": "50 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  {
+    "name": "adr-lint-dispatch",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb",
+      "--require",
+      "26"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "status": "passed",
+    "stdout": "50 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--base",
+      "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb",
+      "--head",
+      "HEAD",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/diagnosis-rounds-count-toward-step-back.md"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "status": "passed",
+    "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 713d4e6ed638 head 97cf87965ec0 merge-base 713d4e6ed638\n",
+    "stderr": ""
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb",
+      "HEAD",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "status": "passed",
+    "stdout": "code lines 262, comment lines 0, 0.0%\nmaximum 5% (package default) met\n",
+    "stderr": ""
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb",
+      "HEAD",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+      "--json"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "status": "passed",
+    "stdout": "[\n {\n  \"doc\": \"docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/dispatch_records.py\"\n  ]\n },\n {\n  \"doc\": \"docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/dispatch_records.py\"\n  ]\n },\n {\n  \"doc\": \"docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/role_triggers.py\"\n  ]\n },\n {\n  \"doc\": \"learning.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/dispatch_records.py\"\n  ]\n }\n]\n",
+    "stderr": ""
+  },
+  {
+    "name": "design",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/diagnosis-rounds-count-toward-step-back.md"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "status": "passed",
+    "stdout": "diagnosis-rounds-count-toward-step-back.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+    "stderr": ""
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/diagnosis-rounds-count-toward-step-back"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "status": "passed",
+    "stdout": "3 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "status": "passed",
+    "stdout": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5781 of 5781 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n",
+    "stderr": ""
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+      "diff",
+      "--check",
+      "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb",
+      "HEAD"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "status": "passed",
+    "stdout": "",
+    "stderr": ""
+  }
+]

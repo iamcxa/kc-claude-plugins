@@ -1,0 +1,30 @@
+Preparing worktree (detached HEAD 97cf87965)
+HEAD is now at 97cf87965 feat(kc-dev-flow-2): count diagnosis rounds by symptom
+STEP 1: candidate 97cf87965ec052a1c9f2d40a1a1d0ca83e8d2244
+test_different_stages_symptoms_none_fences_and_body_do_not_repeat (test_dispatch_records.SymptomDispatchTests.test_different_stages_symptoms_none_fences_and_body_do_not_repeat) ... ok
+test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass (test_dispatch_records.SymptomDispatchTests.test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass) ... ok
+test_named_record_excludes_later_records_and_folder_checks_only_each_stages_newest (test_dispatch_records.SymptomDispatchTests.test_named_record_excludes_later_records_and_folder_checks_only_each_stages_newest) ... ok
+test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict (test_dispatch_records.SymptomDispatchTests.test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.385s
+
+OK
+STEP 2: dispatch checks passed
+test_archived_folder_records_and_nested_state_checkout (test_role_triggers.SymptomRoundsTest.test_archived_folder_records_and_nested_state_checkout) ... ok
+test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated (test_role_triggers.SymptomRoundsTest.test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated) ... ok
+test_date_model_and_waiver_clear_the_third_record_once (test_role_triggers.SymptomRoundsTest.test_date_model_and_waiver_clear_the_third_record_once) ... ok
+test_groups_normalize_but_keep_stages_and_symptoms_separate (test_role_triggers.SymptomRoundsTest.test_groups_normalize_but_keep_stages_and_symptoms_separate) ... ok
+test_second_advises_third_owes_and_only_committed_records_count (test_role_triggers.SymptomRoundsTest.test_second_advises_third_owes_and_only_committed_records_count) ... ok
+test_committed_second_symptom_round_is_forwarded_at_idle (test_pr_watch.TasksTests.test_committed_second_symptom_round_is_forwarded_at_idle) ... ok
+test_third_committed_symptom_round_holds_merge_ask (test_delivery_gate.OwedRoleCallTests.test_third_committed_symptom_round_holds_merge_ask) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 7.147s
+
+OK
+STEP 3: committed-state and forwarding checks passed
+STEP 4: three symptom records, counted=1, reminder=False, exit=0
+EXPECTED UNRESOLVED MISMATCH: approved design includes follow-up message records; candidate excludes them.
+50 ADR file(s) checked, 0 legacy
+STEP 5: ADR lint passed; candidate clean; temporary checkout will be removed

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "marketplace version parity",
+    "status": "done",
+    "jobs": [
+      {
+        "name": "marketplace version parity",
+        "status": "success"
+      }
+    ]
+  },
+  {
+    "name": "kc-dev-flow release gate",
+    "status": "done",
+    "jobs": [
+      {
+        "name": "kc-dev-flow release gate",
+        "status": "success"
+      }
+    ]
+  },
+  {
+    "name": "adr-path-check",
+    "status": "done",
+    "jobs": [
+      {
+        "name": "adr-path-check",
+        "status": "success"
+      }
+    ]
+  },
+  {
+    "name": "kc-dev-flow-2 tests",
+    "status": "done",
+    "jobs": [
+      {
+        "name": "kc-dev-flow-2 tests",
+        "status": "success"
+      }
+    ]
+  }
+]

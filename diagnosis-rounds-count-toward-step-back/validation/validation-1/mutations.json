@@ -1,0 +1,57 @@
+[
+  {
+    "name": "AC-1 first record counted for every symptom",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-0.log"
+  },
+  {
+    "name": "AC-1 reminders moved to stdout",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-1.log"
+  },
+  {
+    "name": "AC-2 stage removed from grouping",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-2.log"
+  },
+  {
+    "name": "AC-3 first record requires header",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-3.log"
+  },
+  {
+    "name": "AC-3 folder mode holds missing header",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-4.log"
+  },
+  {
+    "name": "AC-4 dispatches read from disk",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-5.log"
+  },
+  {
+    "name": "AC-4 date test removed",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-6.log"
+  },
+  {
+    "name": "AC-6 stderr output moved to stdout",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-7.log"
+  },
+  {
+    "name": "AC-7 advisory next prefix removed",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-8.log"
+  },
+  {
+    "name": "AC-8 word budget exceeded",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-9.log"
+  },
+  {
+    "name": "AC-5 base has no symptom reminder",
+    "status": "passed",
+    "message": "14 base replay runs print no step-back line; replay.json"
+  }
+]

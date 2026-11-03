@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass (test_dispatch_records.SymptomDispatchTests.test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/diagnosis-validation-771/mutants/4/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3274, in test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass
+    self.assertEqual(done.returncode, expected, done.stdout)
+AssertionError: 1 != 0 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.144s
+
+FAILED (failures=1)

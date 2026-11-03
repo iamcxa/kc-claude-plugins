@@ -1,0 +1,77 @@
+[
+  {
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771/kc-dev-flow-2/scripts/dispatch_records.py",
+      "/tmp/opencode/diagnosis-validation-771/message-fixture/task"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "stdout": "3 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771/kc-dev-flow-2/scripts/dispatch_records.py",
+      "--names",
+      "--strict",
+      "/tmp/opencode/diagnosis-validation-771/message-fixture/task/dispatch/implementation-2-message-2.md"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main"
+    ],
+    "cwd": "/tmp/opencode/diagnosis-validation-771/message-fixture",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "add",
+      "."
+    ],
+    "cwd": "/tmp/opencode/diagnosis-validation-771/message-fixture",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "commit",
+      "-qm",
+      "continuation fixture"
+    ],
+    "cwd": "/tmp/opencode/diagnosis-validation-771/message-fixture",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771/kc-dev-flow-2/scripts/role_triggers.py",
+      "/tmp/opencode/diagnosis-validation-771/message-fixture",
+      "task"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/.validation-771",
+    "exit": 0,
+    "stdout": "role triggers: 0 event(s) read at HEAD, each with a call or a waiver.\n",
+    "stderr": ""
+  }
+]

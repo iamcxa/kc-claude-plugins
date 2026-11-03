@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Full package discovery",
+    "status": "passed",
+    "message": "879 tests, 6 skips; exit 0; full-suite.log"
+  },
+  {
+    "name": "Unchanged laws checker",
+    "status": "passed",
+    "message": "63 tests, 1 skips; exit 0; laws-tests.log"
+  },
+  {
+    "name": "Role triggers",
+    "status": "passed",
+    "message": "41 tests, 0 skips; exit 0; role-tests.log"
+  },
+  {
+    "name": "Unchanged nested checkout test",
+    "status": "passed",
+    "message": "1 tests, 0 skips; exit 0; nested-test.log"
+  },
+  {
+    "name": "AC-1 first record counted for every symptom",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-0.log"
+  },
+  {
+    "name": "AC-1 reminders moved to stdout",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-1.log"
+  },
+  {
+    "name": "AC-2 stage removed from grouping",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-2.log"
+  },
+  {
+    "name": "AC-3 first record requires header",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-3.log"
+  },
+  {
+    "name": "AC-3 folder mode holds missing header",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-4.log"
+  },
+  {
+    "name": "AC-4 dispatches read from disk",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-5.log"
+  },
+  {
+    "name": "AC-4 date test removed",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-6.log"
+  },
+  {
+    "name": "AC-6 stderr output moved to stdout",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-7.log"
+  },
+  {
+    "name": "AC-7 advisory next prefix removed",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-8.log"
+  },
+  {
+    "name": "AC-8 word budget exceeded",
+    "status": "passed",
+    "message": "mutant rejected, exit 1; mutation-9.log"
+  },
+  {
+    "name": "AC-5 base has no symptom reminder",
+    "status": "passed",
+    "message": "14 base replay runs print no step-back line; replay.json"
+  },
+  {
+    "name": "AC-9 ADR falsifiers",
+    "status": "passed",
+    "message": "Base without amendment rejected; removed required statement rejected with exit 1."
+  },
+  {
+    "name": "Five-step fresh-shell diagnostic acceptance script",
+    "status": "passed",
+    "message": "Exit 0; exposes F1 rather than claiming product acceptance."
+  }
+]
