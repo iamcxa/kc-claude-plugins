@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-walk-off-production-before-release:validation:attempt-1:revision-1",
+  "question": "「決定：照順序合併 #771、#772、#773 嗎？（#769、#770、#774、#775、#777 這次不合併）」 Regular merges with --match-head-commit, in the order #771, #772, #773, as part of the batch 13 validation sitting. Approval also covers later external-review rounds on these PRs, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:release-walk-off-production-before-release:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/32cd9456c591a271dd30157b6b2ca6c56dee6694/release-walk-off-production-before-release.md",
+      "rev": "sha256:c17b4ee3540a5db4b22297bb27f6d3b8abdbb8dbfd6af4b11ebd3537ec21b9f7",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of release-walk-off-production-before-release, PR #772, in the batch 13 validation sitting.\nSufficiency: ra check refuses a production or unrecorded walk environment and `ra accepted` reports a release ready only when its newest walk on one acyclic chain, folder-form tasks included, is clean, shown by red-to-green tests and native CLI probes.\nNecessity: the five design files are the README keys, the extension and adoption text, release_acceptance.py, its tests and ADR 0053.\nExternal rounds: 4.\nSecond reviewer: Copilot because the PR changes merge or review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5757060249\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: no major issues on this head, comment:6608474422.\nDeclined: Deferred risk, validation F2 and RoboRev 1421: `ra` checks that `release-doc:` is set, not that the document exists (approved design D2 says so).\nDeclined: Polish, validation F1: FO's follow-up record implementation-1-message-1.md abbreviates the completion sentence (no handoff was lost; FO's record script is fixed).\nDeclined: Polish, validation F3: the schema table still describes `prior` as the first walk's report (AC-6 freezes that table; stated as a limit)."
+    }
+  ]
+}

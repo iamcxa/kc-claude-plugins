@@ -52,6 +52,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:release-walk-off-production-before-release:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:release-walk-off-production-before-release-validation-1
+              briefing:
+                id: briefing:release-walk-off-production-before-release:validation:attempt-1:revision-1
+                digest: sha256:8a353d3aac8e9f4f10dc6dcb528c37af0b295d6d76411ba4aa7e2c08e5f18cc2
+                room-ref: ./release-walk-off-production-before-release/review/validation/briefing-1
 profile: pilot
 started: 2026-11-03T10:21:16Z
 worktree: .worktrees/spacedock-ensign-release-walk-off-production-before-release
