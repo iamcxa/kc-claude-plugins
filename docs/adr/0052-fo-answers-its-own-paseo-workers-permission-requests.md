@@ -29,6 +29,13 @@ through the secrets wrapper without reading or printing a secret value, and
 deletion of the task's own temporary files. Secret-value reads or prints and
 other deletions remain held for the Captain.
 
+**Words, Captain amendment 1:** 「可以」 — Captain, chat, 2026-11-03.
+
+**Asked, Captain amendment 1:** 「決定：A 的 AC-4 改成『例行批准前只寫一行 `APPROVED: <做什麼> FOR: <哪個 worker>`，批准後不說話』，讓 A 照這個再修一輪嗎？」
+Before a routine answer FO writes exactly one line
+`APPROVED: <what> FOR: <which worker>`, with no other text before it and no text
+after answering. Boundary holds remain one Captain message.
+
 **Options considered:**
 - FO answers its own dispatched workers within its existing scope and authority,
   including wrapper runs and task-owned temporary-file cleanup (chosen).
@@ -42,17 +49,17 @@ other deletions remain held for the Captain.
 This replaces ADR 0048's sentence "FO never answers the worker's permission on
 its behalf." The rest of ADR 0048 remains in force; that file is not changed.
 The listed paseo extension's `Worker permission requests` section owns the
-answering procedure, authority holds, paired ids, recovery and silent routine
-answers. Another agent's requests still follow peers. A permission answer grants
+answering procedure, authority holds, paired ids, recovery and the routine
+approval line. Another agent's requests still follow peers. A permission answer grants
 no additional authority; ADR 0011's money and Captain-judgment boundaries remain.
 
 ## Consequences
 
-The extension grows from 819 to 1,048 words by `wc -w`, and from 829 to 1,062 by
+The extension grows from 819 to 1,055 words by `wc -w`, and from 829 to 1,069 by
 `normalized_words` in `kc-dev-flow-2/scripts/lint-skills.py`. This replaces ADR
 0048's 819-word extension bound; the shared workflow and its word budget stay
-unchanged. Dispatch reads 233 more normalized words; callback package words do
-not increase. Routine answers produce no Captain reply; held requests produce
+unchanged. Dispatch reads 240 more normalized words; callback package words do
+not increase. Routine answers carry one approval line before the answer and no text after; held requests produce
 one message each. Recovery adds a status read after a refusal or missing block,
 not before every answer.
 
