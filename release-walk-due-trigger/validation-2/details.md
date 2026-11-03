@@ -9,7 +9,7 @@ Verdict: **PASSED under Captain amendments 1 and 2**. Consumer PR #775 is a3d9b0
 - Producer branch head is unchanged, with own base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb. Amendment 1 authorizes its three registration files and requires producer-first merge.
 - Loaded skills: spacedock:ensign and kc-dev-flow-2:validation, Pilot. Package scripts come from /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0 as the loaded skill resolves, per the dispatch-facts package rule. The dispatch also spells the same version under .claude; that other install was not substituted for the loaded one.
 - Native CLI observed: /Users/kent/.local/bin/spacedock 0.27.2, contract 3, Codex runtime; the design's 0.27.3 was not the executed binary. Live parser, archive, selected-executable and persistence seams below all passed on the observed binary.
-- All implementation dispatches and prior stage reports read, along with applicable ADRs and learning about config isolation, lifecycle reading and script-output consumers. No subagents, product repairs, repository config writes, pushes, PR comments, review requests, ready or merge actions.
+- All implementation dispatches and prior stage reports read, along with applicable ADRs and learning about config isolation, lifecycle reading and script-output consumers. No subagents, product repairs, repository config writes, product pushes, PR comments, review requests, ready or merge actions.
 
 ## Prior finding dispositions
 
