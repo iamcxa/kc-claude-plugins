@@ -234,6 +234,12 @@ ADR: 0052
 
 ## Captain amendments
 
+### Amendment 2 — 2026-11-03, chat
+Captain: 「好」 (chat, 2026-11-03), after his 「退一步想一下，AC4 到底是怎樣」
+Asked: 「決定：A 的 AC-4 改成『例行批准前一行 APPROVED，批准後不附狀態區塊、不寫給我的回報』，用第二次實測的結果進驗證嗎？」
+Supersedes: AC-6
+
+
 ### Amendment 1 — 2026-11-03, chat
 Captain: 「可以」 (chat, 2026-11-03)
 Asked: 「決定：A 的 AC-4 改成『例行批准前只寫一行 `APPROVED: <做什麼> FOR: <哪個 worker>`，批准後不說話』，讓 A 照這個再修一輪嗎？」
