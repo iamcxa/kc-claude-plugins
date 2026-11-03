@@ -1,0 +1,57 @@
+{
+  "base": "713d4e6ed6381e65fa6d8305e08b282ceb56a8fb",
+  "workflow": {
+    "before": 5781,
+    "after": 5836,
+    "delta": 55
+  },
+  "mod_words": 48,
+  "moments": [
+    {
+      "moment": "Startup and resume, workflow plus mod",
+      "before": 5829,
+      "after": 5884
+    },
+    {
+      "moment": "Validation gate passage",
+      "before": 64,
+      "after": 33
+    },
+    {
+      "moment": "Captain steps section at startup",
+      "before": 0,
+      "after": 86
+    },
+    {
+      "moment": "Steps pass line",
+      "before": 0,
+      "after": 9
+    },
+    {
+      "moment": "Idle on open PR",
+      "before": "unchanged",
+      "after": "unchanged",
+      "evidence": "pr_watch.py and mod byte-identical; merge ASK literal and check() byte-identical"
+    },
+    {
+      "moment": "Idle on merged PR",
+      "before": "unchanged",
+      "after": "unchanged",
+      "evidence": "pr_watch.py and mod byte-identical; merge ASK literal and check() byte-identical"
+    },
+    {
+      "moment": "After archive",
+      "before": "unchanged",
+      "after": "unchanged",
+      "evidence": "pr_watch.py and mod byte-identical; merge ASK literal and check() byte-identical"
+    },
+    {
+      "moment": "Merge ask",
+      "before": "unchanged",
+      "after": "unchanged",
+      "evidence": "pr_watch.py and mod byte-identical; merge ASK literal and check() byte-identical"
+    }
+  ],
+  "correction": "The mandated success line is 9 whitespace-split words, not the design table's 8; no behavior or workflow budget change.",
+  "falsifier": "Adding one word makes the +55 assertion false."
+}

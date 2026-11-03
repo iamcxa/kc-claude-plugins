@@ -1,0 +1,2 @@
+FAIL: repository frontmatter check missing: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp70e1sdf3/scripts/skill-frontmatter-lint.sh
+FAIL: references/sd/workflow.md: 5837 words exceeds the budget of 5836; move the added text out of the README, or add a raise step of 1 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS

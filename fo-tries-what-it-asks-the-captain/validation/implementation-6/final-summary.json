@@ -1,0 +1,10 @@
+{
+  "candidate": "4f08f008f9b117876ffe4b569210278e240d203d",
+  "tests": 889,
+  "skipped": 6,
+  "mutations": 24,
+  "report_lines": 50,
+  "roborev_exit": 0,
+  "roborev": "clean on 4f08f008f; evidence=roborev:1438",
+  "remaining": "known parser limits; prior proposed decline; FO publication/review/CI"
+}

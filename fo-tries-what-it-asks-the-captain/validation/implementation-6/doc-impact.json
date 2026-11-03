@@ -1,0 +1,59 @@
+[
+ {
+  "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/delivery_gate.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/delivery_gate.py"
+  ]
+ },
+ {
+  "doc": "kc-dev-flow-2/README.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py",
+   "kc-dev-flow-2/scripts/test_lint_skills.py"
+  ]
+ },
+ {
+  "doc": "learning.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ }
+]

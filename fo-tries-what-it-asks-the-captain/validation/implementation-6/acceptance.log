@@ -1,0 +1,11 @@
+.....................
+----------------------------------------------------------------------
+Ran 21 tests in 1.090s
+
+OK
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5836 of 5836 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+PASS: step and gate mutations executed from source with caches removed; restoring observer phrase is rejected
+{"base_words": 5781, "candidate_words": 5836, "delta": 55, "validation": [64, 33], "section": 86, "pass_line": 9}
+PASS: 24 isolated mutations produced their expected failing check

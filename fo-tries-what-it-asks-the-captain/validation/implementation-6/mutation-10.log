@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_gate_checks_record_against_latest_validation_report_and_returns_input_errors (test_delivery_gate.CaptainGateTests.test_gate_checks_record_against_latest_validation_report_and_returns_input_errors)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmplxl31dau/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1669, in test_gate_checks_record_against_latest_validation_report_and_returns_input_errors
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : gate text complete
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (failures=1)
