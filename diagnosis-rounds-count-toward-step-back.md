@@ -357,3 +357,43 @@ This complete report supersedes the earlier implementation report. RoboRev findi
 ### Summary
 
 The nine explicit numbered-record acceptance fixtures and their falsifiers pass at `97cf87965ec052a1c9f2d40a1a1d0ca83e8d2244`, and the RoboRev 1418 decline is independently supported. Verdict is **REJECTED** for the unresolved accepted-design mismatch F1; candidate/product bytes remain unchanged and temporary checkouts were removed.
+
+
+## Stage Report: implementation
+
+- DONE: Repair validation-1 F1 under Captain amendment 1: count follow-up message records as rounds on their symptom in both readers and remove the ADR 0026 exclusion.
+  Captain: 「照你建議」, answering 「決定：B 照原設計修，讓追加指示紀錄也算進同症狀的輪數嗎？」; Supersedes: none, so no acceptance criterion moved. Shared matcher admits `<stage>-N-message-M.md`; committed-state and disk readers both count it. Numeric (record, message) ordering drives folder newest, named cutoff and third-round date. ADR 0026 removes the exclusion and records his clarification. Evidence below is in `diagnosis-rounds-count-toward-step-back/validation/implementation-3/`.
+- DONE: Red-to-green test: one plain implementation record plus two message records on one symptom print the reminder and owe the call; a mutation dropping messages fails it.
+  `red.log`: all three new tests fail before the repair; `green.log`: all three pass after it. Real committed-state CLI observes one silent round, two advisory rounds, three owed rounds, an uncommitted-message exclusion and dated clearing; disk CLI covers folder/--names/--strict and excludes later messages. Numeric message 2/10 ordering is tested. `symptom-tests.log`: all 12 symptom tests pass.
+- DONE: Message-specific failure controls and every earlier falsifier are rerun at the repair bytes (python3 -B, caches cleared).
+  `message-mutations.json`: four assertion failures when the shared counter drops messages, committed reader drops them, disk reader drops them, or named cutoff ignores message number. `mutations.json`: all ten previous controls fail as intended, plus the base-script replay counterexample; full output is in message-mutation-0..3.log and mutation-0..9.log.
+- DONE: Keep every existing fixture green and commit locally before the full suite and gate.
+  Repair commit `7aad891353a973c7fbda2ad4214a3aadea71d2a6`, parent `97cf87965ec052a1c9f2d40a1a1d0ca83e8d2244`, branch `spacedock-ensign/diagnosis-rounds-count-toward-step-back`, original base `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb`. Five named repair files; overall PR still seven approved files. Historical/raw fixtures are unchanged; two owned assertions that excluded messages now expect their authorized inclusion. `candidate.json` and `product-hashes.json` bind all seven product files.
+- DONE: Full package suite on the committed repair head.
+  `python3 -B -m unittest discover -s kc-dev-flow-2/scripts` from the assigned worktree: 882 tests, zero failures, 6 skips, exit 0 (`full-suite.log`, `suite.json`). This includes all prior fixture checks and the three added cases.
+- DONE: AC-1, AC-2 and AC-3: dispatch questions, group separation, normalized names, first-record exemption, strict-only missing-header hold and named cutoff.
+  Existing tests and fresh original controls pass in the full suite; follow-up tests extend both disk readers without changing stdout or exit rules. Future messages are excluded by numeric (N, M) cutoff; folder mode chooses the latest follow-up. Counting record one, dropping stage, moving reminders to stdout or broadening the hold fails the retained controls.
+- DONE: AC-4: committed-state counts, dated clearing, archived/nested layouts and independent event families.
+  Full suite includes all role-trigger cases. The new three-record test proves messages reach read_records and symptom_rounds; old call before message 2's date leaves the call owed and a call on it clears. The numeric message-date case prevents message 10 preceding message 2. Disk-read and missing-date controls fail as intended; no nested Git path change.
+- DONE: AC-5: reproduce the qnow-shaped stop condition with record hashes and the base counterexample.
+  Fresh `replay.json`, pinned source 290b47a39, k=14..27: first reminder at 16, none through 15 or for distinct symptoms 22/23/27; base never reminds; stdout and exits equal. Full record hashes and commands are retained with `proof.py`.
+- DONE: AC-6 and AC-7: unchanged L2 parsing and existing real idle/merge forwarding.
+  Full suite includes the unmodified laws tests and real pr_watch/delivery_gate integration. Fresh `laws.json`: repeated/missing headers have equal L2 verdicts and no Cannot. Moving stderr to stdout or dropping advisory next: fails the corresponding controls. Neither production pr_watch.py nor delivery_gate.py changes.
+- DONE: AC-8: lifecycle reading limits and unchanged workflow budget.
+  Fresh `words.json`: added dispatch words 0 clean / 48 repeated / 21 hint (<=26), idle/merge 47 advisory / 74 owed; startup/after-archive additions 0 by unchanged lifecycle/template. Workflow 5781 -> 5781; workflow.md and lint-skills.py byte-identical to base; an added-question-words control fails. Message support adds no printed words.
+- DONE: AC-9: ADR 0026 reflects the Captain's original approval and amendment 1.
+  The message-exclusion clause is removed, the dated clarification quotes his exact words/question, and the count/clearing/stderr/word-cost statements remain. Changed ADRs: 0026 only. ADR tests pass in the full suite; cached-package adr_lint.py docs/adr --since <base> --require 26 exits 0 (`adr-lint.log`).
+- DONE: Repository lint, number guards, comment ratio, design surfaces, document-impact and goal/scope checks.
+  `checks.json`: all exit 0 at this head; comment ratio 0 comment / 311 code lines = 0%, maximum 5%; number guards PASS against the original base (migration guard inapplicable). `design.log`: presentable. doc-impact: ADR 0045 unaffected (ruling check), ADR 0048 unaffected (completion/publication), ADR 0049 unaffected (model floor), learning.md unaffected (historical lessons). Every repair line maps to message counting, ordering, its tests or the requested ADR correction; no new product scaffolding.
+- DONE: Committed-corpus comparison with follow-ups included in latest-record selection.
+  `corpus.json`, state `2b8eb76603b37bfb8b9f05081490937551fd51f7`: 102 task folders, 460 folder/plain/strict checks against base, zero stdout/unexpected changes, 68 intended strict holds for missing headers. The snapshot is immutable and the script retains full per-file verdicts.
+- DONE: Run the RoboRev gate once against base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb after committing.
+  Exact command: `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/roborev_gate.py --repo /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back --base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb`; exit 3, `incomplete: the roborev daemon is not running` (`roborev.log`). One attempt; no clean review or evidence= line claimed.
+- DONE: Hand back the head and updated PR title/body, and append a complete new implementation report.
+  Head `7aad891353a973c7fbda2ad4214a3aadea71d2a6`. `pr.md` title: `feat(kc-dev-flow-2): count symptom rounds across dispatch follow-ups`; body describes the final feature, ordered follow-up counting, validation and review limit. This exact-heading report covers the whole implementation; no version or workflow-budget bump.
+- SKIPPED: Product push/PR update, complete external review, hosted CI and fresh independent validation.
+  FO owns pushing this head to PR #771, a usable exact-head review, hosted checks and the fresh validator. Earlier hosted green results applied to 97cf87965 and are not claimed for this repair. CI cost per PR was not measured; no CI configuration changed.
+
+### Summary
+
+This complete report supersedes the earlier implementation reports. Captain amendment 1 is implemented at `7aad891353a973c7fbda2ad4214a3aadea71d2a6`: plain and follow-up records count in both readers, numeric message ordering is preserved, and the ADR exclusion is removed; red-to-green proof, all prior fixtures, fourteen mutation controls and all nine acceptance criteria pass locally. The one-shot RoboRev gate is incomplete because its daemon is unavailable; FO still owns PR #771 publication, external review, hosted checks and fresh independent validation.

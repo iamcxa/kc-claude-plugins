@@ -1,0 +1,4 @@
+killed: shared symptom counter drops follow-ups
+killed: committed reader drops follow-ups
+killed: disk reader drops follow-ups
+killed: named cutoff ignores message number

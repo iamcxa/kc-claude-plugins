@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks (test_dispatch_records.SymptomDispatchTests.test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/diagnosis-rounds/message-repair/message-mutants/3/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3250, in test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks
+    self.assertEqual(self.cli("--names", plain).stderr, "")
+AssertionError: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00[309 chars]d?\n' != ''
+- /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpl0ifbw7q/task/dispatch/implementation-2.md:1: step back: 2 implementation dispatches name symptom "page freeze"; before you send this one, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.427s
+
+FAILED (failures=1)

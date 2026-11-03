@@ -1,0 +1,26 @@
+F
+======================================================================
+FAIL: test_groups_normalize_but_keep_stages_and_symptoms_separate (test_role_triggers.SymptomRoundsTest.test_groups_normalize_but_keep_stages_and_symptoms_separate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/diagnosis-rounds/message-repair/mutants/2/kc-dev-flow-2/scripts/test_role_triggers.py", line 600, in test_groups_normalize_but_keep_stages_and_symptoms_separate
+    self.assertEqual(groups[("implementation", "validation-1 f1 page freeze")], [(2, None), (10, None)])
+AssertionError: Lists differ: [(2, None), (3, None), (10, None)] != [(2, None), (10, None)]
+
+First differing element 1:
+(3, None)
+(10, None)
+
+First list contains 1 additional elements.
+First extra element 2:
+(10, None)
+
+- [(2, None), (3, None), (10, None)]
+?             -----------
+
++ [(2, None), (10, None)]
+
+----------------------------------------------------------------------
+Ran 1 test in 0.032s
+
+FAILED (failures=1)

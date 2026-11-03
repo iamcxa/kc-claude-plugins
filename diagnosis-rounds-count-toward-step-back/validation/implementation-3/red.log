@@ -1,0 +1,29 @@
+FFF
+======================================================================
+FAIL: test_one_plain_and_two_message_records_remind_then_owe_a_dated_call (test_role_triggers.SymptomRoundsTest.test_one_plain_and_two_message_records_remind_then_owe_a_dated_call)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/kc-dev-flow-2/scripts/test_role_triggers.py", line 528, in test_one_plain_and_two_message_records_remind_then_owe_a_dated_call
+    self.assertIn('2 implementation dispatches on symptom "page freeze"', out)
+AssertionError: '2 implementation dispatches on symptom "page freeze"' not found in 'role triggers: 0 event(s) read at HEAD, each with a call or a waiver.\n'
+
+======================================================================
+FAIL: test_message_numbers_order_the_third_round_date_numerically (test_role_triggers.SymptomRoundsTest.test_message_numbers_order_the_third_round_date_numerically)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/kc-dev-flow-2/scripts/test_role_triggers.py", line 546, in test_message_numbers_order_the_third_round_date_numerically
+    self.assertEqual(run(self.state, SLUG)[0], 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks (test_dispatch_records.SymptomDispatchTests.test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3249, in test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks
+    self.assertIn("step back: 2 implementation", self.cli().stderr)
+AssertionError: 'step back: 2 implementation' not found in ''
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.870s
+
+FAILED (failures=3)

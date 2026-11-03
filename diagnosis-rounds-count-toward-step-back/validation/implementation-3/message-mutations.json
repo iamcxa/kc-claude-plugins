@@ -1,0 +1,22 @@
+[
+  {
+    "name": "shared symptom counter drops follow-ups",
+    "status": "passed",
+    "message": "mutant rejected by assertion; message-mutation-0.log"
+  },
+  {
+    "name": "committed reader drops follow-ups",
+    "status": "passed",
+    "message": "mutant rejected by assertion; message-mutation-1.log"
+  },
+  {
+    "name": "disk reader drops follow-ups",
+    "status": "passed",
+    "message": "mutant rejected by assertion; message-mutation-2.log"
+  },
+  {
+    "name": "named cutoff ignores message number",
+    "status": "passed",
+    "message": "mutant rejected by assertion; message-mutation-3.log"
+  }
+]

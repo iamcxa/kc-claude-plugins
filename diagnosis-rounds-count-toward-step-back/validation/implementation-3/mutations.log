@@ -1,0 +1,10 @@
+killed AC-1 first record counted for every symptom
+killed AC-1 reminders moved to stdout
+killed AC-2 stage removed from grouping
+killed AC-3 first record requires header
+killed AC-3 folder mode holds missing header
+killed AC-4 dispatches read from disk
+killed AC-4 date test removed
+killed AC-6 stderr output moved to stdout
+killed AC-7 advisory next prefix removed
+killed AC-8 word budget exceeded
