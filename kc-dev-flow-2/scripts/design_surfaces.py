@@ -312,7 +312,7 @@ def criterion_blocks(lines):
         if found:
             current = found.group(1)
             blocks[current] = [line]
-        elif current and line.strip() and not line.startswith("#"):
+        elif current and not re.match(r"^[ \t]*#{1,6}(?:[ \t]+|$)", line):
             blocks[current].append(line)
         else:
             current = None

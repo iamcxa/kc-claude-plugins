@@ -33,6 +33,15 @@ class AddedWordsTests(unittest.TestCase):
         self.assertEqual(self.added("alpha bravo charlie echo.", old=old), [(3, "AC-9", ["echo"])])
         self.assertEqual(self.added("alpha bravo zebra echo.", old=old), [])
 
+    def test_criterion_blocks_keep_paragraphs_and_stop_at_declarations_or_headings(self):
+        lines = ["**AC-8** — first paragraph.", "", "The worker must include source/time.", "",
+                 "**AC-9** — next criterion.", "", "Another paragraph.", "   ### Evidence", "unrelated text."]
+        blocks = ds.criterion_blocks(lines)
+        self.assertIn("The worker must include source/time.", blocks["AC-8"])
+        self.assertNotIn("next criterion.", blocks["AC-8"])
+        self.assertIn("Another paragraph.", blocks["AC-9"])
+        self.assertNotIn("unrelated text.", str(blocks))
+
     def test_deletions_whole_new_sentences_and_evidence_tails_are_not_compared(self):
         for text in ("The worker must include source.", "The worker must include source/time. Require a new database service.",
                      "The worker must include source/time. Current evidence: The worker must include source revision/link."):

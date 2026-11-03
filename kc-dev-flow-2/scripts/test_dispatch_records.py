@@ -3271,6 +3271,16 @@ class RewrittenCriterionTests(unittest.TestCase):
                 done = self.run_rewrite(text)
                 self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
 
+    def test_added_words_in_a_later_paragraph_are_held(self):
+        text = REWRITTEN_CRITERION.replace('Run notice present, absent and delayed',
+                                           '\n\nRun notice present, absent and delayed')
+        done = self.run_rewrite(text)
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn('AC-9 (Captain amendment 3) adds words', done.stdout)
+        self.assertIn('words: revision, link;', done.stdout)
+        clean = self.run_rewrite(text.replace('include source revision/link.', 'include source.'))
+        self.assertEqual((clean.returncode, clean.stdout), (0, ''), clean.stderr)
+
     def test_later_asked_or_captain_words_clear_the_hold(self):
         for field in ('Asked', 'Captain'):
             later = ('\n### Amendment 4 — 2026-11-03, chat\nCaptain: 「可以」\n'
