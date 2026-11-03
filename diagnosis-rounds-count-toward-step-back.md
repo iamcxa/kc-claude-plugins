@@ -53,6 +53,8 @@ gates:
                 target-stage: implementation
                 state: consumed
 profile: pilot
+started: 2026-11-03T10:20:59Z
+worktree: .worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back
 ---
 
 ## Scope
