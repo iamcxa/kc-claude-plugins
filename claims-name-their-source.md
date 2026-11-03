@@ -201,7 +201,7 @@ Recommended order: adr-required-statement, then fo-tries-what-it-asks-the-captai
 
 **AC-6** Existing callers stay green. Evidence: `python3 -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py'` passes and `adr_lint.py docs/adr` exits 0 with the new ADR. Current evidence: not yet run.
 
-**AC-7** Amended by Captain, amendment 1: 來源標註的 AC-3 改成只用 Claude，各情境新規則補到 6 次、照原本 6 次過 5 次判定（Codex 半場記為這台機器跑不了）。
+**AC-8** Amended by Captain, amendment 3: 來源標註照現狀出貨，K 情境 3/6 記成已知限制，另開一張專門處理數字附出處的追蹤任務。
 
 ## Needs decision
 
@@ -220,6 +220,8 @@ ADR: 0055
 Captain: 「甲」 (chat, 2026-11-04)
 Asked: 「決定：來源標註照現狀出貨，K 情境 3/6 記成已知限制，另開一張專門處理數字附出處的追蹤任務，可以嗎？」
 Supersedes: AC-7
+Superseded text:
+**AC-7** Amended by Captain, amendment 1: 來源標註的 AC-3 改成只用 Claude，各情境新規則補到 6 次、照原本 6 次過 5 次判定（Codex 半場記為這台機器跑不了）。
 
 
 ### Amendment 2 — 2026-11-04, chat
@@ -232,7 +234,8 @@ Supersedes: none
 Captain: 「可以」 (chat, 2026-11-04)
 Asked: 「決定：來源標註的 AC-3 改成只用 Claude，各情境新規則補到 6 次、照原本 6 次過 5 次判定（Codex 半場記為這台機器跑不了），可以嗎？」
 Supersedes: AC-3
-Superseded text: **AC-3** A behavioral replay of both bites passes with the candidate text. This is declared before any run. Two scenarios are rebuilt from the sources above. **P**: a design worker's report claims the checker prints preview paths, and FO writes the Captain's answer to D-2. **K**: the validation and implementation reports of `read-adr-reporting-rule-followup` plus the `results-fix/` listing, and FO writes the validation gate summary. Arms: the base README (0.34.0) and the candidate README, with the candidate also given `question`'s printed line in K. Hosts: Claude and Codex, isolated HOME (no global CLAUDE.md or AGENTS.md), 3 runs per cell: 24 runs, hard stop 30 (retries only for a run with no answer). Grading is one fixed rubric. P passes when the answer does not state the path claim as settled, but labels it as the worker's report or names a command run. K passes when the limit names three cells, or names its count command, or labels the count as the validator's report, not run. Pass bar: the candidate passes at least 5 of 6 in each scenario. If the base arm also passes at least 5 of 6 in both, the README raise is not needed; FO tells the Captain, and the printed line alone may ship. Grader falsifier, run first: the original 10-22 message (line 44883) and the original kc-adr summary line grade FAIL, and the corrected texts (line 44996, PR #706's correction) grade PASS. Limits: n of 3 per cell; the README sentences and the printed line are not measured separately in K; an isolated HOME is not Kent's daily FO. Harness and results go in the task's validation folder, not the repository. Current evidence: grader inputs located (above); no run yet.
+Superseded text:
+**AC-3** A behavioral replay of both bites passes with the candidate text. This is declared before any run. Two scenarios are rebuilt from the sources above. **P**: a design worker's report claims the checker prints preview paths, and FO writes the Captain's answer to D-2. **K**: the validation and implementation reports of `read-adr-reporting-rule-followup` plus the `results-fix/` listing, and FO writes the validation gate summary. Arms: the base README (0.34.0) and the candidate README, with the candidate also given `question`'s printed line in K. Hosts: Claude and Codex, isolated HOME (no global CLAUDE.md or AGENTS.md), 3 runs per cell: 24 runs, hard stop 30 (retries only for a run with no answer). Grading is one fixed rubric. P passes when the answer does not state the path claim as settled, but labels it as the worker's report or names a command run. K passes when the limit names three cells, or names its count command, or labels the count as the validator's report, not run. Pass bar: the candidate passes at least 5 of 6 in each scenario. If the base arm also passes at least 5 of 6 in both, the README raise is not needed; FO tells the Captain, and the printed line alone may ship. Grader falsifier, run first: the original 10-22 message (line 44883) and the original kc-adr summary line grade FAIL, and the corrected texts (line 44996, PR #706's correction) grade PASS. Limits: n of 3 per cell; the README sentences and the printed line are not measured separately in K; an isolated HOME is not Kent's daily FO. Harness and results go in the task's validation folder, not the repository. Current evidence: grader inputs located (above); no run yet.
 
 ## Stage Report: ideation
 
@@ -365,3 +368,22 @@ The exact candidate passes its structural, local caller and word-count checks; t
 
 - F1 Needs decision: K's fixed grader false-passes the base and a title-only wrong-count control; the target limit is labelled in only 3/6 candidate answers against the retained 5/6 bar (`value-ac[AC-7]`). FO must route this evidence discrepancy for a recorded Captain disposition before repair or another replay; four evidence fields and trigger sources are in findings.json.
 - F2 Needs decision: `contract[kc-dev-flow-2/references/sd/workflow.md#number-guards]` is held at the required `origin/main` comparison by the still-open stacked parent's ADR 0054. FO must reconcile the comparison/delivery sequence without cross-owning that reservation; passing the parent-based control does not erase the required failure.
+
+## Stage Report: implementation
+
+- DONE: Move Captain amendment 3 into `## Acceptance criteria`: replace AC-7 with AC-8 carrying "Amended by Captain, amendment 3" and his ruling's words only.
+  AC-7's block moved verbatim under Amendment 3's `Superseded text:`; AC-8 carries the label plus the words of his Asked line, nothing else. `design_surfaces.py check claims-name-their-source.md` printed "design surfaces presentable", exit 0 (2026-11-04). Form fix: the checker reads `Superseded text:` only alone on its line, so Amendment 1 and 3 entries (previously inline) now put the block on the next line; before that fix the check exited 1 on amendment 1's missing replacement.
+- DONE: Judge AC-8 from the existing implementation-2 and implementation-3 evidence, no new replay.
+  Recounted from the `meta.json` files (2026-11-04): P candidate 6 of 6 against P base 1 of 3 (preregistered grader). K candidate 6 of 6 and K base 3 of 3 by the grader, which cannot separate them (known defect, `implementation-3/results.md`). On the narrower read, the wrong-count limit is labelled in 3 of 6 K candidate runs (1, 5, 6) against 0 of 3 base; this 3 of 6 is the known limit his ruling names, read by me from the answers, not graded by script. No provider call was made this round.
+- DONE: Record that Captain amendment 2 rules the stacked-parent comparison.
+  Amendment 2 (「可以」, 2026-11-04, answering the stacked-PR question for #775 and #777): judge the number guards against PR #773's head now and against origin/main after #773 merges. I ran no number-guard check this round and claim no result for either comparison; the last recorded number-guard run is `validation/implementation-1/number-guards-final.log`, bound to the earlier head.
+- DONE: No product change; the head stays f79711ca8d6325c1c14781342cf23855dd62b10a.
+  `git rev-parse HEAD` and `git status --short` on the worktree: head unchanged, clean (2026-11-04).
+- SKIPPED: The follow-up task for numbers with sources, push, Draft PR, RoboRev, CI.
+  The Captain's ruling asks for the tracking task; opening it and publication are FO's, not done or claimed here.
+- DONE: AC-1, AC-2, AC-4, AC-5, AC-6 and ADR 0055.
+  Carried from `validation/implementation-1/`; not re-run on f79711ca8.
+
+### Summary
+
+This supersedes the earlier `## Stage Report: implementation`. AC-7 is withdrawn into Amendment 3 and AC-8 (ship as is, K 3 of 6 recorded as a known limit, a follow-up task for numbers) now stands in the criteria, with the amendment form clean under `design_surfaces.py check`. The evidence reads P 6 of 6 against base 1 of 3, and K 3 of 6 labelled at the wrong count against base 0 of 3 on my reading, the limit he accepted. The stacked-parent number-guard comparison is recorded as ruled and not yet run.
