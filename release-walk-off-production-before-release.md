@@ -53,6 +53,8 @@ gates:
                 target-stage: implementation
                 state: consumed
 profile: pilot
+started: 2026-11-03T10:21:16Z
+worktree: .worktrees/spacedock-ensign-release-walk-off-production-before-release
 ---
 
 ## Scope
