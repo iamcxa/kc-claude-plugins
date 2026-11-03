@@ -13,6 +13,10 @@ gates:
                 id: briefing:release-walk-off-production-before-release:backlog:attempt-1:revision-1
                 digest: sha256:5105584c0647efba89f916911d52090abacd75cf43789548ff1f8845b5060017
                 room-ref: ./release-walk-off-production-before-release/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-03T07:39:09.550832Z"
+                reason: The Captain widened the batch 13 sitting to seven tasks (chat, 2026-11-03); the bound question named four.
 ---
 
 ## Scope
