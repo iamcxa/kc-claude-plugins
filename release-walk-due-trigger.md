@@ -3,7 +3,7 @@ title: FO's idle line says a release is due for its walk once its last story is 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
