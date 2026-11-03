@@ -1,0 +1,10 @@
+adr-lint exit=0
+number-guards exit=0
+comment-ratio exit=0
+doc-impact exit=0
+design-surfaces exit=0
+dispatch-installed exit=0
+dispatch-candidate exit=0
+diff-check exit=0
+stacked-reference-diff exit=0
+literal-main-diff exit=0

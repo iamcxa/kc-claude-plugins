@@ -1,0 +1,2 @@
+summary needs one top-level External rounds: N line (nonnegative integer)
+next: hold the ask; record the external round count in the summary.

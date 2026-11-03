@@ -1,0 +1,70 @@
+[
+  {
+    "label": "AC6-added-workflow-word",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/kc-dev-flow-2/scripts/lint-skills.py",
+      "--root",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/additional-probes-iz2abhnk/kc-dev-flow-2"
+    ],
+    "exit": 1,
+    "output": "FAIL: references/sd/workflow.md: 5782 words exceeds the budget of 5781; move the added text out of the README, or add a raise step of 1 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS\n"
+  },
+  {
+    "label": "AC7-remove-Words",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/additional-probes-iz2abhnk/docs/adr",
+      "--root",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/additional-probes-iz2abhnk",
+      "--require",
+      "0051"
+    ],
+    "exit": 1,
+    "output": "0051-the-merge-ask-check-requires-the-round-count.md: Decision needs a '**Words:**' line\n"
+  },
+  {
+    "label": "AC7-remove-Asked",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/additional-probes-iz2abhnk/docs/adr",
+      "--root",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/additional-probes-iz2abhnk",
+      "--require",
+      "0051"
+    ],
+    "exit": 0,
+    "output": "50 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "label": "AC7-remove-Recommended",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/additional-probes-iz2abhnk/docs/adr",
+      "--root",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/additional-probes-iz2abhnk",
+      "--require",
+      "0051"
+    ],
+    "exit": 1,
+    "output": "required ADR 0051: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation\n"
+  },
+  {
+    "label": "AC7-remove-code-pointer",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/additional-probes-iz2abhnk/docs/adr",
+      "--root",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/additional-probes-iz2abhnk",
+      "--require",
+      "0051"
+    ],
+    "exit": 1,
+    "output": "0051-the-merge-ask-check-requires-the-round-count.md: kc-dev-flow-2/scripts/delivery_gate.py has no pointer; add a comment line 'see docs/adr/0051-the-merge-ask-check-requires-the-round-count.md'\n"
+  }
+]

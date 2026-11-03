@@ -1,0 +1,11 @@
+{
+  "head": "6b680cf89125d75f062ecf198e37b13239cd16ea",
+  "base": "820a3f0ef7db1e802f99c13d1608b4c849f400cf",
+  "state_head": "ecd3698fa611ee20897d5cfacfb685dd5ac615b3",
+  "package_root": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0",
+  "installed_dispatch_sha256": "3a7a4d171b3e10dfef4c4d99b70876a450d423bf3d9f1ef7fbb834cb770a8b21",
+  "installed_dispatch_equals_candidate": true,
+  "installed_dispatch_equals_main": true,
+  "candidate_clean": true,
+  "spacedock_source": "4d158a484ec73e184861067f8ed1e20087fdc26a"
+}

@@ -1,0 +1,7 @@
+{
+  "commands": 26,
+  "passed": 26,
+  "unittest_cases": 1024,
+  "skipped_cases": 7,
+  "script_sha256": "a29baeba66cb0afafefe75c9360d0c8a21a1f7f0b80953baf987c73fa9cbca55"
+}

@@ -1,0 +1,44 @@
+{
+  "workflow_runs": [
+    {
+      "id": 41567649044,
+      "name": "kc-dev-flow release gate",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 1392,
+      "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/41567649044/jobs",
+      "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/41567649044/logs",
+      "workflow_id": 340605043
+    },
+    {
+      "id": 41567649005,
+      "name": "adr-path-check",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 58,
+      "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/41567649005/jobs",
+      "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/41567649005/logs",
+      "workflow_id": 392075364
+    },
+    {
+      "id": 41567648996,
+      "name": "marketplace version parity",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 2072,
+      "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/41567648996/jobs",
+      "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/41567648996/logs",
+      "workflow_id": 286621000
+    },
+    {
+      "id": 41567649139,
+      "name": "kc-dev-flow-2 tests",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 562,
+      "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/41567649139/jobs",
+      "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/41567649139/logs",
+      "workflow_id": 365763085
+    }
+  ]
+}

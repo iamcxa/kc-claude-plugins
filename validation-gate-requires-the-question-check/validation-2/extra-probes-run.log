@@ -1,0 +1,5 @@
+AC6-added-workflow-word exit=1 FAIL: references/sd/workflow.md: 5782 words exceeds the budget of 5781; move the added text out of the README, or add a raise step of 1 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS
+AC7-remove-Words exit=1 0051-the-merge-ask-check-requires-the-round-count.md: Decision needs a '**Words:**' line
+AC7-remove-Asked exit=0 50 ADR file(s) checked, 0 legacy
+AC7-remove-Recommended exit=1 required ADR 0051: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+AC7-remove-code-pointer exit=1 0051-the-merge-ask-check-requires-the-round-count.md: kc-dev-flow-2/scripts/delivery_gate.py has no pointer; add a comment line 'see docs/adr/0051-the-merge-ask-check-requires-the-round-count.md'

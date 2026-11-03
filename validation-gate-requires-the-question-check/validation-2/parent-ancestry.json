@@ -1,0 +1,26 @@
+[
+  {
+    "pr": 763,
+    "merged": true,
+    "merge_commit": "52e8eba7bf3746fd93d9132548a8163c66a7a26b",
+    "ancestor_exit": 0
+  },
+  {
+    "pr": 764,
+    "merged": true,
+    "merge_commit": "e891e83582ac10936ffd67fb083b530b009ad847",
+    "ancestor_exit": 0
+  },
+  {
+    "pr": 765,
+    "merged": true,
+    "merge_commit": "84e3e492e512efad6e8b5b5b9764e4b13eb8a445",
+    "ancestor_exit": 0
+  },
+  {
+    "pr": 766,
+    "merged": true,
+    "merge_commit": "820a3f0ef7db1e802f99c13d1608b4c849f400cf",
+    "ancestor_exit": 0
+  }
+]

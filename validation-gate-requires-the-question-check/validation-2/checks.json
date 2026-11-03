@@ -1,0 +1,149 @@
+[
+  {
+    "label": "adr-lint",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "820a3f0ef7db1e802f99c13d1608b4c849f400cf",
+      "--require",
+      "0051"
+    ],
+    "exit": 0,
+    "stdout": "50 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  {
+    "label": "number-guards",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-gate-requires-the-question-check.md",
+      "--base",
+      "820a3f0ef7db1e802f99c13d1608b4c849f400cf",
+      "--head",
+      "6b680cf89125d75f062ecf198e37b13239cd16ea"
+    ],
+    "exit": 0,
+    "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 820a3f0ef7db head 6b680cf89125 merge-base 820a3f0ef7db\n",
+    "stderr": ""
+  },
+  {
+    "label": "comment-ratio",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "820a3f0ef7db1e802f99c13d1608b4c849f400cf",
+      "6b680cf89125d75f062ecf198e37b13239cd16ea",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "stdout": "code lines 38, comment lines 1, 2.6%\n   1/   6 kc-dev-flow-2/scripts/delivery_gate.py\nmaximum 5% (package default) met\n",
+    "stderr": ""
+  },
+  {
+    "label": "doc-impact",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "820a3f0ef7db1e802f99c13d1608b4c849f400cf",
+      "6b680cf89125d75f062ecf198e37b13239cd16ea"
+    ],
+    "exit": 0,
+    "stdout": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md\treview\tkc-dev-flow-2/scripts/delivery_gate.py\ndocs/adr/0051-the-merge-ask-check-requires-the-round-count.md\tupdated\tkc-dev-flow-2/scripts/delivery_gate.py\n2 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n",
+    "stderr": ""
+  },
+  {
+    "label": "design-surfaces",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-gate-requires-the-question-check.md"
+    ],
+    "exit": 0,
+    "stdout": "validation-gate-requires-the-question-check.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+    "stderr": ""
+  },
+  {
+    "label": "dispatch-installed",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-gate-requires-the-question-check"
+    ],
+    "exit": 0,
+    "stdout": "5 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "label": "dispatch-candidate",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/kc-dev-flow-2/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-gate-requires-the-question-check"
+    ],
+    "exit": 0,
+    "stdout": "5 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "label": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached",
+      "diff",
+      "--check",
+      "820a3f0ef7db1e802f99c13d1608b4c849f400cf",
+      "6b680cf89125d75f062ecf198e37b13239cd16ea"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "label": "stacked-reference-diff",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached",
+      "diff",
+      "--exit-code",
+      "820a3f0ef7db1e802f99c13d1608b4c849f400cf",
+      "6b680cf89125d75f062ecf198e37b13239cd16ea",
+      "--",
+      "kc-dev-flow-2/references/sd/",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "label": "literal-main-diff",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached",
+      "diff",
+      "--exit-code",
+      "origin/main",
+      "6b680cf89125d75f062ecf198e37b13239cd16ea",
+      "--",
+      "kc-dev-flow-2/references/sd/"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

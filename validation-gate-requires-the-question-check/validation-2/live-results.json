@@ -1,0 +1,72 @@
+[
+  {
+    "label": "live-missing",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/kc-dev-flow-2/scripts/delivery_gate.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/live-state/validation-gate-requires-the-question-check.md",
+      "--pr",
+      "iamcxa/kc-claude-plugins#767",
+      "--text-file",
+      "/tmp/validation-767-cycle2/live-missing.txt",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/.."
+    ],
+    "exit": 1,
+    "stdout": "summary needs one top-level External rounds: N line (nonnegative integer)\nnext: hold the ask; record the external round count in the summary.\n",
+    "stderr": "",
+    "records_before": [],
+    "records_after": []
+  },
+  {
+    "label": "live-present",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/kc-dev-flow-2/scripts/delivery_gate.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/live-state/validation-gate-requires-the-question-check.md",
+      "--pr",
+      "iamcxa/kc-claude-plugins#767",
+      "--text-file",
+      "/tmp/validation-767-cycle2/live-present.txt",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/.."
+    ],
+    "exit": 0,
+    "stdout": "PR head 6b680cf89125d75f062ecf198e37b13239cd16ea equals dispatched candidate 6b680cf89125d75f062ecf198e37b13239cd16ea; no second reviewer outcome is missing\npoint: path: 'docs/adr/0051-the-merge-ask-check-requires-the-round-count.md'\npoint: path: 'kc-dev-flow-2/scripts/delivery_gate.py'\npoint: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'\nclass: never (verdict ask)\nrecord: validation-gate-requires-the-question-check/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "stderr": "",
+    "records_before": [],
+    "records_after": [
+      "ask-1.json"
+    ]
+  },
+  {
+    "label": "live-no-count-rule",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/live-no-count-rule/delivery_gate.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/live-state/validation-gate-requires-the-question-check.md",
+      "--pr",
+      "iamcxa/kc-claude-plugins#767",
+      "--text-file",
+      "/tmp/validation-767-cycle2/live-missing.txt",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/.."
+    ],
+    "exit": 0,
+    "stdout": "PR head 6b680cf89125d75f062ecf198e37b13239cd16ea equals dispatched candidate 6b680cf89125d75f062ecf198e37b13239cd16ea; no second reviewer outcome is missing\npoint: path: 'docs/adr/0051-the-merge-ask-check-requires-the-round-count.md'\npoint: path: 'kc-dev-flow-2/scripts/delivery_gate.py'\npoint: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'\nclass: never (verdict ask)\nrecord: validation-gate-requires-the-question-check/merge/ask-2.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "stderr": "",
+    "records_before": [
+      "ask-1.json"
+    ],
+    "records_after": [
+      "ask-1.json",
+      "ask-2.json"
+    ]
+  }
+]

@@ -1,0 +1,5 @@
+Validation probe only; this text is not a delivery gate or approval.
+Sufficiency: this probe tests the supplied-text round-count boundary.
+Necessity: the historical missing-count text was previously accepted.
+Second reviewer: not triggered
+External rounds: 0

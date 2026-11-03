@@ -1,0 +1,9 @@
+{
+  "assigned_worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check",
+  "branch": "spacedock-ensign/validation-gate-requires-the-question-check",
+  "head": "6b680cf89125d75f062ecf198e37b13239cd16ea",
+  "status": "",
+  "detached_candidate_removed": true,
+  "state_snapshot_removed": true,
+  "live_task_ask_directory_exists": false
+}

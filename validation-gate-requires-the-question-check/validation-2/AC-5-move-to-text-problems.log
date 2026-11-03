@@ -1,0 +1,22 @@
+F
+======================================================================
+FAIL: test_legacy_combined_text_still_accepts_no_round_count (__main__.QuestionTests.test_legacy_combined_text_still_accepts_no_round_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check/.context/validation-767-cycle2-detached/.context/mutations-cie2i3yb/test_delivery_gate.py", line 1339, in test_legacy_combined_text_still_accepts_no_round_count
+    self.assertEqual(self.ask("Deliver it."), (0, "gate text complete\n"))
+AssertionError: Tuples differ: (1, 'summary needs one top-level External [104 chars].\n') != (0, 'gate text complete\n')
+
+First differing element 0:
+1
+0
+
++ (0, 'gate text complete\n')
+- (1,
+-  'summary needs one top-level External rounds: N line (nonnegative integer)\n'
+-  'next: hold the ask; record the external round count in the summary.\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)

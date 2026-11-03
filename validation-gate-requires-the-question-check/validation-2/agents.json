@@ -1,0 +1,83 @@
+{
+  "agents": [
+    {
+      "id": "1a330774-af46-4f9b-b02d-693321a9afdc",
+      "shortId": "1a33077",
+      "title": "ensign b12: question check validation (astra xhigh)",
+      "provider": "codex",
+      "model": "gpt-6-astra",
+      "thinkingOptionId": "xhigh",
+      "effectiveThinkingOptionId": "xhigh",
+      "status": "closed",
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check",
+      "createdAt": "2026-11-02T07:26:31.698Z",
+      "updatedAt": "2026-11-02T07:43:12.156Z",
+      "lastUserMessageAt": null,
+      "archivedAt": null,
+      "requiresAttention": true,
+      "attentionReason": "finished",
+      "attentionTimestamp": "2026-11-02T07:43:12.155Z",
+      "labels": {
+        "role": "ensign",
+        "task": "validation-gate-requires-the-question-check",
+        "stage": "validation",
+        "batch": "12",
+        "paseo.parent-server-id": "srv_Vu_gVMYcYLxv",
+        "paseo.parent-agent-id": "2e87a82e-a8a9-4e41-973a-7483aa46e39d"
+      }
+    },
+    {
+      "id": "2f5c9eee-5117-4e6a-ab74-d4ee580feb64",
+      "shortId": "2f5c9ee",
+      "title": "ensign b12: question check impl (sol xhigh)",
+      "provider": "codex",
+      "model": "gpt-6.1-sol",
+      "thinkingOptionId": "xhigh",
+      "effectiveThinkingOptionId": "xhigh",
+      "status": "closed",
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check",
+      "createdAt": "2026-11-02T06:35:30.529Z",
+      "updatedAt": "2026-11-02T06:49:18.697Z",
+      "lastUserMessageAt": null,
+      "archivedAt": null,
+      "requiresAttention": true,
+      "attentionReason": "finished",
+      "attentionTimestamp": "2026-11-02T06:49:18.696Z",
+      "labels": {
+        "role": "ensign",
+        "task": "validation-gate-requires-the-question-check",
+        "stage": "implementation",
+        "batch": "12",
+        "paseo.parent-server-id": "srv_Vu_gVMYcYLxv",
+        "paseo.parent-agent-id": "2e87a82e-a8a9-4e41-973a-7483aa46e39d"
+      }
+    },
+    {
+      "id": "d8accbfb-dc08-4642-87c8-1222ef0db20a",
+      "shortId": "d8accbf",
+      "title": "ensign b12: #767 validation 2 (astra xhigh)",
+      "provider": "codex",
+      "model": "gpt-6-astra",
+      "thinkingOptionId": "xhigh",
+      "effectiveThinkingOptionId": "xhigh",
+      "status": "running",
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-gate-requires-the-question-check",
+      "createdAt": "2026-11-03T02:47:57.490Z",
+      "updatedAt": "2026-11-03T02:54:06.221Z",
+      "lastUserMessageAt": null,
+      "archivedAt": null,
+      "requiresAttention": false,
+      "attentionReason": null,
+      "attentionTimestamp": null,
+      "labels": {
+        "role": "ensign",
+        "task": "validation-gate-requires-the-question-check",
+        "stage": "validation",
+        "batch": "12",
+        "paseo.parent-server-id": "srv_Vu_gVMYcYLxv",
+        "paseo.parent-agent-id": "2e87a82e-a8a9-4e41-973a-7483aa46e39d"
+      }
+    }
+  ],
+  "serverId": "srv_Vu_gVMYcYLxv"
+}
