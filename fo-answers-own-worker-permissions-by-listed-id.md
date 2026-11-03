@@ -1,6 +1,6 @@
 ---
 title: FO answers its own Paseo workers' permission requests by their listed ids
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 gates:
     version: 1
