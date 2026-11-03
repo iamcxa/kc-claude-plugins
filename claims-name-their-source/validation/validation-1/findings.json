@@ -1,0 +1,32 @@
+[
+  {
+    "id": "F1",
+    "severity": "high",
+    "classification": "Needs decision",
+    "title": "The fixed grader does not establish the count-scenario acceptance result",
+    "file": "claims-name-their-source/validation/implementation-2/replay.py",
+    "line": 35,
+    "detail": "The frozen grader returns 6/6 candidate passes, but the target wrong-count limit is attributed in only runs 1, 5 and 6. Runs 2, 3 and 4 label other claims, leaving this limit unsourced. All three base answers also false-pass. A title-only counterexample flips from fail to pass without changing the wrong count.",
+    "fix": "FO must return the discrepancy against the original 5-of-6 behavioral bar for a recorded Captain disposition before any product repair or new replay. Do not relabel the narrower 3/6 read as the unchanged mechanical score.",
+    "released_user_and_normal_workflow": "A First Officer writing the accepted validation-gate summary from worker reports.",
+    "observable_harm": "A gate can claim the reporting fix meets its bar while the historical wrong-count claim remains unattributed in half the candidate outputs.",
+    "affected_value": "value-ac[AC-7] preserves the original scenario K target-count rule and five-of-six bar.",
+    "trigger_evidence": "replay-audit.json controls and implementation-2 K candidate runs 2/3 plus implementation-3 K candidate run 4; semantic-read.json.",
+    "status": "open"
+  },
+  {
+    "id": "F2",
+    "severity": "medium",
+    "classification": "Needs decision",
+    "title": "The required trunk-based number check remains held by the stacked parent",
+    "file": "claims-name-their-source.md",
+    "line": 214,
+    "detail": "number_guards.py check --base origin/main exits 1 on ADR 0054, which belongs to parent PR #773; this task reserves 0055. Parent 128fe3e3 is still open and is the actual PR base. The same check against that pinned parent exits 0.",
+    "fix": "FO must reconcile the explicitly assigned origin/main check with stacked delivery or land and recheck the parent through its own authority. Do not add another task's number reservation here or silently substitute the passing base.",
+    "released_user_and_normal_workflow": "First Officer preparing the required number-reservation check before this task's merge ask.",
+    "observable_harm": "The required origin/main acceptance command is red and cannot support an all-green delivery recommendation.",
+    "affected_value": "contract[kc-dev-flow-2/references/sd/workflow.md#number-guards] requires a passing candidate number check.",
+    "trigger_evidence": "number-guards.log; number-guards-stacked.log; sibling-pr.json; parent task ADR: 0054 read on this date.",
+    "status": "open"
+  }
+]

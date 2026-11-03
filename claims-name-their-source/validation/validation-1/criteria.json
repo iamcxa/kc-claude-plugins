@@ -1,0 +1,38 @@
+[
+  {
+    "name": "AC-1: rule and budget",
+    "status": "passed",
+    "note": "Both sentences present; 5891/5891 and stacked-parent +55. Removing the step exits 1 and names +55.",
+    "evidence": "lint.log; mutation-budget.log; word-counts.json"
+  },
+  {
+    "name": "AC-2: gate output",
+    "status": "passed",
+    "note": "Pass/hold/unreadable-input codes 0/1/2 preserved; one reminder before the final ask. Dropping only check emission fails its test while question passes.",
+    "evidence": "focused-tests.log; mutation-check.log; mutation-question-control.log"
+  },
+  {
+    "name": "AC-4: observer boundary",
+    "status": "passed",
+    "note": "Chat claim listed; committed-summary rule not excluded. Rewording the chat phrase fails lint. This is the static proof the criterion requests, not a native observer-behavior claim.",
+    "evidence": "lint.log; mutation-chat.log"
+  },
+  {
+    "name": "AC-5: lifecycle words",
+    "status": "passed",
+    "note": "Startup 5836+48 to 5891+48; question 3 to 30; check 57 to 84. Idle/archive/ideation sources unchanged against the stacked parent. Deleting the rule yields +0 instead of +55.",
+    "evidence": "word-counts.json; count-falsifier.json"
+  },
+  {
+    "name": "AC-6: callers and ADR",
+    "status": "passed",
+    "note": "Full exact-head suite passed 892 tests with 6 skips; ADR lint passes. Missing required 0055 exits 1.",
+    "evidence": "full-suite.log; adr-lint.log; adr-missing-falsifier.log"
+  },
+  {
+    "name": "AC-7: Claude replay",
+    "status": "blocked",
+    "note": "Unchanged mechanical grader P 6/6 and K 6/6; independent target-claim read K 3/6, below 5/6. F1 needs disposition. No new model runs.",
+    "evidence": "replay-audit.json; semantic-read.json; findings.json"
+  }
+]

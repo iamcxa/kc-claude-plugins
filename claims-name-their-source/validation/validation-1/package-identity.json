@@ -1,0 +1,38 @@
+[
+  {
+    "script": "adr_lint.py",
+    "active_codex": "203f097c37799e051718ca339035aad64f240b8134c20afb3dfd66cc381b25f4",
+    "dispatch_claude": "203f097c37799e051718ca339035aad64f240b8134c20afb3dfd66cc381b25f4",
+    "same": true
+  },
+  {
+    "script": "dispatch_records.py",
+    "active_codex": "3a7a4d171b3e10dfef4c4d99b70876a450d423bf3d9f1ef7fbb834cb770a8b21",
+    "dispatch_claude": "f0ad624f5d64f993c973c25f13a7da79e6b0cdfb34897e14945f08c13c8f7178",
+    "same": false
+  },
+  {
+    "script": "number_guards.py",
+    "active_codex": "f2fb6ccafde5fb8b2c7217a451ff7d129b25d8c9a0cfd86aa7dd1007c668f8a3",
+    "dispatch_claude": "f2fb6ccafde5fb8b2c7217a451ff7d129b25d8c9a0cfd86aa7dd1007c668f8a3",
+    "same": true
+  },
+  {
+    "script": "doc_impact.py",
+    "active_codex": "2af123dbeeeb0912da30bd1f1c9241c7d3692615e920d5958a1cca33ca7026cd",
+    "dispatch_claude": "2af123dbeeeb0912da30bd1f1c9241c7d3692615e920d5958a1cca33ca7026cd",
+    "same": true
+  },
+  {
+    "script": "comment_ratio.py",
+    "active_codex": "b01e2f61e64b0a3666964e54dd4b14e308345359445d78d6ab68bbcce638a3a0",
+    "dispatch_claude": "b01e2f61e64b0a3666964e54dd4b14e308345359445d78d6ab68bbcce638a3a0",
+    "same": true
+  },
+  {
+    "script": "design_surfaces.py",
+    "active_codex": "887432e94c65c89145cc7e6744cc9264d897e968c7aab0ee669202453fc8d56b",
+    "dispatch_claude": "887432e94c65c89145cc7e6744cc9264d897e968c7aab0ee669202453fc8d56b",
+    "same": true
+  }
+]

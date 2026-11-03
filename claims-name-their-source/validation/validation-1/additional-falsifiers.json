@@ -1,0 +1,14 @@
+[
+  {
+    "criterion": "AC-5",
+    "control_delta": 55,
+    "mutated_delta": 0,
+    "expected_delta": 55
+  },
+  {
+    "criterion": "AC-6",
+    "mutation": "remove 0055 in throwaway docs",
+    "exit": 1,
+    "expected": 1
+  }
+]

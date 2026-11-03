@@ -1,0 +1,6 @@
+{
+  "criterion": "AC-5",
+  "control_delta": 55,
+  "mutated_delta": 0,
+  "expected_delta": 55
+}

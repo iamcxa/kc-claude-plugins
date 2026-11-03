@@ -1,0 +1,42 @@
+[
+  {
+    "file": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "disposition": "unaffected: equality arithmetic, quoted authority and loading ledger retained; new +55 step matches task gate.",
+    "implementation_disposition_checked": true
+  },
+  {
+    "file": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "disposition": "unaffected: Team bullet and protected +144 step unchanged.",
+    "implementation_disposition_checked": true
+  },
+  {
+    "file": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+    "disposition": "unaffected: optional summary and legacy question behavior retained; added output is advisory.",
+    "implementation_disposition_checked": true
+  },
+  {
+    "file": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "disposition": "unaffected: model table, effort lint and trigger ranking unchanged.",
+    "implementation_disposition_checked": true
+  },
+  {
+    "file": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "disposition": "unaffected: round-count refusal still runs before a merge record; reminder adds no acceptance path.",
+    "implementation_disposition_checked": true
+  },
+  {
+    "file": "kc-dev-flow-2/README.md",
+    "disposition": "unaffected: entry, adoption and maintenance instructions still describe the candidate.",
+    "implementation_disposition_checked": true
+  },
+  {
+    "file": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "disposition": "unaffected: word ledger, bounded replay and maintenance process still apply.",
+    "implementation_disposition_checked": true
+  },
+  {
+    "file": "learning.md",
+    "disposition": "unaffected: local worktree-config prohibition, independent lifecycle recount and caller search followed.",
+    "implementation_disposition_checked": true
+  }
+]

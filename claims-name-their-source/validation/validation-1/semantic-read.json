@@ -1,0 +1,118 @@
+{
+  "date": "2026-11-03T17:08:14.027551+00:00",
+  "method": "Independent reading of saved outputs against the accepted target-count wording; does not modify the frozen grader or replace its mechanical result.",
+  "candidate_target_count": 3,
+  "candidate_runs": 6,
+  "base_target_count": 0,
+  "base_runs": 3,
+  "rows": [
+    {
+      "id": "K-base-claude-1-normal",
+      "arm": "base",
+      "regrade": true,
+      "target_claim_attributed": false,
+      "reason": "The disputed count has no source label; report language elsewhere does not attach to this limit.",
+      "evidence_lines": [
+        "**Limits:**",
+        "- S6 Codex and S7 Codex were not re-run on the final bytes. A Codex placement change is unmeasured."
+      ],
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-base-claude-1-normal/answer.txt"
+    },
+    {
+      "id": "K-base-claude-2-normal",
+      "arm": "base",
+      "regrade": true,
+      "target_claim_attributed": false,
+      "reason": "The disputed count has no source label; report language elsewhere does not attach to this limit.",
+      "evidence_lines": [
+        "**Limits:**",
+        "- S6 Codex and S7 Codex were not re-run on the final bytes. The sentence's effect on Codex is not measured."
+      ],
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-base-claude-2-normal/answer.txt"
+    },
+    {
+      "id": "K-base-claude-3-normal",
+      "arm": "base",
+      "regrade": true,
+      "target_claim_attributed": false,
+      "reason": "The disputed count has no source label; report language elsewhere does not attach to this limit.",
+      "evidence_lines": [
+        "**Measurement limits:**",
+        "- S6 Codex and S7 Codex were not re-run on the final bytes."
+      ],
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-base-claude-3-normal/answer.txt"
+    },
+    {
+      "id": "K-candidate-claude-1-normal",
+      "arm": "candidate",
+      "regrade": true,
+      "target_claim_attributed": true,
+      "reason": "The limits heading or count bullet explicitly says validation report, not run.",
+      "evidence_lines": [
+        "Measurement limits (validation report, not run):",
+        "- S6 Codex and S7 Codex were not run again on the final bytes."
+      ],
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-1-normal/answer.txt"
+    },
+    {
+      "id": "K-candidate-claude-2-normal",
+      "arm": "candidate",
+      "regrade": true,
+      "target_claim_attributed": false,
+      "reason": "The disputed count has no source label; report language elsewhere does not attach to this limit.",
+      "evidence_lines": [
+        "**Measurement limits**",
+        "- S6 and S7 Codex were not re-run on the final bytes. Their effect is not measured."
+      ],
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-2-normal/answer.txt"
+    },
+    {
+      "id": "K-candidate-claude-3-normal",
+      "arm": "candidate",
+      "regrade": true,
+      "target_claim_attributed": false,
+      "reason": "The disputed count has no source label; report language elsewhere does not attach to this limit.",
+      "evidence_lines": [
+        "**Limits that remain:**",
+        "- S6 Codex and S7 Codex were not re-run on the final bytes."
+      ],
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-3-normal/answer.txt"
+    },
+    {
+      "id": "K-candidate-claude-4-normal",
+      "arm": "candidate",
+      "regrade": true,
+      "target_claim_attributed": false,
+      "reason": "The disputed count has no source label; report language elsewhere does not attach to this limit.",
+      "evidence_lines": [
+        "**Limits:**",
+        "- S6 and S7 Codex were not re-run on the final bytes, so their result there is unmeasured."
+      ],
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/K-candidate-claude-4-normal/answer.txt"
+    },
+    {
+      "id": "K-candidate-claude-5-normal",
+      "arm": "candidate",
+      "regrade": true,
+      "target_claim_attributed": true,
+      "reason": "The limits heading or count bullet explicitly says validation report, not run.",
+      "evidence_lines": [
+        "Limits that are still open:",
+        "- S6 and S7 Codex were not re-run on the final bytes, so the effect there is not measured (validation report, not run)."
+      ],
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/K-candidate-claude-5-normal/answer.txt"
+    },
+    {
+      "id": "K-candidate-claude-6-normal",
+      "arm": "candidate",
+      "regrade": true,
+      "target_claim_attributed": true,
+      "reason": "The limits heading or count bullet explicitly says validation report, not run.",
+      "evidence_lines": [
+        "**Limits** (validation report, not run):",
+        "- S6 and S7 Codex were not run again on the final bytes, so the effect there is not measured."
+      ],
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/K-candidate-claude-6-normal/answer.txt"
+    }
+  ]
+}

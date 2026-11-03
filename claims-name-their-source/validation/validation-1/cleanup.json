@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-03T17:11:36.774017+00:00",
+  "assigned_head": "f79711ca8d6325c1c14781342cf23855dd62b10a",
+  "assigned_worktree_clean": true,
+  "detached_candidate_removed": true,
+  "acceptance_checkout_removed": true,
+  "provider_runs_started": 0,
+  "agents_started": 0,
+  "test_process_exit": 0
+}
