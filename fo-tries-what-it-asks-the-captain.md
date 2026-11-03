@@ -393,3 +393,50 @@ ADR 0054 records the approved 55-word increase (5,781 to 5,836) and reversal of 
 FO authorized two files outside the original design list: `scripts/test_lint_skills.py` replaces the obsolete chat-only phrase fixture, and `scripts/test_poc_readme.py` supplies the record and checks unchanged forwarding of the checked summary. The repair changes only `scripts/delivery_gate.py` and `scripts/test_delivery_gate.py`.
 
 Validation at `4f72f1bbbff11e9e4cab311d4409594702cff143`: full package suite passed 882 tests with 6 existing skips; 14 focused Captain tests, 16 isolated mutations, fresh-shell acceptance, lint (5,836 of 5,836 words), ADR 0054, number guards, comment ratio and design checks passed. The one requested RoboRev attempt exited 3: `incomplete: the roborev daemon is not running`. Publication, a fresh exact-head review and hosted CI remain with FO. CI cost per PR was not measured; no workflow or trigger changed.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria, D1 (FO-run chat checks), D2 (+55 words), D3 (reverse ADR 0024 D3), with the routed fenced-output repair.
+  Candidate `a83430cb840f934b38cce6dbd49b5d62ba8e1ffb`, branch `spacedock-ensign/fo-tries-what-it-asks-the-captain`, base `713d4e6ed6381e65fa6d8305e08b282ceb56a8fb`; prior head `4f72f1bbbff11e9e4cab311d4409594702cff143`. Only delivery_gate.py and test_delivery_gate.py changed in this repair; no version bump. Evidence: `fo-tries-what-it-asks-the-captain/validation/implementation-3/`.
+- DONE: Repair Codex review 5751409840 / comment 4454090538 (P2), PR #773: fenced Observed output was demanded as an Asked step.
+  `fence-red.log` reproduces the hold for `python3 -c 'print(1 + 1)'`, Observed 2, in an unlabelled message fence and a named card's text fence. `captain-green.log` passes 17 tests including real CLI routes; matching observed fences are excluded from command/link coverage while S1 retains the card's visible text.
+  `positive-cli.json` binds the actual fresh-shell result 2 and both message/card CLI passes to this head. Unrecorded command fences still hold; links inside output are excluded, but the same link outside the output still holds. Removing either classification check, or dropping command checks, fails its regression (`mutation-results.json`).
+- DONE: Every acceptance criterion has current local evidence; the routed external-round-1 P2 finding is repaired in full.
+  AC-1 observations, AC-2 archived qnow path/card, AC-3 command/link coverage, AC-4 Captain reason, AC-5 relay gate/head, and prior Ran/context/UTC/calendar checks: `mutation-tests.log`, `mutation-results.json`, 19 isolated expected failures with python3 -B and caches cleared. Each removed check fails its own test.
+  AC-6: actual fresh-shell commands and required 3-step/1-Captain success line in `positive-cli.json`. AC-7: `acceptance.log` shows 5836/5836 words; restoring the old observer chat-only phrase fails (`observer-mutation.json`). ADR 0054 and the Captain-quoted +55 ledger entry remain.
+  AC-8: `python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py'` exits 0: 885 tests, 6 existing skips (`full-suite.log`); POC recipe record and forwarding coverage retained.
+  AC-9: independent `word-counts.json`: workflow 5781→5836, mod 48, validation passage 64→33, section 86; idle/archive/merge unchanged. Pass line is 9 words, correcting the descriptive table's 8 as FO confirmed. Adding one word fails lint. Five-step `acceptance.sh` passes in a fresh shell.
+- SKIPPED: Implement the outgoing-message structured step list proposed in RoboRev 1419 finding 1; its earlier proposed decline still needs the Captain's validation-gate ruling.
+  Design / PRFAQ: “A prose ask with no command, link or file in it ("sign in on the preview"), unless FO lists it as a step.” S5 names fences, links and named-card fences; the proposed format is absent from the approved design. `proposed-decline.json` replays the remaining prose gap at this head. This is not a decline of the new Codex P2 finding.
+- DONE: Run repository lint, ADR 0054 lint, number guards, comment-ratio and design checks on the new candidate.
+  `acceptance.log`, `adr-lint.log` (`--since 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb --require 0054`), `number-guards.log`, `comment-ratio.log` (5% maximum) and `design-check.log` exit 0. `manifest.json` binds source hashes; task frontmatter unchanged.
+- SKIPPED: Obtain a clean exact-head RoboRev verdict from the one requested command.
+  `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/roborev_gate.py --repo <assigned worktree> --base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb` ran once, exit 3: `incomplete: the roborev daemon is not running` (`roborev.log`, `roborev-exit.txt`). No retry or clean-review claim.
+- SKIPPED: Push the repaired head, update PR #773, obtain fresh hosted review and green CI.
+  FO owns publication under ADR 0042/0048. No worker code push, PR comment, review request, ready or merge action. CI cost per PR not measured; no trigger changed. No successful state-sync receipt is claimed by this report while it is being written.
+- DONE: Record each affected document's disposition and the authorized file exceptions.
+  `doc-dispositions.json`: ADR 0020 unaffected (budget ledger retained); ADR 0037 unaffected (Team rule unchanged); ADR 0044 unaffected (summary/legacy rules retained); ADR 0049 unaffected (model lint unchanged); ADR 0051 unaffected (merge round-count check unchanged).
+  Package README unaffected (entry/adoption retained); maintain-flow skill unaffected (same lint/test commands); learning.md unaffected (recount practice followed). Workflow/observer/ADR 0054 retain the approved implementation. Prior FO-authorized test_lint_skills.py / test_poc_readme.py fixture exceptions remain; this repair adds no out-of-design file.
+- DONE: Prepare the updated exact PR title and body for FO.
+  `pr-title.txt`, `pr-body.md` in implementation-3; exact text follows below.
+
+### Summary
+
+This complete report supersedes earlier implementation reports at `a83430cb840f934b38cce6dbd49b5d62ba8e1ffb`. The P2 fenced-output defect is locally repaired; the earlier prose-format proposed decline, incomplete RoboRev and FO's publication/review/CI remain.
+
+PR title: feat(kc-dev-flow-2): check Captain steps before an ask
+
+PR body (exact):
+
+FO could correctly record `python3 -c 'print(1 + 1)'` and `Observed: 2` yet get an unrecorded-command hold when its result appeared in a fence. Fences matching a recorded observation, with whitespace normalized, are now treated as output in message and named-card coverage. Unrecorded command fences and independent links still hold. This repairs Codex review 5751409840, comment 4454090538 (P2), on PR #773.
+
+`delivery_gate.py steps` checks observations against the outgoing message, including named Markdown cards and missing absolute paths. `question` requires a passing record at a latest dispatched validation candidate. Every step needs `Ran:`; executed runs name a fresh shell or real browser and a valid UTC timestamp. The approved justified `none — <reason>` plus `Only he can:` exception remains.
+
+ADR 0054 records the approved 55-word increase (5,781 to 5,836) and reversal of ADR 0024 D3. The observer can read observations; upgraded validation questions, including POC recipes, hold without the record. Form and coverage checks do not establish truthful observations or intercept chat that skips them.
+
+RoboRev 1419 finding 1 remains a separate proposed decline awaiting the Captain's validation gate: the approved design excludes “A prose ask with no command, link or file in it ("sign in on the preview"), unless FO lists it as a step.” An explicit outgoing-message step list would add a format the design does not name. This limitation is not claimed fixed; the routed P2 fence finding is repaired in full.
+
+FO authorized `scripts/test_lint_skills.py` and `scripts/test_poc_readme.py` outside the original design list to update obsolete fixtures and checked-summary forwarding. This repair changes only `scripts/delivery_gate.py` and `scripts/test_delivery_gate.py`.
+
+Validation at `a83430cb840f934b38cce6dbd49b5d62ba8e1ffb`: full package suite passed 885 tests with 6 existing skips; 17 focused Captain tests, 19 isolated mutations, fresh-shell acceptance, real execution of the reported command and both CLI output-fence routes passed. Lint is 5,836 of 5,836 words; ADR, number, comment-ratio and design checks passed. The one requested RoboRev attempt exited 3: `incomplete: the roborev daemon is not running`. FO owns publication and fresh hosted review/CI. CI cost per PR was not measured; no workflow or trigger changed.

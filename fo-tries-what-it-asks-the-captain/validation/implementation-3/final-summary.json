@@ -1,0 +1,9 @@
+{
+  "candidate": "a83430cb840f934b38cce6dbd49b5d62ba8e1ffb",
+  "tests": 885,
+  "skipped": 6,
+  "mutations": 19,
+  "report_lines": 47,
+  "roborev": "incomplete: the roborev daemon is not running",
+  "remaining": "prior prose-format proposed decline; FO publication/review/CI"
+}

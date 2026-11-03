@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_qnow_card_replay_checks_archived_path_and_unrecorded_fence (test_delivery_gate.CaptainStepsTests.test_qnow_card_replay_checks_archived_path_and_unrecorded_fence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpv2l057a1/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1450, in test_qnow_card_replay_checks_archived_path_and_unrecorded_fence
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.014s
+
+FAILED (failures=1)

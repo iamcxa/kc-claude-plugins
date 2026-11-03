@@ -1,0 +1,11 @@
+FO could correctly record `python3 -c 'print(1 + 1)'` and `Observed: 2` yet get an unrecorded-command hold when its result appeared in a fence. Fences matching a recorded observation, with whitespace normalized, are now treated as output in message and named-card coverage. Unrecorded command fences and independent links still hold. This repairs Codex review 5751409840, comment 4454090538 (P2), on PR #773.
+
+`delivery_gate.py steps` checks observations against the outgoing message, including named Markdown cards and missing absolute paths. `question` requires a passing record at a latest dispatched validation candidate. Every step needs `Ran:`; executed runs name a fresh shell or real browser and a valid UTC timestamp. The approved justified `none — <reason>` plus `Only he can:` exception remains.
+
+ADR 0054 records the approved 55-word increase (5,781 to 5,836) and reversal of ADR 0024 D3. The observer can read observations; upgraded validation questions, including POC recipes, hold without the record. Form and coverage checks do not establish truthful observations or intercept chat that skips them.
+
+RoboRev 1419 finding 1 remains a separate proposed decline awaiting the Captain's validation gate: the approved design excludes “A prose ask with no command, link or file in it ("sign in on the preview"), unless FO lists it as a step.” An explicit outgoing-message step list would add a format the design does not name. This limitation is not claimed fixed; the routed P2 fence finding is repaired in full.
+
+FO authorized `scripts/test_lint_skills.py` and `scripts/test_poc_readme.py` outside the original design list to update obsolete fixtures and checked-summary forwarding. This repair changes only `scripts/delivery_gate.py` and `scripts/test_delivery_gate.py`.
+
+Validation at `a83430cb840f934b38cce6dbd49b5d62ba8e1ffb`: full package suite passed 885 tests with 6 existing skips; 17 focused Captain tests, 19 isolated mutations, fresh-shell acceptance, real execution of the reported command and both CLI output-fence routes passed. Lint is 5,836 of 5,836 words; ADR, number, comment-ratio and design checks passed. The one requested RoboRev attempt exited 3: `incomplete: the roborev daemon is not running`. FO owns publication and fresh hosted review/CI. CI cost per PR was not measured; no workflow or trigger changed.

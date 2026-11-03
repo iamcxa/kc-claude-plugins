@@ -1,0 +1,24 @@
+F
+======================================================================
+FAIL: test_three_exercised_steps_pass_and_report_the_one_captain_step (test_delivery_gate.CaptainStepsTests.test_three_exercised_steps_pass_and_report_the_one_captain_step)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpgaluisql/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1488, in test_three_exercised_steps_pass_and_report_the_one_captain_step
+    self.assertEqual(self.run_steps(body, "\n".join(asked + " — observed: worked" for asked in requests)),
+AssertionError: Tuples differ: (0, 'captain steps complete: 0 steps, 1 left to him\n') != (0, 'captain steps complete: 3 steps, 1 left to him\n')
+
+First differing element 1:
+'captain steps complete: 0 steps, 1 left to him\n'
+'captain steps complete: 3 steps, 1 left to him\n'
+
+- (0, 'captain steps complete: 0 steps, 1 left to him\n')
+?                              ^
+
++ (0, 'captain steps complete: 3 steps, 1 left to him\n')
+?                              ^
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)
