@@ -1354,6 +1354,24 @@ class CaptainStepFixture(unittest.TestCase):
 
 
 class CaptainStepsTests(CaptainStepFixture):
+    def test_non_shell_fences_need_a_recorded_step_unless_they_match_observed(self):
+        for language, content in (("python", "print(1 + 1)"), ("node", "console.log(1 + 1)"),
+                                  ("mermaid", "graph LR; A-->B"), ("text", "Check the preview")):
+            with self.subTest(language=language):
+                shown = f"Read this note.\n```{language}\n{content}\n```\n"
+                body = self.step("Read this note.")
+                code, out = self.run_steps(body, shown)
+                self.assertEqual(code, 1, out)
+                self.assertIn("S5: unrecorded command or link", out)
+                self.assertIn(content, out)
+                for recorded in (body + self.step(content, number=2),
+                                 self.step("Read this note.", observed=content)):
+                    code, out = self.run_steps(recorded, shown)
+                    self.assertEqual(code, 0, out)
+                    run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", str(self.saved), "--text-file", str(self.message)],
+                                         capture_output=True, text=True)
+                    self.assertEqual(run.returncode, 0, run.stdout)
+
     def test_fenced_observed_output_passes_in_message_and_named_card(self):
         command = "python3 -c 'print(1 + 1)'"
         for named_card, language in ((False, ""), (True, "text")):

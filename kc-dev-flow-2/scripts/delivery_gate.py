@@ -690,10 +690,8 @@ def absolute_paths(text):
     return list(dict.fromkeys(paths))
 
 
-def fenced_steps(text, all_blocks=False):
-    return [body.strip() for _, language, body in FENCE.findall(text)
-            if body.strip() and (all_blocks or language.strip().lower() in
-                                 ("", "sh", "sh run", "bash", "zsh", "shell", "console"))]
+def fenced_steps(text):
+    return [body.strip() for _, _, body in FENCE.findall(text) if body.strip()]
 
 
 def links(text):
@@ -730,7 +728,7 @@ def inspect_steps(record_path, message):
                 re.findall(r"(?<![\w:/])(?:[~./\w-]+/)?[\w.-]+\.md(?::\d+(?::\d+)?)?", URL.sub(" ", message))]
     for path in dict.fromkeys(absolute_paths(message) + markdown):
         if path.suffix.lower() == ".md" and path.is_file() and path.resolve() != record_path.resolve():
-            commands += fenced_steps(path.read_text(), all_blocks=True)
+            commands += fenced_steps(path.read_text())
     expanded = message + "\n" + "\n".join(commands)
     asked = [normalized(fields.get("Asked", "")) for _, fields in steps]
     left = 0
