@@ -1200,9 +1200,29 @@ class DueTests(unittest.TestCase):
             f"Path({str(self.log)!r}).write_text(json.dumps({{'argv':sys.argv[1:],'PATH':os.environ['PATH']}}))\n" +
             "p=json.loads(Path(sys.argv[1]).read_text())\nprint(p['stdout'])\nprint(p.get('stderr',''),file=sys.stderr)\nsys.exit(p['exit'])\n")
         node.chmod(0o755)
+        binary = node.with_name("spacedock")
+        put(binary, "#!/bin/sh\nexit 2\n")
+        binary.chmod(0o755)
+        self.parsed_records = None
+        self.native_fields = False
+        self.status_calls = []
+        real_run = subprocess.run
+        def invoke(argv, **kwargs):
+            if not self.native_fields and "status" in argv and "--all-fields" in argv:
+                self.status_calls.append(argv)
+                records = self.parsed_records if self.parsed_records is not None else self.listed_records()
+                listing = {"entities": records, "pagination": {"has_next": "false", "total": str(len(records)), "page": "1", "limit": "0"}}
+                return subprocess.CompletedProcess(argv, 0, json.dumps(listing), "")
+            return real_run(argv, **kwargs)
+        calls = mock.patch.object(ra.subprocess, "run", side_effect=invoke)
+        calls.start()
+        self.addCleanup(calls.stop)
         patch = mock.patch.dict(os.environ, {"PATH": str(node.parent) + os.pathsep + os.environ.get("PATH", "")})
         patch.start()
         self.addCleanup(patch.stop)
+
+    def listed_records(self):
+        return [{**task.fields, "slug": task.slug, "id": task.slug} for task in ra.state_tasks(self.wf)]
 
     def populate(self, status="done"):
         for story in self.document["stories"]:
@@ -1227,6 +1247,86 @@ class DueTests(unittest.TestCase):
         self.assertNotIn("release book-pickup/r1 ", self.due()[1])
         put(claim, task_file({"title": "claim removed"}))
         self.assertIn("release book-pickup/r1 ", self.due()[1])
+
+    def test_done_status_with_yaml_comment_does_not_hide_due_release(self):
+        self.parsed_records = self.listed_records()
+        self.populate("done # completed")
+        code, out = self.due()
+        self.assertEqual(code, 0, out)
+        self.assertEqual(out.count("next:"), 2, out)
+
+    def test_claim_with_yaml_comment_silences_the_claimed_release(self):
+        self.parsed_records = [*self.listed_records(), {"slug": "claim", "id": "claim", "release-acceptance": "book-pickup/r1"}]
+        put(self.state / "claim.md", task_file({"release-acceptance": "book-pickup/r1 # already filed"}))
+        code, out = self.due()
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("release book-pickup/r1 ", out)
+        self.assertIn("release book-pickup/r2 ", out)
+
+    def test_every_due_frontmatter_value_uses_the_parsed_listing(self):
+        self.parsed_records = self.listed_records()
+        for path in self.state.glob("*.md"):
+            put(path, path.read_text().replace("status: done", 'status: "do\\x6ee" # completed')
+                .replace("journey: book-pickup", 'journey: "book\\x2dpickup" # map')
+                .replace("journey-release: r1", "journey-release: 'r1' # first")
+                .replace("journey-release: r2", 'journey-release: "r2" # second'))
+        claim = {"slug": "claim", "id": "claim", "release-acceptance": "book-pickup/r1"}
+        self.parsed_records.append(claim)
+        put(self.state / "_archive/claim/index.md", task_file({"release-acceptance": '"book-pickup/r1" # filed'}))
+        code, out = self.due()
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("release book-pickup/r1 ", out)
+        self.assertIn("release book-pickup/r2 ", out)
+
+    def test_task_listing_is_complete_and_errors_are_diagnostic(self):
+        records = self.listed_records()
+        valid = {"entities": records, "pagination": {"has_next": "false", "total": str(len(records)), "page": "1", "limit": "0"}}
+        partial = {**valid, "pagination": {**valid["pagination"], "has_next": "true"}}
+        wrong_count = {**valid, "pagination": {**valid["pagination"], "total": "0"}}
+        wrong_field = {**valid, "entities": [{**records[0], "status": ["done"]}, *records[1:]]}
+        for code, stdout, stderr, reason in (
+                (2, "", "cannot observe tasks", "cannot observe tasks"),
+                (0, "not JSON", "", "Expecting value"),
+                *[(0, json.dumps(value), "", "incomplete or malformed task listing") for value in
+                  ([], {}, partial, wrong_count, wrong_field)]):
+            with self.subTest(stdout=stdout), mock.patch.object(ra.subprocess, "run", return_value=
+                    subprocess.CompletedProcess([], code, stdout, stderr)) as called:
+                result, out = self.due()
+                self.assertEqual(result, 0, out)
+                self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+                self.assertNotIn("next:", out)
+                called.assert_called_once()
+
+    def test_task_listing_uses_selected_binary_archive_all_fields_and_no_limit(self):
+        binary = self.root / "selected/spacedock-preview"
+        put(binary, "#!/bin/sh\nexit 2\n")
+        binary.chmod(0o755)
+        with mock.patch.dict(os.environ, {"SPACEDOCK_BIN": str(binary)}):
+            self.assertEqual(self.due()[1].count("next:"), 2)
+        self.assertEqual(self.status_calls, [[str(binary), "status", "--workflow-dir", str(self.wf),
+                                             "--archived", "--all-fields", "--limit", "0", "--json"]])
+
+    def test_live_commented_and_quoted_task_fields_match_spacedock(self):
+        _, progress, env = self.live_producer()
+        put(self.map, self.map.read_text().replace("journey: book-pickup", "journey: book-pickup # map"))
+        for path in self.state.glob("*.md"):
+            put(path, path.read_text().replace("status: done", 'status: "do\\x6ee" # completed')
+                .replace("journey: book-pickup", 'journey: "book\\x2dpickup" # map')
+                .replace("journey-release: r1", "journey-release: 'r1' # first")
+                .replace("journey-release: r2", 'journey-release: "r2" # second'))
+        with mock.patch.dict(os.environ, env):
+            code, out = run("due", "--workflow-dir", self.wf, "--progress", progress, self.map)
+            self.assertEqual(code, 0, out)
+            self.assertEqual(out.count("next:"), 2, out)
+            put(self.state / "_archive/claim/index.md", task_file({"release-acceptance": "'book-pickup/r1' # already filed"}))
+            code, out = run("due", "--workflow-dir", self.wf, "--progress", progress, self.map)
+            self.assertEqual(code, 0, out)
+            self.assertNotIn("release book-pickup/r1 ", out)
+            self.assertIn("release book-pickup/r2 ", out)
+            put(self.state / "_archive/claim/index.md", task_file({"release-acceptance": "'book-pickup/r1 # literal' # outside comment"}))
+            code, out = run("due", "--workflow-dir", self.wf, "--progress", progress, self.map)
+            self.assertEqual(code, 0, out)
+            self.assertEqual(out.count("next:"), 2, out)
 
     def test_live_archived_flat_and_folder_claims_and_empty_value(self):
         for name in ("claim.md", "claim/index.md", "_archive/claim.md", "_archive/claim/index.md"):
@@ -1336,10 +1436,11 @@ class DueTests(unittest.TestCase):
         progress = REPO / "kc-journey-map/lib/journey-progress.mjs"
         probe = subprocess.run([node or "node", "--input-type=module", "-e", "await import('./lib/render.mjs')"],
                                cwd=progress.parent.parent, capture_output=True)
-        if not node or not shutil.which("spacedock") or probe.returncode:
+        if not node or not shutil.which("spacedock", path=os.environ["PATH"].split(os.pathsep, 1)[1]) or probe.returncode:
             print("not run: node, kc-journey-map dependencies or spacedock missing")
             self.skipTest("node, kc-journey-map dependencies or spacedock missing")
         env = {**os.environ, "PATH": str(Path(node).parent) + os.pathsep + os.environ["PATH"].split(os.pathsep, 1)[1]}
+        self.native_fields = True
         return node, progress, env
 
     def test_live_producer_keeps_done_but_live_release_and_agrees_on_unbuilt(self):
@@ -1356,7 +1457,7 @@ class DueTests(unittest.TestCase):
                 code, out = run("due", "--workflow-dir", self.wf, "--progress", progress, self.map)
                 self.assertEqual(code, 0, out)
                 self.assertEqual("next:" in out, pending, out)
-                self.assertEqual(called.call_count, int(pending))
+                self.assertEqual(called.call_count, 1 + int(pending))
             if pending:
                 doc.update(source="<workflow>", observedAt="2000-01-01T00:00:00.000Z")
                 self.assertEqual(doc, self.document)
@@ -1366,7 +1467,7 @@ class DueTests(unittest.TestCase):
         binary = self.root / "selected bin/spacedock-preview"
         selected = self.root / "selected-calls.txt"
         put(binary, "#!/bin/sh\n" + f"echo called >> {shlex.quote(str(selected))}\n" +
-            f"exec {shlex.quote(shutil.which('spacedock'))} \"$@\"\n")
+            f"exec {shlex.quote(shutil.which('spacedock', path=env['PATH']))} \"$@\"\n")
         binary.chmod(0o755)
         decoy = binary.with_name("spacedock")
         put(decoy, "#!/bin/sh\necho 'wrong spacedock' >&2\nexit 2\n")

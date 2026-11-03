@@ -174,13 +174,38 @@ def state_dir(workflow_dir):
     return workflow_dir / state if state else workflow_dir
 
 
+def selected_spacedock(env):
+    name = env.get("SPACEDOCK_BIN") or "spacedock"
+    binary = shutil.which(name, path=env.get("PATH", ""))
+    if not binary:
+        raise FileNotFoundError(f"{'SPACEDOCK_BIN' if env.get('SPACEDOCK_BIN') else 'spacedock'} is not executable: {name}")
+    return Path(binary).absolute()
+
+
+def due_records(args, env):
+    done = subprocess.run([str(selected_spacedock(env)), "status", "--workflow-dir", str(args.workflow_dir),
+                           "--archived", "--all-fields", "--limit", "0", "--json"],
+                          capture_output=True, text=True, timeout=60, env=env)
+    if done.returncode:
+        raise ValueError((done.stderr or done.stdout).strip() or f"task listing exit {done.returncode}")
+    listing = json.loads(done.stdout)
+    if not isinstance(listing, dict):
+        raise ValueError("incomplete or malformed task listing")
+    records, pagination = listing.get("entities"), listing.get("pagination")
+    fields = ("status", "journey", "journey-release", "release-acceptance")
+    if not isinstance(records, list) or not isinstance(pagination, dict) \
+            or pagination.get("has_next") != "false" or pagination.get("page") != "1" \
+            or pagination.get("limit") != "0" or pagination.get("total") != str(len(records)) \
+            or any(not isinstance(row, dict) or any(key in row and not isinstance(row[key], str) for key in fields)
+                   for row in records):
+        raise ValueError("incomplete or malformed task listing")
+    return records
+
+
 def progress_read(args, path, env):
     with tempfile.TemporaryDirectory(prefix="release-acceptance-") as directory:
         if env.get("SPACEDOCK_BIN"):
-            binary = shutil.which(env["SPACEDOCK_BIN"], path=env.get("PATH", ""))
-            if not binary:
-                raise FileNotFoundError(f"SPACEDOCK_BIN is not executable: {env['SPACEDOCK_BIN']}")
-            binary = Path(binary).absolute()
+            binary = selected_spacedock(env)
             launcher = Path(directory) / "spacedock"
             launcher.write_text("#!/bin/sh\nexec " + shlex.quote(str(binary)) + " \"$@\"\n")
             launcher.chmod(0o755)
@@ -207,20 +232,17 @@ def cmd_due(args):
     if not args.progress or not Path(args.progress).is_file():
         print("release-acceptance not run: kc-journey-map not found")
         return 0
+    env = dict(os.environ)
     try:
-        state = state_dir(args.workflow_dir)
-        records = [Task(path).fields for root in (state, state / "_archive")
-                   for path in sorted([*root.glob("*.md"), *root.glob("*/index.md")])
-                   if path.name != "README.md"]
+        records = due_records(args, env)
         claimed = {row["release-acceptance"] for row in records if row.get("release-acceptance")}
         candidates = {(row.get("journey"), row.get("journey-release")) for row in records
                       if row.get("status") == "done" and row.get("journey") and row.get("journey-release")
                       and f"{row['journey']}/{row['journey-release']}" not in claimed}
-    except (OSError, UnicodeError, ValueError) as error:
+    except (OSError, UnicodeError, ValueError, subprocess.TimeoutExpired) as error:
         for path, _ in maps:
             print(f"release-acceptance not run: {path}: {str(error).splitlines()[0][:120]}")
         return 0
-    env = dict(os.environ)
     for path, journey in maps:
         if not candidates or (journey is not None and not any(j == journey for j, _ in candidates)):
             continue

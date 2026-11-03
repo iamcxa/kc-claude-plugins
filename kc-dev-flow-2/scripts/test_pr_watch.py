@@ -787,6 +787,12 @@ class TasksTests(unittest.TestCase):
         (self.state / "built.md").write_text("---\ntitle: built\nstatus: done\njourney: demo\njourney-release: r1\n---\n")
         self.git(self.state, "add", "built.md")
         self.git(self.state, "commit", "-qm", "built task")
+        listing = {"entities": [{"slug": "built", "id": "built", "status": "done", "journey": "demo", "journey-release": "r1"}],
+                   "pagination": {"has_next": "false", "total": "1", "page": "1", "limit": "0"}}
+        binary = self.root / "bin/spacedock"
+        source = binary.read_text()
+        binary.write_text(source.replace("import os, sys\n", "import os, sys, json\n" +
+            f"if '--all-fields' in sys.argv:\n    print({json.dumps(listing)!r})\n    sys.exit(0)\n", 1))
         baseline = self.tasks({})
         journey = self.repo / "docs/journey/nested/journey.yaml"
         journey.parent.mkdir(parents=True)
