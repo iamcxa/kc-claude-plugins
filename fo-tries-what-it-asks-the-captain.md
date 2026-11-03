@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:fo-tries-what-it-asks-the-captain:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:fo-tries-what-it-asks-the-captain-backlog-1
+              briefing:
+                id: briefing:fo-tries-what-it-asks-the-captain:backlog:attempt-1:revision-1
+                digest: sha256:5d93bd5c4e59e52a707a26702879e3c788dd6207c41b26a30c16fcd689aa4f3d
+                room-ref: ./fo-tries-what-it-asks-the-captain/review/backlog/briefing-1
 ---
 
 ## Scope
