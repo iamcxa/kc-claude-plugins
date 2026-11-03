@@ -34,6 +34,17 @@ gates:
                 id: briefing:claims-name-their-source:ideation:attempt-1:revision-1
                 digest: sha256:7418662bb45e439c2416313cd09d02322974ca508dca757fdb97a6685c396648
                 room-ref: ./claims-name-their-source/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:claims-name-their-source:ideation:1
+                briefing: briefing:claims-name-their-source:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-03T10:17:27.050462Z"
+                decision: approve
+                reason: The Captain 「可以」 (chat, 2026-11-03), answering 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」; accepts every recommendation each design states for its decisions, with the stated change to release-walk-due-trigger D7.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
