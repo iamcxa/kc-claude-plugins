@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-walk-off-production-before-release:backlog:attempt-2:revision-1",
+  "question": "「決定：這批七張（A 權限、B 同症狀計數、C 改寫條件比對原話、D release 驗收不在正式站、來源標註、FO 先自己試、release 驗收到期提醒）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？要改哪張直接說。」",
+  "artifacts": [
+    {
+      "id": "artifact:release-walk-off-production-before-release:backlog:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/2c3cf8e8377948130979c1e601bd8c98f5a95ad9/release-walk-off-production-before-release.md",
+      "rev": "sha256:2892b18e63a4f47362d6ab5e567f2df60eb091347068c18c5daff5b43a1f2592",
+      "mediaType": "text/markdown",
+      "summary": "Batch 13 backlog sitting, seven tasks; recommended approve to enter ideation under pilot."
+    }
+  ]
+}

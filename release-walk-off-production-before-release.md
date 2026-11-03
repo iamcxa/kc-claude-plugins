@@ -17,6 +17,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-03T07:39:09.550832Z"
                 reason: The Captain widened the batch 13 sitting to seven tasks (chat, 2026-11-03); the bound question named four.
+            - id: gate-attempt:release-walk-off-production-before-release-backlog-2
+              briefing:
+                id: briefing:release-walk-off-production-before-release:backlog:attempt-2:revision-1
+                digest: sha256:2ddaa9b8e0e8f651a68695f4b5179b73d0a8be2876bfd15ff0398d81a18cbcf5
+                room-ref: ./release-walk-off-production-before-release/review/backlog/briefing-2
 ---
 
 ## Scope
