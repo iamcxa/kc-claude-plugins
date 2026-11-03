@@ -191,6 +191,11 @@ All `ra` runs use `kc-dev-flow-2/extensions/release-acceptance/release_acceptanc
 
 **AC-10** Existing behaviour holds. Verified by: `python3 -B kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py` passes with `build_world` writing the three keys and no other existing case changed. Falsifier: an existing case needing a changed expectation besides the README keys.
 
+
+## Number guards
+
+ADR: 0053
+
 ## Stage Report: ideation
 
 - DONE: Design where a repository records its environments, how the release-acceptance walk is held off production, how the production release waits for an accepted walk, the local-only path with its recorded limit, and the four adoption questions when the environments are absent; read subspace-relay's AGENTS.md and docs/releasing.md as one sibling's practice, not as the contract
