@@ -308,3 +308,73 @@ _archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: AC-7 (Captain am
 _archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: AC-8 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: absolute, without, absolute-path, conversion, unusable; remove them, or ask the Captain and record his answer as an amendment, then run this check again
 _archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: AC-10 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: comparison; remove them, or ask the Captain and record his answer as an amendment, then run this check again
 ```
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design with D1 as recommended: hold a validation dispatch on words added inside a kept sentence; only the files the design names.
+  Local candidate f0830463a9c5166f35d8f9e38ede74b4ae4f5cd3, branch spacedock-ensign/rewritten-criteria-checked-against-captain-words, direct parent/base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb; seven design files plus FO-authorized ADR 0057, no versions changed; worktree clean.
+- DONE: AC-1 — The #756 rewrite is held before its validation dispatch.
+  Exact b4e88ece4 task/dispatch snapshot: base --names --strict exits 0; candidate exits 1, one line naming AC-9, amendment 3, revision, link (41 words); frozen source-byte test passes and removing added_words call makes that test fail (mutation-1.log).
+- DONE: AC-2 — A rewrite that adds nothing to his words passes.
+  Snapshot control changing include source revision/link. to include source. is byte-identical to base output (empty, exit 0); renumber/marker/evidence-tail controls pass; counting deleted words or evidence tails fails the controls (mutation-2/3.log).
+- DONE: AC-3 — His later words clear the hold.
+  Snapshot plus amendment 4, Supersedes: none, Asked: revision, link, clears the added-words line; CLI tests also cover Captain: clearance; own-amendment-only mutation fails (mutation-4.log).
+- DONE: AC-4 — The repair dispatch is not held.
+  Snapshot implementation-4-message-2.md has no added-words line; validation-2-message-1.md has one; applying the predicate to all records fails the repair test (mutation-5.log).
+- DONE: AC-5 — L2 reports the line as a violation, not a runner failure.
+  A real temporary state Git push range returns violation: L2 dispatch-record-complete ... AC-9 ... adds words and exit 1; later confirmation clears only later events. Removing the pattern alternative yields exit 2 and fails the test (mutation-6.log).
+- DONE: AC-6 — The corpus bound and no regression.
+  At d7af6b4b7f72ad8a2652e9b9530b47184cd0c210, newest-added dispatch of each amended task: 47 tasks, 10 held, 18 added lines; removing those lines makes base/candidate stdout, stderr and exit behavior match. Exact lines below; filler/AC-id/extra-output mutations fail (mutation-7/8/9.log).
+- DONE: AC-7 — FO reads no more words at any moment except a held pre-dispatch run.
+  Workflow README byte-identical, 5781→5781; clean strict output empty and identical; startup/idle-open/idle-merged/archive/merge-ask add 0 words; held replay adds 41. Workflow-sentence and clean-output mutations fail (mutation-10/9.log). Laws 1255→1345 words; dispatch docstring 686→712, neither newly read at those moments.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation run with python3 -B, caches cleared.
+  /tmp/criteria-check-implementation/{proof.json,corpus-lines.log,mutations.json,mutation-1.log..mutation-10.log}; tests retain the frozen criterion/amendment bytes. Ten mutants rejected by assertions, no import/syntax failures or pyc caches; whole new sentences and evidence tails remain unchecked, translations may be held.
+- DONE: test_dispatch_records.py, test_design_surfaces.py, test_laws_check.py, repository lint-skills.py, adr_lint.py --since <base> --require 0057, number_guards.py check and comment_ratio.py within maximum.
+  Three suites: 376 tests, six existing environment/fixture skips; final 12 focused checks include the subsequently added 0.75 boundary case. All checks exit 0; ADR 51/0 legacy; numbers PASS, no migration path; comments 168 code/3 comment lines, 1.8% ≤5%; git diff --check clean. Logs: /tmp/criteria-check-implementation/{suites,acceptance,adr,numbers,comments,lint}.log.
+- DONE: Fresh-shell verification and affected-document disposition.
+  /bin/bash --noprofile --norc /tmp/criteria-check-implementation/acceptance.sh exits 0: replay/corpus, ten falsifiers, 12 final checks, lint, ADR, numbers, comment ratio and whitespace. doc_impact lists five documents: ADR 0057 updated; ADR 0041 unaffected: seed-only admission unchanged; ADR 0045 unaffected: live ruling-history predicate unchanged; ADR 0048 unaffected: Paseo completion/publication unchanged; learning.md unaffected: its parser/corpus/word-count practices followed, no new learning proposed.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main; roborev evidence= line; CI green on the PR head.
+  FO's 2026-11-03 reply explicitly assigns product push, Draft PR and exact-head RoboRev to FO under ADR 0042/0048; no worker publication/review or CI run is claimed. Base fetched; code committed locally; prepared PR text below. CI cost per PR not measured; no CI trigger changed.
+- DONE: Split-root local state handoff, without frontmatter/status or sibling changes.
+  Initial report committed as f52ea2295 (this task path only); append this complete correction under the required heading and commit this entity path only. All prior bytes, reports and Captain words preserved; task remains implementation. Concurrent sibling state commits are preserved.
+- SKIPPED: Push the state branch so peers see the entity/report.
+  git push origin spacedock-state/dev2 exited 128: fatal: unable to access https://github.com/iamcxa/kc-claude-plugins.git/: Could not resolve host: github.com. No remote sync is claimed; FO must sync the locally committed state and perform the already delegated product publication/review/CI.
+
+### Prepared PR
+
+Title: fix(kc-dev-flow-2): hold widened amendment criteria before validation
+
+Body:
+When an amended acceptance criterion inserts words inside a retained sentence, validation dispatch now holds if the words are absent from the Captain's recorded amendment words. The diagnostic names the criterion, amendment and words, and the existing state-history law recognizes it; repair follow-ups remain available. ADR 0057 records the accepted bounded check.
+
+Validation: 376 tests (six skips), 12 final focused checks, exact historical replay, 47-task corpus comparison, ten rejected falsifier mutations, skill lint, ADR/number checks, 1.8% comment ratio and fresh-shell acceptance. Workflow remains 5781 words. Whole new sentences remain unchecked and translations can be held. CI cost per PR is unmeasured; CI triggers are unchanged. Exact-head RoboRev and hosted CI pending FO.
+
+### Corpus diagnostic evidence
+
+The following are the complete added diagnostics, with only the common temporary corpus prefix removed:
+
+```text
+_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-14 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: report, quoting, l2; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-18 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: one, run, per, push, tip, whose, names; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-19 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: d1; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-20 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: ci, job's; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/fo-interviews-extension/dispatch/validation-3.md:1: AC-8 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: retaining, their, predictions; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-8 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: package's, references, sd, mods, kc-dev-flow-2, md; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-14 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: through, pr_watch, slug, dispatch, attempted, then; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-15 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: sync; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-18 (Captain amendment 5) adds words in a sentence kept from the criterion it replaces that are not in his words: replay, plan, counted; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/kc-decision-log-cli/dispatch/validation-2.md:1: AC-12 (Captain amendment 6) adds words in a sentence kept from the criterion it replaces that are not in his words: shows, skills, read-adr, ac4, text_check, py, asserts, ac4, install-falsifiers, txt, 2026-10-22; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/new-work-starts-from-a-story-map/dispatch/validation-4.md:1: AC-13 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: replaces, arm, arm, alone, does, count, node, kc-journey-map, lib, journey-review, test, mjs; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/paseo-human-surfaces-visible-and-reachable/dispatch/validation-2.md:1: AC-10 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: must, pass; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/peers-paseo-rule-matches-practice/dispatch/validation-3.md:1: AC-9 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: notices, steer, successful, true, actual, steer, notify, true, send, arguments, recipient-side, record, matching, finish, event, information-only, notice, notice, finish, callback, causes, another, action, treated, proof, understanding, amendments-2, 3, exact-head; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/peers-paseo-rule-matches-practice/dispatch/validation-3.md:1: AC-11 (Captain amendment 4) adds words in a sentence kept from the criterion it replaces that are not in his words: policy; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/prod-security-review-gates/dispatch/validation-4.md:1: AC-14 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: question, he, answered; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: AC-7 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: one, host; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: AC-8 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: absolute, without, absolute-path, conversion, unusable; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: AC-10 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: comparison; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+```
+
+### Summary
+
+This report supersedes the earlier implementation report and corrects its state-sync claim: the push failed on DNS resolution. The local candidate implements the accepted bounded comparison and records its departure from ADR 0027 D4 in ADR 0057. The historical widening and ten falsifiers are exercised; clean and repair dispatches retain their behavior, while corpus differences are exactly the 18 intended diagnostics. Product publication, exact-head RoboRev, hosted CI and independent validation remain with FO; no semantic, translation or whole-new-sentence coverage is claimed.
