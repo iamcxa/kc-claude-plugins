@@ -42,6 +42,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+profile: pilot
 ---
 
 ## Scope
