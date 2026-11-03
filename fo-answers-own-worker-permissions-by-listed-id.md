@@ -433,3 +433,102 @@ Product head remains `974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e`; no new probe or
 
 The push branch remains unverified and no push ran. FO owns publication to PR #769, exact-head RoboRev and hosted CI. CI cost was not measured; CI configuration is unchanged.
 ```
+
+## Validation acceptance script — candidate 974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e
+
+This instruction-only change has no screen to capture. The five-step same-host acceptance script uses git, python3, the assigned checkout and installed 0.34.0 package at the absolute paths below. It also requires the retained checkers in /tmp/fo-permission-validation-769 and the task-named qnow/relay/native Claude transcripts under /Users/kent/.claude/projects; these machine-local sources are declared dependencies, not a portable clean-machine or fresh native-run test. It starts no actor, answers no permission and pushes nothing; it does not verify the live push boundary, future model compliance, or delivery.
+
+Run exactly: /bin/bash --noprofile --norc /tmp/fo-permission-validation-769/acceptance.sh
+
+Each step's expected observation is in its comment; exact script run:
+
+```bash
+#!/bin/bash
+set -euo pipefail
+# Step 1: create an exact detached checkout; expected: the full candidate SHA.
+WT='/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-answers-own-worker-permissions-by-listed-id'
+PROOF='/tmp/fo-permission-validation-769'
+CANDIDATE='974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e'
+BASE='713d4e6ed6381e65fa6d8305e08b282ceb56a8fb'
+CHECKOUT=$(mktemp -d "$WT/.acceptance-769.XXXXXX")
+git -C "$WT" worktree add --quiet --detach "$CHECKOUT" "$CANDIDATE"
+trap 'cd "$WT"; git -C "$WT" worktree remove "$CHECKOUT"' EXIT
+export CHECKOUT
+test "$(git -C "$CHECKOUT" rev-parse HEAD)" = "$CANDIDATE"
+git -C "$CHECKOUT" rev-parse HEAD
+
+# Step 2: clauses, unchanged files, ruling and mutations; expected: 36 checks; 0 failed, then 51 ADR file(s) checked, 0 legacy.
+cd "$CHECKOUT"
+python3 -B -c 'import os,pathlib,sys; sys.path.insert(0,"/tmp/fo-permission-validation-769"); import check_acceptance as c; c.ROOT=pathlib.Path(os.environ["CHECKOUT"]); raise SystemExit(c.main())'
+python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since "$BASE" --require 0052
+
+# Step 3: repository lint; expected: PASS, with the workflow at 5781 of 5781 words.
+python3 -B kc-dev-flow-2/scripts/lint-skills.py
+
+# Step 4: replay and its two falsifiers; expected: Replay PASS; both predicate-removal runs exit 1.
+python3 -B "$PROOF/replay.py" --output "$PROOF/captain-replay.json" > "$PROOF/captain-replay.log"
+for predicate in unanswered agent_match; do
+  result=0
+  python3 -B "$PROOF/replay.py" --drop "$predicate" --output "$PROOF/captain-drop-$predicate.json" > "$PROOF/captain-drop-$predicate.log" || result=$?
+  test "$result" -eq 1
+done
+printf '%s\n' 'Replay PASS; both predicate-removal runs exit 1'
+
+# Step 5: retained native refusals and amended approval turn, including evidence mutations; expected: AC-3: 4 checks passed; AC-7 PASSED.
+python3 -B "$PROOF/assess_ac3.py"
+python3 -B "$PROOF/assess_ac7.py"
+test -z "$(git -C "$CHECKOUT" status --porcelain)"
+printf '%s\n' 'Acceptance PASS; detached checkout clean'
+```
+
+Observed output (exit 0):
+
+```text
+974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e
+36 checks; 0 failed
+51 ADR file(s) checked, 0 legacy
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5781 of 5781 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+Replay PASS; both predicate-removal runs exit 1
+AC-3: 4 checks passed
+AC-7 PASSED
+Acceptance PASS; detached checkout clean
+```
+
+The sandbox first denied creating Git worktree metadata; the unchanged acceptance actions then passed with authorized filesystem access. Both temporary checkouts were removed. Full command logs and mutation results: /tmp/fo-permission-validation-769; the recorded helper adaptations changed only checkout/package/output paths.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #769 head 974ee5af against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for 974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e against origin/main 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb; detached checkout verified clean and removed. Commands/exits: /tmp/fo-permission-validation-769/command-results.json; independent artifact/evidence checks below.
+- DONE: Captain amendment 1 superseded AC-4 and Captain amendment 2 superseded AC-6 with AC-7; judge AC-7 against the second native run the implementation report names. The push branch is unverified on this environment because the user settings allow bare Bash; judge it as a stated limit, and do not run a push. Do not start agents you were not asked to
+  Active criteria are AC-1/2/3/5/7; archived AC-4/6 are not acceptance gates. The second recording is the sole AC-7 run; no new agents, permission responses, or push probe. Product publication remains FO-owned.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step script and exact observed output immediately above; /bin/bash --noprofile --norc /tmp/fo-permission-validation-769/acceptance.sh exits 0. Required ADR command uses --since 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb --require 0052, exit 0 (51 records); the loaded Codex package copy also passes and its ADR script is byte-identical.
+- DONE: AC-1 — every clause, approved two-file scope, and protected-file equality
+  Re-ran check_acceptance.py in both detached checkouts: 36 checks pass, covering all 20 clause deletions, base-negative control and protected-byte mutations; mapped every hold/ownership/id/recovery/approval clause manually. Peers, workflow, lint budget and ADR 0048 are byte-identical to base; diff --check passes.
+- DONE: AC-2 — transcript replay and independently rerun predicate falsifiers
+  replay.py exits 0: qnow 2,252 and relay 1,487 successful answers, zero stopped; all seven specified bad calls stopped. --drop unanswered and --drop agent_match each exit 1, admitting exactly relay 49427/50421 and qnow 77628/relay 52454 respectively; source hashes retained in captain-replay.json. Relay has three additional successes since implementation's snapshot.
+- DONE: AC-3 — real Claude refusal evidence and falsifiers
+  Re-read native source 57cfeb59-f178-4cf6-aa8b-54d6d3ca6671.jsonl: Claude Write request at 160, altered id refused at 165/166; delivered request 192, successful archive 196/199, refusal 202/203. assess_ac3.py passes 4 checks; mutating either recorded refusal to success fails its predicate. These are evidence mutations, not a new native run.
+- DONE: AC-7 — amended routine turn and separate unanswered hold
+  Raw source 6381605d-f092-4386-af14-1f5d0d4f8c3f.jsonl (SHA-256 39787cee709cde9a861cdb3b2aa5705473e51100ae35dd7dff38faa409ad6dd8): APPROVED 70, correct delivered pair/allow 71, success 72, waiting narration 78, next callback 83; question 97, one unanswered hold 104. assess_ac7.py passes 8 checks, rejecting missing approval, post-answer status/report, and answering the question.
+- DONE: AC-7 source judgment and candidate identity
+  Loaded extension at transcript 37/41 hashes to candidate 088c093756c872d5615fddabf9633a879d5e1d4a2eb6382d5bdb6e62020a4109. Line 78 reports waiting for the worker callback, not approval/results to the Captain. Line 104 includes a routine-write recap and status block in the separate held-question turn; full text is retained in ac7-primary.json and is not erased from this verdict.
+- DONE: AC-5 — decision record and word figures
+  ADR 0052 keeps the task's three Asked quotes verbatim and records the accepted wrapper/temp-cleanup decision and amendment 1; replaces only the named 0048 sentence without editing 0048. Counts independently match 819→1,055 wc words and 829→1,069 normalized; deleting Recommended makes isolated ADR lint exit 1.
+- DONE: Current-head workflow checks and documents
+  Repository lint and all 47 lint tests pass; number guards, design_surfaces, dispatch_records (all five records) and comment_ratio exit 0; comments 0 code/0 comment lines, maximum not enforced below 20 code lines. doc_impact reports 0 affected documents, agreeing with implementation. No CI configuration changed; cost per PR was not measured.
+- DONE: Limits, cleanup and delivery evidence
+  Stronger no-any-text-after instruction still fails the withdrawn AC-6 check (re-run exit 1); it is not claimed proven by AC-7. Earlier 26-command/1,024-case evidence belongs to ef70c15ac, with Spacedock 0.27.3 rather than CI 0.27.2 and a Node/YAML skip; not relabelled current-head evidence. Current PR head is verified and all five hosted checks pass; exact-head RoboRev remains unverified/FO-owned.
+- DONE: Goal sufficiency and minimal necessity
+  The accepted bounded journey is demonstrated by native routine approval and held judgment request; observed refusal replay motivates paired/unanswered ids, and baseline lacks the permission section. The two changed documents supply the procedure and durable ruling; no script, hook or broad workflow expansion was added. Scope/authority remain instructions plus the host's backstop, not mechanical enforcement.
+- DONE: Probe actor and worktree closure
+  Live get_agent_status rechecks all nine named actors as closed/archived, pendingPermissions []; actor-summary.json retains proof. Both validator-created detached checkouts are removed and product branch/head unchanged; no peer work touched.
+- F1 Deferred risk: live non-owned-repository push boundary unverified
+  User/workflow: FO handling its own Paseo worker. Observable harm: none established. Boundary: captain-ruling[2026-11-03] holds non-owned-repository pushes. Trigger evidence is absent because bare Bash was allowed and the dispatch forbids the probe; a real boundary request approved without Captain authority would make this Material. This is an expressly retained validation limit, not a pass for the push route.
+
+### Summary
+
+PASSED at 974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e against the active amended criteria; no Material repair finding. The native turn proves AC-7 only, not the withdrawn stronger silence rule or the push branch. FO retains exact-head local review, gate presentation and the Captain's delivery decision; this report grants no delivery authority.
