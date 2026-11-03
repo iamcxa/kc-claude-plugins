@@ -1,0 +1,107 @@
+--- design_surfaces.py.orig	2026-11-03 15:56:20
++++ design_surfaces.py	2026-11-03 16:04:32
+@@ -14,6 +14,7 @@
+ import argparse
+ import hashlib
+ import json
++import difflib
+ import re
+ import subprocess
+ import sys
+@@ -998,3 +999,65 @@
+ 
+ if __name__ == "__main__":
+     sys.exit(main())
++
++
++REQUIREMENT_WORD = re.compile(r"[A-Za-z0-9][A-Za-z0-9'’_-]*")
++FILLER_WORDS = frozenset("a an the and or of to in on at by for with that this these those it its is are be been "
++                         "was were still remain remains also as from into not no".split())
++
++
++def criterion_blocks(lines):
++    blocks, current = {}, None
++    for line in lines:
++        found = DECLARATION_LINE.match(line)
++        if found:
++            current = found.group(1)
++            blocks[current] = [line]
++        elif current and line.strip() and not line.startswith("#"):
++            blocks[current].append(line)
++        else:
++            current = None
++    return {key: " ".join(value) for key, value in blocks.items()}
++
++
++def requirement_sentences(block):
++    text = re.split(r"Current evidence:", block)[0]
++    text = re.sub(r"^\s*\*\*AC-[A-Za-z0-9]+\*\*", "", text)
++    text = re.sub(r"Amended by Captain, amendment \d+\.?", "", text)
++    return [s.strip() for s in re.split(r"(?<=[.;:])\s+", text) if len(s.split()) >= 3]
++
++
++def words_of(text):
++    return [w.lower() for w in REQUIREMENT_WORD.findall(text)]
++
++
++def added_words(lines):
++    """(amendment, criterion id, [added words]) for each live replacement criterion that inserts words into a
++    sentence it otherwise keeps from the superseded criterion, where the words are not in the entry's Captain:/Asked: lines."""
++    live = criterion_blocks(section(lines, AC_HEADING) or [])
++    entries = [e for e in parse_amendments(lines)[0] if e.number is not None]
++    found = []
++    for entry in entries:
++        if entry.payload is None:
++            continue
++        his = set(words_of(" ".join(l for e in entries if e.number >= entry.number
++                                    for l in e.prefix.split("\n") if l.startswith(("Captain:", "Asked:")))))
++        old = [s for block in criterion_blocks(entry.moved).values() for s in requirement_sentences(block)]
++        marker = re.compile(rf"Amended by Captain, amendment {entry.number}(?!\d)")
++        for ident, block in live.items():
++            if not marker.search(block):
++                continue
++            added = []
++            for sentence in requirement_sentences(block):
++                if sentence in old or not old:
++                    continue
++                new = words_of(sentence)
++                best = max(old, key=lambda o: difflib.SequenceMatcher(None, words_of(o), new, autojunk=False).ratio())
++                match = difflib.SequenceMatcher(None, words_of(best), new, autojunk=False)
++                if match.ratio() < 0.75:
++                    continue
++                added += [w for op, _, _, j1, j2 in match.get_opcodes() if op in ("insert", "replace") for w in new[j1:j2]
++                          if w not in his and w not in FILLER_WORDS and not re.fullmatch(r"ac-[a-z0-9]+", w)]
++            if added:
++                found.append((entry.number, ident, added))
++    return found
+--- dispatch_records.py.orig	2026-11-03 15:56:20
++++ dispatch_records.py	2026-11-03 16:06:45
+@@ -52,7 +52,7 @@
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ from decision_ledger import split_task, gate_entries
+ from delivery_gate import CANDIDATE, RECORD  # noqa: E402
+-from design_surfaces import AMENDMENTS_HEADING, AMENDMENT_HEADER, amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
++from design_surfaces import added_words, AMENDMENTS_HEADING, AMENDMENT_HEADER, amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
+ from role_triggers import outside_fences  # noqa: E402
+ from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
+ from workflow_extensions import readme_extensions  # noqa: E402
+@@ -262,6 +262,9 @@
+             lines.append(f"{file}:1: '## FO alignment' records alignment as needed with no 'Result:' line; record the Captain's alignment result as 'Result: <what he answered>' there, then run this check again")
+         lines += [f"{file}:1: Captain amendment {NUMBER.search(title).group()} {key} line holds a backslash-quote copied from JSON; write his words as he said them, then run this check again"
+                   for title, key in escaped_amendment_lines(text.split("\n")) if NUMBER.search(title)]
++        lines += [f"{file}:1: {ident} (Captain amendment {n}) adds words in a sentence kept from the criterion it replaces that are not in his "
++                  f"words: {', '.join(words)}; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
++                  for n, ident, words in (added_words(text.split("\n")) if VALIDATION_RECORD.fullmatch(path.name) else [])]
+         named = dispatched_amendments(folder)
+         lines += [f"{file}:1: Captain amendment {n} named in no dispatch checklist; write 'Captain amendment {n}' "
+                   "in a checklist line of this record, then run this check again"
+--- laws_check.py.origtmp/c-ideation/laws.orig	2026-11-03 16:07:56
++++ laws_check.py
+@@ -188,6 +188,7 @@
+                                      r"reserved line '[^']+' missing from scope notes|"
+                                      r"Captain amendment \d+ named in no dispatch checklist|"
+                                      r"Captain amendment form at [^:]+:\d+: .+|"
++                                     r"AC-[A-Za-z0-9]+ \(Captain amendment \d+\) adds words in a sentence kept from the criterion it replaces that are not in his words: [^;]+|"
+                                      r"'## FO alignment' records alignment as needed with no 'Result:' line|"
+                                      r"Captain amendment \d+ (?:Captain|Asked) line holds a backslash-quote copied from JSON)(?:;.*)?", line)
+                 if not match:
