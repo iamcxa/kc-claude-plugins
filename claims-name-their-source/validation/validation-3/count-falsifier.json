@@ -1,0 +1,5 @@
+{
+  "expected_raise": 55,
+  "observed_raise": 55,
+  "deleted_rule_raise": 0
+}

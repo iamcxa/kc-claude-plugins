@@ -1,0 +1,9 @@
+[
+  {
+    "name": "Added comments",
+    "before": 0,
+    "after": 0,
+    "unit": "%",
+    "context": "comment_ratio.py origin/main 69f4988612d17c5524887f99c872a0ef384d05c9 --workflow-dir declared workflow; 57 code lines, 0 comment lines; ceiling 5%"
+  }
+]

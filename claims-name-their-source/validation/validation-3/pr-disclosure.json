@@ -1,0 +1,8 @@
+{
+  "candidate": "69f4988612d17c5524887f99c872a0ef384d05c9",
+  "body_discloses_target_limit": true,
+  "body_discloses_grader_defect": true,
+  "body_names_followup": true,
+  "source": "gh pr view 777 retained in pr-777.json; directly read 2026-11-04",
+  "limits": "Read-only body snapshot, no editing or endorsement of delivery"
+}

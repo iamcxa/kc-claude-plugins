@@ -1,0 +1,6 @@
+docs/adr/0055-a-claim-names-its-source-and-the-gate-scripts-print-the-rule.md
+kc-dev-flow-2/references/sd/workflow.md
+kc-dev-flow-2/scripts/delivery_gate.py
+kc-dev-flow-2/scripts/lint-skills.py
+kc-dev-flow-2/scripts/test_delivery_gate.py
+kc-dev-flow-2/skills/observer/SKILL.md

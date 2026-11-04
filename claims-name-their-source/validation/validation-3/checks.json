@@ -1,0 +1,120 @@
+[
+  {
+    "name": "lint",
+    "argv": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "command": "python3 -B kc-dev-flow-2/scripts/lint-skills.py",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+    "date": "2026-11-04T02:17:37.560644+00:00",
+    "exit": 0
+  },
+  {
+    "name": "adr-lint",
+    "argv": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "origin/main",
+      "--require",
+      "0055"
+    ],
+    "command": "python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since origin/main --require 0055",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+    "date": "2026-11-04T02:17:37.669039+00:00",
+    "exit": 0
+  },
+  {
+    "name": "doc-impact",
+    "argv": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "origin/main",
+      "69f4988612d17c5524887f99c872a0ef384d05c9"
+    ],
+    "command": "python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py origin/main 69f4988612d17c5524887f99c872a0ef384d05c9",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+    "date": "2026-11-04T02:17:37.772552+00:00",
+    "exit": 0
+  },
+  {
+    "name": "comment-ratio",
+    "argv": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "origin/main",
+      "69f4988612d17c5524887f99c872a0ef384d05c9",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "command": "python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py origin/main 69f4988612d17c5524887f99c872a0ef384d05c9 --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+    "date": "2026-11-04T02:17:37.830916+00:00",
+    "exit": 0
+  },
+  {
+    "name": "number-guards-main",
+    "argv": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source.md",
+      "--base",
+      "2bda2e98304261d46b0ae7205a29ddc9038d2b4d",
+      "--head",
+      "69f4988612d17c5524887f99c872a0ef384d05c9"
+    ],
+    "command": "python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py check --repo /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3 --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2 --task /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source.md --base 2bda2e98304261d46b0ae7205a29ddc9038d2b4d --head 69f4988612d17c5524887f99c872a0ef384d05c9",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+    "date": "2026-11-04T02:17:37.964358+00:00",
+    "exit": 0
+  },
+  {
+    "name": "design-surfaces",
+    "argv": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source.md"
+    ],
+    "command": "python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py check /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source.md",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+    "date": "2026-11-04T02:17:38.027607+00:00",
+    "exit": 0
+  },
+  {
+    "name": "dispatch-records",
+    "argv": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source"
+    ],
+    "command": "python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+    "date": "2026-11-04T02:17:38.126873+00:00",
+    "exit": 0
+  },
+  {
+    "name": "focused-tests",
+    "argv": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_delivery_gate.DeliveryGateTests.test_claim_source_reminder_on_pass_hold_and_unreadable_input",
+      "test_delivery_gate.QuestionTests.test_claim_source_reminder_on_pass_hold_and_unreadable_input"
+    ],
+    "command": "python3 -B -m unittest test_delivery_gate.DeliveryGateTests.test_claim_source_reminder_on_pass_hold_and_unreadable_input test_delivery_gate.QuestionTests.test_claim_source_reminder_on_pass_hold_and_unreadable_input",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3/kc-dev-flow-2/scripts",
+    "date": "2026-11-04T02:17:38.869832+00:00",
+    "exit": 0
+  }
+]

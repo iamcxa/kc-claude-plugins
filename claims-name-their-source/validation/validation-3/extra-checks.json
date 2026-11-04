@@ -1,0 +1,54 @@
+[
+  {
+    "name": "adr-lint-dispatch-package",
+    "argv": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "origin/main",
+      "--require",
+      "0055"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+    "date": "2026-11-04T02:19:34.324700+00:00",
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "number-guards-trunk",
+    "argv": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source.md",
+      "--base",
+      "origin/main",
+      "--head",
+      "69f4988612d17c5524887f99c872a0ef384d05c9"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+    "date": "2026-11-04T02:19:34.450863+00:00",
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "adr-missing-falsifier",
+    "argv": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3/.context/tmpqifzc2lx/adr",
+      "--require",
+      "0055"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source/.context/claims-validation-3",
+    "date": "2026-11-04T02:19:34.525467+00:00",
+    "exit": 1,
+    "expected": 1
+  }
+]

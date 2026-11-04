@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "info",
+    "title": "F1 Deferred risk: accepted count attribution limit remains",
+    "status": "confirmed",
+    "file": "docs/adr/0055-a-claim-names-its-source-and-the-gate-scripts-print-the-rule.md",
+    "line": 90,
+    "detail": "Released user and normal workflow: an adopter First Officer writes a validation summary using the supplied reports. Observable harm: the wrong unmeasured-cell claim remains unlabelled in candidate runs 2, 3 and 4; the old grader false-passes the base. Boundary: value-ac[AC-8] accepts 3/6 and requires the numeric-source follow-up. Trigger evidence: independently read saved answers, replay-audit.json, semantic-read.json; the current ADR and PR body disclose the limit.",
+    "fix": "Keep the accepted limit visible; address numeric sourcing in counts-name-the-run-that-produced-them. It becomes Material if delivery claims reliable count correction or hides the limit."
+  }
+]

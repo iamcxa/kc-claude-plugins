@@ -1,0 +1,20 @@
+{
+  "candidate": "69f4988612d17c5524887f99c872a0ef384d05c9",
+  "rulings_verbatim": true,
+  "known_limits_and_followup": true,
+  "controls": [
+    {
+      "name": "hidden known limit",
+      "rejected": true
+    },
+    {
+      "name": "missing follow-up",
+      "rejected": true
+    },
+    {
+      "name": "wrong Captain words",
+      "rejected": true
+    }
+  ],
+  "method": "Recorded-ruling comparisons and bounded wording checks; raw answers independently read; not a behavioral efficacy test"
+}

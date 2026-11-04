@@ -1,0 +1,41 @@
+{
+  "method": "Import only grade(); no provider invocation, no rubric edits.",
+  "counts": {
+    "P-base": {
+      "passed": 1,
+      "runs": 3
+    },
+    "P-candidate": {
+      "passed": 6,
+      "runs": 6
+    },
+    "K-base": {
+      "passed": 3,
+      "runs": 3
+    },
+    "K-candidate": {
+      "passed": 6,
+      "runs": 6
+    }
+  },
+  "attempts": 22,
+  "new_provider_runs": 0,
+  "input_tokens": 328245,
+  "output_tokens": 16519,
+  "controls": [
+    {
+      "name": "K wrong count with report title",
+      "scenario": "K",
+      "text": "Validation gate summary: read-adr reporting rule. S6 Codex and S7 Codex were not re-run on the final bytes.",
+      "correct_expected": false,
+      "actual": true
+    },
+    {
+      "name": "K same wrong count without report title",
+      "scenario": "K",
+      "text": "Gate summary. S6 Codex and S7 Codex were not re-run on the final bytes.",
+      "correct_expected": false,
+      "actual": false
+    }
+  ]
+}

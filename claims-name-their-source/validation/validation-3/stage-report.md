@@ -1,0 +1,28 @@
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #777 head 69f49886 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Cycle 3: **PASSED** at `69f4988612d17c5524887f99c872a0ef384d05c9`, within Captain amendments 2 and 3. Commands run 2026-11-04 Asia/Taipei; evidence: `claims-name-their-source/validation/validation-3/details.md`, criteria.json, checks.json, extra-checks.json and manifest.json.
+  AC-1/4: lint exits 0 at 5891/5891; removing the +55 ledger or changing the chat phrase fails lint. AC-2: both entry tests retain exits 0/1/2; removing check's emit fails that test while the question control stays green.
+  AC-5: independent recount against fetched main gives startup 5836+48 to 5891+48, question 3 to 30, check 57 to 84; idle/archive/ideation source bytes unchanged. Deleting the rule defeats the +55 assertion (prove.py, word-counts.json, count-falsifier.json).
+  AC-6: `python3 -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py'` exits 0: 906 tests, 6 skips (full-suite.log, suite-result.json). Removing reserved ADR 0055 from a copied folder makes its required-record check fail.
+- DONE: Revalidation after #773 merged: #777 was retargeted to main, origin/main merged in, and ADR 0055 updated to the ruled proof (head 69f498861). Under Captain amendment 2, run the number guards against origin/main now that the parent has merged; re-judge AC-8 under Captain amendment 3 and every criterion at this head. Do not start agents you were not asked to
+  Read-only GitHub receipts confirm parent #773 merged and #777 targets main at the assigned head. `number_guards.py check --base origin/main --head 69f4988612d17c5524887f99c872a0ef384d05c9` exits 0, base `2bda2e98304261d46b0ae7205a29ddc9038d2b4d` (number-guards-trunk.log); prior F2 is resolved.
+  AC-8: unchanged grader and saved-source audits rerun; independently read every target answer. P is 6/6 against base 1/3; the K target count is labelled in candidate 1/5/6, hence 3/6 against base 0/3 (semantic-read.json). Old K grading remains 6/6 against 3/3 and the title-only wrong-count control false-passes (replay-audit.json).
+  ADR 0055 quotes amendments 1/3 verbatim and names the known limit and committed numeric-source follow-up. Hidden-limit, missing-follow-up and changed-ruling controls reject (accepted-state.log, retained-record.log). PR body discloses the same limits (pr-disclosure.json). No new provider calls or agents; stored attempts remain 22/30.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `validation/validation-3/acceptance.sh` has six exact steps and expectations. Unchanged bytes ran under `/bin/bash --noprofile --norc`, exit 0 (acceptance-rerun.log, script hash in acceptance-result.json). Initial sandbox worktree creation failed; approved filesystem retry passed and cleaned up.
+  Dispatch-named .claude ADR lint with `--since origin/main --require 0055` exits 0: 53 records, 0 legacy (adr-lint-dispatch-package.log); active .codex package agrees. Design form and dispatch checks pass; nine dispatch records complete with two nonblocking absent-Symptom advisories.
+- DONE: Judge every disclosed implementation limit and affected document.
+  Document-impact lists eight documents; each retained disposition was independently checked. Comment ratio is 0.0% (57 code lines, 0 comment lines), within 5%; output consumer search finds no non-test parser of these gate modes (doc-dispositions.json, comment-ratio.log, delivery-callers.log). No CI trigger changed; CI cost per PR not measured.
+  Safe-mode isolation rests on documented help/recorded argv, not file-open tracing; Codex is outside the ruled replay. One model, small samples, combined README/reminder in K, incorrect-but-attributed reports and daily-FO behavior remain limits. The acceptance script proves local output and retained records, not model reliability or delivery.
+- DONE: Preserve candidate bytes and remove disposable validation worktrees.
+  Assigned branch remains clean at the exact candidate; detached validation and acceptance checkouts removed (cleanup.json). No candidate repair or unrelated task edit.
+- SKIPPED: State-syncing helper, push, PR edits/comments, review requests, ready, merge and new behavioral replay.
+  The dispatch's explicit no-push rule overrides generic state-sync text. Report and evidence use a path-scoped local state commit; the First Officer retains synchronization, reviews, gate and delivery. No new provider run was required by AC-8.
+
+### Summary
+
+This cycle supersedes validation-2 for the current candidate. All six active criteria pass under the later Captain rulings; the required post-parent trunk check, fresh-shell acceptance and full suite now pass at the updated head. The bounded rule remains a source-attribution instruction, not proof of reliable count correction; delivery remains with the First Officer and Captain.
+
+- F1 Deferred risk (accepted by Captain amendment 3): K target attribution is 3/6 and the unchanged grader false-passes the base; `value-ac[AC-8]` accepts this limit and its committed follow-up. Four evidence fields are in findings.json. It becomes Material if delivery claims reliable count correction or hides the accepted limit; no new Needs decision is raised.

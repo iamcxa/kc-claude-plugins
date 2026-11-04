@@ -1,0 +1,12 @@
+{
+  "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py'",
+  "candidate": "69f4988612d17c5524887f99c872a0ef384d05c9",
+  "date": "2026-11-04T02:25:59.598335+00:00",
+  "exit": 0,
+  "tests": 906,
+  "skipped": 6,
+  "failures": 0,
+  "errors": 0,
+  "seconds": 455.139,
+  "log": "full-suite.log"
+}

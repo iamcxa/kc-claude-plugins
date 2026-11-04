@@ -1,0 +1,585 @@
+{
+  "date": "2026-11-04T02:17:51.357348+00:00",
+  "method": "Import only grade(); no provider invocation, no rubric edits.",
+  "candidate": "69f4988612d17c5524887f99c872a0ef384d05c9",
+  "candidate_workflow_sha256": "7a8cb31473879310d7f4da50f267d0a1e6138b241dbe9693191426ab21b7d467",
+  "counts": {
+    "P-base": {
+      "passed": 1,
+      "runs": 3
+    },
+    "P-candidate": {
+      "passed": 6,
+      "runs": 6
+    },
+    "K-base": {
+      "passed": 3,
+      "runs": 3
+    },
+    "K-candidate": {
+      "passed": 6,
+      "runs": 6
+    }
+  },
+  "attempts": 22,
+  "new_provider_runs": 0,
+  "input_tokens": 328245,
+  "output_tokens": 16519,
+  "hashes": [
+    {
+      "folder": "implementation-2",
+      "file": "replay.py",
+      "expected": "3c66b31f146d95177ad589461b83d33312eb6a3397ad735acd136693baa2b114",
+      "actual": "3c66b31f146d95177ad589461b83d33312eb6a3397ad735acd136693baa2b114",
+      "matched": true
+    },
+    {
+      "folder": "implementation-2",
+      "file": "scenarios.json",
+      "expected": "106af5ccc238ad574f44b3a5d20f1aa1766a5dfb2a5db8d470f28181b2a4eb0e",
+      "actual": "106af5ccc238ad574f44b3a5d20f1aa1766a5dfb2a5db8d470f28181b2a4eb0e",
+      "matched": true
+    },
+    {
+      "folder": "implementation-2",
+      "file": "protocol.json",
+      "expected": "9bcc82c7d3d0ae5e603693810f319a32efaa717905e6dc6416fa44553205ac4d",
+      "actual": "9bcc82c7d3d0ae5e603693810f319a32efaa717905e6dc6416fa44553205ac4d",
+      "matched": true
+    },
+    {
+      "folder": "implementation-2",
+      "file": "grader-falsifiers.json",
+      "expected": "09938c24c0f9cb2c11dfbafecf76a591b5e3b056de581ab24135ea984effc21e",
+      "actual": "09938c24c0f9cb2c11dfbafecf76a591b5e3b056de581ab24135ea984effc21e",
+      "matched": true
+    },
+    {
+      "folder": "implementation-2",
+      "file": "base-workflow.md",
+      "expected": "5ba03ba9d348d79d6bc4bd2962513f2487f9ce867c36de57166b7e4d506c4143",
+      "actual": "5ba03ba9d348d79d6bc4bd2962513f2487f9ce867c36de57166b7e4d506c4143",
+      "matched": true
+    },
+    {
+      "folder": "implementation-2",
+      "file": "candidate-workflow.md",
+      "expected": "7a8cb31473879310d7f4da50f267d0a1e6138b241dbe9693191426ab21b7d467",
+      "actual": "7a8cb31473879310d7f4da50f267d0a1e6138b241dbe9693191426ab21b7d467",
+      "matched": true
+    },
+    {
+      "folder": "implementation-3",
+      "file": "replay.py",
+      "expected": "3c66b31f146d95177ad589461b83d33312eb6a3397ad735acd136693baa2b114",
+      "actual": "3c66b31f146d95177ad589461b83d33312eb6a3397ad735acd136693baa2b114",
+      "matched": true
+    },
+    {
+      "folder": "implementation-3",
+      "file": "scenarios.json",
+      "expected": "106af5ccc238ad574f44b3a5d20f1aa1766a5dfb2a5db8d470f28181b2a4eb0e",
+      "actual": "106af5ccc238ad574f44b3a5d20f1aa1766a5dfb2a5db8d470f28181b2a4eb0e",
+      "matched": true
+    },
+    {
+      "folder": "implementation-3",
+      "file": "protocol.json",
+      "expected": "9bcc82c7d3d0ae5e603693810f319a32efaa717905e6dc6416fa44553205ac4d",
+      "actual": "9bcc82c7d3d0ae5e603693810f319a32efaa717905e6dc6416fa44553205ac4d",
+      "matched": true
+    },
+    {
+      "folder": "implementation-3",
+      "file": "grader-falsifiers.json",
+      "expected": "09938c24c0f9cb2c11dfbafecf76a591b5e3b056de581ab24135ea984effc21e",
+      "actual": "09938c24c0f9cb2c11dfbafecf76a591b5e3b056de581ab24135ea984effc21e",
+      "matched": true
+    },
+    {
+      "folder": "implementation-3",
+      "file": "base-workflow.md",
+      "expected": "5ba03ba9d348d79d6bc4bd2962513f2487f9ce867c36de57166b7e4d506c4143",
+      "actual": "5ba03ba9d348d79d6bc4bd2962513f2487f9ce867c36de57166b7e4d506c4143",
+      "matched": true
+    },
+    {
+      "folder": "implementation-3",
+      "file": "candidate-workflow.md",
+      "expected": "7a8cb31473879310d7f4da50f267d0a1e6138b241dbe9693191426ab21b7d467",
+      "actual": "7a8cb31473879310d7f4da50f267d0a1e6138b241dbe9693191426ab21b7d467",
+      "matched": true
+    }
+  ],
+  "falsifiers": [
+    {
+      "folder": "implementation-2",
+      "scenario": "P",
+      "kind": "original",
+      "expected": false,
+      "actual": false,
+      "matched": true
+    },
+    {
+      "folder": "implementation-2",
+      "scenario": "P",
+      "kind": "corrected",
+      "expected": true,
+      "actual": true,
+      "matched": true
+    },
+    {
+      "folder": "implementation-2",
+      "scenario": "K",
+      "kind": "original",
+      "expected": false,
+      "actual": false,
+      "matched": true
+    },
+    {
+      "folder": "implementation-2",
+      "scenario": "K",
+      "kind": "corrected",
+      "expected": true,
+      "actual": true,
+      "matched": true
+    },
+    {
+      "folder": "implementation-3",
+      "scenario": "P",
+      "kind": "original",
+      "expected": false,
+      "actual": false,
+      "matched": true
+    },
+    {
+      "folder": "implementation-3",
+      "scenario": "P",
+      "kind": "corrected",
+      "expected": true,
+      "actual": true,
+      "matched": true
+    },
+    {
+      "folder": "implementation-3",
+      "scenario": "K",
+      "kind": "original",
+      "expected": false,
+      "actual": false,
+      "matched": true
+    },
+    {
+      "folder": "implementation-3",
+      "scenario": "K",
+      "kind": "corrected",
+      "expected": true,
+      "actual": true,
+      "matched": true
+    }
+  ],
+  "controls": [
+    {
+      "name": "K wrong count with report title",
+      "scenario": "K",
+      "text": "Validation gate summary: read-adr reporting rule. S6 Codex and S7 Codex were not re-run on the final bytes.",
+      "correct_expected": false,
+      "actual": true
+    },
+    {
+      "name": "K same wrong count without report title",
+      "scenario": "K",
+      "text": "Gate summary. S6 Codex and S7 Codex were not re-run on the final bytes.",
+      "correct_expected": false,
+      "actual": false
+    }
+  ],
+  "rows": [
+    {
+      "folder": "implementation-2",
+      "id": "K-base-claude-1-normal",
+      "scenario": "K",
+      "arm": "base",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 19937,
+      "output_tokens": 954,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-base-claude-1-normal/answer.txt",
+      "limit_lines": [
+        "**Limits:**",
+        "- S6 Codex and S7 Codex were not re-run on the final bytes. A Codex placement change is unmeasured."
+      ]
+    },
+    {
+      "folder": "implementation-2",
+      "id": "K-base-claude-2-normal",
+      "scenario": "K",
+      "arm": "base",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 19634,
+      "output_tokens": 883,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-base-claude-2-normal/answer.txt",
+      "limit_lines": [
+        "**Limits:**",
+        "- S6 Codex and S7 Codex were not re-run on the final bytes. The sentence's effect on Codex is not measured."
+      ]
+    },
+    {
+      "folder": "implementation-2",
+      "id": "K-base-claude-3-normal",
+      "scenario": "K",
+      "arm": "base",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 19937,
+      "output_tokens": 867,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-base-claude-3-normal/answer.txt",
+      "limit_lines": [
+        "**Measurement limits:**",
+        "- S6 Codex and S7 Codex were not re-run on the final bytes."
+      ]
+    },
+    {
+      "folder": "implementation-2",
+      "id": "K-candidate-claude-1-normal",
+      "scenario": "K",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 19922,
+      "output_tokens": 1422,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-1-normal/answer.txt",
+      "limit_lines": [
+        "Measurement limits (validation report, not run):",
+        "- S6 Codex and S7 Codex were not run again on the final bytes."
+      ]
+    },
+    {
+      "folder": "implementation-2",
+      "id": "K-candidate-claude-2-normal",
+      "scenario": "K",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 20225,
+      "output_tokens": 1734,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-2-normal/answer.txt",
+      "limit_lines": [
+        "**Measurement limits**",
+        "- S6 and S7 Codex were not re-run on the final bytes. Their effect is not measured."
+      ]
+    },
+    {
+      "folder": "implementation-2",
+      "id": "K-candidate-claude-3-normal",
+      "scenario": "K",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 20225,
+      "output_tokens": 951,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/K-candidate-claude-3-normal/answer.txt",
+      "limit_lines": [
+        "**Limits that remain:**",
+        "- S6 Codex and S7 Codex were not re-run on the final bytes."
+      ]
+    },
+    {
+      "folder": "implementation-2",
+      "id": "P-base-claude-1-normal",
+      "scenario": "P",
+      "arm": "base",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 16061,
+      "output_tokens": 869,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/P-base-claude-1-normal/answer.txt",
+      "limit_lines": []
+    },
+    {
+      "folder": "implementation-2",
+      "id": "P-base-claude-2-normal",
+      "scenario": "P",
+      "arm": "base",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": false,
+      "regrade": false,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 16061,
+      "output_tokens": 503,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/P-base-claude-2-normal/answer.txt",
+      "limit_lines": []
+    },
+    {
+      "folder": "implementation-2",
+      "id": "P-base-claude-3-normal",
+      "scenario": "P",
+      "arm": "base",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": false,
+      "regrade": false,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 16061,
+      "output_tokens": 411,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/P-base-claude-3-normal/answer.txt",
+      "limit_lines": []
+    },
+    {
+      "folder": "implementation-2",
+      "id": "P-candidate-claude-1-normal",
+      "scenario": "P",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 16604,
+      "output_tokens": 478,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/P-candidate-claude-1-normal/answer.txt",
+      "limit_lines": []
+    },
+    {
+      "folder": "implementation-2",
+      "id": "P-candidate-claude-2-normal",
+      "scenario": "P",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 16604,
+      "output_tokens": 732,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/P-candidate-claude-2-normal/answer.txt",
+      "limit_lines": []
+    },
+    {
+      "folder": "implementation-2",
+      "id": "P-candidate-claude-3-normal",
+      "scenario": "P",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 16301,
+      "output_tokens": 741,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-2/runs/P-candidate-claude-3-normal/answer.txt",
+      "limit_lines": []
+    },
+    {
+      "folder": "implementation-3",
+      "id": "K-candidate-claude-4-normal",
+      "scenario": "K",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 20256,
+      "output_tokens": 1403,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/K-candidate-claude-4-normal/answer.txt",
+      "limit_lines": [
+        "**Limits:**",
+        "- S6 and S7 Codex were not re-run on the final bytes, so their result there is unmeasured."
+      ]
+    },
+    {
+      "folder": "implementation-3",
+      "id": "K-candidate-claude-5-normal",
+      "scenario": "K",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 20256,
+      "output_tokens": 874,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/K-candidate-claude-5-normal/answer.txt",
+      "limit_lines": [
+        "Limits that are still open:",
+        "- S6 and S7 Codex were not re-run on the final bytes, so the effect there is not measured (validation report, not run)."
+      ]
+    },
+    {
+      "folder": "implementation-3",
+      "id": "K-candidate-claude-6-normal",
+      "scenario": "K",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 20256,
+      "output_tokens": 1717,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/K-candidate-claude-6-normal/answer.txt",
+      "limit_lines": [
+        "**Limits** (validation report, not run):",
+        "- S6 and S7 Codex were not run again on the final bytes, so the effect there is not measured."
+      ]
+    },
+    {
+      "folder": "implementation-3",
+      "id": "P-candidate-claude-4-normal",
+      "scenario": "P",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 16635,
+      "output_tokens": 815,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/P-candidate-claude-4-normal/answer.txt",
+      "limit_lines": []
+    },
+    {
+      "folder": "implementation-3",
+      "id": "P-candidate-claude-5-normal",
+      "scenario": "P",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 16635,
+      "output_tokens": 460,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/P-candidate-claude-5-normal/answer.txt",
+      "limit_lines": []
+    },
+    {
+      "folder": "implementation-3",
+      "id": "P-candidate-claude-6-normal",
+      "scenario": "P",
+      "arm": "candidate",
+      "model": [
+        "claude-opus-5-5"
+      ],
+      "exit": 0,
+      "answered": true,
+      "saved_grade": true,
+      "regrade": true,
+      "answer_matches_raw": true,
+      "prompt_hash_matches": true,
+      "prompt_matches_frozen_inputs": true,
+      "input_tokens": 16635,
+      "output_tokens": 705,
+      "answer_path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/claims-name-their-source/validation/implementation-3/runs/P-candidate-claude-6-normal/answer.txt",
+      "limit_lines": []
+    }
+  ]
+}

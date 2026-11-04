@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/tmp/opencode/claims-validation-3/extra_proof.py", line 44, in <module>
+    r=subprocess.run(['gh','pr','view',str(number),'--repo','iamcxa/kc-claude-plugins','--json','number,state,headRefOid,baseRefName,isDraft,url,mergeCommit,statusCheckRollup'],text=True,capture_output=True,check=True)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['gh', 'pr', 'view', '777', '--repo', 'iamcxa/kc-claude-plugins', '--json', 'number,state,headRefOid,baseRefName,isDraft,url,mergeCommit,statusCheckRollup']' returned non-zero exit status 1.

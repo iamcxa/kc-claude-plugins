@@ -1,0 +1,12 @@
+{
+  "command": "/bin/bash --noprofile --norc /tmp/opencode/claims-validation-3/acceptance.sh",
+  "script_sha256": "5b8d4bf4963ca9bbe9c08cbbc46d2120beff2fdeb0d09bbe5d807edd98ab04aa",
+  "exit": 0,
+  "log": "acceptance-rerun.log",
+  "initial_attempt": {
+    "exit": 128,
+    "log": "acceptance.log",
+    "reason": "Sandbox denied Git administrative-directory creation; unchanged script reran with filesystem approval"
+  },
+  "date": "2026-11-04T02:21:47.133594+00:00"
+}

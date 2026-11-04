@@ -1,0 +1,38 @@
+[
+  {
+    "name": "AC-1: recorded rule and budget",
+    "status": "passed",
+    "evidence": "lint.log; mutation-budget.log",
+    "falsifier": "Deleting the +55 ledger entry exits 1 and names a raise of 55."
+  },
+  {
+    "name": "AC-2: reminder on both gate entries",
+    "status": "passed",
+    "evidence": "focused-tests.log; mutation-check.log; mutation-question-control.log",
+    "falsifier": "Removing check emission fails check tests; question control stays green."
+  },
+  {
+    "name": "AC-4: observer boundary",
+    "status": "passed",
+    "evidence": "lint.log; mutation-chat.log",
+    "falsifier": "Changing the workflow chat phrase fails its observer-list alignment."
+  },
+  {
+    "name": "AC-5: lifecycle reading cost",
+    "status": "passed",
+    "evidence": "word-counts.json; count-falsifier.json",
+    "falsifier": "Deleting the rule removes the independently recounted 55-word increase."
+  },
+  {
+    "name": "AC-6: existing callers",
+    "status": "passed",
+    "evidence": "full-suite.log; adr-lint.log; adr-missing-falsifier.log",
+    "falsifier": "Removing reserved ADR 0055 from a copied folder exits 1."
+  },
+  {
+    "name": "AC-8: accepted count limit and follow-up",
+    "status": "passed",
+    "evidence": "accepted-state.log; semantic-read.json; replay-audit.json; retained-record.json; followup-commit.log",
+    "falsifier": "Missing follow-up or hidden limit rejects; title-only wrong-count control still false-passes the old grader."
+  }
+]
