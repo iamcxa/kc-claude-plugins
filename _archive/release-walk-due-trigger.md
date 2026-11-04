@@ -3,7 +3,7 @@ title: FO's idle line says a release is due for its walk once its last story is 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #769、#770、#774、#775、#777 嗎？（#775 的 F5 是我的驗證派工紀錄少了 Symptom 行，接受為紀錄問題、不擋合併）」'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-03T13:15:01Z
 worktree: .worktrees/spacedock-ensign-release-walk-due-trigger
 pr: pr-merge:775
+verdict: PASSED
+completed: 2026-11-04T12:18:38Z
+archived: 2026-11-04T12:18:38Z
 ---
 
 ## Scope
