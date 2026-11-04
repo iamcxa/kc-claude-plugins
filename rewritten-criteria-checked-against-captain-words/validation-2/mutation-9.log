@@ -1,0 +1,34 @@
+======================================================================
+FAIL: test_deleting_withdrawn_words_and_changing_evidence_are_silent (test_dispatch_records.RewrittenCriterionTests.test_deleting_withdrawn_words_and_changing_evidence_are_silent) (text='## Acceptance criteria\n\n**AC-9** — A cold FO checks a peer-derived Captain action through ')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/mutant/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3275, in test_deleting_withdrawn_words_and_changing_evidence_are_silent
+    self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+AssertionError: Tuples differ: (0, 'extra diagnostic\n') != (0, '')
+
+First differing element 1:
+'extra diagnostic\n'
+''
+
+- (0, 'extra diagnostic\n')
++ (0, '') : 
+
+======================================================================
+FAIL: test_deleting_withdrawn_words_and_changing_evidence_are_silent (test_dispatch_records.RewrittenCriterionTests.test_deleting_withdrawn_words_and_changing_evidence_are_silent) (text='## Acceptance criteria\n\n**AC-99** — A cold FO checks a peer-derived Captain action through')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/mutant/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3275, in test_deleting_withdrawn_words_and_changing_evidence_are_silent
+    self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+AssertionError: Tuples differ: (0, 'extra diagnostic\n') != (0, '')
+
+First differing element 1:
+'extra diagnostic\n'
+''
+
+- (0, 'extra diagnostic\n')
++ (0, '') : 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.216s
+
+FAILED (failures=2)

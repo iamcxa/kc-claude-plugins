@@ -1,0 +1,17 @@
+[
+  {
+    "severity": "info",
+    "title": "F1: tilde-fence bypass remains Deferred risk",
+    "detail": "Constructed strict/L2 bypass persists; 0 of 192 committed acceptance sections uses the trigger. Chief engineer routes it to backlog."
+  },
+  {
+    "severity": "low",
+    "title": "F2: completion-line defect remains Polish",
+    "detail": "implementation-1-message-1 lacks its full standalone completion line; the initial instruction is explicitly inherited."
+  },
+  {
+    "severity": "low",
+    "title": "F3: missing Symptom is Polish",
+    "detail": "Current validation-2 record fails the required pre-dispatch check; no lost symptom escalation established for this integration-only rerun."
+  }
+]

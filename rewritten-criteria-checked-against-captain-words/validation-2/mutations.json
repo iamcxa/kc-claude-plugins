@@ -1,0 +1,67 @@
+[
+  {
+    "name": "AC-1 missing call",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-1.log"
+  },
+  {
+    "name": "AC-2 deleted words counted",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-2.log"
+  },
+  {
+    "name": "AC-2 evidence tail counted",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-3.log"
+  },
+  {
+    "name": "AC-3 later words ignored",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-4.log"
+  },
+  {
+    "name": "AC-4 repair followup held",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-5.log"
+  },
+  {
+    "name": "AC-5 L2 pattern removed",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-6.log"
+  },
+  {
+    "name": "AC-6 filler counted",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-7.log"
+  },
+  {
+    "name": "AC-6 AC ids counted",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-8.log"
+  },
+  {
+    "name": "AC-6/7 clean output added",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-9.log"
+  },
+  {
+    "name": "multi-paragraph repair reverted",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-10.log"
+  },
+  {
+    "name": "short slash sentence filter reverted",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-11.log"
+  },
+  {
+    "name": "declaration prefix normalization reverted",
+    "status": "passed",
+    "message": "Mutant rejected with exit 1; mutation-12.log"
+  },
+  {
+    "name": "AC-7 README sentence added",
+    "status": "passed",
+    "message": "Mutated README rejected with exit 1; mutation-readme.log"
+  }
+]

@@ -1,0 +1,12 @@
+======================================================================
+FAIL: test_short_slash_separated_requirement_is_held (test_dispatch_records.RewrittenCriterionTests.test_short_slash_separated_requirement_is_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/mutant/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3293, in test_short_slash_separated_requirement_is_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+AssertionError: 0 != 1 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.101s
+
+FAILED (failures=1)

@@ -1,0 +1,19 @@
+======================================================================
+FAIL: test_deletions_whole_new_sentences_and_evidence_tails_are_not_compared (test_design_surfaces.AddedWordsTests.test_deletions_whole_new_sentences_and_evidence_tails_are_not_compared) [The worker must include source/time. Current evidence: The worker must include source revision/link.]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 62, in test_deletions_whole_new_sentences_and_evidence_tails_are_not_compared
+    self.assertEqual(self.added(text), [])
+AssertionError: Lists differ: [(3, 'AC-9', ['revision', 'link'])] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+(3, 'AC-9', ['revision', 'link'])
+
+- [(3, 'AC-9', ['revision', 'link'])]
++ []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

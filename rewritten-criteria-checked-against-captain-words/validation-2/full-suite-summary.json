@@ -1,0 +1,10 @@
+{
+  "commands": 26,
+  "passed": 26,
+  "test_count": 1104,
+  "skipped": 7,
+  "failures": [],
+  "spacedock_binary": "/Users/kent/.local/bin/spacedock",
+  "spacedock_plugin_root": "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3",
+  "ci_pinned_spacedock": "v0.27.2; local plugin root is 0.27.3"
+}

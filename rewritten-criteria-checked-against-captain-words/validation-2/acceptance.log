@@ -1,0 +1,17 @@
+Preparing worktree (detached HEAD b81c628fa)
+HEAD is now at b81c628fa Merge origin/main and align rewritten-criterion symptom fixtures
+STEP 1 PASS: b81c628facd2cd38568018beec47b6c4566c0aae
+STEP 2 raw PASS: base=1 candidate=1; shared Symptom hint; candidate-only revision, link; 41 words
+STEP 2 normalized PASS: base=0 candidate=1; widening held
+STEP 2 deletion PASS: base=0 candidate=0; both silent
+----------------------------------------------------------------------
+Ran 23 tests in 7.217s
+
+OK
+STEP 3 PASS: comparison, Symptom and event-time checks
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5836 of 5836 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+53 ADR file(s) checked, 0 legacy
+STEP 4 PASS: workflow unchanged at 5836 words; lint and ADR checks passed
+STEP 5 PASS: product clean; temporary worktree and fixtures removed

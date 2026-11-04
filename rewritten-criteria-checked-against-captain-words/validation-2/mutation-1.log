@@ -1,0 +1,12 @@
+======================================================================
+FAIL: test_frozen_rewrite_is_held_with_criterion_amendment_and_added_words (test_dispatch_records.RewrittenCriterionTests.test_frozen_rewrite_is_held_with_criterion_amendment_and_added_words)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/mutant/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3262, in test_frozen_rewrite_is_held_with_criterion_amendment_and_added_words
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+AssertionError: 0 != 1 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.140s
+
+FAILED (failures=1)

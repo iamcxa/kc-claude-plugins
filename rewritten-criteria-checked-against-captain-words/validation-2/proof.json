@@ -1,0 +1,894 @@
+{
+  "base": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  "candidate": {
+    "exit": 1,
+    "stdout": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2.md:1: AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: revision, link; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+    "stderr": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  "word_count": 41,
+  "clean_base": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  "clean_candidate": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  "clearance": {
+    "exit": 1,
+    "stdout": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2.md:1: Captain amendment 4 named in no dispatch checklist; write 'Captain amendment 4' in a checklist line of this record, then run this check again\n",
+    "stderr": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  "implementation-4-message-2.md": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/implementation-4-message-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  "validation-2-message-1.md": {
+    "exit": 1,
+    "stdout": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2-message-1.md:1: AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: revision, link; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+    "stderr": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2-message-1.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  "normalized_base": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "normalized_candidate": {
+    "exit": 1,
+    "stdout": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2.md:1: AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: revision, link; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+    "stderr": ""
+  },
+  "normalized_clean_base": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "normalized_clean_candidate": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "normalized_clearance": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "normalized_implementation-4-message-2.md": {
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "normalized_validation-2-message-1.md": {
+    "exit": 1,
+    "stdout": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2-message-1.md:1: AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: revision, link; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+    "stderr": ""
+  },
+  "raw_without_added_words": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "/tmp/pr770-revalidation-b81c628f/replay/peer-status-reaches-fresh/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  "word_counts": {
+    "kc-dev-flow-2/references/sd/workflow.md": {
+      "base": 5836,
+      "candidate": 5836,
+      "same_bytes": true
+    },
+    "kc-dev-flow-2/references/sd/laws.md": {
+      "base": 1255,
+      "candidate": 1345,
+      "same_bytes": false
+    },
+    "kc-dev-flow-2/scripts/dispatch_records.py": {
+      "base": 3280,
+      "candidate": 3362,
+      "same_bytes": false
+    }
+  },
+  "state_sha": "de81585004ce636732a2515fd759f2b07c2980cd",
+  "corpus": [
+    {
+      "task": "_archive/adr-protected-path-guard.md",
+      "record": "_archive/adr-protected-path-guard/dispatch/validation-1.md",
+      "base": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/adr-reserved-when-design-names-one.md",
+      "record": "_archive/adr-reserved-when-design-names-one/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/adr-reserved-when-design-names-one/dispatch/validation-2.md:1: Captain amendment 2 named in no dispatch checklist; write 'Captain amendment 2' in a checklist line of this record, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/adr-reserved-when-design-names-one/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/adr-reserved-when-design-names-one/dispatch/validation-2.md:1: Captain amendment 2 named in no dispatch checklist; write 'Captain amendment 2' in a checklist line of this record, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/adr-reserved-when-design-names-one/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/agent-reads-governing-adr.md",
+      "record": "_archive/agent-reads-governing-adr/dispatch/validation-1.md",
+      "base": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/amendment-form-check.md",
+      "record": "_archive/amendment-form-check/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/amendment-form-check/dispatch/validation-3.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/amendment-form-check/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/amendment-form-check/dispatch/validation-3.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/amendment-form-check/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/batch-reaches-each-gate-together.md",
+      "record": "_archive/batch-reaches-each-gate-together/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/batch-reaches-each-gate-together/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/batch-reaches-each-gate-together/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/captain-question-load.md",
+      "record": "_archive/captain-question-load/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/captain-question-load/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/captain-question-load/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/codex-reader-reads-receipt-marker.md",
+      "record": "_archive/codex-reader-reads-receipt-marker/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/codex-reader-reads-receipt-marker/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/codex-reader-reads-receipt-marker/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/delivery-gate-verdict-form.md",
+      "record": "_archive/delivery-gate-verdict-form/dispatch/validation-4.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/delivery-gate-verdict-form/dispatch/validation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/delivery-gate-verdict-form/dispatch/validation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/design-director-runs-ui-design-review.md",
+      "record": "_archive/design-director-runs-ui-design-review/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/design-director-runs-ui-design-review/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/design-director-runs-ui-design-review/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/dev2-laws-check.md",
+      "record": "_archive/dev2-laws-check/dispatch/validation-4.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/dev2-laws-check/dispatch/validation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-14 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: report, quoting, l2; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-18 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: one, run, per, push, tip, whose, names; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-19 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: d1; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-20 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: ci, job's; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/dev2-laws-check/dispatch/validation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": [
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-14 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: report, quoting, l2; remove them, or ask the Captain and record his answer as an amendment, then run this check again",
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-18 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: one, run, per, push, tip, whose, names; remove them, or ask the Captain and record his answer as an amendment, then run this check again",
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-19 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: d1; remove them, or ask the Captain and record his answer as an amendment, then run this check again",
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/dev2-laws-check/dispatch/validation-4.md:1: AC-20 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: ci, job's; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+      ]
+    },
+    {
+      "task": "_archive/extension-instruction-reaches-dispatch.md",
+      "record": "_archive/extension-instruction-reaches-dispatch/dispatch/validation-5.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/extension-instruction-reaches-dispatch/dispatch/validation-5.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/extension-instruction-reaches-dispatch/dispatch/validation-5.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/fo-batch-sittings.md",
+      "record": "_archive/fo-batch-sittings/dispatch/validation-1.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-batch-sittings/dispatch/validation-1.md:1: Captain amendment form at fo-batch-sittings.md:100: '### Amendment 1 \u2014 2026-10-20, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-batch-sittings/dispatch/validation-1.md:1: Captain amendment form at fo-batch-sittings.md:109: '### Amendment 2 \u2014 2026-10-20, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-batch-sittings/dispatch/validation-1.md:1: Captain amendment form at fo-batch-sittings.md:100: '### Amendment 1 \u2014 2026-10-20, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-batch-sittings/dispatch/validation-1.md:1: Captain amendment form at fo-batch-sittings.md:109: '### Amendment 2 \u2014 2026-10-20, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": ""
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/fo-interviews-extension.md",
+      "record": "_archive/fo-interviews-extension/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-interviews-extension/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-interviews-extension/dispatch/validation-3.md:1: AC-8 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: retaining, their, predictions; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-interviews-extension/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": [
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-interviews-extension/dispatch/validation-3.md:1: AC-8 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: retaining, their, predictions; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+      ]
+    },
+    {
+      "task": "_archive/fo-lifecycle-mod.md",
+      "record": "_archive/fo-lifecycle-mod/dispatch/validation-8.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: no 'Candidate: <40-hex head>' line; add one per head to validate above the first '## ' heading, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: no 'Candidate: <40-hex head>' line; add one per head to validate above the first '## ' heading, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-8 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: package's, references, sd, mods, kc-dev-flow-2, md; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-14 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: through, pr_watch, slug, dispatch, attempted, then; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-15 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: one, file, sync; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-18 (Captain amendment 5) adds words in a sentence kept from the criterion it replaces that are not in his words: replay, plan, counted; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": [
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-8 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: package's, references, sd, mods, kc-dev-flow-2, md; remove them, or ask the Captain and record his answer as an amendment, then run this check again",
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-14 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: through, pr_watch, slug, dispatch, attempted, then; remove them, or ask the Captain and record his answer as an amendment, then run this check again",
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-15 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: one, file, sync; remove them, or ask the Captain and record his answer as an amendment, then run this check again",
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-lifecycle-mod/dispatch/validation-8.md:1: AC-18 (Captain amendment 5) adds words in a sentence kept from the criterion it replaces that are not in his words: replay, plan, counted; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+      ]
+    },
+    {
+      "task": "_archive/fo-write-rules-checked.md",
+      "record": "_archive/fo-write-rules-checked/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-write-rules-checked/dispatch/validation-3.md:1: Captain amendment form at fo-write-rules-checked.md:92: '### Amendment 2 \u2014 2026-10-20, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-write-rules-checked/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-write-rules-checked/dispatch/validation-3.md:1: Captain amendment form at fo-write-rules-checked.md:92: '### Amendment 2 \u2014 2026-10-20, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/fo-write-rules-checked/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/idle-hook-names-merged-tasks-without-learn.md",
+      "record": "_archive/idle-hook-names-merged-tasks-without-learn/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/idle-hook-names-merged-tasks-without-learn/dispatch/validation-2.md:1: Captain amendment form at idle-hook-names-merged-tasks-without-learn.md:377: '### Amendment 1 \u2014 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/idle-hook-names-merged-tasks-without-learn/dispatch/validation-2.md:1: Captain amendment form at idle-hook-names-merged-tasks-without-learn.md:382: '### Amendment 2 \u2014 2026-10-28, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/idle-hook-names-merged-tasks-without-learn/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/idle-hook-names-merged-tasks-without-learn/dispatch/validation-2.md:1: Captain amendment form at idle-hook-names-merged-tasks-without-learn.md:377: '### Amendment 1 \u2014 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/idle-hook-names-merged-tasks-without-learn/dispatch/validation-2.md:1: Captain amendment form at idle-hook-names-merged-tasks-without-learn.md:382: '### Amendment 2 \u2014 2026-10-28, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/idle-hook-names-merged-tasks-without-learn/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/journey-map-dev2-contract.md",
+      "record": "_archive/journey-map-dev2-contract/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/journey-map-dev2-contract/dispatch/validation-3.md:11: bare package script name adr_lint.py\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/journey-map-dev2-contract/dispatch/validation-3.md:1: no 'Candidate: <40-hex head>' line; add one per head to validate above the first '## ' heading, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/journey-map-dev2-contract/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/journey-map-dev2-contract/dispatch/validation-3.md:11: bare package script name adr_lint.py\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/journey-map-dev2-contract/dispatch/validation-3.md:1: no 'Candidate: <40-hex head>' line; add one per head to validate above the first '## ' heading, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/journey-map-dev2-contract/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/kc-adr-format-source.md",
+      "record": "_archive/kc-adr-format-source/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-adr-format-source/dispatch/validation-2.md:1: Captain amendment 2 Asked line holds a backslash-quote copied from JSON; write his words as he said them, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-adr-format-source/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-adr-format-source/dispatch/validation-2.md:1: Captain amendment 2 Asked line holds a backslash-quote copied from JSON; write his words as he said them, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-adr-format-source/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/kc-adr-tools-with-dev2-copy.md",
+      "record": "_archive/kc-adr-tools-with-dev2-copy/dispatch/validation-1.md",
+      "base": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/kc-decision-log-cli.md",
+      "record": "_archive/kc-decision-log-cli/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-decision-log-cli/dispatch/validation-2.md:1: Captain amendment form at kc-decision-log-cli.md:328: '### Amendment 3 \u2014 2026-10-21, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-decision-log-cli/dispatch/validation-2.md:1: Captain amendment form at kc-decision-log-cli.md:342: '### Amendment 4 \u2014 2026-10-21, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-decision-log-cli/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-decision-log-cli/dispatch/validation-2.md:1: Captain amendment form at kc-decision-log-cli.md:328: '### Amendment 3 \u2014 2026-10-21, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-decision-log-cli/dispatch/validation-2.md:1: Captain amendment form at kc-decision-log-cli.md:342: '### Amendment 4 \u2014 2026-10-21, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-decision-log-cli/dispatch/validation-2.md:1: AC-12 (Captain amendment 6) adds words in a sentence kept from the criterion it replaces that are not in his words: shows, skills, read-adr, ac4, text_check, py, asserts, ac4, install-falsifiers, txt, 2026-10-22; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-decision-log-cli/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": [
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/kc-decision-log-cli/dispatch/validation-2.md:1: AC-12 (Captain amendment 6) adds words in a sentence kept from the criterion it replaces that are not in his words: shows, skills, read-adr, ac4, text_check, py, asserts, ac4, install-falsifiers, txt, 2026-10-22; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+      ]
+    },
+    {
+      "task": "_archive/merge-gatekeeper.md",
+      "record": "_archive/merge-gatekeeper/dispatch/validation-4.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/merge-gatekeeper/dispatch/validation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/merge-gatekeeper/dispatch/validation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/model-roster-per-repo.md",
+      "record": "_archive/model-roster-per-repo/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/model-roster-per-repo/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/model-roster-per-repo/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/model-roster-question-needs-both-families.md",
+      "record": "_archive/model-roster-question-needs-both-families/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/model-roster-question-needs-both-families/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/model-roster-question-needs-both-families/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/names-check-before-dispatch.md",
+      "record": "_archive/names-check-before-dispatch/dispatch/validation-1.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/names-check-before-dispatch/dispatch/validation-1.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/names-check-before-dispatch/dispatch/validation-1.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n",
+        "stderr": ""
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/new-work-starts-from-a-story-map.md",
+      "record": "_archive/new-work-starts-from-a-story-map/dispatch/validation-4.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/new-work-starts-from-a-story-map/dispatch/validation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/new-work-starts-from-a-story-map/dispatch/validation-4.md:1: AC-13 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: replaces, arm, arm, alone, does, count, node, kc-journey-map, lib, journey-review, test, mjs; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/new-work-starts-from-a-story-map/dispatch/validation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": [
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/new-work-starts-from-a-story-map/dispatch/validation-4.md:1: AC-13 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: replaces, arm, arm, alone, does, count, node, kc-journey-map, lib, journey-review, test, mjs; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+      ]
+    },
+    {
+      "task": "_archive/paseo-codex-dispatch-practice.md",
+      "record": "_archive/paseo-codex-dispatch-practice/dispatch/validation-6.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/paseo-codex-dispatch-practice/dispatch/validation-6.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/paseo-codex-dispatch-practice/dispatch/validation-6.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/paseo-human-surfaces-visible-and-reachable.md",
+      "record": "_archive/paseo-human-surfaces-visible-and-reachable/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/paseo-human-surfaces-visible-and-reachable/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/paseo-human-surfaces-visible-and-reachable/dispatch/validation-2.md:1: AC-10 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: must, pass; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/paseo-human-surfaces-visible-and-reachable/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": [
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/paseo-human-surfaces-visible-and-reachable/dispatch/validation-2.md:1: AC-10 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: must, pass; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+      ]
+    },
+    {
+      "task": "_archive/peer-status-reaches-fresh.md",
+      "record": "_archive/peer-status-reaches-fresh/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/peer-status-reaches-fresh/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/peer-status-reaches-fresh/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/peers-paseo-rule-matches-practice.md",
+      "record": "_archive/peers-paseo-rule-matches-practice/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/peers-paseo-rule-matches-practice/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/peers-paseo-rule-matches-practice/dispatch/validation-3.md:1: AC-9 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: steer, successful, true, actual, steer, notify, true, send, arguments, recipient-side, record, matching, finish, event, information-only, notice, notice, finish, callback, causes, another, action, treated, proof, understanding, amendments-2, 3, exact-head; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/peers-paseo-rule-matches-practice/dispatch/validation-3.md:1: AC-11 (Captain amendment 4) adds words in a sentence kept from the criterion it replaces that are not in his words: policy; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/peers-paseo-rule-matches-practice/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": [
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/peers-paseo-rule-matches-practice/dispatch/validation-3.md:1: AC-9 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: steer, successful, true, actual, steer, notify, true, send, arguments, recipient-side, record, matching, finish, event, information-only, notice, notice, finish, callback, causes, another, action, treated, proof, understanding, amendments-2, 3, exact-head; remove them, or ask the Captain and record his answer as an amendment, then run this check again",
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/peers-paseo-rule-matches-practice/dispatch/validation-3.md:1: AC-11 (Captain amendment 4) adds words in a sentence kept from the criterion it replaces that are not in his words: policy; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+      ]
+    },
+    {
+      "task": "_archive/peers-rules-name-each-host-binding.md",
+      "record": "_archive/peers-rules-name-each-host-binding/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/peers-rules-name-each-host-binding/dispatch/validation-3.md:1: Captain amendment form at peers-rules-name-each-host-binding.md:363: '### Amendment 1 \u2014 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/peers-rules-name-each-host-binding/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/peers-rules-name-each-host-binding/dispatch/validation-3.md:1: Captain amendment form at peers-rules-name-each-host-binding.md:363: '### Amendment 1 \u2014 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/peers-rules-name-each-host-binding/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/prod-security-review-gates.md",
+      "record": "_archive/prod-security-review-gates/dispatch/validation-4.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/prod-security-review-gates/dispatch/validation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/prod-security-review-gates/dispatch/validation-4.md:1: AC-14 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: question, he, answered; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/prod-security-review-gates/dispatch/validation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": [
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/prod-security-review-gates/dispatch/validation-4.md:1: AC-14 (Captain amendment 2) adds words in a sentence kept from the criterion it replaces that are not in his words: question, he, answered; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+      ]
+    },
+    {
+      "task": "_archive/read-adr-honors-adr-folder.md",
+      "record": "_archive/read-adr-honors-adr-folder/dispatch/validation-1.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: Captain amendment form at read-adr-honors-adr-folder.md:222: '### Amendment 1 \u2014 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: Captain amendment form at read-adr-honors-adr-folder.md:235: '### Amendment 2 \u2014 2026-10-28, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: Captain amendment 2 named in no dispatch checklist; write 'Captain amendment 2' in a checklist line of this record, then run this check again\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: Captain amendment form at read-adr-honors-adr-folder.md:222: '### Amendment 1 \u2014 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: Captain amendment form at read-adr-honors-adr-folder.md:235: '### Amendment 2 \u2014 2026-10-28, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: AC-7 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: one, host; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: AC-8 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: absolute, without, absolute-path, conversion, unusable; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: Captain amendment 2 named in no dispatch checklist; write 'Captain amendment 2' in a checklist line of this record, then run this check again\n",
+        "stderr": ""
+      },
+      "added_lines": [
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: AC-7 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: one, host; remove them, or ask the Captain and record his answer as an amendment, then run this check again",
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/read-adr-honors-adr-folder/dispatch/validation-1.md:1: AC-8 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: absolute, without, absolute-path, conversion, unusable; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+      ]
+    },
+    {
+      "task": "_archive/read-adr-reporting-rule-followup.md",
+      "record": "_archive/read-adr-reporting-rule-followup/dispatch/validation-1.md",
+      "base": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/release-acceptance/index.md",
+      "record": "_archive/release-acceptance/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: Captain amendment form at index.md:361: amendment outside '## Captain amendments'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: Captain amendment form at index.md:361: malformed amendment heading; expected '### Amendment N \u2014 YYYY-MM-DD'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: Captain amendment form at index.md:361: duplicate amendment number 1; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: Captain amendment form at index.md:361: '### Amendment 1' has no 'Captain:' line with his words (expected exactly one); repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: Captain amendment form at index.md:361: '### Amendment 1' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: Captain amendment form at index.md:361: amendment outside '## Captain amendments'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: Captain amendment form at index.md:361: malformed amendment heading; expected '### Amendment N \u2014 YYYY-MM-DD'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: Captain amendment form at index.md:361: duplicate amendment number 1; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: Captain amendment form at index.md:361: '### Amendment 1' has no 'Captain:' line with his words (expected exactly one); repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: Captain amendment form at index.md:361: '### Amendment 1' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-acceptance/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/release-walk-picky-reviewers-and-director.md",
+      "record": "_archive/release-walk-picky-reviewers-and-director/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-walk-picky-reviewers-and-director/dispatch/validation-3.md:1: Captain amendment form at release-walk-picky-reviewers-and-director.md:335: '### Amendment 2 \u2014 2026-10-23, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-walk-picky-reviewers-and-director/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-walk-picky-reviewers-and-director/dispatch/validation-3.md:1: Captain amendment form at release-walk-picky-reviewers-and-director.md:335: '### Amendment 2 \u2014 2026-10-23, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/release-walk-picky-reviewers-and-director/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/reused-worker-dispatch-leaves-a-record.md",
+      "record": "_archive/reused-worker-dispatch-leaves-a-record/dispatch/validation-1.md",
+      "base": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/second-round-prompts-a-step-back.md",
+      "record": "_archive/second-round-prompts-a-step-back/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/second-round-prompts-a-step-back/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/second-round-prompts-a-step-back/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/seed-check-requires-schema-fields.md",
+      "record": "_archive/seed-check-requires-schema-fields/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: Captain amendment form at seed-check-requires-schema-fields.md:328: '### Amendment 1 \u2014 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: Captain amendment form at seed-check-requires-schema-fields.md:344: '### Amendment 2 \u2014 2026-10-28, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: Captain amendment 2 named in no dispatch checklist; write 'Captain amendment 2' in a checklist line of this record, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: Captain amendment form at seed-check-requires-schema-fields.md:328: '### Amendment 1 \u2014 2026-10-27, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: Captain amendment form at seed-check-requires-schema-fields.md:344: '### Amendment 2 \u2014 2026-10-28, chat' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'; repair the task form, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: AC-10 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: comparison; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: Captain amendment 2 named in no dispatch checklist; write 'Captain amendment 2' in a checklist line of this record, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": [
+        "/tmp/pr770-revalidation-b81c628f/corpus/_archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: AC-10 (Captain amendment 1) adds words in a sentence kept from the criterion it replaces that are not in his words: comparison; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+      ]
+    },
+    {
+      "task": "_archive/special-role-triggers.md",
+      "record": "_archive/special-role-triggers/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/special-role-triggers/dispatch/validation-3.md:10: bare package script name role_triggers.py\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/special-role-triggers/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/special-role-triggers/dispatch/validation-3.md:10: bare package script name role_triggers.py\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/special-role-triggers/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/stage-report-correction-path.md",
+      "record": "_archive/stage-report-correction-path/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/stage-report-correction-path/dispatch/validation-2.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/stage-report-correction-path/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/stage-report-correction-path/dispatch/validation-2.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/stage-report-correction-path/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/validation-gate-requires-the-question-check.md",
+      "record": "_archive/validation-gate-requires-the-question-check/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/validation-gate-requires-the-question-check/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/validation-gate-requires-the-question-check/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/validation-rerun-waits-for-captain-ruling.md",
+      "record": "_archive/validation-rerun-waits-for-captain-ruling/dispatch/validation-1.md",
+      "base": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "added_lines": []
+    },
+    {
+      "task": "_archive/worker-completion-reaches-fo-on-paseo.md",
+      "record": "_archive/worker-completion-reaches-fo-on-paseo/dispatch/validation-3.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/worker-completion-reaches-fo-on-paseo/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/_archive/worker-completion-reaches-fo-on-paseo/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "adr-silent-undo-probe.md",
+      "record": "adr-silent-undo-probe/dispatch/ideation-1.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/adr-silent-undo-probe/dispatch/ideation-1.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/adr-silent-undo-probe/dispatch/ideation-1.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n",
+        "stderr": ""
+      },
+      "added_lines": []
+    },
+    {
+      "task": "claims-name-their-source.md",
+      "record": "claims-name-their-source/dispatch/implementation-1-message-1.md",
+      "base": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "added_lines": []
+    },
+    {
+      "task": "diagnosis-rounds-count-toward-step-back.md",
+      "record": "diagnosis-rounds-count-toward-step-back/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/diagnosis-rounds-count-toward-step-back/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/diagnosis-rounds-count-toward-step-back/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "fo-answers-own-worker-permissions-by-listed-id.md",
+      "record": "fo-answers-own-worker-permissions-by-listed-id/dispatch/validation-1.md",
+      "base": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "added_lines": []
+    },
+    {
+      "task": "fo-tries-what-it-asks-the-captain.md",
+      "record": "fo-tries-what-it-asks-the-captain/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/fo-tries-what-it-asks-the-captain/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/fo-tries-what-it-asks-the-captain/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "journey-server-host-pilot/index.md",
+      "record": "journey-server-host-pilot/dispatch/validation-10.md",
+      "base": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/journey-server-host-pilot/dispatch/validation-10.md:1: no 'Candidate: <40-hex head>' line; add one per head to validate above the first '## ' heading, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/journey-server-host-pilot/dispatch/validation-10.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/journey-server-host-pilot/dispatch/validation-10.md:1: Captain amendment 2 named in no dispatch checklist; write 'Captain amendment 2' in a checklist line of this record, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/journey-server-host-pilot/dispatch/validation-10.md:1: Captain amendment 3 named in no dispatch checklist; write 'Captain amendment 3' in a checklist line of this record, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/journey-server-host-pilot/dispatch/validation-10.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "/tmp/pr770-revalidation-b81c628f/corpus/journey-server-host-pilot/dispatch/validation-10.md:1: no 'Candidate: <40-hex head>' line; add one per head to validate above the first '## ' heading, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/journey-server-host-pilot/dispatch/validation-10.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/journey-server-host-pilot/dispatch/validation-10.md:1: Captain amendment 2 named in no dispatch checklist; write 'Captain amendment 2' in a checklist line of this record, then run this check again\n/tmp/pr770-revalidation-b81c628f/corpus/journey-server-host-pilot/dispatch/validation-10.md:1: Captain amendment 3 named in no dispatch checklist; write 'Captain amendment 3' in a checklist line of this record, then run this check again\n",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/journey-server-host-pilot/dispatch/validation-10.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "ops-inbox-r1-setup-and-isolation.md",
+      "record": "ops-inbox-r1-setup-and-isolation/dispatch/implementation-2-message-1.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/ops-inbox-r1-setup-and-isolation/dispatch/implementation-2-message-1.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/ops-inbox-r1-setup-and-isolation/dispatch/implementation-2-message-1.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    },
+    {
+      "task": "release-walk-due-trigger.md",
+      "record": "release-walk-due-trigger/dispatch/validation-2.md",
+      "base": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/release-walk-due-trigger/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "/tmp/pr770-revalidation-b81c628f/corpus/release-walk-due-trigger/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+      },
+      "added_lines": []
+    }
+  ],
+  "corpus_tasks": 51,
+  "corpus_held_tasks": 10,
+  "corpus_added_lines": 18
+}

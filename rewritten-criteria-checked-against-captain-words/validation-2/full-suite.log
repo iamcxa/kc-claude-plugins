@@ -1,0 +1,27 @@
+passed: kc-dev-flow-2/scripts/lint-skills.py
+passed: kc-dev-flow-2/scripts/test_lint_skills.py
+passed: kc-dev-flow-2/scripts/test_design_surfaces.py
+passed: kc-dev-flow-2/scripts/test_adr_doc_checks.py
+passed: kc-dev-flow-2/scripts/test_poc_readme.py
+passed: kc-dev-flow-2/scripts/test_comment_ratio.py
+passed: kc-dev-flow-2/extensions/codex/test_codex_review.py
+passed: kc-dev-flow-2/extensions/roborev/test_roborev_gate.py
+passed: kc-dev-flow-2/extensions/copilot/test_copilot_review.py
+passed: kc-dev-flow-2/extensions/journey-map/test_map_footprint.py
+passed: kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py
+passed: kc-dev-flow-2/scripts/test_number_guards.py
+passed: kc-dev-flow-2/scripts/test_delivery_gate.py
+passed: kc-dev-flow-2/scripts/test_validation_security.py
+passed: kc-dev-flow-2/scripts/test_dispatch_records.py
+passed: kc-dev-flow-2/scripts/test_replay_dispatch.py
+passed: kc-dev-flow-2/scripts/test_decision_ledger.py
+passed: kc-dev-flow-2/scripts/test_package_version.py
+passed: kc-dev-flow-2/scripts/test_workflow_checkout.py
+passed: kc-dev-flow-2/scripts/test_observer_check.py
+passed: kc-dev-flow-2/scripts/test_pr_watch.py
+passed: kc-dev-flow-2/scripts/test_role_triggers.py
+passed: kc-dev-flow-2/scripts/test_learning.py
+passed: kc-dev-flow-2/scripts/test_laws_check.py
+passed: kc-dev-flow-2/scripts/test_observer_recovery.py
+passed: kc-dev-flow-2/scripts/test_sd_dispatch.py
+{"commands": 26, "passed": 26, "test_count": 1104, "skipped": 7, "failures": [], "spacedock_binary": "/Users/kent/.local/bin/spacedock", "spacedock_plugin_root": "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3", "ci_pinned_spacedock": "v0.27.2; local plugin root is 0.27.3"}

@@ -1,0 +1,42 @@
+======================================================================
+FAIL: test_deleting_withdrawn_words_and_changing_evidence_are_silent (test_dispatch_records.RewrittenCriterionTests.test_deleting_withdrawn_words_and_changing_evidence_are_silent) (text='## Acceptance criteria\n\n**AC-9** — A cold FO checks a peer-derived Captain action through ')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/mutant/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3275, in test_deleting_withdrawn_words_and_changing_evidence_are_silent
+    self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+AssertionError: Tuples differ: (1, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8n[273 chars]n\n') != (0, '')
+
+First differing element 0:
+1
+0
+
++ (0, '')
+- (1,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmptww4f9mw/task/dispatch/validation-2.md:1: '
+-  'AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion '
+-  'it replaces that are not in his words: time; remove them, or ask the Captain '
+-  'and record his answer as an amendment, then run this check again\n') : 
+
+======================================================================
+FAIL: test_deleting_withdrawn_words_and_changing_evidence_are_silent (test_dispatch_records.RewrittenCriterionTests.test_deleting_withdrawn_words_and_changing_evidence_are_silent) (text='## Acceptance criteria\n\n**AC-99** — A cold FO checks a peer-derived Captain action through')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/mutant/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3275, in test_deleting_withdrawn_words_and_changing_evidence_are_silent
+    self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+AssertionError: Tuples differ: (1, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8n[274 chars]n\n') != (0, '')
+
+First differing element 0:
+1
+0
+
++ (0, '')
+- (1,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmptww4f9mw/task/dispatch/validation-2.md:1: '
+-  'AC-99 (Captain amendment 3) adds words in a sentence kept from the criterion '
+-  'it replaces that are not in his words: time; remove them, or ask the Captain '
+-  'and record his answer as an amendment, then run this check again\n') : 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.256s
+
+FAILED (failures=2)

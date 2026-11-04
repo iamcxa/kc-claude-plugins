@@ -1,0 +1,23 @@
+======================================================================
+FAIL: test_filler_and_ac_ids_do_not_produce_holds (test_dispatch_records.RewrittenCriterionTests.test_filler_and_ac_ids_do_not_produce_holds)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/mutant/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3333, in test_filler_and_ac_ids_do_not_produce_holds
+    self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+AssertionError: Tuples differ: (1, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8n[274 chars]n\n') != (0, '')
+
+First differing element 0:
+1
+0
+
++ (0, '')
+- (1,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpopl3f7ir/task/dispatch/validation-2.md:1: '
+-  'AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion '
+-  'it replaces that are not in his words: ac-88; remove them, or ask the '
+-  'Captain and record his answer as an amendment, then run this check again\n') : 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.103s
+
+FAILED (failures=1)

@@ -714,3 +714,46 @@ _archive/seed-check-requires-schema-fields/dispatch/validation-3.md:1: AC-10 (Ca
 ### Summary
 
 This report supersedes all earlier implementation reports, including their pre-#771 baseline exit codes and reading counts. Merge candidate b81c628facd2cd38568018beec47b6c4566c0aae retains both changes, fixes only fixtures/conflict integration, and re-measures AC-1, AC-2 and AC-7 against 2bda2e98304261d46b0ae7205a29ddc9038d2b4d: stdout distinguishes the criterion hold from the shared Symptom hold. Full local checks pass; RoboRev is incomplete, and FO owns pushes, PR update, fresh hosted proof and revalidation.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #770 head b81c628f against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for the bounded criteria as explicitly re-measured after main integration at b81c628facd2cd38568018beec47b6c4566c0aae, base 2bda2e98304261d46b0ae7205a29ddc9038d2b4d. Evidence: rewritten-criteria-checked-against-captain-words/validation-2/validation.md; no Material finding or delivery approval.
+- DONE: Revalidation after the chief-engineer delivery review (review/chief-engineer-batch13.md): origin/main with #771 was merged in and the RewrittenCriterionTests fixtures numbered 2 or higher gained Symptom lines; re-measure AC-1, AC-2 and AC-7 and every criterion at this head, and carry the earlier F1 (tilde-fence, Deferred risk) and F2 (FO record, Polish) judgments forward if they still hold. Do not start agents you were not asked to
+  Main is an ancestor; comparison-parser bytes equal prior 40ced2d65. F1 remains Deferred risk and F2 Polish; new F3 is a separate dispatch metadata finding. No agents started or product repairs made.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step rewritten-criteria-checked-against-captain-words/validation-2/acceptance.sh ran unchanged under /bin/bash --noprofile --norc, exit 0; validation.md contains every command, expected observation and acceptance.log. ADR lint --since 2bda2e98304261d46b0ae7205a29ddc9038d2b4d exits 0; also --require 0057 exits 0.
+- DONE: AC-1 — The historical rewrite is held before validation.
+  Untouched b4e88ece4 snapshot: base/candidate exit 1 with identical missing-Symptom stderr, but only candidate stdout names AC-9/amendment 3/revision, link (41 words). Header-normalized replay gives 0→1; removing added_words loses the diagnostic even though raw exit remains 1, and fails the focused assertion.
+- DONE: AC-2 — A rewrite adding nothing passes the comparison.
+  Deletion-only raw replay gives byte-identical base/candidate exit 1 and empty stdout; with Symptom: none both exit 0 silently. Renumber/marker/evidence controls pass; counting deletions or the evidence tail fails assertions.
+- DONE: AC-3 — Later Captain words clear the hold.
+  Amendment 4 with Supersedes: none and Asked: revision, link clears the historical diagnostic; a normalized record naming it exits 0. Ignoring later amendments fails the clearance test; Captain-line control also passes.
+- DONE: AC-4 — Repair dispatch remains available.
+  Historical implementation-4-message-2 has no added-words diagnostic; validation-2-message-1 does. Normalized records exit 0 and 1 respectively; applying the comparison to every record fails the repair-route assertion.
+- DONE: AC-5 — L2 classifies a violation at its event.
+  Temporary Git events yield violation: L2 dispatch-record-complete, exit 1, with later clearance applying only to later events. Removing the output pattern makes the runner exit 2 and fails the assertion.
+- DONE: AC-6 — Corpus bound and no regression.
+  State de81585004ce636732a2515fd759f2b07c2980cd: 51 amended tasks' newest-added records, 10 held/18 diagnostics; no other stdout/stderr/exit differences. Every line is in corpus-lines.log; filler, AC-id and extra-output mutants fail. All 26 CI-listed local commands pass: 1104 unittest tests, 7 existing skips.
+- DONE: AC-7 — No task-added reading at clean lifecycle moments.
+  Workflow bytes and budget are unchanged from integrated main: 5836→5836 (the original 5781 baseline is no longer current; 55 words are inherited). Startup, idle, archive, merge ask and clean output add zero; replay adds only 41 stdout words beyond the shared 20-word Symptom hint. README/clean-output mutants fail; laws 1255→1345 and docstring 745→771 are outside those clean reads.
+- DONE: Judge limits, goal sufficiency, minimal necessity, documents and comments.
+  Whole-new-sentence/evidence-tail omissions and faithful-translation hold reproduced. Eight changed paths serve comparison, dispatch, event parser, regression proof or retained rules; call/parser/prefix/paragraph/slash falsifiers justify them. All five doc_impact dispositions verified; comment ratio 223 code/3 comment lines (1.3%), no added narrative comment; ADR/number/design/diff checks pass.
+- FAILED: Dispatch-record completeness required by validation principles.
+  Both declared-package and candidate commands exit 1: implementation-1-message-1 lacks the full completion-recipient line (F2); current validation-2 lacks Symptom (F3). Historical records were preserved; passing product checks does not erase these metadata failures.
+- DONE: Verify exact-head hosted proof and preserve ownership.
+  GitHub unit-test run 41751257209 succeeded on b81c628facd2cd38568018beec47b6c4566c0aae, separately from local CLI 0.27.2/plugin 0.27.3 versus CI plugin 0.27.2. PR #770 was open/non-Draft at the assigned head. CI triggers unchanged; cost per PR unmeasured.
+- DONE: Remove the throwaway detached worktree and retain the candidate.
+  Candidate worktree was clean and removed; acceptance script removed its own worktree/fixtures. Assigned branch remains b81c628facd2cd38568018beec47b6c4566c0aae and clean. No product commit, push, PR comment, review request, ready or merge action.
+- SKIPPED: Fresh exact-head RoboRev proof, backlog/metadata dispositions and delivery.
+  Implementation's daemon-unavailable result is incomplete, not clean review evidence. First Officer owns outstanding review verification, committed decline/backlog routing, F2/F3 disposition and delivery.
+
+### Summary
+
+The integrated candidate passes the accepted bounded comparison with independent historical replay, corpus comparison, all local CI commands, exact-head hosted tests, 13 rejected mutations and fresh-shell acceptance. This supersedes the prior validation's baseline measurements without rewriting Captain criteria: original base exit 0 and 5781 words are no longer true after the accepted main integration; whole rewrites, translations, tilde examples, adoption and delivery are not proved.
+
+### Findings
+
+- F1 Deferred risk (carried forward): released user/workflow is the First Officer checking amended-task validation records. Observable harm: a constructed tilde-fenced duplicate AC-9 changes strict dispatch/L2 from 1 to 0; design check stays 0 and backtick control stays held. Boundary: value-ac[AC-1] protects the historical widening, whose accepted replay passes. Trigger: reproduced at this head, but 0 of 192 committed acceptance sections uses tilde fences; no new normal-workflow harm or changed parser bytes. The chief engineer routes it to backlog with no parser repair here; reclassify if a supported task or accepted fence contract establishes the trigger.
+- F2 Polish (carried forward): released workflow is resuming implementation by follow-up. Observable harm: implementation-1-message-1 fails completion-line metadata validation, with no observed lost completion; its full initial instruction is explicitly inherited. Boundary: contract[docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md#decision] preserves final-reply completion/FO publication. Trigger: the actual committed record still fails both checkers. First Officer disposition remains; do not rewrite historical evidence.
+- F3 Polish (new): released workflow is dispatching this second validation. Observable harm: validation-2.md lacks Symptom and the required strict record check exits 1; no lost symptom escalation is established for this integration-only recheck. Boundary: contract[kc-dev-flow-2/references/sd/workflow.md#stages] requires a passing saved-record check before dispatch; this is an FO record defect, not a changed candidate boundary. Trigger: actual record at de81585004ce636732a2515fd759f2b07c2980cd and both checker outputs. First Officer must disposition it; record a later correction without silently rewriting the historical dispatch.

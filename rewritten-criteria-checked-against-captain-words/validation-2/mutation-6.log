@@ -1,0 +1,15 @@
+======================================================================
+FAIL: test_rewritten_criterion_is_an_event_violation_and_later_clearance_is_not_retroactive (test_laws_check.L2Test.test_rewritten_criterion_is_an_event_violation_and_later_clearance_is_not_retroactive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/mutant/kc-dev-flow-2/scripts/test_laws_check.py", line 313, in test_rewritten_criterion_is_an_event_violation_and_later_clearance_is_not_retroactive
+    self.assertEqual(code, 1, out)
+AssertionError: 2 != 1 : L1 observer-before-sentinel: 0 events judged in 3302dcac690c..2299f822c5a3, 0 violated
+L3 amendment-append-only: 0 events judged in 3302dcac690c..2299f822c5a3, 0 violated
+L2 dispatch-record-complete: cannot judge: dispatch_records.py --names exited 1 with output this runner does not parse: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpugnorzgr/t/dispatch/validation-2.md:1: AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: revision, link; remove them, or ask the Captain and record his answer as an amendment, then run this check again
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.964s
+
+FAILED (failures=1)

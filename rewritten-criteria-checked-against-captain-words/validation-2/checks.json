@@ -1,0 +1,119 @@
+[
+  {
+    "name": "adr",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "2bda2e98304261d46b0ae7205a29ddc9038d2b4d",
+      "--require",
+      "0057"
+    ],
+    "output": "53 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "adr-dispatch",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "2bda2e98304261d46b0ae7205a29ddc9038d2b4d"
+    ],
+    "output": "53 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "numbers",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/rewritten-criteria-checked-against-captain-words.md"
+    ],
+    "output": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 2bda2e983042 head b81c628facd2 merge-base 2bda2e983042\n"
+  },
+  {
+    "name": "design",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/rewritten-criteria-checked-against-captain-words.md"
+    ],
+    "output": "rewritten-criteria-checked-against-captain-words.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  },
+  {
+    "name": "comments",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "2bda2e98304261d46b0ae7205a29ddc9038d2b4d",
+      "b81c628facd2cd38568018beec47b6c4566c0aae",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "output": "code lines 223, comment lines 3, 1.3%\n   2/  94 kc-dev-flow-2/scripts/test_dispatch_records.py\n   1/  53 kc-dev-flow-2/scripts/design_surfaces.py\nmaximum 5% (package default) met\n"
+  },
+  {
+    "name": "doc-impact",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "2bda2e98304261d46b0ae7205a29ddc9038d2b4d",
+      "b81c628facd2cd38568018beec47b6c4566c0aae"
+    ],
+    "output": "docs/adr/0041-seed-admission-enforces-required-fields.md\treview\tkc-dev-flow-2/scripts/design_surfaces.py\ndocs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md\treview\tkc-dev-flow-2/scripts/dispatch_records.py\ndocs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md\treview\tkc-dev-flow-2/scripts/dispatch_records.py\ndocs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md\tupdated\tadded_words, kc-dev-flow-2/scripts/design_surfaces.py\nlearning.md\treview\tkc-dev-flow-2/scripts/dispatch_records.py, kc-dev-flow-2/scripts/laws_check.py\n5 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+  },
+  {
+    "name": "dispatch",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/rewritten-criteria-checked-against-captain-words"
+    ],
+    "output": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\n/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/rewritten-criteria-checked-against-captain-words/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  {
+    "name": "dispatch-candidate",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/candidate/kc-dev-flow-2/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/rewritten-criteria-checked-against-captain-words"
+    ],
+    "output": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\n/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/rewritten-criteria-checked-against-captain-words/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  {
+    "name": "diff-check",
+    "exit": 0,
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/candidate",
+      "diff",
+      "--check",
+      "2bda2e98304261d46b0ae7205a29ddc9038d2b4d",
+      "b81c628facd2cd38568018beec47b6c4566c0aae"
+    ],
+    "output": ""
+  }
+]

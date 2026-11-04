@@ -1,0 +1,71 @@
+{
+  "live": {
+    "dispatch": {
+      "exit": 1,
+      "stdout": "/tmp/pr770-revalidation-b81c628f/fence-probe/live/dispatch/validation-2.md:1: AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: revision, link; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+      "stderr": ""
+    },
+    "design": {
+      "exit": 0,
+      "stdout": "live.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+      "stderr": ""
+    },
+    "L2": {
+      "exit": 1,
+      "stdout": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 1 events judged in 8d78fed50833..c3c1c0f9f45b, 1 violated\nviolation: L2 dispatch-record-complete record=t/dispatch/validation-2.md commit=c3c1c0f9f45b AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: revision, link (line 1)\nL3 amendment-append-only: 0 events judged in 8d78fed50833..c3c1c0f9f45b, 0 violated\n"
+    },
+    "added_words": [
+      [
+        3,
+        "AC-9",
+        [
+          "revision",
+          "link"
+        ]
+      ]
+    ]
+  },
+  "backticks": {
+    "dispatch": {
+      "exit": 1,
+      "stdout": "/tmp/pr770-revalidation-b81c628f/fence-probe/backticks/dispatch/validation-2.md:1: AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: revision, link; remove them, or ask the Captain and record his answer as an amendment, then run this check again\n",
+      "stderr": ""
+    },
+    "design": {
+      "exit": 0,
+      "stdout": "backticks.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+      "stderr": ""
+    },
+    "L2": {
+      "exit": 1,
+      "stdout": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 1 events judged in afbfdaf48d96..5fe87dcd1e32, 1 violated\nviolation: L2 dispatch-record-complete record=t/dispatch/validation-2.md commit=5fe87dcd1e32 AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion it replaces that are not in his words: revision, link (line 1)\nL3 amendment-append-only: 0 events judged in afbfdaf48d96..5fe87dcd1e32, 0 violated\n"
+    },
+    "added_words": [
+      [
+        3,
+        "AC-9",
+        [
+          "revision",
+          "link"
+        ]
+      ]
+    ]
+  },
+  "tilde": {
+    "dispatch": {
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "design": {
+      "exit": 0,
+      "stdout": "tilde.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+      "stderr": ""
+    },
+    "L2": {
+      "exit": 0,
+      "stdout": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 1 events judged in f0440d560da4..93f29c8baffc, 0 violated\nL3 amendment-append-only: 0 events judged in f0440d560da4..93f29c8baffc, 0 violated\n"
+    },
+    "added_words": []
+  }
+}

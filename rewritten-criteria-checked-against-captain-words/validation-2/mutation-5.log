@@ -1,0 +1,24 @@
+======================================================================
+FAIL: test_repair_followup_passes_but_validation_continuation_is_held (test_dispatch_records.RewrittenCriterionTests.test_repair_followup_passes_but_validation_continuation_is_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words/.context/pr770-revalidation-b81c628f/mutant/kc-dev-flow-2/scripts/test_dispatch_records.py", line 3325, in test_repair_followup_passes_but_validation_continuation_is_held
+    self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+AssertionError: Tuples differ: (1, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8n[297 chars]n\n') != (0, '')
+
+First differing element 0:
+1
+0
+
++ (0, '')
+- (1,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpv1ot924w/task/dispatch/implementation-4-message-2.md:1: '
+-  'AC-9 (Captain amendment 3) adds words in a sentence kept from the criterion '
+-  'it replaces that are not in his words: revision, link; remove them, or ask '
+-  'the Captain and record his answer as an amendment, then run this check '
+-  'again\n') : 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.106s
+
+FAILED (failures=1)

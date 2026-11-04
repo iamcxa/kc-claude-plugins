@@ -1,0 +1,6 @@
+docs/adr/0041-seed-admission-enforces-required-fields.md	review	kc-dev-flow-2/scripts/design_surfaces.py
+docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md	review	kc-dev-flow-2/scripts/dispatch_records.py
+docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md	review	kc-dev-flow-2/scripts/dispatch_records.py
+docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md	updated	added_words, kc-dev-flow-2/scripts/design_surfaces.py
+learning.md	review	kc-dev-flow-2/scripts/dispatch_records.py, kc-dev-flow-2/scripts/laws_check.py
+5 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'
