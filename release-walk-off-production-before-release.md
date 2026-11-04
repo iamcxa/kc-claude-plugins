@@ -60,6 +60,17 @@ gates:
                 id: briefing:release-walk-off-production-before-release:validation:attempt-1:revision-1
                 digest: sha256:8a353d3aac8e9f4f10dc6dcb528c37af0b295d6d76411ba4aa7e2c08e5f18cc2
                 room-ref: ./release-walk-off-production-before-release/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-walk-off-production-before-release:validation:1
+                briefing: briefing:release-walk-off-production-before-release:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-04T00:41:25.826043Z"
+                decision: approve
+                reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #771、#772、#773 嗎？（#769、#770、#774、#775、#777 這次不合併）」'
+              application:
+                target-stage: done
+                state: pending
 profile: pilot
 started: 2026-11-03T10:21:16Z
 worktree: .worktrees/spacedock-ensign-release-walk-off-production-before-release
