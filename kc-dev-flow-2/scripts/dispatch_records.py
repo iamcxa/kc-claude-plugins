@@ -42,6 +42,10 @@ is on disk: exit 0 when it is clean or the task has no record, 1 when a name is 
 --coverage checks presence for a declared ideation, implementation or validation stage after an unfenced report:
 exit 0 when not due or covered, 1 when missing, 2 for invalid input or read errors. A positive-numbered stage
 record or stage message record covers repeated reports; contents and historical send timing are not checked.
+Folder mode checks each stage's newest implementation/validation record, including follow-up messages;
+--names checks the named record. Record number, then message number, orders the records numerically.
+From the second same-stage Symptom: header, stderr prints step-back questions before dispatch. Record N >= 2
+without that header gets a stderr hint; only --names --strict holds it. The first record needs no header.
 """
 import argparse
 import re
@@ -53,7 +57,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from decision_ledger import split_task, gate_entries
 from delivery_gate import CANDIDATE, RECORD  # noqa: E402
 from design_surfaces import AMENDMENTS_HEADING, AMENDMENT_HEADER, amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
-from role_triggers import outside_fences  # noqa: E402
+from role_triggers import DIAGNOSIS_RECORD, STEP_BACK, diagnosis_order, outside_fences, symptom_name, symptom_rounds  # noqa: E402
 from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
 from workflow_extensions import readme_extensions  # noqa: E402
 
@@ -203,6 +207,27 @@ def check_context(files):
         print(f"{file}:1: context checks not run: {notice}", file=sys.stderr)
         status = 2
     return status
+
+
+def check_symptoms(files):
+    missing = False
+    for file in files:
+        path = Path(file).resolve()
+        record = DIAGNOSIS_RECORD.fullmatch(path.name)
+        if path.parent.name != "dispatch" or not record:
+            continue
+        symptom = symptom_name(path.read_text())
+        if int(record[2]) >= 2 and not symptom:
+            print(f"{file}:1: no 'Symptom:' line; before first '## ' heading add "
+                  "'Symptom: <failure, named the same way each time>' or 'Symptom: none'", file=sys.stderr)
+            missing = True
+        dispatches = [(p.name, p.read_text()) for p in path.parent.glob(f"{record[1]}-*.md")
+                      if (match := DIAGNOSIS_RECORD.fullmatch(p.name)) and diagnosis_order(match) <= diagnosis_order(record)]
+        group = symptom_rounds(dispatches).get((record[1], symptom), [])
+        if symptom and any(number == int(record[2]) for number, _ in group) and len(group) >= 2:
+            print(f'{file}:1: step back: {len(group)} {record[1]} dispatches name symptom "{symptom}"; '
+                  f"before you send this one, answer: {STEP_BACK}", file=sys.stderr)
+    return int(missing)
 
 
 NUMBER = re.compile(r"\d+")
@@ -513,7 +538,8 @@ def main(argv=None, package=PACKAGE):
             return 2
         status = max(check_names(files, package), check_candidates(files), check_task_facts(files), check_validation_rulings(files))
         context = check_context(files)
-        return max(status, context) if strict else status
+        symptoms = check_symptoms(files)
+        return max(status, context, symptoms) if strict else status
     if "--strict" in args:
         print(__doc__.strip())
         return 2
@@ -563,6 +589,12 @@ def main(argv=None, package=PACKAGE):
             errors.append(f"{path.name}: needs a checklist of its own, not only a reference to another dispatch record")
     for error in errors:
         print(error)
+    newest = {}
+    for path in records:
+        record = DIAGNOSIS_RECORD.fullmatch(path.name)
+        if record and diagnosis_order(record) > newest.get(record[1], ((0, 0), None))[0]:
+            newest[record[1]] = (diagnosis_order(record), path)
+    check_symptoms([path for _, path in newest.values()])
     if not readme:
         print(f"extensions not checked: no workflow README above {folder}")
     if not errors:

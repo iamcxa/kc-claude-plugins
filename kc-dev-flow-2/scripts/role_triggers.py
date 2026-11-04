@@ -13,6 +13,8 @@ Two validations with a Material or Needs decision F bullet, or two amendments wi
 three step-back questions without a hold, independently even when the other event has already cleared at three.
 An owed line carrying those questions suppresses a duplicate reminder. Either count at three owes chief-engineer;
 the third amendment's date clears that event, while the validation event has no date test. Counts stay separate.
+Plain and follow-up message dispatch records count by stage and normalized Symptom: header: two remind, three owe chief-engineer.
+The third record's Dispatched: date dates that event; a qualifying call or waiver clears later rounds too.
 Engineering-reviewer is owed for each `### Amendment N` under `## Captain amendments` whose `Supersedes:` or
 `Design:` value does not start with `none`; one line per task, on fable when the frontmatter says `profile: prod`
 or the `Surfaces:` line under `## FO alignment` lists `db`, else on opus. Fenced blocks are skipped everywhere.
@@ -61,6 +63,7 @@ QUESTION = {
 }
 STEP_BACK = ("is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; "
              "what breaks if this criterion or process is deleted?")
+DIAGNOSIS_RECORD = re.compile(r"^(implementation|validation)-([1-9][0-9]*)(?:-message-([1-9][0-9]*))?\.md$")
 
 
 class Unverifiable(Exception):
@@ -130,6 +133,54 @@ def outside_fences(text):
             yield line
         elif fence and fence.group(1)[0] == marker[0] and len(fence.group(1)) >= len(marker):
             marker = None
+
+
+def dispatch_header(text):
+    header = []
+    for line in outside_fences(text):
+        if line.startswith("## "):
+            break
+        header.append(line)
+    return "\n".join(header)
+
+
+def symptom_name(text):
+    match = re.search(r"^Symptom:[ \t]*(.*)$", dispatch_header(text), re.M)
+    return " ".join(match[1].split()).casefold() if match else None
+
+
+def diagnosis_order(record):
+    return int(record[2]), int(record[3] or 0)
+
+
+def symptom_rounds(dispatches):
+    groups = {}
+    for name, text in dispatches:
+        record = DIAGNOSIS_RECORD.fullmatch(name)
+        symptom = symptom_name(text)
+        if record and symptom and not symptom.startswith("none"):
+            dispatched = re.search(r"^Dispatched:([^\n]*)", dispatch_header(text), re.M)
+            date = DATE.search(dispatched[1]) if dispatched else None
+            groups.setdefault((record[1], symptom), []).append((diagnosis_order(record), date[0] if date else None))
+    return {key: [(order[0], date) for order, date in sorted(rounds)] for key, rounds in groups.items()}
+
+
+def read_records(state, slug, rev):
+    for base in ("", "_archive/"):
+        if any(git(state, "cat-file", "-e", f"{rev}:./{path}")[0] == 0
+               for path in (f"{base}{slug}/index.md", f"{base}{slug}.md")):
+            code, paths = git(state, "ls-tree", "-r", "--name-only", rev, "--", f"{base}{slug}/dispatch/")
+            if code:
+                raise Unverifiable(f"cannot read dispatch records for {slug} at {rev}")
+            dispatches = []
+            for path in paths.splitlines():
+                if DIAGNOSIS_RECORD.fullmatch(Path(path).name):
+                    code, text = git(state, "show", f"{rev}:./{path}")
+                    if code:
+                        raise Unverifiable(f"cannot read {path} at {rev}")
+                    dispatches.append((Path(path).name, text))
+            return dispatches
+    return []
 
 
 def events(lines):
@@ -239,13 +290,15 @@ def check(state, slug, rev, rounds=None, drift=None):
     lines = list(outside_fences(text))
     reports, amendments = events(lines)
     failures, replacements = step_back_events(lines)
+    symptoms = symptom_rounds(read_records(state, slug, rev))
     kept = list(alignment(lines))
     front = re.match(r"---\n(.*?)\n---\n", text, re.S)
     profile = FRONT_PROFILE.search(front.group(1)) if front else None
     strong = (profile and profile.group(1) == "prod", any(SURFACES_DB.match(line.strip()) for line in kept))
     owed, seen = [], 0
     repairs = max(reports - 1, 0)
-    if repairs >= REPAIRS or (rounds or 0) >= REVIEW_ROUNDS or max(failures, len(replacements)) >= 3:
+    if (repairs >= REPAIRS or (rounds or 0) >= REVIEW_ROUNDS or max(failures, len(replacements)) >= 3
+            or any(len(group) >= 3 for group in symptoms.values())):
         seen += 1
         calls, waivers = records(kept, "chief-engineer")
         calls = [(model, made) for model, made in calls if rank(model) >= RANK["opus"]]
@@ -257,15 +310,19 @@ def check(state, slug, rev, rounds=None, drift=None):
         third_date = replacements[2] if len(replacements) >= 3 else None
         replacements_owed = len(replacements) >= 3 and not (
             any(made >= third_date for made in dated) if third_date else calls or waivers)
-        if repair_owed or rounds_owed or failures_owed or replacements_owed:
+        symptom_owed = [f'{len(group)} {stage} dispatches on symptom "{symptom}"'
+                        for (stage, symptom), group in sorted(symptoms.items()) if len(group) >= 3 and not (
+                            any(made >= group[2][1] for made in dated) if group[2][1] else calls or waivers)]
+        if repair_owed or rounds_owed or failures_owed or replacements_owed or symptom_owed:
             found = [f"{repairs} repair passes"] * repair_owed + [f"{rounds} review rounds"] * rounds_owed
             if rounds_owed and drift:
                 found[-1] += f", the newest on {drift}"
             found += [f"{failures} validations with a Material or Needs decision finding"] * failures_owed
             found += [f"{len(replacements)} replacing amendments"] * replacements_owed
+            found += symptom_owed
             owed.append(owed_line(slug, "chief-engineer", "has " + " and ".join(found), "on opus or gpt-6-astra ",
-                                  waived=" <date>" if drift or replacements_owed else "",
-                                  question=STEP_BACK if failures_owed or replacements_owed else None))
+                                  waived=" <date>" if drift or replacements_owed or symptom_owed else "",
+                                  question=STEP_BACK if failures_owed or replacements_owed or symptom_owed else None))
             owed += [hint(slug, "chief-engineer", h) for h in [misplaced(lines, "chief-engineer")] if h]
     if amendments:
         seen += len(amendments)
@@ -287,6 +344,10 @@ def check(state, slug, rev, rounds=None, drift=None):
     reminder = [f"next: {slug} has {failures} validations with a Material or Needs decision finding and "
                 f"{len(replacements)} replacing amendments: before the next step, answer: {STEP_BACK}"] \
         if 2 in (failures, len(replacements)) and not any(STEP_BACK in line for line in owed) else []
+    if not any(STEP_BACK in line for line in owed):
+        reminder += [f'next: {slug} has 2 {stage} dispatches on symptom "{symptom}": '
+                     f"before the next step, answer: {STEP_BACK}"
+                     for (stage, symptom), group in sorted(symptoms.items()) if len(group) == 2]
     if owed or reminder:
         return int(bool(owed)), "\n".join(owed + reminder)
     return 0, f"role triggers: {seen} event(s) read at {rev}, each with a call or a waiver."

@@ -1412,6 +1412,20 @@ def on_disk(committed_text, disk_text):
 class OwedRoleCallTests(unittest.TestCase):
     """These run the real role_triggers.py: a test that patches owed_role_calls cannot fail when the call is removed."""
 
+    def test_third_committed_symptom_round_holds_merge_ask(self):
+        dispatches = {f"implementation-{n}.md": "Dispatched: 2026-11-03\nSymptom: page freeze\n" for n in (2, 3, 4)}
+        def setup(d):
+            committed(ALIGNED)(d)
+            subprocess.run(["git", "-C", d, "add", "task/dispatch"], check=True)
+            subprocess.run(["git", "-C", d, "-c", "user.name=t", "-c", "user.email=t@t", "-c", "core.hooksPath=/dev/null",
+                            "-c", "commit.gpgsign=false", "commit", "-qm", "dispatch records"], check=True)
+        result = run_check(task=ALIGNED, records={**RECORDS, **dispatches}, setup=setup, roles=True)
+        self.assertEqual(result.code, 1, result.out)
+        self.assertIn('3 implementation dispatches on symptom "page freeze"', result.out)
+        self.assertIn("what breaks if this criterion or process is deleted?", result.out)
+        self.assertNotIn(gate.ASK, result.out)
+        self.assertEqual(result.written, {})
+
     def test_second_failure_prints_questions_before_ask_without_holding_and_with_other_problems(self):
         report = "\n## Stage Report: validation\n\n- F1 Material: gap\n"
         text = ALIGNED + report * 2
