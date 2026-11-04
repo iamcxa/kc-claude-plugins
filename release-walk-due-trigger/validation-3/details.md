@@ -170,3 +170,8 @@ PASS claim comment: producer pending=2, due reminders=1, expected=1
 ## Cleanup and handoff
 
 Both detached probe worktrees and the owned support directory were removed. Assigned branch remains bbf65bb3a621ad1c664698e0d50af8b4f4e0f1ec with a clean tree. Task remains validation. Only the entity report and validation-3 evidence are committed through the entity-scoped state command. No push. FO retains F5 disposition, current review evidence and producer-first delivery.
+
+
+### State commit receipt
+
+The requested entity-scoped command returned: "Committed and pushed release-walk-due-trigger to spacedock-state/dev2." Commit: 7d6c00d6c4a5b4bcfacf1da9ba8a6a8a9747a808. This corrects the report/details wording "no push": the helper synchronized only the assigned state report and evidence; no product branch was pushed. Both code and state working trees were clean after the command; task status remains validation.

@@ -538,3 +538,8 @@ This complete report supersedes validation-1's rejection for the two named candi
 ### Summary
 
 This third validation supersedes the second run's deferred main-base check: both candidate products pass all accepted criteria against the merged main base, with prior YAML fixes retained. One new FO-owned record finding remains; no Material product finding or repair. FO retains current-review evidence, the gate and producer-first delivery.
+
+
+### State commit receipt
+
+The requested entity-scoped command returned: "Committed and pushed release-walk-due-trigger to spacedock-state/dev2." Commit: 7d6c00d6c4a5b4bcfacf1da9ba8a6a8a9747a808. This corrects the report/details wording "no push": the helper synchronized only the assigned state report and evidence; no product branch was pushed. Both code and state working trees were clean after the command; task status remains validation.
