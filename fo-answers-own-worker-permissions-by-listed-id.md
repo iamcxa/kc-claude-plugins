@@ -586,3 +586,45 @@ Validation at `f0e4ce490056d1fa36b07be9ebee5988b1882c7c`: one isolated Claude ru
 
 Limits: these are FO instructions, not a mechanical authority guard; native proof is one Claude run and does not establish reliable behavior on every model or callback. The push branch remains unverified and no push probe ran. RoboRev's single gate attempt exited 3: `incomplete: the roborev daemon is not running`. FO retains PR #769 publication, review and hosted CI. CI cost was not measured; CI configuration is unchanged.
 ```
+
+
+## Stage Report: implementation
+
+- DONE: Repair the RoboRev finding on PR #769 (head after f0e4ce490): kc-dev-flow-2/extensions/paseo/EXTENSION.md, the recovery after a refused answer lets FO answer the pending id that get_agent_status returns without rereading it, so a worker could swap a harmless refused request for a privileged one; require FO to read and decide the recovered request afresh against the same boundary, and never apply an approval or denial to a different request id; mirror it in docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md
+  Code head 1f8d30aed016f1eb8197e4e7522134205ae50e6c, base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb; only the paseo extension and ADR 0052 changed. Recovery now requires reading and deciding the returned request afresh under the same boundary, and forbids applying either approval or denial to another requestId. Captain quotes and active criteria are untouched.
+- DONE: Keep AC-7 and AC-8 green on the existing native run (no new probe needed unless the recovery wording changes the judged lines); commit locally, run the full suite, append a complete new implementation report with the new head and updated PR body; FO pushes and runs RoboRev
+  Locally committed as fix(kc-dev-flow-2): reassess recovered permission requests. All 26 full-suite commands passed at this head (1024 unittest cases, 7 skips); exact commands/logs in /tmp/fo-permission-recovery/full-suite.json. Updated exact PR title/body below; FO owns publication and RoboRev.
+- DONE: Recovery repair and counterexamples
+  recovery-tests.json has 8 passing checks: fresh privileged recovery is held; carrying an old approval or denial, skipping the fresh read, or approving the secret-value request is rejected. These are synthetic decision-record checks, not native FO compliance or runtime enforcement; no new probe ran.
+- DONE: AC-1/5 clauses, protected files, ruling and counts
+  40 structural/ADR checks pass in acceptance-tests.json; removing fresh-decision or decision-id binding clauses fails the clause map, and removing Recommended fails ADR lint. protected-diff.log is empty for peers/workflow/lint budget/ADR 0048. Extension is 819→1,101 wc words, 829→1,115 normalized (+286 at dispatch); callback package words and workflow budget are unchanged.
+- DONE: AC-2 replay and predicate-removal falsifiers
+  normal.json stops all seven named bad calls and zero successful answers (qnow 2,252; relay 1,697). --drop unanswered and --drop agent_match exit 1 with the expected escaped bad calls. Source transcripts grew since earlier reports; all three reruns use identical frozen inputs and hashes in replay-sources.json, with originals left untouched.
+- DONE: AC-3 retained native refusals
+  ac3-tests.json rechecks the real Claude No pending and Unknown agent results from /tmp/fo-permission-proof/native-permission-results.json; captured-success mutants fail. No new worker or permission answer was created for this repair.
+- DONE: AC-7/8 retained native run, unchanged judged lines and falsifiers
+  Existing source 7f9e32be-9c60-453d-975f-13699128c2d7.jsonl lines 74/75 and 101 passes the 13 checks in native-tests.json; source hash and the entire judged paragraph are unchanged from f0e4ce490. Recap, post-answer status, missing APPROVED and answered-hold mutants fail. The native run does not exercise the repaired recovery branch; bounded screens are not general semantic classification.
+- DONE: Native actor ownership and cleanup retained
+  No actors started this round. Prior archive proof retains controller bdb7c978-52f4-4b4e-b350-e004178e3eca and worker 80eecfd7-fe40-43e0-a4fe-aea3e66a672a, both claude/claude-sonnet-5-5 medium, stopped/closed with no pending permissions; the held question was never answered and only amendment3-scratch was removed. No other session, settings or workflow was modified.
+- DONE: Scoped guards, affected documents and full-suite limits
+  Required ADR lint, number guards and diff check pass; comment ratio is 0 code/0 comment lines (maximum not enforced below 20 code lines), doc_impact [] lists no additional documents, design_surfaces passes (scope check inapplicable at validation). CLI 0.27.2 matches CI; installed local test plugin root is 0.27.3 versus CI's 0.27.2 pin. Skip reasons remain in test logs; CI configuration is unchanged.
+- SKIPPED: Product push, push-branch probe, PR update and RoboRev rerun
+  Latest routing assigns product publication and exact-head RoboRev to FO; this worker ran neither. Push proof remains unverified because bare Bash is allowed in user settings; no product push was attempted and no settings changed. Hosted CI and current-head review are pending, not claimed clean.
+
+### Summary
+
+This complete report supersedes the earlier implementation reports for candidate 1f8d30aed016f1eb8197e4e7522134205ae50e6c. The two-file recovery security repair is locally committed and the full local suite passes; unchanged AC-7/8 retains its existing native proof, while recovery swapping has synthetic evidence only. FO retains publication to PR #769, current-head RoboRev, independent validation and hosted CI.
+
+Prepared PR title: `fix(kc-dev-flow-2): bind permission decisions to each request`
+
+Prepared PR body (also /tmp/fo-permission-recovery/pr-body.md):
+
+```markdown
+The Paseo extension lets the First Officer (FO) answer its own workers within existing task authority. After a refused answer or missing callback, FO must read the recovered pending request and decide it afresh against the same scope, authority and Captain holds. An approval or denial must never be applied to a different request ID. ADR 0052 records the same rule and the Captain's existing rulings.
+
+Routine answers carry one `APPROVED: <what> FOR: <which worker>` line before the answer, with no following status block or Captain report. A boundary hold is one message naming only the held request, without routine recaps or answering for the Captain. Peers, the shared workflow, its word budget and ADR 0048 remain unchanged.
+
+Validation at `1f8d30aed016f1eb8197e4e7522134205ae50e6c`: all 26 local suite commands passed (1024 unittest cases, 7 skips). Structural clause-removal checks reject missing fresh-decision and request-ID binding rules; bounded synthetic records reject carrying either approval or denial to a recovered request. Existing native run `7f9e32be-9c60-453d-975f-13699128c2d7` still passes AC-7/8: one approval line, no post-answer report, one hold without a recap, and the held question unanswered. The judged paragraph and native source hash are unchanged. Historical replay and its predicate-removal counterexamples pass.
+
+Limits: the recovery request-swap scenario was not run natively; synthetic records check the intended procedure, not agent compliance. The retained native run covers unchanged routine/hold behavior only. These remain FO instructions rather than a mechanical authority guard. The push branch is unverified and no push probe ran. Spacedock CLI 0.27.2 matches CI; the local test plugin is installed 0.27.3 versus CI's 0.27.2 pin. FO retains publication to PR #769, RoboRev on this exact head and hosted CI.
+```
