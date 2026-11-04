@@ -237,11 +237,9 @@ repair is dispatched under the lane in Stages.
 - **Gate content:** Show actual checks and acceptance evidence, material findings
   and limits, and the user's pending delivery decision. For a `ui` task FO runs
   `python3 <package>/scripts/design_surfaces.py check <task>` and includes its
-  output. Before the gate, FO runs the
-  stage's minimal acceptance script exactly as written in a fresh shell, then presents
-  every step in full beside its observed output, never a pointer or a shortened step.
-  A step FO cannot run (a secret, a sign-in, the Captain's own device) is marked not
-  run with the reason; an output that differs from the script returns through feedback.
+  output. Before the gate, FO runs the stage's minimal acceptance script under
+  Captain steps, names its record on the summary's `Captain steps:` line, and
+  returns an output that differs from the script through feedback.
   Before recommending delivery, FO confirms both goal sufficiency and minimal
   necessity from the same candidate's existing route evidence. Passing checks or
   approval replace neither condition; approval is not merge. When a POC report
@@ -256,6 +254,16 @@ Consuming a terminal gate approval is not completion (`spacedock merge guard --h
 a live run requires the declared delivery evidence and successful `merge guard` with
 an explicit verdict. Apply Delivery authority below; a pending PR or missing hook is
 not completion.
+
+## Captain steps
+
+Before asking the Captain to run or look at anything (an acceptance script, a
+command, a link, a sign-in, a file of steps), FO runs each step as written, in a
+fresh shell or a real browser, as far as it goes without his credentials, and
+records it in `<task>/captain-steps/<N>.md`.
+`python3 <package>/scripts/delivery_gate.py steps <record> --text-file <message>`
+prints the record's form; nonzero holds the ask. The message shows each step beside
+its observed output and names the step only he can do, and why.
 
 ## Dispatch facts
 

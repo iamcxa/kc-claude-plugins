@@ -714,6 +714,20 @@ BACKFILLED = ['codex-review-hang-detected',
 
 
 class TasksTests(unittest.TestCase):
+    def test_committed_second_symptom_round_is_forwarded_at_idle(self):
+        self.readme("")
+        self.task("diagnosis", worktree=False)
+        dispatch = self.state / "diagnosis/dispatch"
+        dispatch.mkdir(parents=True)
+        for number in (2, 3):
+            (dispatch / f"implementation-{number}.md").write_text("Symptom: page freeze\n")
+        self.task("diagnosis", worktree=False)
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0)
+        self.assertEqual(sum('next: diagnosis has 2 implementation dispatches on symptom "page freeze"' in line
+                             for line in lines), 1, lines)
+        self.assertTrue(any("what breaks if this criterion or process is deleted?" in line for line in lines), lines)
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)

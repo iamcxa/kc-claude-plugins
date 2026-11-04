@@ -1084,7 +1084,8 @@ class LiveValidationRulingTests(unittest.TestCase):
         done = subprocess.run([sys.executable, "-B", str(Path(records.__file__)), mode,
                                *map(str, files or (self.record,))], capture_output=True, text=True, cwd=cwd,
                               env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
-        return done.returncode, done.stdout + done.stderr
+        self.assertTrue(all("no 'Symptom:' line" in line for line in done.stderr.splitlines()), done.stderr)
+        return done.returncode, done.stdout
 
     def assert_hold(self, code=1):
         result, out = self.cli()
@@ -2684,7 +2685,8 @@ class DesignAdrTests(unittest.TestCase):
         args = [mode, str(self.record)] if mode == "--names" else list(mode)
         done = subprocess.run([sys.executable, "-B", str(script or Path(records.__file__)), *args],
                               capture_output=True, text=True)
-        return done.returncode, done.stdout + done.stderr
+        self.assertTrue(all("no 'Symptom:' line" in line for line in done.stderr.splitlines()), done.stderr)
+        return done.returncode, done.stdout
 
     def assert_missing(self, only=True):
         code, out = self.cli()
@@ -3218,7 +3220,6 @@ RAW_ADR_RECORD = (
 
 
 
-
 REWRITTEN_CRITERION = r"""## Acceptance criteria
 
 **AC-9** — A cold FO checks a peer-derived Captain action through the dev entry skill. Amended by Captain, amendment 3. Before delivery, FO reruns the cold runs on the new head: start a fresh isolated FO context without inherited history, peers preloading/path hints, a current-turn source answer or a replay verdict. Provide ordinary adopted workflow entry through `kc-dev-flow-2:dev` carrying the exact candidate dev skill sentence, a Captain status request, the admitted stale relay line and logged read-only source access. Do not put this task's criteria or answer in the FO prompt. Capture initial context, file/tool read trace, package SHA, fixture bytes and resulting Captain-facing status. Require a current-turn source query for `spacedock-dev/subspace-web` PR 186 before naming its Captain action; reading peers is no longer a pass condition. Run notice present, absent and delayed with MERGED/b71f912; all remove the cleared merge/approval and include source revision/link. Amendment 3 removes only the explicit current observation-time/timezone duty from the FO’s Captain-facing status; originating correction records/notices retain their observation-time duties in the unchanged correction paragraphs. OPEN negative control retains the pending action without merge authority; unavailable source yields unverified and an FO-owned check, with no Captain action assigned. Falsifier: injecting the rule or expected answer into the prompt, no query, stale request after MERGED, suppressing the OPEN action or assigning the inaccessible action to the Captain. Retain the shared peers section for transition corrections. If the ordinary entry/source test fails, report the trace to FO; do not add a startup preload, hook, watchdog or other loader. Current evidence: final f-* records in `peer-status-reaches-fresh/cold-fo/README.md` and validation-1/cold-audit.json name product head 1df246fa992ce0864348c2ffe67d93e80ad0a4b8: exact dev body/current-turn query 8/8, MERGED cleared 4/4, OPEN retained 1/1, unavailable FO-owned 3/3. The follow-up candidate 39fdbb28b411d44a323741f645c7c1d75c653be1 changes only the peers opening sentence; dev bytes match the recorded runs. No new cold agent was launched and the f-* records remain evidence at prior head 1df246fa, not a rerun of this candidate; earlier r/s scratch runs are not final-head proof. Fixture reconstruction and full acceptance remain for independent validation. Limit: an FO resuming through `spacedock:first-officer` without the dev entry does not get this text; these runs prove only the bounded cold dev-entry path; direct First Officer resumes and long sessions remain unverified. AC-4 records the actual entry path and later failures for FO.
@@ -3249,10 +3250,12 @@ class RewrittenCriterionTests(unittest.TestCase):
     def run_rewrite(self, text=REWRITTEN_CRITERION, name='validation-2.md'):
         self.task.write_text('---\nprofile: pilot\n---\n' + text)
         record = self.dispatch / name
-        record.write_text(COMPLETE.replace('Model: sonnet', 'Model: sonnet\nCandidate: ' + HEAD)
+        record.write_text('Symptom: none\n' + COMPLETE.replace('Model: sonnet', 'Model: sonnet\nCandidate: ' + HEAD)
                           .replace('1. Independent', '1. Captain amendments 3 and 4. Independent'))
-        return subprocess.run([sys.executable, '-B', records.__file__, '--names', '--strict', str(record)],
+        done = subprocess.run([sys.executable, '-B', records.__file__, '--names', '--strict', str(record)],
                               capture_output=True, text=True, env={**os.environ, 'PYTHONDONTWRITEBYTECODE': '1'})
+        self.assertEqual(done.stderr, '', done.stderr)
+        return done
 
     def test_frozen_rewrite_is_held_with_criterion_amendment_and_added_words(self):
         done = self.run_rewrite()
@@ -3328,6 +3331,100 @@ class RewrittenCriterionTests(unittest.TestCase):
         text = REWRITTEN_CRITERION.replace('include source revision/link.', 'include the source AC-88.')
         done = self.run_rewrite(text)
         self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+
+
+
+class SymptomDispatchTests(unittest.TestCase):
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        self.folder = self.root / "task"
+        self.dispatch = self.folder / "dispatch"
+        self.dispatch.mkdir(parents=True)
+        self.folder.with_suffix(".md").write_text("---\nprofile: pilot\n---\n")
+        (self.root / "README.md").write_text(NO_EXTENSIONS)
+        self.put(1)
+
+    def put(self, number, symptom=None, stage="implementation", suffix=""):
+        path = self.dispatch / f"{stage}-{number}{suffix}.md"
+        header = (f"Symptom: {symptom}\n" if symptom is not None else "") + f"Candidate: {HEAD}\n"
+        path.write_text(header + COMPLETE)
+        return path
+
+    def cli(self, *args):
+        return subprocess.run([sys.executable, "-B", records.__file__, *map(str, args or (self.folder,))],
+                              capture_output=True, text=True)
+
+    def test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks(self):
+        (self.dispatch / "implementation-1.md").unlink()
+        plain = self.put(2, "page freeze")
+        self.assertEqual(self.cli().stderr, "")
+        first = self.put(2, "page freeze", suffix="-message-1")
+        self.assertIn("step back: 2 implementation", self.cli().stderr)
+        self.assertEqual(self.cli("--names", plain).stderr, "")
+        second = self.put(2, "page freeze", suffix="-message-2")
+        done = self.cli()
+        self.assertEqual((done.returncode, done.stdout), (0, "3 dispatch record(s) complete\n"))
+        self.assertIn("step back: 3 implementation", done.stderr)
+        self.assertIn(records.STEP_BACK, done.stderr)
+        self.assertIn("step back: 2 implementation", self.cli("--names", first).stderr)
+        self.assertIn("step back: 3 implementation", self.cli("--names", "--strict", second).stderr)
+        self.put(2, "different failure", suffix="-message-10")
+        self.assertEqual(self.cli().stderr, "")
+        self.assertIn("step back: 3 implementation", self.cli("--names", second).stderr)
+
+    def test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict(self):
+        self.put(2, "validation-1 F1 page freeze")
+        self.assertEqual(self.cli().stderr, "")
+        self.put(3, "Validation-1  F1 Page freeze")
+        done = self.cli()
+        self.assertEqual((done.returncode, done.stdout), (0, "3 dispatch record(s) complete\n"))
+        self.assertIn('step back: 2 implementation dispatches name symptom "validation-1 f1 page freeze"', done.stderr)
+        self.assertIn(records.STEP_BACK, done.stderr)
+        self.put(2)
+        self.put(3)
+        baseline = self.cli()
+        self.assertEqual((done.returncode, done.stdout), (baseline.returncode, baseline.stdout))
+
+    def test_named_record_excludes_later_records_and_folder_checks_only_each_stages_newest(self):
+        second = self.put(2, "A")
+        third = self.put(3, "A")
+        self.put(4, "A")
+        self.assertEqual(self.cli("--names", second).stderr, "")
+        self.assertIn("step back: 2 implementation", self.cli("--names", "--strict", third).stderr)
+        self.assertIn("step back: 3 implementation", self.cli().stderr)
+        self.put(10, "B")
+        self.put(11, "A", suffix="-message-1")
+        self.assertIn("step back: 4 implementation", self.cli().stderr)
+
+    def test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass(self):
+        first = self.dispatch / "implementation-1.md"
+        self.assertEqual(self.cli("--names", "--strict", first).returncode, 0)
+        second = self.put(2)
+        for args, expected in (((self.folder,), 0), (("--names", second), 0), (("--names", "--strict", second), 1)):
+            done = self.cli(*args)
+            self.assertEqual(done.returncode, expected, done.stdout)
+            self.assertIn("no 'Symptom:' line", done.stderr)
+            self.assertIn("named the same way each time", done.stderr)
+            self.assertLessEqual(len(done.stderr.split()), 26)
+        self.put(2, "none")
+        self.assertEqual(self.cli("--names", "--strict", second).returncode, 0)
+
+    def test_different_stages_symptoms_none_fences_and_body_do_not_repeat(self):
+        self.put(2, "A")
+        self.put(2, "A", stage="validation")
+        for symptom in ("B", "None", "none: new work"):
+            self.put(3, symptom)
+            self.assertEqual(self.cli().stderr, "")
+        path = self.put(3)
+        for text in ("```\nSymptom: A\n```\n" + COMPLETE, COMPLETE + "\nSymptom: A\n"):
+            path.write_text(text)
+            done = self.cli()
+            self.assertNotIn("step back:", done.stderr)
+            self.assertIn("no 'Symptom:' line", done.stderr)
+        path.write_text("Symptom: B\nSymptom: A\n" + COMPLETE)
+        self.assertEqual(self.cli().stderr, "")
 
 
 if __name__ == "__main__":
