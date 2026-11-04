@@ -88,6 +88,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-11-04 — do these amendments withdraw what the Captain approved, and what changes in the build? Answer: adjust; report review/engineering-reviewer-batch13.md.
+Reviewer: kc-dev-flow-2:chief-engineer not run: the 2026-11-04 batch 13 delivery review (review/chief-engineer-batch13.md) already advised on #769; the passes since then were directed by the engineering-reviewer reading (review/engineering-reviewer-batch13.md) under Captain amendment 3 and a RoboRev recovery finding, and validation passed at 1f8d30aed.
 
 ## Stop condition
 - Each observed failure (a guessed id, a wrong or archived worker, a message per routine approval) is named and stopped at a point FO reaches before respond_to_permission, shown on a replay of the observed sequence.
