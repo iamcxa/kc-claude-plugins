@@ -74,7 +74,7 @@ gates:
 profile: pilot
 started: 2026-11-03T10:21:07Z
 worktree: .worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words
-pr: iamcxa/kc-claude-plugins#770
+pr: pr-merge:770
 ---
 
 ## Scope
