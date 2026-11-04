@@ -3,7 +3,7 @@ title: FO runs any step it asks the Captain to run or look at, as far as it goes
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #771、#772、#773 嗎？（#769、#770、#774、#775、#777 這次不合併）」'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-03T10:21:32Z
 worktree: .worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain
 pr: pr-merge:773
+verdict: PASSED
+completed: 2026-11-04T02:17:13Z
+archived: 2026-11-04T02:17:13Z
 ---
 
 ## Scope
