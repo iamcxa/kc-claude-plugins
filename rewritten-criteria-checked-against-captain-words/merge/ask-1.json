@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "b81c628facd2cd38568018beec47b6c4566c0aae",
+  "model": "not run",
+  "necessity": "the changed files are the comparison in design_surfaces.py and dispatch_records.py, laws_check.py and laws.md, their tests and ADR 0057.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'PASSED for the bounded criteria at'",
+    "point: deferred: '- F1 Deferred risk: Codex comment'",
+    "point: deferred: '- DONE: Revalidation after the chief-engineer'",
+    "point: deferred: 'Main is an ancestor; comparison-parser bytes'",
+    "point: deferred: '- F1 Deferred risk (carried forward):'",
+    "point: deferred: 'Declined: Deferred risk, validation F1 and'",
+    "point: deferred: \"Declined: Polish, validation F2: FO's follow-up\"",
+    "point: deferred: \"Declined: Polish, validation F3: FO's validation-2.md\"",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/laws.md'",
+    "point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'",
+    "point: more: 6 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#770",
+  "sufficiency": "a validation dispatch holds when an amended criterion adds words inside a kept sentence that are not the Captain's, shown on the #756 replay and a 47-task corpus, and still holds with #771's Symptom r",
+  "time": "2026-11-04T02:30:17Z",
+  "verdict": "ask"
+}
