@@ -3,7 +3,7 @@ title: A number or factual claim in a gate summary, PR body or Captain message n
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #769、#770、#774、#775、#777 嗎？（#775 的 F5 是我的驗證派工紀錄少了 Symptom 行，接受為紀錄問題、不擋合併）」'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-03T15:11:22Z
 worktree: .worktrees/spacedock-ensign-claims-name-their-source
 pr: pr-merge:777
+verdict: PASSED
+completed: 2026-11-04T12:18:50Z
+archived: 2026-11-04T12:18:50Z
 ---
 
 ## Scope
