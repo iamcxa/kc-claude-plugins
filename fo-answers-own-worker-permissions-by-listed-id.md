@@ -69,6 +69,17 @@ gates:
                 id: briefing:fo-answers-own-worker-permissions-by-listed-id:validation:attempt-1:revision-1
                 digest: sha256:57d216fd52f14f654af445325df8ca4a3e4b5728228ea6d95c287b7dda61bc76
                 room-ref: ./fo-answers-own-worker-permissions-by-listed-id/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-answers-own-worker-permissions-by-listed-id:validation:1
+                briefing: briefing:fo-answers-own-worker-permissions-by-listed-id:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-04T08:57:15.844664Z"
+                decision: approve
+                reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #769、#770、#774、#775、#777 嗎？（#775 的 F5 是我的驗證派工紀錄少了 Symptom 行，接受為紀錄問題、不擋合併）」'
+              application:
+                target-stage: done
+                state: pending
 profile: pilot
 started: 2026-11-03T10:20:50Z
 worktree: .worktrees/spacedock-ensign-fo-answers-own-worker-permissions-by-listed-id
