@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.8.0...kc-journey-map-v1.9.0) (2026-11-04)
+
+
+### Features
+
+* **kc-journey-map:** register the journey progress contract ([2038b07](https://github.com/iamcxa/kc-claude-plugins/commit/2038b0770cbdd0868c859631defce06302f3ddb7))
+* **kc-journey-map:** register the journey progress contract ([b026e0d](https://github.com/iamcxa/kc-claude-plugins/commit/b026e0d7e497f7dc0ae0bae03fb1558810a36db3))
+
 ## [1.8.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.7.0...kc-journey-map-v1.8.0) (2026-10-24)
 
 
