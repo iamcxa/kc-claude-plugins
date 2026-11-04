@@ -628,3 +628,139 @@ Validation at `1f8d30aed016f1eb8197e4e7522134205ae50e6c`: all 26 local suite com
 
 Limits: the recovery request-swap scenario was not run natively; synthetic records check the intended procedure, not agent compliance. The retained native run covers unchanged routine/hold behavior only. These remain FO instructions rather than a mechanical authority guard. The push branch is unverified and no push probe ran. Spacedock CLI 0.27.2 matches CI; the local test plugin is installed 0.27.3 versus CI's 0.27.2 pin. FO retains publication to PR #769, RoboRev on this exact head and hosted CI.
 ```
+
+
+## Validation acceptance script — candidate 1f8d30aed016f1eb8197e4e7522134205ae50e6c
+
+Cycle 2. This is a local evidence replay, with no graphical surface, new agent, permission response, push or settings change. Run the five steps together with `/bin/bash --noprofile --norc /tmp/fo-permission-validation-769-cycle2/acceptance.sh`. Prerequisites: the assigned repository at the absolute path below, Python 3, Git, the declared installed ADR checker, the seven existing evidence helpers copied into `/tmp/fo-permission-validation-769-cycle2` with checkout/output paths adapted, the two frozen transcript files in `/tmp/fo-permission-recovery`, and the three native source files in `/Users/kent/.claude/projects/-private-tmp-fo-permission-proof-native` (57cfeb59-f178-4cf6-aa8b-54d6d3ca6671, 6381605d-f092-4386-af14-1f5d0d4f8c3f, 7f9e32be-9c60-453d-975f-13699128c2d7; each ends `.jsonl`). These are explicit machine-local evidence dependencies, not a portable checkout-only test. No private transcript is committed.
+
+The accepted PR fork base is 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb; local origin/main is now 2bda2e98304261d46b0ae7205a29ddc9038d2b4d. The two-file candidate diff uses their merge base. The required ADR check also ran with literal `--since origin/main` and exited 0. The initial fresh-shell attempt was blocked only by sandbox access to shared Git worktree metadata; the identical script then ran with approved access, exited 0 and removed its clean temporary worktree. The following is the exact script and actual combined output, not an expected-output substitute.
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+# Step 1: make a detached checkout of the reviewed candidate; expect its full SHA.
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-answers-own-worker-permissions-by-listed-id
+PROOF=/tmp/fo-permission-validation-769-cycle2
+HEAD_SHA=1f8d30aed016f1eb8197e4e7522134205ae50e6c
+BASE_SHA=713d4e6ed6381e65fa6d8305e08b282ceb56a8fb
+WORK=$(mktemp -d "$REPO/.context/permission-acceptance.XXXXXX")
+git -C "$REPO" worktree add --detach "$WORK" "$HEAD_SHA"
+trap 'cd "$REPO"; git -C "$REPO" worktree remove "$WORK"' EXIT
+export VALIDATION_WT="$WORK" VALIDATION_OUT="$PROOF/captain" PYTHONDONTWRITEBYTECODE=1
+mkdir -p "$VALIDATION_OUT"
+cd "$WORK"
+test "$(git -C "$WORK" rev-parse HEAD)" = "$HEAD_SHA"
+git -C "$WORK" rev-parse HEAD
+
+# Step 2: clauses, protected files and decision record; expect 40 checks, 0 failed; 51 ADR records.
+python3 -B "$PROOF/check_acceptance.py"
+git -C "$WORK" diff --exit-code "$BASE_SHA..$HEAD_SHA" -- kc-dev-flow-2/extensions/peers kc-dev-flow-2/references/sd/workflow.md kc-dev-flow-2/scripts/lint-skills.py docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md
+python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since 2bda2e98304261d46b0ae7205a29ddc9038d2b4d --require 0052
+
+# Step 3: repository lint; expect PASS and 5781 of 5781 workflow words.
+python3 -B kc-dev-flow-2/scripts/lint-skills.py
+
+# Step 4: replay the frozen transcripts and both falsifiers; expect no stopped successes, then two exits of 1.
+python3 -B "$PROOF/replay.py" --output "$VALIDATION_OUT/replay.json"
+set +e
+python3 -B "$PROOF/replay.py" --drop unanswered --output "$VALIDATION_OUT/drop-unanswered.json"
+unanswered_exit=$?
+python3 -B "$PROOF/replay.py" --drop agent_match --output "$VALIDATION_OUT/drop-agent-match.json"
+agent_exit=$?
+set -e
+test "$unanswered_exit" -eq 1
+test "$agent_exit" -eq 1
+printf 'Falsifier exits: unanswered=%s agent_match=%s\n' "$unanswered_exit" "$agent_exit"
+
+# Step 5: retained native evidence and recovery records; expect AC-3, AC-7, AC-8 and all eight recovery checks to pass.
+python3 -B "$PROOF/assess_ac3.py"
+python3 -B "$PROOF/check_native.py" /Users/kent/.claude/projects/-private-tmp-fo-permission-proof-native/7f9e32be-9c60-453d-975f-13699128c2d7.jsonl
+python3 -B "$PROOF/check_recovery.py"
+test -z "$(git -C "$WORK" status --porcelain)"
+```
+
+Observed output, exit 0:
+
+```text
+Preparing worktree (detached HEAD 1f8d30aed)
+HEAD is now at 1f8d30aed fix(kc-dev-flow-2): reassess recovered permission requests
+1f8d30aed016f1eb8197e4e7522134205ae50e6c
+40 checks; 0 failed
+51 ADR file(s) checked, 0 legacy
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5781 of 5781 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+qnow successes 2252 successes stopped 0 refusals [(66365, True, {'delivered': False, 'agent_match': False, 'unanswered': True}), (77628, True, {'delivered': True, 'agent_match': False, 'unanswered': True}), (77840, True, {'delivered': False, 'agent_match': False, 'unanswered': True}), (78457, True, {'delivered': False, 'agent_match': False, 'unanswered': True})]
+unexpected []
+relay successes 1697 successes stopped 0 refusals [(49427, True, {'delivered': True, 'agent_match': True, 'unanswered': False}), (50421, True, {'delivered': True, 'agent_match': True, 'unanswered': False}), (52454, True, {'delivered': True, 'agent_match': False, 'unanswered': True})]
+unexpected []
+qnow successes 2252 successes stopped 0 refusals [(66365, True, {'delivered': False, 'agent_match': False, 'unanswered': True}), (77628, True, {'delivered': True, 'agent_match': False, 'unanswered': True}), (77840, True, {'delivered': False, 'agent_match': False, 'unanswered': True}), (78457, True, {'delivered': False, 'agent_match': False, 'unanswered': True})]
+unexpected []
+relay successes 1697 successes stopped 0 refusals [(49427, False, {'delivered': True, 'agent_match': True, 'unanswered': False}), (50421, False, {'delivered': True, 'agent_match': True, 'unanswered': False}), (52454, True, {'delivered': True, 'agent_match': False, 'unanswered': True})]
+unexpected []
+qnow successes 2252 successes stopped 0 refusals [(66365, True, {'delivered': False, 'agent_match': False, 'unanswered': True}), (77628, False, {'delivered': True, 'agent_match': False, 'unanswered': True}), (77840, True, {'delivered': False, 'agent_match': False, 'unanswered': True}), (78457, True, {'delivered': False, 'agent_match': False, 'unanswered': True})]
+unexpected []
+relay successes 1697 successes stopped 0 refusals [(49427, True, {'delivered': True, 'agent_match': True, 'unanswered': False}), (50421, True, {'delivered': True, 'agent_match': True, 'unanswered': False}), (52454, False, {'delivered': True, 'agent_match': False, 'unanswered': True})]
+unexpected []
+Falsifier exits: unanswered=1 agent_match=1
+AC-3: 4 checks passed
+{"approval_line": true, "no_routine_status": true, "no_routine_report": true, "one_hold": true, "hold_fields": true, "no_hold_recap": true, "hold_only_request": true, "held_unanswered": true, "routine_request_line": 70, "approval": [{"kind": "text", "line": 74, "text": "APPROVED: Write of harmless routine.txt in the test scratch dir FOR: worker 80eecfd7-fe40-43e0-a4fe-aea3e66a672a"}], "answer_line": 75, "after": [], "next_callback_line": 90, "question_line": 98, "question_id": "permission-1210ce7e-dc93-47c1-8299-e06792c8de4f", "hold": [{"kind": "text", "line": 101, "text": "Held for the Captain: worker 80eecfd7-fe40-43e0-a4fe-aea3e66a672a is asking the Captain to choose Option A or Option B (request permission-1210ce7e-dc93-47c1-8299-e06792c8de4f). The policy holds questions that ask for the Captain's judgment, so I have not answered it. The Captain needs to pick A or B."}], "AC-7": true, "AC-8": true}
+8 checks; 0 failed
+```
+
+### Document-impact reconciliation
+
+The required `doc_impact.py origin/main HEAD` command exits 0 and lists eleven documents because its two-endpoint comparison includes newer changes already on origin/main. Re-running against the accepted fork base above lists zero additional documents. The implementation's zero-document claim is correct for that candidate diff; integration with the advanced main was not tested. Dispositions for every line in the literal origin/main result:
+
+- `docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md` — unaffected: the mentioned changes are upstream-only in the direct origin/main comparison; this candidate changes only the paseo extension and ADR 0052.
+- `docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md` — unaffected: the mentioned changes are upstream-only in the direct origin/main comparison; this candidate changes only the paseo extension and ADR 0052.
+- `docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md` — unaffected: the mentioned changes are upstream-only in the direct origin/main comparison; this candidate changes only the paseo extension and ADR 0052.
+- `docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md` — unaffected: the mentioned changes are upstream-only in the direct origin/main comparison; this candidate changes only the paseo extension and ADR 0052.
+- `docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md` — unaffected: the mentioned changes are upstream-only in the direct origin/main comparison; this candidate changes only the paseo extension and ADR 0052.
+- `docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md` — unaffected: the mentioned changes are upstream-only in the direct origin/main comparison; this candidate changes only the paseo extension and ADR 0052.
+- `docs/adr/0051-the-merge-ask-check-requires-the-round-count.md` — unaffected: the mentioned changes are upstream-only in the direct origin/main comparison; this candidate changes only the paseo extension and ADR 0052.
+- `docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md` — updated: records the approved policy, amendments and exact extension counts.
+- `kc-dev-flow-2/README.md` — unaffected: the mentioned changes are upstream-only in the direct origin/main comparison; this candidate changes only the paseo extension and ADR 0052.
+- `kc-dev-flow-2/skills/maintain-flow/SKILL.md` — unaffected: the mentioned changes are upstream-only in the direct origin/main comparison; this candidate changes only the paseo extension and ADR 0052.
+- `learning.md` — unaffected: the mentioned changes are upstream-only in the direct origin/main comparison; this candidate changes only the paseo extension and ADR 0052.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #769 head 1f8d30ae against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 1f8d30aed016f1eb8197e4e7522134205ae50e6c, approved fork base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb; active AC-1/2/3/5/7/8 pass within the recorded evidence limits. Detached checkouts were clean and removed; candidate bytes and branch unchanged. Evidence: /tmp/fo-permission-validation-769-cycle2.
+- DONE: This rerun's rulings are Captain amendments 1 and 2 (AC-4 then AC-6 superseded, ending at AC-7) and Captain amendment 3 (the hold proof restored as AC-8, the extension and ADR 0052 aligned to his rulings); the engineering-reviewer findings are in review/engineering-reviewer-batch13.md, and a RoboRev recovery finding was repaired at this head (a recovered request is read and decided afresh). Judge AC-7 and AC-8 against the latest native run and every criterion at this head; the push branch stays a stated limit, do not run a push. Do not start agents you were not asked to
+  Rulings, all implementation dispatches and the review read; withdrawn AC-4/6 not used as gates. Latest native 7f9e32be… replaces the older recap-containing hold. No new agent, permission answer or push; FO owns review and delivery.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five exact steps and actual output above; unchanged fresh Bash script exited 0. The named Claude-package ADR command with --since origin/main --require 0052 exits 0: 51 records, 0 legacy; selected Codex-package ADR check also exits 0.
+- DONE: AC-1 — all clauses, two changed sentences and protected bytes
+  Manual clause mapping and 40 structural/ADR checks pass; deleting each of 22 clauses fails, baseline lacks the procedure, protected-byte mutants are rejected. Peers, shared workflow, lint budget and ADR 0048 match the accepted fork base; literal current-origin differences are upstream changes, documented above.
+- DONE: AC-2 — independently rerun historical replay and both falsifiers
+  Frozen inputs verified byte-for-byte against each original transcript prefix and its recorded hash. Qnow 2,252 and Relay 1,697 successful answers: none stopped; all seven specified bad calls stopped. Dropping unanswered escapes Relay 49427/50421; dropping agent-match escapes Qnow 77628 and Relay 52454; both exit 1.
+- DONE: AC-3 — retained real Claude bad-id and archived-worker refusals
+  Raw 57cfeb59… source: delivered Claude Write 160, altered id refusal 165/166; second delivered request 192, archive success 196/199, Unknown agent 202/203. Four replay checks pass, including replacing either refusal with success; these mutations are evidence checks, not new native permission responses.
+- DONE: AC-7/8 — latest native routine turn, hold and counterexamples
+  Raw 7f9e32be… lines 70/74/75/76 show delivered pair, exactly one APPROVED line, matching allow and success; no following routine-turn text before callback 90. Question 98 gets one hold at 101 naming only worker/action/decision and stays unanswered. Thirteen checks pass; missing approval, post-answer status, routine recap and answered-hold mutants fail, as does prior source 6381605d… line 104.
+- DONE: Native identity and limits
+  Source SHA-256 6feb5fab673efc3fff566555ce37fa127c1c81fbd40749fc433e20c28a31f3a3 is unchanged. Loaded text at lines 38/46 matches f0e4ce490's ad099957…1cd9 extension, not the full new file; the entire judged AC-7/8 paragraph is byte-identical to this candidate. Line 94 is separate callback-wait narration; line 133 follows an explicit cleanup request. Full current recovery text was not exercised natively.
+- DONE: Recovery finding and bounded falsifiers
+  Extension and ADR require a fresh read/decision under the same boundaries and bind either approval or denial to that requestId. Eight checks pass, rejecting old approval, old denial, missing fresh read and privileged allow; these are synthetic decision-record rules, not an FO runtime or mechanical enforcement. Clause-removal mutations detect either repaired sentence missing.
+- DONE: AC-5 — retained ruling, replacement and word figures
+  Manually matched all Captain Words/Asked pairs, design decision about wrapper/temp cleanup and amendments 1–3; ADR replaces only the named 0048 sentence and leaves 0048 intact. Counts independently match 819→1101 wc words, 829→1115 normalized (+286 per dispatch; no callback/shared-workflow increase). Removing Recommended makes isolated ADR lint exit 1.
+- DONE: Full local suite and hosted checks at the exact head
+  All 26 commands pass: 1024 unittest cases, 7 skips, commands and logs in full-suite.json. Skips cover optional historical corpus, native builder, Node/journey and obligation-source fixtures. CLI 0.27.2 matches CI; local plugin 0.27.3 differs from CI pin 0.27.2. GitHub reports all five workflows successful for this SHA; PR remains open and ready. No CI changes; cost not measured.
+- DONE: Selected-package guards, dispatch records and affected documents
+  All six guards in selected-package-guards.json exit 0; 8 dispatch records complete, with advisory missing Symptom lines on implementation-4-message-1 and validation-2. Initial Claude-package dispatch checker exit 1 is a stale-copy mismatch: it lacks Paseo completion support; the active Codex skill's package wins by Dispatch facts and passes. Comment ratio 0 code/0 comments, maximum inapplicable; doc-impact reconciliation above; diff --check clean.
+- DONE: Goal sufficiency and minimal necessity
+  Native routine/hold observations establish the accepted bounded journey; replay shows why paired/unanswered ids matter, and the recovery counterexample explains the fresh-decision clause. The two documents supply the procedure and durable ruling with no hook or broader workflow change. Reliability across models, live recovery swaps and non-owned-repository push behavior are not claimed.
+- DONE: Actor, worktree and state ownership
+  Live get_agent_status confirms latest worker 80eecfd7… and controller bdb7c978… closed/archived with empty pendingPermissions. No actors started here; temporary checkouts removed, owned branch clean. Only this task body is appended; sibling state files untouched. State remains validation; gate, review disposition and delivery remain FO/Captain work.
+- F1 Deferred risk: retained live non-owned-repository push boundary is unverified
+  User/workflow: FO answering its own Paseo worker. Harm: none observed. Boundary: captain-ruling[2026-11-03] holds non-owned-repository pushes. Trigger absent: bare Bash was allowed and this dispatch forbids the probe; approving such a real request without Captain authority would make it Material.
+- F2 Deferred risk: repaired recovery procedure has no native request-swap proof
+  User/workflow: FO recovering after a refused answer or missing callback. Harm: none observed at this head. Boundary: value-ac[AC-1] scope/authority still governs recovered requests. Trigger evidence is synthetic only, as explicitly permitted by implementation-4-message-1; a live reused decision approving a newly privileged request would make it Material.
+
+### Summary
+
+Cycle 2 recommends PASSED at 1f8d30aed016f1eb8197e4e7522134205ae50e6c against the latest amended criteria, with no Material repair finding. The restored hold behavior passes on the latest native recording; recovery is repaired in the instructions and has synthetic proof only, while the push branch remains unverified. FO retains acceptance replay, finding disposition, gate presentation and Captain delivery authority; the PR body reports `clean on 1f8d30aed; evidence=roborev:1469`, which is FO-attributed rather than independently queried here.
