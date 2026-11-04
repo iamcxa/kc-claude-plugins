@@ -499,3 +499,42 @@ This complete report supersedes earlier implementation reports for the consumer 
 ### Summary
 
 This complete report supersedes validation-1's rejection for the two named candidates under Captain amendments 1/2: the two YAML defects are repaired, the stacked boundary is now authorized, and F4 is accepted. PASSED is scoped to these revisions and the stated base; FO retains later main verification, review disposition and delivery authority. Detached probe checkouts are removed, the assigned code branch is unchanged, and task status remains validation.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #775 head bbf65bb3 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for consumer bbf65bb3a621ad1c664698e0d50af8b4f4e0f1ec and producer b026e0d7e497f7dc0ae0bae03fb1558810a36db3, with F5 Needs decision below; full evidence and limits: release-walk-due-trigger/validation-3/details.md.
+- DONE: Revalidation after #772 merged: #775 was retargeted to main and origin/main merged in (head bbf65bb3a); #774 (head b026e0d7e, kc-journey-map registration, base main) is unchanged and merges first. Under Captain amendment 2, run AC-16 and the number guards against origin/main now that the parent has merged, and re-judge every criterion on both heads. Do not start agents you were not asked to
+  Fetched main 2bda2e98304261d46b0ae7205a29ddc9038d2b4d; #772 merged at 2c76cb53e; both heads' main-based number checks pass. No subagents. F1/F2 repairs hold; F3 main check now satisfied; F4 stays accepted under amendment 2.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four exact steps in validation-3/acceptance.sh, run unchanged using /bin/bash --noprofile --norc, exit 0: 8/18/3 tests and two YAML-comment PASS lines. Both loaded Codex and explicitly requested .claude ADR lint paths exit 0 against origin/main --require 0056, 53 records/no legacy; full commands/output in details.md.
+- DONE: AC-11 — real due/claim/removal, missing producer and listed idle integration.
+  Real split-root new/status --set/state commit keeps a claim and suppresses its reminder; deleting the claim restores it. Native YAML claim fix passes; raw-field mutation fails.
+- DONE: AC-12 — live/archive flat/folder and empty claims.
+  All shape cases and native quoted archive-folder claim pass; omitting --archived fails the native test.
+- DONE: AC-13 — candidate scan agrees with real and recorded progress.
+  Done-live releases remain due; no-done skips producer. Archived-only mutation fails; status-comment and all-field quoting fixes pass and raw-field reversal fails.
+- DONE: AC-14 — byte-identical unlisted output and listed/no-map gates.
+  Current origin/main and candidate output match on the same unlisted fixture; listed map emits one line and no-map invokes nothing; removing the listing gate fails.
+- DONE: AC-15 — failure diagnostics, native task reads and selected executable.
+  Producer errors and incomplete listings diagnose; targeted producer timeout after successful listing passes. Exit-1 rejection, ignored diagnostic, raw map identity and missing alias mutations fail.
+- DONE: AC-16 — actual-main weight, authorized producer registration and sanitize check.
+  Seven consumer files; workflow/extension byte-identical to main, 5836/529 words; README names idle; no consumer version/CI/producer edits. Producer only three authorized files. Word-cap mutation fails; sanitize conditional pass, 0 BLOCK/REJECT and two baseline-identical WARNs.
+- DONE: AC-17 — command-backed cost and missing-command falsifier.
+  One sample each: unmapped producer 4.7761s/due 2.3549s; mapped five-task producer 0.2802s/due 0.4952s. timings.json carries full argv/output; deleting command provenance is rejected. CI cost per PR unmeasured, triggers unchanged; no scale claim.
+- DONE: Complete relevant suites, contract falsifiers, retention, decision records and documents.
+  122 release + 134 idle + 8 producer tests pass, no skips; 11 faults rejected. All 104 main-base test bodies and prerequisite Task/state_tasks/cmd_accepted ASTs retained. Lint/design/diff/number/ADR checks pass; comments 1/491 (0.2%). ADR 0053 unaffected, ADR 0056 updated; producer doc-impact none.
+- DONE: Re-read current hosted heads and preserve proof limits.
+  #775 six SUCCESS checks plus skipped docs deploy; #774 six SUCCESS; both OPEN/non-draft. Native CLI is 0.27.2. No current RoboRev verdict inferred from old daemon failures; cache activation, large-workflow cost, actual release walk and re-walk remain unverified.
+- FAILED: Required dispatch-record check has a new incomplete record.
+  Exit 1 includes validation-3.md's missing Symptom: declaration (F5), in addition to the unchanged implementation completion-format diagnostic already accepted as F4. No dispatch was repaired.
+- SKIPPED: Product repair/publication, review requests, ready/merge actions, new RoboRev run and delivery approval.
+  Validation owns none of these; FO retains finding disposition and producer-first delivery. Detached worktrees/support removed; assigned code tree clean at bbf65bb3a; task remains validation. Report/evidence committed locally; no push.
+
+### Findings
+
+- F5 Needs decision: First Officer's current validation dispatch lacks the required Symptom: line; dispatch_records.py refuses it. contract[kc-dev-flow-2/skills/validation/principles.md#validation-principles] requires incomplete records returned to FO; trigger is validation-3/dispatch.log and dispatch/validation-3.md:1. No product harm is claimed; FO must disposition this new record issue before the gate. It is distinct from accepted F4.
+
+### Summary
+
+This third validation supersedes the second run's deferred main-base check: both candidate products pass all accepted criteria against the merged main base, with prior YAML fixes retained. One new FO-owned record finding remains; no Material product finding or repair. FO retains current-review evidence, the gate and producer-first delivery.

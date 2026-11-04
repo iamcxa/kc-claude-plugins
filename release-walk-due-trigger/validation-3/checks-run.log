@@ -1,0 +1,15 @@
+lint 0
+adr 0
+adr-dispatch-path 0
+numbers-main 0
+comments 0
+doc-impact 0
+design-surfaces 0
+dispatch 1
+diff-check 0
+scope-main 0
+producer-adr 0
+producer-comments 0
+producer-doc-impact 0
+producer-diff-check 0
+producer-scope 0

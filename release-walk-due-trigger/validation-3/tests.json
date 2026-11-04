@@ -1,0 +1,141 @@
+[
+  {
+    "name": "Release acceptance",
+    "status": "passed",
+    "message": "122 tests; no skips",
+    "file": "release-tests.log"
+  },
+  {
+    "name": "Idle integration",
+    "status": "passed",
+    "message": "134 tests; no skips",
+    "file": "watch-tests.log"
+  },
+  {
+    "name": "Producer registration",
+    "status": "passed",
+    "message": "8 tests; no skips",
+    "file": "contract-tests.log"
+  },
+  {
+    "name": "AC-12-archive-omitted",
+    "status": "passed",
+    "message": "Fault rejected with exit 1; /tmp/release-walk-due-trigger-validation-3/AC-12-archive-omitted.log",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "DueTests.test_live_commented_and_quoted_task_fields_match_spacedock"
+    ]
+  },
+  {
+    "name": "F1-F2-raw-fields",
+    "status": "passed",
+    "message": "Fault rejected with exit 1; /tmp/release-walk-due-trigger-validation-3/F1-F2-raw-fields.log",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "DueTests.test_done_status_with_yaml_comment_does_not_hide_due_release",
+      "DueTests.test_claim_with_yaml_comment_silences_the_claimed_release",
+      "DueTests.test_every_due_frontmatter_value_uses_the_parsed_listing"
+    ]
+  },
+  {
+    "name": "AC-13-archived-only",
+    "status": "passed",
+    "message": "Fault rejected with exit 1; /tmp/release-walk-due-trigger-validation-3/AC-13-archived-only.log",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "DueTests.test_recorded_real_progress_exit_one_and_claim_removal"
+    ]
+  },
+  {
+    "name": "AC-14-unconditional",
+    "status": "passed",
+    "message": "Fault rejected with exit 1; /tmp/release-walk-due-trigger-validation-3/AC-14-unconditional.log",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "TasksTests.test_release_walk_due_is_gated_by_listing_and_map_presence"
+    ]
+  },
+  {
+    "name": "AC-15-exit-one",
+    "status": "passed",
+    "message": "Fault rejected with exit 1; /tmp/release-walk-due-trigger-validation-3/AC-15-exit-one.log",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "DueTests.test_recorded_real_progress_exit_one_and_claim_removal"
+    ]
+  },
+  {
+    "name": "AC-15-ignore-diagnostic",
+    "status": "passed",
+    "message": "Fault rejected with exit 1; /tmp/release-walk-due-trigger-validation-3/AC-15-ignore-diagnostic.log",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "DueTests.test_producer_failures_are_diagnostic_and_never_due"
+    ]
+  },
+  {
+    "name": "AC-16-word-cap",
+    "status": "passed",
+    "message": "Fault rejected with exit 1; /tmp/release-walk-due-trigger-validation-3/AC-16-word-cap.log",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "ContractTests.test_extension_md_stays_within_its_word_budget"
+    ]
+  },
+  {
+    "name": "yaml-literal-id",
+    "status": "passed",
+    "message": "Fault rejected with exit 1; /tmp/release-walk-due-trigger-validation-3/yaml-literal-id.log",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "DueTests.test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids"
+    ]
+  },
+  {
+    "name": "spacedock-alias-removed",
+    "status": "passed",
+    "message": "Fault rejected with exit 1; /tmp/release-walk-due-trigger-validation-3/spacedock-alias-removed.log",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "DueTests.test_renamed_spacedock_bin_is_executed_instead_of_a_path_decoy"
+    ]
+  },
+  {
+    "name": "producer-pending-label",
+    "status": "passed",
+    "message": "Fault rejected with exit 1; /tmp/release-walk-due-trigger-validation-3/producer-pending-label.log",
+    "command": [
+      "node",
+      "--test",
+      "kc-journey-map/lib/schemas.test.mjs"
+    ]
+  },
+  {
+    "name": "producer-table-unversioned",
+    "status": "passed",
+    "message": "Fault rejected with exit 1; /tmp/release-walk-due-trigger-validation-3/producer-table-unversioned.log",
+    "command": [
+      "node",
+      "--test",
+      "kc-journey-map/lib/schemas.test.mjs"
+    ]
+  }
+]

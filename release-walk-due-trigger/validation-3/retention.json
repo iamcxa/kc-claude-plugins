@@ -1,0 +1,11 @@
+{
+  "base": "2bda2e98304261d46b0ae7205a29ddc9038d2b4d",
+  "candidate": "bbf65bb3a621ad1c664698e0d50af8b4f4e0f1ec",
+  "unchanged_prerequisite_functions": [
+    "Task",
+    "state_tasks",
+    "cmd_accepted"
+  ],
+  "retained_test_bodies": 104,
+  "candidate_tests": 122
+}

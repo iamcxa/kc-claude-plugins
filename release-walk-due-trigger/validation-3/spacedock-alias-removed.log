@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_renamed_spacedock_bin_is_executed_instead_of_a_path_decoy (__main__.DueTests.test_renamed_spacedock_bin_is_executed_instead_of_a_path_decoy)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-support/mutation/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1431, in test_renamed_spacedock_bin_is_executed_instead_of_a_path_decoy
+    self.assertEqual(out.count("next:"), 2, out)
+AssertionError: 0 != 2 : release-acceptance not run: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmphwmqm3s1/journey.yaml: wrong spacedock
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.475s
+
+FAILED (failures=1)

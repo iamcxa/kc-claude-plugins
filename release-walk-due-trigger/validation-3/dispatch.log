@@ -1,0 +1,2 @@
+implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient
+/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/release-walk-due-trigger/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'

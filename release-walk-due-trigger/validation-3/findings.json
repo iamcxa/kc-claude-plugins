@@ -1,0 +1,10 @@
+[
+  {
+    "severity": "medium",
+    "title": "F5 Needs decision: validation dispatch lacks its symptom declaration",
+    "file": "release-walk-due-trigger/dispatch/validation-3.md",
+    "line": 1,
+    "detail": "The required dispatch_records.py check exits 1 because the new validation-3 record has no Symptom: line. The older implementation completion-format issue remains accepted under Captain amendment 2. No product defect is claimed. First Officer owns the new record disposition.",
+    "fix": "First Officer disposition before the gate; validation did not edit the dispatch."
+  }
+]

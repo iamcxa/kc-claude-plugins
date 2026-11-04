@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_producer_failures_are_diagnostic_and_never_due (__main__.DueTests.test_producer_failures_are_diagnostic_and_never_due) (options={'document': {'schema': 'journey-progress/v1', 'journey': 'book-pickup', 'source': '<workflow>', 'observedAt': '2000-01-01T00:00:00.000Z', 'diagnostic': 'task observation failed', 'orphans': [], 'stories': [{'journey': 'book-pickup', 'release': 'r1', 'story': 'reserve-copy', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-reserve-copy']}, {'journey': 'book-pickup', 'release': 'r2', 'story': 'choose-pickup-day', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-choose-pickup-day']}, {'journey': 'book-pickup', 'release': 'r1', 'story': 'check-ready', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-check-ready']}, {'journey': 'book-pickup', 'release': 'r2', 'story': 'receive-reminder', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-receive-reminder']}, {'journey': 'book-pickup', 'release': 'r1', 'story': 'collect-book', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-collect-book']}], 'releases': [{'release': 'r1', 'totalStories': 3, 'doneStories': 3, 'requiredTasks': 3, 'doneTasks': 3, 'status': 'exists', 'acceptance': 'pending delivery acceptance'}, {'release': 'r2', 'totalStories': 2, 'doneStories': 2, 'requiredTasks': 2, 'doneTasks': 2, 'status': 'exists', 'acceptance': 'pending delivery acceptance'}]}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-support/mutation/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1378, in test_producer_failures_are_diagnostic_and_never_due
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+AssertionError: 'release-acceptance not run: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp04d5rve7/journey.yaml: task observation failed' not found in 'next: release book-pickup/r1 has every story built and no walk claimed; file its acceptance task per release-acceptance\'s "File the task", with release-acceptance: book-pickup/r1 in frontmatter.\nnext: release book-pickup/r2 has every story built and no walk claimed; file its acceptance task per release-acceptance\'s "File the task", with release-acceptance: book-pickup/r2 in frontmatter.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.369s
+
+FAILED (failures=1)

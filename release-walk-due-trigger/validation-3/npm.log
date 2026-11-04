@@ -1,0 +1,4 @@
+npm warn Unknown user config "minimum-release-age". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+npm warn deprecated lodash.isequal@4.5.0: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
+
+added 404 packages in 4s

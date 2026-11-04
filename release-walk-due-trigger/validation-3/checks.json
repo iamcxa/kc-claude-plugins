@@ -1,0 +1,216 @@
+[
+  {
+    "name": "lint",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+    "exit": 0,
+    "log": "lint.log"
+  },
+  {
+    "name": "adr",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "origin/main",
+      "--require",
+      "0056"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+    "exit": 0,
+    "log": "adr.log"
+  },
+  {
+    "name": "adr-dispatch-path",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "origin/main",
+      "--require",
+      "0056"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+    "exit": 0,
+    "log": "adr-dispatch-path.log"
+  },
+  {
+    "name": "numbers-main",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/release-walk-due-trigger.md",
+      "--base",
+      "origin/main"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+    "exit": 0,
+    "log": "numbers-main.log"
+  },
+  {
+    "name": "comments",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "origin/main",
+      "HEAD",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+    "exit": 0,
+    "log": "comments.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "origin/main",
+      "HEAD"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+    "exit": 0,
+    "log": "doc-impact.log"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/release-walk-due-trigger.md"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+    "exit": 0,
+    "log": "design-surfaces.log"
+  },
+  {
+    "name": "dispatch",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/release-walk-due-trigger"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+    "exit": 1,
+    "log": "dispatch.log"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+      "diff",
+      "--check",
+      "origin/main...HEAD"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+    "exit": 0,
+    "log": "diff-check.log"
+  },
+  {
+    "name": "scope-main",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+      "diff",
+      "--name-only",
+      "origin/main...HEAD"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-consumer",
+    "exit": 0,
+    "log": "scope-main.log"
+  },
+  {
+    "name": "producer-adr",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "origin/main"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-producer",
+    "exit": 0,
+    "log": "producer-adr.log"
+  },
+  {
+    "name": "producer-comments",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/comment_ratio.py",
+      "origin/main",
+      "HEAD",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-producer",
+    "exit": 0,
+    "log": "producer-comments.log"
+  },
+  {
+    "name": "producer-doc-impact",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/scripts/doc_impact.py",
+      "origin/main",
+      "HEAD"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-producer",
+    "exit": 0,
+    "log": "producer-doc-impact.log"
+  },
+  {
+    "name": "producer-diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-producer",
+      "diff",
+      "--check",
+      "origin/main...HEAD"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-producer",
+    "exit": 0,
+    "log": "producer-diff-check.log"
+  },
+  {
+    "name": "producer-scope",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-producer",
+      "diff",
+      "--name-only",
+      "origin/main...HEAD"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-walk-due-trigger/.validation-3-producer",
+    "exit": 0,
+    "log": "producer-scope.log"
+  }
+]
