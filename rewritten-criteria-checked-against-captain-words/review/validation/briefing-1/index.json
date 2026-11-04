@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:rewritten-criteria-checked-against-captain-words:validation:attempt-1:revision-1",
+  "question": "「決定：照順序合併 #769、#770、#774、#775、#777 嗎？（#775 的 F5 是我的驗證派工紀錄少了 Symptom 行，接受為紀錄問題、不擋合併）」 Regular merges with --match-head-commit, in the order #769, #770, #774, #775, #777, as the batch 13 second validation sitting. Approval also covers later external-review rounds on these PRs, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:rewritten-criteria-checked-against-captain-words:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/38dea423e0eaeb1bbe48629c44b08b8cf77f893a/rewritten-criteria-checked-against-captain-words.md",
+      "rev": "sha256:de8c35198150316985179c0861465dea8eb69a0eb024e4edbaaa76f51c8fe8c0",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of rewritten-criteria-checked-against-captain-words, PR #770, in the batch 13 second validation sitting.\nSufficiency: a validation dispatch holds when an amended criterion adds words inside a kept sentence that are not the Captain's, shown on the #756 replay and a 47-task corpus, and still holds with #771's Symptom rule merged in.\nNecessity: the changed files are the comparison in design_surfaces.py and dispatch_records.py, laws_check.py and laws.md, their tests and ADR 0057.\nExternal rounds: 4.\nSecond reviewer: Copilot because the PR changes merge or review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5762367286\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: no major issues on this head, comment:6619733835.\nDeclined: Deferred risk, validation F1 and Codex round 3 P2 comment 4455001433: a tilde-fenced example declaring the same AC id can overwrite the live criterion (no committed acceptance section of 191 has that shape).\nDeclined: Polish, validation F2: FO's follow-up record implementation-1-message-1.md lacks the full completion sentence (no handoff was lost; FO's record script is fixed).\nDeclined: Polish, validation F3: FO's validation-2.md record lacks a Symptom line (no lost escalation; FO's record script now writes it)."
+    }
+  ]
+}

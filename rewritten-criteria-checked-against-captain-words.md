@@ -52,6 +52,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:rewritten-criteria-checked-against-captain-words:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:rewritten-criteria-checked-against-captain-words-validation-1
+              briefing:
+                id: briefing:rewritten-criteria-checked-against-captain-words:validation:attempt-1:revision-1
+                digest: sha256:4f61e91e40eefbcbcf1b9c022ea01be21bbf9efb014529a956a14c6a58caddfa
+                room-ref: ./rewritten-criteria-checked-against-captain-words/review/validation/briefing-1
 profile: pilot
 started: 2026-11-03T10:21:07Z
 worktree: .worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words
