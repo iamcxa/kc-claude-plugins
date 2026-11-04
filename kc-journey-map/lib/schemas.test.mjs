@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { cpSync, existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, cpSync, existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
 import { ADR_TITLES, footer } from './schemas.mjs'
+import { readProgress } from './progress.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const copy = (t) => {
@@ -67,6 +68,68 @@ test('release-walk prints its table and version, and an edited table with an unc
 	const r = run(dir, 'release-walk')
 	assert.equal(r.status, 1)
 	assert.match(r.stderr, /release-walk: the field table changed but version 1\.0\.0 did not/)
+})
+
+test('journey-progress registers its printed table and refuses an unversioned shape edit', (t) => {
+	const ok = run(here, 'journey-progress')
+	assert.equal(ok.status, 0, ok.stderr)
+	assert.match(ok.stdout, /^journey-progress 1\.0\.0\n/)
+	assert.match(ok.stdout, /pending delivery acceptance/)
+	const dir = copy(t), file = join(dir, 'schemas.mjs')
+	writeFileSync(file, readFileSync(file, 'utf8').replace("['releases',", "['deliveries',"))
+	const bad = run(dir, 'journey-progress')
+	assert.equal(bad.status, 1)
+	assert.match(bad.stderr, /journey-progress: the field table changed but version 1\.0\.0 did not/)
+})
+
+test('the progress producer preserves the registered keys and acceptance meanings', (t) => {
+	const dir = mkdtempSync(join(tmpdir(), 'progress-contract-'))
+	t.after(() => rmSync(dir, { recursive: true, force: true }))
+	const taskPath = join(dir, 'build.md'); writeFileSync(taskPath, '')
+	const task = { journey: 'demo', 'journey-release': 'r1', 'journey-story': 'first', status: 'done',
+		'journey-required-tasks': '["build"]', 'journey-mapping-complete': 'true' }
+	const model = { journey: 'demo', releases: [{ id: 'r1' }], steps: [{ stories: [{ id: 'first', release: 'r1' }] }] }
+	const binary = join(dir, 'spacedock')
+	const save = () => {
+		const listing = { entities: [{ ...task, slug: 'build', id: 'build' }, { journey: 'demo', slug: 'old', id: 'old' }],
+			pagination: { has_next: 'false', total: '2', page: '1', limit: '0' } }
+		writeFileSync(binary, `#!/usr/bin/env node
+const args = process.argv;
+const value = args.includes('--read') ? ${JSON.stringify({ path: taskPath, frontmatter: task })}
+ : args.includes('--resolve') ? ${JSON.stringify({ path: taskPath, slug: 'build', id: 'build', stored_id: '' })}
+ : ${JSON.stringify(listing)};
+console.log(JSON.stringify(value));
+`)
+		chmodSync(binary, 0o755)
+	}
+	const keys = (row, expected) => assert.deepEqual(Object.keys(row).sort(), expected.split(' ').sort())
+	const oldPath = process.env.PATH
+	process.env.PATH = `${dir}:${oldPath}`
+	t.after(() => { process.env.PATH = oldPath })
+	save()
+	const complete = readProgress(model, dir)
+	keys(complete, 'schema journey source observedAt diagnostic orphans stories releases')
+	assert.equal(complete.schema, 'journey-progress/v1')
+	assert.equal(complete.source, dir)
+	assert.ok(Number.isFinite(Date.parse(complete.observedAt)))
+	assert.equal(complete.diagnostic, null)
+	assert.deepEqual(complete.orphans, [{ slug: 'old', id: 'old', release: null, story: null }])
+	keys(complete.stories[0], 'journey release story status requiredTasks doneTasks taskIds')
+	assert.deepEqual(complete.stories[0], { journey: 'demo', release: 'r1', story: 'first', status: 'exists', requiredTasks: 1, doneTasks: 1, taskIds: ['build'] })
+	keys(complete.releases[0], 'release totalStories doneStories requiredTasks doneTasks status acceptance')
+	assert.deepEqual(complete.releases[0], { release: 'r1', totalStories: 1, doneStories: 1, requiredTasks: 1, doneTasks: 1, status: 'exists', acceptance: 'pending delivery acceptance' })
+	task.status = 'implementation'; save()
+	const gap = readProgress(model, dir)
+	assert.equal(gap.stories[0].status, 'gap')
+	assert.equal(gap.releases[0].status, 'gap')
+	assert.equal(gap.releases[0].acceptance, 'delivery acceptance not established')
+	writeFileSync(binary, '#!/bin/sh\nexit 2\n')
+	const failed = readProgress(model, dir)
+	assert.ok(failed.diagnostic)
+	assert.equal(failed.stories[0].status, 'unverified')
+	assert.ok(failed.stories[0].diagnostic)
+	assert.equal(failed.releases[0].status, 'unverified')
+	assert.equal(failed.releases[0].acceptance, 'delivery acceptance not established')
 })
 
 test('the README and SKILL.md send a reader to the schema command, the CHANGELOG and the ADR, and say when', () => {

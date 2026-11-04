@@ -22,10 +22,20 @@ export const SCHEMAS = {
 		['stories[].step', '`{id, card, activity}` of the step the story sits under'],
 		['stories[].system, rules', 'the step\'s `system` lines; `rules` is `[{id, text}]`, the step\'s rule ids joined to the map\'s `rules`, `text` being the id when the map holds no such rule'],
 	],
+	'journey-progress': [
+		['schema', 'the string `journey-progress/v1` (wire pin: major only)'],
+		['journey', 'the map journey id'],
+		['source', 'the absolute workflow directory observed'],
+		['observedAt', 'ISO timestamp of the task observation'],
+		['diagnostic', 'null on a successful task read; otherwise a nonempty diagnostic string'],
+		['orphans', '`[{slug, id, release, story}]`: tasks naming this journey but no map story; missing release or story is null'],
+		['stories', '`[{journey, release, story, status, requiredTasks, doneTasks, taskIds, diagnostic?}]`; status is `exists`, `gap` or `unverified`; diagnostic is present when unverified'],
+		['releases', '`[{release, totalStories, doneStories, requiredTasks, doneTasks, status, acceptance}]`; status is `exists`, `gap` or `unverified`; acceptance is `pending delivery acceptance` exactly when the release has stories and all exist, otherwise `delivery acceptance not established`'],
+	],
 }
 export const ADR_TITLE = 'a-captain-ruling-reaches-the-map-as-a-versioned-footprint'
 export const ACCEPTANCE_ADR_TITLE = 'a-release-is-accepted-by-walking-it-and-the-plugins-meet-at-two-named-schemas'
-export const ADR_TITLES = { 'journey-map-question': ADR_TITLE, 'release-walk': ACCEPTANCE_ADR_TITLE }
+export const ADR_TITLES = { 'journey-map-question': ADR_TITLE, 'release-walk': ACCEPTANCE_ADR_TITLE, 'journey-progress': ACCEPTANCE_ADR_TITLE }
 const here = dirname(fileURLToPath(import.meta.url))
 export const VERSIONS_FILE = join(here, 'contract-versions.json')
 
