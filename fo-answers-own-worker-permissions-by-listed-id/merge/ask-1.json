@@ -1,0 +1,25 @@
+{
+  "class": "never",
+  "head": "1f8d30aed016f1eb8197e4e7522134205ae50e6c",
+  "model": "not run",
+  "necessity": "the two files are the paseo extension section and ADR 0052; no script or workflow word changes.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F1 Deferred risk: live non-owned-repository'",
+    "point: deferred: '- F1 Deferred risk: retained live'",
+    "point: deferred: '- F2 Deferred risk: repaired recovery'",
+    "point: deferred: 'Declined: Deferred risk, validation F1: the'",
+    "point: deferred: 'Declined: Deferred risk, validation F2: the'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: acceptance-not-run: '- DONE: Captain amendment 1 superseded'",
+    "point: acceptance-not-run: \"- DONE: This rerun's rulings are\"",
+    "point: amendment: 'Amendment 3 dated 2026-11-04'",
+    "point: path: 'docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md'",
+    "point: path: 'kc-dev-flow-2/extensions/paseo/EXTENSION.md'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#769",
+  "sufficiency": "FO answers its own workers' routine permission requests with the listed id and one APPROVED line, sends no status block or report after them, sends a boundary request to the Captain as one message wit",
+  "time": "2026-11-04T02:30:59Z",
+  "verdict": "ask"
+}
