@@ -235,6 +235,12 @@ ADR: 0052
 
 ## Captain amendments
 
+### Amendment 3 — 2026-11-04, chat
+Captain: 「按建議」 (chat, 2026-11-04)
+Asked: 「決定：A 補回 AC-8（邊界請求以一則訊息交給你、不夾帶例行批准的回報、被擋的請求不代答），文字和 ADR 改成你裁定的版本，再修一輪後重驗，可以嗎？」
+Supersedes: none
+
+
 ### Amendment 2 — 2026-11-03, chat
 Captain: 「好」 (chat, 2026-11-03), after his 「退一步想一下，AC4 到底是怎樣」
 Asked: 「決定：A 的 AC-4 改成『例行批准前一行 APPROVED，批准後不附狀態區塊、不寫給我的回報』，用第二次實測的結果進驗證嗎？」
