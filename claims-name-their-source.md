@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:claims-name-their-source:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:claims-name-their-source-validation-1
+              briefing:
+                id: briefing:claims-name-their-source:validation:attempt-1:revision-1
+                digest: sha256:c64a6be767e25448a097f20741f9b45eb977757f4a803e5104ed086ae5ccc508
+                room-ref: ./claims-name-their-source/review/validation/briefing-1
 started: 2026-11-03T15:11:22Z
 worktree: .worktrees/spacedock-ensign-claims-name-their-source
 pr: iamcxa/kc-claude-plugins#777

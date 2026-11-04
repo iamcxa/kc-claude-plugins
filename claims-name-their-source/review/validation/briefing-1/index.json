@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:claims-name-their-source:validation:attempt-1:revision-1",
+  "question": "「決定：照順序合併 #769、#770、#774、#775、#777 嗎？（#775 的 F5 是我的驗證派工紀錄少了 Symptom 行，接受為紀錄問題、不擋合併）」 Regular merges with --match-head-commit, in the order #769, #770, #774, #775, #777, as the batch 13 second validation sitting. Approval also covers later external-review rounds on these PRs, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:claims-name-their-source:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/2ebc83bca962f93b3f46e6609864baa7cb33f76c/claims-name-their-source.md",
+      "rev": "sha256:53896c599f3c7f3f7f7d8952c30d9bd05dcaaccb561c23968752c04b5d096400",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of claims-name-their-source, PR #777, in the batch 13 second validation sitting.\nSufficiency: both gate scripts print the claim-source rule, the README carries it, and on Claude the P replay labelled its source in 6 of 6 runs against 1 of 3 before; ADR 0055 records the ruled proof and the number guards pass against origin/main after #773 merged.\nNecessity: the six files are the README sentences (+55 words), delivery_gate.py's printed line, lint-skills.py, the observer list, the tests and ADR 0055.\nExternal rounds: 4.\nSecond reviewer: Copilot because the PR changes merge or review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5762367642\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: no major issues on this head, comment:6620757103.\nDeclined: Deferred risk, validation F1: K labelled the wrong count in 3 of 6 Claude runs (accepted by Captain amendment 3, with follow-up task counts-name-the-run-that-produced-them)."
+    }
+  ]
+}
