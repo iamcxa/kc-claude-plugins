@@ -1,6 +1,6 @@
 ---
 title: A release walk runs off production, and production waits for its acceptance
-status: validation
+status: done
 variant: kc-dev-flow-2
 gates:
     version: 1
@@ -70,11 +70,14 @@ gates:
                 reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #771、#772、#773 嗎？（#769、#770、#774、#775、#777 這次不合併）」'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 profile: pilot
 started: 2026-11-03T10:21:16Z
 worktree: .worktrees/spacedock-ensign-release-walk-off-production-before-release
 pr: pr-merge:772
+verdict: PASSED
+completed: 2026-11-04T02:17:06Z
+archived: 2026-11-04T02:17:07Z
 ---
 
 ## Scope
