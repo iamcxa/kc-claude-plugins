@@ -137,7 +137,8 @@ def build_world(root, with_walk=True):
     """A workflow with split-root state, tasks of release r1 and r2, and one acceptance task folder with a walk."""
     wf = Path(root) / "wf"
     state = wf / ".spacedock-state"
-    put(wf / "README.md", "---\nentity-type: task\nstate: .spacedock-state\n---\n")
+    put(wf / "README.md", "---\nentity-type: task\nstate: .spacedock-state\n"
+        "walk-environment: staging\nproduction-environment: production\nrelease-doc: docs/releasing.md\n---\n")
     base = {"journey": "book-pickup", "journey-release": "r1", "profile": "pilot"}
     put(state / "t-reserve.md", task_file({**base, "journey-story": "reserve-copy"},
         validation("F1 Polish: the reserve button label is long", older=["F9 Deferred risk: an old finding"])))
@@ -252,6 +253,66 @@ class EnvironmentTests(Base):
         self.morning()
         self.edit_reviewer("o", lambda d: d["stories"][0].update(result="works", cause=None))
         self.assertIn("reviewers who did: 1", self.check("walk")[1])
+
+
+class RecordedEnvironmentTests(Base):
+    def target(self, name):
+        meta = read(self.walk / "meta.json")
+        meta["target"]["environment"] = name
+        put(self.walk / "meta.json", meta)
+        if (self.walk / "report.json").exists():
+            self.edit_report(lambda r: r["target"].update(environment=name))
+
+    def test_production_is_refused_at_both_tiers(self):
+        self.built()
+        self.target("production")
+        for tier in ("walk", "final"):
+            out = self.refused(tier, "REFUSED: the walk ran on production (production); walk on staging")
+            self.assertIn("clean: no", out)
+
+    def test_recorded_staging_passes_but_another_staging_does_not(self):
+        code, out = self.check()
+        self.assertEqual(code, 0, out)
+        self.assertIn("environment: staging (production: production)", out)
+        self.target("staging-2")
+        self.refused("walk", "the README records staging")
+
+    def test_each_missing_key_holds_and_restoring_it_passes(self):
+        readme = self.wf / "README.md"
+        original = readme.read_text()
+        for key in ("walk-environment", "production-environment", "release-doc"):
+            for replacement in ("", f"{key}:\n"):
+                with self.subTest(key=key, replacement=replacement):
+                    put(readme, re.sub(rf"^{key}:.*\n", replacement, original, flags=re.M))
+                    out = self.refused("walk", "environments not recorded")
+                    self.assertIn(key, out)
+                    self.assertIn("references/sd/adoption.md", out)
+                    put(readme, original)
+                    self.assertEqual(self.check()[0], 0)
+
+    def test_equal_environment_names_hold_even_when_target_matches(self):
+        readme = self.wf / "README.md"
+        put(readme, readme.read_text().replace("production-environment: production", "production-environment: staging"))
+        self.refused("walk", "walk-environment is production-environment (staging)")
+
+    def test_local_requires_the_limit_and_render_keeps_it(self):
+        readme = self.wf / "README.md"
+        put(readme, readme.read_text().replace("walk-environment: staging", "walk-environment: local"))
+        self.target("local")
+        self.refused("walk", "a local walk records its limit")
+        limit = "not deployed: served assets, headers and content types not seen"
+        meta = read(self.walk / "meta.json")
+        meta["not_tested"].append(limit)
+        put(self.walk / "meta.json", meta)
+        code, out = self.check()
+        self.assertEqual(code, 0, out)
+        self.assertIn("environment: local (not deployed)", out)
+        self.built()
+        code, out = run("render", self.folder)
+        self.assertEqual(code, 0, out)
+        self.assertIn(f"## Not tested\n\n- resize\n- {limit}", out)
+        self.edit_report(lambda r: r["not_tested"].remove(limit))
+        self.refused("final", "a local walk records its limit")
 
 
 class MalformedTests(Base):
@@ -551,6 +612,298 @@ class RulingTests(Base):
                                           {"real": "yes", "ruling": "solve", "when": "this-round", "class": "works-but-unusable"}]}}))
 
 
+class AcceptedTests(Base):
+    def accepted(self, release="book-pickup/r1"):
+        return run("accepted", release, "--workflow-dir", self.wf)
+
+    def not_accepted(self, needle):
+        code, out = self.accepted()
+        self.assertEqual(code, 1, out)
+        self.assertIn("not accepted: book-pickup/r1:", out)
+        self.assertIn(needle, out)
+
+    def close(self):
+        RulingTests.clean_world(self)
+        self.built()
+        self.assertEqual(self.check("final")[0], 0)
+        archive = self.folder.parent / "_archive"
+        put(archive / "r1-acceptance.md", task_file({"release-acceptance": "book-pickup/r1", "pr": "local-merge:" + "a" * 40}))
+        self.folder.with_suffix(".md").unlink()
+        shutil.move(self.folder, archive / "r1-acceptance")
+        self.folder = archive / "r1-acceptance"
+        self.walk = self.folder / "walk"
+        return self.folder.with_suffix(".md")
+
+    def rewalk(self, prior=True, archived=True, previous=None, slug="r1-rewalk"):
+        previous = self.folder if previous is None else previous
+        previous_report = previous / "walk/report.json"
+        parent = self.folder.parent if archived else self.folder.parent.parent
+        folder = parent / slug
+        shutil.copytree(previous, folder)
+        for path in (folder / "walk").glob("reviewer-*.json"):
+            reviewer = read(path)
+            reviewer["marks"] = [{"complaint": c["id"], "status": "fixed", "reason": "fixed on re-walk"}
+                                 for c in reviewer["complaints"]]
+            reviewer["complaints"] = []
+            for story in reviewer["stories"]:
+                story["complaints"] = []
+            put(path, reviewer)
+        put(folder / "walk/ruling.json", {"items": [], "tasks": [], "deferred": [
+            {"item": d, "ruling": "do-not-solve", "when": "never", "why": "settled"} for d in DEFERRED]})
+        code, out = run("build", folder, "--workflow-dir", self.wf, "--prior", previous_report)
+        self.assertEqual(code, 0, out)
+        put(folder.with_suffix(".md"), task_file({"release-acceptance": "book-pickup/r1", "pr": "local-merge:" + "b" * 40},
+            f"Prior walk: {previous_report}\n" if prior else ""))
+        return folder
+
+    def test_no_task_and_live_task_hold_production(self):
+        self.not_accepted("r1-acceptance is not archived")
+        self.folder.with_suffix(".md").unlink()
+        self.not_accepted("no acceptance task")
+
+    def test_archive_needs_a_local_merge_sentinel(self):
+        task = self.close()
+        original = task.read_text()
+        for merged in ("", "local-merge:", "https://github.com/example/repo/pull/1", "pr-merge:" + "a" * 40):
+            put(task, task_file({"release-acceptance": "book-pickup/r1", "pr": merged}))
+            self.not_accepted("has no pr: local-merge:<sha>")
+        put(task, original)
+        self.assertEqual(self.accepted()[0], 0)
+
+    def test_clean_closed_walk_names_task_sentinel_and_release_document(self):
+        self.close()
+        code, out = self.accepted()
+        self.assertEqual(code, 0, out)
+        self.assertEqual(out, "accepted: book-pickup/r1 by r1-acceptance (local-merge:" + "a" * 40 +
+                         "); production release per docs/releasing.md\n")
+        readme = self.wf / "README.md"
+        put(readme, readme.read_text().replace("docs/releasing.md", "ops/production.md"))
+        self.assertIn("production release per ops/production.md", self.accepted()[1])
+
+    def test_clean_archived_production_walk_is_not_accepted(self):
+        self.close()
+        self.edit_report(lambda r: r["target"].update(environment="production"))
+        self.not_accepted("the walk ran on production")
+
+    def test_minimal_forged_clean_report_is_not_accepted(self):
+        self.close()
+        put(self.walk / "report.json", {"schema": "release-acceptance/v1",
+            "walk": {"journey": "book-pickup", "release": "r1"},
+            "target": {"environment": "staging", "ref": "abc"}, "stories": [],
+            "proof_line": {"result": "works"}, "smoke": {"result": "passed"}, "walks": []})
+        self.not_accepted("reviewers")
+
+    def test_clean_report_still_needs_valid_ruling_and_complaint_rows(self):
+        self.close()
+        original = read(self.walk / "report.json")
+        self.edit_report(lambda r: r["ruling"]["director"].update(model="sonnet"))
+        self.not_accepted("director.model")
+        put(self.walk / "report.json", original)
+        self.edit_report(lambda r: r["complaint_rows"].clear())
+        self.not_accepted("complaint_rows")
+
+    def test_clean_rewalk_still_needs_its_prior_digest(self):
+        self.close()
+        folder = self.rewalk()
+        self.assertEqual(self.accepted()[0], 0)
+        path = folder / "walk/report.json"
+        report = read(path)
+        report["prior"]["digest"] = "sha256:" + "0" * 64
+        put(path, report)
+        self.not_accepted("prior report's digest does not match")
+
+    def test_clean_local_walk_still_needs_its_recorded_limit(self):
+        self.close()
+        readme = self.wf / "README.md"
+        put(readme, readme.read_text().replace("walk-environment: staging", "walk-environment: local"))
+        self.edit_report(lambda r: r["target"].update(environment="local"))
+        self.not_accepted("a local walk records its limit")
+
+    def test_missing_malformed_or_unclean_report_holds(self):
+        self.close()
+        path = self.walk / "report.json"
+        original = read(path)
+        for change in (lambda r: r["stories"][0].update(result="broken"),
+                       lambda r: r["proof_line"].update(result="broken"),
+                       lambda r: r["smoke"].update(result="failed"),
+                       lambda r: r["ruling"]["items"][0].update(when="this-round"),
+                       lambda r: r["walks"][0].update(marks=[{"status": "partly-fixed"}])):
+            report = copy.deepcopy(original)
+            change(report)
+            put(path, report)
+            self.not_accepted("is not clean")
+        path.unlink()
+        self.not_accepted("report.json is absent")
+        for content in ("not json", "{}", "null"):
+            put(path, content)
+            self.not_accepted("r1")
+        put(path, original)
+        self.assertEqual(self.accepted()[0], 0)
+
+    def test_newest_unclean_rewalk_overrides_older_clean_walk(self):
+        self.close()
+        folder = self.rewalk()
+        path = folder / "walk/report.json"
+        report = read(path)
+        report["stories"][0]["result"] = "broken"
+        put(path, report)
+        self.not_accepted("r1-rewalk is not clean")
+        report["stories"][0]["result"] = "works"
+        put(path, report)
+        code, out = self.accepted()
+        self.assertEqual(code, 0, out)
+        self.assertIn("by r1-rewalk (local-merge:", out)
+
+    def test_live_rewalk_holds_even_with_an_older_clean_archive(self):
+        self.close()
+        self.rewalk(archived=False)
+        self.not_accepted("r1-rewalk is not archived")
+
+    def test_newest_unclean_archived_folder_rewalk_holds_acceptance(self):
+        self.close()
+        folder = self.rewalk()
+        folder.with_suffix(".md").rename(folder / "index.md")
+        path = folder / "walk/report.json"
+        report = read(path)
+        report["proof_line"]["result"] = "broken"
+        put(path, report)
+        self.not_accepted("r1-rewalk is not clean")
+        report["proof_line"]["result"] = "works"
+        put(path, report)
+        code, out = self.accepted()
+        self.assertEqual(code, 0, out)
+        self.assertIn("by r1-rewalk (local-merge:", out)
+
+    def test_live_folder_rewalk_holds_acceptance(self):
+        self.close()
+        folder = self.rewalk(archived=False)
+        folder.with_suffix(".md").rename(folder / "index.md")
+        self.not_accepted("r1-rewalk is not archived")
+
+    def test_parallel_walks_hold_until_prior_is_named(self):
+        self.close()
+        folder = self.rewalk(prior=False)
+        self.not_accepted("r1-acceptance, r1-rewalk are both newest; name the prior walk")
+        with folder.with_suffix(".md").open("a") as f:
+            f.write("Prior walk: _archive/r1-acceptance/walk/report.json\n")
+        self.assertEqual(self.accepted()[0], 0)
+
+    def test_three_walks_point_to_the_immediately_preceding_report(self):
+        self.close()
+        second = self.rewalk()
+        third = self.rewalk(slug="r1-rewalk-again")
+        self.not_accepted("r1-rewalk, r1-rewalk-again are both newest")
+        shutil.rmtree(third)
+        third.with_suffix(".md").unlink()
+        third = self.rewalk(previous=second, slug="r1-rewalk-again")
+        previous_report = second / "walk/report.json"
+        code, out = run("check", third, "--tier", "final", "--workflow-dir", self.wf, "--prior", previous_report)
+        self.assertEqual(code, 0, out)
+        self.assertEqual(read(third / "walk/report.json")["prior"]["digest"],
+                         "sha256:" + hashlib.sha256(previous_report.read_bytes()).hexdigest())
+        code, out = self.accepted()
+        self.assertEqual(code, 0, out)
+        self.assertIn("by r1-rewalk-again (local-merge:", out)
+        code, out = run("check", third, "--tier", "final", "--workflow-dir", self.wf,
+                        "--prior", self.walk / "report.json")
+        self.assertEqual(code, 1, out)
+        self.assertIn("prior report's digest does not match", out)
+
+    def test_foreign_release_and_cyclic_prior_are_refused(self):
+        task = self.close()
+        self.edit_report(lambda r: r["walk"].update(release="r2"))
+        self.not_accepted("report does not describe book-pickup/r1")
+        self.edit_report(lambda r: r["walk"].update(release="r1"))
+        with task.open("a") as f:
+            f.write(f"Prior walk: {self.walk / 'report.json'}\n")
+        self.not_accepted("Prior walk chain is cyclic")
+
+    def test_third_walk_cannot_drop_inherited_unresolved_complaints(self):
+        self.close()
+        second = self.rewalk()
+        third = self.rewalk(previous=second, slug="r1-rewalk-inherited")
+        for who, status in (("o", "partly-fixed"), ("s", "deferred")):
+            path = second / f"walk/reviewer-{who}.json"
+            reviewer = read(path)
+            reviewer["marks"][0].update(status=status, reason="still needs work")
+            if status == "deferred":
+                reviewer["marks"][0]["release"] = "r2"
+            put(path, reviewer)
+        previous_report = second / "walk/report.json"
+        code, out = run("build", second, "--workflow-dir", self.wf, "--prior", self.walk / "report.json")
+        self.assertEqual(code, 0, out)
+        code, out = run("check", second, "--tier", "final", "--workflow-dir", self.wf,
+                        "--prior", self.walk / "report.json")
+        self.assertEqual(code, 0, out)
+        self.assertIn("clean: no", out)
+        report = read(third / "walk/report.json")
+        report["prior"]["digest"] = "sha256:" + hashlib.sha256(previous_report.read_bytes()).hexdigest()
+        put(third / "walk/report.json", report)
+        self.not_accepted("own prior complaint o2 left unmarked")
+        code, out = run("build", third, "--workflow-dir", self.wf, "--prior", previous_report)
+        self.assertEqual(code, 1, out)
+        for who in ("o", "s"):
+            path = third / f"walk/reviewer-{who}.json"
+            reviewer = read(path)
+            reviewer["marks"] = read(second / f"walk/reviewer-{who}.json")["marks"]
+            put(path, reviewer)
+            code, out = run("build", third, "--workflow-dir", self.wf, "--prior", previous_report)
+            self.assertEqual(code, 1 if who == "o" else 0, out)
+            if who == "o":
+                self.assertIn("own prior complaint s2 left unmarked", out)
+        code, out = run("check", third, "--tier", "final", "--workflow-dir", self.wf, "--prior", previous_report)
+        self.assertEqual(code, 0, out)
+        self.assertIn("clean: no", out)
+        rows = read(third / "walk/report.json")["complaint_rows"]
+        self.assertEqual({(r["complaint"], r["reviewer"], r["status"], r["reason"]) for r in rows},
+                         {("o2", "o", "partly-fixed", "still needs work"),
+                          ("s2", "s", "deferred:r2", "still needs work")})
+        rendered = run("render", third)[1]
+        self.assertIn("| o2 | o | none | partly-fixed | still needs work |", rendered)
+        self.assertIn("| s2 | s | none | deferred:r2 | still needs work |", rendered)
+        self.not_accepted("r1-rewalk-inherited is not clean")
+        path = third / "walk/reviewer-o.json"
+        reviewer = read(path)
+        reviewer["marks"][0].update(status="fixed", reason="verified fixed")
+        put(path, reviewer)
+        code, out = run("build", third, "--workflow-dir", self.wf, "--prior", previous_report)
+        self.assertEqual(code, 0, out)
+        code, out = self.accepted()
+        self.assertEqual(code, 0, out)
+        self.assertIn("by r1-rewalk-inherited (local-merge:", out)
+
+    def test_disconnected_self_cycle_cannot_hide_an_unclean_rewalk(self):
+        self.close()
+        folder = self.rewalk()
+        path = folder / "walk/report.json"
+        report = read(path)
+        report["proof_line"]["result"] = "broken"
+        put(path, report)
+        task = folder.with_suffix(".md")
+        put(task, task.read_text().replace(str(self.walk / "report.json"), str(path)))
+        self.not_accepted("one acyclic Prior walk chain")
+
+    def test_disconnected_two_walk_cycle_cannot_hide_unclean_walks(self):
+        self.close()
+        first = self.rewalk()
+        second = first.parent / "r1-rewalk-again"
+        shutil.copytree(first, second)
+        for folder, prior in ((first, second), (second, first)):
+            path = folder / "walk/report.json"
+            report = read(path)
+            report["proof_line"]["result"] = "broken"
+            put(path, report)
+            put(folder.with_suffix(".md"), task_file({"release-acceptance": "book-pickup/r1", "pr": "local-merge:" + "b" * 40},
+                f"Prior walk: {prior / 'walk/report.json'}\n"))
+        self.not_accepted("one acyclic Prior walk chain")
+
+    def test_other_releases_are_not_acceptance_and_bad_argument_is_usage(self):
+        self.close()
+        self.assertEqual(self.accepted("book-pickup/r2")[0], 1)
+        for release in ("r1", "/r1", "book-pickup/", "book-pickup/r1/extra"):
+            self.assertEqual(self.accepted(release)[0], 2)
+
+
 class DirectorSkillTests(unittest.TestCase):
     def test_skill_has_pass_three_and_the_agent_keeps_sonnet(self):
         skill = (PACKAGE / "skills/design-director/SKILL.md").read_text()
@@ -821,6 +1174,37 @@ class RewalkTests(Base):
         o["marks"] = [{"complaint": "o1", "status": "fixed", "reason": "r"}]
         write_walk(self.folder, [o, reviewer_s()])
         self.refused("walk", "marks without a prior walk")
+
+
+class FolderTaskTests(Base):
+    def test_folder_tasks_preserve_all_state_task_callers(self):
+        put(self.folder.parent / "fix-complaint.md", task_file(
+            {"journey": "book-pickup", "journey-release": "r1", "profile": "poc"},
+            "Walk complaints: o1, s1\n"))
+
+        def snapshot():
+            report = self.built()
+            return {
+                "tasks": [(t.slug, t.folder, t.fields) for t in ra.state_tasks(self.wf)],
+                "deferred": run("deferred", "book-pickup/r1", "--workflow-dir", self.wf),
+                "director": run("director-model", self.folder, "--workflow-dir", self.wf),
+                "owners": {sid: [t.slug for t in tasks] for sid, tasks in
+                           ra.owners_by_story(self.wf, "book-pickup", "r1").items()},
+                "links": dict(ra.complaint_links(self.wf, "book-pickup", "r1")),
+                "report": report,
+                "final": self.check("final"),
+            }
+
+        flat = snapshot()
+        self.assertEqual(flat["final"][0], 0, flat["final"][1])
+        for task in ra.state_tasks(self.wf):
+            task.folder.mkdir(exist_ok=True)
+            task.path.rename(task.folder / "index.md")
+        self.assertEqual(snapshot(), flat)
+        for task in ra.state_tasks(self.wf):
+            put(task.folder.with_suffix(".md"), task.text)
+        self.assertEqual(snapshot(), flat)
+        self.assertTrue(all(t.path.name == "index.md" for t in ra.state_tasks(self.wf)))
 
 
 class ContractTests(unittest.TestCase):
