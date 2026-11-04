@@ -2,6 +2,7 @@
 """Build, check and render a release walk: picky-user reviewer reports, the design director's ruling, one record.
 
   deferred JOURNEY/RELEASE --workflow-dir D     list findings earlier tasks of the release deferred
+  accepted JOURNEY/RELEASE --workflow-dir D     require the newest walk to be clean and closed before production
   check FOLDER --tier walk|final --workflow-dir D [--prior REPORT]
                                                 exit 1 when the walk cannot be accepted as it stands
   director-model FOLDER --workflow-dir D        print the one model the design director runs on for this walk
@@ -146,8 +147,8 @@ def strings(value):
 class Task:
     def __init__(self, path):
         self.path = Path(path)
-        self.slug = self.path.stem
-        self.folder = self.path.with_suffix("")
+        self.folder = self.path.parent if self.path.name == "index.md" else self.path.with_suffix("")
+        self.slug = self.folder.name
         self.text = self.path.read_text()
         self.fields = {}
         match = re.match(r"---\n(.*?)\n---", self.text, re.S)
@@ -167,14 +168,22 @@ def state_dir(workflow_dir):
     return workflow_dir / state if state else workflow_dir
 
 
+def state_tasks(workflow_dir):
+    state = state_dir(workflow_dir)
+    tasks = {}
+    for root in (state, state / "_archive"):
+        for pattern in ("*.md", "*/index.md"):
+            for path in root.glob(pattern):
+                if path.name != "README.md":
+                    task = Task(path)
+                    tasks[task.folder] = task
+    return sorted(tasks.values(), key=lambda task: task.slug)
+
+
 def release_tasks(workflow_dir, journey, release):
     """Live and archived tasks of the release, the acceptance tasks themselves excluded."""
-    state = state_dir(workflow_dir)
     tasks = []
-    for path in sorted([*state.glob("*.md"), *(state / "_archive").glob("*.md")], key=lambda p: p.stem):
-        if path.name == "README.md":
-            continue
-        task = Task(path)
+    for task in state_tasks(workflow_dir):
         fields = task.fields
         if fields.get("journey-release") == release and fields.get("journey", journey) in ("", journey) \
                 and "release-acceptance" not in fields:
@@ -341,7 +350,9 @@ def evidence_problems(folder, tag, files):
 def prior_owned(prior):
     owned = collections.defaultdict(list)
     for w in (prior or {}).get("walks", []):
-        owned[w["reviewer"]["id"]] += [c["id"] for c in w.get("complaints", [])]
+        ids = [c["id"] for c in w.get("complaints", [])]
+        ids += [m["complaint"] for m in w.get("marks", []) if m.get("status") in ("partly-fixed", "deferred")]
+        owned[w["reviewer"]["id"]] += list(dict.fromkeys(ids))
     return owned
 
 
@@ -632,46 +643,80 @@ def print_routes(report, workflow_dir, journey, release):
         print(f"route {item.get('id')}: {slugs[0]}" if len(slugs) == 1 else f"route {item.get('id')}: review-release")
 
 
-def cmd_check(args):
-    try:
-        folder = Path(args.folder)
-        _, walk_list = loaded(folder)
-        journey, release = walk_list["journey"], walk_list["release"]["id"]
-        prior, prior_digest = prior_of(args.prior)
-        if args.tier == "final":
+def check_environment(report, workflow_dir):
+    # see docs/adr/0053-a-release-walk-runs-off-production-and-production-waits-for-a-clean-closed-walk.md
+    readme = Path(workflow_dir) / "README.md"
+    fields = frontmatter(readme)
+    missing = [k for k in ("walk-environment", "production-environment", "release-doc") if not fields.get(k)]
+    if missing:
+        raise Refused(f"environments not recorded in {readme}: {', '.join(missing)}; "
+                      "ask the four questions (references/sd/adoption.md, Release environments)")
+    walk, production = fields["walk-environment"], fields["production-environment"]
+    if walk == production:
+        raise Refused(f"walk-environment is production-environment ({walk})")
+    actual = (report.get("target") or {}).get("environment")
+    if not text(actual):
+        return None
+    if actual == production:
+        raise Refused(f"the walk ran on production ({production}); walk on {walk}")
+    elif actual != walk:
+        raise Refused(f"the walk ran on {actual}; the README records {walk}")
+    if walk == "local":
+        limits = report.get("not_tested")
+        if not isinstance(limits, list) or not any(isinstance(s, str) and s.startswith("not deployed:") for s in limits):
+            raise Refused('a local walk records its limit as a not_tested entry starting "not deployed:"')
+        return "environment: local (not deployed)"
+    return f"environment: {walk} (production: {production})"
+
+
+def checked_report(folder, workflow_dir, tier, prior_path=None, report=None):
+    folder = Path(folder)
+    _, walk_list = loaded(folder)
+    journey, release = walk_list["journey"], walk_list["release"]["id"]
+    prior, prior_digest = prior_of(prior_path)
+    if report is None:
+        if tier == "final":
             report = read_json(folder / "walk" / "report.json")
         else:
             report = assemble(folder, walk_list)
-        deferred_ids = [i for i, _ in deferred_items(args.workflow_dir, journey, release)]
-    except (Refused, KeyError, OSError) as error:
-        print(f"REFUSED: {error}")
-        print("clean: no")
-        return 1
+    environment = check_environment(report, workflow_dir)
+    deferred_ids = [i for i, _ in deferred_items(workflow_dir, journey, release)]
     try:
         problems = structure_problems(report, folder, walk_list, deferred_ids, prior)
         recorded = (report.get("prior") or {}).get("digest")
         if prior is None and recorded:
             problems.append("the report records a prior digest but no --prior report was given")
-        elif prior is not None and args.tier == "final" and recorded != prior_digest:
+        elif prior is not None and tier == "final" and recorded != prior_digest:
             problems.append("the prior report's digest does not match the digest the report records")
-        if args.tier == "final" and not problems:
-            problems += ruling_problems(report, args.workflow_dir, journey, release, deferred_ids, prior)
+        if tier == "final" and not problems:
+            problems += ruling_problems(report, workflow_dir, journey, release, deferred_ids, prior)
             problems += row_problems(report, prior)
     except (KeyError, TypeError, AttributeError) as error:
         problems = [f"malformed report: {type(error).__name__} {error}"]
+    return report, environment, problems
+
+
+def cmd_check(args):
+    try:
+        report, environment, problems = checked_report(args.folder, args.workflow_dir, args.tier, args.prior)
+    except (Refused, KeyError, OSError, TypeError, AttributeError) as error:
+        print(f"REFUSED: {error}")
+        print("clean: no")
+        return 1
     for p in problems:
         print(f"REFUSED: {p}")
     if problems:
         print_environment(report)
         print("clean: no")
         return 1
+    print(environment)
     print(f"reviewers: {len(report['reviewers'])} (models: {len({r['model'] for r in report['reviewers']})})")
     if report["diversity"]["mode"] == "single-model":
         print("model consensus is not independent")
     print(f"tier {args.tier}: ok")
     print_environment(report)
     if args.tier == "final":
-        print_routes(report, args.workflow_dir, journey, release)
+        print_routes(report, args.workflow_dir, report["walk"]["journey"], report["walk"]["release"])
         print(f"clean: {'yes' if is_clean(report) else 'no'}")
     return 0
 
@@ -686,6 +731,66 @@ def cmd_deferred(args):
         print(f"{item_id}: {line}")
     if not items:
         print("deferred: none")
+    return 0
+
+
+def cmd_accepted(args):
+    # see docs/adr/0053-a-release-walk-runs-off-production-and-production-waits-for-a-clean-closed-walk.md
+    journey, _, release = args.release.partition("/")
+    if not journey or not release or "/" in release or len(args.release.split()) != 1:
+        print("usage: accepted JOURNEY/RELEASE", file=sys.stderr)
+        return 2
+    try:
+        state = state_dir(args.workflow_dir)
+        tasks = [t for t in state_tasks(args.workflow_dir) if t.fields.get("release-acceptance") == args.release]
+        if not tasks:
+            raise Refused("no acceptance task")
+        reports = {(t.folder / "walk/report.json").resolve(): t for t in tasks}
+        named, priors = set(), {}
+        for task in tasks:
+            prior = re.search(r"^Prior walk:[ \t]*(\S.*)$", task.text, re.M)
+            if prior:
+                path = Path(prior.group(1).strip())
+                path = (path if path.is_absolute() else state / path).resolve()
+                if path not in reports:
+                    raise Refused(f"{task.slug}: prior walk {path} is not an acceptance report of {args.release}")
+                named.add(path)
+                priors[task.slug] = path
+        newest = [t for path, t in reports.items() if path not in named]
+        if len(newest) > 1:
+            raise Refused(f"{', '.join(t.slug for t in newest)} are both newest; name the prior walk")
+        if not newest:
+            raise Refused("no newest walk; Prior walk chain is cyclic")
+        task = newest[0]
+        chain = set()
+        cursor = (task.folder / "walk/report.json").resolve()
+        while cursor is not None:
+            if cursor in chain:
+                raise Refused("all acceptance tasks must form one acyclic Prior walk chain; cycle found")
+            chain.add(cursor)
+            cursor = priors.get(reports[cursor].slug)
+        if len(chain) != len(tasks):
+            raise Refused("all acceptance tasks must form one acyclic Prior walk chain; disconnected: "
+                          + ", ".join(t.slug for path, t in reports.items() if path not in chain))
+        if task.folder.parent != state / "_archive":
+            raise Refused(f"{task.slug} is not archived")
+        merged = task.fields.get("pr", "")
+        if not merged.startswith("local-merge:") or not text(merged.removeprefix("local-merge:")):
+            raise Refused(f"{task.slug} has no pr: local-merge:<sha>")
+        report = read_json(task.folder / "walk/report.json")
+        if report.get("schema") != WIRE or report.get("walk", {}).get("journey") != journey \
+                or report.get("walk", {}).get("release") != release:
+            raise Refused(f"{task.slug}: report does not describe {args.release} ({WIRE})")
+        if not is_clean(report):
+            raise Refused(f"{task.slug} is not clean")
+        _, _, problems = checked_report(task.folder, args.workflow_dir, "final", priors.get(task.slug), report)
+        if problems:
+            raise Refused(f"{task.slug}: final check failed: {'; '.join(problems)}")
+        release_doc = frontmatter(Path(args.workflow_dir) / "README.md").get("release-doc", "docs/releasing.md")
+    except (Refused, OSError, KeyError, TypeError, AttributeError) as error:
+        print(f"not accepted: {args.release}: {error}")
+        return 1
+    print(f"accepted: {args.release} by {task.slug} ({merged}); production release per {release_doc}")
     return 0
 
 
@@ -815,6 +920,10 @@ def main(argv=None):
     p.add_argument("release")
     p.add_argument("--workflow-dir", required=True)
     p.set_defaults(run=cmd_deferred)
+    p = sub.add_parser("accepted")
+    p.add_argument("release")
+    p.add_argument("--workflow-dir", required=True)
+    p.set_defaults(run=cmd_accepted)
     p = sub.add_parser("check")
     p.add_argument("folder")
     p.add_argument("--tier", choices=("walk", "final"), required=True)
