@@ -224,6 +224,8 @@ Verified by: one disposable Claude worker through Paseo raising one permission r
 
 **AC-7** Amended by Captain, amendment 2: 例行批准前一行 APPROVED，批准後不附狀態區塊、不寫給我的回報
 
+**AC-8** Amended by Captain, amendment 3: 邊界請求以一則訊息交給你、不夾帶例行批准的回報、被擋的請求不代答
+
 **AC-5** The ADR lands with the Captain's words and question verbatim, names the replaced ADR 0048 sentence, leaves 0048 unedited, and states the extension's new word figure.
 Verified by: `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --require <reserved number>` exits 0 and `git diff <base>..<head> -- docs/adr/0048-*` prints nothing. Falsifier: lint non-zero, or 0048 changed.
 
@@ -539,3 +541,48 @@ The sandbox first denied creating Git worktree metadata; the unchanged acceptanc
 ### Summary
 
 PASSED at 974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e against the active amended criteria; no Material repair finding. The native turn proves AC-7 only, not the withdrawn stronger silence rule or the push branch. FO retains exact-head local review, gate presentation and the Captain's delivery decision; this report grants no delivery authority.
+
+## Stage Report: implementation
+
+- DONE: Add AC-8 under Captain amendment 3 in the task file, in his ruling's words only: a boundary request goes to the Captain as one message, that message carries no report of routine approvals, and a held request is never answered on his behalf; keep AC-7
+  Active AC-8 is marked Amended by Captain, amendment 3 and uses only his accepted ruling. AC-7 and frontmatter are unchanged; design_surfaces check exits 0. No prior criterion or report was deleted.
+- DONE: Change the paseo extension section and docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md to the ruled wording: after a routine answer no status block and no report to the Captain (not "no text after answering"); and a hold message that names only the held request
+  Only the two design files change in code. The extension and ADR 0052 now prohibit a post-answer status block/Captain report, and restrict a hold to the held request without routine recaps or answering for the Captain. ADR quotes amendments 2 and 3 verbatim; no no-text-after requirement remains as operative wording.
+- DONE: Rerun the native probe once, isolated as before, and judge AC-7 and AC-8 against it: one APPROVED line before the routine answer, no status block or report after it, one hold message with no routine recap, the held request unanswered; archive every actor you start; do not run a push
+  One native run at f0e4ce490056d1fa36b07be9ebee5988b1882c7c passes AC-7/8: controller source 7f9e32be-9c60-453d-975f-13699128c2d7.jsonl lines 74/75 show the APPROVED line and allow; line 101 is one held-question message naming only that request, no routine recap or answer. Both actors archived; no push probe ran.
+- DONE: Every other criterion still green; a mutation that lets the hold message recap a routine approval fails AC-8
+  AC-1/2/3/5 remain green with the evidence below. The mutation appending a routine approval recap to the hold fails AC-8, as does the actual prior line-104 recap recording. Checks run under python3 -B with no proof bytecode caches.
+- DONE: Commit locally, run the full suite and the RoboRev gate once against base 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb, and append a complete new `## Stage Report: implementation` with the head and updated PR title and body, ending in a `### Summary` that says it supersedes the earlier one; FO pushes to PR #769
+  Committed code head f0e4ce490056d1fa36b07be9ebee5988b1882c7c on the assigned branch, based on 713d4e6ed6381e65fa6d8305e08b282ceb56a8fb. Full local suite: 26 command equivalents passed, 1024 unittest cases, 7 skips. CLI 0.27.2 matches CI; test plugin root was installed 0.27.3 rather than CI’s 0.27.2 pin. RoboRev gate attempted exactly once: exit 3, incomplete: the roborev daemon is not running. This is incomplete, not clean; prepared PR text below, publication to #769 remains FO-owned.
+- DONE: AC-1/5 clause, immutability and ruling proof
+  38 structural/ADR checks pass in /tmp/fo-permission-amendment3/acceptance-tests.json; removing each clause or Recommended fails its check; actual no-index mutations detect protected-file edits. protected-diff.log is empty for peers/workflow/budget/ADR 0048. Required ADR lint exits 0. Extension 819→1,076 wc words and 829→1,090 normalized (+261 at dispatch); workflow/callback package words unchanged.
+- DONE: AC-2 replay and falsifiers
+  normal.json: qnow 2,252 and relay 1,484 successful answers, zero stopped; all seven recorded bad calls stopped. replay-tests.json records normal exit 0, --drop unanswered exit 1 (relay 49427/50421 escape), --drop agent_match exit 1 (qnow 77628/relay 52454 escape); script replay.py, source hashes retained.
+- DONE: AC-3 native refusals retained
+  Original real Claude Write refusal results remain in /tmp/fo-permission-proof/native-permission-results.json; ac3-tests.json rechecks No pending and Unknown agent and rejects captured-success mutants. The id mechanism is unchanged; no extra native actors were started.
+- DONE: AC-7/8 evidence and counterexamples
+  13 checks in native-tests.json pass; check_native.py <source> is read-only. Recap, answered-held-question, routine-status and missing-APPROVED mutants fail; old source 6381605d… line 104 fails AC-8. Full raw routine/hold text and source hash are retained in native-checked.json; manual read agrees with the bounded screens, which are not a general semantic classifier or host enforcement.
+- DONE: Scoped guards and affected documents
+  number guards PASS at the exact head; comment ratio 0 code/0 comment lines (maximum not enforced below 20 added code lines); doc_impact [] (no additional affected documents listed). Full-suite skips and dependency preconditions remain in their logs. No CI change; cost per PR unmeasured.
+- SKIPPED: RoboRev review completed
+  Single gate invocation returned exit 3: incomplete: the roborev daemon is not running. No evidence= line or clean verdict exists; no daemon start or second attempt. FO must obtain review before treating it as reviewed.
+- DONE: Native placement, identity and cleanup
+  Controller bdb7c978-52f4-4b4e-b350-e004178e3eca and worker 80eecfd7-fe40-43e0-a4fe-aea3e66a672a, both claude/claude-sonnet-5-5 medium (auto controller/default worker), independently verified closed/archived with no pending permissions in archive-proof.json. Only amendment3-scratch removed. Loaded extension sha256 ad0999576eb7879feac8b9e29f9782379badbe0bc801e921f63b4dc8e8451cd9 matches committed bytes. Unrelated agents/settings/workflows untouched.
+
+### Summary
+
+This complete report supersedes the earlier implementation reports for the current criteria. The aligned two-file candidate f0e4ce490056d1fa36b07be9ebee5988b1882c7c passes the one native AC-7/8 run and its named counterexamples; the full local suite passes, while RoboRev is incomplete because its daemon is stopped. Push proof remains unverified and no push probe ran; FO retains product publication, independent validation, review and hosted CI.
+
+Prepared PR title: `fix(kc-dev-flow-2): scope worker permission approvals and holds`
+
+Prepared PR body (also /tmp/fo-permission-amendment3/pr-body.md):
+
+```markdown
+The Paseo extension gives the First Officer (FO) a procedure for answering its own workers' permission requests within existing task authority, using the delivered agent/request pair and a status-read recovery after a refusal. Routine answers get one `APPROVED: <what> FOR: <which worker>` line, with no following status block or Captain report. Boundary requests get one message about the held request alone, with no routine-approval recap and no answer on the Captain's behalf.
+
+ADR 0052 records the Captain's rulings, including amendments 2 and 3. Peers, the shared workflow, its word budget and ADR 0048 remain unchanged.
+
+Validation at `f0e4ce490056d1fa36b07be9ebee5988b1882c7c`: one isolated Claude run passed AC-7 and AC-8; it approved a harmless Write and held a Captain-choice question unanswered, without a routine recap. Evidence mutations adding a recap, post-answer status or held-question answer fail; the previous recap-containing recording is rejected by AC-8. Other criteria, replay predicates and their falsifiers passed. Full local suite: 26 command equivalents passed, 1024 unittest cases, 7 skips. CLI 0.27.2 matches CI; test plugin root was installed 0.27.3 rather than CI’s 0.27.2 pin.
+
+Limits: these are FO instructions, not a mechanical authority guard; native proof is one Claude run and does not establish reliable behavior on every model or callback. The push branch remains unverified and no push probe ran. RoboRev's single gate attempt exited 3: `incomplete: the roborev daemon is not running`. FO retains PR #769 publication, review and hosted CI. CI cost was not measured; CI configuration is unchanged.
+```
