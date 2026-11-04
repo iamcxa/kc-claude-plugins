@@ -53,6 +53,17 @@ gates:
                 id: briefing:fo-tries-what-it-asks-the-captain:validation:attempt-1:revision-1
                 digest: sha256:bf0f30ece06d89d866acd657022b0b841b2c365c1c147065c2a23d28b5d7222d
                 room-ref: ./fo-tries-what-it-asks-the-captain/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-tries-what-it-asks-the-captain:validation:1
+                briefing: briefing:fo-tries-what-it-asks-the-captain:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-04T00:41:29.040995Z"
+                decision: approve
+                reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #771、#772、#773 嗎？（#769、#770、#774、#775、#777 這次不合併）」'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-03T10:21:32Z
 worktree: .worktrees/spacedock-ensign-fo-tries-what-it-asks-the-captain
 pr: iamcxa/kc-claude-plugins#773
