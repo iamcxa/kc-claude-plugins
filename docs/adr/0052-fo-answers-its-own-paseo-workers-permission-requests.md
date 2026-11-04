@@ -64,17 +64,20 @@ The listed paseo extension's `Worker permission requests` section owns the
 answering procedure, authority holds, paired ids, recovery and the routine
 approval line. Another agent's requests still follow peers. A permission answer grants
 no additional authority; ADR 0011's money and Captain-judgment boundaries remain.
+A recovered pending request must be read and decided afresh under the same
+scope, authority and Captain holds. Never apply an approval or denial to a
+different requestId.
 
 ## Consequences
 
-The extension grows from 819 to 1,076 words by `wc -w`, and from 829 to 1,090 by
+The extension grows from 819 to 1,101 words by `wc -w`, and from 829 to 1,115 by
 `normalized_words` in `kc-dev-flow-2/scripts/lint-skills.py`. This replaces ADR
 0048's 819-word extension bound; the shared workflow and its word budget stay
-unchanged. Dispatch reads 261 more normalized words; callback package words do
+unchanged. Dispatch reads 286 more normalized words; callback package words do
 not increase. Routine answers carry one approval line before the answer, with no
 status block or Captain report afterwards; a held request produces one message
-about that request alone. Recovery adds a status read after a refusal or missing block,
-not before every answer.
+about that request alone. Recovery adds a status read and a fresh decision on
+the recovered request after a refusal or missing block, not before every answer.
 
 Paseo's pending-request lookup rejects an id not pending for that agent. Scope,
 authority and silence remain instructions for FO, with its own host's permission
