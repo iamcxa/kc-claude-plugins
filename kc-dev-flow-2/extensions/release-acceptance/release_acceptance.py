@@ -2,6 +2,7 @@
 """Build, check and render a release walk: picky-user reviewer reports, the design director's ruling, one record.
 
   deferred JOURNEY/RELEASE --workflow-dir D     list findings earlier tasks of the release deferred
+  due --workflow-dir D [--progress SCRIPT] MAP... print unclaimed releases whose stories are built
   accepted JOURNEY/RELEASE --workflow-dir D     require the newest walk to be clean and closed before production
   check FOLDER --tier walk|final --workflow-dir D [--prior REPORT]
                                                 exit 1 when the walk cannot be accepted as it stands
@@ -17,8 +18,13 @@ import argparse
 import collections
 import hashlib
 import json
+import os
 import re
+import shlex
+import shutil
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -166,6 +172,108 @@ def state_dir(workflow_dir):
     workflow_dir = Path(workflow_dir)
     state = frontmatter(workflow_dir / "README.md").get("state", "")
     return workflow_dir / state if state else workflow_dir
+
+
+def selected_spacedock(env):
+    name = env.get("SPACEDOCK_BIN") or "spacedock"
+    binary = shutil.which(name, path=env.get("PATH", ""))
+    if not binary:
+        raise FileNotFoundError(f"{'SPACEDOCK_BIN' if env.get('SPACEDOCK_BIN') else 'spacedock'} is not executable: {name}")
+    return Path(binary).absolute()
+
+
+def due_records(args, env):
+    done = subprocess.run([str(selected_spacedock(env)), "status", "--workflow-dir", str(args.workflow_dir),
+                           "--archived", "--all-fields", "--limit", "0", "--json"],
+                          capture_output=True, text=True, timeout=60, env=env)
+    if done.returncode:
+        raise ValueError((done.stderr or done.stdout).strip() or f"task listing exit {done.returncode}")
+    listing = json.loads(done.stdout)
+    if not isinstance(listing, dict):
+        raise ValueError("incomplete or malformed task listing")
+    records, pagination = listing.get("entities"), listing.get("pagination")
+    fields = ("status", "journey", "journey-release", "release-acceptance")
+    if not isinstance(records, list) or not isinstance(pagination, dict) \
+            or pagination.get("has_next") != "false" or pagination.get("page") != "1" \
+            or pagination.get("limit") != "0" or pagination.get("total") != str(len(records)) \
+            or any(not isinstance(row, dict) or any(key in row and not isinstance(row[key], str) for key in fields)
+                   for row in records):
+        raise ValueError("incomplete or malformed task listing")
+    return records
+
+
+def progress_read(args, path, env):
+    with tempfile.TemporaryDirectory(prefix="release-acceptance-") as directory:
+        if env.get("SPACEDOCK_BIN"):
+            binary = selected_spacedock(env)
+            launcher = Path(directory) / "spacedock"
+            launcher.write_text("#!/bin/sh\nexec " + shlex.quote(str(binary)) + " \"$@\"\n")
+            launcher.chmod(0o755)
+            env = {**env, "PATH": directory + os.pathsep + str(binary.parent.resolve()) + os.pathsep + env.get("PATH", "")}
+        return subprocess.run(["node", str(args.progress), str(path), "--workflow-dir", str(args.workflow_dir)],
+                              capture_output=True, text=True, timeout=60, env=env)
+
+
+def cmd_due(args):
+    # see docs/adr/0056-the-idle-look-prompts-unclaimed-release-walks-from-versioned-progress.md
+    maps = []
+    for name in args.maps:
+        path = Path(name)
+        try:
+            match = re.search(r"^journey:[ \t]*(.*)$", path.read_text(), re.M)
+            if match:
+                scalar = match.group(1).strip()
+                plain = re.fullmatch(r"[A-Za-z_][A-Za-z0-9_-]*", scalar) and scalar.lower() not in {"null", "true", "false"}
+                maps.append((path, scalar if plain else None))
+        except (OSError, UnicodeError) as error:
+            print(f"release-acceptance not run: {path}: {str(error).splitlines()[0][:120]}")
+    if not maps:
+        return 0
+    if not args.progress or not Path(args.progress).is_file():
+        print("release-acceptance not run: kc-journey-map not found")
+        return 0
+    env = dict(os.environ)
+    try:
+        records = due_records(args, env)
+        claimed = {row["release-acceptance"] for row in records if row.get("release-acceptance")}
+        candidates = {(row.get("journey"), row.get("journey-release")) for row in records
+                      if row.get("status") == "done" and row.get("journey") and row.get("journey-release")
+                      and f"{row['journey']}/{row['journey-release']}" not in claimed}
+    except (OSError, UnicodeError, ValueError, subprocess.TimeoutExpired) as error:
+        for path, _ in maps:
+            print(f"release-acceptance not run: {path}: {str(error).splitlines()[0][:120]}")
+        return 0
+    for path, journey in maps:
+        if not candidates or (journey is not None and not any(j == journey for j, _ in candidates)):
+            continue
+        try:
+            done = progress_read(args, path, env)
+            if done.returncode not in (0, 1):
+                raise ValueError((done.stderr or done.stdout).strip() or f"producer exit {done.returncode}")
+            result = json.loads(done.stdout)
+            if not isinstance(result, dict) or result.get("schema") != "journey-progress/v1":
+                raise ValueError("expected journey-progress/v1")
+            if result.get("diagnostic") is not None:
+                raise ValueError(str(result["diagnostic"]))
+            observed_journey = result.get("journey")
+            if not isinstance(observed_journey, str) or not observed_journey.strip() \
+                    or (journey is not None and observed_journey != journey) or not isinstance(result.get("releases"), list):
+                raise ValueError("invalid progress journey or releases")
+            journey = observed_journey
+            releases = result["releases"]
+            if any(not isinstance(row, dict) or not isinstance(row.get("release"), str)
+                   or not isinstance(row.get("acceptance"), str) for row in releases):
+                raise ValueError("invalid progress release row")
+        except (OSError, UnicodeError, ValueError, subprocess.TimeoutExpired) as error:
+            print(f"release-acceptance not run: {path}: {str(error).splitlines()[0][:120]}")
+            continue
+        for row in releases:
+            pair = f"{journey}/{row['release']}"
+            if row["acceptance"] == "pending delivery acceptance" and pair not in claimed:
+                print(f"next: release {pair} has every story built and no walk claimed; "
+                      "file its acceptance task per release-acceptance's \"File the task\", "
+                      f"with release-acceptance: {pair} in frontmatter.")
+    return 0
 
 
 def state_tasks(workflow_dir):
@@ -916,6 +1024,11 @@ def main(argv=None):
     p = sub.add_parser("schema")
     p.add_argument("name")
     p.set_defaults(run=cmd_schema)
+    p = sub.add_parser("due")
+    p.add_argument("--workflow-dir", required=True)
+    p.add_argument("--progress")
+    p.add_argument("maps", nargs="+")
+    p.set_defaults(run=cmd_due)
     p = sub.add_parser("deferred")
     p.add_argument("release")
     p.add_argument("--workflow-dir", required=True)

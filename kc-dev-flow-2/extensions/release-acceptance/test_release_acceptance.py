@@ -4,12 +4,15 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -1174,6 +1177,310 @@ class RewalkTests(Base):
         o["marks"] = [{"complaint": "o1", "status": "fixed", "reason": "r"}]
         write_walk(self.folder, [o, reviewer_s()])
         self.refused("walk", "marks without a prior walk")
+
+
+class DueTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        self.wf = self.root / "workflow"
+        self.state = self.wf / ".spacedock-state"
+        put(self.wf / "README.md", "---\nentity-type: task\nid-style: slug\nstate: .spacedock-state\nstages:\n  states:\n    - name: implementation\n      initial: true\n    - name: done\n      terminal: true\n---\n")
+        self.document = read(HERE / "fixtures/journey-progress-v1.json")
+        self.map = self.root / "journey.yaml"
+        shutil.copyfile(REPO / "kc-journey-map/skills/kc-journey-map/references/journey.example.yaml", self.map)
+        self.populate()
+        self.progress = self.root / "producer.json"
+        self.log = self.root / "calls.json"
+        self.stub()
+        node = self.root / "bin/node"
+        put(node, f"#!{sys.executable}\n" +
+            "import json,os,sys\nfrom pathlib import Path\n" +
+            f"Path({str(self.log)!r}).write_text(json.dumps({{'argv':sys.argv[1:],'PATH':os.environ['PATH']}}))\n" +
+            "p=json.loads(Path(sys.argv[1]).read_text())\nprint(p['stdout'])\nprint(p.get('stderr',''),file=sys.stderr)\nsys.exit(p['exit'])\n")
+        node.chmod(0o755)
+        binary = node.with_name("spacedock")
+        put(binary, "#!/bin/sh\nexit 2\n")
+        binary.chmod(0o755)
+        self.parsed_records = None
+        self.native_fields = False
+        self.status_calls = []
+        real_run = subprocess.run
+        def invoke(argv, **kwargs):
+            if not self.native_fields and "status" in argv and "--all-fields" in argv:
+                self.status_calls.append(argv)
+                records = self.parsed_records if self.parsed_records is not None else self.listed_records()
+                listing = {"entities": records, "pagination": {"has_next": "false", "total": str(len(records)), "page": "1", "limit": "0"}}
+                return subprocess.CompletedProcess(argv, 0, json.dumps(listing), "")
+            return real_run(argv, **kwargs)
+        calls = mock.patch.object(ra.subprocess, "run", side_effect=invoke)
+        calls.start()
+        self.addCleanup(calls.stop)
+        patch = mock.patch.dict(os.environ, {"PATH": str(node.parent) + os.pathsep + os.environ.get("PATH", "")})
+        patch.start()
+        self.addCleanup(patch.stop)
+
+    def listed_records(self):
+        return [{**task.fields, "slug": task.slug, "id": task.slug} for task in ra.state_tasks(self.wf)]
+
+    def populate(self, status="done"):
+        for story in self.document["stories"]:
+            for tid in story["taskIds"]:
+                put(self.state / f"{tid}.md", task_file({"title": tid, "status": status,
+                    "journey": "book-pickup", "journey-release": story["release"], "journey-story": story["story"],
+                    "journey-required-tasks": "'" + json.dumps(story["taskIds"]) + "'", "journey-mapping-complete": "true"}))
+
+    def stub(self, document=None, code=1, stdout=None, stderr=""):
+        put(self.progress, {"exit": code, "stdout": stdout if stdout is not None else json.dumps(document or self.document), "stderr": stderr})
+
+    def due(self, progress=True, maps=None):
+        return run("due", "--workflow-dir", self.wf, *(["--progress", self.progress] if progress else []), *(maps or [self.map]))
+
+    def test_recorded_real_progress_exit_one_and_claim_removal(self):
+        code, out = self.due()
+        self.assertEqual(code, 0, out)
+        self.assertEqual(out.count("next:"), 2, out)
+        self.assertNotIn("not run:", out)
+        claim = self.state / "accept.md"
+        put(claim, task_file({"release-acceptance": "book-pickup/r1"}))
+        self.assertNotIn("release book-pickup/r1 ", self.due()[1])
+        put(claim, task_file({"title": "claim removed"}))
+        self.assertIn("release book-pickup/r1 ", self.due()[1])
+
+    def test_done_status_with_yaml_comment_does_not_hide_due_release(self):
+        self.parsed_records = self.listed_records()
+        self.populate("done # completed")
+        code, out = self.due()
+        self.assertEqual(code, 0, out)
+        self.assertEqual(out.count("next:"), 2, out)
+
+    def test_claim_with_yaml_comment_silences_the_claimed_release(self):
+        self.parsed_records = [*self.listed_records(), {"slug": "claim", "id": "claim", "release-acceptance": "book-pickup/r1"}]
+        put(self.state / "claim.md", task_file({"release-acceptance": "book-pickup/r1 # already filed"}))
+        code, out = self.due()
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("release book-pickup/r1 ", out)
+        self.assertIn("release book-pickup/r2 ", out)
+
+    def test_every_due_frontmatter_value_uses_the_parsed_listing(self):
+        self.parsed_records = self.listed_records()
+        for path in self.state.glob("*.md"):
+            put(path, path.read_text().replace("status: done", 'status: "do\\x6ee" # completed')
+                .replace("journey: book-pickup", 'journey: "book\\x2dpickup" # map')
+                .replace("journey-release: r1", "journey-release: 'r1' # first")
+                .replace("journey-release: r2", 'journey-release: "r2" # second'))
+        claim = {"slug": "claim", "id": "claim", "release-acceptance": "book-pickup/r1"}
+        self.parsed_records.append(claim)
+        put(self.state / "_archive/claim/index.md", task_file({"release-acceptance": '"book-pickup/r1" # filed'}))
+        code, out = self.due()
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("release book-pickup/r1 ", out)
+        self.assertIn("release book-pickup/r2 ", out)
+
+    def test_task_listing_is_complete_and_errors_are_diagnostic(self):
+        records = self.listed_records()
+        valid = {"entities": records, "pagination": {"has_next": "false", "total": str(len(records)), "page": "1", "limit": "0"}}
+        partial = {**valid, "pagination": {**valid["pagination"], "has_next": "true"}}
+        wrong_count = {**valid, "pagination": {**valid["pagination"], "total": "0"}}
+        wrong_field = {**valid, "entities": [{**records[0], "status": ["done"]}, *records[1:]]}
+        for code, stdout, stderr, reason in (
+                (2, "", "cannot observe tasks", "cannot observe tasks"),
+                (0, "not JSON", "", "Expecting value"),
+                *[(0, json.dumps(value), "", "incomplete or malformed task listing") for value in
+                  ([], {}, partial, wrong_count, wrong_field)]):
+            with self.subTest(stdout=stdout), mock.patch.object(ra.subprocess, "run", return_value=
+                    subprocess.CompletedProcess([], code, stdout, stderr)) as called:
+                result, out = self.due()
+                self.assertEqual(result, 0, out)
+                self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+                self.assertNotIn("next:", out)
+                called.assert_called_once()
+
+    def test_task_listing_uses_selected_binary_archive_all_fields_and_no_limit(self):
+        binary = self.root / "selected/spacedock-preview"
+        put(binary, "#!/bin/sh\nexit 2\n")
+        binary.chmod(0o755)
+        with mock.patch.dict(os.environ, {"SPACEDOCK_BIN": str(binary)}):
+            self.assertEqual(self.due()[1].count("next:"), 2)
+        self.assertEqual(self.status_calls, [[str(binary), "status", "--workflow-dir", str(self.wf),
+                                             "--archived", "--all-fields", "--limit", "0", "--json"]])
+
+    def test_live_commented_and_quoted_task_fields_match_spacedock(self):
+        _, progress, env = self.live_producer()
+        put(self.map, self.map.read_text().replace("journey: book-pickup", "journey: book-pickup # map"))
+        for path in self.state.glob("*.md"):
+            put(path, path.read_text().replace("status: done", 'status: "do\\x6ee" # completed')
+                .replace("journey: book-pickup", 'journey: "book\\x2dpickup" # map')
+                .replace("journey-release: r1", "journey-release: 'r1' # first")
+                .replace("journey-release: r2", 'journey-release: "r2" # second'))
+        with mock.patch.dict(os.environ, env):
+            code, out = run("due", "--workflow-dir", self.wf, "--progress", progress, self.map)
+            self.assertEqual(code, 0, out)
+            self.assertEqual(out.count("next:"), 2, out)
+            put(self.state / "_archive/claim/index.md", task_file({"release-acceptance": "'book-pickup/r1' # already filed"}))
+            code, out = run("due", "--workflow-dir", self.wf, "--progress", progress, self.map)
+            self.assertEqual(code, 0, out)
+            self.assertNotIn("release book-pickup/r1 ", out)
+            self.assertIn("release book-pickup/r2 ", out)
+            put(self.state / "_archive/claim/index.md", task_file({"release-acceptance": "'book-pickup/r1 # literal' # outside comment"}))
+            code, out = run("due", "--workflow-dir", self.wf, "--progress", progress, self.map)
+            self.assertEqual(code, 0, out)
+            self.assertEqual(out.count("next:"), 2, out)
+
+    def test_live_archived_flat_and_folder_claims_and_empty_value(self):
+        for name in ("claim.md", "claim/index.md", "_archive/claim.md", "_archive/claim/index.md"):
+            with self.subTest(name=name):
+                path = self.state / name
+                put(path, task_file({"release-acceptance": "book-pickup/r1"}))
+                self.assertNotIn("release book-pickup/r1 ", self.due()[1])
+                put(path, task_file({"release-acceptance": ""}))
+                self.assertIn("release book-pickup/r1 ", self.due()[1])
+                path.unlink()
+
+    def test_no_done_task_skips_producer_and_all_claimed_skips_producer(self):
+        self.populate("implementation")
+        self.assertEqual(self.due(), (0, ""))
+        self.assertFalse(self.log.exists())
+        self.populate()
+        for release in self.document["releases"]:
+            put(self.state / f"claim-{release['release']}.md", task_file({"release-acceptance": "book-pickup/" + release["release"]}))
+        self.assertEqual(self.due(), (0, ""))
+        self.assertFalse(self.log.exists())
+
+    def test_missing_producer_prints_once_even_without_done_tasks(self):
+        self.populate("implementation")
+        self.assertEqual(self.due(progress=False), (0, "release-acceptance not run: kc-journey-map not found\n"))
+        self.progress.unlink()
+        self.assertEqual(self.due()[1], "release-acceptance not run: kc-journey-map not found\n")
+
+    def test_nonmap_yaml_is_silent_and_done_folder_tasks_are_candidates(self):
+        put(self.map, "other: yaml\n")
+        self.assertEqual(self.due(progress=False), (0, ""))
+        put(self.map, "journey: book-pickup\n")
+        for task in self.state.glob("*.md"):
+            put(task.with_suffix("") / "index.md", task.read_text())
+            task.unlink()
+        self.assertEqual(self.due()[1].count("next:"), 2)
+
+    def test_producer_failures_are_diagnostic_and_never_due(self):
+        bad_schema = {**self.document, "schema": "journey-progress/v2"}
+        diagnostic = {**self.document, "diagnostic": "task observation failed"}
+        for options, reason in (({"code": 2, "stderr": "cannot load\nextra"}, "cannot load"),
+                                ({"stdout": "not json"}, "Expecting value"),
+                                ({"document": bad_schema}, "expected journey-progress/v1"),
+                                ({"document": diagnostic}, "task observation failed"),
+                                ({"document": {**self.document, "releases": None}}, "invalid progress")):
+            with self.subTest(options=options):
+                self.stub(**options)
+                code, out = self.due()
+                self.assertEqual(code, 0, out)
+                self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+                self.assertNotIn("next:", out)
+        with mock.patch.object(ra.subprocess, "run", side_effect=subprocess.TimeoutExpired("node", 60)):
+            self.assertIn("timed out", self.due()[1])
+
+    def test_spacedock_bin_leads_path_and_producer_argv_is_explicit(self):
+        binary = self.root / "selected/spacedock"
+        put(binary, "#!/bin/sh\nexit 0\n")
+        binary.chmod(0o755)
+        with mock.patch.dict(os.environ, {"SPACEDOCK_BIN": str(binary)}):
+            self.due()
+        logged = read(self.log)
+        search = logged["PATH"].split(os.pathsep)
+        self.assertEqual(search[1], str(binary.resolve().parent))
+        self.assertFalse(Path(search[0]).exists(), "the command alias must be removed after the producer exits")
+        self.assertEqual(logged["argv"], [str(self.progress), str(self.map), "--workflow-dir", str(self.wf)])
+
+    def test_missing_selected_spacedock_is_diagnostic_instead_of_using_path_fallback(self):
+        with mock.patch.dict(os.environ, {"SPACEDOCK_BIN": str(self.root / "missing/spacedock-preview")}):
+            code, out = self.due()
+        self.assertEqual(code, 0, out)
+        self.assertIn("SPACEDOCK_BIN is not executable:", out)
+        self.assertNotIn("next:", out)
+
+    def test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids(self):
+        for value in ("book-pickup # comment", "'book-pickup' # comment", '"book\\x2dpickup" # comment',
+                      ">-\n  book-pickup"):
+            with self.subTest(value=value):
+                put(self.map, "journey: " + value + "\n")
+                code, out = self.due()
+                self.assertEqual(code, 0, out)
+                self.assertEqual(out.count("next:"), 2, out)
+                self.assertTrue(self.log.is_file(), "the producer must read the YAML identity")
+                self.log.unlink()
+
+    def test_renamed_spacedock_bin_is_executed_instead_of_a_path_decoy(self):
+        binary = self.root / "selected tool's bin/spacedock-preview"
+        selected = self.root / "selected.json"
+        put(binary, f"#!{sys.executable}\nimport json,sys\nfrom pathlib import Path\n" +
+            f"Path({str(selected)!r}).write_text(json.dumps(sys.argv[1:]))\n" +
+            f"print({json.dumps(self.document)!r})\n")
+        binary.chmod(0o755)
+        decoy = binary.with_name("spacedock")
+        put(decoy, "#!/bin/sh\necho 'wrong spacedock' >&2\nexit 2\n")
+        decoy.chmod(0o755)
+        node = self.root / "bin/node"
+        put(node, f"#!{sys.executable}\nimport os,subprocess,sys\nfrom pathlib import Path\n" +
+            f"Path({str(self.log)!r}).write_text(os.environ['PATH'])\n" +
+            "r=subprocess.run(['spacedock','status','--json'],capture_output=True,text=True)\n" +
+            "print(r.stdout,end='')\nprint(r.stderr,end='',file=sys.stderr)\nsys.exit(r.returncode)\n")
+        with mock.patch.dict(os.environ, {"SPACEDOCK_BIN": str(binary)}):
+            code, out = self.due()
+        self.assertEqual(code, 0, out)
+        self.assertEqual(out.count("next:"), 2, out)
+        self.assertEqual(read(selected), ["status", "--json"])
+
+    def live_producer(self):
+        node = shutil.which("node", path=os.environ["PATH"].split(os.pathsep, 1)[1])
+        progress = REPO / "kc-journey-map/lib/journey-progress.mjs"
+        probe = subprocess.run([node or "node", "--input-type=module", "-e", "await import('./lib/render.mjs')"],
+                               cwd=progress.parent.parent, capture_output=True)
+        if not node or not shutil.which("spacedock", path=os.environ["PATH"].split(os.pathsep, 1)[1]) or probe.returncode:
+            print("not run: node, kc-journey-map dependencies or spacedock missing")
+            self.skipTest("node, kc-journey-map dependencies or spacedock missing")
+        env = {**os.environ, "PATH": str(Path(node).parent) + os.pathsep + os.environ["PATH"].split(os.pathsep, 1)[1]}
+        self.native_fields = True
+        return node, progress, env
+
+    def test_live_producer_keeps_done_but_live_release_and_agrees_on_unbuilt(self):
+        node, progress, env = self.live_producer()
+        for status, pending in (("done", True), ("implementation", False)):
+            self.populate(status)
+            observed = subprocess.run([node, str(progress), str(self.map), "--workflow-dir", str(self.wf)],
+                                      capture_output=True, text=True, env=env, timeout=60)
+            self.assertIn(observed.returncode, (0, 1), observed.stderr)
+            doc = json.loads(observed.stdout)
+            self.assertIsNone(doc["diagnostic"], doc)
+            self.assertEqual(any(r["acceptance"] == "pending delivery acceptance" for r in doc["releases"]), pending)
+            with mock.patch.dict(os.environ, env), mock.patch.object(ra.subprocess, "run", wraps=subprocess.run) as called:
+                code, out = run("due", "--workflow-dir", self.wf, "--progress", progress, self.map)
+                self.assertEqual(code, 0, out)
+                self.assertEqual("next:" in out, pending, out)
+                self.assertEqual(called.call_count, 1 + int(pending))
+            if pending:
+                doc.update(source="<workflow>", observedAt="2000-01-01T00:00:00.000Z")
+                self.assertEqual(doc, self.document)
+
+    def test_live_yaml_scalars_and_renamed_spacedock_use_the_real_producer(self):
+        _, progress, env = self.live_producer()
+        binary = self.root / "selected bin/spacedock-preview"
+        selected = self.root / "selected-calls.txt"
+        put(binary, "#!/bin/sh\n" + f"echo called >> {shlex.quote(str(selected))}\n" +
+            f"exec {shlex.quote(shutil.which('spacedock', path=env['PATH']))} \"$@\"\n")
+        binary.chmod(0o755)
+        decoy = binary.with_name("spacedock")
+        put(decoy, "#!/bin/sh\necho 'wrong spacedock' >&2\nexit 2\n")
+        decoy.chmod(0o755)
+        original = self.map.read_text()
+        for scalar in ("book-pickup # comment", '"book\\x2dpickup" # comment', ">-\n  book-pickup"):
+            put(self.map, original.replace("journey: book-pickup", "journey: " + scalar))
+            with self.subTest(scalar=scalar), mock.patch.dict(os.environ, {**env, "SPACEDOCK_BIN": str(binary)}):
+                code, out = run("due", "--workflow-dir", self.wf, "--progress", progress, self.map)
+                self.assertEqual(code, 0, out)
+                self.assertEqual(out.count("next:"), 2, out)
+                self.assertNotIn("not run:", out)
+                self.assertTrue(selected.is_file(), "the selected real CLI must be invoked")
 
 
 class FolderTaskTests(Base):

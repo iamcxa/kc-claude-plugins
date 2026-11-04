@@ -1,0 +1,85 @@
+{
+  "schema": "journey-progress/v1",
+  "journey": "book-pickup",
+  "source": "<workflow>",
+  "observedAt": "2000-01-01T00:00:00.000Z",
+  "diagnostic": null,
+  "orphans": [],
+  "stories": [
+    {
+      "journey": "book-pickup",
+      "release": "r1",
+      "story": "reserve-copy",
+      "status": "exists",
+      "requiredTasks": 1,
+      "doneTasks": 1,
+      "taskIds": [
+        "build-reserve-copy"
+      ]
+    },
+    {
+      "journey": "book-pickup",
+      "release": "r2",
+      "story": "choose-pickup-day",
+      "status": "exists",
+      "requiredTasks": 1,
+      "doneTasks": 1,
+      "taskIds": [
+        "build-choose-pickup-day"
+      ]
+    },
+    {
+      "journey": "book-pickup",
+      "release": "r1",
+      "story": "check-ready",
+      "status": "exists",
+      "requiredTasks": 1,
+      "doneTasks": 1,
+      "taskIds": [
+        "build-check-ready"
+      ]
+    },
+    {
+      "journey": "book-pickup",
+      "release": "r2",
+      "story": "receive-reminder",
+      "status": "exists",
+      "requiredTasks": 1,
+      "doneTasks": 1,
+      "taskIds": [
+        "build-receive-reminder"
+      ]
+    },
+    {
+      "journey": "book-pickup",
+      "release": "r1",
+      "story": "collect-book",
+      "status": "exists",
+      "requiredTasks": 1,
+      "doneTasks": 1,
+      "taskIds": [
+        "build-collect-book"
+      ]
+    }
+  ],
+  "releases": [
+    {
+      "release": "r1",
+      "totalStories": 3,
+      "doneStories": 3,
+      "requiredTasks": 3,
+      "doneTasks": 3,
+      "status": "exists",
+      "acceptance": "pending delivery acceptance"
+    },
+    {
+      "release": "r2",
+      "totalStories": 2,
+      "doneStories": 2,
+      "requiredTasks": 2,
+      "doneTasks": 2,
+      "status": "exists",
+      "acceptance": "pending delivery acceptance"
+    }
+  ]
+}
