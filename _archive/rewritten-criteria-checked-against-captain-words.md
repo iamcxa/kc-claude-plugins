@@ -1,6 +1,6 @@
 ---
 title: A rewritten acceptance criterion is checked against the Captain's words
-status: validation
+status: done
 variant: kc-dev-flow-2
 gates:
     version: 1
@@ -70,11 +70,14 @@ gates:
                 reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #769、#770、#774、#775、#777 嗎？（#775 的 F5 是我的驗證派工紀錄少了 Symptom 行，接受為紀錄問題、不擋合併）」'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 profile: pilot
 started: 2026-11-03T10:21:07Z
 worktree: .worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words
 pr: pr-merge:770
+verdict: PASSED
+completed: 2026-11-04T12:18:28Z
+archived: 2026-11-04T12:18:28Z
 ---
 
 ## Scope
