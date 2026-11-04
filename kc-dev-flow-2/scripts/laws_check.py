@@ -188,6 +188,7 @@ def l2_dispatch_record_complete(ctx):
                                      r"reserved line '[^']+' missing from scope notes|"
                                      r"Captain amendment \d+ named in no dispatch checklist|"
                                      r"Captain amendment form at [^:]+:\d+: .+|"
+                                     r"AC-[A-Za-z0-9]+ \(Captain amendment \d+\) adds words in a sentence kept from the criterion it replaces that are not in his words: [^;]+|"
                                      r"'## FO alignment' records alignment as needed with no 'Result:' line|"
                                      r"Captain amendment \d+ (?:Captain|Asked) line holds a backslash-quote copied from JSON)(?:;.*)?", line)
                 if not match:

@@ -3219,6 +3219,121 @@ RAW_ADR_RECORD = (
 )
 
 
+
+REWRITTEN_CRITERION = r"""## Acceptance criteria
+
+**AC-9** — A cold FO checks a peer-derived Captain action through the dev entry skill. Amended by Captain, amendment 3. Before delivery, FO reruns the cold runs on the new head: start a fresh isolated FO context without inherited history, peers preloading/path hints, a current-turn source answer or a replay verdict. Provide ordinary adopted workflow entry through `kc-dev-flow-2:dev` carrying the exact candidate dev skill sentence, a Captain status request, the admitted stale relay line and logged read-only source access. Do not put this task's criteria or answer in the FO prompt. Capture initial context, file/tool read trace, package SHA, fixture bytes and resulting Captain-facing status. Require a current-turn source query for `spacedock-dev/subspace-web` PR 186 before naming its Captain action; reading peers is no longer a pass condition. Run notice present, absent and delayed with MERGED/b71f912; all remove the cleared merge/approval and include source revision/link. Amendment 3 removes only the explicit current observation-time/timezone duty from the FO’s Captain-facing status; originating correction records/notices retain their observation-time duties in the unchanged correction paragraphs. OPEN negative control retains the pending action without merge authority; unavailable source yields unverified and an FO-owned check, with no Captain action assigned. Falsifier: injecting the rule or expected answer into the prompt, no query, stale request after MERGED, suppressing the OPEN action or assigning the inaccessible action to the Captain. Retain the shared peers section for transition corrections. If the ordinary entry/source test fails, report the trace to FO; do not add a startup preload, hook, watchdog or other loader. Current evidence: final f-* records in `peer-status-reaches-fresh/cold-fo/README.md` and validation-1/cold-audit.json name product head 1df246fa992ce0864348c2ffe67d93e80ad0a4b8: exact dev body/current-turn query 8/8, MERGED cleared 4/4, OPEN retained 1/1, unavailable FO-owned 3/3. The follow-up candidate 39fdbb28b411d44a323741f645c7c1d75c653be1 changes only the peers opening sentence; dev bytes match the recorded runs. No new cold agent was launched and the f-* records remain evidence at prior head 1df246fa, not a rerun of this candidate; earlier r/s scratch runs are not final-head proof. Fixture reconstruction and full acceptance remain for independent validation. Limit: an FO resuming through `spacedock:first-officer` without the dev entry does not get this text; these runs prove only the bounded cold dev-entry path; direct First Officer resumes and long sessions remain unverified. AC-4 records the actual entry path and later failures for FO.
+
+## Captain amendments
+
+### Amendment 3 — 2026-10-31, chat
+Captain: 「可以」 (chat, 2026-10-31)
+Asked: 「決定：#756 拿掉 FO 回報要寫查證時間這項驗收要求，可以嗎？」, which FO had stated as: 「peers 檔裡規範發更正通知那一方的時間要求不變。」
+Supersedes: AC-8
+
+Superseded text:
+
+**AC-8** — A cold FO checks a peer-derived Captain action through the dev entry skill. Amended by Captain, amendment 2. Before delivery, FO reruns the cold runs on the new head: start a fresh isolated FO context without inherited history, peers preloading/path hints, a current-turn source answer or a replay verdict. Provide ordinary adopted workflow entry through `kc-dev-flow-2:dev` carrying the exact candidate dev skill sentence, a Captain status request, the admitted stale relay line and logged read-only source access. Do not put this task's criteria or answer in the FO prompt. Capture initial context, file/tool read trace, package SHA, fixture bytes and resulting Captain-facing status. Require a current-turn source query for `spacedock-dev/subspace-web` PR 186 before naming its Captain action; reading peers is no longer a pass condition. Run notice present, absent and delayed with MERGED/b71f912; all remove the cleared merge/approval and include source/time. OPEN negative control retains the pending action without merge authority; unavailable source yields unverified and an FO-owned check, with no Captain action assigned. Falsifier: injecting the rule or expected answer into the prompt, no query, stale request after MERGED, suppressing the OPEN action or assigning the inaccessible action to the Captain. Retain the shared peers section for transition corrections. If the ordinary entry/source test fails, report the trace to FO; do not add a startup preload, hook, watchdog or other loader. Current evidence: earlier FO-run cold cases in `peer-status-reaches-fresh/cold-fo/README.md` are on the prior head or scratch wording; new-head reruns are pending. Limit: an FO resuming through `spacedock:first-officer` without the dev entry does not get this text; these runs prove only the dev-entry path.
+
+"""
+
+
+class RewrittenCriterionTests(unittest.TestCase):
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        self.task = self.root / 'task.md'
+        self.dispatch = self.root / 'task/dispatch'
+        self.dispatch.mkdir(parents=True)
+
+    def run_rewrite(self, text=REWRITTEN_CRITERION, name='validation-2.md'):
+        self.task.write_text('---\nprofile: pilot\n---\n' + text)
+        record = self.dispatch / name
+        record.write_text('Symptom: none\n' + COMPLETE.replace('Model: sonnet', 'Model: sonnet\nCandidate: ' + HEAD)
+                          .replace('1. Independent', '1. Captain amendments 3 and 4. Independent'))
+        done = subprocess.run([sys.executable, '-B', records.__file__, '--names', '--strict', str(record)],
+                              capture_output=True, text=True, env={**os.environ, 'PYTHONDONTWRITEBYTECODE': '1'})
+        self.assertEqual(done.stderr, '', done.stderr)
+        return done
+
+    def test_frozen_rewrite_is_held_with_criterion_amendment_and_added_words(self):
+        done = self.run_rewrite()
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertEqual(len(done.stdout.splitlines()), 1, done.stdout)
+        self.assertIn('AC-9 (Captain amendment 3) adds words', done.stdout)
+        self.assertIn('words: revision, link;', done.stdout)
+        self.assertEqual(len(done.stdout.split(':1: ', 1)[1].split()), 41)
+
+    def test_deleting_withdrawn_words_and_changing_evidence_are_silent(self):
+        control = REWRITTEN_CRITERION.replace('include source revision/link.', 'include source.')
+        renumbered = control.replace('**AC-9**', '**AC-99**').replace(
+            'Current evidence: final f-* records', 'Current evidence: fabricated mandatory extras; final f-* records')
+        for text in (control, renumbered):
+            with self.subTest(text=text[:90]):
+                done = self.run_rewrite(text)
+                self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+
+    def test_added_words_in_a_later_paragraph_are_held(self):
+        text = REWRITTEN_CRITERION.replace('Run notice present, absent and delayed',
+                                           '\n\nRun notice present, absent and delayed')
+        done = self.run_rewrite(text)
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn('AC-9 (Captain amendment 3) adds words', done.stdout)
+        self.assertIn('words: revision, link;', done.stdout)
+        clean = self.run_rewrite(text.replace('include source revision/link.', 'include source.'))
+        self.assertEqual((clean.returncode, clean.stdout), (0, ''), clean.stderr)
+
+    def test_short_slash_separated_requirement_is_held(self):
+        text = ("## Acceptance criteria\n\n**AC-9** Amended by Captain, amendment 3. Require source/revision/link.\n\n"
+                "## Captain amendments\n\n### Amendment 3 — 2026-11-03, chat\nCaptain: remove time\n"
+                "Asked: remove the timestamp\nSupersedes: AC-8\n\nSuperseded text:\n"
+                "**AC-8** Require source/revision/time.\n")
+        done = self.run_rewrite(text)
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn('AC-9 (Captain amendment 3) adds words', done.stdout)
+        self.assertIn('words: link;', done.stdout)
+        clean = self.run_rewrite(text.replace('source/revision/link.', 'source/revision/time.'))
+        self.assertEqual((clean.returncode, clean.stdout), (0, ''), clean.stderr)
+
+    def test_list_form_replacement_is_held_after_renumbering(self):
+        for old_prefix, new_prefix in (("- ", "- "), ("* ", "+ "), ("> - ", "2) ")):
+            with self.subTest(old_prefix=old_prefix, new_prefix=new_prefix):
+                text = ("## Acceptance criteria\n\n" + new_prefix
+                        + "**AC-9** Amended by Captain, amendment 3. Require source/revision/link.\n\n"
+                        "## Captain amendments\n\n### Amendment 3 — 2026-11-03, chat\nCaptain: remove time\n"
+                        "Asked: remove the timestamp\nSupersedes: AC-8\n\nSuperseded text:\n"
+                        + old_prefix + "**AC-8** Require source/revision/time.\n")
+                done = self.run_rewrite(text)
+                self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+                self.assertIn('AC-9 (Captain amendment 3) adds words', done.stdout)
+                self.assertIn('words: link;', done.stdout)
+                clean = self.run_rewrite(text.replace('source/revision/link.', 'source/revision/time.'))
+                self.assertEqual((clean.returncode, clean.stdout), (0, ''), clean.stderr)
+
+    def test_later_asked_or_captain_words_clear_the_hold(self):
+        for field in ('Asked', 'Captain'):
+            later = ('\n### Amendment 4 — 2026-11-03, chat\nCaptain: 「可以」\n'
+                     'Asked: revision, link\nSupersedes: none\n')
+            if field == 'Captain':
+                later = later.replace('Captain: 「可以」', 'Captain: revision, link').replace('Asked: revision, link', 'Asked: allow it')
+            done = self.run_rewrite(REWRITTEN_CRITERION + later)
+            self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+
+    def test_repair_followup_passes_but_validation_continuation_is_held(self):
+        done = self.run_rewrite(name='implementation-4-message-2.md')
+        self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+        done = self.run_rewrite(name='validation-2-message-1.md')
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn('words: revision, link;', done.stdout)
+
+    def test_filler_and_ac_ids_do_not_produce_holds(self):
+        text = REWRITTEN_CRITERION.replace('include source revision/link.', 'include the source AC-88.')
+        done = self.run_rewrite(text)
+        self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+
+
+
 class SymptomDispatchTests(unittest.TestCase):
     def setUp(self):
         tmp = tempfile.TemporaryDirectory()

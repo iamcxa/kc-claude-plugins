@@ -30,7 +30,8 @@ the runner's registry differ.
   its `## FO alignment` says `Alignment: needed`; and no `Captain:` or `Asked:` amendment line holds a JSON backslash-quote. Amendment headings belong in one
   `## Captain amendments` section, with unique numbers, balanced fences, one nonempty `Captain:` and one
   whole-value `Supersedes:` list. Fenced examples and `Superseded text:` are not live metadata;
-  `### Feedback Cycles` ends an entry.
+  `### Feedback Cycles` ends an entry. A validation record (including a message continuation) also holds when a live replacement
+  criterion inserts words into a kept sentence that are absent from that amendment's or later amendments' `Captain:`/`Asked:` lines.
 - **Event.** A commit in the range that adds a `dispatch/<name>.md` record, status added, or renamed from a path
   that is not a dispatch record. A record added, then corrected or deleted in a later commit of the same push, is
   judged as added; a record deleted and added again is judged at each add. Archiving a task or renaming its folder
@@ -40,6 +41,7 @@ the runner's registry differ.
   folder (or its `index.md`) as committed at that commit. The added checks print `reserved line '<kind>: NNNN' missing from scope notes`,
   `Captain amendment N named in no dispatch checklist`, `'## FO alignment' records alignment as needed with no 'Result:' line`
   and `Captain amendment N Captain line holds a backslash-quote copied from JSON` (or `Asked line`).
+  The criterion comparison prints `AC-N (Captain amendment N) adds words in a sentence kept from the criterion it replaces that are not in his words: <words>`.
   Structural errors print `<dispatch-file>:<line>: Captain amendment form at <task-file>:<line>: <defect>`;
   L2 classifies this known shape as a violation. Unknown output and missing execution evidence remain exit 2.
   Dispatch checks structure without requiring pending worker moves or future artifacts. Full
@@ -56,6 +58,8 @@ the runner's registry differ.
   whose task file is absent at its commit is not judged for the reserved line or the amendment. The alignment line is read
   only as `Alignment: needed`; another spelling is not judged, and the `Result:` line is checked for presence, not for truth
   or for being written before the dispatch inside one state commit.
+  The criterion comparison uses word-sequence similarity of at least 0.75, ignores filler words and AC ids, and ends at
+  `Current evidence:`. Whole new sentences remain unchecked; translations can be held. See [ADR 0057](../../../docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md).
 
 
 ## L3 amendment-append-only
