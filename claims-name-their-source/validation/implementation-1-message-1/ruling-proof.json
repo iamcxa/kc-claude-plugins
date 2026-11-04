@@ -1,0 +1,16 @@
+[
+  {
+    "amendment": 1,
+    "Captain": "「可以」",
+    "Asked": "「決定：來源標註的 AC-3 改成只用 Claude，各情境新規則補到 6 次、照原本 6 次過 5 次判定（Codex 半場記為這台機器跑不了），可以嗎？」",
+    "captain_verbatim": true,
+    "asked_verbatim": true
+  },
+  {
+    "amendment": 3,
+    "Captain": "「甲」",
+    "Asked": "「決定：來源標註照現狀出貨，K 情境 3/6 記成已知限制，另開一張專門處理數字附出處的追蹤任務，可以嗎？」",
+    "captain_verbatim": true,
+    "asked_verbatim": true
+  }
+]

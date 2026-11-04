@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Captain amendments quoted verbatim",
+    "status": "passed"
+  },
+  {
+    "name": "Ruled proof and known K limit recorded",
+    "status": "passed"
+  },
+  {
+    "name": "Required ADR lint and full suite",
+    "status": "passed"
+  },
+  {
+    "name": "Post-parent number check against main",
+    "status": "passed"
+  },
+  {
+    "name": "Fresh validation and PR update",
+    "status": "untested"
+  }
+]

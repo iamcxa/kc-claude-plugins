@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-04",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-claims-name-their-source",
+  "branch": "spacedock-ensign/claims-name-their-source",
+  "repair_base": "eb556c61a775f148fa7ae6410b5d106ff32d917c",
+  "trunk_base": "2bda2e98304261d46b0ae7205a29ddc9038d2b4d",
+  "head": "69f4988612d17c5524887f99c872a0ef384d05c9",
+  "changed_files": [
+    "docs/adr/0055-a-claim-names-its-source-and-the-gate-scripts-print-the-rule.md"
+  ],
+  "adr_sha256": "1b43498425449c7f8a4c466f3bbe92dac1018ad2d0e812dda77d54156a54834f",
+  "new_provider_calls": 0,
+  "publication_and_roborev": "FO owned, not run",
+  "CI_cost_per_PR": "not measured; no CI change",
+  "profile": "pilot",
+  "scope": "ADR 0055 repair and task report/PR text only; no new replay",
+  "commands": {
+    "adr-lint.log": "python3 -B <package>/scripts/adr_lint.py docs/adr --since eb556c61a775f148fa7ae6410b5d106ff32d917c --require 0055",
+    "full-suite.log": "python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py'",
+    "number-guards.log": "python3 -B <package>/scripts/number_guards.py check --repo <assigned worktree> --workflow-dir <shared workflow> --task <assigned entity> --base origin/main --head HEAD",
+    "comment-ratio.log": "python3 -B <package>/scripts/comment_ratio.py eb556c61a775f148fa7ae6410b5d106ff32d917c HEAD --workflow-dir <shared workflow>",
+    "doc-impact.txt": "python3 -B <package>/scripts/doc_impact.py eb556c61a775f148fa7ae6410b5d106ff32d917c HEAD",
+    "proof-audit.log": "python3 -B audit.py"
+  },
+  "package": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0",
+  "full_suite": {
+    "tests": 906,
+    "skipped": 6,
+    "exit": 0,
+    "log": "full-suite.log"
+  }
+}
