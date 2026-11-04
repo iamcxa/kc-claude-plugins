@@ -74,7 +74,7 @@ gates:
 profile: pilot
 started: 2026-11-03T10:21:16Z
 worktree: .worktrees/spacedock-ensign-release-walk-off-production-before-release
-pr: iamcxa/kc-claude-plugins#772
+pr: pr-merge:772
 ---
 
 ## Scope
