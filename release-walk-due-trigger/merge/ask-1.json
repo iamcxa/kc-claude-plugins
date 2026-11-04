@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "bbf65bb3a621ad1c664698e0d50af8b4f4e0f1ec",
+  "model": "not run",
+  "necessity": "#774 is the three kc-journey-map registration files; #775 is release_acceptance.py's due command, pr_watch.py, their tests and ADR 0056.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: \"Declined: Polish, validation F5: FO's validation-3.md\"",
+    "point: deferred: \"Declined: Polish, validation-1 F4: FO's follow-up\"",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 2 dated 2026-11-04'",
+    "point: path: 'docs/adr/0056-the-idle-look-prompts-unclaimed-release-walks-from-versioned-progr'",
+    "point: path: 'kc-dev-flow-2/extensions/release-acceptance/fixtures/journey-progress-v1.json'",
+    "point: path: 'kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py'",
+    "point: path: 'kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#775",
+  "sufficiency": "the idle look prints one next line for each built release no acceptance task claims, silences claimed ones, reads task fields through Spacedock and prints not run on a failed read, and #774 registers ",
+  "time": "2026-11-04T02:30:23Z",
+  "verdict": "ask"
+}
