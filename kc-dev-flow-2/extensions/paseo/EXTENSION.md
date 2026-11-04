@@ -28,7 +28,7 @@ A permission callback from a worker FO spawned for an open dispatch is FO's to a
 
 Copy agentId and requestId together from that request's block and answer each block once; never type, recall or adapt an id. After a refusal, or with no block in this turn, call get_agent_status for that worker and answer only an id it returns; if none is pending, the request is gone. Paseo refuses an id not pending for that agent.
 
-Before a routine answer, write exactly one line `APPROVED: <what> FOR: <which worker>`; send no other text before it and no text after answering. An answered request ends no unit of work. A hold is one Captain message naming the worker, the action and the decision asked.
+Before a routine answer, write exactly one line `APPROVED: <what> FOR: <which worker>`; send no other text before it. After answering, add no status block or report to the Captain. An answered request ends no unit of work. A hold is one Captain message naming only the held request: its worker, action and decision needed. Include no recap of routine approvals; never answer the held request for him.
 
 ## Human terminals and pages
 

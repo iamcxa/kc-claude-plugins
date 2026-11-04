@@ -32,9 +32,21 @@ other deletions remain held for the Captain.
 **Words, Captain amendment 1:** 「可以」 — Captain, chat, 2026-11-03.
 
 **Asked, Captain amendment 1:** 「決定：A 的 AC-4 改成『例行批准前只寫一行 `APPROVED: <做什麼> FOR: <哪個 worker>`，批准後不說話』，讓 A 照這個再修一輪嗎？」
+
+**Words, Captain amendment 2:** 「好」 — Captain, chat, 2026-11-03.
+
+**Asked, Captain amendment 2:** 「決定：A 的 AC-4 改成『例行批准前一行 APPROVED，批准後不附狀態區塊、不寫給我的回報』，用第二次實測的結果進驗證嗎？」
+
+**Words, Captain amendment 3:** 「按建議」 — Captain, chat, 2026-11-04.
+
+**Asked, Captain amendment 3:** 「決定：A 補回 AC-8（邊界請求以一則訊息交給你、不夾帶例行批准的回報、被擋的請求不代答），文字和 ADR 改成你裁定的版本，再修一輪後重驗，可以嗎？」
+
 Before a routine answer FO writes exactly one line
-`APPROVED: <what> FOR: <which worker>`, with no other text before it and no text
-after answering. Boundary holds remain one Captain message.
+`APPROVED: <what> FOR: <which worker>`, with no other text before it. After the
+answer FO adds no status block or report to the Captain. A boundary hold is one
+Captain message naming only the held request: its worker, action and decision
+needed, without recapping routine approvals. FO never answers a held request
+on the Captain's behalf.
 
 **Options considered:**
 - FO answers its own dispatched workers within its existing scope and authority,
@@ -55,15 +67,16 @@ no additional authority; ADR 0011's money and Captain-judgment boundaries remain
 
 ## Consequences
 
-The extension grows from 819 to 1,055 words by `wc -w`, and from 829 to 1,069 by
+The extension grows from 819 to 1,076 words by `wc -w`, and from 829 to 1,090 by
 `normalized_words` in `kc-dev-flow-2/scripts/lint-skills.py`. This replaces ADR
 0048's 819-word extension bound; the shared workflow and its word budget stay
-unchanged. Dispatch reads 240 more normalized words; callback package words do
-not increase. Routine answers carry one approval line before the answer and no text after; held requests produce
-one message each. Recovery adds a status read after a refusal or missing block,
+unchanged. Dispatch reads 261 more normalized words; callback package words do
+not increase. Routine answers carry one approval line before the answer, with no
+status block or Captain report afterwards; a held request produces one message
+about that request alone. Recovery adds a status read after a refusal or missing block,
 not before every answer.
 
 Paseo's pending-request lookup rejects an id not pending for that agent. Scope,
 authority and silence remain instructions for FO, with its own host's permission
 checks as a backstop; this change adds no hook or mechanical policy checker.
-Revisit if an authority boundary is crossed or routine approval messages persist.
+Revisit if an authority boundary is crossed or routine approval reports recur.
