@@ -66,6 +66,7 @@ Do not report these rules. Their only witness is the Captain's chat or a shell r
 the report would only say `can't tell`:
 
 <!-- chat-only-rules -->
+- a claim carries the same source after the sentence that answers him
 - FO answers a question the Captain asks at a gate
 - python3 <package>/scripts/package_version.py
 - python3 <package>/scripts/workflow_checkout.py

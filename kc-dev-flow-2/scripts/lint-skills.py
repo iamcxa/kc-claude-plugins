@@ -58,6 +58,9 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=55, why="Captain steps covers every ask and records observations; the validation passage points to that rule",
          captain="「可以」 (Captain, chat, 2026-11-03), answering 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」; accepts fo-tries-what-it-asks-the-captain decision 2, +55 words (5781 to 5836)",
          loaded="startup and resume of the First Officer, before a Captain ask and validation gate preparation"),
+    dict(delta=55, why="numbers and factual claims name their command and date, or the report repeated without a run",
+         captain="「可以」 (Captain, chat, 2026-11-03), answering 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」; accepts claims-name-their-source decision 1, +55 words (5836 to 5891), and decision 2, 24 replay runs with a hard stop at 30",
+         loaded="startup"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.

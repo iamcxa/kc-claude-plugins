@@ -52,6 +52,7 @@ the summary outside fences. It requires one top-level External rounds: N (nonneg
 optionally followed by a full stop or a semicolon/full stop and detail. Without it, legacy checks apply.
 The summary (combined text for legacy calls) needs Captain steps: <record path>, passing steps
 against the gate text and latest validation report, at a latest dispatched Candidate.
+Both `question` and `check` print a claim-source reminder on entry, without adding a hold.
 
 Usage: delivery_gate.py steps <record> --text-file <message>
 Reads Captain step observations without executing commands. Missing observations, unmatched steps,
@@ -107,6 +108,7 @@ MAX_POINTS = 12
 CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
                  "Necessity": "who uses this change and what breaks without it"}
 ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."
+CLAIM_SOURCE = "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`."
 
 
 def clean(line):
@@ -494,6 +496,7 @@ def text_problems(task_text, gate_text, at_gate=False, reviewer_text=None):
 
 
 def check(args):
+    emit(CLAIM_SOURCE)
     task, text_file = Path(args.task), Path(args.text_file)
     if task.is_dir():
         task = task / "index.md"
@@ -801,6 +804,7 @@ def captain_step_problems(task, gate_text, summary):
 
 
 def question(args):
+    emit(CLAIM_SOURCE)
     task = Path(args.task)
     if task.is_dir():
         task = task / "index.md"
