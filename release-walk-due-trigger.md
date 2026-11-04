@@ -53,6 +53,17 @@ gates:
                 id: briefing:release-walk-due-trigger:validation:attempt-1:revision-1
                 digest: sha256:b25a07cfca84e8b01bc44bf5d7166a22dc9cddbeafe3896bb932e9e30a0b3371
                 room-ref: ./release-walk-due-trigger/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-walk-due-trigger:validation:1
+                briefing: briefing:release-walk-due-trigger:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-04T08:57:22.421502Z"
+                decision: approve
+                reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #769、#770、#774、#775、#777 嗎？（#775 的 F5 是我的驗證派工紀錄少了 Symptom 行，接受為紀錄問題、不擋合併）」'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-03T13:15:01Z
 worktree: .worktrees/spacedock-ensign-release-walk-due-trigger
 pr: iamcxa/kc-claude-plugins#775
