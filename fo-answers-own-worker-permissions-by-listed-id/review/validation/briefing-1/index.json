@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-answers-own-worker-permissions-by-listed-id:validation:attempt-1:revision-1",
+  "question": "「決定：照順序合併 #769、#770、#774、#775、#777 嗎？（#775 的 F5 是我的驗證派工紀錄少了 Symptom 行，接受為紀錄問題、不擋合併）」 Regular merges with --match-head-commit, in the order #769, #770, #774, #775, #777, as the batch 13 second validation sitting. Approval also covers later external-review rounds on these PRs, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-answers-own-worker-permissions-by-listed-id:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/656e160bbc41c5414e5bcbb5a4b7f25f2e25aa72/fo-answers-own-worker-permissions-by-listed-id.md",
+      "rev": "sha256:3c8f06520930014f75c2963c705462a2e25802abf38632c38efdcdb0ce4f8140",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of fo-answers-own-worker-permissions-by-listed-id, PR #769, in the batch 13 second validation sitting.\nSufficiency: FO answers its own workers' routine permission requests with the listed id and one APPROVED line, sends no status block or report after them, sends a boundary request to the Captain as one message with no routine recap, never answers a held request, and reads a recovered request afresh, shown on the native run and replays of the 7 observed bad calls.\nNecessity: the two files are the paseo extension section and ADR 0052; no script or workflow word changes.\nExternal rounds: 4.\nSecond reviewer: Copilot because the PR changes merge or review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5762366985\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: no major issues on this head, comment:6620341798.\nDeclined: Deferred risk, validation F1: the push to a repository the Captain does not own is unverified here (user settings allow bare Bash, so no push request can be raised).\nDeclined: Deferred risk, validation F2: the repaired recovery has no native request-swap proof (a swapped pending request cannot be staged without a live misbehaving worker)."
+    }
+  ]
+}

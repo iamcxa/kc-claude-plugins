@@ -61,6 +61,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:fo-answers-own-worker-permissions-by-listed-id:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:fo-answers-own-worker-permissions-by-listed-id-validation-1
+              briefing:
+                id: briefing:fo-answers-own-worker-permissions-by-listed-id:validation:attempt-1:revision-1
+                digest: sha256:57d216fd52f14f654af445325df8ca4a3e4b5728228ea6d95c287b7dda61bc76
+                room-ref: ./fo-answers-own-worker-permissions-by-listed-id/review/validation/briefing-1
 profile: pilot
 started: 2026-11-03T10:20:50Z
 worktree: .worktrees/spacedock-ensign-fo-answers-own-worker-permissions-by-listed-id
