@@ -60,6 +60,17 @@ gates:
                 id: briefing:diagnosis-rounds-count-toward-step-back:validation:attempt-1:revision-1
                 digest: sha256:258d5c0169928899c2da2f0a3f5557239a48d7276c0b7b83a0a9514409bbd031
                 room-ref: ./diagnosis-rounds-count-toward-step-back/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:diagnosis-rounds-count-toward-step-back:validation:1
+                briefing: briefing:diagnosis-rounds-count-toward-step-back:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-04T00:41:22.217089Z"
+                decision: approve
+                reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #771、#772、#773 嗎？（#769、#770、#774、#775、#777 這次不合併）」'
+              application:
+                target-stage: done
+                state: pending
 profile: pilot
 started: 2026-11-03T10:20:59Z
 worktree: .worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back
