@@ -74,6 +74,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-11-04 — do these amendments withdraw what the Captain approved, and what changes in the build? Answer: adjust; report review/engineering-reviewer-batch13.md.
+Reviewer: kc-dev-flow-2:chief-engineer not run: the 2026-11-04 batch 13 delivery review (review/chief-engineer-batch13.md) already advised on #777; the passes since then were the AC-3 replay, Captain amendments 1 to 3 and the ADR 0055 update the engineering-reviewer reading asked for, and validation passed at 69f498861.
 
 ## Design
 
