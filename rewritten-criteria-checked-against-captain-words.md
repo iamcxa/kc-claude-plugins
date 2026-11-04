@@ -60,6 +60,17 @@ gates:
                 id: briefing:rewritten-criteria-checked-against-captain-words:validation:attempt-1:revision-1
                 digest: sha256:4f61e91e40eefbcbcf1b9c022ea01be21bbf9efb014529a956a14c6a58caddfa
                 room-ref: ./rewritten-criteria-checked-against-captain-words/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:rewritten-criteria-checked-against-captain-words:validation:1
+                briefing: briefing:rewritten-criteria-checked-against-captain-words:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-04T08:57:19.281756Z"
+                decision: approve
+                reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #769、#770、#774、#775、#777 嗎？（#775 的 F5 是我的驗證派工紀錄少了 Symptom 行，接受為紀錄問題、不擋合併）」'
+              application:
+                target-stage: done
+                state: pending
 profile: pilot
 started: 2026-11-03T10:21:07Z
 worktree: .worktrees/spacedock-ensign-rewritten-criteria-checked-against-captain-words
