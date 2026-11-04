@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-walk-due-trigger:validation:attempt-1:revision-1",
+  "question": "「決定：照順序合併 #769、#770、#774、#775、#777 嗎？（#775 的 F5 是我的驗證派工紀錄少了 Symptom 行，接受為紀錄問題、不擋合併）」 Regular merges with --match-head-commit, in the order #769, #770, #774, #775, #777, as the batch 13 second validation sitting. Approval also covers later external-review rounds on these PRs, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:release-walk-due-trigger:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f5bc584bc017a21d9864750feba109c53040fe42/release-walk-due-trigger.md",
+      "rev": "sha256:3be2d9ba6ab38b68f1d205868070b9b9d2e160051989d29cdc5fd451dda6cf8c",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of release-walk-due-trigger, PR #775 with sibling #774, in the batch 13 second validation sitting.\nSufficiency: the idle look prints one next line for each built release no acceptance task claims, silences claimed ones, reads task fields through Spacedock and prints not run on a failed read, and #774 registers journey-progress/v1 so a shape change fails in kc-journey-map; AC-16 and the number guards pass against origin/main after #772 merged.\nNecessity: #774 is the three kc-journey-map registration files; #775 is release_acceptance.py's due command, pr_watch.py, their tests and ADR 0056.\nExternal rounds: 5.\nSecond reviewer: Copilot because the PR changes merge or review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5762367405\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: no major issues on this head, comment:6619409034.\nDeclined: Polish, validation F5: FO's validation-3.md record lacks a Symptom line (no product harm; FO's record script now writes it).\nDeclined: Polish, validation-1 F4: FO's follow-up record implementation-1-message-1.md lacks the final-reply completion line (no handoff was lost; accepted by Captain amendment 2)."
+    }
+  ]
+}

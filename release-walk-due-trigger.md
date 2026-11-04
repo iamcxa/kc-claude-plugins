@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:release-walk-due-trigger:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:release-walk-due-trigger-validation-1
+              briefing:
+                id: briefing:release-walk-due-trigger:validation:attempt-1:revision-1
+                digest: sha256:b25a07cfca84e8b01bc44bf5d7166a22dc9cddbeafe3896bb932e9e30a0b3371
+                room-ref: ./release-walk-due-trigger/review/validation/briefing-1
 started: 2026-11-03T13:15:01Z
 worktree: .worktrees/spacedock-ensign-release-walk-due-trigger
 pr: iamcxa/kc-claude-plugins#775
