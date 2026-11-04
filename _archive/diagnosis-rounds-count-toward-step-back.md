@@ -1,6 +1,6 @@
 ---
 title: Diagnosis rounds on one symptom count toward the step back
-status: validation
+status: done
 variant: kc-dev-flow-2
 gates:
     version: 1
@@ -70,11 +70,14 @@ gates:
                 reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #771、#772、#773 嗎？（#769、#770、#774、#775、#777 這次不合併）」'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 profile: pilot
 started: 2026-11-03T10:20:59Z
 worktree: .worktrees/spacedock-ensign-diagnosis-rounds-count-toward-step-back
 pr: pr-merge:771
+verdict: PASSED
+completed: 2026-11-04T02:17:00Z
+archived: 2026-11-04T02:17:00Z
 ---
 
 ## Scope
