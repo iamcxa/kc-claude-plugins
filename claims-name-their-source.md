@@ -53,6 +53,17 @@ gates:
                 id: briefing:claims-name-their-source:validation:attempt-1:revision-1
                 digest: sha256:c64a6be767e25448a097f20741f9b45eb977757f4a803e5104ed086ae5ccc508
                 room-ref: ./claims-name-their-source/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:claims-name-their-source:validation:1
+                briefing: briefing:claims-name-their-source:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-04T08:57:25.4836Z"
+                decision: approve
+                reason: 'The Captain 「可以」 (chat, 2026-11-04), answering 「決定：照順序合併 #769、#770、#774、#775、#777 嗎？（#775 的 F5 是我的驗證派工紀錄少了 Symptom 行，接受為紀錄問題、不擋合併）」'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-03T15:11:22Z
 worktree: .worktrees/spacedock-ensign-claims-name-their-source
 pr: iamcxa/kc-claude-plugins#777
