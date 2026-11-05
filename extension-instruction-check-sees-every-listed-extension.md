@@ -318,3 +318,7 @@ The Pilot candidate checks the three shipped scope-note forms on their applicabl
 PASSED on 272721000cce947c8f2dcdd3a40c22cdf11dee09 against all seven accepted criteria; no new Material, Deferred risk, Polish or Needs decision finding. Accepted first-sentence, trusted-header/not-run, message-exemption and deferred README/YAML limits remain explicit in the evidence; execution-harness corrections and their failed logs are retained, with the corrected native run and final acceptance script both passing. This recommendation leaves gate and delivery authority with the Captain and FO.
 
 
+
+### State synchronization correction
+
+The prescribed spacedock state commit command committed and pushed the task report/evidence to spacedock-state/dev2 at 016335e51122b170729552138663c61129dc0a2e. The preceding line assigning pending state synchronization to FO is superseded: synchronization has already occurred automatically. No product-branch push or PR write was performed.
