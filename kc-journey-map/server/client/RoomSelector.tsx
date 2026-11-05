@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { DefaultPageMenu, TldrawUiButton, TldrawUiButtonIcon, TldrawUiButtonLabel, TldrawUiDropdownMenuContent, TldrawUiDropdownMenuGroup, TldrawUiDropdownMenuItem, TldrawUiDropdownMenuRoot, TldrawUiDropdownMenuTrigger, TldrawUiInput, useMenuIsOpen } from 'tldraw'
-import { journeyApi, type HumanContext } from './api'
+import { journeyFetch, journeyApi, type HumanContext } from './api'
 import './room-selector.css'
 
 export type ConnectionState = 'loading' | 'connected' | 'offline' | 'error'
@@ -20,7 +20,7 @@ export function RoomSelector({ children, ...navigation }: RoomNavigation & { chi
 		const controller = new AbortController()
 		setLoading(true)
 		setError(false)
-		fetch(journeyApi(human ? '/auth/rooms' : '/health'), { signal: controller.signal })
+		journeyFetch(journeyApi(human ? '/auth/rooms' : '/health'), { signal: controller.signal })
 			.then(async response => {
 				if (!response.ok) { if (human && [401, 403].includes(response.status)) onDenied(); throw new Error('Room inventory unavailable') }
 				const result = await response.json()

@@ -302,6 +302,18 @@ class L1Test(Base):
 
 class L2Test(Base):
 
+    def test_a_missing_paseo_instruction_is_a_parseable_l2_violation(self):
+        repo = Repo(self.tmp / "l2-paseo")
+        before = repo.commit("base", keep="x")
+        event = repo.commit("paseo worker", t=task(),
+                            **{"t__dispatch__ideation-1": record().replace("Model: sonnet", "Model: sonnet (Claude via Paseo)")})
+        readme = self.tmp / "paseo.md"
+        readme.write_text("---\nextensions: [learn, paseo]\n---\n")
+        code, out = self.judge(repo, before, readme=readme)
+        self.assertEqual(code, 1, out)
+        self.assertIn(f"violation: L2 dispatch-record-complete record=t/dispatch/ideation-1.md commit={event[:12]} paseo worker instruction is absent", out)
+        self.assertNotIn("output this runner does not parse", out)
+
     def test_rewritten_criterion_is_an_event_violation_and_later_clearance_is_not_retroactive(self):
         from test_dispatch_records import REWRITTEN_CRITERION
         repo = Repo(self.tmp / "l2-rewritten-criterion")
@@ -342,7 +354,7 @@ class L2Test(Base):
                 self.assertEqual(current[0], 1, current[1])
                 self.assertEqual([line for line in current[1].splitlines() if line.startswith("violation:")],
                                  [line for line in initial[1].splitlines() if line.startswith("violation:")])
-                repo.commit("reserved continuation", **{"t__dispatch__implementation-2": record()})
+                repo.commit("reserved continuation", **{"t__dispatch__implementation-2": record() + "/pkg/extensions/roborev/roborev_gate.py\n"})
                 self.assertEqual(self.judge(repo, event)[0], 0)
 
     def test_live_ruling_predicate_is_skipped_by_real_historical_snapshot_caller(self):
@@ -403,7 +415,7 @@ class L2Test(Base):
         code, out = self.judge(repo, reserved)
         self.assertEqual(code, 1, out)
         self.assertRegex(out, rf"record=t/dispatch/implementation-2\.md commit={second[:12]} .*Captain amendment 1 named in no dispatch checklist")
-        repo.commit("named", **{"t__dispatch__implementation-3": record(checklist="- Captain amendment 1: do it")})
+        repo.commit("named", **{"t__dispatch__implementation-3": record(checklist="- Captain amendment 1: do it") + "/pkg/extensions/roborev/roborev_gate.py\n"})
         self.assertEqual(self.judge(repo, second)[0], 0)
 
     def test_an_ideation_record_whose_task_owes_a_result_line_is_an_l2_violation_and_the_result_clears_it(self):
@@ -432,7 +444,7 @@ class L2Test(Base):
                 amended = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nSupersedes: none\nAsked: y\n" + line
                 repo = Repo(self.tmp / f"l2-other-{abs(hash(line))}")
                 before = repo.commit("base", keep="x")
-                repo.commit("record", t=task(body=amended), **{"t__dispatch__implementation-2": record(checklist="- Captain amendment 1: do it")})
+                repo.commit("record", t=task(body=amended), **{"t__dispatch__implementation-2": record(checklist="- Captain amendment 1: do it") + "/pkg/extensions/roborev/roborev_gate.py\n"})
                 code, out = self.judge(repo, before)
                 self.assertEqual(code, 0, out)
 

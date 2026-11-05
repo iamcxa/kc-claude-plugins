@@ -703,12 +703,14 @@ class ExtensionInstructionTests(unittest.TestCase):
             code = records.main([*flags, str(folder)])
         return code, out.getvalue()
 
-    def check(self, files, readme=LISTS_ROBOREV, flags=()):
+    def check(self, files, readme=LISTS_ROBOREV, flags=(), task=None):
         with tempfile.TemporaryDirectory() as d:
             if readme is not None:
                 Path(d, "README.md").write_text(readme)
             folder = Path(d, "task")
             (folder / "dispatch").mkdir(parents=True)
+            if task is not None:
+                Path(d, "task.md").write_text(task)
             for name, text in files.items():
                 (folder / "dispatch" / name).write_text(text)
             return self.run_main(folder, *flags)
@@ -777,26 +779,16 @@ class ExtensionInstructionTests(unittest.TestCase):
             text = Path(records.PACKAGE, "extensions", name, "EXTENSION.md").read_text()
             self.assertIn("under `docs/journey/`; ", text)
 
-    def test_release_acceptance_turns_loud_when_its_bullet_carries_the_instruction_label(self):
+    def test_release_acceptance_checks_an_acceptance_tasks_first_implementation_only(self):
         readme = "---\nentity-type: task\nextensions: [release-acceptance]\n---\n"
-        source = Path(records.PACKAGE, "extensions", "release-acceptance", "EXTENSION.md").read_text()
-        label = "- **Acceptance task's implementation scope notes:** FO adds"
-        self.assertIn(label, source)
-        loud = source.replace(label, "- **Joins:** implementation\n- **Instruction FO adds to the scope notes:** "
-                                     "run python3 <package>/extensions/release-acceptance/release_acceptance.py; FO adds", 1)
-        with tempfile.TemporaryDirectory() as d:
-            package = Path(d, "pkg")
-            (package / "extensions" / "release-acceptance").mkdir(parents=True)
-            (package / "extensions" / "release-acceptance" / "EXTENSION.md").write_text(loud)
-            Path(d, "README.md").write_text(readme)
-            folder = Path(d, "task")
-            (folder / "dispatch").mkdir(parents=True)
-            (folder / "dispatch" / "implementation-1.md").write_text(COMPLETE)
-            out = io.StringIO()
-            with contextlib.redirect_stdout(out):
-                code = records.main([str(folder)], package=package)
+        acceptance = "---\nrelease-acceptance: pickup/r1\n---\n"
+        code, out = self.check({"implementation-1.md": COMPLETE}, readme, task=acceptance)
         self.assertEqual(code, 1)
-        self.assertIn("release-acceptance worker instruction is absent", out.getvalue())
+        self.assertIn("implementation-1.md: release-acceptance worker instruction is absent", out)
+        for line in ("Lead the walk.", "release-acceptance not run: walk postponed"):
+            self.assertEqual(self.check({"implementation-1.md": COMPLETE + line}, readme, task=acceptance)[0], 0)
+        self.assertEqual(self.check({"implementation-2.md": COMPLETE}, readme, task=acceptance)[0], 0)
+        self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme, task="---\ntitle: ordinary\n---\n")[0], 0)
 
     def test_an_unlisted_extension_is_not_checked(self):
         self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme=NO_EXTENSIONS)[0], 0)
@@ -807,17 +799,53 @@ class ExtensionInstructionTests(unittest.TestCase):
         self.assertEqual(self.check({"implementation-1.md": complete, "validation-1.md": COMPLETE})[0], 0)
         self.assertEqual(self.check({"validation-1.md": COMPLETE})[0], 0)
 
-    def test_a_later_implementation_record_without_the_instruction_is_not_checked(self):
+    def test_a_later_implementation_record_without_the_instruction_is_checked(self):
         complete = COMPLETE + f"python3 {ROBOREV_PATH}\n"
-        self.assertEqual(self.check({"implementation-1.md": complete, "implementation-2.md": COMPLETE})[0], 0)
+        code, out = self.check({"implementation-1.md": complete, "implementation-2.md": COMPLETE})
+        self.assertEqual(code, 1)
+        self.assertIn("implementation-2.md: roborev worker instruction is absent", out)
 
     def test_every_shipped_instruction_is_read_from_its_extension_file(self):
         shipped = [p.name for p in Path(records.PACKAGE, "extensions").iterdir() if p.is_dir()]
-        found = {name: (stage, paths) for name, stage, paths in records.declared_instructions(records.PACKAGE, shipped)}
+        instructions = records.declared_instructions(records.PACKAGE, shipped)
+        found = {name: (stage, paths) for name, stage, paths in instructions}
+        self.assertEqual(len(instructions), 3)
+        self.assertEqual(set(found), {"roborev", "paseo", "release-acceptance"})
         self.assertEqual(found["roborev"], ("implementation", ["extensions/roborev/roborev_gate.py"]))
-        for name in shipped:
-            text = Path(records.PACKAGE, "extensions", name, "EXTENSION.md").read_text()
-            self.assertEqual("Instruction FO adds" in text, name in found, name)
+        self.assertEqual(found["paseo"], ("paseo", "Start in the assigned worktree; verify pwd and git root before edits."))
+        self.assertEqual(found["release-acceptance"], ("acceptance", "Lead the walk."))
+
+    def test_paseo_requires_the_sentence_for_each_supported_header(self):
+        readme = "---\nentity-type: task\nextensions: [paseo]\n---\n"
+        sentence = "Start in the assigned worktree; verify pwd and git root before edits."
+        for header in ("Model: gpt-6.1-sol (Codex via Paseo, effort high)",
+                       "Model: claude-opus-5-5 (Claude via Paseo, effort high)",
+                       "Model: sonnet\nRoster: worker; host=paseo; model=sonnet"):
+            with self.subTest(header=header):
+                text = COMPLETE.replace("Model: sonnet", header)
+                code, out = self.check({"ideation-1.md": text}, readme)
+                self.assertEqual(code, 1, out)
+                self.assertIn("ideation-1.md: paseo worker instruction is absent", out)
+                for line in (sentence, sentence.replace("; ", ";\n  "), "paseo not run: worker runs locally"):
+                    self.assertEqual(self.check({"ideation-1.md": text + line}, readme)[0], 0)
+                self.assertEqual(self.check({"ideation-1.md": text}, NO_EXTENSIONS)[0], 0)
+        self.assertEqual(self.check({"ideation-1.md": COMPLETE}, readme)[0], 0)
+        self.assertEqual(self.check({"ideation-1.md": COMPLETE + "Model: sonnet (Claude via Paseo)\n"}, readme)[0], 0)
+
+    def test_paseo_checks_later_spawn_records_but_not_messages_or_recovery_records(self):
+        readme = "---\nentity-type: task\nextensions: [paseo, roborev]\n---\n"
+        text = COMPLETE.replace("Model: sonnet", "Model: sonnet (Claude via Paseo)")
+        complete = text + "Start in the assigned worktree; verify pwd and git root before edits.\n" + ROBOREV_PATH
+        for name in ("ideation-2.md", "implementation-3.md", "validation-1.md"):
+            with self.subTest(name=name):
+                first = name.split("-")[0] + "-1.md"
+                files = {first: complete, name: text + ROBOREV_PATH}
+                code, out = self.check(files, readme)
+                self.assertEqual(code, 1, out)
+                self.assertIn(f"{name}: paseo worker instruction is absent", out)
+        files = {"implementation-1.md": complete, "implementation-1-message-1.md": text,
+                 "implementation-1-package-recovery.md": text}
+        self.assertEqual(self.check(files, readme)[0], 0)
 
     def test_no_readme_is_said_not_skipped_and_leaves_the_exit_code_alone(self):
         code, out = self.check({"implementation-1.md": COMPLETE}, readme=None)

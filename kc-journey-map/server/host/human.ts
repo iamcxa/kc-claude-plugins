@@ -4,7 +4,7 @@ import { HUMAN_BOUND, type HumanConfig, type HumanSession, type Member, type Mem
 import { verifyCloudflareIdentity } from './human-provider'
 export const randomSecret = () => [...crypto.getRandomValues(new Uint8Array(32))].map(b => b.toString(16).padStart(2, '0')).join('')
 export const cookieValue = (headers: Headers, name: string) => new RegExp('(?:^|;\\s*)' + name + '=([^;]+)').exec(headers.get('cookie') || '')?.[1]
-export type HumanHost = { origin: string; meta: Metadata; humanConfig?: HumanConfig; localHumanReady?: boolean; publicRequestUrl?: boolean }
+export type HumanHost = { origin: string; meta: Metadata; humanConfig?: HumanConfig; localHumanReady?: boolean; publicRequestUrl?: boolean; nativeAccount?: boolean }
 function deny(status: number, category: string): never { throw new HostError(status, category, { category }) }
 export async function currentHuman(meta: Metadata, session: HumanSession, now = Date.now()) {
  const config = await meta.get<HumanConfig>('human-config:v1')
@@ -68,9 +68,16 @@ async function sessionMaterial() {
 export async function humanRoute(host: HumanHost, req: Request): Promise<Response | null> {
  const url = new URL(req.url), path = url.pathname
  if (!path.startsWith('/auth/')) return null
- if (path === '/auth/config' && req.method === 'GET') return Response.json(host.humanConfig ? { enabled: true, mode: host.humanConfig.mode, localReady: !!host.localHumanReady } : { enabled: false })
+ if (path === '/auth/config' && req.method === 'GET') return Response.json(host.humanConfig ? { enabled: true, mode: host.humanConfig.mode, localReady: !!host.localHumanReady, nativeAccount: !!host.nativeAccount } : { enabled: false })
  if (!host.humanConfig || !host.meta.human) deny(503, 'human_entry_unconfigured')
  if (req.method === 'POST') sameOrigin(host, req)
+ if (path === '/auth/account' && req.method==='GET') {
+  if(!host.nativeAccount)deny(404,'native_account_disabled')
+  const human=await humanFromHeaders(host,req.headers)
+  if(!['_human','_backend','_humanAt','_humanRoom'].every(key=>url.searchParams.has(key)))deny(403,'human_context_required')
+  const result=await host.meta.human('account-read',{sessionDigest:human.sessionDigest,csrfDigest:human.session.csrfDigest,memberId:url.searchParams.get('_human'),backendId:url.searchParams.get('_backend'),signInAt:Number(url.searchParams.get('_humanAt')),roomId:url.searchParams.get('_humanRoom')})
+  return Response.json(result,{headers:{'Cache-Control':'private, no-store'}})
+ }
  if (path === '/auth/rooms' && req.method === 'GET') {
   const human = await humanFromHeaders(host, req.headers)
   await requireHumanContext(host.meta, { actorType: 'human', credentialId: human.member.id, principalId: human.member.id, humanSessionDigest: human.sessionDigest, rooms: human.rooms, cookie: true, expiresAt: human.session.expiresAt }, url)

@@ -3,7 +3,7 @@ import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import mermaid from 'mermaid'
 import GithubSlugger from 'github-slugger'
-import { journeyApi } from './api'
+import { journeyFetch, journeyApi } from './api'
 
 mermaid.initialize({ startOnLoad: false, securityLevel: 'strict' })
 
@@ -70,7 +70,7 @@ export function DocPopup({ target, onClose, returnFocusTo, roomId = new URLSearc
 		let cancelled = false
 		setState({ kind: 'loading' })
 		const q = new URLSearchParams({ owner: target.owner, repo: target.repo, refPath: target.refAndPath })
-		fetch(journeyApi(`/repo-doc?${q}&room=${encodeURIComponent(roomId)}`))
+		journeyFetch(journeyApi(`/repo-doc?${q}&room=${encodeURIComponent(roomId)}`))
 			.then((r) => r.json())
 			.then((result: { state: 'ok'; content: string; sha: string } | { state: 'unavailable'; reason: string }) => {
 				if (cancelled) return

@@ -3,6 +3,7 @@
 
 Reads every task file (active and `_archive/`), never writes. One JSON line per gate
 resolution or withdrawal; `--summary` prints counts per area instead.
+`--reason FILE` checks a Captain resolution reason before it is recorded.
 """
 import argparse
 import json
@@ -15,6 +16,36 @@ OVERRIDE = re.compile(
 SURFACES = re.compile(r"^Surfaces:\s*(.+)$", re.M)
 AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
 KEY = re.compile(r"^(?P<indent> *)(?:- )?(?P<key>[a-z-]+):(?: (?P<value>.*))?$")
+FOLLOWED = "Recommendation: followed"
+
+
+def check_reason(path):
+    try:
+        reason = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        print(f"reason: cannot read {path}: {exc}", file=sys.stderr)
+        return 2
+    if not reason.strip():
+        print("reason: empty file", file=sys.stderr)
+        return 2
+    over = OVERRIDE.search(reason)
+    followed = FOLLOWED in reason
+    if over and followed:
+        problem = "both declarations"
+    elif over and over.group("rec").lstrip().startswith(("<", ".", "…")):
+        problem = "placeholder recommendation"
+    elif over:
+        print(f"reason: override (area: {over.group('area').strip()})")
+        return 0
+    elif followed:
+        print("reason: followed")
+        return 0
+    else:
+        problem = "missing declaration"
+    print(f"reason: {problem}")
+    print("next: write Override: recommended <option>; Captain chose <option>; area: <area> "
+          "with a concrete recommendation, or Recommendation: followed.")
+    return 1
 
 
 def unquote(raw):
@@ -121,6 +152,7 @@ def task_rows(state, path):
             "conn_source": e.get("conn_source"),
             "question": question(state, path, e.get("room")),
             "override": over.groupdict() if over else None,
+            "followed": FOLLOWED in reason,
             "area": over.group("area").strip() if over else (surfaces.group(1).strip() if surfaces else None),
             "amended_after": sum(1 for _, d in amendments if date and d >= date),
         })
@@ -149,20 +181,27 @@ def summary(rows):
         if r["kind"] != "resolution":
             continue
         s = out.setdefault(r["area"] or "unknown", {
-            "rulings": 0, "captain": 0, "fo_delegated": 0, "overrides": 0, "amended_after": 0})
+            "rulings": 0, "captain": 0, "fo_delegated": 0, "overrides": 0, "followed": 0, "amended_after": 0})
         s["rulings"] += 1
         s["captain"] += r["by"] == "person:captain"
         s["fo_delegated"] += r["by"] == "agent:first-officer"
         s["overrides"] += r["override"] is not None
+        s["followed"] += r["followed"]
         s["amended_after"] += r["amended_after"] > 0
     return out
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("state", type=Path, help="state checkout holding the task files")
-    ap.add_argument("--summary", action="store_true", help="counts per area instead of rows")
+    ap.add_argument("state", type=Path, nargs="?", help="state checkout holding the task files")
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument("--summary", action="store_true", help="counts per area instead of rows")
+    mode.add_argument("--reason", type=Path, help="check a Captain resolution reason before recording")
     args = ap.parse_args(argv)
+    if args.reason is not None:
+        return check_reason(args.reason)
+    if args.state is None:
+        ap.error("state is required unless --reason is used")
     if not args.state.is_dir():
         print(f"not a directory: {args.state}", file=sys.stderr)
         return 2

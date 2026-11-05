@@ -4,9 +4,13 @@ non-empty Checklist and Scope notes sections, a `Package root:` line with an abs
 line naming `main` as the completion recipient (or the final-reply line when the README lists paseo), and a checklist that is not only pointer lines (a record name plus only
 words from POINTER_WORDS, as in "Same checklist as implementation-2."); a pointer worded outside that set, such as
 "Reuse the checklist of implementation-2.", passes.
-When the workflow README lists an extension whose EXTENSION.md has an `Instruction FO adds to the scope notes`
-bullet, the first record of its `Joins:` stage (`implementation-1.md`) also needs that bullet's script paths with
-`<package>` replaced by the record's own `Package root:` value, or a line `<name> not run: <reason>`.
+For extensions listed in the workflow README, fresh-worker records named ideation-N.md, implementation-N.md
+or validation-N.md (positive N) need their EXTENSION.md's scope-note instruction; follow-up message records are exempt.
+An `Instruction FO adds to the scope notes` bullet requires its script paths in each `Joins:`-stage record,
+with `<package>` replaced by that record's `Package root:`. Paseo's unindented `Add to scope notes:` line requires
+its first sentence when the header names Claude or Codex via Paseo, or a Roster with host=paseo.
+The acceptance-task scope-note bullet requires its first sentence in implementation-1.md of a task declaring
+`release-acceptance:` in frontmatter. A line `<name> not run: <reason>` satisfies each instruction check.
 
 Usage: dispatch_records.py [--readme FILE] <task folder or task .md file>
        dispatch_records.py [--readme FILE] --coverage <task .md file> --stage <worker stage>
@@ -88,6 +92,10 @@ INSTRUCTION = re.compile(r"^- \*\*Instruction FO adds to the scope notes:\*\*(.*
 JOINS = re.compile(r"^- \*\*Joins:\*\*[ \t]*(\w+)", re.M)
 PACKAGE_PATH = re.compile(r"<package>/(extensions/[\w-]+/[\w.-]+\.py)")
 ROOT = re.compile(r"^Package root:[ \t]*(/\S+)", re.M)
+SCOPE_INSTRUCTION = re.compile(r'^Add to scope notes:[ \t]*"([^"]+)', re.M | re.I)
+ACCEPTANCE_INSTRUCTION = re.compile(r'^- \*\*Acceptance task\'s implementation scope notes:\*\*[^\n]*\n[ \t]*"([^"]+)', re.M)
+SPAWN_RECORD = re.compile(r"^(ideation|implementation|validation)-[1-9][0-9]*\.md$")
+PASEO_HEADER = re.compile(r"^Model:[^\n]*\((?:Claude|Codex) via Paseo\b|^Roster:[^\n]*\bhost=paseo(?:[;\s]|$)", re.M)
 
 
 POINTER_WORDS = {"same", "identical", "unchanged", "checklist", "items", "as", "in", "to", "of", "from", "the", "see", "and", "for"}
@@ -114,6 +122,11 @@ def declared_instructions(package, listed):
         paths = PACKAGE_PATH.findall(bullet.group(1)) if bullet else []
         if stage and paths:
             found.append((name, stage.group(1), paths))
+        for match in SCOPE_INSTRUCTION.finditer(text):
+            found.append((name, "paseo", match.group(1).split(". ", 1)[0].rstrip(".") + "."))
+        acceptance = ACCEPTANCE_INSTRUCTION.search(text)
+        if acceptance:
+            found.append((name, "acceptance", acceptance.group(1).split(". ", 1)[0].rstrip(".") + "."))
     return found
 
 
@@ -126,10 +139,16 @@ def find_readme(folder):
 
 
 def instruction_error(record, name, paths):
-    text, root = record.read_text(), ROOT.search(record.read_text())
+    text = record.read_text()
+    root = ROOT.search(text)
     if not root or re.search(rf"^.*\b{re.escape(name)} not run:[ \t]*\S", text, re.M):
         return None
     base = root.group(1).rstrip("/")
+    if isinstance(paths, str):
+        if " ".join(paths.split()) in " ".join(text.split()):
+            return None
+        return (f"{record.name}: {name} worker instruction is absent; copy the scope-note instruction of "
+                f"{base}/extensions/{name}/EXTENSION.md into the scope notes, or add a line '{name} not run: <reason>'")
     missing = [p for p in paths if not re.search(rf"(?<![\w.~-]){re.escape(base + '/' + p)}(?=[.,`)\x22\x27]{{0,3}}(?:\s|$))", text)]
     if not missing:
         return None
@@ -142,9 +161,18 @@ def instruction_error(record, name, paths):
 def extension_errors(folder, readme, package):
     listed = readme_extensions(readme)
     errors = []
+    task = next((p for p in (Path(folder, "index.md"), Path(folder).with_suffix(".md")) if p.is_file()), None)
+    acceptance = bool(task and frontmatter(task).get("release-acceptance"))
     for name, stage, paths in declared_instructions(package, listed):
-        for record in [Path(folder, "dispatch", f"{stage}-1.md")]:
-            error = instruction_error(record, name, paths) if record.is_file() else None
+        for record in sorted(Path(folder, "dispatch").glob("*.md")):
+            spawn = SPAWN_RECORD.fullmatch(record.name)
+            if not record.is_file() or not spawn:
+                continue
+            header = re.split(r"^## ", record.read_text(), maxsplit=1, flags=re.M)[0]
+            applies = (bool(PASEO_HEADER.search(header)) if stage == "paseo" else
+                       acceptance and record.name == "implementation-1.md" if stage == "acceptance" else
+                       spawn.group(1) == stage)
+            error = instruction_error(record, name, paths) if applies else None
             if error:
                 errors.append(error)
     return errors
