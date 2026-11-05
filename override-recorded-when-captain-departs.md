@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-11-05T10:53:03Z
 worktree: .worktrees/spacedock-ensign-override-recorded-when-captain-departs
+pr: iamcxa/kc-claude-plugins#786
 ---
 
 ## Scope
