@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:step-back-answer-has-a-record-line:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:step-back-answer-has-a-record-line-ideation-1
+              briefing:
+                id: briefing:step-back-answer-has-a-record-line:ideation:attempt-1:revision-1
+                digest: sha256:cf543f1fe0299a259ba4c03f191053dbe2f89ee6d72ccb1d612a3e0a6b2c7eb5
+                room-ref: ./step-back-answer-has-a-record-line/review/ideation/briefing-1
 ---
 
 When `role_triggers.py` prints the step-back reminder for a task, FO writes its answers to the three questions on one fixed line in the task, and `role_triggers.py` stops printing the reminder for that round once the line is there.

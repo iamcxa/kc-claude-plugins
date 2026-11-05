@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:step-back-answer-has-a-record-line:ideation:attempt-1:revision-1",
+  "question": "決定：退一步答案欄位這份設計進入實作嗎？核准即接受 D1（答案寫成 FO 對齊欄位下一行 Step back: \u003c事件\u003e — outcome: …; test: …; delete: …）與 D2（派工前的提醒維持原樣）兩個建議。",
+  "artifacts": [
+    {
+      "id": "artifact:step-back-answer-has-a-record-line:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5f37cfcb1bb347e202d4c7c7f6df113683fb47ee/step-back-answer-has-a-record-line.md",
+      "rev": "sha256:e3326115c273e34cfde9aedfb167e695c1ef24b21ce3e44aaa29fd5e5e39c822",
+      "mediaType": "text/markdown",
+      "summary": "One Step back: line under FO alignment stops role_triggers.py's reminder per event; replays of 3 batch 12-13 tasks pass; D1-D2."
+    }
+  ]
+}
