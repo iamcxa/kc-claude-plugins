@@ -1,0 +1,22 @@
+[
+  {
+    "name": "reason-missing-declaration-accepted",
+    "caught": true,
+    "exit": 1
+  },
+  {
+    "name": "reason-double-declaration-accepted",
+    "caught": true,
+    "exit": 1
+  },
+  {
+    "name": "reason-placeholder-accepted",
+    "caught": true,
+    "exit": 1
+  },
+  {
+    "name": "reason-followed-marker-widened",
+    "caught": true,
+    "exit": 1
+  }
+]

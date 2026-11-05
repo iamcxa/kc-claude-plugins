@@ -1,0 +1,17 @@
+{
+  "base_functions_preserved": [
+    "check_reason",
+    "gate_entries",
+    "ledger",
+    "main",
+    "question",
+    "scalar",
+    "split_task",
+    "summary",
+    "task_rows",
+    "unquote"
+  ],
+  "quote_helper_ast_preserved": true,
+  "observer_skill_bytes_preserved": true,
+  "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly"
+}

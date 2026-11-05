@@ -1,0 +1,5 @@
+{
+  "source_message_id": "cb6e2867-12d4-42cc-98ba-d7488018b67c",
+  "owner": "kc-plugin dev2 FO",
+  "words": "judge decision_ledger.py in the exported candidate at 2493d57a1, not the installed 0.35.0 copy. The installed path in the dispatch line only names the script (the record check needs a full path); the installed 0.35.0 copy predates both #786 and #788 and is not the candidate."
+}

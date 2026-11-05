@@ -1,0 +1,13 @@
+.F.....
+======================================================================
+FAIL: test_both_declarations_hold (test_decision_ledger.ReasonTest.test_both_declarations_hold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/reason-falsifiers-vcm67cxx/scripts/test_decision_ledger.py", line 223, in test_both_declarations_hold
+    self.assertEqual(code, 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.120s
+
+FAILED (failures=1)

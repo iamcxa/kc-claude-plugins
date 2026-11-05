@@ -1,0 +1,858 @@
+[
+  {
+    "name": "test_design_surfaces.AddedWordsTests.test_criterion_blocks_keep_paragraphs_and_stop_at_declarations_or_headings",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AddedWordsTests.test_deletions_whole_new_sentences_and_evidence_tails_are_not_compared",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AddedWordsTests.test_filler_ids_and_amendment_markers_are_ignored",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AddedWordsTests.test_fo_design_words_cannot_clear_a_hold",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AddedWordsTests.test_insertions_and_substitutions_in_kept_sentences",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AddedWordsTests.test_short_slash_separated_requirements_use_comparison_tokens",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AddedWordsTests.test_similarity_threshold_includes_three_of_four_matching_words",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AddedWordsTests.test_supported_declaration_prefixes_do_not_become_requirement_words",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AddedWordsTests.test_unmarked_replacement_missing_moved_text_and_fenced_live_example",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentCorpusTests.test_every_pinned_task_and_artifact_with_per_file_verdicts",
+    "status": "skipped",
+    "message": "set DEV2_AMENDMENT_CORPORA and DEV2_AMENDMENT_BASE for frozen corpus CLI replay"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentHistoricalTests.test_declared_reading_manifest_and_fixture_stdout",
+    "status": "skipped",
+    "message": "set DEV2_AMENDMENT_STATE for exact historical CLI replays"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentHistoricalTests.test_real_form_bites_and_single_field_repairs_with_event_artifacts",
+    "status": "skipped",
+    "message": "set DEV2_AMENDMENT_STATE for exact historical CLI replays"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentHistoricalTests.test_real_rewrite_cli_ranges_and_exact_state_workflow_invocation",
+    "status": "skipped",
+    "message": "set DEV2_AMENDMENT_STATE for exact historical CLI replays"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentStructureTests.test_disabling_fences_and_generic_heading_splitting_break_controls",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentStructureTests.test_feedback_and_fenced_examples_end_or_hide_entries",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentStructureTests.test_mismatched_fences_and_moved_metadata_are_not_live",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentStructureTests.test_raw_crlf_and_trailing_content_spaces_survive",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentStructureTests.test_restoring_first_section_scanning_or_substring_ids_breaks_controls",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentStructureTests.test_section_ownership_duplicate_sections_numbers_and_malformed_headings",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentStructureTests.test_whole_value_grammar_and_unique_ids",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_a_backslash_quote_on_a_captain_or_asked_line_is_refused_outside_a_moved_criterion",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_a_backslash_quote_on_any_other_amendment_line_is_not_judged",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_a_bold_id_in_evidence_prose_is_not_a_moved_criterion",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_a_relocated_criterion_none_no_amendments_and_a_fenced_example_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_a_replacement_later_moved_by_another_entry_still_satisfies_the_entry_that_wrote_it",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_a_superseded_criterion_waits_in_place_until_a_dispatch_checklist_names_the_amendment",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_a_superseded_id_still_declared_is_refused_including_a_redeclared_id",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_an_entry_holding_a_criterion_its_supersedes_line_does_not_name_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_an_entry_without_the_captain_line_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_an_id_inside_the_waiver_reason_is_not_named",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_an_indented_sibling_heading_ends_the_criteria_section",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_counting_a_non_declaration_line_as_the_marker_fails_its_cases",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_dropping_the_captain_rule_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_dropping_the_disjointness_rule_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_dropping_the_fence_skip_flags_a_fenced_example",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_dropping_the_moved_criterion_rule_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_dropping_the_other_entry_lookup_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_dropping_the_replacement_rule_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_dropping_the_waiver_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_matching_the_amendments_heading_case_sensitively_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_reading_a_bold_id_anywhere_on_a_line_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_reading_the_design_line_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_reading_the_id_list_past_the_waiver_text_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_mutation_restoring_the_plain_section_end_fails_its_cases",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_naming_every_moved_id_and_a_bold_on_the_captain_line_alone_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_no_replacement_on_the_supersedes_line_waives_the_replacement_rule",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_superseding_entries_need_a_criterion_with_the_amendment_phrase",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_the_amendments_heading_matches_in_any_case_and_with_surrounding_space",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_the_design_line_is_not_read",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_the_marker_counts_only_on_a_declaration_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentTests.test_the_marker_shapes_the_corpus_writes_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AskFormTests.test_failing_cli_never_prints_the_reminder",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.AskFormTests.test_reminder_is_last_at_backlog_and_ideation_only",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.BuiltScreenTests.test_a_built_screen_review_with_every_disposition_passes_and_prints_its_lines",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.BuiltScreenTests.test_a_decline_needs_its_ruling_report_and_an_overruled_one_becomes_a_decision",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.BuiltScreenTests.test_a_task_without_a_design_review_or_not_at_validation_is_not_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.BuiltScreenTests.test_a_ui_task_without_a_built_screen_review_or_waiver_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.BuiltScreenTests.test_an_f_bullet_must_be_in_the_current_validation_report",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.BuiltScreenTests.test_an_ideation_picture_is_not_a_built_screen",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.BuiltScreenTests.test_each_branch_of_the_screenshot_rule_has_a_mutant_that_passes_what_it_refuses",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.BuiltScreenTests.test_the_picture_and_the_upheld_lines_reach_the_output",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.BuiltScreenTests.test_the_review_finding_and_decline_lines_are_read_from_the_current_validation_report_only",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.BuiltScreenTests.test_two_built_screen_review_lines_are_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.CriteriaTests.test_each_fixture_is_accepted_or_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.CriteriaTests.test_mutation_accepting_a_plain_list_as_a_declaration_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.CriteriaTests.test_mutation_dropping_the_empty_section_rule_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.CriteriaTests.test_mutation_matching_the_heading_case_sensitively_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.CriteriaTests.test_mutation_restoring_the_column_zero_anchor_fails_its_cases",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.CriteriaTests.test_the_two_messages_the_readme_does_not_restate_are_worded_as_pointed_at",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_a_decision_ruling_needs_a_line_a_kind_and_an_owner",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_a_decline_check_naming_a_missing_file_or_the_wrong_shape_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_a_declined_finding_ruled_overruled_or_decision_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_a_declined_finding_with_no_ruling_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_a_declined_finding_without_a_decline_check_line_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_a_host_component_decline_needs_its_name_and_declaration_path",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_a_host_look_decision_must_end_with_the_adr_title",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_a_ruling_for_a_finding_the_review_does_not_list_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_a_ruling_missing_its_evidence_or_change_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_a_ruling_outside_the_rulings_list_does_not_count",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_a_scalar_design_decline_check_root_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_an_empty_evidence_or_change_counts_as_missing",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_an_overruled_decline_redisposed_passes_and_counts",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_an_upheld_ruling_for_a_finding_that_is_not_declined_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_decisions_of_one_kind_and_owner_print_once",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_each_preview_path_is_printed_resolved_and_a_url_as_written",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_the_gate_material_lists_each_upheld_decline_not_a_count",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DeclineCheckTests.test_two_decline_check_lines_are_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_a_fenced_preview_line_cannot_bind_a_report",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_a_folder_task_passes_with_its_own_report",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_a_prod_ui_task_owes_both_reviews",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_a_report_naming_any_of_several_preview_lines_passes",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_a_report_of_the_wrong_shape_or_for_another_preview_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_a_review_without_a_decline_prints_one_short_line_and_the_preview",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_a_reviewed_ui_design_passes_and_prints_its_summary_preview_and_upheld_decline",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_a_second_surfaces_line_cannot_switch_the_design_review_off",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_a_ui_task_past_ideation_or_without_ui_is_unchanged",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_an_empty_findings_list_passes_with_no_finding_lines",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_each_refusal_names_its_own_reason",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_limitations_are_not_read_so_an_unshown_state_beside_no_findings_passes",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_design_call_lets_a_missing_review_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_design_review_count_lets_two_lines_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_duplicate_rule_lets_two_dispositions_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_fixed_rule_refuses_a_fixed_finding",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_minor_test_lets_a_declined_major_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_one_preview_rule_lets_two_direct_previews_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_preview_rule_lets_another_preview_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_surfaces_count_lets_a_second_line_hide_ui",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_gating_on_ideation_alone_refuses_a_task_without_ui",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_matching_only_the_first_preview_line_refuses_the_second",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_reading_preview_candidates_from_the_raw_body_lets_a_fenced_one_bind",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_reading_the_preview_at_any_indent_takes_a_nested_one",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_searching_the_whole_report_takes_a_preview_of_another_mapping",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_mutation_using_the_security_scale_accepts_a_high_design_finding",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_the_preview_is_exactly_one_direct_child_of_the_root",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_two_dispositions_for_one_finding_number_are_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignReviewTests.test_two_review_lines_are_refused_even_when_the_first_names_a_valid_report",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignSurfacesTests.test_a_passing_ui_and_db_task",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignSurfacesTests.test_db_schema_as_erdiagram_passes",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignSurfacesTests.test_each_rule_refuses_with_its_own_message",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.DesignSurfacesTests.test_ui_preview_url_is_accepted_without_a_local_file",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.FencedFoAlignmentTests.test_a_task_quoting_a_fenced_fo_alignment_passes_check_and_seed",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.FencedFoAlignmentTests.test_mutation_reading_the_fo_alignment_from_raw_text_refuses_the_quoting_task",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.OverrideNoteTests.test_a_placeholder_form_a_fenced_line_and_a_plain_chose_clause_print_nothing",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.OverrideNoteTests.test_a_reason_carrying_the_chosen_text_prints_nothing_even_when_the_rest_of_the_line_differs",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.OverrideNoteTests.test_an_override_line_no_gate_reason_carries_prints_one_note_and_changes_no_verdict",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.OverrideNoteTests.test_mutation_dropping_the_placeholder_test_or_the_carried_test_prints_a_note",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_a_scope_line_added_after_the_backlog_gate_holds_with_a_line_addressed_to_fo",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_a_scope_line_removed_after_the_backlog_gate_holds",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_a_task_the_check_cannot_judge_prints_why_and_exits_zero",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_an_amendment_committed_with_the_edit_covers_it_and_an_edit_after_it_holds",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_an_amendment_heading_outside_the_amendments_section_or_inside_a_fence_is_no_baseline",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_an_earlier_look_alike_heading_with_the_same_number_is_not_the_amendment_commit",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_an_edit_outside_scope_is_not_a_scope_change",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_an_unchanged_scope_is_clean_and_prints_the_presentable_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_an_uncommitted_amendment_covers_an_uncommitted_scope_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_fenced_lines_inside_the_real_scope_stay_compared_and_a_fenced_heading_does_not_end_it",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_mutation_dropping_the_label_exemption_holds_a_non_goals_fill",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_mutation_dropping_the_stage_gate_holds_an_implementation_run",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_mutation_letting_any_amendment_exempt_every_later_edit_turns_the_edit_after_it_clean",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_mutation_reading_amendment_headings_from_the_whole_body_clears_a_look_alike_heading",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_mutation_reading_only_the_backlog_sha_holds_a_scope_change_an_amendment_records",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_seed_mode_never_reads_git",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_the_four_label_prefixes_the_readme_defines_are_filled_without_an_amendment",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_the_hold_reaches_only_a_task_in_ideation",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_the_hold_wording_orders_restore_before_amendment_and_ends_with_the_worker_sentence",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.ScopeCheckTests.test_the_scope_is_the_first_scope_heading_outside_a_fence",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_bold_acceptance_id_in_design_prose_is_not_a_declared_criterion",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_comment_or_blank_line_before_findings_does_not_move_its_depth",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_dash_inside_a_block_scalar_is_not_an_item",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_declined_medium_and_an_acceptance_criterion_on_any_severity_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_file_that_is_not_a_review_report_and_a_path_leaving_the_task_folder_are_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_findings_item_with_no_severity_among_others_is_not_dropped",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_findings_item_with_no_severity_is_not_counted_as_zero_findings",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_findings_key_that_is_not_a_direct_child_of_the_root_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_findings_value_that_is_not_a_list_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_folder_task_with_no_report_in_its_own_folder_is_still_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_quoted_severity_still_counts_as_a_finding",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_report_with_an_empty_findings_list_passes_with_no_finding_lines",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_reviewed_prod_design_passes_and_prints_one_short_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_root_key_that_carries_a_value_is_refused_so_its_children_are_not_scalar_text",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_second_findings_line_is_refused_in_a_scalar_and_as_a_key",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_second_root_line_at_column_zero_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_severity_line_outside_the_parsed_items_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_severity_may_sit_on_any_line_of_its_item",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_task_of_another_profile_or_past_ideation_is_unchanged",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_a_truncated_item_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_an_indented_root_line_is_not_a_second_root",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_an_item_with_no_severity_is_refused_by_its_number",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_an_unknown_severity_value_is_refused_by_its_number",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_each_refusal_names_its_own_reason",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_counting_any_dash_as_an_item_splits_a_block_scalar",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_defaulting_a_missing_severity_hides_the_item",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_direct_child_rule_reads_a_nested_findings_as_the_list",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_empty_list_literal_refuses_findings_of_nothing",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_empty_rule_passes_a_key_with_no_items",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_findings_count_accepts_a_second_findings_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_folder_rule_lets_a_path_outside_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_indent_rule_swallows_a_misindented_item",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_key_value_rule_changes_a_bare_item_reason",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_not_run_rule_changes_its_reason",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_quote_strip_refuses_a_quoted_severity",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_root_count_accepts_a_second_root",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_root_value_rule_reads_a_scalar_root_as_a_mapping",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_scale_test_accepts_an_unknown_severity",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_security_call_lets_a_missing_review_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_security_duplicate_check_lets_two_dispositions_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_security_review_count_lets_two_lines_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_severity_count_accepts_a_severity_line_the_parser_skipped",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_severity_test_lets_a_declined_high_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_dropping_the_value_rule_reads_a_scalar_as_a_list",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_matching_unquoted_frontmatter_only_skips_a_quoted_prod_task",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_reading_a_folder_task_as_a_flat_task_refuses_its_own_report",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_reading_ids_from_the_whole_task_accepts_a_prose_id",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_mutation_reading_severity_at_any_depth_takes_one_from_a_block_scalar",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_quoted_frontmatter_values_are_still_a_prod_ideation_task",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_the_same_report_passes_for_a_flat_task_and_for_a_folder_task",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_two_dispositions_for_one_security_finding_number_are_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SecurityReviewTests.test_two_review_lines_are_refused_so_a_rerun_cannot_leave_an_older_report_binding",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedBoundsTests.test_dedicated_bounds_accept_real_content_at_zero_to_three_spaces",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedBoundsTests.test_dedicated_bounds_reject_quotes_at_zero_to_three_spaces",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedBoundsTests.test_dedicated_sections_and_scope_bullets_and_plural_forms",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedBoundsTests.test_default_mode_preserves_missing_bounds_and_seed_uses_no_process",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedBoundsTests.test_empty_placeholder_quote_report_and_fenced_impostors_are_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedBoundsTests.test_fence_length_and_kind_keep_impostors_hidden",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedBoundsTests.test_slug_id_frontmatter_and_scope_are_not_new_requirements",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedBoundsTests.test_three_bounds_required_individually_in_both_task_forms",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedBoundsTests.test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedModeTests.test_a_seed_without_criteria_passes_seed_mode",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedModeTests.test_a_ui_seed_owing_its_proposal_passes_seed_and_fails_the_full_check",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedModeTests.test_each_seed_rule_refuses_and_exits_1",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedModeTests.test_mutation_dropping_the_heading_rule_from_seed_mode_fails_its_case",
+    "status": "passed"
+  },
+  {
+    "name": "test_design_surfaces.SeedModeTests.test_mutation_running_the_artifact_rules_in_seed_mode_fails_its_case",
+    "status": "passed"
+  }
+]

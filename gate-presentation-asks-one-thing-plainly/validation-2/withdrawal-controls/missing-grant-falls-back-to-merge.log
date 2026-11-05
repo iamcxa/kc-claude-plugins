@@ -1,0 +1,38 @@
+.....FFF
+======================================================================
+FAIL: test_withdrawn_approval_without_an_effective_captain_grant_asks_separately (test_delivery_gate.BoundApprovalTests.test_withdrawn_approval_without_an_effective_captain_grant_asks_separately) (entries=[('person:captain', 'Captain 「准」, answering 「「決定：含「婉拒要寫明」的設計進實作嗎？」 Approval\n  also covers merging this head.」')])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/withdrawal-falsifier-aj4nddn9/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1767, in test_withdrawn_approval_without_an_effective_captain_grant_asks_separately
+    self.assertEqual(self.run_approval(entries, withdrawals=(1,)), gate.ASK_UNQUOTED)
+AssertionError: 'next: merge this head if the approved question [150 chars]ime.' != 'next: ask for merge with this text: there is no[173 chars]ime.'
+- next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
++ next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.
+
+
+======================================================================
+FAIL: test_withdrawn_approval_without_an_effective_captain_grant_asks_separately (test_delivery_gate.BoundApprovalTests.test_withdrawn_approval_without_an_effective_captain_grant_asks_separately) (entries=[('person:captain', 'Captain 「准」, answering 「「決定：含「婉拒要寫明」的設計進實作嗎？」 Approval\n  also covers merging this head.」'), ('agent:first-officer', 'repair under revoked grant')])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/withdrawal-falsifier-aj4nddn9/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1767, in test_withdrawn_approval_without_an_effective_captain_grant_asks_separately
+    self.assertEqual(self.run_approval(entries, withdrawals=(1,)), gate.ASK_UNQUOTED)
+AssertionError: 'next: merge this head if the approved question [150 chars]ime.' != 'next: ask for merge with this text: there is no[173 chars]ime.'
+- next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
++ next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.
+
+
+======================================================================
+FAIL: test_withdrawn_quoted_approval_cannot_mask_an_active_unquoted_approval (test_delivery_gate.BoundApprovalTests.test_withdrawn_quoted_approval_cannot_mask_an_active_unquoted_approval)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/withdrawal-falsifier-aj4nddn9/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1761, in test_withdrawn_quoted_approval_cannot_mask_an_active_unquoted_approval
+    self.assertEqual(self.run_approval(entries, withdrawals=(2,)), gate.ASK_UNQUOTED)
+AssertionError: 'next: merge this head if the approved question [150 chars]ime.' != 'next: ask for merge with this text: there is no[173 chars]ime.'
+- next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
++ next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.469s
+
+FAILED (failures=3)

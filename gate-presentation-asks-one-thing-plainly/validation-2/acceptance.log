@@ -1,0 +1,47 @@
+candidate 2493d57a17dcbe08489918b208c9bd5019450772
+test_newest_captain_answer_decides_in_both_directions (test_delivery_gate.BoundApprovalTests.test_newest_captain_answer_decides_in_both_directions) ... ok
+test_question_reminder_reaches_cli_only_on_pass (test_delivery_gate.BoundApprovalTests.test_question_reminder_reaches_cli_only_on_pass) ... ok
+test_quoted_answer_pre_ask_and_delegated_repair_keep_the_existing_line (test_delivery_gate.BoundApprovalTests.test_quoted_answer_pre_ask_and_delegated_repair_keep_the_existing_line) ... ok
+test_unquoted_or_prefix_only_approval_asks_separately (test_delivery_gate.BoundApprovalTests.test_unquoted_or_prefix_only_approval_asks_separately) ... ok
+test_withdrawal_leaves_active_quoted_approvals_and_new_pre_asks_unchanged (test_delivery_gate.BoundApprovalTests.test_withdrawal_leaves_active_quoted_approvals_and_new_pre_asks_unchanged) ... ok
+test_withdrawn_approval_without_an_effective_captain_grant_asks_separately (test_delivery_gate.BoundApprovalTests.test_withdrawn_approval_without_an_effective_captain_grant_asks_separately) ... ok
+test_withdrawn_quoted_approval_cannot_mask_an_active_unquoted_approval (test_delivery_gate.BoundApprovalTests.test_withdrawn_quoted_approval_cannot_mask_an_active_unquoted_approval) ... ok
+test_failing_cli_never_prints_the_reminder (test_design_surfaces.AskFormTests.test_failing_cli_never_prints_the_reminder) ... ok
+test_reminder_is_last_at_backlog_and_ideation_only (test_design_surfaces.AskFormTests.test_reminder_is_last_at_backlog_and_ideation_only) ... ok
+test_missing_question_reason_or_answering_marker_does_not_match (test_decision_ledger.BoundQuestionTests.test_missing_question_reason_or_answering_marker_does_not_match) ... ok
+test_whole_question_with_nested_brackets_and_whitespace (test_decision_ledger.BoundQuestionTests.test_whole_question_with_nested_brackets_and_whitespace) ... ok
+test_amendment_counts_only_against_earlier_rulings (test_decision_ledger.LedgerTest.test_amendment_counts_only_against_earlier_rulings) ... ok
+test_delegated_decision_keeps_its_grant (test_decision_ledger.LedgerTest.test_delegated_decision_keeps_its_grant) ... ok
+test_every_resolution_and_withdrawal_is_a_row (test_decision_ledger.LedgerTest.test_every_resolution_and_withdrawal_is_a_row) ... ok
+test_followed_survives_the_ledger_and_summary (test_decision_ledger.LedgerTest.test_followed_survives_the_ledger_and_summary) ... ok
+test_followed_without_colon_is_not_a_declaration (test_decision_ledger.LedgerTest.test_followed_without_colon_is_not_a_declaration) ... ok
+test_missing_directory_is_a_usage_error (test_decision_ledger.LedgerTest.test_missing_directory_is_a_usage_error) ... not a directory: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfyrd1byd/nope
+ok
+test_override_sets_area_and_others_fall_back_to_surfaces (test_decision_ledger.LedgerTest.test_override_sets_area_and_others_fall_back_to_surfaces) ... ok
+test_question_comes_from_the_briefing_room (test_decision_ledger.LedgerTest.test_question_comes_from_the_briefing_room) ... ok
+test_summary_counts_resolutions_per_area (test_decision_ledger.LedgerTest.test_summary_counts_resolutions_per_area) ... ok
+test_wrapped_single_quoted_reason_is_folded_and_unescaped (test_decision_ledger.LedgerTest.test_wrapped_single_quoted_reason_is_folded_and_unescaped) ... ok
+test_agreement_needs_the_followed_declaration (test_decision_ledger.ReasonTest.test_agreement_needs_the_followed_declaration) ... ok
+test_both_declarations_hold (test_decision_ledger.ReasonTest.test_both_declarations_hold) ... ok
+test_empty_and_unreadable_files_are_input_errors (test_decision_ledger.ReasonTest.test_empty_and_unreadable_files_are_input_errors) ... ok
+test_flagged_reasons_hold_and_pass_with_override (test_decision_ledger.ReasonTest.test_flagged_reasons_hold_and_pass_with_override) ... ok
+test_followed_is_a_declaration_not_a_truth_check (test_decision_ledger.ReasonTest.test_followed_is_a_declaration_not_a_truth_check) ... ok
+test_malformed_override_and_followed_typo_hold (test_decision_ledger.ReasonTest.test_malformed_override_and_followed_typo_hold) ... ok
+test_placeholder_recommendations_hold (test_decision_ledger.ReasonTest.test_placeholder_recommendations_hold) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 6.803s
+
+OK
+test_historical_answers_lose_grant_and_whole_question_restores_it (test_delivery_gate.HistoricalBoundQuestionTests.test_historical_answers_lose_grant_and_whole_question_restores_it) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 6.921s
+
+OK
+historical cases: 5
+59 ADR file(s) checked, 0 legacy
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base a7c0bdbe0ae0 head 2493d57a17dc merge-base 65d35dac02ae
+acceptance PASS; exported candidate and historical evidence: /tmp/gate-presentation-acceptance-2493d57.o6GaiN

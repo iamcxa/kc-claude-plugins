@@ -1,0 +1,10 @@
+{
+  "adr_lint": 0,
+  "number_guards": 0,
+  "skill_lint": 0,
+  "comment_ratio": 0,
+  "doc_impact": 0,
+  "dispatch_records": 0,
+  "task_design": 0,
+  "acceptance": 0
+}

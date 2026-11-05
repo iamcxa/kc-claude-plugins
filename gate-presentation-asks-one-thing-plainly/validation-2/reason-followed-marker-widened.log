@@ -1,0 +1,13 @@
+.....F.
+======================================================================
+FAIL: test_malformed_override_and_followed_typo_hold (test_decision_ledger.ReasonTest.test_malformed_override_and_followed_typo_hold) (reason='Recommendation followed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/reason-falsifiers-vcm67cxx/scripts/test_decision_ledger.py", line 245, in test_malformed_override_and_followed_typo_hold
+    self.assertEqual(self.check(reason)[0], 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.041s
+
+FAILED (failures=1)

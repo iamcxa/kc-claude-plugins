@@ -1,0 +1,30 @@
+[
+  {
+    "quoted": false,
+    "declared": false,
+    "exit": 1,
+    "stdout": "reason: missing declaration\nnext: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.\n",
+    "quote_match": false
+  },
+  {
+    "quoted": false,
+    "declared": true,
+    "exit": 0,
+    "stdout": "reason: followed\n",
+    "quote_match": false
+  },
+  {
+    "quoted": true,
+    "declared": false,
+    "exit": 1,
+    "stdout": "reason: missing declaration\nnext: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.\n",
+    "quote_match": true
+  },
+  {
+    "quoted": true,
+    "declared": true,
+    "exit": 0,
+    "stdout": "reason: followed\n",
+    "quote_match": true
+  }
+]

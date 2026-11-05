@@ -1,0 +1,13 @@
+.F.....
+======================================================================
+FAIL: test_question_reminder_reaches_cli_only_on_pass (test_delivery_gate.BoundApprovalTests.test_question_reminder_reaches_cli_only_on_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1788, in test_question_reminder_reaches_cli_only_on_pass
+    self.assertEqual(gate.ASK_FORM in done.stdout, code == 0)
+AssertionError: True != False
+
+----------------------------------------------------------------------
+Ran 7 tests in 8.204s
+
+FAILED (failures=1)

@@ -1,0 +1,10 @@
+{
+  "report_sha256": "3671bd0bcaddd05a3545b39db84dd26a51d806d635b9cc9d0a92c709c480d3dd",
+  "source": "/tmp/ac5-observer-report.md",
+  "supplied_run_not_relaunched": true,
+  "current_helper_and_instruction_equivalent": true,
+  "three_stage_rows_replayed": true,
+  "ideation_violation_present": true,
+  "ok_mutant_caught": true,
+  "omitted_row_mutant_caught": true
+}

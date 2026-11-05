@@ -1,0 +1,117 @@
+FFFFFFFFFFFFFF
+======================================================================
+FAIL: test_failing_cli_never_prints_the_reminder (test_design_surfaces.AskFormTests.test_failing_cli_never_prints_the_reminder) (stage='backlog', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1614, in test_failing_cli_never_prints_the_reminder
+    self.assertNotIn(ASK_FORM, done.stdout)
+AssertionError: 'next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.' unexpectedly found in "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\ntask.md: 'Surfaces:' has unknown value(s) unknown\nscope check not run: stage is backlog, not ideation\n"
+
+======================================================================
+FAIL: test_failing_cli_never_prints_the_reminder (test_design_surfaces.AskFormTests.test_failing_cli_never_prints_the_reminder) (stage='backlog', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1614, in test_failing_cli_never_prints_the_reminder
+    self.assertNotIn(ASK_FORM, done.stdout)
+AssertionError: 'next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.' unexpectedly found in "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\ntask.md: 'Surfaces:' has unknown value(s) unknown\n"
+
+======================================================================
+FAIL: test_failing_cli_never_prints_the_reminder (test_design_surfaces.AskFormTests.test_failing_cli_never_prints_the_reminder) (stage='ideation', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1614, in test_failing_cli_never_prints_the_reminder
+    self.assertNotIn(ASK_FORM, done.stdout)
+AssertionError: 'next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.' unexpectedly found in "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\ntask.md: 'Surfaces:' has unknown value(s) unknown\nscope check not run: backlog briefing unreadable\n"
+
+======================================================================
+FAIL: test_failing_cli_never_prints_the_reminder (test_design_surfaces.AskFormTests.test_failing_cli_never_prints_the_reminder) (stage='ideation', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1614, in test_failing_cli_never_prints_the_reminder
+    self.assertNotIn(ASK_FORM, done.stdout)
+AssertionError: 'next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.' unexpectedly found in "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\ntask.md: 'Surfaces:' has unknown value(s) unknown\n"
+
+======================================================================
+FAIL: test_failing_cli_never_prints_the_reminder (test_design_surfaces.AskFormTests.test_failing_cli_never_prints_the_reminder) (stage='implementation', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1614, in test_failing_cli_never_prints_the_reminder
+    self.assertNotIn(ASK_FORM, done.stdout)
+AssertionError: 'next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.' unexpectedly found in "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\ntask.md: 'Surfaces:' has unknown value(s) unknown\nscope check not run: stage is implementation, not ideation\n"
+
+======================================================================
+FAIL: test_failing_cli_never_prints_the_reminder (test_design_surfaces.AskFormTests.test_failing_cli_never_prints_the_reminder) (stage='implementation', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1614, in test_failing_cli_never_prints_the_reminder
+    self.assertNotIn(ASK_FORM, done.stdout)
+AssertionError: 'next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.' unexpectedly found in "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\ntask.md: 'Surfaces:' has unknown value(s) unknown\n"
+
+======================================================================
+FAIL: test_failing_cli_never_prints_the_reminder (test_design_surfaces.AskFormTests.test_failing_cli_never_prints_the_reminder) (stage='validation', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1614, in test_failing_cli_never_prints_the_reminder
+    self.assertNotIn(ASK_FORM, done.stdout)
+AssertionError: 'next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.' unexpectedly found in "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\ntask.md: 'Surfaces:' has unknown value(s) unknown\nscope check not run: stage is validation, not ideation\n"
+
+======================================================================
+FAIL: test_failing_cli_never_prints_the_reminder (test_design_surfaces.AskFormTests.test_failing_cli_never_prints_the_reminder) (stage='validation', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1614, in test_failing_cli_never_prints_the_reminder
+    self.assertNotIn(ASK_FORM, done.stdout)
+AssertionError: 'next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.' unexpectedly found in "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\ntask.md: 'Surfaces:' has unknown value(s) unknown\n"
+
+======================================================================
+FAIL: test_reminder_is_last_at_backlog_and_ideation_only (test_design_surfaces.AskFormTests.test_reminder_is_last_at_backlog_and_ideation_only) (stage='implementation', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1603, in test_reminder_is_last_at_backlog_and_ideation_only
+    self.assertEqual(ASK_FORM in done.stdout, stage in ("backlog", "ideation"))
+AssertionError: True != False
+
+======================================================================
+FAIL: test_reminder_is_last_at_backlog_and_ideation_only (test_design_surfaces.AskFormTests.test_reminder_is_last_at_backlog_and_ideation_only) (stage='implementation', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1603, in test_reminder_is_last_at_backlog_and_ideation_only
+    self.assertEqual(ASK_FORM in done.stdout, stage in ("backlog", "ideation"))
+AssertionError: True != False
+
+======================================================================
+FAIL: test_reminder_is_last_at_backlog_and_ideation_only (test_design_surfaces.AskFormTests.test_reminder_is_last_at_backlog_and_ideation_only) (stage='validation', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1603, in test_reminder_is_last_at_backlog_and_ideation_only
+    self.assertEqual(ASK_FORM in done.stdout, stage in ("backlog", "ideation"))
+AssertionError: True != False
+
+======================================================================
+FAIL: test_reminder_is_last_at_backlog_and_ideation_only (test_design_surfaces.AskFormTests.test_reminder_is_last_at_backlog_and_ideation_only) (stage='validation', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1603, in test_reminder_is_last_at_backlog_and_ideation_only
+    self.assertEqual(ASK_FORM in done.stdout, stage in ("backlog", "ideation"))
+AssertionError: True != False
+
+======================================================================
+FAIL: test_reminder_is_last_at_backlog_and_ideation_only (test_design_surfaces.AskFormTests.test_reminder_is_last_at_backlog_and_ideation_only) (stage='done', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1603, in test_reminder_is_last_at_backlog_and_ideation_only
+    self.assertEqual(ASK_FORM in done.stdout, stage in ("backlog", "ideation"))
+AssertionError: True != False
+
+======================================================================
+FAIL: test_reminder_is_last_at_backlog_and_ideation_only (test_design_surfaces.AskFormTests.test_reminder_is_last_at_backlog_and_ideation_only) (stage='done', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1603, in test_reminder_is_last_at_backlog_and_ideation_only
+    self.assertEqual(ASK_FORM in done.stdout, stage in ("backlog", "ideation"))
+AssertionError: True != False
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.972s
+
+FAILED (failures=14)

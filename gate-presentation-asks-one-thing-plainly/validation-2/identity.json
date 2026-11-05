@@ -1,0 +1,20 @@
+{
+  "candidate": "2493d57a17dcbe08489918b208c9bd5019450772",
+  "base": "a7c0bdbe0ae0f111780f6d3b7254ed4ad67befcd",
+  "merge_base": "65d35dac02ae2aa4bb94642c41665a4e06ed8490",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly",
+  "branch": "spacedock-ensign/gate-presentation-asks-one-thing-plainly",
+  "export": "/tmp/gate-presentation-validation-2493d57/candidate",
+  "matching_export_files": 1540,
+  "code_clean": true,
+  "task_diff_files": [
+    "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "kc-dev-flow-2/scripts/decision_ledger.py",
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/skills/observer/SKILL.md"
+  ]
+}

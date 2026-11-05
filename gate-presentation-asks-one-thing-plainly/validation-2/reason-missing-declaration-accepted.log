@@ -1,0 +1,53 @@
+F..FFF.FF.
+======================================================================
+FAIL: test_agreement_needs_the_followed_declaration (test_decision_ledger.ReasonTest.test_agreement_needs_the_followed_declaration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/reason-falsifiers-vcm67cxx/scripts/test_decision_ledger.py", line 212, in test_agreement_needs_the_followed_declaration
+    self.assertEqual(self.check(reason)[0], 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_flagged_reasons_hold_and_pass_with_override (test_decision_ledger.ReasonTest.test_flagged_reasons_hold_and_pass_with_override) (attempt='gate-attempt:model-roster-question-needs-both-families-backlog-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/reason-falsifiers-vcm67cxx/scripts/test_decision_ledger.py", line 204, in test_flagged_reasons_hold_and_pass_with_override
+    self.assertEqual(code, 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_flagged_reasons_hold_and_pass_with_override (test_decision_ledger.ReasonTest.test_flagged_reasons_hold_and_pass_with_override) (attempt='gate-attempt:special-roles-follow-the-model-table-backlog-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/reason-falsifiers-vcm67cxx/scripts/test_decision_ledger.py", line 204, in test_flagged_reasons_hold_and_pass_with_override
+    self.assertEqual(code, 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_flagged_reasons_hold_and_pass_with_override (test_decision_ledger.ReasonTest.test_flagged_reasons_hold_and_pass_with_override) (attempt='gate-attempt:release-walk-due-trigger-ideation-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/reason-falsifiers-vcm67cxx/scripts/test_decision_ledger.py", line 204, in test_flagged_reasons_hold_and_pass_with_override
+    self.assertEqual(code, 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_malformed_override_and_followed_typo_hold (test_decision_ledger.ReasonTest.test_malformed_override_and_followed_typo_hold) (reason='Recommendation followed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/reason-falsifiers-vcm67cxx/scripts/test_decision_ledger.py", line 245, in test_malformed_override_and_followed_typo_hold
+    self.assertEqual(self.check(reason)[0], 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_malformed_override_and_followed_typo_hold (test_decision_ledger.ReasonTest.test_malformed_override_and_followed_typo_hold) (reason='Override: recommended A; Captain chose B')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/reason-falsifiers-vcm67cxx/scripts/test_decision_ledger.py", line 245, in test_malformed_override_and_followed_typo_hold
+    self.assertEqual(self.check(reason)[0], 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.072s
+
+FAILED (failures=6)

@@ -1,0 +1,37 @@
+FFFF
+======================================================================
+FAIL: test_missing_question_reason_or_answering_marker_does_not_match (test_decision_ledger.BoundQuestionTests.test_missing_question_reason_or_answering_marker_does_not_match) (row={'question': 'Approve?', 'reason': 'Captain 「准」'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_decision_ledger.py", line 104, in test_missing_question_reason_or_answering_marker_does_not_match
+    self.assertFalse(dl.quotes_bound_question(row))
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_missing_question_reason_or_answering_marker_does_not_match (test_decision_ledger.BoundQuestionTests.test_missing_question_reason_or_answering_marker_does_not_match) (row={'question': 'Approve?', 'reason': '「Approve?」'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_decision_ledger.py", line 104, in test_missing_question_reason_or_answering_marker_does_not_match
+    self.assertFalse(dl.quotes_bound_question(row))
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_missing_question_reason_or_answering_marker_does_not_match (test_decision_ledger.BoundQuestionTests.test_missing_question_reason_or_answering_marker_does_not_match) (row={'question': 'Approve? And merge.', 'reason': 'answering 「Approve?」'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_decision_ledger.py", line 104, in test_missing_question_reason_or_answering_marker_does_not_match
+    self.assertFalse(dl.quotes_bound_question(row))
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_whole_question_with_nested_brackets_and_whitespace (test_decision_ledger.BoundQuestionTests.test_whole_question_with_nested_brackets_and_whitespace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-g636mayl/kc-dev-flow-2/scripts/test_decision_ledger.py", line 96, in test_whole_question_with_nested_brackets_and_whitespace
+    self.assertFalse(dl.quotes_bound_question(row))
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.001s
+
+FAILED (failures=4)

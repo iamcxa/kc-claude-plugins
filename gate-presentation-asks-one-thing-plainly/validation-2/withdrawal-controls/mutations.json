@@ -1,0 +1,20 @@
+[
+  {
+    "name": "withdrawn-rows-restored",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/gate-presentation-validation-2493d57/withdrawal-controls/withdrawn-rows-restored.log"
+  },
+  {
+    "name": "withdrawn-treated-as-pre-ask",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/gate-presentation-validation-2493d57/withdrawal-controls/withdrawn-treated-as-pre-ask.log"
+  },
+  {
+    "name": "missing-grant-falls-back-to-merge",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/gate-presentation-validation-2493d57/withdrawal-controls/missing-grant-falls-back-to-merge.log"
+  }
+]
