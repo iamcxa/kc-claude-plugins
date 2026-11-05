@@ -223,7 +223,9 @@ Recommended order: after fo-write-checks-parse-top-level and comment-check-reach
 
 ## Number guards
 
-ADR: 0060
+ADR: 0062
+
+Re-reserved 2026-11-05: 0060 and 0061 landed on main from kc-journey-map #789 (a7c0bdbe0, another workflow) while this task held 0060; 0062 is free on main and in every open PR (FO read of origin/main docs/adr and open PR file lists, 2026-11-05).
 
 ## Stage Report: ideation
 
