@@ -3,8 +3,8 @@ import { journeyApi, setHumanContext, type HumanContext } from './api'
 import './human-entry.css'
 type Entry = { backendId: string; memberId: string; label: string; rooms: string[]; room: string | null; expiresAt: number; verifiedHumanSignInAt: number; status: string }
 const secret = () => [...crypto.getRandomValues(new Uint8Array(32))].map(b => b.toString(16).padStart(2, '0')).join('')
-async function post(path: string, body: object) {
- const response = await fetch(journeyApi(path), { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Journey-Entry': '1' }, body: JSON.stringify(body) })
+async function post(path: string, body: object, signal?: AbortSignal) {
+ const response = await fetch(journeyApi(path), { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Journey-Entry': '1' }, signal, body: JSON.stringify(body) })
  const result = await response.json()
  if (!response.ok) throw new Error(result.category || result.error || 'host_unavailable')
  return result
@@ -15,33 +15,63 @@ const messages: Record<string, string> = {
  provider_unavailable: '身分服務暫時無法使用。請稍後重試。', owner_peer_unavailable: '此主機無法確認本機帳號，登入已停止。', challenge_expired_or_consumed: '這次驗證已到期或已使用，請重新開始。',
 }
 const humanEntryEnabled = import.meta.env.VITE_JOURNEY_HUMAN_ENTRY === 'true'
-export type HumanCanvasEntry = { context: HumanContext | null; problem: string; activate: (room: string) => void }
+export type HumanCanvasEntry = { nativeAccount:boolean; signOut:(context:HumanContext)=>Promise<void>; label:string; context:HumanContext|null; problem:string; activate:(room:string)=>void }
 export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) => ReactNode }) {
- const [config, setConfig] = useState<{ enabled: boolean; mode?: string; localReady?: boolean } | null>(humanEntryEnabled ? null : { enabled: false })
+ const [config, setConfig] = useState<{ enabled: boolean; mode?: string; localReady?: boolean; nativeAccount?: boolean } | null>(humanEntryEnabled ? null : { enabled: false })
  const [entry, setEntry] = useState<Entry | null>(null)
  const [problem, setProblem] = useState('')
  const [busy, setBusy] = useState(humanEntryEnabled)
  const [requestId, setRequestId] = useState('')
  const verifier = useRef<{ verifier: string; csrf: string; requestId: string } | null>(null)
  const requestVersion = useRef(0)
+ const tabId=useRef('')
+ const held=useRef('')
+ const [hold,setHold]=useState(held.current)
+ const activity=useRef<AbortController>(null!),popup=useRef<Window|null>(null),writingLogout=useRef(false)
+ const holdSession=(value:string)=>{
+  held.current=value;setHold(value)
+  if(value)sessionStorage.setItem('journey-native-session-hold',value);else sessionStorage.removeItem('journey-native-session-hold')
+ }
+ const stopActivity=()=>{
+  requestVersion.current++;activity.current.abort();activity.current=new AbortController()
+  popup.current?.close();popup.current=null;verifier.current=null;setRequestId('');setEntry(null);setHumanContext(null)
+ }
+ async function signOut(context:import('./api').HumanContext) {
+  if(writingLogout.current)return
+  writingLogout.current=true;stopActivity();holdSession('pending');setBusy(true);setProblem('')
+  const channel=new BroadcastChannel('journey-human-authority')
+  channel.postMessage({type:'logout',sender:tabId.current,backend:context.backend,member:context.member,signInAt:context.signInAt});channel.close()
+  try {
+   const query=new URLSearchParams({_human:context.member,_backend:context.backend,_humanAt:String(context.signInAt),_humanRoom:context.room})
+   const csrf=/(?:^|;\s*)journey_human_csrf=([^;]+)/.exec(document.cookie)?.[1]||''
+   const response=await fetch(journeyApi('/auth/logout?'+query),{method:'POST',headers:{'Content-Type':'application/json','X-Journey-Entry':'1','X-Journey-Csrf':csrf},body:'{}',signal:AbortSignal.timeout(15000)})
+   const result=await response.json()
+   if(!response.ok || result.loggedOut!==true)throw new Error()
+   holdSession('confirmed')
+  }catch{holdSession('unknown')}
+  finally{writingLogout.current=false;setBusy(false)}
+ }
+ function cancelLogin(){stopActivity();holdSession('cancelled');setProblem('');setBusy(false)}
+
  const search = new URLSearchParams(window.location.search)
  const requested = search.get('room')
  const problemMessage = problem === 'room_denied' && requested !== null ? `你沒有權限進入「${requested}」。請從下面選一張你可以進入的畫布。` : messages[problem]
  async function refresh() {
+  if(held.current && config?.nativeAccount)return
   const requested = new URLSearchParams(window.location.search).get('room')
   const version = ++requestVersion.current
   setBusy(true); setEntry(null); setProblem('')
   try {
    const query = new URLSearchParams()
    if (requested !== null) query.set('room', requested)
-   const response = await fetch(journeyApi('/auth/entry?' + query))
+   const response = await fetch(journeyApi('/auth/entry?' + query),{signal:activity.current.signal})
    let result = await response.json()
    if (version !== requestVersion.current) return
    if (!response.ok) {
     setProblem(result.category || 'host_unavailable')
     if (['room_denied', 'room_missing'].includes(result.category)) {
      const inventory = await fetch(journeyApi('/auth/entry'))
-     if (inventory.ok && version === requestVersion.current) setEntry(await inventory.json())
+     if (inventory.ok) {const value=await inventory.json();if(version === requestVersion.current)setEntry(value)}
     }
     return
    }
@@ -70,16 +100,33 @@ export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) =
  }
  useEffect(() => {
   if (!humanEntryEnabled) return
+  activity.current=new AbortController()
   let active = true
   fetch(journeyApi('/auth/config')).then(async response => {
    if (!response.ok) throw new Error()
    const value = await response.json()
    if (!active) return
+   if(value.nativeAccount){
+    tabId.current=secret()
+    held.current=sessionStorage.getItem('journey-native-session-hold')||''
+    setHold(held.current)
+   }
    setConfig(value)
-   if (value.enabled) void refresh(); else setBusy(false)
+   if (value.enabled && !(value.nativeAccount && held.current)) void refresh(); else setBusy(false)
   }).catch(() => { if (active) { setProblem('host_unavailable'); setBusy(false) } })
-  return () => { active = false; requestVersion.current++ }
+  return () => { active = false; requestVersion.current++;activity.current.abort();popup.current?.close() }
  }, [])
+ useEffect(()=>{
+  if(!config?.nativeAccount)return
+  const channel=new BroadcastChannel('journey-human-authority')
+  channel.onmessage=event=>{
+   const value=event.data
+   if(value?.type!=='logout' || value.sender===tabId.current || !entry || value.backend!==entry.backendId || value.member!==entry.memberId || value.signInAt!==entry.verifiedHumanSignInAt)return
+   // Without durable drafts, preserve other tabs in memory instead of discarding edits.
+   setProblem('authority_denied')
+  }
+  return()=>channel.close()
+ },[config?.nativeAccount,entry])
  useEffect(() => {
   if (!config?.enabled || entry?.room) return
   const onNavigation = () => { void refresh() }
@@ -88,56 +135,73 @@ export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) =
  }, [config, requested, entry?.room])
  useEffect(() => {
   if (!entry?.room || problem) return
+  const version=requestVersion.current
   const timer = setTimeout(async () => {
    const csrf = /(?:^|;\s*)journey_human_csrf=([^;]+)/.exec(document.cookie)?.[1] || ''
    try {
     const response = await fetch(journeyApi('/auth/renew?' + new URLSearchParams({ _human: entry.memberId, _backend: entry.backendId, _humanAt: String(entry.verifiedHumanSignInAt), _humanRoom: entry.room! })), { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Journey-Entry': '1', 'X-Journey-Csrf': csrf }, body: '{}' })
     const result = await response.json()
-    if (!response.ok) { setProblem(result.category || 'host_unavailable'); return }
+    if(version!==requestVersion.current)return
+    if(!response.ok){setProblem(result.category||'host_unavailable');return}
     setEntry(current => current ? { ...current, expiresAt: result.expiresAt } : null)
-   } catch { setProblem('host_unavailable') }
+   } catch { if(version===requestVersion.current)setProblem('host_unavailable') }
   }, Math.max(0, entry.expiresAt - Date.now() - 60_000))
   return () => clearTimeout(timer)
  }, [entry, problem])
  async function login() {
-  setBusy(true); setProblem('')
+  if(busy)return
+  const version=++requestVersion.current
+  setBusy(true);setProblem('')
   try {
-   if (config?.mode === 'local') {
-    const material = { verifier: secret(), csrf: secret() }
-    const result = await post('/auth/local/start', material)
-    verifier.current = { ...material, requestId: result.requestId }; setRequestId(result.requestId)
-   } else {
-    const popup = window.open('about:blank', '_blank')
-    if (popup) popup.opener = null
-    try {
-     const result = await post('/auth/provider/start', {})
-     if (popup) popup.location.href = result.loginUrl
-     else { setProblem('請允許登入視窗，然後重試。') }
-    } catch (error) { popup?.close(); throw error }
+   if(config?.mode==='local') {
+    const material={verifier:secret(),csrf:secret()}
+    const result=await post('/auth/local/start',material,activity.current.signal)
+    if(version!==requestVersion.current)return
+    verifier.current={...material,requestId:result.requestId};setRequestId(result.requestId)
+   }else{
+    popup.current=window.open('about:blank','_blank')
+    if(popup.current)popup.current.opener=null
+    const result=await post('/auth/provider/start',{},activity.current.signal)
+    if(version!==requestVersion.current){popup.current?.close();return}
+    if(popup.current)popup.current.location.href=result.loginUrl
+    else setProblem('請允許登入視窗，然後重試。')
    }
-  } catch (error) { setProblem(error instanceof Error ? error.message : 'host_unavailable') }
-  finally { setBusy(false) }
+  }catch(error){if(version===requestVersion.current){popup.current?.close();setProblem(error instanceof Error?error.message:'host_unavailable')}}
+  finally{if(version===requestVersion.current)setBusy(false)}
  }
- async function finishLocal() {
-  if (!verifier.current) return
-  setBusy(true); setProblem('')
-  try { await post('/auth/local/consume', verifier.current); verifier.current = null; setRequestId(''); await refresh() }
-  catch (error) { setProblem(error instanceof Error ? error.message : 'host_unavailable'); setBusy(false) }
+ async function finishLocal(){
+  if(!verifier.current || busy)return
+  const version=++requestVersion.current
+  setBusy(true);setProblem('')
+  try{
+   await post('/auth/local/consume',verifier.current,activity.current.signal)
+   if(version!==requestVersion.current)return
+   verifier.current=null;setRequestId('');holdSession('');await refresh()
+  }catch(error){if(version===requestVersion.current){setProblem(error instanceof Error?error.message:'host_unavailable');setBusy(false)}}
  }
+ function retryEntry(){if(writingLogout.current)return;holdSession('');void refresh()}
  function select(room: string) {
   const url = new URL(window.location.href); url.searchParams.set('room', room); url.searchParams.delete('d'); url.hash = ''
   window.history.pushState(null, '', url); window.dispatchEvent(new PopStateEvent('popstate'))
  }
- if (config && !config.enabled) { setHumanContext(null); return children({ context: null, problem: '', activate: () => {} }) }
- if (entry?.room && !busy) {
+ if (config && !config.enabled) { setHumanContext(null); return children({ nativeAccount:false,signOut:async()=>{},label:'',context: null, problem: '', activate: () => {} }) }
+ if (entry?.room && !busy && !(config?.nativeAccount && hold)) {
   const context = { member: entry.memberId, backend: entry.backendId, signInAt: entry.verifiedHumanSignInAt, room: entry.room }
   setHumanContext(context)
   const activate = (room: string) => {
    setEntry(current => current ? { ...current, room } : null)
    try { localStorage.setItem('journey-human-history:' + window.location.origin + ':' + entry.backendId + ':' + entry.memberId, room) } catch {}
   }
-  return <><div className="human-entry-identity">{entry.label} · {problem ? '先前驗證身分，存取已暫停' : '身分已驗證'}</div>{children({ context, problem, activate })}</>
+  return <>{!config?.nativeAccount&&<div className="human-entry-identity">{entry.label} · {problem ? '先前驗證身分，存取已暫停' : '身分已驗證'}</div>}{children({ nativeAccount:!!config?.nativeAccount,signOut,label:entry.label,context, problem, activate })}</>
  }
+ if(config?.nativeAccount && hold)return <main className="human-entry"><section aria-labelledby="human-entry-title" aria-busy={busy}>
+  <h1 id="human-entry-title">{hold==='pending'?'正在結束登入':hold==='unknown'?'登出結果未確認':hold==='cancelled'?'登入已取消':'目前已停止存取'}</h1>
+  <p role="status">{busy?'正在處理，請稍候。':problem?messages[problem]||problem:hold==='unknown'?'私密畫布已關閉，但未確認伺服器登出。沒有重送操作；請明確重新驗證入口。':hold==='confirmed'?'應用程式登入已結束。':'私密畫布已關閉。請重新驗證入口。'}</p>
+  {requestId&&<div><p>請在本機終端機核准這次請求：</p><code>{requestId}</code><button disabled={busy} onClick={()=>void finishLocal()}>我已在本機核准</button></div>}
+  <button disabled={busy||!!requestId} onClick={()=>void login()}>{config.mode==='local'?'開始本機帳號驗證':'開啟身分登入'}</button>
+  <button disabled={busy} onClick={retryEntry}>重新驗證入口</button>
+  {(busy||requestId||popup.current)&&!writingLogout.current&&<button onClick={cancelLogin}>取消登入</button>}
+ </section></main>
  return <main className="human-entry"><section aria-labelledby="human-entry-title" aria-busy={busy}>
   <p className="human-entry-eyebrow">私人畫布</p><h1 id="human-entry-title">{busy ? '正在確認入口' : entry ? '選擇畫布' : '驗證後進入畫布'}</h1>
   {requested !== null && <p>指定畫布：<strong>{requested || '（空白）'}</strong></p>}
@@ -147,6 +211,7 @@ export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) =
   {!entry && <button disabled={busy || (config?.mode === 'local' && !config.localReady)} onClick={() => void login()}>{config?.mode === 'local' ? '開始本機帳號驗證' : '開啟身分登入'}</button>}
   {config?.mode === 'local' && !config.localReady && <p>本機帳號驗證通道不可用；請由主機擁有者檢查。</p>}
   {entry?.rooms.map(room => <button key={room} disabled={busy} onClick={() => select(room)}>{room}</button>)}
-  <button className="human-entry-secondary" disabled={busy} onClick={() => void refresh()}>重新確認入口</button>
+  {(busy||requestId||popup.current)&&config?.nativeAccount&&<button onClick={cancelLogin}>取消登入</button>}
+  <button className="human-entry-secondary" disabled={busy} onClick={retryEntry}>重新確認入口</button>
  </section></main>
 }

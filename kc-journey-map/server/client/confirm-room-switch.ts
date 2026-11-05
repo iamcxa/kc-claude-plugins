@@ -1,5 +1,5 @@
 import type { Editor } from 'tldraw'
-import { journeyApi } from './api'
+import { journeyFetch, journeyApi } from './api'
 
 function ordered(value: unknown): unknown {
 	if (Array.isArray(value)) return value.map(ordered)
@@ -15,7 +15,7 @@ export async function confirmRoomSwitch(editor: Editor | null, roomId: string, o
 	const snapshot = () => documentFingerprint(editor)
 	const before = snapshot()
 	try {
-		const response = await fetch(journeyApi('/doc?room=' + encodeURIComponent(roomId)), { signal: AbortSignal.timeout(8000) })
+		const response = await journeyFetch(journeyApi('/doc?room=' + encodeURIComponent(roomId)), { signal: AbortSignal.timeout(8000) })
 		if (!response.ok) { if (response.status === 401 || response.status === 403) onDenied?.(); return false }
 		const result = await response.json()
 		const remote = Object.fromEntries(result.snapshot.documents.map(({ state }: { state: { id: string } }) => [state.id, state]))

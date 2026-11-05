@@ -5,7 +5,7 @@ import { currentGrant, validateGrants, type Admission, type Grant, type Metadata
 import { pruneExpiredSessions } from './session-retention'
 import { bootstrapHuman, humanOperation, validateHumanConfig, type HumanConfig, type SyncMetadata } from './human-store'
 
-type Env = { ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string; JOURNEY_HUMAN_CONFIG?: string }
+type Env = { JOURNEY_NATIVE_ACCOUNT?: string; ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string; JOURNEY_HUMAN_CONFIG?: string }
 const stub = (namespace: any, id: string) => namespace.get(namespace.idFromName(id))
 const assetBlobKey = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
 const ownsAsset = (room: string, key: unknown) => typeof key === 'string' && key.startsWith(room + '/') && assetBlobKey.test(key.slice(room.length + 1))
@@ -80,11 +80,13 @@ export class JourneyRegistry {
 export class CloudflareHost implements Host {
  private = true
  publicRequestUrl = true
+ nativeAccount: boolean
  humanConfig?: HumanConfig
  meta: RegistryMetadata
  port: number
  origin: string
  constructor(private env: Env) {
+  this.nativeAccount = env.JOURNEY_NATIVE_ACCOUNT === 'true'
   this.origin = env.JOURNEY_ORIGIN
   const origin = new URL(this.origin)
   if (origin.origin !== this.origin || (origin.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(origin.hostname))) throw new Error('private origin requires HTTPS')
