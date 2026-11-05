@@ -1,0 +1,152 @@
+[
+  {
+    "task": "codex-reader-reads-receipt-marker",
+    "state_commit": "673fc6100726413a8e2572d3f08c3522780643ba",
+    "candidate": "199d8141c34a5bff9d9ac3db7d6a09525a0f0384",
+    "base": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 199d8141c34a5bff9d9ac3db7d6a09525a0f0384 equals dispatched candidate 199d8141c34a5bff9d9ac3db7d6a09525a0f0384; no second reviewer outcome is missing\npoint: deferred: '- F2 Deferred risk: nothing guards'\npoint: deferred: '- F4 Deferred risk: the first'\npoint: deferred: '- F2 (Deferred risk, narrowed): the'\npoint: deferred: '- F4 (Deferred risk): the first'\npoint: deferred: '- F3 Deferred risk: older findings'\npoint: deferred: '- F4 Deferred risk: a clean'\npoint: deferred: '- F5 Deferred risk (carried): nothing'\npoint: deferred: '- F6 Deferred risk (carried): the'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "candidate_output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 199d8141c34a5bff9d9ac3db7d6a09525a0f0384 equals dispatched candidate 199d8141c34a5bff9d9ac3db7d6a09525a0f0384; no second reviewer outcome is missing\npoint: deferred: '- F2 Deferred risk: nothing guards'\npoint: deferred: '- F4 Deferred risk: the first'\npoint: deferred: '- F2 (Deferred risk, narrowed): the'\npoint: deferred: '- F4 (Deferred risk): the first'\npoint: deferred: '- F3 Deferred risk: older findings'\npoint: deferred: '- F4 Deferred risk: a clean'\npoint: deferred: '- F5 Deferred risk (carried): nothing'\npoint: deferred: '- F6 Deferred risk (carried): the'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.\n",
+    "saved": {
+      "ask-1.json": {
+        "class": "docs-only",
+        "head": "199d8141c34a5bff9d9ac3db7d6a09525a0f0384",
+        "model": "not run",
+        "necessity": "the relay adopter reads it at each merge ask.",
+        "next": "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: '- F2 Deferred risk: nothing guards'",
+          "point: deferred: '- F4 Deferred risk: the first'",
+          "point: deferred: '- F2 (Deferred risk, narrowed): the'",
+          "point: deferred: '- F4 (Deferred risk): the first'",
+          "point: deferred: '- F3 Deferred risk: older findings'",
+          "point: deferred: '- F4 Deferred risk: a clean'",
+          "point: deferred: '- F5 Deferred risk (carried): nothing'",
+          "point: deferred: '- F6 Deferred risk (carried): the'",
+          "point: deferred: 'Declined: F0 (historical fixture reason); F1'"
+        ],
+        "pr": "o/r#9",
+        "sufficiency": "every acceptance criterion in the validation report was met.",
+        "time": "2026-11-05T11:35:59Z",
+        "verdict": "ask"
+      }
+    },
+    "quoted_control": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 199d8141c34a5bff9d9ac3db7d6a09525a0f0384 equals dispatched candidate 199d8141c34a5bff9d9ac3db7d6a09525a0f0384; no second reviewer outcome is missing\npoint: deferred: '- F2 Deferred risk: nothing guards'\npoint: deferred: '- F4 Deferred risk: the first'\npoint: deferred: '- F2 (Deferred risk, narrowed): the'\npoint: deferred: '- F4 (Deferred risk): the first'\npoint: deferred: '- F3 Deferred risk: older findings'\npoint: deferred: '- F4 Deferred risk: a clean'\npoint: deferred: '- F5 Deferred risk (carried): nothing'\npoint: deferred: '- F6 Deferred risk (carried): the'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "fixture_limits": "gh is stubbed; synthetic valid summary isolates the recorded question comparison"
+  },
+  {
+    "task": "agent-reads-governing-adr",
+    "state_commit": "8c5009333df14ff6e7895f4f72ea104a2353517e",
+    "candidate": "589c54e57fe969b6049bad737be8615e96b7b54e",
+    "base": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 589c54e57fe969b6049bad737be8615e96b7b54e equals dispatched candidate 589c54e57fe969b6049bad737be8615e96b7b54e; no second reviewer outcome is missing\npoint: deferred: \"- F2 Deferred risk: the pointer's\"\npoint: deferred: '- F3 Deferred risk: the `REF:`'\npoint: deferred: '- F4 Deferred risk: after-compaction reload'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "candidate_output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 589c54e57fe969b6049bad737be8615e96b7b54e equals dispatched candidate 589c54e57fe969b6049bad737be8615e96b7b54e; no second reviewer outcome is missing\npoint: deferred: \"- F2 Deferred risk: the pointer's\"\npoint: deferred: '- F3 Deferred risk: the `REF:`'\npoint: deferred: '- F4 Deferred risk: after-compaction reload'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.\n",
+    "saved": {
+      "ask-1.json": {
+        "class": "docs-only",
+        "head": "589c54e57fe969b6049bad737be8615e96b7b54e",
+        "model": "not run",
+        "necessity": "the relay adopter reads it at each merge ask.",
+        "next": "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: \"- F2 Deferred risk: the pointer's\"",
+          "point: deferred: '- F3 Deferred risk: the `REF:`'",
+          "point: deferred: '- F4 Deferred risk: after-compaction reload'",
+          "point: deferred: 'Declined: F0 (historical fixture reason); F1'"
+        ],
+        "pr": "o/r#9",
+        "sufficiency": "every acceptance criterion in the validation report was met.",
+        "time": "2026-11-05T11:36:00Z",
+        "verdict": "ask"
+      }
+    },
+    "quoted_control": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 589c54e57fe969b6049bad737be8615e96b7b54e equals dispatched candidate 589c54e57fe969b6049bad737be8615e96b7b54e; no second reviewer outcome is missing\npoint: deferred: \"- F2 Deferred risk: the pointer's\"\npoint: deferred: '- F3 Deferred risk: the `REF:`'\npoint: deferred: '- F4 Deferred risk: after-compaction reload'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "fixture_limits": "gh is stubbed; synthetic valid summary isolates the recorded question comparison"
+  },
+  {
+    "task": "merge-ask-holds-missing-clauses",
+    "state_commit": "254a8cefdb3a6154e21fd7bf3cd913c8d9620747",
+    "candidate": "1e47b8c6108371ec379ad4fae18a80df2cdd0b81",
+    "base": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 1e47b8c6108371ec379ad4fae18a80df2cdd0b81 equals dispatched candidate 1e47b8c6108371ec379ad4fae18a80df2cdd0b81; no second reviewer outcome is missing\npoint: deferred: '- F1 Deferred risk: a folder'\npoint: deferred: '- F2 Deferred risk: `role_triggers.py` reads'\npoint: deferred: '- F3 Deferred risk: after release,'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "candidate_output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 1e47b8c6108371ec379ad4fae18a80df2cdd0b81 equals dispatched candidate 1e47b8c6108371ec379ad4fae18a80df2cdd0b81; no second reviewer outcome is missing\npoint: deferred: '- F1 Deferred risk: a folder'\npoint: deferred: '- F2 Deferred risk: `role_triggers.py` reads'\npoint: deferred: '- F3 Deferred risk: after release,'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.\n",
+    "saved": {
+      "ask-1.json": {
+        "class": "docs-only",
+        "head": "1e47b8c6108371ec379ad4fae18a80df2cdd0b81",
+        "model": "not run",
+        "necessity": "the relay adopter reads it at each merge ask.",
+        "next": "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: '- F1 Deferred risk: a folder'",
+          "point: deferred: '- F2 Deferred risk: `role_triggers.py` reads'",
+          "point: deferred: '- F3 Deferred risk: after release,'",
+          "point: deferred: 'Declined: F0 (historical fixture reason); F1'"
+        ],
+        "pr": "o/r#9",
+        "sufficiency": "every acceptance criterion in the validation report was met.",
+        "time": "2026-11-05T11:36:01Z",
+        "verdict": "ask"
+      }
+    },
+    "quoted_control": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 1e47b8c6108371ec379ad4fae18a80df2cdd0b81 equals dispatched candidate 1e47b8c6108371ec379ad4fae18a80df2cdd0b81; no second reviewer outcome is missing\npoint: deferred: '- F1 Deferred risk: a folder'\npoint: deferred: '- F2 Deferred risk: `role_triggers.py` reads'\npoint: deferred: '- F3 Deferred risk: after release,'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "fixture_limits": "gh is stubbed; synthetic valid summary isolates the recorded question comparison"
+  },
+  {
+    "task": "codex-reader-counts-code-review-only",
+    "state_commit": "372ad53b99fb757f804727da531853e9ee72b279",
+    "candidate": "28807397841eff05cb4b8bd06992001584d73fec",
+    "base": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 28807397841eff05cb4b8bd06992001584d73fec equals dispatched candidate 28807397841eff05cb4b8bd06992001584d73fec; no second reviewer outcome is missing\npoint: deferred: 'Verdict PASSED at 127662897 (Draft, open,'\npoint: deferred: 'PASSED for 127662897fc547dedd501a59c953c8d3ece9cddb. F1 Deferred risk:'\npoint: deferred: '- F1 Deferred risk: the summary'\npoint: deferred: '- F2 Deferred risk: a Codex'\npoint: deferred: '- F3 Deferred risk: a clean'\npoint: deferred: '- F4 Deferred risk: a PR'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "candidate_output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 28807397841eff05cb4b8bd06992001584d73fec equals dispatched candidate 28807397841eff05cb4b8bd06992001584d73fec; no second reviewer outcome is missing\npoint: deferred: 'Verdict PASSED at 127662897 (Draft, open,'\npoint: deferred: 'PASSED for 127662897fc547dedd501a59c953c8d3ece9cddb. F1 Deferred risk:'\npoint: deferred: '- F1 Deferred risk: the summary'\npoint: deferred: '- F2 Deferred risk: a Codex'\npoint: deferred: '- F3 Deferred risk: a clean'\npoint: deferred: '- F4 Deferred risk: a PR'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.\n",
+    "saved": {
+      "ask-1.json": {
+        "class": "docs-only",
+        "head": "28807397841eff05cb4b8bd06992001584d73fec",
+        "model": "not run",
+        "necessity": "the relay adopter reads it at each merge ask.",
+        "next": "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: 'Verdict PASSED at 127662897 (Draft, open,'",
+          "point: deferred: 'PASSED for 127662897fc547dedd501a59c953c8d3ece9cddb. F1 Deferred risk:'",
+          "point: deferred: '- F1 Deferred risk: the summary'",
+          "point: deferred: '- F2 Deferred risk: a Codex'",
+          "point: deferred: '- F3 Deferred risk: a clean'",
+          "point: deferred: '- F4 Deferred risk: a PR'",
+          "point: deferred: 'Declined: F0 (historical fixture reason); F1'"
+        ],
+        "pr": "o/r#9",
+        "sufficiency": "every acceptance criterion in the validation report was met.",
+        "time": "2026-11-05T11:36:01Z",
+        "verdict": "ask"
+      }
+    },
+    "quoted_control": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 28807397841eff05cb4b8bd06992001584d73fec equals dispatched candidate 28807397841eff05cb4b8bd06992001584d73fec; no second reviewer outcome is missing\npoint: deferred: 'Verdict PASSED at 127662897 (Draft, open,'\npoint: deferred: 'PASSED for 127662897fc547dedd501a59c953c8d3ece9cddb. F1 Deferred risk:'\npoint: deferred: '- F1 Deferred risk: the summary'\npoint: deferred: '- F2 Deferred risk: a Codex'\npoint: deferred: '- F3 Deferred risk: a clean'\npoint: deferred: '- F4 Deferred risk: a PR'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "fixture_limits": "gh is stubbed; synthetic valid summary isolates the recorded question comparison"
+  },
+  {
+    "task": "rewritten-criteria-checked-against-captain-words",
+    "state_commit": "56968af7f7ac5727cd3bf7d8c0a12a9d862801be",
+    "candidate": "b81c628facd2cd38568018beec47b6c4566c0aae",
+    "base": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head b81c628facd2cd38568018beec47b6c4566c0aae equals dispatched candidate b81c628facd2cd38568018beec47b6c4566c0aae; no second reviewer outcome is missing\npoint: deferred: 'PASSED for the bounded criteria at'\npoint: deferred: '- F1 Deferred risk: Codex comment'\npoint: deferred: '- DONE: Revalidation after the chief-engineer'\npoint: deferred: 'Main is an ancestor; comparison-parser bytes'\npoint: deferred: '- F1 Deferred risk (carried forward):'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "candidate_output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head b81c628facd2cd38568018beec47b6c4566c0aae equals dispatched candidate b81c628facd2cd38568018beec47b6c4566c0aae; no second reviewer outcome is missing\npoint: deferred: 'PASSED for the bounded criteria at'\npoint: deferred: '- F1 Deferred risk: Codex comment'\npoint: deferred: '- DONE: Revalidation after the chief-engineer'\npoint: deferred: 'Main is an ancestor; comparison-parser bytes'\npoint: deferred: '- F1 Deferred risk (carried forward):'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.\n",
+    "saved": {
+      "ask-1.json": {
+        "class": "docs-only",
+        "head": "b81c628facd2cd38568018beec47b6c4566c0aae",
+        "model": "not run",
+        "necessity": "the relay adopter reads it at each merge ask.",
+        "next": "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: 'PASSED for the bounded criteria at'",
+          "point: deferred: '- F1 Deferred risk: Codex comment'",
+          "point: deferred: '- DONE: Revalidation after the chief-engineer'",
+          "point: deferred: 'Main is an ancestor; comparison-parser bytes'",
+          "point: deferred: '- F1 Deferred risk (carried forward):'",
+          "point: deferred: 'Declined: F0 (historical fixture reason); F1'"
+        ],
+        "pr": "o/r#9",
+        "sufficiency": "every acceptance criterion in the validation report was met.",
+        "time": "2026-11-05T11:36:02Z",
+        "verdict": "ask"
+      }
+    },
+    "quoted_control": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head b81c628facd2cd38568018beec47b6c4566c0aae equals dispatched candidate b81c628facd2cd38568018beec47b6c4566c0aae; no second reviewer outcome is missing\npoint: deferred: 'PASSED for the bounded criteria at'\npoint: deferred: '- F1 Deferred risk: Codex comment'\npoint: deferred: '- DONE: Revalidation after the chief-engineer'\npoint: deferred: 'Main is an ancestor; comparison-parser bytes'\npoint: deferred: '- F1 Deferred risk (carried forward):'\npoint: deferred: 'Declined: F0 (historical fixture reason); F1'\nclass: docs-only (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "fixture_limits": "gh is stubbed; synthetic valid summary isolates the recorded question comparison"
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "name": "AC-1 \u2014 gate reminders and unchanged failure output",
+    "status": "passed"
+  },
+  {
+    "name": "AC-2 \u2014 five historical unquoted approvals ask separately",
+    "status": "passed"
+  },
+  {
+    "name": "AC-3 \u2014 quoted, pending and delegated approvals; withdrawal repair",
+    "status": "passed"
+  },
+  {
+    "name": "AC-4 \u2014 nested brackets and identical ledger output",
+    "status": "passed"
+  },
+  {
+    "name": "AC-5 \u2014 supplied observer run reports the ideation mismatch",
+    "status": "passed"
+  },
+  {
+    "name": "AC-6 \u2014 unchanged recurring reading; gate preparation +62 words",
+    "status": "passed"
+  },
+  {
+    "name": "AC-7 \u2014 ruling provenance and required suites",
+    "status": "passed"
+  }
+]

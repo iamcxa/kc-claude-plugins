@@ -1,0 +1,10 @@
+[
+  {
+    "severity": "low",
+    "title": "Annotated status values omit the writing reminder",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 1061,
+    "detail": "Deferred risk: a synthetic status: backlog # approved is read as backlog by native Spacedock, while the passing seed check omits ASK_FORM. No annotated status exists among 192 pinned task files, and this scratch workflow did not expose an actionable ready gate. Material if the supported gate-preparation route produces/preserves this form or an adopter task uses it. Candidate bytes unchanged.",
+    "fix": "Have FO disposition the risk; if the trigger is supported, consume the native parsed status."
+  }
+]

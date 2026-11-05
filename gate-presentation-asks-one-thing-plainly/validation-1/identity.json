@@ -1,0 +1,12 @@
+{
+  "head": "73db59bef6d1327e8b8c810b4f57601664aee1ef",
+  "base": "d37c6dc653e0f45d6ca630c2faa6121c0863a57e",
+  "state_pin": "79fb4abf3f9c751c83e8d70dcfeaa654ff8774c4",
+  "assigned_worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly",
+  "validation_detached_checkout": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly/.validation-checkout",
+  "detached_checkout_removed": true,
+  "assigned_branch_unchanged_and_clean": true,
+  "time": "2026-11-05T14:56:48.460402+00:00",
+  "verdict": "PASSED",
+  "scope": "Bounded Pilot; FO gate and delivery remain pending"
+}

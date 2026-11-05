@@ -1,0 +1,74 @@
+[
+  {
+    "name": "reminder-on-entry",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/reminder-on-entry.log"
+  },
+  {
+    "name": "reminder-status-guard-removed",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/reminder-status-guard-removed.log"
+  },
+  {
+    "name": "reminder-dropped",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/reminder-dropped.log"
+  },
+  {
+    "name": "question-reminder-on-entry",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/question-reminder-on-entry.log"
+  },
+  {
+    "name": "question-reminder-dropped",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/question-reminder-dropped.log"
+  },
+  {
+    "name": "prefix-only",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/prefix-only.log"
+  },
+  {
+    "name": "any-quote",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/any-quote.log"
+  },
+  {
+    "name": "oldest-approval",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/oldest-approval.log"
+  },
+  {
+    "name": "exact-whitespace",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/exact-whitespace.log"
+  },
+  {
+    "name": "agent-resolution-judged",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/agent-resolution-judged.log"
+  },
+  {
+    "name": "nested-brackets-regex",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/nested-brackets-regex.log"
+  },
+  {
+    "name": "reminder-leaks-to-idle",
+    "caught": true,
+    "exit": 1,
+    "log": "/tmp/opencode/gate-plain-validation/original-controls/reminder-leaks-to-idle.log"
+  }
+]

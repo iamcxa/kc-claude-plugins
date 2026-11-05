@@ -1,0 +1,26 @@
+[
+  {
+    "input": "ideation",
+    "exit": 0,
+    "reminder": true,
+    "output": "task.md: seed fields and FO alignment recorded\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "input": "\"ideation\"",
+    "exit": 0,
+    "reminder": true,
+    "output": "task.md: seed fields and FO alignment recorded\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "input": "'backlog'",
+    "exit": 0,
+    "reminder": true,
+    "output": "task.md: seed fields and FO alignment recorded\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "input": "backlog # approved",
+    "exit": 0,
+    "reminder": false,
+    "output": "task.md: seed fields and FO alignment recorded\n"
+  }
+]

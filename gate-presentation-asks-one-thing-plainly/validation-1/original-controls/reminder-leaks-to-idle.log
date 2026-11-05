@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not (test_pr_watch.TasksTests.test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-t4a572db/kc-dev-flow-2/scripts/test_pr_watch.py", line 1788, in test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not
+    self.assertEqual(len(lines), 1, lines)
+AssertionError: 2 != 1 : ['next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.', 'next: the seed check fails for these backlog tasks (bad); before preparing the gate of one, fix the reported seed fields and run `python3 /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/gate-falsifiers-t4a572db/kc-dev-flow-2/scripts/design_surfaces.py check --seed <task>`.']
+
+----------------------------------------------------------------------
+Ran 1 test in 1.347s
+
+FAILED (failures=1)

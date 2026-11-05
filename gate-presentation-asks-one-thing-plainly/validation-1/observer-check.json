@@ -1,0 +1,11 @@
+{
+  "report": "/tmp/ac5-observer-report.md",
+  "sha256": "3671bd0bcaddd05a3545b39db84dd26a51d806d635b9cc9d0a92c709c480d3dd",
+  "supplied_observer_run": "FO reports Claude Sonnet; not re-launched by validator",
+  "all_three_stage_rows_present": true,
+  "ideation_violation_present": true,
+  "ok_mutant_rejected": true,
+  "omitted_row_mutant_rejected": true,
+  "candidate_instruction_and_helper_unchanged_since_observer_run": true,
+  "validation_note": "First local report selector also selected the separate Override finding; selector narrowed to the actual comparison row."
+}

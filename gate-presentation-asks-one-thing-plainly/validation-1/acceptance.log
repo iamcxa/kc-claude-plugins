@@ -1,0 +1,31 @@
+Preparing worktree (detached HEAD 73db59bef)
+HEAD is now at 73db59bef fix(kc-dev-flow-2): ignore withdrawn validation approvals
+test_newest_captain_answer_decides_in_both_directions (test_delivery_gate.BoundApprovalTests.test_newest_captain_answer_decides_in_both_directions) ... ok
+test_question_reminder_reaches_cli_only_on_pass (test_delivery_gate.BoundApprovalTests.test_question_reminder_reaches_cli_only_on_pass) ... ok
+test_quoted_answer_pre_ask_and_delegated_repair_keep_the_existing_line (test_delivery_gate.BoundApprovalTests.test_quoted_answer_pre_ask_and_delegated_repair_keep_the_existing_line) ... ok
+test_unquoted_or_prefix_only_approval_asks_separately (test_delivery_gate.BoundApprovalTests.test_unquoted_or_prefix_only_approval_asks_separately) ... ok
+test_withdrawal_leaves_active_quoted_approvals_and_new_pre_asks_unchanged (test_delivery_gate.BoundApprovalTests.test_withdrawal_leaves_active_quoted_approvals_and_new_pre_asks_unchanged) ... ok
+test_withdrawn_approval_without_an_effective_captain_grant_asks_separately (test_delivery_gate.BoundApprovalTests.test_withdrawn_approval_without_an_effective_captain_grant_asks_separately) ... ok
+test_withdrawn_quoted_approval_cannot_mask_an_active_unquoted_approval (test_delivery_gate.BoundApprovalTests.test_withdrawn_quoted_approval_cannot_mask_an_active_unquoted_approval) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.260s
+
+OK
+test_historical_answers_lose_grant_and_whole_question_restores_it (test_delivery_gate.HistoricalBoundQuestionTests.test_historical_answers_lose_grant_and_whole_question_restores_it) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 6.073s
+
+OK
+test_failing_cli_never_prints_the_reminder (test_design_surfaces.AskFormTests.test_failing_cli_never_prints_the_reminder) ... ok
+test_reminder_is_last_at_backlog_and_ideation_only (test_design_surfaces.AskFormTests.test_reminder_is_last_at_backlog_and_ideation_only) ... ok
+test_missing_question_reason_or_answering_marker_does_not_match (test_decision_ledger.BoundQuestionTests.test_missing_question_reason_or_answering_marker_does_not_match) ... ok
+test_whole_question_with_nested_brackets_and_whitespace (test_decision_ledger.BoundQuestionTests.test_whole_question_with_nested_brackets_and_whitespace) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.424s
+
+OK
+59 ADR file(s) checked, 0 legacy
+acceptance PASS; five-case evidence: /tmp/gate-presentation-acceptance.nMS7hX/historical-replays.json

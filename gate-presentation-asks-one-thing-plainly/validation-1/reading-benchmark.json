@@ -1,0 +1,74 @@
+[
+  {
+    "name": "startup",
+    "before": 7151,
+    "after": 7151,
+    "better": "lower"
+  },
+  {
+    "name": "idle_open",
+    "before": 906,
+    "after": 906,
+    "better": "lower"
+  },
+  {
+    "name": "idle_merged",
+    "before": 860,
+    "after": 860,
+    "better": "lower"
+  },
+  {
+    "name": "after_archive",
+    "before": 333,
+    "after": 333,
+    "better": "lower"
+  },
+  {
+    "name": "backlog_prepare",
+    "before": 7,
+    "after": 69,
+    "better": "lower"
+  },
+  {
+    "name": "ideation_prepare",
+    "before": 4,
+    "after": 66,
+    "better": "lower"
+  },
+  {
+    "name": "validation_prepare",
+    "before": 30,
+    "after": 92,
+    "better": "lower"
+  },
+  {
+    "name": "ui_validation_prepare",
+    "before": 43,
+    "after": 105,
+    "better": "lower"
+  },
+  {
+    "name": "implementation_amendment",
+    "before": 13,
+    "after": 13,
+    "better": "lower"
+  },
+  {
+    "name": "merge_ask",
+    "before": 2429,
+    "after": 2429,
+    "better": "lower"
+  },
+  {
+    "name": "gate_presentation",
+    "before": 1633,
+    "after": 1633,
+    "better": "lower"
+  },
+  {
+    "name": "unquoted merge next line",
+    "before": 40,
+    "after": 39,
+    "better": "lower"
+  }
+]

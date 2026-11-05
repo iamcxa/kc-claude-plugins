@@ -1,0 +1,9 @@
+docs/adr/0011-fo-decides-for-the-captain-by-a-delegation-ladder.md	review	kc-dev-flow-2/scripts/decision_ledger.py
+docs/adr/0041-seed-admission-enforces-required-fields.md	review	kc-dev-flow-2/scripts/design_surfaces.py
+docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md	review	kc-dev-flow-2/scripts/delivery_gate.py
+docs/adr/0051-the-merge-ask-check-requires-the-round-count.md	review	kc-dev-flow-2/scripts/delivery_gate.py
+docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md	review	kc-dev-flow-2/scripts/design_surfaces.py
+docs/adr/0060-a-gate-approval-grants-what-its-quoted-bound-question-says.md	updated	kc-dev-flow-2/scripts/decision_ledger.py, kc-dev-flow-2/scripts/delivery_gate.py, quotes_bound_question
+kc-dev-flow-2/skills/maintain-flow/SKILL.md	review	kc-dev-flow-2/scripts/decision_ledger.py
+kc-dev-flow-2/skills/observer/SKILL.md	updated	quotes_bound_question
+8 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

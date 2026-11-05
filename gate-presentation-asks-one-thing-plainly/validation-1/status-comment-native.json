@@ -1,0 +1,100 @@
+[
+  {
+    "annotation": "",
+    "commands": [
+      [
+        "/Users/kent/.local/bin/spacedock",
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode/gate-plain-validation/status-fixture",
+        "--all-fields",
+        "--limit",
+        "0",
+        "--json"
+      ],
+      [
+        "/Users/kent/.local/bin/spacedock",
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode/gate-plain-validation/status-fixture",
+        "--next",
+        "--json"
+      ],
+      [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-B",
+        "kc-dev-flow-2/scripts/design_surfaces.py",
+        "check",
+        "--seed",
+        "/tmp/opencode/gate-plain-validation/status-fixture/.spacedock-state/fixture.md"
+      ]
+    ],
+    "runs": [
+      {
+        "exit": 0,
+        "stdout": "{\"command\":\"status\",\"entities\":[{\"id\":\"fixture\",\"slug\":\"fixture\",\"status\":\"backlog\",\"title\":\"seats\",\"score\":\"\",\"gate-readiness\":\"validating\",\"profile\":\"pilot\"}],\"pagination\":{\"page\":\"1\",\"limit\":\"0\",\"total\":\"1\",\"start\":\"1\",\"end\":\"1\",\"has_next\":\"false\"}}\n",
+        "stderr": ""
+      },
+      {
+        "exit": 0,
+        "stdout": "{\"command\":\"next\",\"dispatchable\":[],\"ready_gates\":[]}\n",
+        "stderr": ""
+      },
+      {
+        "exit": 0,
+        "stdout": "fixture.md: seed fields and FO alignment recorded\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n",
+        "stderr": ""
+      }
+    ],
+    "reminder": true
+  },
+  {
+    "annotation": " # approved",
+    "commands": [
+      [
+        "/Users/kent/.local/bin/spacedock",
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode/gate-plain-validation/status-fixture",
+        "--all-fields",
+        "--limit",
+        "0",
+        "--json"
+      ],
+      [
+        "/Users/kent/.local/bin/spacedock",
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode/gate-plain-validation/status-fixture",
+        "--next",
+        "--json"
+      ],
+      [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-B",
+        "kc-dev-flow-2/scripts/design_surfaces.py",
+        "check",
+        "--seed",
+        "/tmp/opencode/gate-plain-validation/status-fixture/.spacedock-state/fixture.md"
+      ]
+    ],
+    "runs": [
+      {
+        "exit": 0,
+        "stdout": "{\"command\":\"status\",\"entities\":[{\"id\":\"fixture\",\"slug\":\"fixture\",\"status\":\"backlog\",\"title\":\"seats\",\"score\":\"\",\"gate-readiness\":\"validating\",\"profile\":\"pilot\"}],\"pagination\":{\"page\":\"1\",\"limit\":\"0\",\"total\":\"1\",\"start\":\"1\",\"end\":\"1\",\"has_next\":\"false\"}}\n",
+        "stderr": ""
+      },
+      {
+        "exit": 0,
+        "stdout": "{\"command\":\"next\",\"dispatchable\":[],\"ready_gates\":[]}\n",
+        "stderr": ""
+      },
+      {
+        "exit": 0,
+        "stdout": "fixture.md: seed fields and FO alignment recorded\n",
+        "stderr": ""
+      }
+    ],
+    "reminder": false
+  }
+]
