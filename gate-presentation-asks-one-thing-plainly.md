@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:gate-presentation-asks-one-thing-plainly:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:gate-presentation-asks-one-thing-plainly-ideation-1
+              briefing:
+                id: briefing:gate-presentation-asks-one-thing-plainly:ideation:attempt-1:revision-1
+                digest: sha256:e2b673eaac3fec8aa733b200318c49eaf224a47035398f7789d39dc0980facfe
+                room-ref: ./gate-presentation-asks-one-thing-plainly/review/ideation/briefing-1
 ---
 
 ## Scope

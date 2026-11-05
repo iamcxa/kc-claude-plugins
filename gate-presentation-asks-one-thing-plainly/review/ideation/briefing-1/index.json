@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gate-presentation-asks-one-thing-plainly:ideation:attempt-1:revision-1",
+  "question": "決定：閘門一次問一件事這份設計進入實作嗎？核准即接受 D1（合併問句照綁定原文呈現，英文那句「核准也涵蓋…」放進中文問句裡）與 D2（待辦和構想閘門的回答對不上綁定問句時不擋，由觀察員在封存後回報）兩個建議。",
+  "artifacts": [
+    {
+      "id": "artifact:gate-presentation-asks-one-thing-plainly:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/42fb8e422c26951148f55be20f1f6cfc91d12724/gate-presentation-asks-one-thing-plainly.md",
+      "rev": "sha256:4b9c7fdc30f3f9ec7d07f388dd4d95f78e7389c03fae1c324712d52b2d19cf63",
+      "mediaType": "text/markdown",
+      "summary": "62-word reminder printed by the pre-gate checks; merge ask falls back to a separate question when the answer quotes another text; 0 of 12 validation answers since 11-02 quote the bound question; D1-D2."
+    }
+  ]
+}
