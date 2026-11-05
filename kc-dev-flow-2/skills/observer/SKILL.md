@@ -44,6 +44,16 @@ quotes a peer's words, or a peer's report of the Captain, in place of his own; a
 made in his own words after reading peer data is his. An exchange the file does not record
 is outside what state shows.
 
+For every `person:captain` gate resolution (backlog, ideation and validation),
+compare its reason with its bound question using `decision_ledger.quotes_bound_question`:
+`answering 「` + the whole question + `」` must occur in the reason after removing
+all whitespace from both strings; use a substring, since questions can contain
+nested 「」. Report `ok` quoting both texts' first words when a quote matches,
+`violation` when the reason quotes text and none matches, and `can't tell` when
+the reason quotes nothing (the chat is outside state). A missing bound question
+is `can't tell`. These rows check the recorded ask, not what the Captain read;
+backlog and ideation mismatches add no dispatch hold.
+
 Replay the design check. For each backlog and ideation briefing, take the sha in its artifact `uri`
 (`git-root://state/<sha>/<TASK>.md`), extract `<TASK>.md` and, when it exists at that sha, `<TASK>/` with
 `git archive` into a new empty temporary directory, and run

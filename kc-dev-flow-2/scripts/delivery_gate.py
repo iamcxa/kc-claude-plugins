@@ -40,13 +40,15 @@ adds one problem line and its `next:` lines, exit 2 holds with its message.
 Exit 0 from it forwards advisory `next:` lines before the record and ASK, without holding the ask.
 Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
-and one last `next:` line, the `ASK` line: merge when the approved question named the merge, else ask. The `class:` line ends
+and one last `next:` line: `ASK_UNQUOTED` when a non-pending validation attempt has no effective Captain approval
+quoting its bound question as `answering 「…」` (whitespace ignored), else `ASK`. Withdrawn attempts supply neither
+an approval nor a resolution; an unanswered, non-withdrawn attempt keeps the pre-ask line. The `class:` line ends
 `(verdict ask)` when the saved verdict is `ask`.
 
 Usage: delivery_gate.py question <task file or task folder> --text-file <file> [--summary-file <file>] [--workflow-dir <dir>]
 Runs the text checks of `check` on the validation gate question before `gate prepare`, and also refuses text that names the merge with
 `--match-head-commit` and has no sentence of the form "unless he says he merges or holds" (`unless` or `if`, then `he`, `you`, `the Captain` or `Captain`, then `say`, then `merge` or `hold`). Exit 0
-prints `gate text complete`; exit 1 prints each problem; exit 2 when an input cannot be read. `check` does not judge that clause.
+prints `gate text complete` then `ASK_FORM`; exit 1 prints each problem; exit 2 when an input cannot be read. `check` does not judge that clause.
 With --summary-file, ordinary text checks use question plus summary; reviewer checks use only
 the summary outside fences. It requires one top-level External rounds: N (nonnegative integer),
 optionally followed by a full stop or a semicolon/full stop and detail. Without it, legacy checks apply.
@@ -75,6 +77,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from design_surfaces import FM_PROFILE, task_folder
 from number_guards import task_facts
 from role_triggers import outside_fences
+import decision_ledger
 
 ROLE_TRIGGERS = Path(__file__).resolve().parent / "role_triggers.py"
 CANDIDATE = re.compile(r"^Candidate:[ \t]+([0-9a-f]{40})[ \t]*$", re.M)
@@ -108,6 +111,9 @@ MAX_POINTS = 12
 CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
                  "Necessity": "who uses this change and what breaks without it"}
 ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."
+# see docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md
+ASK_UNQUOTED = "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time."
+ASK_FORM = "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`."
 CLAIM_SOURCE = "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`."
 
 
@@ -655,11 +661,30 @@ def check(args):
     verdict = "merge" if not points and cls != "never" else "ask"
     emit(*points, f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else ""))
 
+    # see docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md
+    front, _ = decision_ledger.split_task(task_text)
+    stage = latest_attempt = None
+    for line in front or []:
+        match = decision_ledger.KEY.match(line)
+        if match:
+            key, value = match.group("key"), match.group("value") or ""
+            if key == "stage":
+                stage = value
+            elif stage == "validation" and key == "id" and value.startswith("gate-attempt:"):
+                latest_attempt = value
+    rows = [r for r in decision_ledger.task_rows(task.parent, task) if r["stage"] == "validation"]
+    withdrawn = {r["attempt"] for r in rows if r["kind"] == "withdrawal"}
+    rows = [r for r in rows if r["attempt"] not in withdrawn]
+    captain = [r for r in rows if r["kind"] == "resolution" and r["by"] == "person:captain" and r["decision"] == "approve"]
+    answered = any(r["attempt"] == latest_attempt and r["kind"] == "resolution" for r in rows)
+    pending = not answered and latest_attempt not in withdrawn
+    ask = ASK if pending or captain and decision_ledger.quotes_bound_question(
+        max(captain, key=lambda r: r["at"] or "")) else ASK_UNQUOTED
     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
-                                "points": points, "next": ASK, **({"siblings": sibling_notes} if sibling_notes else {}),
+                                "points": points, "next": ask, **({"siblings": sibling_notes} if sibling_notes else {}),
                                 "sufficiency": clean(clause(gate_text, "Sufficiency"))[:200],
                                 "necessity": clean(clause(gate_text, "Necessity"))[:200], "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
-    emit(f"record: {task_folder(task).name}/merge/{saved.name}", ASK)
+    emit(f"record: {task_folder(task).name}/merge/{saved.name}", ask)
     return 0
 
 
@@ -839,7 +864,7 @@ def question(args):
     nexts += wanted
     emit(*problems, *dict.fromkeys(nexts))
     if not problems:
-        emit("gate text complete")
+        emit("gate text complete", ASK_FORM)
     return 1 if problems else 0
 
 

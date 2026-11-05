@@ -1220,9 +1220,9 @@ class FoWriteRuleTests(unittest.TestCase):
     def test_the_sentence_names_no_pr_number_and_no_head(self):
         self.assertTrue(gate.ASK.endswith(" " + SENTENCE))
         self.assertNotRegex(SENTENCE, r"#\d|[0-9a-f]{7}")
-        module = variant_of(" Every other PR, the Release PR included, is asked one at a time.", " Every other PR, #672 included, is asked one at a time.")
+        module = variant_of("ASK = " + json.dumps(gate.ASK), "ASK = " + json.dumps(gate.ASK.replace("the Release PR", "#672")))
         self.assertNotEqual(nexts(run_variant(module)), [CLAIM_SOURCE, PASS_NEXT])
-        module = variant_of(" Every other PR, the Release PR included, is asked one at a time.", "")
+        module = variant_of("ASK = " + json.dumps(gate.ASK), "ASK = " + json.dumps(gate.ASK.removesuffix(" " + SENTENCE)))
         self.assertNotEqual(nexts(run_variant(module)), [CLAIM_SOURCE, PASS_NEXT])
 
     def test_the_class_line_carries_the_verdict_only_when_it_is_ask(self):
@@ -1679,7 +1679,7 @@ class CaptainGateTests(CaptainStepFixture):
             code, out = self.ask_gate(candidate="e623efd2" + "0" * 32, summary=summary)
             self.assertEqual(code, 1, out)
             self.assertIn("differs from latest dispatched Candidate", out)
-            self.assertEqual(self.ask_gate(summary=summary), (0, CLAIM_SOURCE + "\ngate text complete\n"))
+            self.assertEqual(self.ask_gate(summary=summary), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
         no_clause = variant_of('missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)', 'missing = []')
         self.assertEqual(self.ask_gate(declaration=False, module=no_clause)[0], 0)
         no_binding = variant_of('if candidate not in candidates:', 'if False:')
@@ -1708,6 +1708,150 @@ class CaptainGateTests(CaptainStepFixture):
         self.saved.unlink()
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(gate.main(["question", str(self.task), "--text-file", str(self.message)]), 2)
+
+
+class BoundApprovalTests(unittest.TestCase):
+    QUESTION = "「決定：含「婉拒要寫明」的設計進實作嗎？」 Approval also covers merging this head."
+
+    def run_approval(self, entries, module=gate, withdrawals=()):
+        task = "---\nprofile: pilot\ngates:\n    records:\n        - stage: validation\n          attempts:\n"
+        for n, (actor, reason) in enumerate(entries, 1):
+            task += (f"            - id: gate-attempt:task-validation-{n}\n"
+                     f"              briefing:\n                room-ref: ./rooms/{n}\n")
+            if actor:
+                task += (f"              resolution:\n                by: {actor}\n"
+                         f"                at: 2026-11-05T10:00:{n:02d}Z\n"
+                         f"                decision: approve\n                reason: {json.dumps(reason, ensure_ascii=False)}\n")
+            if n in withdrawals:
+                task += ("              withdrawal:\n                by: agent:first-officer\n"
+                         f"                at: 2026-11-05T11:00:{n:02d}Z\n                reason: approval revoked\n")
+        task += "---\n"
+        def setup(d):
+            for n in range(1, len(entries) + 1):
+                room = Path(d, "rooms", str(n))
+                room.mkdir(parents=True)
+                (room / "index.json").write_text(json.dumps({"question": self.QUESTION}, ensure_ascii=False))
+        result = run_variant(module, task=task, setup=setup)
+        self.assertEqual(result.code, 0, result.out)
+        self.assertEqual(result.lines[-2], result.written["ask-1.json"]["next"])
+        return result.lines[-2]
+
+    def quoted(self):
+        return "Captain 「准」, answering 「" + self.QUESTION.replace("Approval also", "Approval\n  also") + "」"
+
+    def test_unquoted_or_prefix_only_approval_asks_separately(self):
+        for reason in ("Captain 「准」", "answering 「「決定：含「婉拒要寫明」的設計進實作嗎？」」", "answering 「different」"):
+            with self.subTest(reason=reason):
+                self.assertEqual(self.run_approval([("person:captain", reason)]), gate.ASK_UNQUOTED)
+
+    def test_quoted_answer_pre_ask_and_delegated_repair_keep_the_existing_line(self):
+        for entries in ([('person:captain', self.quoted())],
+                        [('person:captain', "Captain 「准」"), (None, None)],
+                        [('person:captain', self.quoted()), ('agent:first-officer', 'repair under grant')]):
+            with self.subTest(entries=entries):
+                self.assertEqual(self.run_approval(entries), gate.ASK)
+
+    def test_newest_captain_answer_decides_in_both_directions(self):
+        for reasons, expected in (((self.quoted(), 'Captain 「准」'), gate.ASK_UNQUOTED),
+                                  (('Captain 「准」', self.quoted()), gate.ASK)):
+            self.assertEqual(self.run_approval([('person:captain', r) for r in reasons]), expected)
+
+    def test_withdrawn_quoted_approval_cannot_mask_an_active_unquoted_approval(self):
+        entries = [('person:captain', 'Captain 「准」'), ('person:captain', self.quoted())]
+        self.assertEqual(self.run_approval(entries, withdrawals=(2,)), gate.ASK_UNQUOTED)
+
+    def test_withdrawn_approval_without_an_effective_captain_grant_asks_separately(self):
+        for entries in ([('person:captain', self.quoted())],
+                        [('person:captain', self.quoted()), ('agent:first-officer', 'repair under revoked grant')]):
+            with self.subTest(entries=entries):
+                self.assertEqual(self.run_approval(entries, withdrawals=(1,)), gate.ASK_UNQUOTED)
+
+    def test_withdrawal_leaves_active_quoted_approvals_and_new_pre_asks_unchanged(self):
+        for entries, withdrawals in (([('person:captain', 'Captain 「准」'), ('person:captain', self.quoted())], (1,)),
+                                     ([('person:captain', self.quoted()), ('person:captain', self.quoted())], (2,)),
+                                     ([('person:captain', self.quoted()), ('person:captain', 'Captain 「准」')], (2,)),
+                                     ([('person:captain', self.quoted()), (None, None)], (1,))):
+            with self.subTest(entries=entries, withdrawals=withdrawals):
+                self.assertEqual(self.run_approval(entries, withdrawals=withdrawals), gate.ASK)
+
+    def test_question_reminder_reaches_cli_only_on_pass(self):
+        with tempfile.TemporaryDirectory() as d:
+            readme(d)
+            entry, message = Path(d, "task.md"), Path(d, "gate.txt")
+            entry.write_text(TASK)
+            steps = captain_record(entry)
+            for text, code in (("Approve?", 0), (MERGE_ASK.format(tail="."), 1)):
+                message.write_text(CLAUSES + text + steps)
+                done = subprocess.run([sys.executable, "-B", gate.__file__, "question", str(entry),
+                                       "--text-file", str(message)], capture_output=True, text=True)
+                self.assertEqual(done.returncode, code, done.stdout + done.stderr)
+                self.assertEqual(gate.ASK_FORM in done.stdout, code == 0)
+                if not code:
+                    self.assertEqual(done.stdout.splitlines()[-1], gate.ASK_FORM)
+            self.assertEqual(len(gate.ASK_FORM.split()), 62)
+
+
+@unittest.skipUnless(os.environ.get("GATE_PRESENTATION_STATE"), "set GATE_PRESENTATION_STATE for the five committed validation replays")
+class HistoricalBoundQuestionTests(unittest.TestCase):
+    SNAPSHOTS = {
+        "codex-reader-reads-receipt-marker": "673fc6100726413a8e2572d3f08c3522780643ba",
+        "agent-reads-governing-adr": "8c5009333df14ff6e7895f4f72ea104a2353517e",
+        "merge-ask-holds-missing-clauses": "254a8cefdb3a6154e21fd7bf3cd913c8d9620747",
+        "codex-reader-counts-code-review-only": "372ad53b99fb757f804727da531853e9ee72b279",
+        "rewritten-criteria-checked-against-captain-words": "56968af7f7ac5727cd3bf7d8c0a12a9d862801be",
+    }
+
+    def test_historical_answers_lose_grant_and_whole_question_restores_it(self):
+        state = os.environ["GATE_PRESENTATION_STATE"]
+        base = os.environ["GATE_PRESENTATION_BASE"]
+        evidence = Path(os.environ["GATE_PRESENTATION_EVIDENCE"])
+        evidence.mkdir(parents=True, exist_ok=True)
+        def git(*args):
+            return subprocess.check_output(["git", "-C", state, *args], text=True)
+        original = subprocess.check_output(["git", "-C", str(Path(gate.__file__).parents[2]), "show",
+                                            base + ":kc-dev-flow-2/scripts/delivery_gate.py"], text=True)
+        baseline = types.ModuleType("delivery_gate_baseline")
+        baseline.__file__ = gate.__file__
+        exec(compile(original, gate.__file__, "exec"), baseline.__dict__)
+        results = []
+        for slug, commit in self.SNAPSHOTS.items():
+            with self.subTest(task=slug):
+                text = git("show", f"{commit}:{slug}.md")
+                paths = git("ls-tree", "-r", "--name-only", commit, slug + "/").splitlines()
+                indexes = {p: git("show", f"{commit}:{p}") for p in paths if p.endswith("/index.json")}
+                dispatch = {Path(p).name: git("show", f"{commit}:{p}") for p in paths
+                            if gate.RECORD.fullmatch(Path(p).name) and "/dispatch/" in p}
+                newest = max(dispatch, key=lambda p: int(gate.RECORD.fullmatch(p)[1]))
+                head = gate.CANDIDATE.findall(dispatch[newest])[0]
+                def setup(d):
+                    for path, body in indexes.items():
+                        target = Path(d, path)
+                        target.parent.mkdir(parents=True, exist_ok=True)
+                        target.write_text(body)
+                declines = "Declined: " + "; ".join(f"F{i} (historical fixture reason)" for i in range(50)) + "\n"
+                kw = dict(task=text, records=dispatch, head=head, text=declines, setup=setup,
+                          adr=[f"{n:04d}-fixture.md" for n in range(100)])
+                before, after = run_variant(baseline, **kw), run_check(**kw)
+                self.assertEqual(before.code, 0, before.out)
+                self.assertEqual(after.code, 0, after.out)
+                self.assertEqual(before.out.splitlines()[-1], gate.ASK)
+                self.assertEqual(after.out.splitlines()[-1], gate.ASK_UNQUOTED)
+                self.assertEqual(next(iter(after.written.values()))["next"], gate.ASK_UNQUOTED)
+                front, _ = gate.decision_ledger.split_task(text)
+                entry = [r for r in gate.decision_ledger.gate_entries(front)
+                         if r["stage"] == "validation" and r.get("by") == "person:captain" and r.get("decision") == "approve"][-1]
+                question = json.loads(indexes[str(Path(entry["room"]) / "index.json")])["question"]
+                quoted = "Captain 「准」, answering 「" + question.replace(" ", " \n ") + "」"
+                new = json.dumps(quoted, ensure_ascii=False)
+                reason_line = [line for line in front if line.strip().startswith("reason:") and entry["reason"][:30] in line][-1]
+                repaired = text.replace(reason_line, reason_line[:reason_line.index("reason:")] + "reason: " + new)
+                restored = run_check(**{**kw, "task": repaired})
+                self.assertEqual(restored.code, 0, restored.out)
+                self.assertEqual(restored.out.splitlines()[-1], gate.ASK)
+                results.append({"task": slug, "state_commit": commit, "candidate": head,
+                                "base": before.out, "candidate_output": after.out, "saved": after.written,
+                                "quoted_control": restored.out, "fixture_limits": "gh is stubbed; synthetic valid summary isolates the recorded question comparison"})
+        (evidence / "historical-replays.json").write_text(json.dumps(results, ensure_ascii=False, indent=2))
 
 
 class QuestionTests(unittest.TestCase):
@@ -1740,7 +1884,7 @@ class QuestionTests(unittest.TestCase):
 
     def test_legacy_combined_text_still_accepts_no_round_count(self):
         self.assertNotIn("External rounds:", CLAUSES)
-        self.assertEqual(self.ask("Deliver it."), (0, CLAIM_SOURCE + "\ngate text complete\n"))
+        self.assertEqual(self.ask("Deliver it."), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
 
     def test_a_question_that_names_the_merge_without_the_hold_out_clause_is_refused(self):
         code, out = self.ask(MERGE_ASK.format(tail="."))
@@ -1752,8 +1896,8 @@ class QuestionTests(unittest.TestCase):
     def test_both_wordings_in_use_and_a_question_that_names_no_merge_pass(self):
         for label, tail in HOLD_OUT_TAIL.items():
             with self.subTest(label):
-                self.assertEqual(self.ask(MERGE_ASK.format(tail=tail)), (0, CLAIM_SOURCE + "\ngate text complete\n"))
-        self.assertEqual(self.ask("Admit the sample task?"), (0, CLAIM_SOURCE + "\ngate text complete\n"))
+                self.assertEqual(self.ask(MERGE_ASK.format(tail=tail)), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
+        self.assertEqual(self.ask("Admit the sample task?"), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
         self.assertEqual(self.ask(MERGE_ASK.format(tail="."), as_folder=True)[0], 1)
 
     def test_the_other_text_checks_run_and_an_unreadable_input_exits_2(self):

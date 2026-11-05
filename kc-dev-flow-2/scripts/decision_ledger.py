@@ -159,6 +159,13 @@ def task_rows(state, path):
     return rows
 
 
+def quotes_bound_question(row):
+    # see docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md
+    question = row.get("question")
+    return bool(question and "".join(("answering 「" + question + "」").split())
+                in "".join((row.get("reason") or "").split()))
+
+
 def ledger(state):
     paths = sorted(state.glob("*.md")) + sorted((state / "_archive").glob("*.md"))
     rows = []
