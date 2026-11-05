@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gate-summary-names-each-decline:ideation:attempt-1:revision-1",
+  "question": "決定：婉拒要寫明這份設計進入實作嗎？核准即接受 D1（沒寫 Declined 標籤的婉拒，用字詞比對擋下，這跟 ADR 0027 D4 你選的「不做字詞檢查」不同）、D2（設計總監同意婉拒的每個 MINOR 都要列出）、D3（接手任務可以寫成別的 repo 的 owner/repo:slug，只檢查有寫、不去讀它）三個建議。",
+  "artifacts": [
+    {
+      "id": "artifact:gate-summary-names-each-decline:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e8ebb5c5b5dbaad1e07684d00e10687ab54c43ad/gate-summary-names-each-decline.md",
+      "rev": "sha256:d2c7c7a68977357b3c7adfefecffc096cfe1f5f85dd2e62f3f448887cc08e61b",
+      "mediaType": "text/markdown",
+      "summary": "Three new delivery_gate.py holds: unlabelled declines, uncounted security/design declines, round-3 declines naming no task; 13 of 149 tests change as expected; D1-D3, D1 departs from ADR 0027 D4."
+    }
+  ]
+}
