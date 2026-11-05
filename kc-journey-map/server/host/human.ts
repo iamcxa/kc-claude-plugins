@@ -4,7 +4,7 @@ import { HUMAN_BOUND, type HumanConfig, type HumanSession, type Member, type Mem
 import { verifyCloudflareIdentity } from './human-provider'
 export const randomSecret = () => [...crypto.getRandomValues(new Uint8Array(32))].map(b => b.toString(16).padStart(2, '0')).join('')
 export const cookieValue = (headers: Headers, name: string) => new RegExp('(?:^|;\\s*)' + name + '=([^;]+)').exec(headers.get('cookie') || '')?.[1]
-export type HumanHost = { origin: string; meta: Metadata; humanConfig?: HumanConfig; localHumanReady?: boolean; publicRequestUrl?: boolean; nativeAccount?: boolean }
+export type HumanHost = { origin: string; meta: Metadata; humanConfig?: HumanConfig; localHumanReady?: boolean; publicRequestUrl?: boolean; nativeAccount?: boolean; agentPairing?: boolean }
 function deny(status: number, category: string): never { throw new HostError(status, category, { category }) }
 export async function currentHuman(meta: Metadata, session: HumanSession, now = Date.now()) {
  const config = await meta.get<HumanConfig>('human-config:v1')
@@ -68,7 +68,7 @@ async function sessionMaterial() {
 export async function humanRoute(host: HumanHost, req: Request): Promise<Response | null> {
  const url = new URL(req.url), path = url.pathname
  if (!path.startsWith('/auth/')) return null
- if (path === '/auth/config' && req.method === 'GET') return Response.json(host.humanConfig ? { enabled: true, mode: host.humanConfig.mode, localReady: !!host.localHumanReady, nativeAccount: !!host.nativeAccount } : { enabled: false })
+ if (path === '/auth/config' && req.method === 'GET') return Response.json(host.humanConfig ? { enabled: true, mode: host.humanConfig.mode, localReady: !!host.localHumanReady, nativeAccount: !!host.nativeAccount, ...(host.agentPairing === true ? { agentPairing: true } : {}) } : { enabled: false })
  if (!host.humanConfig || !host.meta.human) deny(503, 'human_entry_unconfigured')
  if (req.method === 'POST') sameOrigin(host, req)
  if (path === '/auth/account' && req.method==='GET') {
@@ -136,7 +136,7 @@ export async function humanRoute(host: HumanHost, req: Request): Promise<Respons
   if (!csrf || csrf !== cookieValue(req.headers, 'journey_human_csrf')) deny(403, 'csrf_denied')
   const result = await host.meta.human(path === '/auth/renew' ? 'renew' : 'logout', { sessionDigest: human.sessionDigest, csrfDigest: await digest(csrf) })
   const token = cookieValue(req.headers, 'journey_human')!
-  return Response.json(path === '/auth/logout' ? { loggedOut: true } : { ok: true, expiresAt: result.expiresAt, verifiedHumanSignInAt: result.verifiedHumanSignInAt, humanRevalidateBy: result.humanRevalidateBy }, { headers: cookies(host.origin, path === '/auth/logout' ? '' : token, path === '/auth/logout' ? '' : csrf, path === '/auth/logout' ? 0 : result.expiresAt) })
+  return Response.json(path === '/auth/logout' ? result : { ok: true, expiresAt: result.expiresAt, verifiedHumanSignInAt: result.verifiedHumanSignInAt, humanRevalidateBy: result.humanRevalidateBy }, { headers: cookies(host.origin, path === '/auth/logout' ? '' : token, path === '/auth/logout' ? '' : csrf, path === '/auth/logout' ? 0 : result.expiresAt) })
  }
  return deny(404, 'unknown_human_operation')
 }

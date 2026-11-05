@@ -2,6 +2,7 @@ import { hostname } from 'node:os'
 import { createInterface } from 'node:readline'
 import websocketPlugin from '@fastify/websocket'
 import fastify from 'fastify'
+import { audited } from './host/audit'
 import { NodeHost } from './host/node'
 import { startLocalOwner } from './host/local-owner'
 import { admit, handle } from './host/transport'
@@ -28,11 +29,15 @@ app.get('/connect/:roomId', {
  const { room: id, admission } = (req as any).journeyAdmission
  const room = host.rooms.get(id)!.room
  const sessionId = String((req.query as any).sessionId || '')
- host.track(socket, admission, id)
- room.handleSocketConnect({ sessionId, socket: { send: (data: string) => socket.send(data), close: (code?: number, reason?: string) => socket.close(code, reason), get readyState() { return socket.readyState } } as any })
+ const ready=(async()=>{await host.track(socket,admission,id);if(socket.readyState!==1)throw new Error('socket closed');room.handleSocketConnect({ sessionId, socket: { send: (data: string) => host.send(socket, data), close: (code?: number, reason?: string) => socket.close(code, reason), get readyState() { return socket.readyState } } as any })})().catch(()=>{socket.close(1008,'authority denied');return false})
  socket.on('message', async data => {
+  if(await ready===false)return
   if (!await host.socketAllowed(admission, id)) { socket.close(1008, 'credential invalid'); return }
-  room.handleSocketMessage(sessionId, data.toString())
+  try {
+   const message=data.toString(),batch=JSON.parse(message)
+   if(batch.type==='push')await audited(host,admission,id,'socket:push',async()=>{room.handleSocketMessage(sessionId,message)},undefined,'admitted')
+   else room.handleSocketMessage(sessionId,message)
+  } catch {socket.close(1011,'mutation outcome unknown')}
  })
  socket.on('close', () => room.handleSocketClose(sessionId))
  socket.on('error', () => room.handleSocketError(sessionId))

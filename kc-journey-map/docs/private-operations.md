@@ -86,6 +86,8 @@ exit or tool success alone is not evidence that an intended note was saved.
 Rotate by issuing a new ID, installing its digest-only grant, and confirming its
 scoped read before revoking the old ID through operator control. Existing IDs are
 immutable on startup: editing a JSON entry does not update a persisted grant.
+Inventory every consumer sharing the old credential and verify each new consumer
+in its original room before matching revoke; one successful consumer is insufficient.
 Never reuse an old ID. On suspected compromise, revoke before distributing the
 replacement and accept the short interruption. Confirm old access is denied;
 remove its local secret after successful revocation. Expiry is not a substitute
@@ -119,7 +121,9 @@ node --import tsx scripts/private-node-ops.ts restore /absolute/private-operator
 ```
 
 Every archived ID is restored as revoked, including one revoked after that
-backup was taken. Old sessions are never restored. Existing targets and reused
+backup was taken. Archived sessions/families are quarantined by the security-aware restore;
+human-enabled recovery requires the security section and fresh backend/member IDs.
+See [revocation recovery](delegation-revocation.md#security-recovery-and-rollback). Existing targets and reused
 credential IDs are refused. A failure after partial initialization leaves the
 target quarantined: keep evidence, stop it and retry into another fresh target.
 Do not repair or merge tldraw tables manually.

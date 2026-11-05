@@ -13,6 +13,14 @@ import { humanOperation, bootstrapHuman, validateHumanConfig, HUMAN_BOUND, type 
 import { digest } from '../server/host/policy'
 const origin = 'http://127.0.0.1:3737'
 const config: HumanConfig = { version: 1, backendId: 'synthetic', origin, mode: 'local', issuer: 'local:synthetic', localOwnerUid: 501, localMemberId: 'owner', members: [{ id: 'owner', issuer: 'local:synthetic', subject: 'uid:501', label: 'Synthetic owner', role: 'operator', rooms: [{ id: 'one', expiresAt: 9e15 }] }] }
+test('human config exposes pairing only for an explicit opt-in and preserves the disabled account config', async () => {
+ for (const agentPairing of [undefined,false,true]) {
+  const host={private:true,origin,humanConfig:config,nativeAccount:true,localHumanReady:true,agentPairing,meta:{get:async()=>null}} as unknown as Host
+  const response=await handle(host,new Request(origin+'/auth/config'))
+  assert.equal(response.status,200)
+  assert.deepEqual(await response.json(),{enabled:true,mode:'local',localReady:true,nativeAccount:true,...(agentPairing===true?{agentPairing:true}:{})})
+ }
+})
 function fixture() {
  const data = new Map<string, any>()
  const store: SyncMetadata = { get: key => structuredClone(data.get(key) ?? null), put: (key, value) => { data.set(key, structuredClone(value)) }, delete: key => { data.delete(key) }, list: (prefix, limit) => [...data].filter(([k]) => k.startsWith(prefix)).sort().slice(0, limit).map(([key, value]) => ({ key, value: structuredClone(value) })) }

@@ -48,8 +48,21 @@ test('existing app logout checks context/CSRF, revokes only the session and reje
  const post=(q=query,c=csrf)=>handle(host,new Request(origin+'/auth/logout?'+q,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json','X-Journey-Entry':'1','X-Journey-Csrf':c,Cookie:'journey_human='+token+'; journey_human_csrf='+csrf},body:'{}'}))
  assert.equal((await post(query,'wrong')).status,403)
  assert.equal((await post(new URLSearchParams({...Object.fromEntries(query),_human:'other'}))).status,403)
- const before=store.list('member',100),response=await post()
- assert.equal(response.status,200);assert.deepEqual(await response.json(),{loggedOut:true})
+ const otherSession={...store.get<any>('browser-session:'+context.sessionDigest),revoked:false}
+ const family={id:'other-installation',memberId:'owner',revoked:false}
+ store.put('browser-session:other',otherSession);store.put('agent-family:other-installation',family)
+ const before=store.list('member',100),started=Date.now(),response=await post()
+ assert.equal(response.status,200)
+ const result=await response.json() as any
+ assert.match(result.operationId,/^[0-9a-f-]{36}$/)
+ assert.ok(result.deniedAt>=started && result.deniedAt<=Date.now())
+ assert.deepEqual(result,{loggedOut:true,operationId:result.operationId,denied:true,deniedAt:result.deniedAt,streamsStopped:'stopping'})
+ assert.deepEqual(store.get('security-denial:'+result.operationId),{operationId:result.operationId,target:{humanSessionDigest:context.sessionDigest},deniedAt:result.deniedAt})
+ const receipt=store.get<any>('security-receipt:'+result.operationId)
+ assert.equal(receipt.action,'logout');assert.equal(receipt.outcome,'committed');assert.equal(receipt.final,true)
+ assert.equal(store.get<any>('browser-session:'+context.sessionDigest).revokeOperation,result.operationId)
+ assert.deepEqual(store.get('browser-session:other'),otherSession)
+ assert.deepEqual(store.get('agent-family:other-installation'),family)
  assert.match(response.headers.get('set-cookie')||'',/Max-Age=0/)
  assert.equal(store.get<any>('browser-session:'+context.sessionDigest).revoked,true)
  assert.deepEqual(store.list('member',100),before)
