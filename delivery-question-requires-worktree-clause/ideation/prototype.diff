@@ -1,0 +1,30 @@
+--- a/kc-dev-flow-2/scripts/delivery_gate.py	2026-11-06 00:18:15
++++ b/kc-dev-flow-2/scripts/delivery_gate.py	2026-11-06 01:25:27
+@@ -262,6 +262,9 @@
+ 
+ GRANT = re.compile(r"--match-head-commit")
+ HOLD_OUT = re.compile(r"\b(?:unless|if)\b\s+(?:he|you|the\s+captain|captain)\s+says?\b[^.;\n]{0,30}\b(?:merges?|holds?)\b", re.I)
++
++
++WORKTREE_REMOVAL = re.compile(r"\bremov(?:e|es|ing)\b[^.;\n]{0,20}\bclean\b[^.;\n]{0,10}\bpushed\b[^.;\n]{0,10}\bworktrees?\b", re.I)
+ 
+ 
+ def grant_without_hold_out(text):
+@@ -835,6 +838,7 @@
+         task = task / "index.md"
+     try:
+         task_text, gate_text = task.read_text(), Path(args.text_file).read_text()
++        question_text = gate_text
+         workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
+         if not workflow_dir:
+             raise ValueError("cannot find the workflow README with a trunk: next to the task or in --workflow-dir")
+@@ -860,6 +864,9 @@
+         emit(f"cannot read input: {error}")
+         return 2
+     problems, nexts = text_problems(task_text, gate_text, at_gate=True, reviewer_text=reviewer_text)
++    if GRANT.search(gate_text) and not WORKTREE_REMOVAL.search(question_text):
++        problems.append("the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree")
++        nexts.append("next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.")
+     problems += found
+     nexts += wanted
+     emit(*problems, *dict.fromkeys(nexts))
