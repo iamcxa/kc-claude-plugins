@@ -60,6 +60,8 @@ Consumer: every adopter FO at a second validation round or second relaxation, an
 
 - Held 2026-11-05 at the ideation gate: the Captain 「可以」 (chat, 2026-11-05), answering 「這張先擱置，下一批手動試，好嗎？」. FO's reasons: the counted triggers miss a step-back owed at first proposal (one of the two this session that the Captain prompted himself); a self-answered line under a hold invites filler, and no record shows an answer changing direction. Trial: for the next batch, when role_triggers.py prints the step-back reminder, FO brings the three questions and its answers to the Captain as one item in the next sitting; after that batch, a direction change keeps this task, none deletes it.
 
+- FO record error, noted 2026-11-05: the ideation hold reason ends "Recommendation followed.", but the bound question recommended approving D1 and D2; FO changed its recommendation after the Captain's questions, so under override-recorded-when-captain-departs's widened rule this resolution departs from FO's recommendation (Override: recommended approve D1-D2; Captain chose hold and a hand trial; area: none). The recorded reason cannot be edited.
+
 ## Budget
 - One package PR. Workflow word budget unchanged unless the design names a raise for the Captain.
 
