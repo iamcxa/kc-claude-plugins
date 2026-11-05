@@ -185,15 +185,15 @@ Verified by: one recount command run on base d37c6dc65 and the candidate, saved 
 - DONE: A `### Batch overlap` section naming each file the design would change and each other batch task and live task that changes the same file or check, so FO can order implementation
   ### Batch overlap lists four files and all 18 named tasks; collisions: two batch-14 tasks on the same README section and budget step, captain-ruling-sources-checked on the ledger JSON.
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
-  Startup 5891 → 5939 (+48, `text.split()` on origin/main d37c6dc65 vs candidate); a new pre-record step; other moments unchanged.
+  Startup 5891 → 5939 (+48, `text.split()` as lint-skills.py counts; its `workflow_budget()` is 5891 on origin/main d37c6dc65); a new pre-record step; other moments unchanged.
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
   AC-1..AC-7 each with evidence and falsifier; D1-D4 each recommended with its cost.
 - DONE: AC-1 (three flagged reasons exit 1, exit 0 with Override)
   Prototype run 2026-11-05 matches; package test not yet written (implementation).
 - DONE: AC-2 (agreeing reason passes with `Recommendation: followed`)
   Prototype: commissioned-by-names-spacedock validation-1 exit 0 with the token, exit 1 without; package test not yet written.
-- DONE: AC-3 (both forms and placeholder exit 1; unreadable exit 2)
-  Prototype: both forms exit 1, placeholder exit 1; exit 2 not yet verified.
+- SKIPPED: AC-3 (both forms and placeholder exit 1; unreadable exit 2)
+  Partly verified by the prototype: both forms exit 1, placeholder exit 1; exit 2 not yet verified.
 - SKIPPED: AC-4 (declaration survives `spacedock gate record`)
   Not yet verified; needs a temporary workflow at implementation or validation.
 - SKIPPED: AC-5 (ledger JSON gains only `followed`)
