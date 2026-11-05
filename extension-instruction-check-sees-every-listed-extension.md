@@ -34,6 +34,17 @@ gates:
                 id: briefing:extension-instruction-check-sees-every-listed-extension:ideation:attempt-1:revision-1
                 digest: sha256:5327e7f9590548299ba8ffe47a2114c2bb5bf927eddf896f63bebb3d66b584e8
                 room-ref: ./extension-instruction-check-sees-every-listed-extension/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extension-instruction-check-sees-every-listed-extension:ideation:1
+                briefing: briefing:extension-instruction-check-sees-every-listed-extension:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-05T10:41:20.352542Z"
+                decision: approve
+                reason: 'The Captain 「可以」 (chat, 2026-11-05), answering 「決定：派工交代句檢查這份設計進入實作嗎？核准即接受 D1（經 Paseo 開的工人不分 Claude 或 Codex 都要有那句）、D2（只檢查第一句）、D3（對已在跑的工人的後續訊息不檢查）、D4（別的 FO 的進行中任務被新抓到的紀錄，由該 FO 在下次派工前補一行 <name> not run: 並註明日期）四個建議。」; accepts the design and D1 to D4 as recommended. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 `dispatch_records.py` holds a dispatch record that lacks the scope-note instruction of any extension the workflow README lists, not only the instructions that name a package script.
