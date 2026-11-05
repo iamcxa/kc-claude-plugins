@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 status: backlog
 profile: pilot
 merge: pr
+gates:
+    version: 1
+    records:
+        - id: gate:step-back-answer-has-a-record-line:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:step-back-answer-has-a-record-line-backlog-1
+              briefing:
+                id: briefing:step-back-answer-has-a-record-line:backlog:attempt-1:revision-1
+                digest: sha256:ec5681ebf0f86939bc3531f916dee2f7fbfe35519d450ab5f0ffb9700098a049
+                room-ref: ./step-back-answer-has-a-record-line/review/backlog/briefing-1
 ---
 
 When `role_triggers.py` prints the step-back reminder for a task, FO writes its answers to the three questions on one fixed line in the task, and `role_triggers.py` stops printing the reminder for that round once the line is there.
