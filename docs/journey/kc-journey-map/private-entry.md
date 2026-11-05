@@ -42,7 +42,7 @@ HTTPS. The narrowly scoped provider-start verifier uses a 60-second Lax cookie
 for the provider's top-level return; it grants no app access by itself.
 
 The other stories retain agent pairing and rotation, installation credential
-storage, full room switching/catalog behavior, interrupted-context restoration,
+storage, interrupted-context restoration,
 stream-stop guarantees and durable human drafts. Approved defaults are five
 minutes for pairing, 60 seconds for local handoff, 30 seconds for stream leases,
 an observed stop target of at most 60 seconds, and 30 days for lifecycle receipts.
@@ -83,9 +83,19 @@ flowchart TD
  A -- yes --> N[Mount existing native canvas; report actual sync state]
  N --> P{Current policy and original identity context still valid?}
  P -- yes --> N
- P -- no --> X
+ P -- no --> F[Freeze retained editor and disconnect its sync client]
+ F -- explicit alternative in separate tab --> V
 ```
 
 The diagram describes the accepted boundary. Rendering proves presentation only;
 operator/provider/runtime evidence remains separate. Frozen historical reports
 and design-review findings are preserved outside this current product snapshot.
+
+## Room catalog candidate
+
+[Room catalog](../../../kc-journey-map/docs/room-catalog.md) implements metadata-only
+permitted-room discovery and staged native switching on the accepted first-entry
+prerequisite. This is a local, default-off candidate, not whole-journey runtime
+acceptance. Original IDs and complete-record concurrency remain unchanged.
+Physical-device, hosted-provider, outgoing-stream safety and durable-draft work
+remain separate; no sibling story is marked complete.

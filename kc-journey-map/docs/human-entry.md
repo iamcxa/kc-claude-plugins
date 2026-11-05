@@ -146,3 +146,7 @@ backup or run a version that bypasses those checks. If an enabled test deploymen
 needs immediate denial, disable its member through the protected control first;
 active-stream stop remains explicitly unverified until the later safety story.
 This candidate is not authorization for production activation or formal merge.
+
+The native permitted-room menu and retained-source switching are described in
+[room-catalog.md](room-catalog.md). Generalized stream safety and durable drafts
+still require their separate stories; the entry remains disabled by default.

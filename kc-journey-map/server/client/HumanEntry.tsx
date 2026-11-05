@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { journeyApi, setHumanContext } from './api'
+import { journeyApi, setHumanContext, type HumanContext } from './api'
 import './human-entry.css'
 type Entry = { backendId: string; memberId: string; label: string; rooms: string[]; room: string | null; expiresAt: number; verifiedHumanSignInAt: number; status: string }
 const secret = () => [...crypto.getRandomValues(new Uint8Array(32))].map(b => b.toString(16).padStart(2, '0')).join('')
@@ -15,7 +15,8 @@ const messages: Record<string, string> = {
  provider_unavailable: '身分服務暫時無法使用。請稍後重試。', owner_peer_unavailable: '此主機無法確認本機帳號，登入已停止。', challenge_expired_or_consumed: '這次驗證已到期或已使用，請重新開始。',
 }
 const humanEntryEnabled = import.meta.env.VITE_JOURNEY_HUMAN_ENTRY === 'true'
-export function HumanEntry({ children }: { children: () => ReactNode }) {
+export type HumanCanvasEntry = { context: HumanContext | null; problem: string; activate: (room: string) => void }
+export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) => ReactNode }) {
  const [config, setConfig] = useState<{ enabled: boolean; mode?: string; localReady?: boolean } | null>(humanEntryEnabled ? null : { enabled: false })
  const [entry, setEntry] = useState<Entry | null>(null)
  const [problem, setProblem] = useState('')
@@ -80,11 +81,11 @@ export function HumanEntry({ children }: { children: () => ReactNode }) {
   return () => { active = false; requestVersion.current++ }
  }, [])
  useEffect(() => {
-  if (!config?.enabled) return
+  if (!config?.enabled || entry?.room) return
   const onNavigation = () => { void refresh() }
   window.addEventListener('popstate', onNavigation)
   return () => window.removeEventListener('popstate', onNavigation)
- }, [config, requested])
+ }, [config, requested, entry?.room])
  useEffect(() => {
   if (!entry?.room || problem) return
   const timer = setTimeout(async () => {
@@ -127,8 +128,16 @@ export function HumanEntry({ children }: { children: () => ReactNode }) {
   const url = new URL(window.location.href); url.searchParams.set('room', room); url.searchParams.delete('d'); url.hash = ''
   window.history.pushState(null, '', url); window.dispatchEvent(new PopStateEvent('popstate'))
  }
- if (config && !config.enabled) { setHumanContext(null); return children() }
- if (entry?.room && !problem && !busy) { setHumanContext({ member: entry.memberId, backend: entry.backendId, signInAt: entry.verifiedHumanSignInAt, room: entry.room }); return <><div className="human-entry-identity">{entry.label} · 身分已驗證</div>{children()}</> }
+ if (config && !config.enabled) { setHumanContext(null); return children({ context: null, problem: '', activate: () => {} }) }
+ if (entry?.room && !busy) {
+  const context = { member: entry.memberId, backend: entry.backendId, signInAt: entry.verifiedHumanSignInAt, room: entry.room }
+  setHumanContext(context)
+  const activate = (room: string) => {
+   setEntry(current => current ? { ...current, room } : null)
+   try { localStorage.setItem('journey-human-history:' + window.location.origin + ':' + entry.backendId + ':' + entry.memberId, room) } catch {}
+  }
+  return <><div className="human-entry-identity">{entry.label} · {problem ? '先前驗證身分，存取已暫停' : '身分已驗證'}</div>{children({ context, problem, activate })}</>
+ }
  return <main className="human-entry"><section aria-labelledby="human-entry-title" aria-busy={busy}>
   <p className="human-entry-eyebrow">私人畫布</p><h1 id="human-entry-title">{busy ? '正在確認入口' : entry ? '選擇畫布' : '驗證後進入畫布'}</h1>
   {requested !== null && <p>指定畫布：<strong>{requested || '（空白）'}</strong></p>}
