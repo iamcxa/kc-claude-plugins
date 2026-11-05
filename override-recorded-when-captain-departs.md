@@ -3,7 +3,7 @@ title: A gate resolution records an Override when the Captain's ruling departs f
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
