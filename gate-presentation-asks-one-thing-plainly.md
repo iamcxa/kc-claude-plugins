@@ -366,3 +366,42 @@ The High finding is confirmed and repaired: withdrawn validation attempts cannot
 
 PASSED recommendation for PR #788 at 73db59bef6d1327e8b8c810b4f57601664aee1ef within the approved Pilot boundary, with F1 for FO's distinct disposition. The implementation's tested record comparison, withdrawal repair and +62-word preparation cost are supported; the stale design baseline, supplied single Observer run and non-enforcement of chat quality remain explicit limits. FO still owns acceptance replay, the validation gate, review outcome and delivery; this report does not authorize merge.
 
+
+## Stage Report: implementation
+
+- DONE: Merge origin/main with a merge commit while keeping both ledger features and the approved D1/D2 Pilot boundary.
+  4be594614f1ce37172a3b4cf82b858409f30d71b has parents 73db59bef6d1327e8b8c810b4f57601664aee1ef and 65d35dac02ae2aa4bb94642c41665a4e06ed8490. Main advanced through #787 while merge approval was pending; that parent contains #786. The single test-file conflict was resolved by retaining both sets of tests; check_reason/task_rows/summary/main match upstream and quotes_bound_question retains its prior executable AST.
+- DONE: Apply FO's replacement reservation ADR 0062 and update its pointers and prepared PR text.
+  Dispatch implementation-1-message-3 authorizes the rename after #789 used 0060/0061. 2493d57a17dcbe08489918b208c9bd5019450772 extends 4be594614; only the ruling number and three source comments changed, with no ruling-text or executable-AST change. Eight task-delta files remain; no version bump, rebase, force push or product push.
+- DONE: AC-1 — gate reminders retain their passing/failing/status behavior.
+  Fresh final-tree design suite 213 tests and watcher suite 134 tests pass; the existing four optional design corpus tests skip. Gate reminder and pre-ask output checks run in the delivery suite; suite-summary.json under /tmp/opencode/gate-presentation-merge-final.
+- DONE: AC-2 — all five committed historical validation answers ask separately and persist ASK_UNQUOTED.
+  HistoricalBoundQuestionTests ran against current-main baseline a7c0bdbe0ae0f111780f6d3b7254ed4ad67befcd with declared state/evidence paths; historical-replays.json saves base, candidate and quoted controls. The prefix-only and any-quote mutations are caught.
+- DONE: AC-3 — quoted, whitespace, pending, delegated-repair and withdrawn-attempt cases pass.
+  Fresh 157-test delivery suite includes the withdrawal regressions and checks printed/saved next fields; no effective quoting grant asks separately while a fresh unanswered attempt keeps ASK. Whitespace mutation is caught; earlier withdrawal-falsifier evidence remains prior-candidate evidence, not a new run here.
+- DONE: AC-4 — nested brackets work and this task preserves the new main's ledger JSON.
+  Frozen state 79fb4abf3f9c751c83e8d70dcfeaa654ff8774c4: 399 rows/428103 bytes, sha256 6c565df9cf24cfc733d45ace57a8b0adae4240f0c178e62fc0813069f5a72c67, byte-identical to current main including #786's followed field. ledger-proof.json; nested-regex mutant fails. The older 420525-byte count predates that upstream schema change.
+- DONE: AC-5 — retain the configured Observer's changed-ideation violation.
+  FO's unedited /tmp/ac5-observer-report.md is prior-run evidence, not rerun; observer instructions and the comparison's executable AST are unchanged. The double-outer-bracket rule remains deliberate; the pointer comment now names 0062.
+- DONE: AC-6 — independently recount reading against the current main.
+  reading.json: startup 7199/7199; idle 906/906 and 860/860; archive 333/333; backlog 7/69, ideation 4/66, validation 30/92, ui-validation 43/105; normal merge 2429/2429, separate line 40/39. The workflow is byte-identical to current main; its 48-word increase since the original base belongs to upstream #786.
+- DONE: AC-7 — four final-tree suites and the ruling/provenance check pass.
+  Delivery 157 + design 213 + ledger 19 + watcher 134 = 519 passed, four existing optional corpus skips; tests.json. ADR lint --since origin/main --require 0062 exits 0, 59 records checked; renumber-proof.json preserves the Captain's Words/Asked text except the number, and adr-provenance.json rejects FO words.
+- DONE: Run the decision_ledger.py falsifiers with python3 -B and cleared caches, preserving both features.
+  mutations.json records 8/8 caught: prefix, any quote, exact whitespace, nested regex, missing declaration accepted, double declaration accepted, placeholder accepted and followed marker widened. composition.json exercises four native --reason/quote combinations; the 19-test ledger suite retains all upstream reason cases.
+- DONE: Number guards pass against current origin/main after the new commit.
+  number-guards.log exits 0: base a7c0bdbe0ae0, head 2493d57a17dc, merge-base 65d35dac02ae; no findings, no migration path. Before renumbering, current-main-number-guards.log at the merge candidate recorded the real R5 collision; that finding is now resolved by the reserved 0062.
+- DONE: Repository skill lint, task design check and comment ratio satisfy their limits.
+  skills-lint.log passes at 5939/5939 workflow words; the task design check previously passed on the unchanged task design, with only Number guards subsequently updated by FO. comment-ratio.log: 229 code lines, 3 comment lines, 1.3%, maximum 5%.
+- DONE: Rerun doc_impact.py on the actual integrated parent and review all eight listed documents.
+  docs/adr/0011 unaffected by this task: upstream ledger/delegation preserved; 0041 seed holds unchanged; 0044 legacy/summary checks retained; 0051 round check retained; 0057 amendment comparison unchanged; kc-dev-flow-2/skills/maintain-flow/SKILL.md ledger command retained. docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md and skills/observer/SKILL.md are updated task documents; doc-impact.json.
+- DONE: Verify local mergeability and prepare the new handoff.
+  git merge-tree --write-tree HEAD origin/main exits 0 (local-mergeability.log); code worktree clean. origin/main remains a7c0bdbe0, so the follow-up condition to merge again if it moved past that commit did not trigger. /tmp/impl-gate-presentation-asks-one-thing-plainly-pr.md names the new head and 0062; candidate.json and integration-proof.json bind both local commits.
+- SKIPPED: Product push, PR #788 update, fresh RoboRev, independent validation and hosted CI.
+  FO owns these. The earlier independent PASSED recommendation belongs to 73db59bef, not this integration; its F1 annotated-status Deferred risk is unchanged and outside this conflict/renumber scope. Local mergeability does not establish GitHub's post-push mergeability.
+- SKIPPED: CI cost measurement.
+  No CI trigger changed; cost per PR not measured.
+
+### Summary
+
+This complete report supersedes all earlier implementation reports: the final candidate is 2493d57a17dcbe08489918b208c9bd5019450772, retaining both #786's reason declarations and this task's whole-question/withdrawal behavior after merge commit 4be594614. ADR 0062 replaces this task's colliding reservation under FO authority; current-main number guards, final-tree tests and ledger falsifiers pass. Publication, new-head review, independent validation and CI remain FO-owned.
