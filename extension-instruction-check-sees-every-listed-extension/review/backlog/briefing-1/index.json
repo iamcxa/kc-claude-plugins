@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extension-instruction-check-sees-every-listed-extension:backlog:attempt-1:revision-1",
+  "question": "決定：這批五張（派工交代句的檢查、退一步答案欄位、漏寫 Override、婉拒要寫明、閘門一次問一件事）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？其中「婉拒要寫明」照我提的三項範圍（沒寫 Declined 標籤的婉拒、沒有 F 條目的審查者、沒指明接手任務）。要改哪張直接說。",
+  "artifacts": [
+    {
+      "id": "artifact:extension-instruction-check-sees-every-listed-extension:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fd353e65bf0598175d39e57b3c7585f54f2cae30/extension-instruction-check-sees-every-listed-extension.md",
+      "rev": "sha256:48dd75c50b074a5dc565732ac8eefdb73a0709dc24f9d3c56f6dfc42398cd5d3",
+      "mediaType": "text/markdown",
+      "summary": "Pilot. Widen dispatch_records.py so every listed extension's scope-note line is checked in every record it applies to; 6 paseo violations in batches 12-13 passed the current check, which sees only roborev."
+    }
+  ]
+}

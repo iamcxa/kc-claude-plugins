@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 status: backlog
 profile: pilot
 merge: pr
+gates:
+    version: 1
+    records:
+        - id: gate:extension-instruction-check-sees-every-listed-extension:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:extension-instruction-check-sees-every-listed-extension-backlog-1
+              briefing:
+                id: briefing:extension-instruction-check-sees-every-listed-extension:backlog:attempt-1:revision-1
+                digest: sha256:d7c07cbecae6d0a7fd945d14cc7d29634b7c6093531e1679611e8a4f547a4ef7
+                room-ref: ./extension-instruction-check-sees-every-listed-extension/review/backlog/briefing-1
 ---
 
 `dispatch_records.py` holds a dispatch record that lacks the scope-note instruction of any extension the workflow README lists, not only the instructions that name a package script.
