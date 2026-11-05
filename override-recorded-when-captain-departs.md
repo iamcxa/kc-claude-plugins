@@ -229,3 +229,43 @@ Verified by: one recount command run on base d37c6dc65 and the candidate, saved 
 ### Summary
 
 The design widens the README Override rule to a revise asking for what FO did not recommend and to approval of FO's revised recommendation, and adds `decision_ledger.py --reason`, run before each Captain `gate record`, which holds a reason that declares neither an Override nor `Recommendation: followed`. The finding that makes it needed: a batch sitting copies one reason onto every task, so "with the stated change" landed on 4 and 7 tasks with no Override. The check enforces a declaration, not the truth (a wrong `Recommendation: followed` passes, measured), so the observer stays the truth check. Four decisions go to the Captain: placement (D1), a +48-word budget raise (D2), no phrase guard per ADR 0027 D4 (D3), no scorer (D4).
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design, D1-A to D4-A, within its four named files; no version bump.
+  Code worktree `.worktrees/spacedock-ensign-override-recorded-when-captain-departs`; branch `spacedock-ensign/override-recorded-when-captain-departs`; fetched base d37c6dc653e0f45d6ca630c2faa6121c0863a57e; candidate 69d62c772c5f4fd28d9105c6f5d49516d559c947; clean code tree.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation run with python3 -B and no bytecode caches.
+  Reproducible scripts, inputs, command/exit records and results are in `/tmp/opencode/override-captain/`: `evidence.py`, `remaining-evidence.py`, `commands.json`, `remaining-commands.json`; run copies in a fresh evidence directory with `reasons.json`.
+- DONE: AC-1, AC-2 and AC-3: verbatim historical reasons, declarations, conflicts, placeholders and input errors.
+  `test_decision_ledger.py`: 17 tests pass (`tests.json`, `unit.log`); `cli.json`: each flagged original exits 1, each Override exits 0 with its area, agreement plus followed exits 0, both/placeholder exit 1, empty/unreadable exit 2. Missing-declaration, require-Override and both-forms reverse mutations each fail the suite; original base also fails the candidate goal checks (`without-candidate/test.log`).
+- DONE: AC-4: declarations survive real Spacedock gate recording.
+  `evidence.py` records only synthetic approvals in a disposable workflow using installed Spacedock 0.27.2; `roundtrip.json` shows followed true and parsed Override; the no-colon mutation records followed false. No human approval or FO-compliance claim.
+- DONE: AC-5: ledger rows and summaries gain only followed, preserving all existing keys and values.
+  Base/candidate replay over state dc91fa798: 394 rows, including 360 Captain resolutions, identical after removing followed; every historical followed is false (`compatibility.json`). Actual task-key rename makes `compatibility-check.py` exit 1 (`remaining-commands.json`).
+- DONE: AC-6: widened Override paragraph, pre-record command and one approved budget step.
+  Repository `python3 -B kc-dev-flow-2/scripts/lint-skills.py` exits 0; removing the new step makes the actual lint CLI exit 1 at 5939 versus 5891 words (`lint.log`, `lint-mutation.log`). The step quotes 「准」 and the exact ideation question in this task's recorded gate.
+- DONE: AC-7: lifecycle reading recount and protected source boundaries.
+  `word-counts.json`: startup/resume 5891 → 5939; new pre-record output followed 2 words, Override 5 for the sample area, hold 20. Native stage-definition output is byte-identical: ideation 630/630, implementation 1365/1365, validation 1519/1519 (`stage-word-counts.json`); gate preparation, idle, merge ask and archive sources unchanged. Changing delivery_gate.py in a disposable repo makes `scope-check.py` exit 1.
+- DONE: Repository lint, dispatch integration and affected-reader regressions.
+  `test_lint_skills.py` passes 47 tests; `test_laws_check.py` passes 64 tests with 1 skipped; `test_sd_dispatch.py --sd-plugin-root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3` exits 0 using Spacedock 0.27.2 (`lint-tests.log`, `laws-tests.log`, `sd-dispatch.log`). Existing Override assertions hold.
+- DONE: ADR lint, number guards, design-surface check and comment maximum at the committed candidate.
+  Package `adr_lint.py docs/adr --since d37c6dc653e0f45d6ca630c2faa6121c0863a57e` exits 0 (58 records); `number_guards.py check --repo <code-worktree> --workflow-dir <workflow> --task <this task> --base <base>` exits 0; `design_surfaces.py check <this task>` exits 0. `comment_ratio.py <base> HEAD --workflow-dir <workflow>` exits 0: code 118, comments 0, 0.0%, maximum 5% (`adr-lint.log`, `number-guards.log`, `design.log`, `comment-ratio.log`).
+- DONE: Affected documents, from package doc_impact.py <base> HEAD --json (`doc-impact.json`).
+  `docs/adr/0011-fo-decides-for-the-captain-by-a-delegation-ladder.md`: unaffected: existing ladder and derived ledger contract unchanged; FO explicitly confirmed no new ADR.
+  `docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md`: unaffected: the new quoted +48 step applies its equality rule.
+  `docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md`: unaffected: its Team rule and +144 step are unchanged.
+  `docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md`: unaffected: role and effort checks unchanged.
+  `docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md`: unaffected: permission procedure and historical measurements unchanged.
+  `kc-dev-flow-2/README.md`: unaffected: existing ledger/count and maintenance entry descriptions remain correct; no exhaustive JSON schema there.
+  `kc-dev-flow-2/skills/maintain-flow/SKILL.md`: unaffected: its ledger summary and lint entry points remain valid.
+  `learning.md`: unaffected: historical observations unchanged; this task applies its reading-cost and parser compatibility practices.
+- DONE: Prepare Conventional Commit PR text for FO and commit named code files only.
+  `/tmp/impl-override-recorded-when-captain-departs-pr.md` contains title then body. The existing-code capability audit is retained in Design; this implementation reuses OVERRIDE and leaves split_task, gate_entries and question untouched, preserving the parallel question-reader ownership.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins, product-branch push and external review/CI.
+  No PR opened: no push grant; FO owns publication, Draft PR, independent validation and CI. No CI configuration changed; cost per PR not measured.
+- SKIPPED: RoboRev evidence line.
+  Not run, delegated to FO by its 2026-11-05 reply: “RoboRev: FO runs it after you report; record it as delegated to FO, not run.” No clean verdict claimed.
+
+### Summary
+
+The local candidate adds a pre-record declaration check, the followed ledger field/count and the approved 48-word workflow passage, with all seven acceptance criteria exercised and their falsifiers caught. The check establishes declaration presence only; truth remains the observer's responsibility, and publication, independent validation, RoboRev and remote CI remain with FO.
