@@ -1,0 +1,3 @@
+.journey-private-dialog{max-width:min(560px,calc(100vw - 32px));overflow-wrap:anywhere}
+.journey-private-dialog p{margin:0 0 12px;line-height:1.5}
+.journey-private-dialog .tlui-button{min-height:44px;height:auto;white-space:normal}

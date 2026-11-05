@@ -150,6 +150,13 @@ export function humanOperation(store: SyncMetadata, operation: string, input: an
  }
  const { session, member: m } = activeSession(store, config!, input.sessionDigest, now)
  if (input.csrfDigest !== session.csrfDigest) fail(403, 'csrf_denied')
+ if (operation === 'account-read') {
+  if(input.backendId!==config!.backendId || input.memberId!==m.id || input.signInAt!==session.verifiedHumanSignInAt)fail(403,'identity_changed')
+  const room=input.roomId,grant=store.get<MemberRoom>('member-room:'+m.id+':'+room)
+  if(!room || canonicalRoom(room)!==room || !grant || grant.memberId!==m.id || grant.roomId!==room || grant.revoked || grant.expiresAt<=now)fail(403,'room_denied')
+  if(!store.get('room:'+room))fail(404,'room_missing')
+  return {backendId:config!.backendId,memberId:m.id,label:m.label,roomId:room}
+ }
  if (operation === 'renew') {
   session.expiresAt = Math.min(now + HUMAN_ACCESS, session.humanRevalidateBy)
   store.put('browser-session:' + input.sessionDigest, session)

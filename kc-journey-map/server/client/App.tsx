@@ -11,12 +11,13 @@ import './doc-popup.css'
 import { SaveButton } from './SaveButton'
 import { StickyBackbone } from './StickyBackbone'
 import { addSequencePage } from './sequence'
-import { journeyApi, type HumanContext } from './api'
+import { journeyApi, journeyFetch, type HumanContext } from './api'
 import { RoomPageMenu, RoomSelector, type ConnectionState } from './RoomSelector'
 import { confirmRoomSwitch, documentFingerprint } from './confirm-room-switch'
 import { verifyRoomAdmission, RoomAdmissionError, sourceAdmissionLost } from './room-admission'
 import { assetUploadId } from './asset-upload-id'
 import { HumanEntry, type HumanCanvasEntry } from './HumanEntry'
+import { NativeAccountProvider, NativeMainMenu } from './NativeAccount'
 
 const APP_NAME = 'kc-journey-map'
 
@@ -62,7 +63,7 @@ const canvasAssets = (roomId: string): TLAssetStore => ({
 	async upload(_asset, file) {
 		// crypto.randomUUID is unavailable over plain http on a private-network hostname.
 		const name = assetUploadId(file.name)
-		const res = await fetch(journeyApi(`/uploads/${encodeURIComponent(name)}?room=${encodeURIComponent(roomId)}`), { method: 'PUT', body: file })
+		const res = await journeyFetch(journeyApi(`/uploads/${encodeURIComponent(name)}?room=${encodeURIComponent(roomId)}`), { method: 'PUT', body: file })
 		if (!res.ok) throw new Error(`upload failed: ${res.status} ${res.statusText}`)
 		return { src: `${ASSET_SCHEME}${name}` }
 	},
@@ -235,7 +236,7 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
   verifyRoomAdmission(active.roomId, entry.context, controller.signal).catch(error => { if (error instanceof RoomAdmissionError && error.denied) freeze() }).finally(() => { pausedCheck.current = false })
   return () => controller.abort()
  }, [connection, active.roomId, entry.context?.member, frozen, freeze])
- return <RoomSelector roomId={active.roomId} human={entry.context} connection={connection} switching={switching} switchError={switchError} frozen={frozen} onDenied={freeze} onNavigate={next => {
+ return <NativeAccountProvider entry={entry} context={entry.context?{...entry.context,room:active.roomId}:null} paused={frozen||!!entry.problem}><RoomSelector roomId={active.roomId} human={entry.context} connection={connection} switching={switching} switchError={switchError} frozen={frozen} onDenied={freeze} onNavigate={next => {
   const url = new URL(acceptedUrl.current)
   url.searchParams.set('room', next); url.searchParams.delete('d'); url.hash = ''
   if (frozen) { window.open(url.href, '_blank', 'noopener,noreferrer'); return }
@@ -243,7 +244,7 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
  }}>
   {[...(!frozen ? [active] : []), ...(target ? [target] : [])].map(session => <RoomSync key={session.id} session={session} onStore={onStore} />)}
   <RoomCanvas key={active.id} session={active} frozen={frozen} onConnection={setConnection} onEditor={onEditor} />
- </RoomSelector>
+ </RoomSelector></NativeAccountProvider>
 }
 
 function RoomSync({ session, onStore }: { session: RoomSession; onStore: (id: number, store: TLStoreWithStatus) => void }) {
@@ -257,7 +258,7 @@ function RoomCanvas({ session, frozen, onConnection, onEditor }: { session: Room
  const roomId = session.roomId
  const store = session.store || { status: 'loading' as const }
 	const components = useMemo(
-		() => ({ PageMenu: RoomPageMenu, SharePanel: () => frozen ? null : <SaveButton roomId={roomId} />, InFrontOfTheCanvas: StickyBackbone }),
+		() => ({ MainMenu: NativeMainMenu, PageMenu: RoomPageMenu, SharePanel: () => frozen ? null : <SaveButton roomId={roomId} />, InFrontOfTheCanvas: StickyBackbone }),
 		[roomId, frozen]
 	)
 	useEffect(() => {
@@ -286,7 +287,7 @@ function RoomCanvas({ session, frozen, onConnection, onEditor }: { session: Room
 					const stopBorders = syncStoryBorders(editor)
 					const stopTitle = syncDocumentTitle(editor, roomId)
 					setEditor(editor)
-					return () => { onEditor(session.id, null); stopBorders(); stopTitle() }
+					return () => { onEditor(session.id, null); stopBorders(); stopTitle(); if((window as any).editor===editor){delete (window as any).editor;delete (window as any).addSequencePage;delete (window as any).serializeTldrawJson} }
 				}}
 			/>
 			{popup &&
