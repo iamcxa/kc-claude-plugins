@@ -18,7 +18,7 @@ await writeFile(grantsFile,JSON.stringify([{credentialId:'seed',secretDigest:has
 await writeFile(configFile,JSON.stringify({version:1,backendId:'pair-browser',origin,mode:'local',issuer:'local:pair-browser',localOwnerUid:process.geteuid(),localMemberId:'owner',members:[{id:'owner',issuer:'local:pair-browser',subject:'uid:'+process.geteuid(),label:'Synthetic owner',role:'operator',rooms:[{id:'one',expiresAt:Date.now()+3600000}]}]}),{mode:0o600})
 await writeFile(helperConfig,JSON.stringify({endpoint,backendId:'pair-browser',installationId:crypto.randomUUID(),memberId:'owner',rooms:['one'],label:'Synthetic installation; self-reported'}),{mode:0o600})
 const logs=[]
-const child=spawn(process.execPath,['--import','tsx','server/canvas-server.ts'],{cwd:root,stdio:['pipe','pipe','pipe'],env:{...process.env,JOURNEY_PRIVATE_DIR:dataDir,JOURNEY_GRANTS_FILE:grantsFile,JOURNEY_HUMAN_CONFIG:configFile,JOURNEY_AGENT_PAIRING:'true',JOURNEY_ORIGIN:origin,JOURNEY_API_PORT:String(apiPort)}})
+const child=spawn(process.execPath,['--import','tsx','server/canvas-server.ts'],{cwd:root,stdio:['pipe','pipe','pipe'],env:{...process.env,JOURNEY_PRIVATE_DIR:dataDir,JOURNEY_GRANTS_FILE:grantsFile,JOURNEY_HUMAN_CONFIG:configFile,JOURNEY_AGENT_PAIRING:'true',JOURNEY_NATIVE_ACCOUNT:'true',JOURNEY_ORIGIN:origin,JOURNEY_API_PORT:String(apiPort)}})
 child.stdout.on('data',d=>logs.push(String(d)));child.stderr.on('data',d=>logs.push(String(d)))
 const helper=(command,input)=>execFileSync(process.execPath,[join(root,'scripts/agent-helper.mjs'),command,helperConfig,storeRoot],{cwd:root,input,encoding:'utf8',timeout:60000})
 const report={candidate:execFileSync('git',['-C',root,'rev-parse','HEAD'],{encoding:'utf8'}).trim(),clean:!execFileSync('git',['-C',root,'status','--porcelain'],{encoding:'utf8'}).trim(),provider:'NOT RUN',physicalMobile:'NOT RUN; browser device emulation only',checks:[]}
@@ -39,17 +39,21 @@ try {
  execFileSync('python3',[join(root,'scripts/owner-login.py'),join(dataDir,'owner-login.sock'),login],{input:'approve\n',encoding:'utf8'})
  await page.getByRole('button',{name:'我已在本機核准'}).click()
  await page.waitForFunction(()=>!!window.editor)
- await page.waitForFunction(()=>document.querySelector('.agent-account'))
- assert.ok(await page.evaluate(()=>window.editor.getViewportScreenBounds().y>=56))
- await page.getByRole('button',{name:'帳號與代理'}).click()
- await page.getByRole('heading',{name:'帳號與代理'}).waitFor()
+ const openAgents=async(target=page,method='click')=>{
+  await target.getByTestId('main-menu.button')[method]()
+  await target.getByRole('menuitem',{name:'我的帳號',exact:true})[method]()
+  await target.getByText('目前權限已確認',{exact:true}).waitFor()
+  await target.getByRole('button',{name:'我的 agent',exact:true})[method]()
+  await target.getByRole('heading',{name:'我的 agent',exact:true}).waitFor()
+ }
+ await openAgents()
  await page.getByText('目前沒有代理安裝。',{exact:true}).waitFor()
  pass('real tldraw canvas preserves account sheet entry and empty state')
  const request=JSON.parse(helper('begin'));paired=true
  await page.getByLabel('配對碼').fill(request.code)
  await page.getByRole('button',{name:'檢視配對請求'}).click()
  await page.getByText('完整紀錄新增、修改、刪除與整份文件取代',{exact:true}).waitFor()
- assert.ok((await page.locator('dialog').innerText()).includes('one'))
+ assert.ok((await page.getByRole('dialog').innerText()).includes('one'))
  const approve=page.getByRole('button',{name:'核准這些畫布與能力'})
  await approve.scrollIntoViewIfNeeded()
  assert.equal(await approve.evaluate(el=>{const r=el.getBoundingClientRect();return document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===el}),true)
@@ -66,20 +70,18 @@ try {
  for(const theme of ['light','dark']){
   await page.emulateMedia({colorScheme:theme})
   await page.evaluate(theme=>window.editor.user.updateUserPreferences({colorScheme:theme}),theme)
-  await page.waitForFunction(theme=>document.querySelector('.agent-sheet')?.getAttribute('data-theme')===theme,theme)
-  assert.equal(await page.evaluate(()=>!!document.querySelector('.tl-theme__dark')),theme==='dark')
-  assert.equal(await page.locator('.agent-sheet').evaluate(el=>getComputedStyle(el).backgroundColor),theme==='dark'?'rgb(34, 39, 53)':'rgb(255, 255, 255)')
+  await page.waitForFunction(theme=>!!document.querySelector('.tl-theme__dark')===(theme==='dark'),theme)
+  assert.equal(await page.locator('.journey-native-agents').evaluate(el=>getComputedStyle(el).getPropertyValue('--agent-bg').trim()===getComputedStyle(el).getPropertyValue('--tl-color-panel').trim()),true)
   for(const viewport of [{width:1280,height:800},{width:390,height:844}]){
    await page.setViewportSize(viewport)
-   for(const button of await page.locator('dialog button:visible').all()){const box=await button.boundingBox();assert.ok(box.height>=44)}
-   assert.equal(await page.locator('dialog').evaluate(el=>el.scrollWidth<=el.clientWidth),true)
+   for(const button of await page.getByRole('dialog').locator('button:visible').all()){const box=await button.boundingBox();assert.ok(box.height>=44,JSON.stringify({text:await button.innerText(),box}))}
+   assert.equal(await page.getByRole('dialog').evaluate(el=>el.scrollWidth<=el.clientWidth),true)
    await page.screenshot({path:join(scratch,'agents-'+theme+'-'+viewport.width+'.png')})
   }
  }
  await page.keyboard.press('Escape')
- await page.getByRole('button',{name:'帳號與代理'}).waitFor()
- assert.equal(await page.getByRole('button',{name:'帳號與代理'}).evaluate(el=>document.activeElement===el),true)
- await page.keyboard.press('Enter');await page.getByRole('heading',{name:'帳號與代理'}).waitFor()
+ await page.waitForFunction(()=>document.activeElement===document.querySelector('[data-testid="main-menu.button"]'))
+ await openAgents()
  await page.getByRole('button',{name:'撤銷此安裝'}).click()
  await page.getByRole('button',{name:'取消撤銷'}).click()
  assert.equal(await page.getByRole('button',{name:'確認撤銷此安裝'}).count(),0)
@@ -88,7 +90,7 @@ try {
  await page.getByText('新請求已拒絕；舊安裝不會復活。',{exact:true}).waitFor()
  for(const theme of ['light','dark']){
   await page.evaluate(theme=>window.editor.user.updateUserPreferences({colorScheme:theme}),theme)
-  await page.waitForFunction(theme=>document.querySelector('.agent-sheet')?.getAttribute('data-theme')===theme,theme)
+  await page.waitForFunction(theme=>!!document.querySelector('.tl-theme__dark')===(theme==='dark'),theme)
   for(const state of ['stopping','unknown','stopped','error']){
    await page.route('**/agents/list?**',async route=>{
     if(state==='error'){await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({category:'host_unavailable'})});return}
@@ -98,7 +100,7 @@ try {
    await page.getByRole('button',{name:'更新代理清單'}).click()
    const text=state==='stopped'?'所有已登記連線已確認關閉。':state==='stopping'?'正在停止既有連線；尚未確認全部關閉。':state==='unknown'?'既有連線停止結果未確認；請更新清單。':'主機回覆未確認。請保留此頁，重新確認；不要推測操作已完成。'
    await page.getByText(text,{exact:true}).waitFor()
-   for(const width of [1280,390]){await page.setViewportSize({width,height:844});assert.equal(await page.locator('dialog').evaluate(el=>el.scrollWidth<=el.clientWidth),true);await page.screenshot({path:join(scratch,'revoke-'+state+'-'+theme+'-'+width+'.png')})}
+   for(const width of [1280,390]){await page.setViewportSize({width,height:844});assert.equal(await page.getByRole('dialog').evaluate(el=>el.scrollWidth<=el.clientWidth),true);await page.screenshot({path:join(scratch,'revoke-'+state+'-'+theme+'-'+width+'.png')})}
    await page.unroute('**/agents/list?**')
   }
  }
@@ -108,9 +110,9 @@ try {
  pass('light/dark desktop and actual 390px viewport controls hit targets; Escape restores focus; human revoke plus authenticated helper reconcile confirms old family')
  const mobile=await browser.newContext({...devices['iPhone 13'],storageState:await context.storageState()})
  const touch=await mobile.newPage();await touch.goto(origin+'/?room=one');await touch.waitForFunction(()=>!!window.editor)
- await touch.getByRole('button',{name:'帳號與代理'}).tap();await touch.getByRole('heading',{name:'帳號與代理'}).waitFor()
- const close=touch.getByRole('button',{name:'關閉帳號與代理'});const box=await close.boundingBox();assert.ok(box.width>=44 && box.height>=44)
- await close.tap();assert.equal(await touch.locator('dialog[open]').count(),0)
+ await openAgents(touch,'tap')
+ const close=touch.getByTestId('dialog.close');const box=await close.boundingBox();assert.ok(box.width>=44 && box.height>=44)
+ await close.tap();assert.equal(await touch.getByRole('dialog').count(),0)
  await mobile.close();pass('mobile browser touch emulation opens and closes real sheet; physical phone remains unverified')
  for(const room of ['one','two'])assert.deepEqual((await(await fetch(endpoint+'/doc?room='+room,{headers})).json()).snapshot.documents.filter(d=>d.state.typeName!=='user'),before[room].snapshot.documents)
  assert.deepEqual(errors,[])

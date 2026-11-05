@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { journeyApi, setHumanContext, type HumanContext } from './api'
 import './human-entry.css'
-import { AgentSheet } from './AgentSheet'
 type Entry = { backendId: string; memberId: string; label: string; rooms: string[]; room: string | null; expiresAt: number; verifiedHumanSignInAt: number; status: string }
 const secret = () => [...crypto.getRandomValues(new Uint8Array(32))].map(b => b.toString(16).padStart(2, '0')).join('')
 async function post(path: string, body: object, signal?: AbortSignal) {
@@ -193,7 +192,7 @@ export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) =
    setEntry(current => current ? { ...current, room } : null)
    try { localStorage.setItem('journey-human-history:' + window.location.origin + ':' + entry.backendId + ':' + entry.memberId, room) } catch {}
   }
-  return <>{!config?.nativeAccount&&(problem ? <div className="human-entry-identity">{entry.label} · 先前驗證身分，存取已暫停</div> : <AgentSheet entry={entry}/>)}{children({ nativeAccount:!!config?.nativeAccount,agentPairing:config?.agentPairing===true,signOut,label:entry.label,context, problem, activate })}</>
+  return <>{!config?.nativeAccount&&<div className="human-entry-identity">{entry.label} · {problem ? '先前驗證身分，存取已暫停' : '身分已驗證'}</div>}{children({ nativeAccount:!!config?.nativeAccount,agentPairing:config?.agentPairing===true,signOut,label:entry.label,context, problem, activate })}</>
  }
  if(config?.nativeAccount && hold)return <main className="human-entry"><section aria-labelledby="human-entry-title" aria-busy={busy}>
   <h1 id="human-entry-title">{hold==='pending'?'正在結束登入':hold==='unknown'?'登出結果未確認':hold==='cancelled'?'登入已取消':'目前已停止存取'}</h1>

@@ -21,10 +21,13 @@ whole-document replacement, configured asset access, and only the actual Node
 save directory and repository allowlist. No administrator capability is delegated.
 Labels are self-reported, never verified model or owner identities.
 
-When `JOURNEY_AGENT_PAIRING=true`, the signed-in human opens **我的帳號** →
-**我的 agent** if `JOURNEY_NATIVE_ACCOUNT=true`, or the outer **帳號與代理**
-entry if native account is off. These pairing entries appear only when pairing
-is enabled. The human enters the human code, inspects the exact
+The only browser pairing entry is **我的帳號** → **我的 agent**, available
+when both `JOURNEY_NATIVE_ACCOUNT=true` and `JOURNEY_AGENT_PAIRING=true`.
+With pairing on and native account off, the server still starts and keeps its
+existing pairing/revocation API behavior, but the browser exposes no pairing
+entry, sends no `/agents/*` requests and retains the account-off layout. This
+UI-only choice avoids adding a server startup restriction. The human enters
+the human code, inspects the exact
 authorizer/backend/rooms/capabilities and explicitly approves or denies.
 Inspection creates one consent context bound to that exact session, original
 verified event and original room. A switched identity, stale event, different

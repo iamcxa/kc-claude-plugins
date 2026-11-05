@@ -247,3 +247,10 @@ The optional [revocation candidate](delegation-revocation.md) adds lease-guarded
 outgoing delivery, separate close acknowledgment, mutation receipts and versioned
 security recovery. Existing metadata DDL and canvas schema remain unchanged;
 provider/activation evidence is still held.
+
+## Optional agent pairing entry
+
+Browser pairing requires both `JOURNEY_NATIVE_ACCOUNT=true` and
+`JOURNEY_AGENT_PAIRING=true`; open **我的帳號** → **我的 agent**.
+See [agent pairing](agent-pairing.md#consent-and-authority) for the single-entry
+flag behavior and activation limits.
