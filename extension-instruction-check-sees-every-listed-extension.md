@@ -15,6 +15,17 @@ gates:
                 id: briefing:extension-instruction-check-sees-every-listed-extension:backlog:attempt-1:revision-1
                 digest: sha256:d7c07cbecae6d0a7fd945d14cc7d29634b7c6093531e1679611e8a4f547a4ef7
                 room-ref: ./extension-instruction-check-sees-every-listed-extension/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extension-instruction-check-sees-every-listed-extension:backlog:1
+                briefing: briefing:extension-instruction-check-sees-every-listed-extension:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-05T09:12:35.416511Z"
+                decision: approve
+                reason: The Captain 「准」 (chat, 2026-11-05), answering 「決定：這批五張（派工交代句的檢查、退一步答案欄位、漏寫 Override、婉拒要寫明、閘門一次問一件事）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？其中「婉拒要寫明」照我提的三項範圍（沒寫 Declined 標籤的婉拒、沒有 F 條目的審查者、沒指明接手任務）。要改哪張直接說。」; accepts the outcome, scope, budget and stop condition in this file, Pilot.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 `dispatch_records.py` holds a dispatch record that lacks the scope-note instruction of any extension the workflow README lists, not only the instructions that name a package script.
