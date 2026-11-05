@@ -53,6 +53,10 @@ gates:
                 id: briefing:gate-presentation-asks-one-thing-plainly:validation:attempt-1:revision-1
                 digest: sha256:c2697dd142098eb90ec1d4d5932a2a6c863a8f07cd9bd229da4bbe853716ecfa
                 room-ref: ./gate-presentation-asks-one-thing-plainly/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-05T15:56:27.919089Z"
+                reason: 'Candidate moved from 73db59bef to 2493d57a1 (merge of origin/main after #786 and #787, ADR renumbered 0060 to 0062) before the Captain ruled; validation-2 dispatched at the new head.'
 started: 2026-11-05T10:53:13Z
 worktree: .worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly
 pr: iamcxa/kc-claude-plugins#788
