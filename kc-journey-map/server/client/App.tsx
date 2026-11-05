@@ -15,6 +15,7 @@ import { journeyApi } from './api'
 import { RoomPageMenu, RoomSelector, type ConnectionState } from './RoomSelector'
 import { confirmRoomSwitch } from './confirm-room-switch'
 import { assetUploadId } from './asset-upload-id'
+import { HumanEntry } from './HumanEntry'
 
 const APP_NAME = 'kc-journey-map'
 
@@ -97,6 +98,10 @@ function syncStoryBorders(editor: Editor) {
 }
 
 export default function App() {
+	return <HumanEntry>{() => <CanvasApp />}</HumanEntry>
+}
+
+function CanvasApp() {
 	const search = useSyncExternalStore(subscribeToLocation, () => window.location.search)
 	const [roomId, setRoomId] = useState(() => new URLSearchParams(search).get('room') || 'default')
 	const [connection, setConnection] = useState<ConnectionState>('loading')
