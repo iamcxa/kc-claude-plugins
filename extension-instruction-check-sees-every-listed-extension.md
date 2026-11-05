@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:extension-instruction-check-sees-every-listed-extension:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:extension-instruction-check-sees-every-listed-extension-ideation-1
+              briefing:
+                id: briefing:extension-instruction-check-sees-every-listed-extension:ideation:attempt-1:revision-1
+                digest: sha256:5327e7f9590548299ba8ffe47a2114c2bb5bf927eddf896f63bebb3d66b584e8
+                room-ref: ./extension-instruction-check-sees-every-listed-extension/review/ideation/briefing-1
 ---
 
 `dispatch_records.py` holds a dispatch record that lacks the scope-note instruction of any extension the workflow README lists, not only the instructions that name a package script.

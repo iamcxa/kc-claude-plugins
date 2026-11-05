@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extension-instruction-check-sees-every-listed-extension:ideation:attempt-1:revision-1",
+  "question": "決定：派工交代句檢查這份設計進入實作嗎？核准即接受 D1（經 Paseo 開的工人不分 Claude 或 Codex 都要有那句）、D2（只檢查第一句）、D3（對已在跑的工人的後續訊息不檢查）、D4（別的 FO 的進行中任務被新抓到的紀錄，由該 FO 在下次派工前補一行 \u003cname\u003e not run: 並註明日期）四個建議。",
+  "artifacts": [
+    {
+      "id": "artifact:extension-instruction-check-sees-every-listed-extension:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3bb87f622ce42c00ab558ab490cb6e8062fd8905/extension-instruction-check-sees-every-listed-extension.md",
+      "rev": "sha256:3ed3b180ba74d3bcdc9339700535b450b5c6259400cff0c058f529c17e42dcd6",
+      "mediaType": "text/markdown",
+      "summary": "dispatch_records.py reads three instruction forms and checks every spawn record; replay flags 30 paseo + 7 roborev records today's check passes; D1-D4."
+    }
+  ]
+}
