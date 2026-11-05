@@ -13,6 +13,14 @@ status: backlog
 - Bite: observers on four dev2 tasks (codex-reader-reads-receipt-marker, agent-reads-governing-adr, merge-ask-holds-missing-clauses, codex-reader-counts-code-review-only) recorded that the chat question the Captain answered did not carry the bound acceptance sentence; the Captain asked what an FO term meant several times in the 2026-10-21 to 10-23 sittings. The package holds none of these rules (grep of the 0.28.0 markdown for "conclusion first", "one decision", "eight words", "plain language": 0 files).
 - Upstream first: Spacedock present-gate skill (render the gate once, name entity, stage, briefing, one recommendation and the decision); kc-dev-flow-2 README Gate content and FO steps.
 - Non-goals: his personal language and status-block preferences.
+- Rechecked 2026-11-05: grep of the 0.35.0 markdown for the same four phrases still finds 0 files.
+- Batch 14: the Captain 「可以」 (chat, 2026-11-05), answering 「這 5 張當下一批，可以嗎？」, which named this task.
+
+## Budget
+- One package PR. Workflow word budget unchanged unless the design names a raise for the Captain.
+
+## Stop condition
+- The design names where the four rules and the verbatim acceptance sentence live and what reads them; if it proposes a check, replays of the four observed presentations that lacked the acceptance sentence are held.
 
 ## FO alignment
 
