@@ -56,7 +56,7 @@ function AccountDialog({onClose}:TLUiDialogProps) {
  const context=session.context
  return <><Header title="我的帳號"/><TldrawUiDialogBody className="journey-private-dialog">
   <p>{account?.label||session.entry.label} · {session.paused?'先前驗證身分，存取已暫停':'已驗證的人類'}</p><p>{context.member}</p><p>目前房間：{context.room}</p><p role="status">{problem||(!account?'正在確認目前權限…':'目前權限已確認')}</p>
-  <TldrawUiButton type="normal" disabled={session.paused} onClick={()=>{onClose();dialogs.addDialog({id:'journey-own-agents',onClose:returnFocus,component:props=><AgentSheet native entry={{backendId:context.backend,memberId:context.member,label:session.entry.label}} onClose={props.onClose}/>})}}><TldrawUiButtonLabel>我的 agent</TldrawUiButtonLabel></TldrawUiButton>
+  {session.entry.agentPairing===true&&<TldrawUiButton type="normal" disabled={session.paused} onClick={()=>{onClose();dialogs.addDialog({id:'journey-own-agents',onClose:returnFocus,component:props=><AgentSheet native entry={{backendId:context.backend,memberId:context.member,label:session.entry.label}} onClose={props.onClose}/>})}}><TldrawUiButtonLabel>我的 agent</TldrawUiButtonLabel></TldrawUiButton>}
  </TldrawUiDialogBody><TldrawUiDialogFooter><TldrawUiButton type="normal" onClick={()=>{onClose();dialogs.addDialog({id:'journey-logout',onClose:returnFocus,preventBackgroundClose:true,component:props=><Logout {...props} session={session}/>})}}><TldrawUiButtonLabel>登出</TldrawUiButtonLabel></TldrawUiButton></TldrawUiDialogFooter></>
 }
 export function NativeMainMenu() {

@@ -16,9 +16,9 @@ const messages: Record<string, string> = {
  provider_unavailable: '身分服務暫時無法使用。請稍後重試。', owner_peer_unavailable: '此主機無法確認本機帳號，登入已停止。', challenge_expired_or_consumed: '這次驗證已到期或已使用，請重新開始。',
 }
 const humanEntryEnabled = import.meta.env.VITE_JOURNEY_HUMAN_ENTRY === 'true'
-export type HumanCanvasEntry = { nativeAccount:boolean; signOut:(context:HumanContext)=>Promise<void>; label:string; context:HumanContext|null; problem:string; activate:(room:string)=>void }
+export type HumanCanvasEntry = { nativeAccount:boolean; agentPairing?:boolean; signOut:(context:HumanContext)=>Promise<void>; label:string; context:HumanContext|null; problem:string; activate:(room:string)=>void }
 export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) => ReactNode }) {
- const [config, setConfig] = useState<{ enabled: boolean; mode?: string; localReady?: boolean; nativeAccount?: boolean } | null>(humanEntryEnabled ? null : { enabled: false })
+ const [config, setConfig] = useState<{ enabled: boolean; mode?: string; localReady?: boolean; nativeAccount?: boolean; agentPairing?: boolean } | null>(humanEntryEnabled ? null : { enabled: false })
  const [entry, setEntry] = useState<Entry | null>(null)
  const [problem, setProblem] = useState('')
  const [busy, setBusy] = useState(humanEntryEnabled)
@@ -193,7 +193,7 @@ export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) =
    setEntry(current => current ? { ...current, room } : null)
    try { localStorage.setItem('journey-human-history:' + window.location.origin + ':' + entry.backendId + ':' + entry.memberId, room) } catch {}
   }
-  return <>{!config?.nativeAccount&&(problem ? <div className="human-entry-identity">{entry.label} · 先前驗證身分，存取已暫停</div> : <AgentSheet entry={entry}/>)}{children({ nativeAccount:!!config?.nativeAccount,signOut,label:entry.label,context, problem, activate })}</>
+  return <>{!config?.nativeAccount&&(problem ? <div className="human-entry-identity">{entry.label} · 先前驗證身分，存取已暫停</div> : <AgentSheet entry={entry}/>)}{children({ nativeAccount:!!config?.nativeAccount,agentPairing:config?.agentPairing===true,signOut,label:entry.label,context, problem, activate })}</>
  }
  if(config?.nativeAccount && hold)return <main className="human-entry"><section aria-labelledby="human-entry-title" aria-busy={busy}>
   <h1 id="human-entry-title">{hold==='pending'?'正在結束登入':hold==='unknown'?'登出結果未確認':hold==='cancelled'?'登入已取消':'目前已停止存取'}</h1>
