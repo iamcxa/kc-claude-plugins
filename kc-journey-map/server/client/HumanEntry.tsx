@@ -24,10 +24,10 @@ export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) =
  const [requestId, setRequestId] = useState('')
  const verifier = useRef<{ verifier: string; csrf: string; requestId: string } | null>(null)
  const requestVersion = useRef(0)
- const tabId=useRef(crypto.randomUUID())
- const held=useRef(sessionStorage.getItem('journey-native-session-hold')||'')
+ const tabId=useRef('')
+ const held=useRef('')
  const [hold,setHold]=useState(held.current)
- const activity=useRef(new AbortController()),popup=useRef<Window|null>(null),writingLogout=useRef(false)
+ const activity=useRef<AbortController>(null!),popup=useRef<Window|null>(null),writingLogout=useRef(false)
  const holdSession=(value:string)=>{
   held.current=value;setHold(value)
   if(value)sessionStorage.setItem('journey-native-session-hold',value);else sessionStorage.removeItem('journey-native-session-hold')
@@ -106,6 +106,11 @@ export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) =
    if (!response.ok) throw new Error()
    const value = await response.json()
    if (!active) return
+   if(value.nativeAccount){
+    tabId.current=secret()
+    held.current=sessionStorage.getItem('journey-native-session-hold')||''
+    setHold(held.current)
+   }
    setConfig(value)
    if (value.enabled && !(value.nativeAccount && held.current)) void refresh(); else setBusy(false)
   }).catch(() => { if (active) { setProblem('host_unavailable'); setBusy(false) } })
