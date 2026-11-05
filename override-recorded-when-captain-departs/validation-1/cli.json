@@ -1,0 +1,97 @@
+[
+  {
+    "attempt": "gate-attempt:model-roster-question-needs-both-families-backlog-1",
+    "form": "as-recorded",
+    "exit": 1,
+    "stdout": "reason: missing declaration\nnext: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.\n"
+  },
+  {
+    "attempt": "gate-attempt:model-roster-question-needs-both-families-backlog-1",
+    "form": "override",
+    "exit": 0,
+    "stdout": "reason: override (area: model policy)\n"
+  },
+  {
+    "attempt": "gate-attempt:model-roster-question-needs-both-families-backlog-1",
+    "form": "followed",
+    "exit": 0,
+    "stdout": "reason: followed\n"
+  },
+  {
+    "attempt": "gate-attempt:special-roles-follow-the-model-table-backlog-1",
+    "form": "as-recorded",
+    "exit": 1,
+    "stdout": "reason: missing declaration\nnext: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.\n"
+  },
+  {
+    "attempt": "gate-attempt:special-roles-follow-the-model-table-backlog-1",
+    "form": "override",
+    "exit": 0,
+    "stdout": "reason: override (area: model policy)\n"
+  },
+  {
+    "attempt": "gate-attempt:special-roles-follow-the-model-table-backlog-1",
+    "form": "followed",
+    "exit": 0,
+    "stdout": "reason: followed\n"
+  },
+  {
+    "attempt": "gate-attempt:release-walk-due-trigger-ideation-1",
+    "form": "as-recorded",
+    "exit": 1,
+    "stdout": "reason: missing declaration\nnext: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.\n"
+  },
+  {
+    "attempt": "gate-attempt:release-walk-due-trigger-ideation-1",
+    "form": "override",
+    "exit": 0,
+    "stdout": "reason: override (area: model policy)\n"
+  },
+  {
+    "attempt": "gate-attempt:release-walk-due-trigger-ideation-1",
+    "form": "followed",
+    "exit": 0,
+    "stdout": "reason: followed\n"
+  },
+  {
+    "attempt": "gate-attempt:commissioned-by-names-spacedock-validation-1",
+    "form": "as-recorded",
+    "exit": 1,
+    "stdout": "reason: missing declaration\nnext: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.\n"
+  },
+  {
+    "attempt": "gate-attempt:commissioned-by-names-spacedock-validation-1",
+    "form": "override",
+    "exit": 0,
+    "stdout": "reason: override (area: model policy)\n"
+  },
+  {
+    "attempt": "gate-attempt:commissioned-by-names-spacedock-validation-1",
+    "form": "followed",
+    "exit": 0,
+    "stdout": "reason: followed\n"
+  },
+  {
+    "form": "both",
+    "exit": 1,
+    "stdout": "reason: both declarations\nnext: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.\n",
+    "stderr": ""
+  },
+  {
+    "form": "placeholder",
+    "exit": 1,
+    "stdout": "reason: placeholder recommendation\nnext: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.\n",
+    "stderr": ""
+  },
+  {
+    "form": "empty",
+    "exit": 2,
+    "stdout": "",
+    "stderr": "reason: empty file\n"
+  },
+  {
+    "form": "unreadable",
+    "exit": 2,
+    "stderr": "reason: cannot read /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/missing-file: [Errno 2] No such file or directory: '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/missing-file'\n"
+  }
+]

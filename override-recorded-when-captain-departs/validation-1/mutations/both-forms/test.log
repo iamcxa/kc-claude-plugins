@@ -1,0 +1,14 @@
+.....not a directory: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpycbr9rxh/nope
+......F.....
+======================================================================
+FAIL: test_both_declarations_hold (__main__.ReasonTest.test_both_declarations_hold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/mutations/both-forms/test_decision_ledger.py", line 204, in test_both_declarations_hold
+    self.assertEqual(code, 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.052s
+
+FAILED (failures=1)

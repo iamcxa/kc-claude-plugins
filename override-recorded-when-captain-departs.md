@@ -270,3 +270,43 @@ The design widens the README Override rule to a revise asking for what FO did no
 ### Summary
 
 The local candidate adds a pre-record declaration check, the followed ledger field/count and the approved 48-word workflow passage, with all seven acceptance criteria exercised and their falsifiers caught. The check establishes declaration presence only; truth remains the observer's responsibility, and publication, independent validation, RoboRev and remote CI remain with FO.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #786 head 69d62c77 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 69d62c772c5f4fd28d9105c6f5d49516d559c947, base origin/main d37c6dc653e0f45d6ca630c2faa6121c0863a57e; detached throwaway checkout exercised, unchanged, then removed. Primary evidence: [validation-1](override-recorded-when-captain-departs/validation-1/manifest.json); no product edits.
+- DONE: Judge D1-A to D4-A as approved; also replay the hold reason of step-back-answer-has-a-record-line's ideation gate (recorded 2026-11-05 as Recommendation followed, though FO changed its recommendation after questions) and report what the candidate check says. Do not start agents you were not asked to
+  Approved D1-A pre-record step, D2-A +48 words, D3-A declaration-only check, D4-A no scorer applied; no agents started. Actual hold reason: exit 1, missing declaration; colon-only replacement: exit 0, reason: followed; correct Override: exit 0, area none ([actual-hold-replay.json](override-recorded-when-captain-departs/validation-1/actual-hold-replay.json)).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Run `bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/override-recorded-when-captain-departs/validation-1/acceptance.sh`; six annotated steps pin the checkout and check missing/followed/Override/both/empty reasons; observed exact SHA then exits 1/0/0/1/2, matching expectations, shell exit 0 ([acceptance.log](override-recorded-when-captain-departs/validation-1/acceptance.log)). Requires declared checkout and python3; no UI. It does not establish truth, human compliance, full ledger compatibility or remote delivery.
+- DONE: AC-1 — three verbatim flagged reasons and their Override forms.
+  Independent fixture equality against state dc91fa798 passed; three originals exit 1, each Override exits 0 and prints model policy. Returning 0 for missing declarations makes the 17-test suite fail ([cli.json](override-recorded-when-captain-departs/validation-1/cli.json), mutations/missing-declaration/test.log).
+- DONE: AC-2 — agreement requires the followed declaration.
+  Commissioned-by-names-spacedock original exits 1; with the exact token exits 0 and prints reason: followed. Requiring Override instead makes the suite fail (cli.json; mutations/require-override/test.log).
+- DONE: AC-3 — both forms, placeholders and invalid input.
+  Both forms and placeholder exit 1, empty/unreadable exit 2; removing the both-forms branch makes the suite fail (cli.json; mutations/both-forms/test.log); invalid UTF-8/directory cases also pass the unit suite.
+- DONE: AC-4 — real Spacedock recording round-trip.
+  Installed Spacedock 0.27.2 recorded synthetic approvals in an isolated workflow: followed true and parsed Override survive. Recording Recommendation followed without a colon yields followed false ([roundtrip.json](override-recorded-when-captain-departs/validation-1/roundtrip.json)); no real grant recorded.
+- DONE: AC-5 — backward-compatible ledger rows and summaries.
+  Historical 191 tasks / 394 rows / 360 Captain resolutions: base and candidate identical after removing followed, every historical followed false; actual task-key rename makes compatibility checker exit 1 ([compatibility.json](override-recorded-when-captain-departs/validation-1/compatibility.json), remaining-commands.json).
+- DONE: AC-6 — widened rule, one approved budget step and dispatch compatibility.
+  Candidate lint and test_sd_dispatch.py --sd-plugin-root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3 exit 0; quoted +48 step matches the ideation resolution. Removing it makes lint exit 1 at 5939 > 5891 (lint.log, lint-mutation.log, sd-dispatch.log).
+- DONE: AC-7 — lifecycle reading and unchanged other check surfaces.
+  Recount: startup/resume 5891→5939; new pre-record output 2/5/20 words for followed/Override/hold samples; worker stage output byte-identical (630/1365/1519 words); only four approved files differ. A delivery_gate.py mutation fails the scope guard (word-counts.json, stage-word-counts.json, remaining-commands.json).
+- DONE: Required checks, independent regressions and without-candidate observation.
+  Unit 17/17, lint tests 47/47, laws 63 passed/1 skipped, native dispatch suite passed; original base fails candidate goal tests (without-candidate.log). Package design surfaces, number guards and dispatch-record checks exit 0 (3 complete records); added comments read, comment ratio 0/118=0.0% ≤5%.
+- DONE: ADR lint at the exact candidate.
+  `cd <detached candidate> && python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since d37c6dc653e0f45d6ca630c2faa6121c0863a57e` exited 0, “58 ADR file(s) checked, 0 legacy” (adr-lint.log); no new/reserved ADR or migration. The implementation's no-new-ADR disposition follows its recorded FO instruction.
+- DONE: Affected documents and sufficiency/minimal necessity.
+  doc_impact.py returned the same eight documents; each implementation disposition checked: ADR 0011 unaffected (ladder/derived ledger); 0020 unaffected (quoted equality rule applied); 0037 unaffected (Team/+144 unchanged); 0049 unaffected (roster checks unchanged); 0052 unaffected (permission flow/history unchanged); package README unaffected (ledger/maintenance descriptions remain correct); maintain-flow/SKILL.md unaffected (existing counts still present); learning.md unaffected (historical evidence retained). Source functions imported by other readers are unchanged.
+- DONE: Implementation limits judged against approved scope.
+  One Spacedock version proven; synthetic persistence is real but no human/FO behavior is proven. The known area trailing-parenthesis parser limit is unchanged/out of scope. Scoring is deliberately absent under D4-A. Publication/CI/RoboRev belong to FO; none inferred from local passes. No CI configuration changed; cost per PR not measured.
+- DONE: Candidate, artifact and task boundaries at completion.
+  Final provider read still shows PR #786 OPEN/DRAFT at the same full SHA; original code worktree is clean, detached validation tree removed, task frontmatter unchanged at validation. Evidence stays in this task's companion folder; all own test processes finished. No product push, PR comment, review request, ready or merge action.
+- F1 Deferred risk: The required step remains a manual instruction, and a wrong but well-formed followed declaration passes; these are accepted D1-A/D3-A limits, not a new repair request.
+  User/normal workflow: FO recording Captain rulings; observable limit: actual hold replay passes after colon-only correction and the scratch producer records a failed-check typo; boundary: captain-ruling[2026-11-05] explicitly accepts declaration-only checking; trigger: actual-hold-replay.json and roundtrip.json. No promised truth/compliance boundary is violated; reopen only on a new Captain requirement.
+
+### Summary
+
+PASSED for PR #786 at 69d62c772c5f4fd28d9105c6f5d49516d559c947: all seven criteria and their falsifiers were independently exercised, with no Material or Needs decision finding. The real hold replay catches the absent colon, not the incorrect agreement judgment; this remains within the four approved design choices. FO still owns its acceptance rerun, external review/CI, gate and delivery decisions.
+

@@ -1,0 +1,62 @@
+{
+  "state_commit": "acb39aba17babc61ad66edb93d79d8a9f680bfaa",
+  "record": {
+    "task": "step-back-answer-has-a-record-line",
+    "archived": false,
+    "stage": "ideation",
+    "attempt": "gate-attempt:step-back-answer-has-a-record-line-ideation-1",
+    "kind": "resolution",
+    "by": "person:captain",
+    "at": "2026-11-05T10:38:18.360884Z",
+    "decision": "hold",
+    "reason": "The Captain 「可以」 (chat, 2026-11-05), answering 「這張先擱置，下一批手動試，好嗎？」, after asking 「這個做法真的可以來讓退一步想想發生在該發生的時候嗎？」. Hold: neither the advisory line nor a hold variant is built. Trial by hand for the next batch: when role_triggers.py prints the step-back reminder, FO brings the three questions with its own answers to the Captain as one item in the next sitting; after that batch, a direction change keeps the task, none deletes it. Recommendation followed.",
+    "conn_quote": null,
+    "conn_source": null,
+    "question": "決定：退一步答案欄位這份設計進入實作嗎？核准即接受 D1（答案寫成 FO 對齊欄位下一行 Step back: <事件> — outcome: …; test: …; delete: …）與 D2（派工前的提醒維持原樣）兩個建議。",
+    "override": null,
+    "followed": false,
+    "area": "none",
+    "amended_after": 0
+  },
+  "runs": [
+    {
+      "form": "as-recorded",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-786/kc-dev-flow-2/scripts/decision_ledger.py",
+        "--reason",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/as-recorded.txt"
+      ],
+      "exit": 1,
+      "stdout": "reason: missing declaration\nnext: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.\n",
+      "stderr": ""
+    },
+    {
+      "form": "colon-only",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-786/kc-dev-flow-2/scripts/decision_ledger.py",
+        "--reason",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/colon-only.txt"
+      ],
+      "exit": 0,
+      "stdout": "reason: followed\n",
+      "stderr": ""
+    },
+    {
+      "form": "correct-override",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-786/kc-dev-flow-2/scripts/decision_ledger.py",
+        "--reason",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/correct-override.txt"
+      ],
+      "exit": 0,
+      "stdout": "reason: override (area: none)\n",
+      "stderr": ""
+    }
+  ]
+}

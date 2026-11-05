@@ -1,0 +1,17 @@
+{
+  "ideation": {
+    "base": 630,
+    "candidate": 630,
+    "byte_identical": true
+  },
+  "implementation": {
+    "base": 1365,
+    "candidate": 1365,
+    "byte_identical": true
+  },
+  "validation": {
+    "base": 1519,
+    "candidate": 1519,
+    "byte_identical": true
+  }
+}

@@ -1,0 +1,246 @@
+[
+  {
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/compatibility-check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-786/kc-dev-flow-2/scripts/decision_ledger.py"
+    ],
+    "exit": 0,
+    "stdout": "compatible\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/compatibility-check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/rename-key-decision-ledger.py"
+    ],
+    "exit": 1,
+    "stdout": "changed existing ledger keys or values\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/scope-check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-786",
+      "d37c6dc653e0f45d6ca630c2faa6121c0863a57e"
+    ],
+    "exit": 0,
+    "stdout": "scope unchanged\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-c",
+      "user.name=Fixture",
+      "-c",
+      "user.email=fixture@example.invalid",
+      "-c",
+      "commit.gpgsign=false",
+      "-c",
+      "core.hooksPath=/dev/null",
+      "init",
+      "--initial-branch=main",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/scope-mutation"
+    ],
+    "exit": 0,
+    "stdout": "Initialized empty Git repository in /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/scope-mutation/.git/\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-c",
+      "user.name=Fixture",
+      "-c",
+      "user.email=fixture@example.invalid",
+      "-c",
+      "commit.gpgsign=false",
+      "-c",
+      "core.hooksPath=/dev/null",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/scope-mutation",
+      "add",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-c",
+      "user.name=Fixture",
+      "-c",
+      "user.email=fixture@example.invalid",
+      "-c",
+      "commit.gpgsign=false",
+      "-c",
+      "core.hooksPath=/dev/null",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/scope-mutation",
+      "commit",
+      "-m",
+      "test: scope control"
+    ],
+    "exit": 0,
+    "stdout": "[main (root-commit) 140fbdb] test: scope control\n 1 file changed, 870 insertions(+)\n create mode 100644 kc-dev-flow-2/scripts/delivery_gate.py\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/scope-check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/scope-mutation",
+      "HEAD"
+    ],
+    "exit": 1,
+    "stdout": "forbidden scope: kc-dev-flow-2/scripts/delivery_gate.py\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-786",
+      "show",
+      "d37c6dc653e0f45d6ca630c2faa6121c0863a57e:kc-dev-flow-2/references/sd/workflow.md"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout_bytes": 39637,
+    "stdout_sha256": "3a5bcd0dfb86b0e1f1c4c11b3280ee62f5d02bbefba781afc922641e7c5b4d9f",
+    "stdout_note": "Long snapshot/source/stage output omitted; exact argv retained and original local run has full output."
+  },
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "show-stage-def",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/stage-base",
+      "--stage",
+      "ideation"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout_bytes": 4260,
+    "stdout_sha256": "62f9b3d4e71d63adde7e258f5a98261035e755590eb2bdafeccad3d5a2641f57",
+    "stdout_note": "Long snapshot/source/stage output omitted; exact argv retained and original local run has full output."
+  },
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "show-stage-def",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/stage-candidate",
+      "--stage",
+      "ideation"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout_bytes": 4260,
+    "stdout_sha256": "62f9b3d4e71d63adde7e258f5a98261035e755590eb2bdafeccad3d5a2641f57",
+    "stdout_note": "Long snapshot/source/stage output omitted; exact argv retained and original local run has full output."
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-786",
+      "show",
+      "d37c6dc653e0f45d6ca630c2faa6121c0863a57e:kc-dev-flow-2/references/sd/workflow.md"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout_bytes": 39637,
+    "stdout_sha256": "3a5bcd0dfb86b0e1f1c4c11b3280ee62f5d02bbefba781afc922641e7c5b4d9f",
+    "stdout_note": "Long snapshot/source/stage output omitted; exact argv retained and original local run has full output."
+  },
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "show-stage-def",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/stage-base",
+      "--stage",
+      "implementation"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout_bytes": 9023,
+    "stdout_sha256": "981db8f9ce6445c350c3579d96dd89bfc7d87f14dc75df124f455c5d3f3264cf",
+    "stdout_note": "Long snapshot/source/stage output omitted; exact argv retained and original local run has full output."
+  },
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "show-stage-def",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/stage-candidate",
+      "--stage",
+      "implementation"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout_bytes": 9023,
+    "stdout_sha256": "981db8f9ce6445c350c3579d96dd89bfc7d87f14dc75df124f455c5d3f3264cf",
+    "stdout_note": "Long snapshot/source/stage output omitted; exact argv retained and original local run has full output."
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-786",
+      "show",
+      "d37c6dc653e0f45d6ca630c2faa6121c0863a57e:kc-dev-flow-2/references/sd/workflow.md"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout_bytes": 39637,
+    "stdout_sha256": "3a5bcd0dfb86b0e1f1c4c11b3280ee62f5d02bbefba781afc922641e7c5b4d9f",
+    "stdout_note": "Long snapshot/source/stage output omitted; exact argv retained and original local run has full output."
+  },
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "show-stage-def",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/stage-base",
+      "--stage",
+      "validation"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout_bytes": 10106,
+    "stdout_sha256": "430ecc9326f5df02463dd6f12b86b62f14265a10b4f8f24d77d412730a9ce502",
+    "stdout_note": "Long snapshot/source/stage output omitted; exact argv retained and original local run has full output."
+  },
+  {
+    "argv": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "show-stage-def",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/stage-candidate",
+      "--stage",
+      "validation"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout_bytes": 10106,
+    "stdout_sha256": "430ecc9326f5df02463dd6f12b86b62f14265a10b4f8f24d77d412730a9ce502",
+    "stdout_note": "Long snapshot/source/stage output omitted; exact argv retained and original local run has full output."
+  }
+]

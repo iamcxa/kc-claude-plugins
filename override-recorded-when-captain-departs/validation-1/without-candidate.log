@@ -1,0 +1,419 @@
+...EEnot a directory: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdcbxghag/nope
+...F.EEEEEEEEEEEEEEEEEE
+======================================================================
+ERROR: test_followed_survives_the_ledger_and_summary (__main__.LedgerTest.test_followed_survives_the_ledger_and_summary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 159, in test_followed_survives_the_ledger_and_summary
+    self.assertEqual([r["followed"] for r in rows], [True, False, False, False])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 159, in <listcomp>
+    self.assertEqual([r["followed"] for r in rows], [True, False, False, False])
+                      ~^^^^^^^^^^^^
+KeyError: 'followed'
+
+======================================================================
+ERROR: test_followed_without_colon_is_not_a_declaration (__main__.LedgerTest.test_followed_without_colon_is_not_a_declaration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 165, in test_followed_without_colon_is_not_a_declaration
+    self.assertFalse(any(r["followed"] for r in dl.ledger(self.state)))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 165, in <genexpr>
+    self.assertFalse(any(r["followed"] for r in dl.ledger(self.state)))
+                         ~^^^^^^^^^^^^
+KeyError: 'followed'
+
+======================================================================
+ERROR: test_agreement_needs_the_followed_declaration (__main__.ReasonTest.test_agreement_needs_the_followed_declaration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 193, in test_agreement_needs_the_followed_declaration
+    self.assertEqual(self.check(reason)[0], 1)
+                     ^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_both_declarations_hold (__main__.ReasonTest.test_both_declarations_hold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 203, in test_both_declarations_hold
+    code, out, _ = self.check(OVERRIDE + "\nRecommendation: followed")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_empty_and_unreadable_files_are_input_errors (__main__.ReasonTest.test_empty_and_unreadable_files_are_input_errors) (value='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 216, in test_empty_and_unreadable_files_are_input_errors
+    self.assertEqual(self.check(value)[0], 2)
+                     ^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_empty_and_unreadable_files_are_input_errors (__main__.ReasonTest.test_empty_and_unreadable_files_are_input_errors) (value=' \n\t')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 216, in test_empty_and_unreadable_files_are_input_errors
+    self.assertEqual(self.check(value)[0], 2)
+                     ^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_empty_and_unreadable_files_are_input_errors (__main__.ReasonTest.test_empty_and_unreadable_files_are_input_errors)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 218, in test_empty_and_unreadable_files_are_input_errors
+    self.assertEqual(dl.main(["--reason", str(self.path.parent / "missing")]), 2)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_flagged_reasons_hold_and_pass_with_override (__main__.ReasonTest.test_flagged_reasons_hold_and_pass_with_override) (attempt='gate-attempt:model-roster-question-needs-both-families-backlog-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 184, in test_flagged_reasons_hold_and_pass_with_override
+    code, out, _ = self.check(reason)
+                   ^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_flagged_reasons_hold_and_pass_with_override (__main__.ReasonTest.test_flagged_reasons_hold_and_pass_with_override) (attempt='gate-attempt:special-roles-follow-the-model-table-backlog-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 184, in test_flagged_reasons_hold_and_pass_with_override
+    code, out, _ = self.check(reason)
+                   ^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_flagged_reasons_hold_and_pass_with_override (__main__.ReasonTest.test_flagged_reasons_hold_and_pass_with_override) (attempt='gate-attempt:release-walk-due-trigger-ideation-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 184, in test_flagged_reasons_hold_and_pass_with_override
+    code, out, _ = self.check(reason)
+                   ^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_followed_is_a_declaration_not_a_truth_check (__main__.ReasonTest.test_followed_is_a_declaration_not_a_truth_check) (reason='The Captain 「可以，但不用寫了就報錯，接受 `max` 和 `ultra`沒關係，等於就是不建議，但使用者真的想要也可以」 (chat, 2026-11-02), answering the batch 12 sitting 「決定：五件事都照建議，第 5 項用這張表，並把 xhigh 上限寫進設定檔檢查，可以嗎？」; approves Pilot, this outcome and these bounds, with the stated change.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 200, in test_followed_is_a_declaration_not_a_truth_check
+    self.assertEqual(self.check(reason + "\nRecommendation: followed")[0], 0)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_followed_is_a_declaration_not_a_truth_check (__main__.ReasonTest.test_followed_is_a_declaration_not_a_truth_check) (reason='The Captain 「可以，但不用寫了就報錯，接受 `max` 和 `ultra`沒關係，等於就是不建議，但使用者真的想要也可以」 (chat, 2026-11-02), answering the batch 12 sitting 「決定：五件事都照建議，第 5 項用這張表，並把 xhigh 上限寫進設定檔檢查，可以嗎？」; approves Pilot, this outcome and these bounds, with the stated change.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 200, in test_followed_is_a_declaration_not_a_truth_check
+    self.assertEqual(self.check(reason + "\nRecommendation: followed")[0], 0)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_followed_is_a_declaration_not_a_truth_check (__main__.ReasonTest.test_followed_is_a_declaration_not_a_truth_check) (reason='The Captain 「可以」 (chat, 2026-11-03), answering 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」; accepts every recommendation each design states for its decisions, with the stated change to release-walk-due-trigger D7.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 200, in test_followed_is_a_declaration_not_a_truth_check
+    self.assertEqual(self.check(reason + "\nRecommendation: followed")[0], 0)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_followed_is_a_declaration_not_a_truth_check (__main__.ReasonTest.test_followed_is_a_declaration_not_a_truth_check) (reason='Captain 「同意合併」 (chat, 2026-10-20, batch-4 sitting, question 18), after asking what the two declined points were and being shown both: approve validation and merge iamcxa/kc-claude-plugins#685 at head 187f93a534f4792f6d747288947e2e43af589ce8, as recommended.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 200, in test_followed_is_a_declaration_not_a_truth_check
+    self.assertEqual(self.check(reason + "\nRecommendation: followed")[0], 0)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_malformed_override_and_followed_typo_hold (__main__.ReasonTest.test_malformed_override_and_followed_typo_hold) (reason='Recommendation followed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 226, in test_malformed_override_and_followed_typo_hold
+    self.assertEqual(self.check(reason)[0], 1)
+                     ^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_malformed_override_and_followed_typo_hold (__main__.ReasonTest.test_malformed_override_and_followed_typo_hold) (reason='Override: recommended A; Captain chose B')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 226, in test_malformed_override_and_followed_typo_hold
+    self.assertEqual(self.check(reason)[0], 1)
+                     ^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_placeholder_recommendations_hold (__main__.ReasonTest.test_placeholder_recommendations_hold) (value='<option>')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 211, in test_placeholder_recommendations_hold
+    self.assertEqual(self.check(OVERRIDE.replace("option A", value))[0], 1)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_placeholder_recommendations_hold (__main__.ReasonTest.test_placeholder_recommendations_hold) (value='.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 211, in test_placeholder_recommendations_hold
+    self.assertEqual(self.check(OVERRIDE.replace("option A", value))[0], 1)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_placeholder_recommendations_hold (__main__.ReasonTest.test_placeholder_recommendations_hold) (value='...')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 211, in test_placeholder_recommendations_hold
+    self.assertEqual(self.check(OVERRIDE.replace("option A", value))[0], 1)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_placeholder_recommendations_hold (__main__.ReasonTest.test_placeholder_recommendations_hold) (value='…')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 211, in test_placeholder_recommendations_hold
+    self.assertEqual(self.check(OVERRIDE.replace("option A", value))[0], 1)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 178, in check
+    code = dl.main(["--reason", str(self.path)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/decision_ledger.py", line 158, in main
+    args = ap.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+FAIL: test_summary_counts_resolutions_per_area (__main__.LedgerTest.test_summary_counts_resolutions_per_area)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-override-recorded-when-captain-departs/.context/validation-evidence-786/without-candidate/test_decision_ledger.py", line 147, in test_summary_counts_resolutions_per_area
+    self.assertEqual(s["db"], {"rulings": 1, "captain": 1, "fo_delegated": 0,
+AssertionError: {'rul[30 chars]legated': 0, 'overrides': 1, 'amended_after': 1} != {'rul[30 chars]legated': 0, 'overrides': 1, 'followed': 0, 'amended_after': 1}
+  {'amended_after': 1,
+   'captain': 1,
+   'fo_delegated': 0,
++  'followed': 0,
+   'overrides': 1,
+   'rulings': 1}
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.046s
+
+FAILED (failures=1, errors=20)

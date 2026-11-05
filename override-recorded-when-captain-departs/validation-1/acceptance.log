@@ -1,0 +1,13 @@
+69d62c772c5f4fd28d9105c6f5d49516d559c947
+reason: missing declaration
+next: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.
+exit=1 (expected 1)
+reason: followed
+exit=0 (expected 0)
+reason: override (area: design)
+exit=0 (expected 0)
+reason: both declarations
+next: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.
+exit=1 (expected 1)
+reason: empty file
+exit=2 (expected 2)

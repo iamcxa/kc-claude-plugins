@@ -1,0 +1,10 @@
+{
+  "snapshot": "dc91fa798",
+  "fixtures": [
+    "gate-attempt:model-roster-question-needs-both-families-backlog-1",
+    "gate-attempt:special-roles-follow-the-model-table-backlog-1",
+    "gate-attempt:release-walk-due-trigger-ideation-1",
+    "gate-attempt:commissioned-by-names-spacedock-validation-1"
+  ],
+  "all_verbatim": true
+}

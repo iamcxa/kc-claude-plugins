@@ -1,0 +1,1 @@
+PASS: actual key-renaming and scope mutations fail their acceptance guards; every worker stage is byte-identical.

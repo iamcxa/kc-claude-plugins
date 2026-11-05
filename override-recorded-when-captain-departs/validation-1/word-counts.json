@@ -1,0 +1,13 @@
+{
+  "startup_and_resume": {
+    "before": 5891,
+    "after": 5939
+  },
+  "pre_record": {
+    "before": 0,
+    "followed_words": 2,
+    "override_words": 5,
+    "hold_words": 20
+  },
+  "other_moments": "Gate preparation, idle, merge ask and archive source bytes unchanged; no new output there."
+}

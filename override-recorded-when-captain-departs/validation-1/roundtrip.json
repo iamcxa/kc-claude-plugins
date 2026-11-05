@@ -1,0 +1,60 @@
+[
+  {
+    "task": "followed",
+    "archived": false,
+    "stage": "backlog",
+    "attempt": "gate-attempt:followed-backlog-1",
+    "kind": "resolution",
+    "by": "person:captain",
+    "at": "2026-11-05T11:36:25.104765Z",
+    "decision": "approve",
+    "reason": "|- SYNTHETIC TEST ONLY; no real human grant. Recommendation: followed",
+    "conn_quote": null,
+    "conn_source": null,
+    "question": "Synthetic fixture only?",
+    "override": null,
+    "followed": true,
+    "area": null,
+    "amended_after": 0
+  },
+  {
+    "task": "override",
+    "archived": false,
+    "stage": "backlog",
+    "attempt": "gate-attempt:override-backlog-1",
+    "kind": "resolution",
+    "by": "person:captain",
+    "at": "2026-11-05T11:36:25.988711Z",
+    "decision": "approve",
+    "reason": "|- SYNTHETIC TEST ONLY; no real human grant. Override: recommended option A; Captain chose option B; area: model policy",
+    "conn_quote": null,
+    "conn_source": null,
+    "question": "Synthetic fixture only?",
+    "override": {
+      "rec": "option A",
+      "chose": "option B",
+      "area": "model policy"
+    },
+    "followed": false,
+    "area": "model policy",
+    "amended_after": 0
+  },
+  {
+    "task": "typo",
+    "archived": false,
+    "stage": "backlog",
+    "attempt": "gate-attempt:typo-backlog-1",
+    "kind": "resolution",
+    "by": "person:captain",
+    "at": "2026-11-05T11:36:26.874486Z",
+    "decision": "approve",
+    "reason": "|- SYNTHETIC TEST ONLY; no real human grant. Recommendation followed",
+    "conn_quote": null,
+    "conn_source": null,
+    "question": "Synthetic fixture only?",
+    "override": null,
+    "followed": false,
+    "area": null,
+    "amended_after": 0
+  }
+]

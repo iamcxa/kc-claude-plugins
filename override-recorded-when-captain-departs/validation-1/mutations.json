@@ -1,0 +1,26 @@
+[
+  {
+    "name": "missing-declaration",
+    "status": "passed",
+    "message": "Reverse mutation makes the regression suite fail.",
+    "exit": 1
+  },
+  {
+    "name": "require-override",
+    "status": "passed",
+    "message": "Reverse mutation makes the regression suite fail.",
+    "exit": 1
+  },
+  {
+    "name": "both-forms",
+    "status": "passed",
+    "message": "Reverse mutation makes the regression suite fail.",
+    "exit": 1
+  },
+  {
+    "name": "remove-budget-step",
+    "status": "passed",
+    "message": "Lint exits 1: 5939 words exceed 5891.",
+    "exit": 1
+  }
+]
