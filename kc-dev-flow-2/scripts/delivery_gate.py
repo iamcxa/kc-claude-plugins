@@ -111,7 +111,7 @@ MAX_POINTS = 12
 CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
                  "Necessity": "who uses this change and what breaks without it"}
 ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."
-# see docs/adr/0060-a-gate-approval-grants-what-its-quoted-bound-question-says.md
+# see docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md
 ASK_UNQUOTED = "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time."
 ASK_FORM = "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`."
 CLAIM_SOURCE = "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`."
@@ -661,7 +661,7 @@ def check(args):
     verdict = "merge" if not points and cls != "never" else "ask"
     emit(*points, f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else ""))
 
-    # see docs/adr/0060-a-gate-approval-grants-what-its-quoted-bound-question-says.md
+    # see docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md
     front, _ = decision_ledger.split_task(task_text)
     stage = latest_attempt = None
     for line in front or []:

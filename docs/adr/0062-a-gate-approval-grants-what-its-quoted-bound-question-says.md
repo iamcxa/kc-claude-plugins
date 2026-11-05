@@ -1,4 +1,4 @@
-# 0060. A gate approval grants what its quoted bound question says
+# 0062. A gate approval grants what its quoted bound question says
 
 Date: 2026-11-05
 

@@ -160,7 +160,7 @@ def task_rows(state, path):
 
 
 def quotes_bound_question(row):
-    # see docs/adr/0060-a-gate-approval-grants-what-its-quoted-bound-question-says.md
+    # see docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md
     question = row.get("question")
     return bool(question and "".join(("answering 「" + question + "」").split())
                 in "".join((row.get("reason") or "").split()))
