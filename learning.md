@@ -452,3 +452,40 @@ the ten root learning.md entries (blob b6ba5556) cover none of it. Recorded in
 spacedock-state/dev2:_archive/release-acceptance/index.md under '### Feedback
 Cycles', '## Stage Report: implementation (cycle 1 repair)' and '## Stage Report:
 validation (cycle 2)'.
+
+## Read task frontmatter through Spacedock's parsed listing
+
+### Applicability
+
+A kc-dev-flow-2 extension or script in this repository (such as
+`release_acceptance.py due`) that decides from the values of task frontmatter fields
+(status, journey, journey-release, release-acceptance or another custom key), and
+whose output must not hide a due item or repeat a settled one.
+
+### Practice
+
+Take those values from Spacedock's own parsed listing (`spacedock status
+--workflow-dir <workflow> --archived --all-fields --limit 0 --json`, run once per
+call, with pagination, count and field types checked and a diagnostic printed on a
+partial read) rather than from raw frontmatter text or a regular expression. Give
+each consumed field a test case with a trailing YAML comment and a quoted value, run
+against the real Spacedock CLI, and keep a reverse mutation that restores the raw
+read and must fail. Uncertainty: one task; the cost is that the script now always
+pays one native task query (due 2.4 s versus 0.1 s on the unmapped 190-task
+workflow, one run each), and no second consumer has been observed.
+
+### Evidence
+
+Task release-walk-due-trigger (iamcxa/kc-claude-plugins#775, closure revision
+086fba54df16c5030bf21d7217314596b9531a0a, landed
+418a79d8814e43074306149273912483d54e1223). Head 442cfef4 read raw Task field values;
+validation-1 REJECTED it with two Material findings: `status: done # completed` made
+`due` print nothing while the real producer reported two pending releases (F1), and
+`release-acceptance: book-pickup/r1 # already filed` repeated an already claimed
+walk (F2). Repair head a3d9b00211929469c3b8cd8ccf63f95d2e261274 read the native
+listing; the four new cases failed before and passed after, restoring the raw read
+made them fail again, and validation-2 and validation-3 passed with both examples.
+The existing-code check in the design had already named that listing as Spacedock's,
+yet the first design chose a raw read, so the rework cost one implementation and one
+validation cycle. No existing project rule, selected profile or stage principle
+states this practice; the implementation principle says only 'existing tools'.
