@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-question-requires-worktree-clause:backlog:attempt-1:revision-1",
+  "question": "決定：「合併問句要有移除 worktree 那一句」這張用 Pilot，照任務寫下的範圍、預算與停止條件進入構想嗎？",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-question-requires-worktree-clause:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f44000ff6f82bab71396d5d074a8a507275aa682/delivery-question-requires-worktree-clause.md",
+      "rev": "sha256:95e57a605c33b33a7f9acbbbb69ebd1a2eabc43679a254e98111e2c8845a2abe",
+      "mediaType": "text/markdown",
+      "summary": "Pilot. delivery_gate.py question holds a validation question without the worktree-removal clause; bite: the #786 and #787 questions passed without it and FO removed both worktrees unauthorized (observer report, 2026-11-05)."
+    }
+  ]
+}
