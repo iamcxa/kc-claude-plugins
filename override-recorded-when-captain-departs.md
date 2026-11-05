@@ -53,6 +53,17 @@ gates:
                 id: briefing:override-recorded-when-captain-departs:validation:attempt-1:revision-1
                 digest: sha256:142fe9268dc2d8c72a3fd5957259e416cf99987070477000240d6a4e4e129bdc
                 room-ref: ./override-recorded-when-captain-departs/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:override-recorded-when-captain-departs:validation:1
+                briefing: briefing:override-recorded-when-captain-departs:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-05T15:16:12.325429Z"
+                decision: approve
+                reason: 'The Captain chose 「Merge (Recommended)」 (host question dialog, 2026-11-05), answering 「決定：合併 #786（漏寫 Override 的記錄前檢查）嗎？ Regular merge with --match-head-commit 69d62c772c5f4fd28d9105c6f5d49516d559c947, first of the batch 14 validation sitting. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-05T10:53:03Z
 worktree: .worktrees/spacedock-ensign-override-recorded-when-captain-departs
 pr: iamcxa/kc-claude-plugins#786
