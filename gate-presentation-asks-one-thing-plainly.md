@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-11-05T10:53:13Z
 worktree: .worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly
+pr: iamcxa/kc-claude-plugins#788
 ---
 
 ## Scope
