@@ -86,15 +86,15 @@ Replay script `/tmp/gp_sub.py` (substring match of `answering 「<Briefing quest
 | All time, validation | 0 | 18 | 86 |
 | Since 2026-11-02, validation | 0 | 10 | 2 |
 
-The four observed tasks are the four validation gates: #693, #698, #703, #702. Each reason quotes a short Chinese chat ask (for example 「#703（合併提問補漏）要合併嗎？我建議合併。」) while the bound question carries "approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head …" and the merge command. In each, the post-approval `delivery_gate.py check` (`merge/ask-2.json`) ran 6 to 20 seconds after the resolution, so the check sees the recorded answer. The current form (batch 13, for example rewritten-criteria-checked-against-captain-words) binds 「決定：…嗎？」 followed by an English "Approval also covers later external-review rounds …" sentence and records only the Chinese part as answered. One batch-13 ideation answer (fo-tries-what-it-asks-the-captain) quotes a question with a changed D7 that differs from the bound one. Only the observer report on codex-reader-reads-receipt-marker states the missing sentence; the other three observers marked the bound question `ok` and the chat side `can't tell` or a binding "after the fact" (FO's Scope overstates the observer record; the replay above is the evidence).
+The four observed tasks are the four validation gates: #693, #698, #703, #702. Each reason quotes a short Chinese chat ask (for example 「#703（合併提問補漏）要合併嗎？我建議合併。」) while the bound question carries "approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head …" and the merge command. In each, the post-approval `delivery_gate.py check` (`merge/ask-2.json`) ran 6 to 20 seconds after the resolution, so the check sees the recorded answer. The current form (batch 13, for example rewritten-criteria-checked-against-captain-words) binds 「決定：…嗎？」 followed by an English "Approval also covers later external-review rounds …" sentence and records only the Chinese part as answered. One batch-13 ideation answer (fo-tries-what-it-asks-the-captain) quotes a question with a changed D7 that differs from the bound one. The package's own reader agrees: `decision_ledger.py` JSON over the same checkout, with the same substring test, gives 6 backlog matches, 0 ideation, 0 validation, and false for all four tasks (2026-11-05). Only the observer report on codex-reader-reads-receipt-marker states the missing sentence; the other three observers marked the bound question `ok` and the chat side `can't tell` or a binding "after the fact" (FO's Scope overstates the observer record; the replay above is the evidence).
 
 ### Where each rule lives and what reads it
 
 | Rule | Home | Read by, when |
 | --- | --- | --- |
-| One decision; decision and recommendation first; plain words, new terms in eight words or fewer; the sentence saying what approving accepts; show the bound question verbatim; record `answering 「…」` | Constant `ASK_FORM` printed by `design_surfaces.py check` and `check --seed` after the pass line (skipped when the task's `status:` is `validation`), and by `delivery_gate.py question` after `gate text complete` | FO, just before `gate prepare` of the backlog, ideation and validation gates; an ideation worker running the check |
+| One decision; decision and recommendation first; plain words, new terms in eight words or fewer; the sentence saying what approving accepts; show the bound question verbatim; record `answering 「…」` | Constant `ASK_FORM` printed by `design_surfaces.py check` and `check --seed` after the pass line only when the task's `status:` is `backlog` or `ideation` (the full check also runs at implementation amendment handling and ui validation), and by `delivery_gate.py question` after `gate text complete` | FO, just before `gate prepare` of the backlog, ideation and validation gates; an ideation worker running the check |
 | A merge grant applies only when the newest `person:captain` validation approval quotes its bound question | `delivery_gate.py check` chooses `ASK` or `ASK_UNQUOTED` with a helper in `decision_ledger.py` (`quotes_bound_question`) | FO, at the merge ask |
-| Backlog and ideation answers quote their bound question | `skills/observer/SKILL.md`, one paragraph using the same helper's rule | Observer, after archive |
+| Every Captain gate answer quotes its bound question (backlog, ideation and validation) | `skills/observer/SKILL.md`, one paragraph using the same helper's rule | Observer, after archive |
 | The ruling | `docs/adr/<reserved>-a-gate-approval-grants-what-its-quoted-bound-question-says.md` | Later designers |
 
 `ASK_FORM` (62 words): "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`."
@@ -104,6 +104,7 @@ The four observed tasks are the four validation gates: #693, #698, #703, #702. E
 Exact rules for the implementation:
 - `quotes_bound_question(row)`: true when `"answering 「" + question + "」"` is a substring of `reason` with all whitespace removed from both. A substring, not a `「(.*?)」` parse: bound questions hold nested 「」 (this task's backlog question holds 「婉拒要寫明」).
 - `check` judges the newest `person:captain` `approve` resolution at stage `validation`, and only when the latest validation gate attempt has a resolution (the pre-ask run has none and keeps `ASK`). An `agent:first-officer` repair resolution under the grant is not judged; the Captain approval it rests on is. The saved `merge/ask-<N>.json` `next` holds whichever line was printed. No new exit code: the PR checks and holds are unchanged.
+- FO binds the question without surrounding 「」. A bound question that already begins with 「 (the batch-13 form) is still recorded whole inside one more pair: `answering 「「決定：…」 Approval also covers …」`.
 - The print goes after the pass line, so failing output and `pr_watch.py` `seeds` (which reads the exit code, and the last line on exit 2) are unchanged.
 
 ### Flow
@@ -119,7 +120,10 @@ flowchart TD
   S --> A[Captain answers]
   A --> G[gate record: reason quotes answering 「bound question」]
   G --> V{validation gate?}
-  V -->|no: backlog or ideation| D[next stage dispatched; observer compares quote and bound question after archive]
+  V -->|no: backlog or ideation| D[next stage dispatched]
+  D --> O[observer compares each Captain answer with its bound question after archive]
+  M --> O
+  Q --> O
   V -->|yes| K{delivery_gate.py check: newest Captain validation approval quotes its bound question?}
   K -->|yes| M[ASK: merge under the grant unless he said he merges or holds]
   K -->|no| Q[ASK_UNQUOTED: FO asks for the merge separately]
@@ -140,7 +144,8 @@ Startup, idle, after-archive, merge-ask and presentation counts are VALIDATION.m
 | After archive | 333 | 333 |
 | Backlog gate prepare (seed check pass) | 7 | 69 |
 | Ideation gate prepare (full check pass) | 4 | 66 |
-| Validation gate prepare (`question` pass; ui tasks also run the full check) | 30 (34 ui) | 92 (96 ui: the full check skips `ASK_FORM` at `status: validation`) |
+| Validation gate prepare (`question` pass; ui tasks also run the full check) | 30 (34 ui) | 92 (96 ui: the full check prints no `ASK_FORM` at `status: validation`) |
+| Implementation amendment handling (full check pass) | 4 | 4 |
 | Merge ask (`check` pass) | 2408 | 2408 when quoted; 2407 when not |
 | Gate presentation (Spacedock present-gate + lifecycle) | 1633 | 1633 |
 
@@ -166,7 +171,7 @@ Recommended order: after fo-write-checks-parse-top-level and comment-check-reach
 
 ## Acceptance criteria
 
-**AC-1** The reminder reaches FO at each gate-prepare moment and changes no failing output. Verified by: CLI tests in `test_design_surfaces.py` and `test_delivery_gate.py` asserting `ASK_FORM` is the last stdout line of a passing `check --seed`, full `check` and `question`; absent from full `check` on a `status: validation` task; absent from every failing run, whose last line is unchanged; and the existing `test_pr_watch.py` seed tests pass. Falsifiers: print on entry (failing last line changes), drop the status skip (ui validation prints it twice), drop the print (pass tests fail).
+**AC-1** The reminder reaches FO at each gate-prepare moment and changes no failing output. Verified by: CLI tests in `test_design_surfaces.py` and `test_delivery_gate.py` asserting `ASK_FORM` is the last stdout line of a passing `check --seed`, full `check` and `question`; absent from full `check` on a `status: implementation` or `status: validation` task; absent from every failing run, whose last line is unchanged; and the existing `test_pr_watch.py` seed tests pass. Falsifiers: print on entry (failing last line changes), drop the status condition (ui validation prints it twice, amendment handling prints it), drop the print (pass tests fail).
 
 **AC-2** The four observed validation answers lose the merge grant. Verified by: `delivery_gate.py check` with stubbed `gh`, run on copies of codex-reader-reads-receipt-marker, agent-reads-governing-adr, merge-ask-holds-missing-clauses and codex-reader-counts-code-review-only as committed at their validation resolution (task file, Briefing `index.json`, validation dispatch record), prints `ASK_UNQUOTED` as its last line and saves it in `ask-<N>.json`; the 0.35.0 script prints `ASK` on the same copies. One copy of rewritten-criteria-checked-against-captain-words (Chinese part quoted, English sentence not) also gets `ASK_UNQUOTED`. Falsifiers: compare only a prefix; accept any reason containing 「; judge the oldest resolution.
 
@@ -174,7 +179,7 @@ Recommended order: after fo-write-checks-parse-top-level and comment-check-reach
 
 **AC-4** Nested brackets compare correctly. Verified by: a `test_decision_ledger.py` case on a copy of this task's backlog gate record (bound question holds 「婉拒要寫明」) returns true; `ledger` JSON over the state checkout at a pinned revision is byte-identical before and after. Falsifier: replace the substring test with a `「(.*?)」` parse.
 
-**AC-5** The observer reports backlog and ideation answers. Verified by: the observer paragraph names the comparison and its three outcomes (`ok` quoting both texts' first words when one quote matches, `violation` when quotes exist and none matches, `can't tell` when the reason quotes nothing); one observer run on codex-reader-reads-receipt-marker, on the model-roster row, reports its validation answer as a violation. One run proves the instruction is followable, not a rate. Falsifier: the run reports `ok` or omits the row.
+**AC-5** The observer reports every Captain gate answer. Verified by: the observer paragraph names the comparison and its three outcomes (`ok` quoting both texts' first words when one quote matches, `violation` when quotes exist and none matches, `can't tell` when the reason quotes nothing); one observer run on fo-tries-what-it-asks-the-captain, on the model-roster row, reports its ideation answer (a changed D7, not the bound question) as a violation. One run proves the instruction is followable, not a rate. Falsifier: the run reports `ok` or omits the row.
 
 **AC-6** Reading cost is as tabled. Verified by: an independent recount at base and candidate of each moment in "Words FO reads at each moment"; startup, idle and after-archive identical; each gate-prepare moment +62; `references/sd/workflow.md` byte-identical and `lint-skills.py` passes. Falsifier: a README edit, or `ASK_FORM` reaching `pr_watch.py tasks` output.
 
@@ -200,7 +205,7 @@ Recommended order: after fo-write-checks-parse-top-level and comment-check-reach
 - DONE: AC-2 four replays lose the merge grant: not yet verified by the script; `/tmp/gp_sub.py` replay at dc91fa798 shows all four reasons quote text other than the bound question, and each `ask-2.json` postdates its resolution by 6 to 20 s.
 - DONE: AC-3 quoted answer keeps the grant: not yet verified; current state holds 6 matching answers, all backlog, none validation.
 - DONE: AC-4 nested brackets: not yet verified; this task's backlog reason matches its bound question by substring (replay, 2026-11-05).
-- DONE: AC-5 observer row: not yet verified; needs one observer run.
+- DONE: AC-5 observer row: not yet verified; needs one observer run on fo-tries-what-it-asks-the-captain.
 - DONE: AC-6 reading cost: not yet verified by an independent recount; design arithmetic only.
 - DONE: AC-7 ADR and suites: not yet verified; ADR named without a number.
 - DONE: `design_surfaces.py check` on this task file
