@@ -14,6 +14,8 @@ status: backlog
 - This task: FO reads rounds.md when it chooses, files package gaps it shows, and at the exit proposes the package change (or none).
 - Upstream first: ADR 0011 (delegation ladder; L3 not built), decision_ledger.py, the observer, backlog override-recorded-when-captain-departs.
 - Non-goals: messaging the Bridge FO per round (the Captain's change).
+- Added 2026-11-05: the Bridge experiment ended after 10 rounds (2026-10-23 to 2026-11-05; outcome report `_l3-dogfood/OUTCOME.md`, branch spacedock-state/dev2-poc of iamcxa/kc-paseo-plugins, commit a94f9cd; relayed by the kc-paseo-plugins dev2 FO, Paseo 8b2c2fc2, 2026-11-05). It lists 8 package gaps; FO spot-checked 3 against 0.35.0 on 2026-11-05 (the role_triggers.py model-rank gap no longer holds, `RANK` includes astra; the `spacedock new` empty-id gap does not apply under `id-style: slug`; the number_guards.py R4 POC gap holds) and owes the other 5.
+- Added 2026-11-05: the Captain 「開」 (chat, 2026-11-05), answering 「要不要開一張待辦，把第 2 類做成套件裡可以選擇開啟的授權？」, after FO recommended making it an opt-in package grant rather than a dev2 default. Class 2 is project-env ADR 0007's merge-and-reload after his validation approval, renewed alone on his 「可以第二類」 (chat, 2026-11-05); relayed record: about 7 uses, no reversal. FO filed this here rather than as a new task because this task already owns the package proposal at the experiment's exit. Preconditions FO proposed for the grant: the validation approval quotes the bound question (see gate-presentation-asks-one-thing-plainly), the delivery check exits 0, and the Captain has not asked to hold merges for a batch release (counter-example in this repository: #766, 「先不合併，我想要把這些也評估修復後，再一起發版」).
 
 ## FO alignment
 
