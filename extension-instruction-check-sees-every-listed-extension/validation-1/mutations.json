@@ -1,0 +1,170 @@
+[
+  {
+    "name": "AC-1 line anchor removed",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "ExtensionInstructionTests.test_every_shipped_instruction_is_read_from_its_extension_file"
+    ],
+    "log": "/tmp/pr787-validation/mutation-1.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-1 scope-line reader removed",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "ExtensionInstructionTests.test_every_shipped_instruction_is_read_from_its_extension_file"
+    ],
+    "log": "/tmp/pr787-validation/mutation-2.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-2 local header wrongly selected",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "ExtensionInstructionTests.test_paseo_requires_the_sentence_for_each_supported_header"
+    ],
+    "log": "/tmp/pr787-validation/mutation-3.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-2 Claude header excluded",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "ExtensionInstructionTests.test_paseo_requires_the_sentence_for_each_supported_header"
+    ],
+    "log": "/tmp/pr787-validation/mutation-4.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-2 whitespace made exact",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "ExtensionInstructionTests.test_paseo_requires_the_sentence_for_each_supported_header"
+    ],
+    "log": "/tmp/pr787-validation/mutation-5.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-3 only first cycles",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "ExtensionInstructionTests.test_paseo_checks_later_spawn_records_but_not_messages_or_recovery_records"
+    ],
+    "log": "/tmp/pr787-validation/mutation-6.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-3 roborev only first cycle",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "ExtensionInstructionTests.test_a_later_implementation_record_without_the_instruction_is_checked"
+    ],
+    "log": "/tmp/pr787-validation/mutation-7.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-3 message records selected",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "ExtensionInstructionTests.test_paseo_checks_later_spawn_records_but_not_messages_or_recovery_records"
+    ],
+    "log": "/tmp/pr787-validation/mutation-8.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-4 task frontmatter ignored",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "ExtensionInstructionTests.test_release_acceptance_checks_an_acceptance_tasks_first_implementation_only"
+    ],
+    "log": "/tmp/pr787-validation/mutation-9.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-4 later cycles selected",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "ExtensionInstructionTests.test_release_acceptance_checks_an_acceptance_tasks_first_implementation_only"
+    ],
+    "log": "/tmp/pr787-validation/mutation-10.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-5 replay loses Claude records",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/pr787-validation/replay.py",
+      "--batch-only",
+      "--mutation"
+    ],
+    "log": "/tmp/pr787-validation/mutation-11.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-6 diagnostic becomes unparseable",
+    "status": "passed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_laws_check.py",
+      "L2Test.test_a_missing_paseo_instruction_is_a_parseable_l2_violation"
+    ],
+    "log": "/tmp/pr787-validation/mutation-12.log",
+    "message": "Injected defect rejected"
+  },
+  {
+    "name": "AC-7 forbidden README edit",
+    "status": "passed",
+    "message": "Exact three-file whitelist rejects README delta",
+    "paths": [
+      "kc-dev-flow-2/README.md",
+      "kc-dev-flow-2/scripts/dispatch_records.py",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ]
+  }
+]

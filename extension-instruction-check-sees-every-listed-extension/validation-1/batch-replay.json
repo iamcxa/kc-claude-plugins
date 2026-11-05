@@ -1,0 +1,435 @@
+{
+  "identity": {
+    "candidate": "272721000cce947c8f2dcdd3a40c22cdf11dee09",
+    "base": "d37c6dc653e0f45d6ca630c2faa6121c0863a57e",
+    "state": "acb39aba17babc61ad66edb93d79d8a9f680bfaa",
+    "d4": "962a430f0"
+  },
+  "tasks": [
+    "second-round-prompts-a-step-back",
+    "claims-name-their-source",
+    "release-walk-due-trigger",
+    "fo-tries-what-it-asks-the-captain",
+    "diagnosis-rounds-count-toward-step-back",
+    "fo-answers-own-worker-permissions-by-listed-id",
+    "model-roster-question-needs-both-families",
+    "release-walk-off-production-before-release",
+    "validation-gate-requires-the-question-check",
+    "rewritten-criteria-checked-against-captain-words",
+    "worker-completion-reaches-fo-on-paseo",
+    "special-roles-follow-the-model-table"
+  ],
+  "totals": {
+    "baseline": {
+      "counts": {},
+      "records": []
+    },
+    "candidate": {
+      "counts": {
+        "paseo": 30,
+        "roborev": 7
+      },
+      "records": [
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-2.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'",
+        "implementation-3.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'",
+        "implementation-4.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'",
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-3.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-4.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-2.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'",
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-2.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'",
+        "implementation-3.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'",
+        "implementation-4.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'",
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-3.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-4.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "implementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'",
+        "ideation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'"
+      ]
+    }
+  },
+  "runs": [
+    {
+      "version": "baseline",
+      "task": "second-round-prompts-a-step-back",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/second-round-prompts-a-step-back"
+      ],
+      "exit": 0,
+      "stdout": "7 dispatch record(s) complete\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/second-round-prompts-a-step-back/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "baseline",
+      "task": "claims-name-their-source",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/claims-name-their-source"
+      ],
+      "exit": 0,
+      "stdout": "9 dispatch record(s) complete\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/claims-name-their-source/dispatch/implementation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n/tmp/pr787-validation/state/_archive/claims-name-their-source/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "baseline",
+      "task": "release-walk-due-trigger",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/release-walk-due-trigger"
+      ],
+      "exit": 1,
+      "stdout": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/release-walk-due-trigger/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "baseline",
+      "task": "fo-tries-what-it-asks-the-captain",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/fo-tries-what-it-asks-the-captain"
+      ],
+      "exit": 1,
+      "stdout": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/fo-tries-what-it-asks-the-captain/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "baseline",
+      "task": "diagnosis-rounds-count-toward-step-back",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/diagnosis-rounds-count-toward-step-back"
+      ],
+      "exit": 0,
+      "stdout": "5 dispatch record(s) complete\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/diagnosis-rounds-count-toward-step-back/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n/tmp/pr787-validation/state/_archive/diagnosis-rounds-count-toward-step-back/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "baseline",
+      "task": "fo-answers-own-worker-permissions-by-listed-id",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/fo-answers-own-worker-permissions-by-listed-id"
+      ],
+      "exit": 0,
+      "stdout": "8 dispatch record(s) complete\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/fo-answers-own-worker-permissions-by-listed-id/dispatch/implementation-4-message-1.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n/tmp/pr787-validation/state/_archive/fo-answers-own-worker-permissions-by-listed-id/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "baseline",
+      "task": "model-roster-question-needs-both-families",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/model-roster-question-needs-both-families"
+      ],
+      "exit": 0,
+      "stdout": "8 dispatch record(s) complete\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/model-roster-question-needs-both-families/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "baseline",
+      "task": "release-walk-off-production-before-release",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/release-walk-off-production-before-release"
+      ],
+      "exit": 1,
+      "stdout": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/release-walk-off-production-before-release/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "baseline",
+      "task": "validation-gate-requires-the-question-check",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/validation-gate-requires-the-question-check"
+      ],
+      "exit": 0,
+      "stdout": "5 dispatch record(s) complete\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/validation-gate-requires-the-question-check/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "baseline",
+      "task": "rewritten-criteria-checked-against-captain-words",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/rewritten-criteria-checked-against-captain-words"
+      ],
+      "exit": 1,
+      "stdout": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/rewritten-criteria-checked-against-captain-words/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "baseline",
+      "task": "worker-completion-reaches-fo-on-paseo",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/worker-completion-reaches-fo-on-paseo"
+      ],
+      "exit": 1,
+      "stdout": "validation-1.md: needs a scope-notes line naming main as the completion recipient\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/worker-completion-reaches-fo-on-paseo/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "baseline",
+      "task": "special-roles-follow-the-model-table",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/special-roles-follow-the-model-table"
+      ],
+      "exit": 0,
+      "stdout": "6 dispatch record(s) complete\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/special-roles-follow-the-model-table/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "second-round-prompts-a-step-back",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/second-round-prompts-a-step-back"
+      ],
+      "exit": 1,
+      "stdout": "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nideation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/second-round-prompts-a-step-back/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "claims-name-their-source",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/claims-name-their-source"
+      ],
+      "exit": 1,
+      "stdout": "implementation-2.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'\nimplementation-3.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'\nimplementation-4.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'\nideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-3.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-4.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/claims-name-their-source/dispatch/implementation-4.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n/tmp/pr787-validation/state/_archive/claims-name-their-source/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "release-walk-due-trigger",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/release-walk-due-trigger"
+      ],
+      "exit": 1,
+      "stdout": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\nideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/release-walk-due-trigger/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "fo-tries-what-it-asks-the-captain",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/fo-tries-what-it-asks-the-captain"
+      ],
+      "exit": 1,
+      "stdout": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\nideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/fo-tries-what-it-asks-the-captain/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "diagnosis-rounds-count-toward-step-back",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/diagnosis-rounds-count-toward-step-back"
+      ],
+      "exit": 1,
+      "stdout": "implementation-2.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'\nideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/diagnosis-rounds-count-toward-step-back/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n/tmp/pr787-validation/state/_archive/diagnosis-rounds-count-toward-step-back/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "fo-answers-own-worker-permissions-by-listed-id",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/fo-answers-own-worker-permissions-by-listed-id"
+      ],
+      "exit": 1,
+      "stdout": "implementation-2.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'\nimplementation-3.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'\nimplementation-4.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'\nideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-3.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-4.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/fo-answers-own-worker-permissions-by-listed-id/dispatch/implementation-4-message-1.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n/tmp/pr787-validation/state/_archive/fo-answers-own-worker-permissions-by-listed-id/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "model-roster-question-needs-both-families",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/model-roster-question-needs-both-families"
+      ],
+      "exit": 1,
+      "stdout": "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nideation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/model-roster-question-needs-both-families/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "release-walk-off-production-before-release",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/release-walk-off-production-before-release"
+      ],
+      "exit": 1,
+      "stdout": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\nideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/release-walk-off-production-before-release/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "validation-gate-requires-the-question-check",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/validation-gate-requires-the-question-check"
+      ],
+      "exit": 1,
+      "stdout": "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nideation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/validation-gate-requires-the-question-check/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "rewritten-criteria-checked-against-captain-words",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/rewritten-criteria-checked-against-captain-words"
+      ],
+      "exit": 1,
+      "stdout": "implementation-1-message-1.md: needs a scope-notes line naming main as the completion recipient\nideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nimplementation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/rewritten-criteria-checked-against-captain-words/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "worker-completion-reaches-fo-on-paseo",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/worker-completion-reaches-fo-on-paseo"
+      ],
+      "exit": 1,
+      "stdout": "validation-1.md: needs a scope-notes line naming main as the completion recipient\nideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/worker-completion-reaches-fo-on-paseo/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    },
+    {
+      "version": "candidate",
+      "task": "special-roles-follow-the-model-table",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787/kc-dev-flow-2/scripts/dispatch_records.py",
+        "--readme",
+        "/tmp/pr787-validation/README.md",
+        "/tmp/pr787-validation/state/_archive/special-roles-follow-the-model-table"
+      ],
+      "exit": 1,
+      "stdout": "ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\nideation-2.md: paseo worker instruction is absent; copy the scope-note instruction of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.34.0/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'\n",
+      "stderr": "/tmp/pr787-validation/state/_archive/special-roles-follow-the-model-table/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+    }
+  ]
+}

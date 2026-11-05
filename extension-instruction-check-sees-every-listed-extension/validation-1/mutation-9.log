@@ -1,0 +1,15 @@
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmptxx5ap5i/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+F
+======================================================================
+FAIL: test_release_acceptance_checks_an_acceptance_tasks_first_implementation_only (__main__.ExtensionInstructionTests.test_release_acceptance_checks_an_acceptance_tasks_first_implementation_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787-mutations/kc-dev-flow-2/scripts/test_dispatch_records.py", line 791, in test_release_acceptance_checks_an_acceptance_tasks_first_implementation_only
+    self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme, task="---\ntitle: ordinary\n---\n")[0], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.012s
+
+FAILED (failures=1)

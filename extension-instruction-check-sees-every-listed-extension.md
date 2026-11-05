@@ -280,3 +280,41 @@ The widened check reads all three scope-note forms the shipped EXTENSION.md file
 
 The Pilot candidate checks the three shipped scope-note forms on their applicable fresh-worker records, keeps follow-up messages exempt and detects the archived omissions with the approved counts. The locally committed candidate and prepared PR text are ready for FO publication, review and independent validation; shared-state report synchronization is separate from product delivery.
 
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #787 head 27272100 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED: head 272721000cce947c8f2dcdd3a40c22cdf11dee09, fetched base d37c6dc653e0f45d6ca630c2faa6121c0863a57e; AC-1 through AC-7 verified below; primary commands, outputs and limit judgments in [evidence](extension-instruction-check-sees-every-listed-extension/validation-1/evidence.md).
+- DONE: Judge D1-D4 as approved; rerun the replay over the 12 batch 12 and 13 tasks and the live-task count D4 names. Do not start agents you were not asked to
+  Recorded ideation approval accepts all four recommendations; 82 archived records yield 30 paseo/7 roborev omissions; state acb39aba17babc61ad66edb93d79d8a9f680bfaa and historical 962a430f0 both reproduce D4's 6 paseo plus 5 newly flagged roborev records; owning FOs retain dated next-touch corrections; no agents started.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  [Five-step script](extension-instruction-check-sees-every-listed-extension/validation-1/acceptance.sh), executed from its final report path with /bin/bash --noprofile --norc, exit 0; [observed output](extension-instruction-check-sees-every-listed-extension/validation-1/acceptance.log); both active and dispatch-named package adr_lint.py commands report 58 ADR files, 0 legacy, exit 0; no new finding in any disposition class.
+- DONE: AC-1 — all three shipped instruction forms
+  All nine definitions produce exactly roborev, paseo and release-acceptance; line-anchor removal and scope-line-reader removal each fail the shipped-definition test (mutations 1-2).
+- DONE: AC-2 — applicable Paseo headers, supplied/wrapped/not-run instructions and exclusions
+  Claude/Codex/roster cases hold missing instructions and accept the approved escapes; local/unlisted/below-heading cases stay quiet; unconditional, Codex-only and exact-whitespace predicates each fail (mutations 3-5).
+- DONE: AC-3 — later fresh workers, exempt messages
+  Later ideation/implementation/validation and roborev records are checked; first-cycle-only, roborev-first-only and message-selection mutants each fail (mutations 6-8).
+- DONE: AC-4 — acceptance task's first implementation record
+  Missing/supplied/not-run/ordinary/later-cycle cases and the retained quiet test pass; ignoring task frontmatter or selecting later cycles each fails (mutations 9-10).
+- DONE: AC-5 — archived replay and falsifier
+  [Raw replay](extension-instruction-check-sees-every-listed-extension/validation-1/batch-replay.json): candidate 30 paseo (16 ideation, 14 implementation) and 7 roborev, baseline 0 extension lines; no validation/message extension diagnostic; Codex-only mutation fails the count (mutation 11). Five older completion-recipient errors occur identically in both versions and are not counted as extension errors.
+- DONE: AC-6 — existing history-law consumer
+  The real laws_check.py subprocess reports the Paseo omission as L2; changing its diagnostic prefix fails the test (mutation 12); laws_check.py is unchanged.
+- DONE: AC-7 — detector-only scope
+  Exactly the three approved files differ; a temporary README edit fails that whitelist (mutation 13); lint and version parity pass, workflow budget remains 5891/5891; all mutations ran with python3 -B and cleared caches, restored instruction tests pass 16/16.
+- DONE: Package suite and native evidence
+  All 25 CI-listed package test commands pass; dispatch 115 tests and laws 65 tests; native builder separately passes without its optional skip. [Checks](extension-instruction-check-sees-every-listed-extension/validation-1/checks.json) binds argv/exits/logs; native executable reports 0.27.2 with plugin root 0.27.3, while [hosted CI](extension-instruction-check-sees-every-listed-extension/validation-1/ci.json) passes on this exact head using its configured pinned runtime.
+- DONE: Broader replay, comments and reading burden
+  106 actual task folders: 64 changed, 245 added omissions (144 paseo/101 roborev), none removed, all spawn records; comment_ratio 0/99 code lines, 0.0% <= 5%; wc -w confirms 12/24/30-word sentence/paseo/roborev outputs and docstring 771 -> 824 (+53), changed paragraph 50 -> 103.
+- DONE: Affected-document dispositions and necessity
+  ADR 0045 unaffected: names-only ruling predicate unchanged; ADR 0048 unaffected: completion/publication unchanged; learning.md unaffected: retained practices exercised. Existing selectors, parser and diagnostic changes map to observed omissions/falsifiers; three history fixtures now supply the required roborev path; no new ADR or number reservation.
+- DONE: Candidate preservation and cleanup
+  Assigned branch remains at 272721000cce947c8f2dcdd3a40c22cdf11dee09 with clean product status; detached validation, mutation and acceptance checkouts removed. Report/evidence only; no push, PR comment, review request, ready or merge. State synchronization remains with FO under the dispatch's do-not-push instruction.
+- SKIPPED: Optional unrelated pinned-history replay, live worker/release-walk execution, RoboRev and delivery
+  DEV2_OBLIGATION_SOURCES was not supplied; the new L2 behavior was exercised. Workers were not launched; release-acceptance uses fixtures. RoboRev remains FO-owned. Earlier implementation absence of a PR/CI is resolved by current exact-head Draft PR/hosted-success evidence; approval, adoption and delivery remain unverified. CI triggers unchanged; cost per PR not measured.
+
+### Summary
+
+PASSED on 272721000cce947c8f2dcdd3a40c22cdf11dee09 against all seven accepted criteria; no new Material, Deferred risk, Polish or Needs decision finding. Accepted first-sentence, trusted-header/not-run, message-exemption and deferred README/YAML limits remain explicit in the evidence; execution-harness corrections and their failed logs are retained, with the corrected native run and final acceptance script both passing. This recommendation leaves gate and delivery authority with the Captain and FO.
+
+

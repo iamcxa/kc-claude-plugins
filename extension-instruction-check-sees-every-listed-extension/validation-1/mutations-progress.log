@@ -1,0 +1,13 @@
+AC-1 line anchor removed 1
+AC-1 scope-line reader removed 1
+AC-2 local header wrongly selected 1
+AC-2 Claude header excluded 1
+AC-2 whitespace made exact 1
+AC-3 only first cycles 1
+AC-3 roborev only first cycle 1
+AC-3 message records selected 1
+AC-4 task frontmatter ignored 1
+AC-4 later cycles selected 1
+AC-5 replay loses Claude records 1
+AC-6 diagnostic becomes unparseable 1
+13 falsifiers rejected; restored exact candidate; focused suite passed.

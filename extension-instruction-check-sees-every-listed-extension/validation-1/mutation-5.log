@@ -1,0 +1,32 @@
+FFF
+======================================================================
+FAIL: test_paseo_requires_the_sentence_for_each_supported_header (__main__.ExtensionInstructionTests.test_paseo_requires_the_sentence_for_each_supported_header) (header='Model: gpt-6.1-sol (Codex via Paseo, effort high)')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787-mutations/kc-dev-flow-2/scripts/test_dispatch_records.py", line 830, in test_paseo_requires_the_sentence_for_each_supported_header
+    self.assertEqual(self.check({"ideation-1.md": text + line}, readme)[0], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_paseo_requires_the_sentence_for_each_supported_header (__main__.ExtensionInstructionTests.test_paseo_requires_the_sentence_for_each_supported_header) (header='Model: claude-opus-5-5 (Claude via Paseo, effort high)')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787-mutations/kc-dev-flow-2/scripts/test_dispatch_records.py", line 830, in test_paseo_requires_the_sentence_for_each_supported_header
+    self.assertEqual(self.check({"ideation-1.md": text + line}, readme)[0], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_paseo_requires_the_sentence_for_each_supported_header (__main__.ExtensionInstructionTests.test_paseo_requires_the_sentence_for_each_supported_header) (header='Model: sonnet\nRoster: worker; host=paseo; model=sonnet')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787-mutations/kc-dev-flow-2/scripts/test_dispatch_records.py", line 830, in test_paseo_requires_the_sentence_for_each_supported_header
+    self.assertEqual(self.check({"ideation-1.md": text + line}, readme)[0], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.026s
+
+FAILED (failures=3)

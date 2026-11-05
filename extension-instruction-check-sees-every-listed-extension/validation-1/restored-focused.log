@@ -1,0 +1,8 @@
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpkyu899ha/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+......../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4kf3z2hy/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+.../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmppjzp_jf2/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+....
+----------------------------------------------------------------------
+Ran 16 tests in 0.166s
+
+OK

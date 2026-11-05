@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/pr787-validation/replay.py", line 90, in <module>
+    if "--batch-only" in sys.argv:batch()
+                                  ~~~~~^^
+  File "/tmp/pr787-validation/replay.py", line 39, in batch
+    assert totals["candidate"]["counts"]=={"paseo":30,"roborev":7},totals["candidate"]["counts"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'roborev': 7, 'paseo': 11}

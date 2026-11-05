@@ -1,0 +1,8 @@
+{
+  "product_head": "272721000cce947c8f2dcdd3a40c22cdf11dee09",
+  "product_status": "",
+  "remaining_task_worktrees": [
+    "worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension\nHEAD 272721000cce947c8f2dcdd3a40c22cdf11dee09\nbranch refs/heads/spacedock-ensign/extension-instruction-check-sees-every-listed-extension"
+  ],
+  "temporary_checkouts_removed": true
+}

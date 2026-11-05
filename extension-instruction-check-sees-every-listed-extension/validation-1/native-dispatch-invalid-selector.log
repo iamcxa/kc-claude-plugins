@@ -1,0 +1,10 @@
+E
+======================================================================
+ERROR: NativeBuilderTests (unittest.loader._FailedTest.NativeBuilderTests)
+----------------------------------------------------------------------
+AttributeError: module '__main__' has no attribute 'NativeBuilderTests'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (errors=1)

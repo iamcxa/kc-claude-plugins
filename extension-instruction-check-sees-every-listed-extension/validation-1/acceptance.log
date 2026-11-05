@@ -1,0 +1,27 @@
+Preparing worktree (detached HEAD 272721000)
+Updating files:  83% (1280/1533)Updating files:  84% (1288/1533)Updating files:  85% (1304/1533)Updating files:  86% (1319/1533)Updating files:  87% (1334/1533)Updating files:  88% (1350/1533)Updating files:  89% (1365/1533)Updating files:  90% (1380/1533)Updating files:  91% (1396/1533)Updating files:  92% (1411/1533)Updating files:  93% (1426/1533)Updating files:  94% (1442/1533)Updating files:  95% (1457/1533)Updating files:  96% (1472/1533)Updating files:  97% (1488/1533)Updating files:  98% (1503/1533)Updating files:  99% (1518/1533)Updating files: 100% (1533/1533)Updating files: 100% (1533/1533), done.
+HEAD is now at 272721000 fix(kc-dev-flow-2): check listed extension instructions on fresh dispatches
+Candidate 272721000cce947c8f2dcdd3a40c22cdf11dee09
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpchb_crst/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+......../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp337kjyw5/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+.../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfsnndwnd/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+....
+----------------------------------------------------------------------
+Ran 16 tests in 0.215s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.954s
+
+OK
+ideation-1.md: paseo worker instruction is absent; copy the scope-note instruction of /pkg/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'
+1 dispatch record(s) complete
+Missing instruction held; supplied instruction passed.
+paseo 30 (ideation 16, implementation 14); roborev 7; validation/message extension errors 0
+Only the three approved detector/test files changed.
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5891 of 5891 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+58 ADR file(s) checked, 0 legacy
+Acceptance passed; cleanup follows.

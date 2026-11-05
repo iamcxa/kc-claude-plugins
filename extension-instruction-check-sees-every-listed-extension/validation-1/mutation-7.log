@@ -1,0 +1,15 @@
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpnl33l098/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+F
+======================================================================
+FAIL: test_a_later_implementation_record_without_the_instruction_is_checked (__main__.ExtensionInstructionTests.test_a_later_implementation_record_without_the_instruction_is_checked)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787-mutations/kc-dev-flow-2/scripts/test_dispatch_records.py", line 805, in test_a_later_implementation_record_without_the_instruction_is_checked
+    self.assertEqual(code, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.007s
+
+FAILED (failures=1)

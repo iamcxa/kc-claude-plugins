@@ -1,0 +1,4 @@
+docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md	review	kc-dev-flow-2/scripts/dispatch_records.py
+docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md	review	kc-dev-flow-2/scripts/dispatch_records.py
+learning.md	review	kc-dev-flow-2/scripts/dispatch_records.py
+3 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

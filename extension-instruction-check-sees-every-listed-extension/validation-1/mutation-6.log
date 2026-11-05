@@ -1,0 +1,26 @@
+F/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpbo0o5r48/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+F
+======================================================================
+FAIL: test_paseo_checks_later_spawn_records_but_not_messages_or_recovery_records (__main__.ExtensionInstructionTests.test_paseo_checks_later_spawn_records_but_not_messages_or_recovery_records) (name='ideation-2.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787-mutations/kc-dev-flow-2/scripts/test_dispatch_records.py", line 844, in test_paseo_checks_later_spawn_records_but_not_messages_or_recovery_records
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 2 dispatch record(s) complete
+
+
+======================================================================
+FAIL: test_paseo_checks_later_spawn_records_but_not_messages_or_recovery_records (__main__.ExtensionInstructionTests.test_paseo_checks_later_spawn_records_but_not_messages_or_recovery_records) (name='implementation-3.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787-mutations/kc-dev-flow-2/scripts/test_dispatch_records.py", line 844, in test_paseo_checks_later_spawn_records_but_not_messages_or_recovery_records
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 2 dispatch record(s) complete
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.018s
+
+FAILED (failures=2)

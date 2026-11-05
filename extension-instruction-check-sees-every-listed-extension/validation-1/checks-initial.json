@@ -1,0 +1,429 @@
+[
+  {
+    "name": "kc-dev-flow-2/scripts/test_lint_skills.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "log": "/tmp/pr787-validation/test_lint_skills.log",
+    "message": "tionTests.test_script_named_by_link_label_only) ... ok\ntest_the_chat_only_list_must_exist (__main__.RouteMutationTests.test_the_chat_only_list_must_exist) ... ok\ntest_the_chat_only_list_must_hold_a_rule (__main__.RouteMutationTests.test_the_chat_only_list_must_hold_a_rule) ... ok\ntest_the_known_overlap_is_listed_and_a_new_one_is_not (__main__.RouteMutationTests.test_the_known_overlap_is_listed_and_a_new_one_is_not) ... ok\ntest_unknown_profile (__main__.RouteMutationTests.test_unknown_profile) ... ok\ntest_valid_scaffold (__main__.RouteMutationTests.test_valid_scaffold) ... ok\ntest_workflow_equal_to_its_word_budget_passes_and_prints_the_count (__main__.RouteMutationTests.test_workflow_equal_to_its_word_budget_passes_and_prints_the_count) ... ok\ntest_workflow_over_its_word_budget (__main__.RouteMutationTests.test_workflow_over_its_word_budget) ... ok\ntest_workflow_under_its_word_budget_names_the_cut_step (__main__.RouteMutationTests.test_workflow_under_its_word_budget_names_the_cut_step) ... ok\ntest_wrong_shared_principle (__main__.RouteMutationTests.test_wrong_shared_principle) ... ok\n\n----------------------------------------------------------------------\nRan 47 tests in 11.003s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "log": "/tmp/pr787-validation/test_design_surfaces.log",
+    "message": "ne with text\nscope check not run: no frontmatter\ntask.md: surface 'ui' Preview 'missing.html' does not exist\nscope check not run: no frontmatter\ntask.md: surface 'db' needs a 'Migration source:' line with a value\nscope check not run: no frontmatter\ntask.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table\nscope check not run: no frontmatter\ntask.md: design surfaces presentable\nscope check not run: no frontmatter\ntask.md: seed fields and FO alignment recorded\ntask.md: seed fields and FO alignment recorded\ntask.md: seed fields and FO alignment recorded\ntask.md: surface 'ui' needs a 'UI proposal:' line with text\ntask.md: surface 'ui' needs a 'Preview:' line\nscope check not run: no frontmatter\ntask.md: missing '## FO alignment' section\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: '## FO alignment' needs a 'Visible change:' line\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Surfaces:' has unknown value(s) api\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "log": "/tmp/pr787-validation/test_adr_doc_checks.log",
+    "message": "---------------------------------------------------------------\nRan 9 tests in 1.013s\n\nOK\n1 ADR file(s) checked, 0 legacy; changed records not checked (no --since or --require)\nrequired ADR 2: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation\n2 ADR file(s) checked, 0 legacy\n1 ADR file(s) checked, 0 legacy\n0002-first.md: Decision needs a '**Words:**' line\n0002-first.md: Decision needs a '**Options considered:**' line\n0002-first.md: sections must be exactly Status, Context, Decision, Consequences in that order\n0002-first.md: section 'Context' is empty\n0002-first.md: status 'Done' is not Proposed, Accepted, Deprecated or 'Superseded by NNNN'\n0002-first.md: superseded by 0009, which does not exist\n0002-first.md: first line must be '# 2. <title>'\n0002-first.md: needs a 'Date: YYYY-MM-DD' line before the first section\n2-first.md: file name must be NNNN-short-title.md\n0002-second.md: number 2 is also used by 0002-first.md\n2 ADR file(s) checked, 1 legacy\nrequired ADR 1 is a legacy record; a new ruling needs its own file\nrequired ADR 3 does not exist\n1 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "log": "/tmp/pr787-validation/test_poc_readme.log",
+    "message": ".........\n----------------------------------------------------------------------\nRan 9 tests in 2.381s\n\nOK\nPOC README matches the five-stage README without ideation\n--- derived\n+++ /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmplxx816iu/poc.md\n@@ -7,7 +7,7 @@\n extensions: [learn, peers]\n second-reviewer: \"\"\n state: .spacedock-state\n-trunk: next\n+trunk: main\n stages:\n   defaults:\n     worktree: false\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "log": "/tmp/pr787-validation/test_comment_ratio.log",
+    "message": "..............\n----------------------------------------------------------------------\nRan 14 tests in 12.140s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_number_guards.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "log": "/tmp/pr787-validation/test_number_guards.log",
+    "message": "............................\n----------------------------------------------------------------------\nRan 28 tests in 29.484s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "log": "/tmp/pr787-validation/test_codex_review.log",
+    "message": "...................................\n----------------------------------------------------------------------\nRan 35 tests in 0.006s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "log": "/tmp/pr787-validation/test_roborev_gate.log",
+    "message": ".....\n----------------------------------------------------------------------\nRan 5 tests in 2.626s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "log": "/tmp/pr787-validation/test_copilot_review.log",
+    "message": "...............\n----------------------------------------------------------------------\nRan 15 tests in 0.001s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "log": "/tmp/pr787-validation/test_map_footprint.log",
+    "message": ".......................\n----------------------------------------------------------------------\nRan 23 tests in 0.366s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "log": "/tmp/pr787-validation/test_release_acceptance.log",
+    "message": "...................................................sss.......................................s............................\n----------------------------------------------------------------------\nRan 122 tests in 9.052s\n\nOK (skipped=4)\nnot run: node, kc-journey-map dependencies or spacedock missing\nnot run: node, kc-journey-map dependencies or spacedock missing\nnot run: node, kc-journey-map dependencies or spacedock missing\nnot run: node or journey-accept.mjs missing, or its yaml dependency is not installed\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "log": "/tmp/pr787-validation/test_dispatch_records.log",
+    "message": "k/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n.../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdrol6aig/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n............................................../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpln7g6p5u/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n.........../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfjl7gxwz/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpk_dupo2f/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.\n..\n----------------------------------------------------------------------\nRan 115 tests in 133.005s\n\nOK (skipped=1)\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "log": "/tmp/pr787-validation/test_delivery_gate.log",
+    "message": ".....................................................................................................................................................\n----------------------------------------------------------------------\nRan 149 tests in 89.469s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_validation_security.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "log": "/tmp/pr787-validation/test_validation_security.log",
+    "message": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.529s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "log": "/tmp/pr787-validation/test_pr_watch.log",
+    "message": "................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]\n                        {add,check,wait,tasks} [args ...]\ntest_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')\n......................................................................................................\n----------------------------------------------------------------------\nRan 134 tests in 69.442s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "log": "/tmp/pr787-validation/test_replay_dispatch.log",
+    "message": "........\n----------------------------------------------------------------------\nRan 8 tests in 5.261s\n\nOK\nremoved /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzowu1pfo/runs/r1\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "log": "/tmp/pr787-validation/test_decision_ledger.log",
+    "message": "...not a directory: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp5mfrru32/nope\n.....\n----------------------------------------------------------------------\nRan 8 tests in 0.031s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_package_version.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "log": "/tmp/pr787-validation/test_package_version.log",
+    "message": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.007s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "log": "/tmp/pr787-validation/test_workflow_checkout.log",
+    "message": ".............\n----------------------------------------------------------------------\nRan 13 tests in 8.112s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "log": "/tmp/pr787-validation/test_observer_check.log",
+    "message": "...................\n----------------------------------------------------------------------\nRan 19 tests in 8.134s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "log": "/tmp/pr787-validation/test_role_triggers.log",
+    "message": "...........................................\n----------------------------------------------------------------------\nRan 43 tests in 50.805s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_laws_check.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "log": "/tmp/pr787-validation/test_laws_check.log",
+    "message": "..............................................................s..\n----------------------------------------------------------------------\nRan 65 tests in 116.815s\n\nOK (skipped=1)\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_learning.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "log": "/tmp/pr787-validation/test_learning.log",
+    "message": "in__.LearningTests.test_replay_of_the_stalled_learning_pr_ends_recorded_without_a_captain_message) ... ok\ntest_same_job_reclaim_ignores_hold (__main__.LearningTests.test_same_job_reclaim_ignores_hold) ... ok\ntest_settle_is_split_by_actor_and_a_token_holder_needs_no_recovery (__main__.LearningTests.test_settle_is_split_by_actor_and_a_token_holder_needs_no_recovery) ... ok\ntest_settled_sibling_releases_hold (__main__.LearningTests.test_settled_sibling_releases_hold) ... ok\ntest_still_open_delivery_is_resumed_by_actor_not_left_blocking (__main__.LearningTests.test_still_open_delivery_is_resumed_by_actor_not_left_blocking) ... ok\ntest_three_outcomes_and_mixed_preserve_project_files (__main__.LearningTests.test_three_outcomes_and_mixed_preserve_project_files) ... ok\ntest_torn_and_missing_record_are_uncertain_not_automatic_retries (__main__.LearningTests.test_torn_and_missing_record_are_uncertain_not_automatic_retries) ... ok\ntest_torn_delivery_is_visible_and_requires_explicit_reconciliation (__main__.LearningTests.test_torn_delivery_is_visible_and_requires_explicit_reconciliation) ... ok\n\n----------------------------------------------------------------------\nRan 47 tests in 61.484s\n\nOK\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "log": "/tmp/pr787-validation/test_sd_dispatch.log",
+    "message": "-question-prerequisites, roster-adoption-prerequisites, roster-provider-host) are each asserted present, and each reverted alone to its previous text reports only its own gaps\nPASS: native flat/folder slug creation with omitted/matching id passes the seed check; missing Budget and all template placeholders refuse; mismatching native id refuses\nPASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not\nPASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist\nPASS: Batch gates survives POC derivation but changes no pilot/POC worker stage definition; inlining mutations reach both implementation definitions\nPASS: four separately prepared/committed batch gates retain mapped approve/revise/hold/unanswered authority; stale-binding mutation refuses; resumed approval advances its own task without duplicate resolution\nNot run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge\n"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "log": "/tmp/pr787-validation/test_observer_recovery.log",
+    "message": "PASS: archive without observer.md detected; state commit refused for the late report; path-scoped commit then state commit published it; validate VALID; check exits 0\n"
+  },
+  {
+    "name": "lint",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "log": "/tmp/pr787-validation/lint.log",
+    "message": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5891 of 5891 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n"
+  },
+  {
+    "name": "parity",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "bash",
+      "scripts/version-parity-check.sh"
+    ],
+    "log": "/tmp/pr787-validation/parity.log",
+    "message": "e-v0.1.0, kc-nightwatch-v0.1.0, kc-hyperfocus-v0.1.0, kc-team-ops-v0.1.0, kc-journey-map-v0.1.0, kc-pr-flow-v0.1.0, kc-dev-flow-v0.1.0, kc-ship-flow-v0.1.0, kc-dev-flow-2-v0.1.0, kc-adr-v0.1.0\nPlugin directory enumeration: on-disk plugin directories and marketplace.json entries match 1:1\n\nPLUGIN             release   plugin.json market    codex     hermes    RESULT\ne2e-pipeline       3.3.5     3.3.5     3.3.5     3.3.5     -         ok\nkc-plugin-forge    1.10.0    1.10.0    1.10.0    1.10.0    -         ok\nkc-nightwatch      0.5.1     0.5.1     0.5.1     -         -         ok\nkc-hyperfocus      1.6.4     1.6.4     1.6.4     -         -         ok\nkc-team-ops        1.8.0     1.8.0     1.8.0     1.8.0     -         ok\nkc-journey-map     1.9.0     1.9.0     1.9.0     1.9.0     -         ok\nkc-pr-flow         1.12.0    1.12.0    1.12.0    1.12.0    -         ok\nkc-dev-flow        4.6.0     4.6.0     4.6.0     4.6.0     4.6.0     ok\nkc-ship-flow       0.3.0     0.3.0     0.3.0     0.3.0     -         ok\nkc-dev-flow-2      0.35.0    0.35.0    0.35.0    0.35.0    -         ok\nkc-adr             0.2.1     0.2.1     0.2.1     0.2.1     -         ok\n\nVersion parity: all plugins consistent\n"
+  },
+  {
+    "name": "adr-lint",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "d37c6dc653e0f45d6ca630c2faa6121c0863a57e"
+    ],
+    "log": "/tmp/pr787-validation/adr-lint.log",
+    "message": "58 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "comment-ratio",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "d37c6dc653e0f45d6ca630c2faa6121c0863a57e",
+      "272721000cce947c8f2dcdd3a40c22cdf11dee09",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "log": "/tmp/pr787-validation/comment-ratio.log",
+    "message": "code lines 99, comment lines 0, 0.0%\nmaximum 5% (package default) met\n"
+  },
+  {
+    "name": "doc-impact",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "d37c6dc653e0f45d6ca630c2faa6121c0863a57e",
+      "272721000cce947c8f2dcdd3a40c22cdf11dee09"
+    ],
+    "log": "/tmp/pr787-validation/doc-impact.log",
+    "message": "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md\treview\tkc-dev-flow-2/scripts/dispatch_records.py\ndocs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md\treview\tkc-dev-flow-2/scripts/dispatch_records.py\nlearning.md\treview\tkc-dev-flow-2/scripts/dispatch_records.py\n3 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+  },
+  {
+    "name": "design-surfaces",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/extension-instruction-check-sees-every-listed-extension.md"
+    ],
+    "log": "/tmp/pr787-validation/design-surfaces.log",
+    "message": "extension-instruction-check-sees-every-listed-extension.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  },
+  {
+    "name": "number-guards",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/extension-instruction-check-sees-every-listed-extension.md"
+    ],
+    "log": "/tmp/pr787-validation/number-guards.log",
+    "message": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase d37c6dc653e0 head 272721000cce merge-base d37c6dc653e0\n"
+  },
+  {
+    "name": "dispatch-records",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/extension-instruction-check-sees-every-listed-extension"
+    ],
+    "log": "/tmp/pr787-validation/dispatch-records.log",
+    "message": "3 dispatch record(s) complete\n"
+  },
+  {
+    "name": "native-dispatch",
+    "status": "failed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "NativeBuilderTests"
+    ],
+    "log": "/tmp/pr787-validation/native-dispatch.log",
+    "message": "E\n======================================================================\nERROR: NativeBuilderTests (unittest.loader._FailedTest.NativeBuilderTests)\n----------------------------------------------------------------------\nAttributeError: module '__main__' has no attribute 'NativeBuilderTests'\n\n----------------------------------------------------------------------\nRan 1 test in 0.001s\n\nFAILED (errors=1)\n"
+  }
+]

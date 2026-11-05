@@ -1,0 +1,17 @@
+F
+======================================================================
+FAIL: test_a_missing_paseo_instruction_is_a_parseable_l2_violation (__main__.L2Test.test_a_missing_paseo_instruction_is_a_parseable_l2_violation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787-mutations/kc-dev-flow-2/scripts/test_laws_check.py", line 313, in test_a_missing_paseo_instruction_is_a_parseable_l2_violation
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : L1 observer-before-sentinel: 0 events judged in dc47a689768b..ccd4b6e3d545, 0 violated
+L3 amendment-append-only: 0 events judged in dc47a689768b..ccd4b6e3d545, 0 violated
+L2 dispatch-record-complete: cannot judge: dispatch_records.py exited 1 with output this runner does not parse: ideation-1.md: instruction for paseo is absent; copy the scope-note instruction of /pkg/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.565s
+
+FAILED (failures=1)

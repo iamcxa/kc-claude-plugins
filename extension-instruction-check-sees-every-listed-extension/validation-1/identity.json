@@ -1,0 +1,9 @@
+{
+  "candidate": "272721000cce947c8f2dcdd3a40c22cdf11dee09",
+  "base": "d37c6dc653e0f45d6ca630c2faa6121c0863a57e",
+  "state": "acb39aba17babc61ad66edb93d79d8a9f680bfaa",
+  "d4": "962a430f0",
+  "native_version": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+  "validation_verdict": "PASSED",
+  "cleanup": "Detached candidate, mutation and acceptance worktrees removed; assigned branch unchanged."
+}

@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_paseo_requires_the_sentence_for_each_supported_header (__main__.ExtensionInstructionTests.test_paseo_requires_the_sentence_for_each_supported_header)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787-mutations/kc-dev-flow-2/scripts/test_dispatch_records.py", line 832, in test_paseo_requires_the_sentence_for_each_supported_header
+    self.assertEqual(self.check({"ideation-1.md": COMPLETE}, readme)[0], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.037s
+
+FAILED (failures=1)

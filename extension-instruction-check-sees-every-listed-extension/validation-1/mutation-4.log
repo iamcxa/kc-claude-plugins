@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_paseo_requires_the_sentence_for_each_supported_header (__main__.ExtensionInstructionTests.test_paseo_requires_the_sentence_for_each_supported_header) (header='Model: claude-opus-5-5 (Claude via Paseo, effort high)')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension/.context/validation-pr787-mutations/kc-dev-flow-2/scripts/test_dispatch_records.py", line 827, in test_paseo_requires_the_sentence_for_each_supported_header
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 1 dispatch record(s) complete
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.022s
+
+FAILED (failures=1)
