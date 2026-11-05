@@ -55,6 +55,12 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=27, why="delivery summary preflight names the separate summary, unchanged use and legacy compatibility",
          captain="「進實作」 (Captain, chat, 2026-10-29), answering 「決定：四張全准進實作，含工作流文件多 27 字？要改哪張直接說。」; ideation gate attempt 2 of gate-requires-recorded-reviews",
          loaded="startup and resume of the First Officer, and each Delivery authority read including delivery gate preparation"),
+    dict(delta=55, why="Captain steps covers every ask and records observations; the validation passage points to that rule",
+         captain="「可以」 (Captain, chat, 2026-11-03), answering 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」; accepts fo-tries-what-it-asks-the-captain decision 2, +55 words (5781 to 5836)",
+         loaded="startup and resume of the First Officer, before a Captain ask and validation gate preparation"),
+    dict(delta=55, why="numbers and factual claims name their command and date, or the report repeated without a run",
+         captain="「可以」 (Captain, chat, 2026-11-03), answering 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」; accepts claims-name-their-source decision 1, +55 words (5836 to 5891), and decision 2, 24 replay runs with a hard stop at 30",
+         loaded="startup"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
@@ -193,16 +199,22 @@ def lint_tree(root, basic_lint=BASIC_LINT):
         if set(rows) != set(PROFILES):
             errors.append(f"{stage}: profile coverage must be poc, pilot, prod")
 
+    # see docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md
+    roster = read(root / "references/model-roster.md")
+    table = re.search(r"^## Model table\n(.*?)(?=^## |\Z)", roster, re.M | re.S)
+    cells = dict(re.findall(r"^\| ([a-z-]+) \| ([^|]+?) \|[^\n]*\|$", table[1], re.M)) if table else {}
     for role, policy in AGENT_MODELS.items():
+        if cells.get(role) != f"{policy[0].title()} / {policy[1]}":
+            errors.append(f"model table: {role} Claude cell differs from agent policy")
         body = read(root / "agents" / f"{role}.md")
-        fields = dict(re.findall(r"^(skills|model|reasoning): (.+)$", body, re.MULTILINE))
+        fields = dict(re.findall(r"^(skills|model|effort): (.+)$", body, re.MULTILINE))
         try:
             calls = json.loads(fields.get("skills", "null"))
         except json.JSONDecodeError:
             calls = None
         if calls != [f"{VARIANT}:{role}"]:
             errors.append(f"{role} agent: expected exact variant skill binding")
-        if (fields.get("model"), fields.get("reasoning")) != policy:
+        if (fields.get("model"), fields.get("effort")) != policy:
             errors.append(f"{role} agent: existing {policy[0]}/{policy[1]} policy changed")
     errors += workflow_size_and_duplicates(root)
     errors += chat_only_errors(root)

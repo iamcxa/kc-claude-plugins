@@ -173,7 +173,7 @@ Ask which recommended or optional rows to add once, before the Captain reviews t
 2. Put one multi-select to the Captain through the host's structured Ask UI, or in plain chat
    when none is available: the required rows shown as already on, `journey-map` with
    `release-acceptance` as one choice that writes both names, `codex`, `roborev`, and `copilot`
-   unchecked and marked quota-limited, and `paseo` unchecked for its Paseo Codex worker handoff. Confirmed
+   unchecked and marked quota-limited, and `paseo` unchecked for its Paseo worker handoff. Confirmed
    Paseo peer asks and replies already belong to peers. Offer `fo-feedback` unchecked for the interviewing
    maintainer only; show its prerequisite results without enabling dependencies.
 3. Write the chosen names after the required ones. Never list a row whose probe failed; report
@@ -187,6 +187,7 @@ Ask which recommended or optional rows to add once, before the Captain reviews t
    `.notes/fo-feedback/index.md` in the state checkout; follow its extension for cadence.
    No answer leaves it off; selection here does not authorize an interview send.
 6. When `codex` and `copilot` are both listed, write `second-reviewer: copilot`; otherwise leave it empty.
+   When `release-acceptance` is chosen, record [Release environments](#release-environments) before its first walk.
 
 The `extensions:` line is the adopter's own after adoption. At a re-sync, `git merge-file` against
 the template's new line merges an adopter `[]` clean to `[learn, peers]`, merges an equal list
@@ -194,9 +195,20 @@ clean, and conflicts on any other list (measured 2026-10-25). Keep the adopter's
 conflicts, and when a clean merge changed it, restore it; no check reads a re-synced README for a
 dropped extension, so the adopter's review of the sync PR is the only check.
 
+## Release environments
+
+For `release-acceptance`, ask once: which environments exist, how a change reaches each,
+who approves production, and how to roll back. Record flat workflow README frontmatter
+`walk-environment: <preview or staging name>`, `production-environment: <production name>`,
+and `release-doc: <repository release document>`. With no preview or staging, use
+`walk-environment: local`; the walk records its deployment limit. The two environment names differ.
+Keep deployment, approval and rollback answers in that release document; if none exists,
+create `docs/releasing.md` in the reviewed adoption change. Existing adopters missing keys
+answer these questions when `ra check` holds their first walk.
+
 ## Before activation
 
-At adoption or introducing sync, follow `<package>/references/model-roster.md` to ask once about stage workers only when the workflow frontmatter lists `paseo` and the Codex provider is available. Otherwise ask nothing, write nothing and retain README behavior. Save only an explicit shared choice through the normal reviewed change. Preserve existing settings; no answer leaves README defaults.
+At adoption or introducing sync, follow `<package>/references/model-roster.md` to ask once about stage workers only when the workflow frontmatter lists `paseo` and Codex and Claude providers are available. Otherwise ask nothing, write nothing and retain README behavior. Save only an explicit shared choice through the normal reviewed change. Preserve existing settings; no answer leaves README defaults.
 
 Review the concrete README, state mapping, exact stage-skill availability and
 copied mod with the user. Run SD state readiness and status validation using the

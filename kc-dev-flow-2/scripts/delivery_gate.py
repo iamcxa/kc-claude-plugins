@@ -13,6 +13,7 @@ The PR head is compared, as a prefix, with each line; it passes when it matches 
 --text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each,
 at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token; `answer=review:<id>` is no review.
+The gate text also needs one top-level `External rounds: N` line outside fences, using the summary count form below.
 Both commands require exactly one configured second-reviewer declaration, including `not triggered` when applicable.
 Prod/db cannot claim `not triggered`. Listed Copilot refusals must copy the quote/id from
 `<task>/review/copilot-not-run.txt` and offer `Copilot retry: available when the Captain confirms quota is back.`
@@ -36,6 +37,7 @@ README cannot be read, or an input is unusable. Every problem is printed.
 A task whose committed state owes a chief-engineer or engineering-reviewer call also holds: `role_triggers.py` runs on the task folder and stem
 (no --review-rounds), reading the task as committed at HEAD of its state checkout, so an edit not yet state-committed is not seen; exit 1 from it
 adds one problem line and its `next:` lines, exit 2 holds with its message.
+Exit 0 from it forwards advisory `next:` lines before the record and ASK, without holding the ask.
 Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
 and one last `next:` line, the `ASK` line: merge when the approved question named the merge, else ask. The `class:` line ends
@@ -48,6 +50,18 @@ prints `gate text complete`; exit 1 prints each problem; exit 2 when an input ca
 With --summary-file, ordinary text checks use question plus summary; reviewer checks use only
 the summary outside fences. It requires one top-level External rounds: N (nonnegative integer),
 optionally followed by a full stop or a semicolon/full stop and detail. Without it, legacy checks apply.
+The summary (combined text for legacy calls) needs Captain steps: <record path>, passing steps
+against the gate text and latest validation report, at a latest dispatched Candidate.
+Both `question` and `check` print a claim-source reminder on entry, without adding a hold.
+
+Usage: delivery_gate.py steps <record> --text-file <message>
+Reads Captain step observations without executing commands. Missing observations, unmatched steps,
+unrecorded fenced commands or links (including fences in named Markdown files), missing absolute
+paths, and Captain-only steps without a reason hold the ask (exit 1). Unreadable input is exit 2.
+Candidate may be none outside a validation gate. The check trusts recorded observations.
+Prose asks, inline code, fences inside a > quote, fences starting on a list-marker line,
+and 4-space indented code blocks stay undetected. An unclosed fence in a named Markdown
+file becomes one large required step, through the end of the file.
 """
 import argparse
 import datetime
@@ -94,6 +108,7 @@ MAX_POINTS = 12
 CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
                  "Necessity": "who uses this change and what breaks without it"}
 ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."
+CLAIM_SOURCE = "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`."
 
 
 def clean(line):
@@ -481,6 +496,7 @@ def text_problems(task_text, gate_text, at_gate=False, reviewer_text=None):
 
 
 def check(args):
+    emit(CLAIM_SOURCE)
     task, text_file = Path(args.task), Path(args.text_file)
     if task.is_dir():
         task = task / "index.md"
@@ -608,6 +624,14 @@ def check(args):
         nexts.extend(said)
     elif code:
         holds.extend(said or [f"role_triggers.py exited {code} with no message"])
+    else:
+        nexts.extend(line for line in said if line.startswith("next:"))
+
+    # see docs/adr/0051-the-merge-ask-check-requires-the-round-count.md
+    missing = summary_round_problems("\n".join(outside_fences(gate_text)))
+    problems += missing
+    if missing:
+        nexts.append("next: hold the ask; record the external round count in the summary.")
 
     emit(*problems, *holds)
     if problems:
@@ -616,6 +640,7 @@ def check(args):
     if holds:
         emit(*(dict.fromkeys(nexts) or ["next: hold the ask and show the Captain these lines."]))
         return 2
+    emit(*dict.fromkeys(nexts))
     emit(f"PR head {head} equals dispatched candidate {head}; no second reviewer outcome is missing", *sibling_notes)
     if security_note:
         emit(security_note)
@@ -645,7 +670,141 @@ def summary_round_problems(text):
     return []
 
 
+STEP_FORM = """Candidate: <40-hex head, or none>
+
+### Step 1
+Asked: <the step exactly as the message states it>
+Ran: <what FO ran, where (fresh shell, real browser), UTC time>
+Observed: <the output, or a path in the task folder holding it>
+Only he can: <what is left> — <why: his credential, account, device or judgment>"""
+STEP_FIELD = re.compile(r"^(Asked|Ran|Observed|Only he can):[ \t]*(.*?)(?=^(?:Asked|Ran|Observed|Only he can):|\Z)", re.M | re.S)
+FENCE = re.compile(r"^[ \t]*(`{3,}|~{3,})([^\n]*)\n(.*?)(?:^[ \t]*\1[`~]*[ \t]*$|\Z)", re.M | re.S)
+URL = re.compile(r"https?://[^\s<>`\"')\]]+")
+ABS_PATH = re.compile(r'''(?<![\w:/>])(?:"(?:~/|/)[^"\n]+"|'(?:~/|/)[^'\n]+'|(?:~/|/)[^\s`"'()\[\]{}]+)''')
+
+
+def normalized(text):
+    return " ".join(text.split())
+
+
+def absolute_paths(text):
+    paths = []
+    for value in ABS_PATH.findall(URL.sub(" ", text)):
+        value = re.sub(r":\d+(?::\d+)?$", "", value.strip("\"'").rstrip(".,;:"))
+        if "<" not in value and ">" not in value:
+            paths.append(Path(value).expanduser())
+    return list(dict.fromkeys(paths))
+
+
+def fenced_steps(text):
+    return [body.strip() for _, _, body in FENCE.findall(text) if body.strip()]
+
+
+def links(text):
+    return [value.rstrip(".,;") for value in URL.findall(text)]
+
+
+def execution_recorded(ran):
+    if not re.search(r"\b(?:fresh\s+shell|real\s+browser)\b", ran, re.I):
+        return False
+    stamp = re.search(r"\b\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|\+00:00|[ \t]+UTC)(?![\w:+-])", ran)
+    if not stamp:
+        return False
+    try:
+        value = re.sub(r"[ \t]+UTC$", "+00:00", stamp[0]).replace("Z", "+00:00")
+        return datetime.datetime.fromisoformat(value).utcoffset() == datetime.timedelta(0)
+    except ValueError:
+        return False
+
+
+def inspect_steps(record_path, message):
+    text = record_path.read_text()
+    header = re.split(r"^### Step \d+[ \t]*$", text, maxsplit=1, flags=re.M)[0]
+    candidates = re.findall(r"^Candidate:[ \t]*([^\n]*)$", header, re.M)
+    problems = []
+    candidate = candidates[0].strip() if len(candidates) == 1 else ""
+    if not re.fullmatch(r"[0-9a-f]{40}|none", candidate):
+        problems.append("record needs one Candidate: <40-hex head, or none> line")
+    chunks = re.split(r"^### Step (\d+)[ \t]*$", text, flags=re.M)
+    steps = [(number, dict(STEP_FIELD.findall(body))) for number, body in zip(chunks[1::2], chunks[2::2])]
+    if not steps:
+        problems.append("record has no Step 1")
+    observed = {normalized(fields["Observed"]) for _, fields in steps if fields.get("Observed", "").strip()}
+    path_text = FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], message)
+    texts = [message]
+    commands = fenced_steps(message)
+    markdown = [Path(re.sub(r":\d+(?::\d+)?$", "", value)).expanduser() for value in
+                re.findall(r"(?<![\w:/])(?:[~./\w-]+/)?[\w.-]+\.md(?::\d+(?::\d+)?)?", URL.sub(" ", path_text))]
+    for path in dict.fromkeys(absolute_paths(path_text) + markdown):
+        if path.suffix.lower() == ".md" and path.is_file() and path.resolve() != record_path.resolve():
+            card = path.read_text()
+            texts.append(card)
+            commands += fenced_steps(card)
+    expanded = "\n".join(texts)
+    asked = [normalized(fields.get("Asked", "")) for _, fields in steps]
+    left = 0
+    for number, fields in steps:
+        request = normalized(fields.get("Asked", ""))
+        if not request or request not in normalized(expanded):
+            problems.append(f"step {number} S1: Asked text is not in the message")
+        only = fields.get("Only he can", "").strip()
+        left += bool(only)
+        ran = fields.get("Ran", "").strip()
+        unrun = re.fullmatch(r"none\s+[—–-]\s+\S.*", ran)
+        if not ran or (not unrun and not execution_recorded(ran)):
+            problems.append(f"step {number}: Ran needs fresh shell or real browser and a valid UTC timestamp, or none — <reason>")
+        if (not fields.get("Observed", "").strip() or unrun) and not (unrun and only):
+            problems.append(f"step {number} S2: no Observed output or justified unrun step")
+        if "Only he can" in fields:
+            reason = re.fullmatch(r"\S.*?\s+[—–-]\s+(\S.*)", only, re.S)
+            if not reason or len(reason[1].split()) < 2:
+                problems.append(f"step {number} S3: Only he can needs a reason of two or more words after the dash")
+        for path in absolute_paths(fields.get("Asked", "")):
+            if not path.exists():
+                problems.append(f"step {number} S4: missing path {path}")
+    for path in absolute_paths(path_text):
+        if not path.exists():
+            problems.append(f"message S4: missing path {path}")
+    required_commands = [body for body in commands if normalized(body) not in observed]
+    coverage_text = "\n".join(FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], text)
+                              for text in texts)
+    coverage_text += "\n" + "\n".join(required_commands)
+    for item in required_commands + links(coverage_text):
+        if not any(normalized(item) in request for request in asked):
+            problems.append(f"message S5: unrecorded command or link {tok(item, words=10, chars=160)}")
+    return problems, candidate, len(steps), left
+
+
+def steps(args):
+    try:
+        problems, _, count, left = inspect_steps(Path(args.record).expanduser(), Path(args.text_file).read_text())
+    except (OSError, UnicodeDecodeError) as error:
+        emit(f"cannot read input: {error}")
+        return 2
+    if problems:
+        emit(*problems, STEP_FORM)
+        return 1
+    emit(f"captain steps complete: {count} steps, {left} left to him")
+    return 0
+
+
+def captain_step_problems(task, gate_text, summary):
+    declarations = re.findall(r"^Captain steps:[ \t]*(.*)$", "\n".join(outside_fences(summary)), re.M)
+    if len(declarations) != 1 or not declarations[0].strip():
+        return ["gate text needs one Captain steps: <record path> line"]
+    path = Path(declarations[0].strip().strip("`\"")).expanduser()
+    report = (VALIDATION_SECTION.findall(task.read_text()) or [""])[-1]
+    problems, candidate, _, _ = inspect_steps(path, gate_text + "\n" + report)
+    if problems:
+        return [f"Captain steps record fails: {problems[0]}"]
+    candidates, _ = dispatched_candidates(task)
+    if candidate not in candidates:
+        return [f"Captain steps Candidate {candidate} differs from latest dispatched Candidate {' '.join(candidates) or 'none'}"]
+    return []
+
+
 def question(args):
+    emit(CLAIM_SOURCE)
     task = Path(args.task)
     if task.is_dir():
         task = task / "index.md"
@@ -668,6 +827,10 @@ def question(args):
             found += missing
             if missing:
                 wanted.append("next: hold preparation; record the external round count in the summary.")
+        missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)
+        found += missing
+        if missing:
+            wanted.append("next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.")
     except (OSError, UnicodeDecodeError, ValueError) as error:
         emit(f"cannot read input: {error}")
         return 2
@@ -696,8 +859,11 @@ def main(argv=None):
     ask.add_argument("--text-file", required=True)
     ask.add_argument("--workflow-dir")
     ask.add_argument("--summary-file")
+    run_steps = commands.add_parser("steps")
+    run_steps.add_argument("record")
+    run_steps.add_argument("--text-file", required=True)
     args = parser.parse_args(argv)
-    return question(args) if args.command == "question" else check(args)
+    return {"question": question, "check": check, "steps": steps}[args.command](args)
 
 
 if __name__ == "__main__":

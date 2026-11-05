@@ -1,5 +1,66 @@
 # Changelog
 
+## [0.35.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.34.0...kc-dev-flow-2-v0.35.0) (2026-11-04)
+
+
+### Features
+
+* **kc-dev-flow-2:** check Captain steps before an ask ([2bda2e9](https://github.com/iamcxa/kc-claude-plugins/commit/2bda2e98304261d46b0ae7205a29ddc9038d2b4d))
+* **kc-dev-flow-2:** check Captain steps before an ask ([d67d795](https://github.com/iamcxa/kc-claude-plugins/commit/d67d795d5fde48e9ee065809fff18f76ce3bade9))
+* **kc-dev-flow-2:** count diagnosis rounds by symptom ([f623f0f](https://github.com/iamcxa/kc-claude-plugins/commit/f623f0f16e2203ca33358cb26fa470bb81714767))
+* **kc-dev-flow-2:** count diagnosis rounds by symptom ([97cf879](https://github.com/iamcxa/kc-claude-plugins/commit/97cf87965ec052a1c9f2d40a1a1d0ca83e8d2244))
+* **kc-dev-flow-2:** hold production readiness for a clean release walk ([2c76cb5](https://github.com/iamcxa/kc-claude-plugins/commit/2c76cb53ecbe1c6843d189137ebfd6bf734310b1))
+* **kc-dev-flow-2:** hold production readiness for a clean release walk ([6d998a2](https://github.com/iamcxa/kc-claude-plugins/commit/6d998a29c01ebb5779943663c3ad30533b3856a4))
+* **kc-dev-flow-2:** name claim sources at gate writes ([63dedf2](https://github.com/iamcxa/kc-claude-plugins/commit/63dedf268aa195d8d421a13e9d6e6096fc6e0f93))
+* **kc-dev-flow-2:** name claim sources at gate writes ([792c3c6](https://github.com/iamcxa/kc-claude-plugins/commit/792c3c6847966824ab002d91ad41f7f164ee373c))
+* **kc-dev-flow-2:** prompt a step back after repeated task findings ([92dbf1d](https://github.com/iamcxa/kc-claude-plugins/commit/92dbf1d32c7142e010fad6a7d9807a17ae0ce240))
+* **kc-dev-flow-2:** prompt step-back questions on repeated task findings ([820a3f0](https://github.com/iamcxa/kc-claude-plugins/commit/820a3f0ef7db1e802f99c13d1608b4c849f400cf))
+* **kc-dev-flow-2:** prompt unclaimed release walks at idle ([418a79d](https://github.com/iamcxa/kc-claude-plugins/commit/418a79d8814e43074306149273912483d54e1223))
+* **kc-dev-flow-2:** prompt unclaimed release walks at idle ([ec87cd8](https://github.com/iamcxa/kc-claude-plugins/commit/ec87cd83807c734f6145a2022c0aca018654d35e))
+
+
+### Bug Fixes
+
+* **dev2:** check every fence in Captain step coverage ([066b074](https://github.com/iamcxa/kc-claude-plugins/commit/066b074718e1602e75941ab39ea91fd90a712d54))
+* **dev2:** exclude recorded output from path checks ([128fe3e](https://github.com/iamcxa/kc-claude-plugins/commit/128fe3e3fed70fa64ded8657f5a1b36933af3ced))
+* **dev2:** match recorded steps in named card text ([4f08f00](https://github.com/iamcxa/kc-claude-plugins/commit/4f08f008f9b117876ffe4b569210278e240d203d))
+* **dev2:** require steps in longer and unclosed fences ([6833c76](https://github.com/iamcxa/kc-claude-plugins/commit/6833c76c8e8b943671747de81369556fbbc1ec03))
+* **kc-dev-flow-2:** align role models and applied effort with the table ([d14c5ae](https://github.com/iamcxa/kc-claude-plugins/commit/d14c5ae3b0c9f14eb89cd38a2fb500b2a57119fa))
+* **kc-dev-flow-2:** apply the approved role model table and effort ([e891e83](https://github.com/iamcxa/kc-claude-plugins/commit/e891e83582ac10936ffd67fb083b530b009ad847))
+* **kc-dev-flow-2:** ask about the model roster only with both providers ([84e3e49](https://github.com/iamcxa/kc-claude-plugins/commit/84e3e492e512efad6e8b5b5b9764e4b13eb8a445))
+* **kc-dev-flow-2:** bind permission decisions to each request ([9078c5a](https://github.com/iamcxa/kc-claude-plugins/commit/9078c5a1c467b15f5d482636c505d1f180e67f1d))
+* **kc-dev-flow-2:** chain each re-walk to its immediate predecessor ([b4849e1](https://github.com/iamcxa/kc-claude-plugins/commit/b4849e1e4716e74be4592f8bb78f3bf5cecc84c0))
+* **kc-dev-flow-2:** compare later paragraphs of amended criteria ([5e79f10](https://github.com/iamcxa/kc-claude-plugins/commit/5e79f10eb25057a96db53dc532742119e8659c4a))
+* **kc-dev-flow-2:** condition roster question on both providers ([295913a](https://github.com/iamcxa/kc-claude-plugins/commit/295913ac24ac3ba11460b8f8cf56aac2de6f0f91))
+* **kc-dev-flow-2:** count follow-up messages as diagnosis rounds ([7aad891](https://github.com/iamcxa/kc-claude-plugins/commit/7aad891353a973c7fbda2ad4214a3aadea71d2a6))
+* **kc-dev-flow-2:** deliver Paseo worker completion by final reply ([52e8eba](https://github.com/iamcxa/kc-claude-plugins/commit/52e8eba7bf3746fd93d9132548a8163c66a7a26b))
+* **kc-dev-flow-2:** deliver Paseo worker completion by final reply ([c129cb2](https://github.com/iamcxa/kc-claude-plugins/commit/c129cb215c2630d08853eeffae0fd5a2ee7e40c6))
+* **kc-dev-flow-2:** hold widened amendment criteria before validation ([d1ff660](https://github.com/iamcxa/kc-claude-plugins/commit/d1ff660510960dcd7ad4afd386f13c740b3c86a3))
+* **kc-dev-flow-2:** hold widened amendment criteria before validation ([f083046](https://github.com/iamcxa/kc-claude-plugins/commit/f0830463a9c5166f35d8f9e38ede74b4ae4f5cd3))
+* **kc-dev-flow-2:** ignore comments in Paseo extension membership ([fef0ae5](https://github.com/iamcxa/kc-claude-plugins/commit/fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf))
+* **kc-dev-flow-2:** include folder tasks in release acceptance ([606781c](https://github.com/iamcxa/kc-claude-plugins/commit/606781cbec3f684af5e7f9a74c90026e49c3e0a1))
+* **kc-dev-flow-2:** keep permission holds free of routine recaps ([f0e4ce4](https://github.com/iamcxa/kc-claude-plugins/commit/f0e4ce490056d1fa36b07be9ebee5988b1882c7c))
+* **kc-dev-flow-2:** keep routine permission answers silent ([51c5a63](https://github.com/iamcxa/kc-claude-plugins/commit/51c5a630052ee802b3d472ff112c8807c9b6ff05))
+* **kc-dev-flow-2:** keep step-back thresholds independent ([65e8f5a](https://github.com/iamcxa/kc-claude-plugins/commit/65e8f5a95bdb4cdc53235a862208caaded2ff403))
+* **kc-dev-flow-2:** let FO answer its workers' permission requests ([ef70c15](https://github.com/iamcxa/kc-claude-plugins/commit/ef70c15acb13b52001caad6c3ed5d3d7ebf8bd7e))
+* **kc-dev-flow-2:** normalize quoted roster extension names ([bc882e6](https://github.com/iamcxa/kc-claude-plugins/commit/bc882e6483ab2ee6a0944bbdcf6d86f20ae8aef1))
+* **kc-dev-flow-2:** normalize supported criterion declaration prefixes ([40ced2d](https://github.com/iamcxa/kc-claude-plugins/commit/40ced2d65e9ee7b069154670bac8dcab29d0d93d))
+* **kc-dev-flow-2:** preserve journey and selected CLI semantics ([ca8677d](https://github.com/iamcxa/kc-claude-plugins/commit/ca8677d448e092d0a4652ff59e38cdf47bcccdbb))
+* **kc-dev-flow-2:** read block-form roster prerequisites ([e2eb2fb](https://github.com/iamcxa/kc-claude-plugins/commit/e2eb2fb5a9629f52ab540fac1e274c287913cfac))
+* **kc-dev-flow-2:** read due task fields through Spacedock ([a3d9b00](https://github.com/iamcxa/kc-claude-plugins/commit/a3d9b00211929469c3b8cd8ccf63f95d2e261274))
+* **kc-dev-flow-2:** read quoted Captain step paths ([3d9d378](https://github.com/iamcxa/kc-claude-plugins/commit/3d9d37856d2667816df1de85960cadd8ba860c29))
+* **kc-dev-flow-2:** reassess recovered permission requests ([1f8d30a](https://github.com/iamcxa/kc-claude-plugins/commit/1f8d30aed016f1eb8197e4e7522134205ae50e6c))
+* **kc-dev-flow-2:** recognize fenced Captain step output ([a83430c](https://github.com/iamcxa/kc-claude-plugins/commit/a83430cb840f934b38cce6dbd49b5d62ba8e1ffb))
+* **kc-dev-flow-2:** require a recorded execution for Captain steps ([4f72f1b](https://github.com/iamcxa/kc-claude-plugins/commit/4f72f1bbbff11e9e4cab311d4409594702cff143))
+* **kc-dev-flow-2:** require one acyclic acceptance walk chain ([444e6e6](https://github.com/iamcxa/kc-claude-plugins/commit/444e6e6429213c94252dba44c150204c95b43539))
+* **kc-dev-flow-2:** require one approval line before routine answers ([974ee5a](https://github.com/iamcxa/kc-claude-plugins/commit/974ee5afb9b1b8dfd30ccfb121e4673f46b52a8e))
+* **kc-dev-flow-2:** require round counts at merge asks ([713d4e6](https://github.com/iamcxa/kc-claude-plugins/commit/713d4e6ed6381e65fa6d8305e08b282ceb56a8fb))
+* **kc-dev-flow-2:** require round counts at merge asks ([2b471f4](https://github.com/iamcxa/kc-claude-plugins/commit/2b471f41497483b32397a8286e494c3797ae9ac1))
+* **kc-dev-flow-2:** retain unresolved complaints across re-walks ([7144840](https://github.com/iamcxa/kc-claude-plugins/commit/7144840845b83ab5d1b7fabd640d9c13c81d4d6a))
+* **kc-dev-flow-2:** share workflow extension list parsing ([c2643da](https://github.com/iamcxa/kc-claude-plugins/commit/c2643dae831f9685166b7cd564d8d885e88a3f21))
+* **kc-dev-flow-2:** tokenize short requirement sentences consistently ([8d94819](https://github.com/iamcxa/kc-claude-plugins/commit/8d94819b4bc6f50af1a5e91d086a46e639af8802))
+* **kc-dev-flow-2:** validate the final walk before acceptance ([bfcc463](https://github.com/iamcxa/kc-claude-plugins/commit/bfcc463255af71fcb9ec283b886d7dfdbaef09dd))
+
 ## [0.34.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.33.1...kc-dev-flow-2-v0.34.0) (2026-11-01)
 
 

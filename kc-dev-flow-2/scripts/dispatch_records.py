@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check a task's dispatch records: each needs a Dispatched line with a full SHA, a Model line,
 non-empty Checklist and Scope notes sections, a `Package root:` line with an absolute path inside Scope notes, a scope-notes
-line naming `main` as the completion recipient, and a checklist that is not only pointer lines (a record name plus only
+line naming `main` as the completion recipient (or the final-reply line when the README lists paseo), and a checklist that is not only pointer lines (a record name plus only
 words from POINTER_WORDS, as in "Same checklist as implementation-2."); a pointer worded outside that set, such as
 "Reuse the checklist of implementation-2.", passes.
 When the workflow README lists an extension whose EXTENSION.md has an `Instruction FO adds to the scope notes`
@@ -28,6 +28,7 @@ for each `ADR: NNNN` or `Migration: NNNN` the task's `## Number guards` reserves
 `<file>:1: '## FO alignment' records alignment as needed with no 'Result:' line; ...` for an `ideation-<N>.md` whose task has an unfenced
 `Alignment: needed` line and no `Result: <text>` line, and `<file>:1: Captain amendment N <Captain|Asked> line holds a backslash-quote copied from JSON; ...`
 for a `\\"` on a `Captain:` or `Asked:` amendment line outside a `Superseded text:` block.
+Validation records and their message continuations also print `AC-N (Captain amendment N) adds words ...` for inserted words in kept sentences absent from his amendment words.
 --names refuses implementation records (including message continuations) for Pilot/Prod when the last unfenced
 `## Design` (also ` — title` or `: title`) contains `docs/adr/<placeholder>-title.md` and task_facts has no reserved ADR.
 Quoted/fenced paths and numbered citations do not signal this obligation; scope-copy checks stay first-record-only.
@@ -42,6 +43,10 @@ is on disk: exit 0 when it is clean or the task has no record, 1 when a name is 
 --coverage checks presence for a declared ideation, implementation or validation stage after an unfenced report:
 exit 0 when not due or covered, 1 when missing, 2 for invalid input or read errors. A positive-numbered stage
 record or stage message record covers repeated reports; contents and historical send timing are not checked.
+Folder mode checks each stage's newest implementation/validation record, including follow-up messages;
+--names checks the named record. Record number, then message number, orders the records numerically.
+From the second same-stage Symptom: header, stderr prints step-back questions before dispatch. Record N >= 2
+without that header gets a stderr hint; only --names --strict holds it. The first record needs no header.
 """
 import argparse
 import re
@@ -52,11 +57,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from decision_ledger import split_task, gate_entries
 from delivery_gate import CANDIDATE, RECORD  # noqa: E402
-from design_surfaces import AMENDMENTS_HEADING, AMENDMENT_HEADER, amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
-from role_triggers import outside_fences  # noqa: E402
+from design_surfaces import added_words, AMENDMENTS_HEADING, AMENDMENT_HEADER, amendment_form, parse_amendments, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, task_folder  # noqa: E402
+from role_triggers import DIAGNOSIS_RECORD, STEP_BACK, diagnosis_order, outside_fences, symptom_name, symptom_rounds  # noqa: E402
 from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
+from workflow_extensions import readme_extensions  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent.parent
+
+PASEO_COMPLETION_LINE = ("Your final reply is your completion message: Paseo delivers it to FO when your turn ends. "
+                         "End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.")
+COMPLETION_PART = "a scope-notes line naming main as the completion recipient"
+PASEO_COMPLETION = re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^" + re.escape(PASEO_COMPLETION_LINE) + r"$", re.M)
 
 PARTS = {
     "a 'Dispatched:' line with a full 40-character SHA": re.compile(r"^Dispatched:.*\b[0-9a-f]{40}\b", re.M),
@@ -65,7 +76,7 @@ PARTS = {
     "a non-empty '## Scope notes' section": re.compile(r"^## Scope notes[ \t]*\n(?:[ \t]*\n)*(?!## )\S", re.M),
     "a 'Package root:' line with an absolute path in its scope notes":
         re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^Package root:[ \t]*/\S", re.M),
-    "a scope-notes line naming main as the completion recipient":
+    COMPLETION_PART:
         re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?\bcompletion(?: message)? to [`']?main(?![\w-])", re.M | re.I),
 }
 
@@ -129,7 +140,7 @@ def instruction_error(record, name, paths):
 
 
 def extension_errors(folder, readme, package):
-    listed = re.findall(r"[\w-]+", frontmatter(readme).get("extensions", ""))
+    listed = readme_extensions(readme)
     errors = []
     for name, stage, paths in declared_instructions(package, listed):
         for record in [Path(folder, "dispatch", f"{stage}-1.md")]:
@@ -199,6 +210,27 @@ def check_context(files):
     return status
 
 
+def check_symptoms(files):
+    missing = False
+    for file in files:
+        path = Path(file).resolve()
+        record = DIAGNOSIS_RECORD.fullmatch(path.name)
+        if path.parent.name != "dispatch" or not record:
+            continue
+        symptom = symptom_name(path.read_text())
+        if int(record[2]) >= 2 and not symptom:
+            print(f"{file}:1: no 'Symptom:' line; before first '## ' heading add "
+                  "'Symptom: <failure, named the same way each time>' or 'Symptom: none'", file=sys.stderr)
+            missing = True
+        dispatches = [(p.name, p.read_text()) for p in path.parent.glob(f"{record[1]}-*.md")
+                      if (match := DIAGNOSIS_RECORD.fullmatch(p.name)) and diagnosis_order(match) <= diagnosis_order(record)]
+        group = symptom_rounds(dispatches).get((record[1], symptom), [])
+        if symptom and any(number == int(record[2]) for number, _ in group) and len(group) >= 2:
+            print(f'{file}:1: step back: {len(group)} {record[1]} dispatches name symptom "{symptom}"; '
+                  f"before you send this one, answer: {STEP_BACK}", file=sys.stderr)
+    return int(missing)
+
+
 NUMBER = re.compile(r"\d+")
 
 
@@ -256,6 +288,9 @@ def check_task_facts(files):
             lines.append(f"{file}:1: '## FO alignment' records alignment as needed with no 'Result:' line; record the Captain's alignment result as 'Result: <what he answered>' there, then run this check again")
         lines += [f"{file}:1: Captain amendment {NUMBER.search(title).group()} {key} line holds a backslash-quote copied from JSON; write his words as he said them, then run this check again"
                   for title, key in escaped_amendment_lines(text.split("\n")) if NUMBER.search(title)]
+        lines += [f"{file}:1: {ident} (Captain amendment {n}) adds words in a sentence kept from the criterion it replaces that are not in his "
+                  f"words: {', '.join(words)}; remove them, or ask the Captain and record his answer as an amendment, then run this check again"
+                  for n, ident, words in (added_words(text.split("\n")) if VALIDATION_RECORD.fullmatch(path.name) else [])]
         named = dispatched_amendments(folder)
         lines += [f"{file}:1: Captain amendment {n} named in no dispatch checklist; write 'Captain amendment {n}' "
                   "in a checklist line of this record, then run this check again"
@@ -507,7 +542,8 @@ def main(argv=None, package=PACKAGE):
             return 2
         status = max(check_names(files, package), check_candidates(files), check_task_facts(files), check_validation_rulings(files))
         context = check_context(files)
-        return max(status, context) if strict else status
+        symptoms = check_symptoms(files)
+        return max(status, context, symptoms) if strict else status
     if "--strict" in args:
         print(__doc__.strip())
         return 2
@@ -535,9 +571,20 @@ def main(argv=None, package=PACKAGE):
     if not records:
         print(f"{folder}: no dispatch records under dispatch/")
         return 1
-    errors = [f"{path.name}: needs {part}" for path in records
-              for part, pattern in PARTS.items() if not pattern.search(path.read_text())]
     readme = readme or find_readme(folder)
+    # see docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md
+    try:
+        listed = readme_extensions(readme) if readme else []
+    except (OSError, UnicodeError, ValueError) as error:
+        print(f"{readme}: {error}")
+        return 2
+    paseo = "paseo" in listed
+    errors = []
+    for path in records:
+        text = path.read_text()
+        for part, pattern in PARTS.items():
+            if not pattern.search(text) and not (part == COMPLETION_PART and paseo and PASEO_COMPLETION.search(text)):
+                errors.append(f"{path.name}: needs {part}")
     if readme:
         errors += extension_errors(folder, readme, package)
     names = [path.stem for path in records]
@@ -546,6 +593,12 @@ def main(argv=None, package=PACKAGE):
             errors.append(f"{path.name}: needs a checklist of its own, not only a reference to another dispatch record")
     for error in errors:
         print(error)
+    newest = {}
+    for path in records:
+        record = DIAGNOSIS_RECORD.fullmatch(path.name)
+        if record and diagnosis_order(record) > newest.get(record[1], ((0, 0), None))[0]:
+            newest[record[1]] = (diagnosis_order(record), path)
+    check_symptoms([path for _, path in newest.values()])
     if not readme:
         print(f"extensions not checked: no workflow README above {folder}")
     if not errors:

@@ -41,6 +41,8 @@ Send your completion message to `main` (the README's Dispatch facts: `team-lead`
 
 
 MAIN_LINE = "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).\n"
+PASEO_LINE = ("Your final reply is your completion message: Paseo delivers it to FO when your turn ends. "
+              "End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.")
 
 
 NO_EXTENSIONS = "---\nentity-type: task\n---\n"
@@ -301,6 +303,43 @@ class DispatchRecordTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertIn("a-1.md: needs a scope-notes line naming main as the completion recipient", out)
 
+    def test_paseo_completion_passes_only_with_the_listed_extension(self):
+        text = COMPLETE.replace(MAIN_LINE, PASEO_LINE + "\n")
+        for value in ("[peers, paseo]", "[peers, 'paseo'] # listed", '[peers, "paseo"] # listed'):
+            listed = "---\nentity-type: task\nextensions: " + value + "\n---\n"
+            with self.subTest(value=value):
+                code, out = self.check({"implementation-1.md": text}, readme=listed)
+                self.assertEqual((code, out), (0, "1 dispatch record(s) complete\n"))
+        for readme in (NO_EXTENSIONS, LISTS_ROBOREV, None,
+                       "---\nentity-type: task\nextensions: [paseo-other]\n---\n",
+                       "---\nentity-type: task\nextensions: [learn, peers] # paseo intentionally disabled\n---\n",
+                       "---\nentity-type: task\nextensions: [] # paseo intentionally disabled\n---\n",
+                       "---\nentity-type: task\nextensions: ['paseo disabled', peers]\n---\n"):
+            with self.subTest(readme=readme):
+                code, out = self.check({"implementation-1.md": text}, readme=readme)
+                self.assertEqual(code, 1)
+                self.assertIn("implementation-1.md: needs a scope-notes line naming main as the completion recipient", out)
+
+    def test_paseo_completion_requires_the_exact_line_inside_scope_notes(self):
+        listed = "---\nentity-type: task\nextensions: [peers, paseo]\n---\n"
+        missing = COMPLETE.replace(MAIN_LINE, "")
+        for text in (COMPLETE.replace(MAIN_LINE, PASEO_LINE.replace("final", "last") + "\n"),
+                     missing.replace("## Checklist\n", PASEO_LINE + "\n\n## Checklist\n"),
+                     missing + "\n## Other\n\n" + PASEO_LINE + "\n"):
+            with self.subTest(text=text):
+                code, out = self.check({"implementation-1.md": text}, readme=listed)
+                self.assertEqual(code, 1)
+                self.assertIn("needs a scope-notes line naming main as the completion recipient", out)
+        self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme=listed)[0], 0)
+
+    def test_paseo_extension_and_checker_share_the_completion_instruction(self):
+        extension = Path(records.__file__).parents[1] / "extensions/paseo/EXTENSION.md"
+        line = re.search(r'In scope notes and follow-ups, replace the main line with: "([^"]+)"',
+                         extension.read_text())
+        self.assertIsNotNone(line)
+        self.assertEqual(line[1], PASEO_LINE)
+        self.assertEqual(records.PASEO_COMPLETION_LINE, PASEO_LINE)
+
     def test_the_package_root_line_must_be_absolute_and_inside_the_scope_notes(self):
         moved = COMPLETE.replace("Package root: /abs/kc-dev-flow-2\n", "").replace("## Checklist\n", "Package root: /abs/kc-dev-flow-2\n## Checklist\n")
         for label, text in (
@@ -472,6 +511,42 @@ GUARDS = "\n## Number guards\n\nADR: 0020\nMigration: 0007\n"
 AMENDMENTS = ("\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nSupersedes: none\n\n"
               "### Amendment 2 \u2014 2026-10-18, chat\nCaptain: y\nSupersedes: none\n")
 NOTES_WITH_BOTH = COMPLETE.replace("Package root:", "ADR: 0020\nMigration: 0007\nPackage root:")
+
+
+class PaseoCompletionMutationTests(unittest.TestCase):
+    def test_completion_boundary_falsifiers_fail_without_caches(self):
+        cases = (
+            ("comment-membership", "scripts/dispatch_records.py",
+             'paseo = "paseo" in listed',
+             'paseo = bool(readme and "paseo" in re.findall(r"[\\w-]+", frontmatter(readme).get("extensions", "")))',
+             "test_paseo_completion_passes_only_with_the_listed_extension"),
+            ("unlisted", "scripts/dispatch_records.py", 'and paseo and PASEO_COMPLETION.search(text)',
+             'and PASEO_COMPLETION.search(text)', "test_paseo_completion_passes_only_with_the_listed_extension"),
+            ("no-branch", "scripts/dispatch_records.py", 'part == COMPLETION_PART and paseo',
+             'False and paseo', "test_paseo_completion_passes_only_with_the_listed_extension"),
+            ("checker-word", "scripts/dispatch_records.py", 'Your final reply is your completion message:',
+             'Your last reply is your completion message:', "test_paseo_extension_and_checker_share_the_completion_instruction"),
+            ("extension-word", "extensions/paseo/EXTENSION.md", 'Your final reply is your completion message:',
+             'Your last reply is your completion message:', "test_paseo_extension_and_checker_share_the_completion_instruction"),
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            package = Path(tmp) / "package"
+            shutil.copytree(Path(records.__file__).parents[1], package,
+                            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+            for label, name, old, new, target in cases:
+                with self.subTest(mutation=label):
+                    path = package / name
+                    original = path.read_text()
+                    self.assertIn(old, original)
+                    path.write_text(original.replace(old, new, 1))
+                    done = subprocess.run([sys.executable, "-B", "-m", "unittest",
+                                           "test_dispatch_records.DispatchRecordTests." + target, "-q"],
+                                          cwd=package / "scripts", capture_output=True, text=True,
+                                          env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
+                    path.write_text(original)
+                    self.assertNotEqual(done.returncode, 0, label + done.stdout + done.stderr)
+                    self.assertIn("AssertionError", done.stderr, label + done.stderr)
+                    self.assertFalse(list(package.rglob("*.pyc")))
 
 
 class TaskFactTests(unittest.TestCase):
@@ -1009,7 +1084,8 @@ class LiveValidationRulingTests(unittest.TestCase):
         done = subprocess.run([sys.executable, "-B", str(Path(records.__file__)), mode,
                                *map(str, files or (self.record,))], capture_output=True, text=True, cwd=cwd,
                               env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
-        return done.returncode, done.stdout + done.stderr
+        self.assertTrue(all("no 'Symptom:' line" in line for line in done.stderr.splitlines()), done.stderr)
+        return done.returncode, done.stdout
 
     def assert_hold(self, code=1):
         result, out = self.cli()
@@ -2609,7 +2685,8 @@ class DesignAdrTests(unittest.TestCase):
         args = [mode, str(self.record)] if mode == "--names" else list(mode)
         done = subprocess.run([sys.executable, "-B", str(script or Path(records.__file__)), *args],
                               capture_output=True, text=True)
-        return done.returncode, done.stdout + done.stderr
+        self.assertTrue(all("no 'Symptom:' line" in line for line in done.stderr.splitlines()), done.stderr)
+        return done.returncode, done.stdout
 
     def assert_missing(self, only=True):
         code, out = self.cli()
@@ -3140,6 +3217,214 @@ RAW_ADR_RECORD = (
     '\n'
     "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).\n"
 )
+
+
+
+REWRITTEN_CRITERION = r"""## Acceptance criteria
+
+**AC-9** — A cold FO checks a peer-derived Captain action through the dev entry skill. Amended by Captain, amendment 3. Before delivery, FO reruns the cold runs on the new head: start a fresh isolated FO context without inherited history, peers preloading/path hints, a current-turn source answer or a replay verdict. Provide ordinary adopted workflow entry through `kc-dev-flow-2:dev` carrying the exact candidate dev skill sentence, a Captain status request, the admitted stale relay line and logged read-only source access. Do not put this task's criteria or answer in the FO prompt. Capture initial context, file/tool read trace, package SHA, fixture bytes and resulting Captain-facing status. Require a current-turn source query for `spacedock-dev/subspace-web` PR 186 before naming its Captain action; reading peers is no longer a pass condition. Run notice present, absent and delayed with MERGED/b71f912; all remove the cleared merge/approval and include source revision/link. Amendment 3 removes only the explicit current observation-time/timezone duty from the FO’s Captain-facing status; originating correction records/notices retain their observation-time duties in the unchanged correction paragraphs. OPEN negative control retains the pending action without merge authority; unavailable source yields unverified and an FO-owned check, with no Captain action assigned. Falsifier: injecting the rule or expected answer into the prompt, no query, stale request after MERGED, suppressing the OPEN action or assigning the inaccessible action to the Captain. Retain the shared peers section for transition corrections. If the ordinary entry/source test fails, report the trace to FO; do not add a startup preload, hook, watchdog or other loader. Current evidence: final f-* records in `peer-status-reaches-fresh/cold-fo/README.md` and validation-1/cold-audit.json name product head 1df246fa992ce0864348c2ffe67d93e80ad0a4b8: exact dev body/current-turn query 8/8, MERGED cleared 4/4, OPEN retained 1/1, unavailable FO-owned 3/3. The follow-up candidate 39fdbb28b411d44a323741f645c7c1d75c653be1 changes only the peers opening sentence; dev bytes match the recorded runs. No new cold agent was launched and the f-* records remain evidence at prior head 1df246fa, not a rerun of this candidate; earlier r/s scratch runs are not final-head proof. Fixture reconstruction and full acceptance remain for independent validation. Limit: an FO resuming through `spacedock:first-officer` without the dev entry does not get this text; these runs prove only the bounded cold dev-entry path; direct First Officer resumes and long sessions remain unverified. AC-4 records the actual entry path and later failures for FO.
+
+## Captain amendments
+
+### Amendment 3 — 2026-10-31, chat
+Captain: 「可以」 (chat, 2026-10-31)
+Asked: 「決定：#756 拿掉 FO 回報要寫查證時間這項驗收要求，可以嗎？」, which FO had stated as: 「peers 檔裡規範發更正通知那一方的時間要求不變。」
+Supersedes: AC-8
+
+Superseded text:
+
+**AC-8** — A cold FO checks a peer-derived Captain action through the dev entry skill. Amended by Captain, amendment 2. Before delivery, FO reruns the cold runs on the new head: start a fresh isolated FO context without inherited history, peers preloading/path hints, a current-turn source answer or a replay verdict. Provide ordinary adopted workflow entry through `kc-dev-flow-2:dev` carrying the exact candidate dev skill sentence, a Captain status request, the admitted stale relay line and logged read-only source access. Do not put this task's criteria or answer in the FO prompt. Capture initial context, file/tool read trace, package SHA, fixture bytes and resulting Captain-facing status. Require a current-turn source query for `spacedock-dev/subspace-web` PR 186 before naming its Captain action; reading peers is no longer a pass condition. Run notice present, absent and delayed with MERGED/b71f912; all remove the cleared merge/approval and include source/time. OPEN negative control retains the pending action without merge authority; unavailable source yields unverified and an FO-owned check, with no Captain action assigned. Falsifier: injecting the rule or expected answer into the prompt, no query, stale request after MERGED, suppressing the OPEN action or assigning the inaccessible action to the Captain. Retain the shared peers section for transition corrections. If the ordinary entry/source test fails, report the trace to FO; do not add a startup preload, hook, watchdog or other loader. Current evidence: earlier FO-run cold cases in `peer-status-reaches-fresh/cold-fo/README.md` are on the prior head or scratch wording; new-head reruns are pending. Limit: an FO resuming through `spacedock:first-officer` without the dev entry does not get this text; these runs prove only the dev-entry path.
+
+"""
+
+
+class RewrittenCriterionTests(unittest.TestCase):
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        self.task = self.root / 'task.md'
+        self.dispatch = self.root / 'task/dispatch'
+        self.dispatch.mkdir(parents=True)
+
+    def run_rewrite(self, text=REWRITTEN_CRITERION, name='validation-2.md'):
+        self.task.write_text('---\nprofile: pilot\n---\n' + text)
+        record = self.dispatch / name
+        record.write_text('Symptom: none\n' + COMPLETE.replace('Model: sonnet', 'Model: sonnet\nCandidate: ' + HEAD)
+                          .replace('1. Independent', '1. Captain amendments 3 and 4. Independent'))
+        done = subprocess.run([sys.executable, '-B', records.__file__, '--names', '--strict', str(record)],
+                              capture_output=True, text=True, env={**os.environ, 'PYTHONDONTWRITEBYTECODE': '1'})
+        self.assertEqual(done.stderr, '', done.stderr)
+        return done
+
+    def test_frozen_rewrite_is_held_with_criterion_amendment_and_added_words(self):
+        done = self.run_rewrite()
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertEqual(len(done.stdout.splitlines()), 1, done.stdout)
+        self.assertIn('AC-9 (Captain amendment 3) adds words', done.stdout)
+        self.assertIn('words: revision, link;', done.stdout)
+        self.assertEqual(len(done.stdout.split(':1: ', 1)[1].split()), 41)
+
+    def test_deleting_withdrawn_words_and_changing_evidence_are_silent(self):
+        control = REWRITTEN_CRITERION.replace('include source revision/link.', 'include source.')
+        renumbered = control.replace('**AC-9**', '**AC-99**').replace(
+            'Current evidence: final f-* records', 'Current evidence: fabricated mandatory extras; final f-* records')
+        for text in (control, renumbered):
+            with self.subTest(text=text[:90]):
+                done = self.run_rewrite(text)
+                self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+
+    def test_added_words_in_a_later_paragraph_are_held(self):
+        text = REWRITTEN_CRITERION.replace('Run notice present, absent and delayed',
+                                           '\n\nRun notice present, absent and delayed')
+        done = self.run_rewrite(text)
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn('AC-9 (Captain amendment 3) adds words', done.stdout)
+        self.assertIn('words: revision, link;', done.stdout)
+        clean = self.run_rewrite(text.replace('include source revision/link.', 'include source.'))
+        self.assertEqual((clean.returncode, clean.stdout), (0, ''), clean.stderr)
+
+    def test_short_slash_separated_requirement_is_held(self):
+        text = ("## Acceptance criteria\n\n**AC-9** Amended by Captain, amendment 3. Require source/revision/link.\n\n"
+                "## Captain amendments\n\n### Amendment 3 — 2026-11-03, chat\nCaptain: remove time\n"
+                "Asked: remove the timestamp\nSupersedes: AC-8\n\nSuperseded text:\n"
+                "**AC-8** Require source/revision/time.\n")
+        done = self.run_rewrite(text)
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn('AC-9 (Captain amendment 3) adds words', done.stdout)
+        self.assertIn('words: link;', done.stdout)
+        clean = self.run_rewrite(text.replace('source/revision/link.', 'source/revision/time.'))
+        self.assertEqual((clean.returncode, clean.stdout), (0, ''), clean.stderr)
+
+    def test_list_form_replacement_is_held_after_renumbering(self):
+        for old_prefix, new_prefix in (("- ", "- "), ("* ", "+ "), ("> - ", "2) ")):
+            with self.subTest(old_prefix=old_prefix, new_prefix=new_prefix):
+                text = ("## Acceptance criteria\n\n" + new_prefix
+                        + "**AC-9** Amended by Captain, amendment 3. Require source/revision/link.\n\n"
+                        "## Captain amendments\n\n### Amendment 3 — 2026-11-03, chat\nCaptain: remove time\n"
+                        "Asked: remove the timestamp\nSupersedes: AC-8\n\nSuperseded text:\n"
+                        + old_prefix + "**AC-8** Require source/revision/time.\n")
+                done = self.run_rewrite(text)
+                self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+                self.assertIn('AC-9 (Captain amendment 3) adds words', done.stdout)
+                self.assertIn('words: link;', done.stdout)
+                clean = self.run_rewrite(text.replace('source/revision/link.', 'source/revision/time.'))
+                self.assertEqual((clean.returncode, clean.stdout), (0, ''), clean.stderr)
+
+    def test_later_asked_or_captain_words_clear_the_hold(self):
+        for field in ('Asked', 'Captain'):
+            later = ('\n### Amendment 4 — 2026-11-03, chat\nCaptain: 「可以」\n'
+                     'Asked: revision, link\nSupersedes: none\n')
+            if field == 'Captain':
+                later = later.replace('Captain: 「可以」', 'Captain: revision, link').replace('Asked: revision, link', 'Asked: allow it')
+            done = self.run_rewrite(REWRITTEN_CRITERION + later)
+            self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+
+    def test_repair_followup_passes_but_validation_continuation_is_held(self):
+        done = self.run_rewrite(name='implementation-4-message-2.md')
+        self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+        done = self.run_rewrite(name='validation-2-message-1.md')
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn('words: revision, link;', done.stdout)
+
+    def test_filler_and_ac_ids_do_not_produce_holds(self):
+        text = REWRITTEN_CRITERION.replace('include source revision/link.', 'include the source AC-88.')
+        done = self.run_rewrite(text)
+        self.assertEqual((done.returncode, done.stdout), (0, ''), done.stderr)
+
+
+
+class SymptomDispatchTests(unittest.TestCase):
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        self.folder = self.root / "task"
+        self.dispatch = self.folder / "dispatch"
+        self.dispatch.mkdir(parents=True)
+        self.folder.with_suffix(".md").write_text("---\nprofile: pilot\n---\n")
+        (self.root / "README.md").write_text(NO_EXTENSIONS)
+        self.put(1)
+
+    def put(self, number, symptom=None, stage="implementation", suffix=""):
+        path = self.dispatch / f"{stage}-{number}{suffix}.md"
+        header = (f"Symptom: {symptom}\n" if symptom is not None else "") + f"Candidate: {HEAD}\n"
+        path.write_text(header + COMPLETE)
+        return path
+
+    def cli(self, *args):
+        return subprocess.run([sys.executable, "-B", records.__file__, *map(str, args or (self.folder,))],
+                              capture_output=True, text=True)
+
+    def test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks(self):
+        (self.dispatch / "implementation-1.md").unlink()
+        plain = self.put(2, "page freeze")
+        self.assertEqual(self.cli().stderr, "")
+        first = self.put(2, "page freeze", suffix="-message-1")
+        self.assertIn("step back: 2 implementation", self.cli().stderr)
+        self.assertEqual(self.cli("--names", plain).stderr, "")
+        second = self.put(2, "page freeze", suffix="-message-2")
+        done = self.cli()
+        self.assertEqual((done.returncode, done.stdout), (0, "3 dispatch record(s) complete\n"))
+        self.assertIn("step back: 3 implementation", done.stderr)
+        self.assertIn(records.STEP_BACK, done.stderr)
+        self.assertIn("step back: 2 implementation", self.cli("--names", first).stderr)
+        self.assertIn("step back: 3 implementation", self.cli("--names", "--strict", second).stderr)
+        self.put(2, "different failure", suffix="-message-10")
+        self.assertEqual(self.cli().stderr, "")
+        self.assertIn("step back: 3 implementation", self.cli("--names", second).stderr)
+
+    def test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict(self):
+        self.put(2, "validation-1 F1 page freeze")
+        self.assertEqual(self.cli().stderr, "")
+        self.put(3, "Validation-1  F1 Page freeze")
+        done = self.cli()
+        self.assertEqual((done.returncode, done.stdout), (0, "3 dispatch record(s) complete\n"))
+        self.assertIn('step back: 2 implementation dispatches name symptom "validation-1 f1 page freeze"', done.stderr)
+        self.assertIn(records.STEP_BACK, done.stderr)
+        self.put(2)
+        self.put(3)
+        baseline = self.cli()
+        self.assertEqual((done.returncode, done.stdout), (baseline.returncode, baseline.stdout))
+
+    def test_named_record_excludes_later_records_and_folder_checks_only_each_stages_newest(self):
+        second = self.put(2, "A")
+        third = self.put(3, "A")
+        self.put(4, "A")
+        self.assertEqual(self.cli("--names", second).stderr, "")
+        self.assertIn("step back: 2 implementation", self.cli("--names", "--strict", third).stderr)
+        self.assertIn("step back: 3 implementation", self.cli().stderr)
+        self.put(10, "B")
+        self.put(11, "A", suffix="-message-1")
+        self.assertIn("step back: 4 implementation", self.cli().stderr)
+
+    def test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass(self):
+        first = self.dispatch / "implementation-1.md"
+        self.assertEqual(self.cli("--names", "--strict", first).returncode, 0)
+        second = self.put(2)
+        for args, expected in (((self.folder,), 0), (("--names", second), 0), (("--names", "--strict", second), 1)):
+            done = self.cli(*args)
+            self.assertEqual(done.returncode, expected, done.stdout)
+            self.assertIn("no 'Symptom:' line", done.stderr)
+            self.assertIn("named the same way each time", done.stderr)
+            self.assertLessEqual(len(done.stderr.split()), 26)
+        self.put(2, "none")
+        self.assertEqual(self.cli("--names", "--strict", second).returncode, 0)
+
+    def test_different_stages_symptoms_none_fences_and_body_do_not_repeat(self):
+        self.put(2, "A")
+        self.put(2, "A", stage="validation")
+        for symptom in ("B", "None", "none: new work"):
+            self.put(3, symptom)
+            self.assertEqual(self.cli().stderr, "")
+        path = self.put(3)
+        for text in ("```\nSymptom: A\n```\n" + COMPLETE, COMPLETE + "\nSymptom: A\n"):
+            path.write_text(text)
+            done = self.cli()
+            self.assertNotIn("step back:", done.stderr)
+            self.assertIn("no 'Symptom:' line", done.stderr)
+        path.write_text("Symptom: B\nSymptom: A\n" + COMPLETE)
+        self.assertEqual(self.cli().stderr, "")
 
 
 if __name__ == "__main__":

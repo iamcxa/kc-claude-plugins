@@ -26,8 +26,19 @@ class DeriveTests(unittest.TestCase):
             root = Path(d)
             task, question, proposed, prepared = [root / name for name in ("task.md", "question", "summary", "prepared")]
             task.write_text("---\nprofile: pilot\n---\n\n## FO alignment\nSurfaces: none\n")
-            question.write_text("Sufficiency: accepted criteria.\nNecessity: summary location.\n")
-            proposed.write_text(summary)
+            head = "a" * 40
+            dispatch = root / "task/dispatch"
+            dispatch.mkdir(parents=True)
+            (dispatch / "validation-1.md").write_text(f"Candidate: {head}\n")
+            steps = root / "task/captain-steps/1.md"
+            steps.parent.mkdir()
+            steps.write_text(f"Candidate: {head}\n\n### Step 1\nAsked: Review this candidate.\n"
+                             "Ran: fresh shell, 2026-11-03T00:00:00Z\nObserved: checks passed\n")
+            proof = f"Captain steps: {steps}\n"
+            checked = (summary + proof).encode()
+            question.write_text("Sufficiency: accepted criteria.\nNecessity: summary location.\nReview this candidate.\n" +
+                                (proof if omit else ""))
+            proposed.write_bytes(checked)
             (root / "README.md").write_text("---\ntrunk: main\nsecond-reviewer: ''\nextensions: []\n---\n")
             if mode == "unreadable":
                 proposed.unlink()
@@ -45,7 +56,7 @@ class DeriveTests(unittest.TestCase):
             script = command + "\ncode=$?\n" + ("" if ignore else 'test "$code" -eq 0 || exit "$code"\n')
             script += shlex.join([sys.executable, "-B", str(recorder), str(forward), str(prepared)])
             done = subprocess.run(["/bin/sh", "-c", script], cwd=d, capture_output=True, text=True)
-            return done.returncode, prepared.read_bytes() if prepared.exists() else None, done.stdout
+            return done.returncode, prepared.read_bytes() if prepared.exists() else None, done.stdout, checked
 
     def test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes(self):
         for source in (SOURCE, poc.derive(SOURCE)):
@@ -54,9 +65,9 @@ class DeriveTests(unittest.TestCase):
                                              ("External rounds: 0\n", "unreadable", 2),
                                              ("External rounds: 0\n", "bad-config", 2)):
                 with self.subTest(mode=mode, summary=summary):
-                    code, prepared, out = self.recipe(source, summary, mode=mode)
+                    code, prepared, out, checked = self.recipe(source, summary, mode=mode)
                     self.assertEqual(code, expected, out)
-                    self.assertEqual(prepared, summary.encode() if expected == 0 else None)
+                    self.assertEqual(prepared, checked if expected == 0 else None)
             self.assertEqual(self.recipe(source, omit=True)[0], 0)
             for mutant in (source.replace("FO runs `python3 <package>/scripts/delivery_gate.py question", "FO skips `python3 <package>/scripts/delivery_gate.py question"),
                            source.replace(" --summary-file <summary file>", "")):
@@ -64,7 +75,8 @@ class DeriveTests(unittest.TestCase):
                     self.recipe(mutant)
             self.assertIsNotNone(self.recipe(source, "", omit=True)[1])
             self.assertIsNotNone(self.recipe(source, "", ignore=True)[1])
-            self.assertNotEqual(self.recipe(source, swap=True)[1], b"External rounds: 0\n")
+            swapped = self.recipe(source, swap=True)
+            self.assertNotEqual(swapped[1], swapped[3])
 
     def test_the_source_derives_to_four_stages_that_never_route_through_ideation(self):
         derived = poc.derive(SOURCE)
@@ -81,7 +93,8 @@ class DeriveTests(unittest.TestCase):
         end = lines.index("### `implementation`")
         after = next(i for i in range(entry + 1, len(lines)) if not lines[i].startswith("      "))
         expected = lines[:entry] + lines[after:start] + lines[end:]
-        self.assertEqual(lines[entry + 1], "      gate: true")
+        self.assertIn("      model: opus", lines[entry + 1:after])
+        self.assertIn("      gate: true", lines[entry + 1:after])
         self.assertEqual(poc.derive(SOURCE), "\n".join(expected))
 
     def test_the_derived_poc_readme_carries_the_migration_rule_to_both_worker_stages(self):

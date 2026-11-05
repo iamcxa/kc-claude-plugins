@@ -714,6 +714,20 @@ BACKFILLED = ['codex-review-hang-detected',
 
 
 class TasksTests(unittest.TestCase):
+    def test_committed_second_symptom_round_is_forwarded_at_idle(self):
+        self.readme("")
+        self.task("diagnosis", worktree=False)
+        dispatch = self.state / "diagnosis/dispatch"
+        dispatch.mkdir(parents=True)
+        for number in (2, 3):
+            (dispatch / f"implementation-{number}.md").write_text("Symptom: page freeze\n")
+        self.task("diagnosis", worktree=False)
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0)
+        self.assertEqual(sum('next: diagnosis has 2 implementation dispatches on symptom "page freeze"' in line
+                             for line in lines), 1, lines)
+        self.assertTrue(any("what breaks if this criterion or process is deleted?" in line for line in lines), lines)
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
@@ -782,6 +796,80 @@ class TasksTests(unittest.TestCase):
             code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], **({"look": look} if look else {}), **({"clock": clock} if clock else {}))
         return code, out.getvalue().splitlines()
 
+    def test_release_walk_due_is_gated_by_listing_and_map_presence(self):
+        self.readme("")
+        (self.state / "built.md").write_text("---\ntitle: built\nstatus: done\njourney: demo\njourney-release: r1\n---\n")
+        self.git(self.state, "add", "built.md")
+        self.git(self.state, "commit", "-qm", "built task")
+        listing = {"entities": [{"slug": "built", "id": "built", "status": "done", "journey": "demo", "journey-release": "r1"}],
+                   "pagination": {"has_next": "false", "total": "1", "page": "1", "limit": "0"}}
+        binary = self.root / "bin/spacedock"
+        source = binary.read_text()
+        binary.write_text(source.replace("import os, sys\n", "import os, sys, json\n" +
+            f"if '--all-fields' in sys.argv:\n    print({json.dumps(listing)!r})\n    sys.exit(0)\n", 1))
+        baseline = self.tasks({})
+        journey = self.repo / "docs/journey/nested/journey.yaml"
+        journey.parent.mkdir(parents=True)
+        journey.write_text("journey: demo\n")
+        progress = self.root / "journey-progress.mjs"
+        progress.write_text(json.dumps({"schema": "journey-progress/v1", "journey": "demo", "diagnostic": None,
+                                       "releases": [{"release": "r1", "acceptance": "pending delivery acceptance"}]}))
+        node = self.root / "bin/node"
+        node.write_text(f"#!{sys.executable}\nimport sys\nfrom pathlib import Path\nprint(Path(sys.argv[1]).read_text())\n")
+        node.chmod(0o755)
+        calls = []
+        real_run = subprocess.run
+        line = ("next: release demo/r1 has every story built and no walk claimed; "
+                "file its acceptance task per release-acceptance's \"File the task\", with release-acceptance: demo/r1 in frontmatter.")
+        def invoke(argv, **kwargs):
+            if "due" in argv:
+                calls.append(argv)
+            return real_run(argv, **kwargs)
+        with mock.patch.object(watch.subprocess, "run", side_effect=invoke), \
+                mock.patch.object(watch, "journey_progress", return_value=progress):
+            self.assertEqual(self.tasks({}), baseline)
+            self.assertEqual(calls, [])
+            self.readme("release-acceptance")
+            code, out = self.tasks({})
+            self.assertEqual(code, 0, out)
+            self.assertEqual(out.count(line), 1)
+            self.assertEqual(calls, [[sys.executable, str(watch.SCRIPTS.parent / "extensions/release-acceptance/release_acceptance.py"),
+                                     "due", "--workflow-dir", str(self.workflow.resolve()), "--progress", str(progress), str(journey.resolve())]])
+            journey.unlink(); calls.clear()
+            self.assertEqual(self.tasks({}), baseline)
+            self.assertEqual(calls, [])
+
+    def test_release_walk_due_errors_are_reported(self):
+        self.readme("release-acceptance")
+        journey = self.repo / "docs/journey/journey.yaml"
+        journey.parent.mkdir(parents=True)
+        journey.write_text("journey: demo\n")
+        real_run = subprocess.run
+        def invoke(argv, **kwargs):
+            if "due" in argv:
+                return subprocess.CompletedProcess(argv, 2, "", "bad usage")
+            return real_run(argv, **kwargs)
+        with mock.patch.object(watch.subprocess, "run", side_effect=invoke):
+            code, out = self.tasks({})
+        self.assertEqual(code, 2)
+        self.assertEqual(out, ["next: report release-acceptance due to the Captain: bad usage."])
+
+    def test_progress_locator_prefers_direct_then_highest_cached_version(self):
+        scripts = self.root / "cache/kc-dev-flow-2/0.34.0/scripts"
+        scripts.mkdir(parents=True)
+        with mock.patch.object(watch, "SCRIPTS", scripts):
+            self.assertIsNone(watch.journey_progress())
+            paths = []
+            for version in ("1.9.0", "1.10.0"):
+                path = self.root / f"cache/kc-journey-map/{version}/lib/journey-progress.mjs"
+                path.parent.mkdir(parents=True)
+                path.write_text("stub")
+                paths.append(path)
+            self.assertEqual(watch.journey_progress(), paths[-1])
+            direct = scripts.parent.parent / "kc-journey-map/lib/journey-progress.mjs"
+            direct.parent.mkdir(parents=True)
+            direct.write_text("stub")
+            self.assertEqual(watch.journey_progress(), direct)
 
     def test_coverage_without_directory_or_pr_and_with_provider_failure(self):
         self.readme("")
@@ -1451,6 +1539,25 @@ class TasksTests(unittest.TestCase):
     def test_an_archived_task_owing_a_role_call_prints_nothing(self):
         self.readme("roborev")
         self.fourth_repair("some-task", archived=True)
+        self.assertEqual(self.tasks({}), (0, []))
+
+    def test_second_failed_validation_is_advisory_live_and_silent_archived(self):
+        self.readme("roborev")
+        report = "\n## Stage Report: validation\n\n- F1 Material: gap\n"
+        self.task("some-task", worktree=False, body=report.encode())
+        record = self.record("some-task", "## Checklist\n\n- one\n", commit=False)
+        record.rename(record.with_name("validation-1.md"))
+        self.git(self.state, "add", "some-task/dispatch")
+        self.git(self.state, "commit", "-qm", "validation dispatch")
+        self.assertEqual(self.tasks({}), (0, []))
+        self.task("some-task", worktree=False, body=(report * 2).encode())
+        code, lines = self.tasks({})
+        self.assertEqual((code, len(lines)), (0, 1), lines)
+        self.assertIn("before the next step, answer: is what I am solving still the outcome first asked for", lines[0])
+        self.assertNotIn("dispatch kc-dev-flow-2:chief-engineer", lines[0])
+        (self.state / "_archive").mkdir()
+        self.git(self.state, "mv", "some-task.md", "_archive/some-task.md")
+        self.git(self.state, "commit", "-qm", "archive")
         self.assertEqual(self.tasks({}), (0, []))
 
     def test_a_task_the_role_check_cannot_read_is_reported_with_exit_2(self):

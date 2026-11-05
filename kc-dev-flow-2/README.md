@@ -115,7 +115,7 @@ These are skill instructions, not mechanically unskippable runtime gates.
 
 Engineering Reviewer provides independent technical assurance; CE (Chief Engineer)
 advises the next smallest integrated delivery step. Their agents and skills retain
-the existing role boundaries and Opus/xhigh policy. Neither is a routine gate,
+the existing role boundaries and model table row. Neither is a routine gate,
 and POC defaults to no consultation. Observer reads FO's writes to one task's
 state against the workflow rules; its agent declares Sonnet, and it reports without
 repairing. The design director reviews a ui task's pictures and screenshots and
@@ -179,11 +179,11 @@ rows; the install ask in [`adoption.md`](references/sd/adoption.md) offers the r
 | [codex](extensions/codex/EXTENSION.md) | recommended | FO review rounds and the merge ask | reads Codex GitHub review rounds on the PR head |
 | [roborev](extensions/roborev/EXTENSION.md) | recommended | implementation, before the report | a local roborev review of the committed changes |
 | [peers](extensions/peers/EXTENSION.md) | required | FO, before opening a task or exchanging peer facts | selects the peer transport, permits confirmed Paseo asks and replies without paseo listing, searches existing work and checks facts within existing authority |
-| [paseo](extensions/paseo/EXTENSION.md) | optional, requires peers | FO, before a listed Paseo Codex worker dispatch | selects its worker publication and local-review handoff; peers owns peer asks and replies |
+| [paseo](extensions/paseo/EXTENSION.md) | optional, requires peers | FO, before a listed Paseo worker dispatch | selects its worker publication and local-review handoff; peers owns peer asks and replies |
 | [copilot](extensions/copilot/EXTENSION.md) | optional | FO review rounds, each push and the merge ask | requests and reads GitHub Copilot review rounds on the PR head |
 | [learn](extensions/learn/EXTENSION.md) | required | FO, through the `kc-dev-flow-2` mod in `references/sd/mods/`, before the merge sentinel and right after a task is archived | checks `observer.md` is committed before the sentinel (`scripts/observer_check.py`), runs `learn` and the observer, and presents both results |
 | [journey-map](extensions/journey-map/EXTENSION.md) | recommended | FO, after a gate ruling on a journey task, before `merge guard`, and after the archive | writes a footprint for a ruling that answers a map question, checks it before the merge guard, and folds it into the map as a docs-only pull request |
-| [release-acceptance](extensions/release-acceptance/EXTENSION.md) | recommended, with journey-map | an acceptance task for a release, from implementation to the validation gate and the close | walks a finished release with reviewers on different Claude models, has the design director rule on their complaints and the deferred findings, and records the walk in the task folder |
+| [release-acceptance](extensions/release-acceptance/EXTENSION.md) | recommended, with journey-map | the idle look prompts unclaimed walks; an acceptance task runs from implementation to the validation gate and the close | walks a finished release with reviewers on different Claude models, has the design director rule on their complaints and the deferred findings, and records the walk in the task folder |
 | [fo-feedback](extensions/fo-feedback/EXTENSION.md) | optional, requires peers | interviewing maintainer, at attended resume and named batch close | gathers operator experience every three completed batches beside independent observer findings |
 
 ## Learning loop

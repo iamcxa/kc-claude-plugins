@@ -1,0 +1,25 @@
+title: kc-claude-plugins
+description: Plugin documentation built from each plugin's own Markdown.
+remote_theme: just-the-docs/just-the-docs@v0.12.0
+plugins:
+  - jekyll-remote-theme
+search_enabled: true
+enable_copy_code_button: true
+search:
+  heading_level: 3
+aux_links:
+  Source on GitHub: https://github.com/iamcxa/kc-claude-plugins
+
+mermaid:
+  version: "12.2.0"
+relative_links:
+  enabled: true
+  collections: true
+titles_from_headings:
+  enabled: true
+  collections: true
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor

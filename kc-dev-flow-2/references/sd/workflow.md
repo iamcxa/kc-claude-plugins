@@ -18,6 +18,7 @@ stages:
       initial: true
       gate: true
     - name: ideation
+      model: opus
       gate: true
       context-sections:
         - Dispatch facts
@@ -31,6 +32,7 @@ stages:
         - Affected documents
         - Number guards
     - name: validation
+      model: opus
       worktree: true
       fresh: true
       feedback-to: implementation
@@ -47,7 +49,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.34.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.35.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -78,14 +80,12 @@ At each next gate, wait for every member's sufficient committed evidence, then p
 
 `<package>/scripts/pr_watch.py tasks` sitting hints remain subject to this boundary; stage alone joins neither unrelated tasks nor incomplete batches. Unbatched tasks retain ordinary gates.
 
-When requested, chief-engineer reviews the complete package/process batch before briefing bindings; engineering-reviewer handles contested hard-to-reverse claims. Give committed task files/artifact links, not FO's suspicions/conclusions. Record reviewer/model/evidence; use a different family from all workers or ask the Captain. Review advises, without approval authority.
+When requested, chief-engineer reviews the complete package/process batch before briefing bindings; engineering-reviewer handles contested hard-to-reverse claims. Give committed task files/artifact links, not FO's suspicions/conclusions. Record reviewer/model/evidence; use a different family from implementation workers or ask the Captain. Review advises, without approval authority.
 
 ## Stages
 
 Stage workers follow `<package>/references/model-roster.md`; absence retains README defaults.
-`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and
-`kc-dev-flow-2:observer` run on the model and reasoning their agent files declare, never
-a cheaper one. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
+`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer`, `kc-dev-flow-2:design-director` and `kc-dev-flow-2:observer` run on its `## Model table` row, never cheaper. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
 `Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.
 
 `concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an
@@ -237,11 +237,9 @@ repair is dispatched under the lane in Stages.
 - **Gate content:** Show actual checks and acceptance evidence, material findings
   and limits, and the user's pending delivery decision. For a `ui` task FO runs
   `python3 <package>/scripts/design_surfaces.py check <task>` and includes its
-  output. Before the gate, FO runs the
-  stage's minimal acceptance script exactly as written in a fresh shell, then presents
-  every step in full beside its observed output, never a pointer or a shortened step.
-  A step FO cannot run (a secret, a sign-in, the Captain's own device) is marked not
-  run with the reason; an output that differs from the script returns through feedback.
+  output. Before the gate, FO runs the stage's minimal acceptance script under
+  Captain steps, names its record on the summary's `Captain steps:` line, and
+  returns an output that differs from the script through feedback.
   Before recommending delivery, FO confirms both goal sufficiency and minimal
   necessity from the same candidate's existing route evidence. Passing checks or
   approval replace neither condition; approval is not merge. When a POC report
@@ -256,6 +254,18 @@ Consuming a terminal gate approval is not completion (`spacedock merge guard --h
 a live run requires the declared delivery evidence and successful `merge guard` with
 an explicit verdict. Apply Delivery authority below; a pending PR or missing hook is
 not completion.
+
+## Captain steps
+
+Before asking the Captain to run or look at anything (an acceptance script, a
+command, a link, a sign-in, a file of steps), FO runs each step as written, in a
+fresh shell or a real browser, as far as it goes without his credentials, and
+records it in `<task>/captain-steps/<N>.md`.
+`python3 <package>/scripts/delivery_gate.py steps <record> --text-file <message>`
+prints the record's form; nonzero holds the ask. The message shows each step beside
+its observed output and names the step only he can do, and why.
+
+Each number or factual claim in a gate summary or PR body names the command that produced it and the date, or the report it repeats as `<whose> report, not run`, and is not stated as settled. In a message to the Captain, a claim carries the same source after the sentence that answers him.
 
 ## Dispatch facts
 

@@ -7,6 +7,9 @@
   pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
   pr_watch.py [--state FILE] tasks WORKFLOW_DIR     read the workflow's tasks and print each next step
 
+Tasks forwards advisory step-back questions from role_triggers.py even when no role call is owed.
+With release-acceptance listed, tasks also prints unclaimed release walks due under docs/journey/.
+
 Without --state the list is kept per session in ~/.local/state/kc-dev-flow-2/pr-watch/<id>.json, where id is
 $CLAUDE_CODE_SESSION_ID (shared by FO, its workers and its background commands), else a hash of the working
 directory; the older shared pr-watch.json is not read.
@@ -371,6 +374,34 @@ def entities(state):
     return sorted(found.items())
 
 
+def journey_progress():
+    package = SCRIPTS.parent
+    direct = package.parent / "kc-journey-map/lib/journey-progress.mjs"
+    if direct.is_file():
+        return direct
+    cached = package.parent.parent / "kc-journey-map"
+    versions = [(tuple(map(int, path.name.split("."))), path / "lib/journey-progress.mjs")
+                for path in cached.glob("*") if re.fullmatch(r"\d+\.\d+\.\d+", path.name)
+                and (path / "lib/journey-progress.mjs").is_file()]
+    return max(versions)[1] if versions else None
+
+
+def release_walks_due(workflow):
+    maps = sorted((toplevel(workflow) / "docs/journey").rglob("*.yaml"))
+    maps = [path for path in maps if path.is_file()]
+    if not maps:
+        return [], []
+    progress = journey_progress()
+    argv = [sys.executable, str(SCRIPTS.parent / "extensions/release-acceptance/release_acceptance.py"),
+            "due", "--workflow-dir", str(workflow)]
+    if progress:
+        argv += ["--progress", str(progress)]
+    done = subprocess.run([*argv, *map(str, maps)], capture_output=True, text=True)
+    if done.returncode:
+        return [], [f"next: report release-acceptance due to the Captain: {(done.stderr or done.stdout).strip()[:120]}."]
+    return done.stdout.splitlines(), []
+
+
 def ready_rows(workflow):
     binary = os.environ.get("SPACEDOCK_BIN") or "spacedock"
     done = subprocess.run([binary, "status", "--workflow-dir", str(workflow), "--next", "--json"], capture_output=True, text=True)
@@ -588,6 +619,8 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
             out += done.stdout.splitlines()
         elif done.returncode:
             errors.append(f"next: report {slug} to the Captain: {(done.stdout or done.stderr).strip()[:120]}.")
+        else:
+            out += [line for line in done.stdout.splitlines() if line.startswith("next:")]
     try:
         rows = ready_rows(workflow)
         out += sittings(rows)
@@ -600,6 +633,13 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
     line, broken = holds(found, state)
     out += line
     errors += broken
+    if "release-acceptance" in listed:
+        try:
+            line, broken = release_walks_due(workflow)
+            out += line
+            errors += broken
+        except (RuntimeError, OSError, ValueError) as error:
+            errors.append(f"next: report release-acceptance due to the Captain: {str(error)[:120]}.")
     if "learn" in listed:
         line, broken = archived_learning(Path(opts.args[0]).absolute(), state, ask)
         out += line

@@ -107,6 +107,14 @@ class RouteMutationTests(unittest.TestCase):
         self.change("agents/design-director.md", "model: sonnet", "model: inherit")
         self.refuses("design-director agent: existing sonnet/high policy changed")
 
+    def test_model_table_cannot_drift_from_agent_policy(self):
+        self.change("references/model-roster.md", "| chief-engineer | Opus / xhigh |", "| chief-engineer | Sonnet / high |")
+        self.refuses("model table: chief-engineer Claude cell differs from agent policy")
+
+    def test_agent_effort_cannot_drift_from_policy(self):
+        self.change("agents/chief-engineer.md", "effort: xhigh", "effort: high")
+        self.refuses("chief-engineer agent: existing opus/xhigh policy changed")
+
     def test_design_director_needs_its_skill(self):
         shutil.rmtree(self.root / "skills/design-director")
         self.refuses("missing skills: design-director")
@@ -160,11 +168,11 @@ class RouteMutationTests(unittest.TestCase):
         self.refuses("skills/read-adr/writing.md: package path must be <package>/scripts/NAME")
 
     def test_a_chat_only_rule_the_workflow_no_longer_says_is_named(self):
-        self.change("references/sd/workflow.md", "presents\n  every step in full beside its observed output", "shows\n  each step with its output")
-        self.refuses("chat-only rule 'presents every step in full beside its observed output' is not in references/sd/workflow.md")
+        self.change("references/sd/workflow.md", "FO answers a question the Captain asks at a gate", "FO ignores a question the Captain asks at a gate")
+        self.refuses("chat-only rule 'FO answers a question the Captain asks at a gate' is not in references/sd/workflow.md")
 
     def test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines(self):
-        self.change("references/sd/workflow.md", "presents\n  every step", "presents every\n  step")
+        self.change("references/sd/workflow.md", "FO answers a question", "FO answers\n  a question")
         self.assertEqual(lint.lint_tree(self.root), [])
 
     def test_the_chat_only_list_must_exist(self):
