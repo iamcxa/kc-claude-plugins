@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:override-recorded-when-captain-departs:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:override-recorded-when-captain-departs-backlog-1
+              briefing:
+                id: briefing:override-recorded-when-captain-departs:backlog:attempt-1:revision-1
+                digest: sha256:c457fd26460b41b4f13e09149f09cd5ac9c8eb4c026988ac0a8aa0655fc3dde3
+                room-ref: ./override-recorded-when-captain-departs/review/backlog/briefing-1
 ---
 
 ## Scope

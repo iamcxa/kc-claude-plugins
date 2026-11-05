@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:override-recorded-when-captain-departs:backlog:attempt-1:revision-1",
+  "question": "決定：這批五張（派工交代句的檢查、退一步答案欄位、漏寫 Override、婉拒要寫明、閘門一次問一件事）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？其中「婉拒要寫明」照我提的三項範圍（沒寫 Declined 標籤的婉拒、沒有 F 條目的審查者、沒指明接手任務）。要改哪張直接說。",
+  "artifacts": [
+    {
+      "id": "artifact:override-recorded-when-captain-departs:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/41dc9caf206d202e135f11b875963612c2a62610/override-recorded-when-captain-departs.md",
+      "rev": "sha256:c9da8c7ebfd6e9c5e4b0153216957f19ef4418a26e750a385ec2f74165096d47",
+      "mediaType": "text/markdown",
+      "summary": "Pilot. Override recorded when the Captain departs from FO's recommendation, including revise and revised recommendations; 3 observer violations in batches 12-13; #724 covered only placement."
+    }
+  ]
+}
