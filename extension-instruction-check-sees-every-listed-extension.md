@@ -54,3 +54,167 @@ Alignment: not needed: the line and where it applies are already written in each
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+## Design
+
+### Chain check and existing-code check (2026-11-05, origin/main, kc-dev-flow-2 0.35.0)
+
+- Spacedock 0.27.3: `dispatch build` takes `--scope-notes-file` and writes no `dispatch/<name>.md` record; it has no extension concept. Nothing to reuse.
+- kc-dev-flow-2 0.35.0 (`scripts/dispatch_records.py` at origin/main is byte-identical to the dispatched package): `declared_instructions` keeps an extension only when its EXTENSION.md has the `- **Instruction FO adds to the scope notes:**` bullet, a `- **Joins:**` stage and a `<package>/extensions/...py` path; `extension_errors` judges only `<stage>-1.md`. Of the nine packaged EXTENSION.md files, three tell FO to add a scope-note line, in three forms: roborev (that bullet), paseo (an unindented `Add to scope notes: "..."` line under `## Workers through Paseo`, plus a conditional `For each worker needing human interaction, add to scope notes: ...` line) and release-acceptance (`- **Acceptance task's implementation scope notes:** FO adds to its first implementation record only: "..."`). codex, copilot, fo-feedback, journey-map, learn and peers give no scope-note line.
+- Which records a worker reached through Paseo is already written in each record header: `Model: <model> (Claude via Paseo, ...` / `(Codex via Paseo, ...` (242 records in this state) or `Roster: ...; host=paseo; ...` (`references/model-roster.md`). `model_roster.py` `author()` parses these headers but only for Codex implementation/repair authors, so it cannot be reused as is; the check uses one header pattern of its own.
+- `laws_check.py` L2 already passes `--readme` to the folder run and parses `<record>.md: <name> worker instruction ...` as a violation of the record added in the range (ADR 0017: added events only), so a new line in that shape reaches L2 with no `laws_check.py` change.
+- Adopters (read-only, 2026-11-05): paseo is listed only in this workflow (docs/dev2); release-acceptance is listed in six adopter READMEs; no task with `release-acceptance:` frontmatter has a dispatch record anywhere on this machine, so release-acceptance has no observed miss.
+- Repaired, not replaced: `declared_instructions`, `instruction_error` and `extension_errors` in `dispatch_records.py`.
+
+### Past rulings read
+
+- `extension-instruction-reaches-dispatch` (#652, Captain 「准」 2026-10-17) Decision 1: the check runs in the folder run, not a new pre-send command; Decision 2: first record only, because "a follow-up to a live worker already holds the instruction", with the named cost "a fresh worker dispatched at cycle 2 or later without the line passes unnoticed". That cost has since bitten: observer reports flag roborev absent from `implementation-3`, `-5`, `-6` and `-7` spawn records. This task's approved stop condition ("not only `<stage>-1.md`") supersedes the first-record limit for fresh workers; its reason still holds for follow-up messages to a live worker, so this design keeps messages exempt (D3).
+- ADR 0017 (L2 judges added events, not accumulated history), ADR 0027 (a FO-write rule is checked by the script FO already runs at the write), ADR 0042/0048 (Paseo workers commit locally and complete by final reply). `git -C <state> grep -n 'Override:'` (2026-11-05) finds no override on dispatch-record extension checks.
+- `extension-instruction-followups` (backlog) parks the YAML block-list parse and the README-at-run-time limit; both stay out of scope.
+
+### PRFAQ
+
+**Press release (future).** FO saves a validation record for a Codex worker it is about to start through Paseo and runs the dispatch-record check as it does today. The check prints `validation-1.md: paseo worker instruction is absent; copy the scope-note instruction of <package>/extensions/paseo/EXTENSION.md into the scope notes, or add a line 'paseo not run: <reason>'`, and the dispatch holds until FO adds the line. The same check now judges every fresh worker's record, not only the first of its stage, and reads each listed extension's scope-note line in the form that extension writes it. The observer stops being the only reader that catches the missing paseo sentence.
+
+**FAQ.**
+
+- *What exactly must a record carry for paseo?* The first sentence of paseo's `Add to scope notes:` line, read from EXTENSION.md at run time: `Start in the assigned worktree; verify pwd and git root before edits.` That is the sentence every observer violation cites, and what FO writes in ideation and validation records today (36 records carry only it; the rest of the line is about the product branch, which ideation and validation do not have). See D2.
+- *Which records does paseo apply to?* Every fresh-worker record (`ideation-<N>.md`, `implementation-<N>.md`, `validation-<N>.md`) whose header names a Paseo host, Claude or Codex. See D1.
+- *What about follow-up messages?* `<stage>-<N>-message-<M>.md` goes to a worker that already received its record's lines, so the extension check does not judge it (D3); every other part of the record check still does.
+- *What about roborev?* Unchanged rule (its script path with the record's `Package root:`), now on every `implementation-<N>.md`, not only `implementation-1.md`.
+- *What about release-acceptance?* Its first sentence, `Lead the walk.`, on `implementation-1.md` of a task whose task file frontmatter has `release-acceptance:`, as its EXTENSION.md says ("its first implementation record only").
+- *Is paseo's human-interaction line checked?* No. It applies "for each worker needing human interaction", and no record field says whether a worker needs one; requiring it everywhere would put a line with unfilled placeholders on every worker (D2).
+- *What escapes?* A record carrying `<name> not run: <reason>` passes, as today. Records with other names (for example `implementation-1-package-recovery.md`) are not judged by the extension check, as today.
+- *Does FO read more?* Only on a failure: one line of 24 words per missing paseo line. No README, workflow.md or EXTENSION.md word changes.
+
+```mermaid
+flowchart TD
+    A[FO saves a dispatch record and runs dispatch_records.py on the task folder] --> B{README found or given?}
+    B -- no --> N[extensions not checked: unchanged note]
+    B -- yes --> C[for each listed extension, read its EXTENSION.md]
+    C --> D{which scope-note form?}
+    D -- Instruction bullet + Joins + script path --> E[roborev: each Joins-stage spawn record]
+    D -- unindented Add to scope notes line --> F[paseo: each spawn record whose header names a Paseo host]
+    D -- Acceptance task's implementation scope notes bullet --> G[release-acceptance: implementation-1 of a task with release-acceptance frontmatter]
+    D -- none --> Z[extension not checked]
+    E --> H{record carries the substituted script path, or name not run: reason?}
+    F --> I{record carries the first sentence, or name not run: reason?}
+    G --> I
+    H -- yes --> P[pass]
+    I -- yes --> P
+    H -- no --> X[stdout: record: name worker instruction is absent; exit 1; dispatch holds]
+    I -- no --> X
+    X --> L[L2 parses the same line as a violation of a record added in the range]
+```
+
+### What the design changes
+
+1. `kc-dev-flow-2/scripts/dispatch_records.py`: `declared_instructions` returns, per listed extension, a record selector and a requirement for each of the three forms (anchored at line start, so paseo's conditional human-interaction line is not read); a spawn-record pattern `^(ideation|implementation|validation)-[1-9][0-9]*\.md$`; one Paseo header pattern (`Model: ... (Claude|Codex via Paseo` or `Roster: ...; host=paseo`) read above the first `## `; `instruction_error` checks a first sentence by whitespace-normalised substring as well as the existing script-path match; `extension_errors` walks every record of the folder instead of `<stage>-1.md`. The new message keeps the `<record>: <name> worker instruction is absent; ...` shape L2 parses. The module docstring's extension paragraph is rewritten to say which records each form applies to.
+2. `kc-dev-flow-2/scripts/test_dispatch_records.py`: new cases for AC-1 to AC-4; `test_a_later_implementation_record_without_the_instruction_is_not_checked` and `test_every_shipped_instruction_is_read_from_its_extension_file` change to the new behaviour; `test_release_acceptance_turns_loud_when_its_bullet_carries_the_instruction_label` is replaced by the acceptance-task case.
+3. `kc-dev-flow-2/scripts/test_laws_check.py`: one L2 case for a paseo line (AC-6). `laws_check.py` is not changed.
+
+Not changed: every `EXTENSION.md`, `references/sd/workflow.md` (exact word budget), the adopted README, `references/sd/laws.md` (L2's rule already reads "every part `dispatch_records.py` requires"), `--names`, `--newest`, `--coverage`, the observer skill. No ADR: no ruling changes; Decision 2's first-record limit is narrowed by this task's approved stop condition, recorded above.
+
+### Replay (prototype, 2026-11-05)
+
+A throwaway copy of the 0.35.0 scripts with the change above, in `/tmp` (no repository file), run with `--readme docs/dev2/README.md` on each task folder:
+
+| Records | 0.35.0 extension lines | Prototype extension lines |
+|---|---|---|
+| The 12 archived tasks of batches 12 and 13 (82 records) | 0 | paseo 30 (16 ideation, 14 implementation spawn records), roborev 7 (`implementation-2..4` of later cycles); 0 on validation records, all of which carry the sentence |
+| Live tasks in this state (46 records) | roborev 1 (`journey-server-host-pilot/implementation-1.md`) | paseo 6 (ideation records of archive-waits-for-observer-report, captain-ruling-sources-checked ×2, dispatch-carries-reserved-adr-number, picky-reviewers-may-run-on-gemini, seed-check-requires-alignment-result), roborev 6 (journey-server-host-pilot implementation-1, -2, -3, -5, -6, -7); this task's and the other batch-14 ideation records pass |
+
+The 19 batch-12/13 follow-up message records that lack the paseo sentence are not judged (D3); 12 of them follow a spawn record that is itself flagged, 7 follow one that carries the sentence.
+
+### Words FO reads at each moment
+
+Counted with `wc -w` on 2026-11-05 (learning.md "Measure the words FO reads at each moment, not one file's size"):
+
+| Moment | Before | After |
+|---|---|---|
+| Startup / README read | adopted README and workflow.md | unchanged, 0 |
+| Writing a dispatch record | paseo's 12-word sentence already owed by EXTENSION.md | unchanged, 0 |
+| Folder check, clean | `N dispatch record(s) complete` | unchanged, 0 |
+| Folder check, missing paseo sentence | nothing | +24 words per record (`<record>: paseo worker instruction is absent; copy ...`) |
+| Folder check, missing roborev path on a later implementation record | nothing | +30 words per record (existing roborev line) |
+| Usage error (docstring printed) | 771 words, 50 in the extension paragraph | about +60 (paragraph rewritten to name the three forms and their records); recounted at implementation |
+| L2 law output | violation line per added record | same shape, now also for paseo |
+
+### Batch overlap
+
+Files the design would change: `kc-dev-flow-2/scripts/dispatch_records.py` (`declared_instructions`, `instruction_error`, `extension_errors`, docstring), `kc-dev-flow-2/scripts/test_dispatch_records.py`, `kc-dev-flow-2/scripts/test_laws_check.py`. No shared index (no ADR number, no migration, no word-budget raise).
+
+| Task | Shared file or check | Order |
+|---|---|---|
+| step-back-answer-has-a-record-line (batch 14) | its D2 recommends leaving `dispatch_records.py` alone; if D2 is reversed, both edit `dispatch_records.py` (its step-back stderr, not the extension functions) | none; textual conflict only if its D2 is reversed |
+| override-recorded-when-captain-departs (batch 14) | names `dispatch_records.py` in its overlap with none shared | none |
+| gate-summary-names-each-decline, gate-presentation-asks-one-thing-plainly (batch 14) | no `dispatch_records.py`, test or EXTENSION.md change | none |
+| adoption-asks-which-extensions (other session, ideation since 2026-10-25) | same function: makes `extension_errors` judge each record against the README at its `Dispatched:` SHA; same test file | direct; recommended this task first (approved stop condition, live bite), then that task rebases its per-record window onto the loop this task introduces |
+| dispatch-carries-reserved-adr-number (ideation) | same file, different function (`check_task_facts`, `--names`) | textual only; either order |
+| seed-check-requires-alignment-result (ideation) | `design_surfaces.py`; runs `test_dispatch_records.py` | none |
+| captain-ruling-sources-checked (ideation) | `design_surfaces.py`, `extensions/peers/EXTENSION.md` (not read by this check: peers gives no scope-note line) | none |
+| comment-check-reaches-delivery-gate (ideation) | `delivery_gate.py` | none |
+| picky-reviewers-may-run-on-gemini (ideation) | changes no file; if reopened, `extensions/release-acceptance/EXTENSION.md` reviewer wording, not its `Lead the walk.` sentence | none; if it ever rewrites the first sentence, AC-1's test fails and tells it |
+| archive-waits-for-observer-report (implementation) | `extensions/learn/EXTENSION.md` (gives no scope-note line) | none |
+| journey-server-host-pilot (other session) | no file; its records gain 5 roborev lines (D4) | none |
+| adr-required-statement, adr-silent-undo-probe, fo-write-checks-parse-top-level, journey-canvas-hosted-poc, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot | none of the three files | none |
+| extension-instruction-followups (backlog) | same function and parse | after this task and adoption-asks-which-extensions |
+
+Recommended order: this task, then adoption-asks-which-extensions, then extension-instruction-followups; the other batch-14 tasks in any order.
+
+## Acceptance criteria
+
+**AC-1** The reader finds each listed extension's scope-note line in the form its EXTENSION.md writes it. Run on the shipped package with all nine extensions listed, `declared_instructions` returns exactly three entries: roborev (stage `implementation`, path `extensions/roborev/roborev_gate.py`), paseo (sentence `Start in the assigned worktree; verify pwd and git root before edits.`) and release-acceptance (sentence `Lead the walk.`, `implementation-1.md` of an acceptance task); paseo's human-interaction line yields nothing. Evidence: a test reading the shipped EXTENSION.md files. Falsifier: dropping the line-start anchor (paseo's human line then becomes a second paseo entry), or keeping today's bullet-only reader (paseo absent), fails that test.
+
+**AC-2** paseo is judged on the records it applies to. Under a README listing paseo, a spawn record lacking the sentence fails with `<record>: paseo worker instruction is absent` and exit 1 when its header is `Model: gpt-6.1-sol (Codex via Paseo, ...`, `Model: claude-opus-5-5 (Claude via Paseo, ...` or `Roster: ...; host=paseo; ...`; the same record passes with the sentence (also when wrapped across lines) or with `paseo not run: <reason>`; a record with `Model: sonnet` passes without it; a README not listing paseo passes. Evidence: tests asserting printed text and exit code. Falsifier: removing the header selector fails the `Model: sonnet` case; a Codex-only selector fails the Claude case (D1); an exact-whitespace match fails the wrapped case.
+
+**AC-3** Every fresh-worker record is judged, follow-up messages are not. `ideation-2.md`, `implementation-3.md` and `validation-1.md` each fail for paseo when they lack the sentence beside a complete `<stage>-1.md`; `implementation-2.md` fails for roborev without the substituted path beside a complete `implementation-1.md`; `implementation-1-message-1.md` without either line passes (D3). Evidence: tests. Falsifier: keeping `<stage>-1.md` as the only judged record fails the first two cases; judging message records fails the last.
+
+**AC-4** release-acceptance is judged only where its EXTENSION.md says. `implementation-1.md` lacking `Lead the walk.` fails in a task whose task file frontmatter has `release-acceptance: <journey>/<release>`, and passes in a task without it; `implementation-2.md` of the acceptance task passes without it. The existing `test_journey_map_and_release_acceptance_stay_quiet_without_an_acceptance_instruction` still passes. Evidence: tests. Falsifier: dropping the frontmatter condition fails the non-acceptance case; judging every implementation record fails the `implementation-2.md` case.
+
+**AC-5** The real records replay as the prototype did, read-only. The candidate run with `--readme <workflow>/README.md` on the 12 archived task folders of batches 12 and 13 prints 30 paseo lines (16 ideation and 14 implementation spawn records) and 7 roborev lines, and 0.35.0 prints none; no validation record and no follow-up message record is named. On the live tasks it prints the 6 paseo and 6 roborev lines of the replay table and none for the batch-14 ideation records. Evidence: the commands and counts in the validation report. Falsifier: a different count, or any named validation record (a false positive), fails this criterion.
+
+**AC-6** L2 sees the new line without a `laws_check.py` change. `test_laws_check.py` gains a case where a record lacking the paseo sentence, with a Paseo header, is added in the range under a README listing paseo: `laws_check.py` prints `violation: L2 dispatch-record-complete record=<path> ... paseo worker instruction is absent ...` and does not raise its "output this runner does not parse" error. Evidence: that test with `python3 -B`, caches cleared. Falsifier: changing the new message so it no longer starts `<record>.md: paseo worker instruction` makes the test fail.
+
+**AC-7** The change stays a detector. `git diff --name-only <base>..<candidate> -- kc-dev-flow-2` lists only `scripts/dispatch_records.py`, `scripts/test_dispatch_records.py` and `scripts/test_laws_check.py`; `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0 with `WORKFLOW_WORD_BUDGET` untouched; the package test suite and `scripts/version-parity-check.sh` pass; the words-per-moment table recounts with `wc -w` to the same values (the docstring delta stated as measured). Falsifier: any EXTENSION.md, README, workflow.md or laws.md edit in the diff fails this criterion.
+
+## Unresolved decisions for the Captain
+
+**D1. Which Paseo workers owe the line?** The dispatch checklist says "Codex workers"; paseo's EXTENSION.md section is "Workers through Paseo", and observer reports flag Claude-via-Paseo records too (e.g. `special-roles-follow-the-model-table/ideation-1`). Recommendation: every worker started through Paseo, Claude or Codex. What gets worse: 19 of the 30 held batch-12/13 records are Claude-via-Paseo (ideation, and `claims-name-their-source` implementation-2..4), and FO copies the sentence into Claude workers' records as it already does in this batch.
+
+**D2. How much of paseo's line does a record owe?** Recommendation: its first sentence, everywhere it applies; the conditional human-interaction line is not checked. That is what the 12 observer violations cite and what FO writes in ideation and validation records today. What gets worse: an implementation record carrying the first sentence but contradicting the rest ("Push and Draft PR ...", seen twice, both in records that also lacked the sentence) passes the check; requiring the whole line instead would also hold the 36 records in this state that carry only the first sentence (every validation record and every batch-14 ideation record), and put "commit locally and report the branch" into ideation records, which write no commit.
+
+**D3. Do follow-up messages to a live worker owe the lines?** Recommendation: no, as Decision 2 of `extension-instruction-reaches-dispatch` reasoned: the worker already holds its record's lines. What gets worse: the observer, which also judges message records, may still flag a follow-up whose spawn record passed (7 such batch-12/13 message records; one report already flagged one, `special-roles-follow-the-model-table/implementation-1-message-1`); judging messages instead would hold 19 batch-12/13 message records and add the paseo sentence and roborev instruction to every follow-up.
+
+**D4. What does FO do with the live records the wider check newly flags?** 6 ideation records (paseo) in five live tasks and 5 implementation records (roborev) in `journey-server-host-pilot` will fail that task's next folder run. Recommendation: before its next dispatch on such a task, its FO appends to each flagged record's scope notes one line `<name> not run: line omitted when dispatched; found by dispatch_records.py <date>`, committed with the next state commit; no exemption is built. What gets worse: 11 historical records are edited after dispatch (visible in git; L2 judges added records only, ADR 0017), and the other sessions' FOs meet a failure they did not cause.
+
+## Stage Report: ideation
+
+- DONE: Design the widened instruction check in /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py: how each listed EXTENSION.md's scope-note line is read (paseo's `Add to scope notes:` form included), which dispatch records each one applies to (paseo: Codex workers), with replays of the batch 12 and 13 records that lack the paseo line
+  `## Design`: three anchored forms (roborev bullet, paseo `Add to scope notes:` first sentence, release-acceptance first sentence on an acceptance task's implementation-1), every spawn record, Paseo header selector (Claude or Codex, D1); prototype replay in /tmp: 0.35.0 flags 0 batch-12/13 records, the design flags 30 paseo + 7 roborev.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (step-back-answer-has-a-record-line, override-recorded-when-captain-departs, gate-summary-names-each-decline, gate-presentation-asks-one-thing-plainly) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, captain-ruling-sources-checked, comment-check-reaches-delivery-gate, dispatch-carries-reserved-adr-number, fo-write-checks-parse-top-level, journey-canvas-hosted-poc, journey-server-host-pilot, picky-reviewers-may-run-on-gemini, seed-check-requires-alignment-result, archive-waits-for-observer-report, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (stalled or driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  One direct overlap: adoption-asks-which-extensions edits the same `extension_errors`; order this task, then it, then extension-instruction-followups. Others none or textual only (grep of each task file for dispatch_records / EXTENSION.md / laws_check).
+- DONE: The words FO reads at each moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  Table in `## Design`: 0 at every clean moment; +24 words per missing paseo line, +30 per missing roborev path; docstring about +60 (printed on usage error only), recounted at implementation.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-1..AC-7 each carry evidence and a falsifier; D1 (which Paseo workers), D2 (first sentence only), D3 (messages exempt), D4 (11 live records) each carry a recommendation and its cost; no `Override:` bears on them.
+- DONE: AC-1 reader finds three forms
+  Prototype only (`declared_instructions` printed roborev/paseo/release-acceptance, no human-interaction entry); candidate not yet verified.
+- DONE: AC-2 paseo judged on Paseo-header records
+  Not yet verified (future tests).
+- DONE: AC-3 every spawn record, messages exempt
+  Not yet verified (future tests); prototype replay named no message record.
+- DONE: AC-4 release-acceptance only on an acceptance task's implementation-1
+  Not yet verified; no acceptance-task record exists on this machine to replay.
+- DONE: AC-5 real-record replay
+  Prototype observed 30 paseo / 7 roborev on batch 12/13 and 6 / 6 on live tasks, 0 validation records named; candidate not yet verified.
+- DONE: AC-6 L2 parses the paseo line
+  Not yet verified; `laws_check.py` regex `[\w-]+ worker instruction .+` read, the message keeps that shape.
+- DONE: AC-7 detector-only diff
+  Not yet verified (future diff and lint).
+- DONE: design_surfaces.py check
+  `python3 <package>/scripts/design_surfaces.py check <task>`: "design surfaces presentable", exit 0.
+
+### Summary
+
+The widened check reads all three scope-note forms the shipped EXTENSION.md files use and judges every fresh-worker record, so paseo's "Start in the assigned worktree" sentence is checked wherever the observer has been finding it missing; laws_check needs no change. Four Captain decisions: all Paseo workers, not only Codex (D1); first sentence only (D2); follow-up messages exempt, following #652's Decision 2 (D3); how FO handles the 11 live records the wider check newly flags (D4). The one ordering dependency is adoption-asks-which-extensions, which edits the same function.
