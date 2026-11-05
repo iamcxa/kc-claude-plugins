@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-05T10:53:13Z
+worktree: .worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly
 ---
 
 ## Scope
