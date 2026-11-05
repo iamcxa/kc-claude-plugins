@@ -239,3 +239,39 @@ ADR: 0060
 ### Summary
 
 The four writing rules and "show the bound question verbatim, record `answering 「…」`" become one 62-word reminder printed by the checks FO runs before each `gate prepare`; the README budget is untouched. The only mechanical check compares two recorded strings: when the Captain's recorded validation answer does not quote the bound question, `delivery_gate.py check` withholds the merge grant and FO asks for the merge on its own. The replay shows the gap is current practice, not history: 0 of 12 validation answers since 2026-11-02 quote their bound question. D1 (English sentence inside the Chinese ask) and D2 (observer only for backlog and ideation) are the Captain's.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and D1/D2 in only the eight named files, locally from origin/main.
+  Branch spacedock-ensign/gate-presentation-asks-one-thing-plainly; base d37c6dc653e0f45d6ca630c2faa6121c0863a57e; candidate 3196dd4c3c0de7d211972dfcdd48a56f0ae0c753; clean assigned worktree; decision_ledger.py only gains quotes_bound_question; no version bump.
+- DONE: AC-1 — reminder reaches passing gate preparation, stays last, and is absent from failures, implementation and validation full checks.
+  Required CLI cases and watcher seed cases pass; entry-print, missing-status and dropped-print mutants fail; /tmp/opencode/gate-presentation/{design_surfaces.json,delivery_gate.json,mutations.json}.
+- DONE: AC-2 — the four observed validation answers and the later Chinese-only answer lose the merge grant.
+  HistoricalBoundQuestionTests replays the five pinned resolution commits with their task, Briefing and dispatch bytes, stubbed gh and synthetic valid summaries; base prints ASK, candidate prints/saves ASK_UNQUOTED; prefix-only, any-quote and oldest-approval mutants fail; historical-replays.json.
+- DONE: AC-3 — whole-question answers, whitespace changes, unanswered latest attempts and FO repair resolutions retain ASK.
+  BoundApprovalTests plus all five historical quoted controls pass; exact-whitespace and agent-resolution mutants fail; delivery_gate.json and mutations.json.
+- DONE: AC-4 — nested brackets compare and ledger JSON stays byte-identical at a frozen state revision.
+  State 79fb4abf3f9c751c83e8d70dcfeaa654ff8774c4: actual nested backlog matches; 399 rows, 420525 bytes, sha256 aff64d3b888718ad96bc809dce9203a613b5a0826c64049989c827eab52cfd75; nested-regex mutant fails; ledger-proof.json.
+- DONE: AC-5 — observer instructions cover every Captain gate answer and the configured role reports the changed ideation ask as violation.
+  FO supplied the Claude Sonnet Observer run, unedited /tmp/ac5-observer-report.md, copied byte-identically to observer-report.md; observer-proof.json rejects both an ok replacement and an omitted ideation row. Existing outer brackets must be enclosed again per the approved Exact rules, so the reported historical formatting mismatches require no code repair.
+- DONE: AC-6 — independent recount at the current base and candidate preserves startup/idle/archive costs and adds 62 words at each gate preparation.
+  reading.json: startup 7151/7151; idle open 906/906, merged 860/860; archive 333/333; backlog 7/69, ideation 4/66, validation 30/92, ui-validation 43/105; normal merge 2429/2429; unquoted line 40/39. Design's older absolute baseline is stale (reported to FO); workflow bytes match. README-edit and idle-output mutants are caught.
+- DONE: AC-7 — ADR 0060 quotes the Captain's ideation answer and Asked text; the four required suites pass.
+  154 delivery + 213 design + 10 ledger + 134 watcher tests = 507 passed, four pre-existing optional design corpus skips; required five historical snapshots ran. ADR provenance rejects FO words; suite-summary.json and adr-provenance.json.
+- DONE: Repository skill lint, ADR lint --since base --require 0060, number guards and the task design check exit 0.
+  skills-lint.log, adr-lint.log, number-guards.log and task-design-check.log; number guard checked candidate 3196dd4c3c0d against base d37c6dc653e0, no migration path declared.
+- DONE: comment_ratio.py is within its maximum.
+  comment-ratio.log: 208 code lines, 3 comment lines, 1.4%, maximum 5%; all added code, tests and ADR pointers map to the approved criteria or falsifiers.
+- DONE: doc_impact.py base candidate reviewed every listed document.
+  docs/adr/0011 unaffected: ledger JSON schema and delegation unchanged; 0041 unaffected: seed field holds unchanged; 0044 unaffected: legacy/summary checks retained; 0051 unaffected: round-count checks retained; 0057 unaffected: amendment comparison untouched.
+  kc-dev-flow-2/skills/maintain-flow/SKILL.md unaffected: its ledger command and output are unchanged; docs/adr/0060-a-gate-approval-grants-what-its-quoted-bound-question-says.md and kc-dev-flow-2/skills/observer/SKILL.md updated. doc-impact.json lists all eight documents.
+- DONE: Prepared Conventional Commit PR title/body for FO.
+  /tmp/impl-gate-presentation-asks-one-thing-plainly-pr.md; no product push; live GitHub branch query found no open PR. Local acceptance scripts, captured output and JSON evidence are in /tmp/opencode/gate-presentation.
+- SKIPPED: Product push, one Draft PR, independent validation, RoboRev, and CI.
+  FO owns publication and review; FO explicitly superseded the worker RoboRev command on 2026-11-05 and directed “record RoboRev as delegated to FO, not run”; no clean review is claimed.
+- SKIPPED: CI cost measurement.
+  No CI trigger changed; cost per PR not measured.
+
+### Summary
+
+The local candidate prints the approved gate-writing reminder and withholds the carried merge grant when the recorded Captain approval omits the whole bound question. The five historical replays, configured Observer run and mutation controls support that bounded change; chat fidelity, publication, independent validation, RoboRev and hosted CI remain FO-owned. Reproduce delivery replays with GATE_PRESENTATION_STATE set to this state checkout, GATE_PRESENTATION_BASE=d37c6dc653e0f45d6ca630c2faa6121c0863a57e and GATE_PRESENTATION_EVIDENCE set to an external directory, then python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_delivery_gate.py; the other required suites use test_design_surfaces.py, test_decision_ledger.py and test_pr_watch.py.
