@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:gate-presentation-asks-one-thing-plainly:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:gate-presentation-asks-one-thing-plainly-validation-1
+              briefing:
+                id: briefing:gate-presentation-asks-one-thing-plainly:validation:attempt-1:revision-1
+                digest: sha256:c2697dd142098eb90ec1d4d5932a2a6c863a8f07cd9bd229da4bbe853716ecfa
+                room-ref: ./gate-presentation-asks-one-thing-plainly/review/validation/briefing-1
 started: 2026-11-05T10:53:13Z
 worktree: .worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly
 pr: iamcxa/kc-claude-plugins#788

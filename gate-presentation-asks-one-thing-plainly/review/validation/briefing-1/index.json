@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gate-presentation-asks-one-thing-plainly:validation:attempt-1:revision-1",
+  "question": "決定：合併 #788（閘門核准綁定引用的原問句，ADR 0060）嗎？ Regular merge with --match-head-commit 73db59bef6d1327e8b8c810b4f57601664aee1ef, third of the batch 14 validation sitting. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:gate-presentation-asks-one-thing-plainly:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/189053fea8c47c71c98070366752e59003770e71/gate-presentation-asks-one-thing-plainly.md",
+      "rev": "sha256:fe0cce923d8af0a09e861bed992b0294619750550c27c35c0010b1b682a01046",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of gate-presentation-asks-one-thing-plainly, PR #788, in the batch 14 validation sitting.\nSufficiency: the pre-gate checks print the 62-word reminder; delivery_gate.py stops the direct-merge line when the recorded validation answer does not quote the bound question, and a withdrawn approval no longer counts; the five historical replays and 15 mutation falsifiers behave as designed (validation-1 report, Astra, 2026-11-05).\nNecessity: the eight files are delivery_gate.py, design_surfaces.py, decision_ledger.py (quotes_bound_question), their three test files, the observer skill and ADR 0060 (git diff --name-only origin/main...head, FO 2026-11-05).\nAcceptance, run by FO in a fresh shell 2026-11-05, exit 0: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-presentation-asks-one-thing-plainly/validation-1/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-presentation-asks-one-thing-plainly/captain-steps/1.md\nExternal rounds: 1.\nSecond reviewer: Copilot because the PR changes approval and merge rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5787167706\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: no major issues on this head.\nRoboRev: findings on 3196dd4c3 (job 1514, withdrawn approvals still counted), repaired in 73db59bef; clean on 73db59bef, evidence=roborev:1515.\nDeclined: Deferred risk, validation F1 at 73db59bef: an annotated YAML status value suppresses the reminder on a passing seed check (none of the 192 pinned tasks uses that form; validation-1 report keeps the reproduction)."
+    }
+  ]
+}
