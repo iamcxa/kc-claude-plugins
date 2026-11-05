@@ -16,6 +16,13 @@ status: backlog
 - Non-goals: mining session history.
 - Folded 2026-10-25 into fo-written-lines-checked-before-dispatch (the Captain 「可以」 (chat, 2026-10-25), answering 「需要你決定：這份第 6 批的清單可以嗎？」 about FO's batch-6 list); not run on its own while that task is live.
 - Added 2026-10-26: partly covered by iamcxa/kc-claude-plugins#724 (merged 1a6149f5): only an `Override:` line placed outside a gate resolution reason is now noted. Not covered: an Override for a revise or hold that departs from FO's recommendation (README widening) and a scorer over the decision ledger; fo-written-lines-checked-before-dispatch D4 chose its option A and excluded both. Stays open for that remainder; the Captain allowed closing the folded tasks only 「如果都涵蓋了」 (chat, 2026-10-26).
+- Batch 14: the Captain 「可以」 (chat, 2026-11-05), answering 「這 5 張當下一批，可以嗎？」, which named this task.
+
+## Budget
+- One package PR. Workflow word budget unchanged unless the design names a raise for the Captain.
+
+## Stop condition
+- The design names which of the two causes in Scope it closes and where the check runs; replays of the three batch 12 and 13 resolutions the observer flagged are caught, and a resolution that agrees with FO's recommendation passes.
 
 ## FO alignment
 
