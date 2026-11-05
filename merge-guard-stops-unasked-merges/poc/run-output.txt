@@ -1,0 +1,6 @@
+# bash poc/run.sh /tmp/merge-guard-poc, 2026-11-06, Claude Code 2.1.316, codex-cli 0.162.1
+claude-p-nomatch | hook "result": "stop" | merge ran 0
+claude-p-match | hook "result": "pass" | merge ran 1
+codex-deny-nomatch | hook "result": "stop" | merge ran 0
+codex-match | hook "result": "pass" | merge ran 1
+codex-ask-nomatch | hook "result": "stop" | merge ran 1

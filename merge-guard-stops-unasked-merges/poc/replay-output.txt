@@ -1,0 +1,32 @@
+# python3 poc/replay.py <state checkout> poc/pr672.json poc/merged-14d.json, 2026-11-06; prints #672 and every stop
+672 release-please--branches--main stop
+789 spacedock-ensign/private-pairing-revoke stop
+785 spacedock-ensign/private-native-account stop
+784 docs/journey-private-slices stop
+782 learning/13df332879bb0b766569f69a5baf907 stop
+781 chore/dev2-sync-0.35.0 stop
+779 spacedock-ensign/private-room-catalog stop
+778 spacedock-ensign/private-human-entry stop
+776 iamcxa/dev2-docs-site stop
+774 spacedock-ensign/release-walk-due-trigge stop
+768 release-please--branches--main stop
+762 chore/dev2-model-roster stop
+761 chore/dev2-sync-0.34.0 stop
+760 release-please--branches--main stop
+753 chore/dev2-sync-0.33.1 stop
+752 release-please--branches--main stop
+747 chore/dev2-sync-0.33.0 stop
+746 release-please--branches--main stop
+741 chore/dev2-sync-0.32.1 stop
+739 release-please--branches--main stop
+733 chore/dev2-sync-0.32.0 stop
+731 release-please--branches--main stop
+726 learning/12af920036eed5d6d577773b877b42c stop
+725 chore/dev2-sync-0.31.0 stop
+723 release-please--branches--main stop
+718 chore/dev2-sync-0.30.0 stop
+717 release-please--branches--main stop
+715 chore/dev2-sync-0.29.0 stop
+707 release-please--branches--main stop
+704 feat/story-map-kc-journey-map stop
+{('stop', 'release'): 10, ('stop', 'task-or-other'): 20, ('pass', 'task-or-other'): 54} total 84

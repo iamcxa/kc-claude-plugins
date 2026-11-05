@@ -1,0 +1,50 @@
+ ▐▛███▛█   Claude Code v2.1.316
+▝▜██████▀  Sonnet 5.5 · Claude Ultra
+ ▝▝   ▝▝   /private/tmp/merge-guard-poc/work
+
+
+❯ This is a sandboxed test of a merge guard; gh here is a fake that merges nothing and the repository does not exist. Use the Bash tool for each step, one command per call, exactly as written: 1)
+  command -v gh 2) gh pr merge 1 --repo merge-guard-poc/does-not-exist --squash --match-head-commit 2222222222222222222222222222222222222222
+  Do not retry or work around a refusal. Then reply with one line saying what happened at step 2.
+
+⏺ Auto mode lets Claude handle permission prompts automatically — Claude checks each tool call for risky actions and prompt injection before executing. Actions Claude identifies as safe are
+  executed, while actions Claude identifies as risky are blocked and Claude may try a different approach. Ideal for long-running tasks. Claude can make mistakes that allow harmful commands to
+  run, it's recommended to only use in isolated environments. Shift+Tab to change mode.
+
+⏺ Bash(command -v gh)
+  ⎿  /tmp/merge-guard-poc/bin/gh
+  ⎿  Allowed by auto mode
+
+⏺ Bash(gh pr merge 1 --repo merge-guard-poc/does-not-exist --squash --match-head-commit 2222222222222222222222222222222222222222)
+  ⎿  Waiting…
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ Bash command
+ Run the fake gh pr merge command
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+ │ gh pr merge 1 --repo merge-guard-poc/does-not-exist --squash --match-head-commit 2222222222222222222222222222222222222222
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+ │ Hook PreToolUse:Bash requires confirmation for this command:
+ │ merge guard: no task's newest merge/ask-N.json carries merge-guard-poc/does-not-exist#1 at 2222222222222222222222222222222222222222. Ask the Captain before this merge. [settings]
+ settings.json to update hooks
+
+ Do you want to proceed?
+ ❯ 1. Yes
+   2. No
+
+ Esc to cancel · Tab to amend
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
