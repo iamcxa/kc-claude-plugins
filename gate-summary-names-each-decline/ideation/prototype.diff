@@ -1,0 +1,169 @@
+--- a/kc-dev-flow-2/scripts/delivery_gate.py	2026-11-05 17:41:14
++++ b/kc-dev-flow-2/scripts/delivery_gate.py	2026-11-05 17:41:14
+@@ -23,7 +23,11 @@
+ `FO declines...:` (up to the next sentence that opens with a label and a colon, a blank line, or a line that opens a new decline; a label
+ after `e.g.` or `i.e.`, or inside the item, does not start another) needs a bracket, `( )` or `[ ]`, of two or more words holding its reason; this proves a bracket exists, not that
+ it is a reason. When the newest `## Stage Report: validation` lists `- F<N> Deferred risk:` or `- F<N> Polish:` bullets, fewer
+-declined items than those bullets holds; a report with no such bullets is not joined.
++declined items than those bullets, plus the newest validation security review's and the newest report's built-screen
++`declined:` lines, holds; a report with none of these is not joined. A clause outside every labelled item that declines
++a finding (a decline word beside F<N>, a severity, Polish, Deferred risk, finding or item, and no `below`, `above`, `as stated`
++or `in the summary`) holds. With `External rounds: N` of 3 or more, a declined item citing an external review, unless it cites
++only rounds 1 and 2, names its receiving task: a task slug in the workflow or its `_archive`, or `<owner>/<repo>:<slug>` (not read).
+ The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files`. Exit 1 holds the ask when the head differs,
+ a confirmation clause is missing, a second reviewer has no stated outcome, a declined item has no bracketed reason, an `ADR: NNNN` the task reserves under
+ `## Number guards` has no `<adr-path>/NNNN-*.md` in the directory at the PR head (README `adr-path:`, default `docs/adr`;
+@@ -72,9 +76,10 @@
+ from pathlib import Path
+ 
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+-from design_surfaces import FM_PROFILE, task_folder
++from design_surfaces import BUILT_FINDING_LINE, FM_PROFILE, task_folder
+ from number_guards import task_facts
+ from role_triggers import outside_fences
++import validation_security
+ 
+ ROLE_TRIGGERS = Path(__file__).resolve().parent / "role_triggers.py"
+ CANDIDATE = re.compile(r"^Candidate:[ \t]+([0-9a-f]{40})[ \t]*$", re.M)
+@@ -104,6 +109,13 @@
+ DECLINE_START = re.compile(r"\bDeclined\b[^:\n]{0,60}:|\bFO declines\b[^:\n]{0,60}:")
+ DECLINE_END = re.compile(r"(?<![eE]\.[gG]\.)(?<![iI]\.[eE]\.)(?<=[.)\]])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n|\n(?=[ \t]*(?:[-*+][ \t]+)?(?:[\w.-]+[ \t]+)?(?:Declined|FO declines)\b)")
+ FINDING = re.compile(r"^\s*[-*]\s*\*{0,2}F\d+\*{0,2}\s*[:(]?\s*\(?\s*(?:Deferred risk|Polish)\b", re.M)
++DECLINE_WORD = re.compile(r"\bdeclin(?:e|ed|es|ing)\b", re.I)
++FINDING_REF = re.compile(r"\b(?:F\d+|P[0-3]|LOW|MEDIUM|HIGH|CRITICAL|MINOR|MAJOR|Polish|Deferred(?: risk)?|findings?|items?)\b")
++POINTER = re.compile(r"\b(?:below|above)\b|\bas stated\b|\bin the summary\b", re.I)
++CLAUSE = re.compile(r"[^;.!?\n]+(?:[.!?](?=\s|$))?")
++EXTERNAL = re.compile(r"\b(?:review|comment|roborev|summary):\s?\d+|\bcomment \d{6,}|\bround (\d+)\b|\bevidence=", re.I)
++ROUNDS = re.compile(r"^External rounds:[ \t]*([0-9]+)", re.M)
++RECEIVER = re.compile(r"(?<![\w/.:-])(?:([\w.-]+/[\w.-]+):)?([a-z0-9]+(?:-[a-z0-9]+)+)(?![\w/-])")
+ MAX_POINTS = 12
+ CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
+                  "Necessity": "who uses this change and what breaks without it"}
+@@ -221,16 +233,25 @@
+     return missing
+ 
+ 
+-def declined_items(text):
+-    items, stop = [], 0
++def item_runs(text):
++    runs, stop = [], 0
+     for start in DECLINE_START.finditer(text):
+         if start.start() < stop:
+             continue
+         rest = text[start.end():]
+         end = DECLINE_END.search(rest)
+         stop = start.end() + (end.start() if end else len(rest))
++        runs.append((start.start(), start.end(), stop))
++    return runs
++
++
++def declined_items(text):
++    items = []
++    for _, begin, stop in item_runs(text):
++        rest = text[begin:]
++        end = None if stop == len(text) else stop - begin
+         depth, item = 0, ""
+-        for ch in (rest[:end.start()] if end else rest).strip().rstrip("."):
++        for ch in (rest[:end] if end is not None else rest).strip().rstrip("."):
+             depth = max(depth + (ch in "([") - (ch in ")]"), 0)
+             if ch == ";" and depth == 0:
+                 items.append(item.strip())
+@@ -275,15 +296,54 @@
+     return [item for item in declined_items(text) if not any(len(b.split()) >= 2 for b in brackets(item))]
+ 
+ 
+-def findings_join(task_text, gate_text):
++def unlabelled_declines(text):
++    runs, found = item_runs(text), []
++    for clause in CLAUSE.finditer(text):
++        word = DECLINE_WORD.search(clause.group(0))
++        if not word or any(a <= clause.start() + word.start() < b for a, _, b in runs) or DECLINE_START.search(clause.group(0)):
++            continue
++        if FINDING_REF.search(clause.group(0)) and not POINTER.search(clause.group(0)):
++            found.append(clause.group(0).strip())
++    return found
++
++
++def owed_declines(task_text):
+     report = (VALIDATION_SECTION.findall(task_text) or [""])[-1]
+-    owed, got = len(FINDING.findall(report)), len(declined_items(gate_text))
++    newest = None
++    for value in validation_security.REVIEW.findall(task_text):
++        bound = validation_security.REVIEW_AT.match(value.strip())
++        newest = bound.group(2) if bound else newest
++    security = sum(n == newest and rest.lower().startswith("declined:") for n, _, rest in validation_security.FINDING.findall(task_text))
++    built = sum(rest.lower().startswith("declined:") for _, rest in BUILT_FINDING_LINE.findall(report))
++    return len(FINDING.findall(report)), security, built
++
++
++def findings_join(task_text, gate_text):
++    bullets, security, built = owed_declines(task_text)
++    owed, got = bullets + security + built, len(declined_items(gate_text))
+     if owed and got < owed:
+-        return (f"declined items ({got}) are fewer than the validation report's Deferred risk and Polish findings ({owed}): "
+-                "add a declined item for each, naming the fix as its reason when FO fixed it.")
++        return (f"declined items ({got}) are fewer than the validation findings declined or deferred ({owed}: {bullets} Deferred risk "
++                f"and Polish, {security} security, {built} built screen): add a declined item for each, naming the fix as its reason when FO fixed it.")
+     return None
+ 
+ 
++def unreceived_declines(gate_text, task):
++    rounds = ROUNDS.search(gate_text)
++    if task is None or not rounds or int(rounds.group(1)) < 3:
++        return []
++    folder = task_folder(task)
++    roots = [folder.parent, folder.parent / "_archive"] + ([folder.parent.parent] if folder.parent.name == "_archive" else [])
++    def held(repo, slug):
++        return bool(repo) or (slug != folder.name and any((r / f"{slug}.md").is_file() or (r / slug / "index.md").is_file() for r in roots))
++    missing = []
++    for item in declined_items(gate_text):
++        cites = list(EXTERNAL.finditer(item))
++        stated = [int(c.group(1)) for c in cites if c.group(1)]
++        if cites and not (stated and max(stated) < 3) and not any(held(*m.groups()) for m in RECEIVER.finditer(item)):
++            missing.append(item)
++    return missing
++
++
+ def adr_names(repo, head, adr_dir):
+     try:
+         return gh("api", f"repos/{repo}/contents/{adr_dir}?ref={head}", "--jq", ".[].name").split()
+@@ -471,7 +531,7 @@
+     return path
+ 
+ 
+-def text_problems(task_text, gate_text, at_gate=False, reviewer_text=None):
++def text_problems(task_text, gate_text, at_gate=False, reviewer_text=None, task=None):
+     problems, nexts = [], []
+     for reviewer in unstated_second_reviewers(gate_text if reviewer_text is None else reviewer_text):
+         nexts.append("next: hold the ask until each second reviewer has an outcome.")
+@@ -481,6 +541,12 @@
+     for item in unreasoned_items(gate_text):
+         problems.append(f"declined item has no reason: {tok(item)}")
+         nexts.append("next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.")
++    for clause in unlabelled_declines(gate_text):
++        problems.append(f"decline written without a 'Declined:' label: {tok(clause)}")
++        nexts.append("next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.")
++    for item in unreceived_declines(gate_text, task):
++        problems.append(f"declined item from external review round 3 or later names no receiving task: {tok(item)}")
++        nexts.append("next: hold the ask; file it with spacedock new, its body carrying the finding and the reason, or name the task that holds it.")
+ 
+     if (why := findings_join(task_text, gate_text)):
+         problems.append(why)
+@@ -603,7 +669,7 @@
+         problems.append(error)
+         nexts.append("next: hold the ask; run the validation security review at this head, or tell the Captain.")
+ 
+-    found, wanted = text_problems(task_text, gate_text)
++    found, wanted = text_problems(task_text, gate_text, task=task)
+     problems += found
+     nexts += wanted
+     try:
+@@ -834,7 +900,7 @@
+     except (OSError, UnicodeDecodeError, ValueError) as error:
+         emit(f"cannot read input: {error}")
+         return 2
+-    problems, nexts = text_problems(task_text, gate_text, at_gate=True, reviewer_text=reviewer_text)
++    problems, nexts = text_problems(task_text, gate_text, at_gate=True, reviewer_text=reviewer_text, task=task)
+     problems += found
+     nexts += wanted
+     emit(*problems, *dict.fromkeys(nexts))
