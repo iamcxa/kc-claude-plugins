@@ -1,24 +1,24 @@
 {
   "schema_version": 1,
-  "selected_from": "0.34.0",
-  "decision": "Captain selected Accept in the host question dialog, chat 2026-11-01, batch 11 delivery of model-roster-per-repo",
+  "selected_from": "0.35.0",
+  "decision": "Captain selected Accept in the host question dialog, chat 2026-11-05, offered the 0.35.0 recommendation at the post-release roster question",
   "stages": {
     "ideation": {
-      "provider": "codex",
-      "model": "gpt-6-astra",
+      "provider": "claude",
+      "model": "claude-opus-5-5",
       "effort": "high",
       "host": "paseo"
     },
     "implementation": {
       "provider": "codex",
       "model": "gpt-6.1-sol",
-      "effort": "high",
+      "effort": "xhigh",
       "host": "paseo"
     },
     "validation": {
       "provider": "codex",
       "model": "gpt-6-astra",
-      "effort": "high",
+      "effort": "xhigh",
       "host": "paseo"
     }
   }
