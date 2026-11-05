@@ -21,8 +21,11 @@ whole-document replacement, configured asset access, and only the actual Node
 save directory and repository allowlist. No administrator capability is delegated.
 Labels are self-reported, never verified model or owner identities.
 
-The signed-in human opens **帳號與代理**, enters the human code, inspects the
-exact authorizer/backend/rooms/capabilities and explicitly approves or denies.
+When `JOURNEY_AGENT_PAIRING=true`, the signed-in human opens **我的帳號** →
+**我的 agent** if `JOURNEY_NATIVE_ACCOUNT=true`, or the outer **帳號與代理**
+entry if native account is off. These pairing entries appear only when pairing
+is enabled. The human enters the human code, inspects the exact
+authorizer/backend/rooms/capabilities and explicitly approves or denies.
 Inspection creates one consent context bound to that exact session, original
 verified event and original room. A switched identity, stale event, different
 room or changed scope requires a new inspection. Code possession alone grants
