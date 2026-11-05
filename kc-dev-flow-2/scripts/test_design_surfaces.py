@@ -1582,6 +1582,42 @@ class OverrideNoteTests(unittest.TestCase):
         self.assertEqual(len(self.notes(OVERRIDE_LINE, reason=OVERRIDE_LINE, module=uncarried)[1]), 1)
 
 
+class AskFormTests(unittest.TestCase):
+    def cli(self, stage, seed=False, broken=False):
+        with tempfile.TemporaryDirectory() as d:
+            text = GATED.replace("status: ideation", f"status: {stage}")
+            if broken:
+                text = text.replace("Surfaces: none", "Surfaces: unknown")
+            path = Path(d, "task.md")
+            path.write_text(text)
+            return subprocess.run([sys.executable, "-B", ds.__file__, "check",
+                                   *(["--seed"] if seed else []), str(path)], capture_output=True, text=True)
+
+    def test_reminder_is_last_at_backlog_and_ideation_only(self):
+        from delivery_gate import ASK_FORM
+        for stage in ("backlog", "ideation", "implementation", "validation", "done"):
+            for seed in (False, True):
+                with self.subTest(stage=stage, seed=seed):
+                    done = self.cli(stage, seed)
+                    self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+                    self.assertEqual(ASK_FORM in done.stdout, stage in ("backlog", "ideation"))
+                    if stage in ("backlog", "ideation"):
+                        self.assertEqual(done.stdout.splitlines()[-1], ASK_FORM)
+
+    def test_failing_cli_never_prints_the_reminder(self):
+        from delivery_gate import ASK_FORM
+        for stage in ("backlog", "ideation", "implementation", "validation"):
+            for seed in (False, True):
+                with self.subTest(stage=stage, seed=seed):
+                    done = self.cli(stage, seed, broken=True)
+                    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+                    self.assertNotIn(ASK_FORM, done.stdout)
+                    if not seed:
+                        self.assertTrue(done.stdout.splitlines()[-1].startswith("scope check not run:"))
+                    if seed:
+                        self.assertIn("unknown value(s) unknown", done.stdout.splitlines()[-1])
+
+
 class ScopeCheckTests(unittest.TestCase):
     """A Scope change after the backlog gate, on a task in a linked git worktree (as a split-root state checkout is, its .git a file)."""
 
@@ -1638,7 +1674,7 @@ class ScopeCheckTests(unittest.TestCase):
 
     def test_an_unchanged_scope_is_clean_and_prints_the_presentable_line(self):
         self.assertEqual(ds.scope_hold(self.task), ("clean", self.sha))
-        self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\n"))
+        self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\n" + __import__("delivery_gate").ASK_FORM + "\n"))
 
     def test_a_scope_line_added_after_the_backlog_gate_holds_with_a_line_addressed_to_fo(self):
         self.add_line()
@@ -1709,7 +1745,7 @@ class ScopeCheckTests(unittest.TestCase):
     def test_an_uncommitted_amendment_covers_an_uncommitted_scope_line(self):
         self.add_line()
         self.amend()
-        self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\n"))
+        self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\n" + __import__("delivery_gate").ASK_FORM + "\n"))
 
     def test_the_four_label_prefixes_the_readme_defines_are_filled_without_an_amendment(self):
         for line in ("- Non-goals: nothing else.", "Budget: one day.", "- Stop condition: green CI.", "Follow-up: a later task."):
@@ -1725,7 +1761,7 @@ class ScopeCheckTests(unittest.TestCase):
     def test_a_task_the_check_cannot_judge_prints_why_and_exits_zero(self):
         self.add_line()
         self.edit("decision: approve", "decision: revise")
-        self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\nscope check not run: no closed backlog approval\n"))
+        self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\nscope check not run: no closed backlog approval\n" + __import__("delivery_gate").ASK_FORM + "\n"))
         self.edit("decision: revise", "decision: approve")
         index = self.work / "t" / "review" / "backlog" / "briefing-1" / "index.json"
         original = index.read_text()
@@ -1787,7 +1823,7 @@ class ScopeCheckTests(unittest.TestCase):
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             self.assertEqual(ds.main(["check", "--seed", str(self.task)]), 0)
-        self.assertEqual(out.getvalue(), "t.md: seed fields and FO alignment recorded\n")
+        self.assertEqual(out.getvalue(), "t.md: seed fields and FO alignment recorded\n" + __import__("delivery_gate").ASK_FORM + "\n")
 
     def amended_commit(self):
         self.add_line()

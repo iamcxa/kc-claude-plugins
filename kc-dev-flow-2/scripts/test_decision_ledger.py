@@ -83,6 +83,25 @@ Captain: 「改一下」
 """
 
 
+class BoundQuestionTests(unittest.TestCase):
+    def test_whole_question_with_nested_brackets_and_whitespace(self):
+        question = "決定：這批五張都用 Pilot，其中「婉拒要寫明」照三項範圍，可以嗎？"
+        row = {"question": question, "reason": "Captain 「准」, answering 「" + question + "」; Override: none"}
+        self.assertTrue(dl.quotes_bound_question(row))
+        row["reason"] = row["reason"].replace("Pilot", "Pi\n lot").replace("這批", "這\t批")
+        self.assertTrue(dl.quotes_bound_question(row))
+        row["reason"] = "answering 「決定：這批五張都用 Pilot」"
+        self.assertFalse(dl.quotes_bound_question(row))
+
+    def test_missing_question_reason_or_answering_marker_does_not_match(self):
+        for row in ({}, {"question": ""}, {"question": "Approve?"},
+                    {"question": "Approve?", "reason": "Captain 「准」"},
+                    {"question": "Approve?", "reason": "「Approve?」"},
+                    {"question": "Approve? And merge.", "reason": "answering 「Approve?」"}):
+            with self.subTest(row=row):
+                self.assertFalse(dl.quotes_bound_question(row))
+
+
 class LedgerTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

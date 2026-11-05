@@ -1056,6 +1056,12 @@ def main(argv=None):
             print(note)
     if verdict == "not run":
         print(f"scope check not run: {why}")
+    if not errors:
+        front, _ = decision_ledger.split_task(path.read_text())
+        status = FM_STATUS.search("\n".join(front or []))
+        if status and status.group(1) in ("backlog", "ideation"):
+            from delivery_gate import ASK_FORM
+            print(ASK_FORM)
     return 1 if errors else 0
 
 
