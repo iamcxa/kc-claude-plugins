@@ -1,7 +1,7 @@
 ---
 title: The dispatch-record check sees every listed extension's scope-note instruction, the paseo one included
 variant: kc-dev-flow-2
-status: implementation
+status: validation
 profile: pilot
 merge: pr
 gates:
