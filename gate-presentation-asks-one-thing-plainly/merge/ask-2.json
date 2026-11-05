@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "2493d57a17dcbe08489918b208c9bd5019450772",
+  "model": "not run",
+  "necessity": "the eight files are delivery_gate.py, design_surfaces.py, decision_ledger.py (quotes_bound_question), their three test files, the observer skill and ADR 0062 (gh pr view 788 --json files, FO 2026-11-0",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'Recommend PASSED for 73db59bef6d1327e8b8c810b4f57601664aee1ef against fetched'",
+    "point: deferred: '- F1 Deferred risk: an annotated'",
+    "point: deferred: 'Cycle 2: recommend PASSED at 2493d57a17dcbe08489918b208c9bd5019450772'",
+    "point: deferred: 'Required design/delivery CLI and watcher seed'",
+    "point: deferred: 'PASSED recommendation for PR #788 at'",
+    "point: deferred: 'Declined: Deferred risk, validation-1 F1 at'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md'",
+    "point: path: 'kc-dev-flow-2/scripts/decision_ledger.py'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_decision_ledger.py'",
+    "point: more: 4 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#788",
+  "sufficiency": "the pre-gate checks print the 62-word reminder; delivery_gate.py stops the direct-merge line when the recorded validation answer does not quote the bound question, a withdrawn approval no longer count",
+  "time": "2026-11-05T16:14:27Z",
+  "verdict": "ask"
+}
