@@ -15,6 +15,17 @@ gates:
                 id: briefing:override-recorded-when-captain-departs:backlog:attempt-1:revision-1
                 digest: sha256:c457fd26460b41b4f13e09149f09cd5ac9c8eb4c026988ac0a8aa0655fc3dde3
                 room-ref: ./override-recorded-when-captain-departs/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:override-recorded-when-captain-departs:backlog:1
+                briefing: briefing:override-recorded-when-captain-departs:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-05T09:12:50.170907Z"
+                decision: approve
+                reason: The Captain 「准」 (chat, 2026-11-05), answering 「決定：這批五張（派工交代句的檢查、退一步答案欄位、漏寫 Override、婉拒要寫明、閘門一次問一件事）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？其中「婉拒要寫明」照我提的三項範圍（沒寫 Declined 標籤的婉拒、沒有 F 條目的審查者、沒指明接手任務）。要改哪張直接說。」; accepts the outcome, scope, budget and stop condition in this file, Pilot.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
