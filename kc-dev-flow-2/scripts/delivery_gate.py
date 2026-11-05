@@ -40,9 +40,9 @@ adds one problem line and its `next:` lines, exit 2 holds with its message.
 Exit 0 from it forwards advisory `next:` lines before the record and ASK, without holding the ask.
 Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
-and one last `next:` line: `ASK_UNQUOTED` when the latest validation attempt has a resolution and the newest
-Captain validation approval does not quote its bound question as `answering 「…」` (whitespace ignored), else `ASK`.
-An unquoted approval grants no merge; an unanswered attempt keeps the pre-ask line. The `class:` line ends
+and one last `next:` line: `ASK_UNQUOTED` when a non-pending validation attempt has no effective Captain approval
+quoting its bound question as `answering 「…」` (whitespace ignored), else `ASK`. Withdrawn attempts supply neither
+an approval nor a resolution; an unanswered, non-withdrawn attempt keeps the pre-ask line. The `class:` line ends
 `(verdict ask)` when the saved verdict is `ask`.
 
 Usage: delivery_gate.py question <task file or task folder> --text-file <file> [--summary-file <file>] [--workflow-dir <dir>]
@@ -112,7 +112,7 @@ CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, fro
                  "Necessity": "who uses this change and what breaks without it"}
 ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."
 # see docs/adr/0060-a-gate-approval-grants-what-its-quoted-bound-question-says.md
-ASK_UNQUOTED = "next: ask for merge with this text: his recorded validation answer does not quote its bound question as `answering 「…」`, so that approval grants no merge. Every other PR, the Release PR included, is asked one at a time."
+ASK_UNQUOTED = "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time."
 ASK_FORM = "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`."
 CLAIM_SOURCE = "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`."
 
@@ -673,10 +673,13 @@ def check(args):
             elif stage == "validation" and key == "id" and value.startswith("gate-attempt:"):
                 latest_attempt = value
     rows = [r for r in decision_ledger.task_rows(task.parent, task) if r["stage"] == "validation"]
+    withdrawn = {r["attempt"] for r in rows if r["kind"] == "withdrawal"}
+    rows = [r for r in rows if r["attempt"] not in withdrawn]
     captain = [r for r in rows if r["kind"] == "resolution" and r["by"] == "person:captain" and r["decision"] == "approve"]
     answered = any(r["attempt"] == latest_attempt and r["kind"] == "resolution" for r in rows)
-    ask = ASK_UNQUOTED if answered and captain and not decision_ledger.quotes_bound_question(
-        max(captain, key=lambda r: r["at"] or "")) else ASK
+    pending = not answered and latest_attempt not in withdrawn
+    ask = ASK if pending or captain and decision_ledger.quotes_bound_question(
+        max(captain, key=lambda r: r["at"] or "")) else ASK_UNQUOTED
     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
                                 "points": points, "next": ask, **({"siblings": sibling_notes} if sibling_notes else {}),
                                 "sufficiency": clean(clause(gate_text, "Sufficiency"))[:200],

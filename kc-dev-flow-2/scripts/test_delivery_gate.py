@@ -1713,7 +1713,7 @@ class CaptainGateTests(CaptainStepFixture):
 class BoundApprovalTests(unittest.TestCase):
     QUESTION = "「決定：含「婉拒要寫明」的設計進實作嗎？」 Approval also covers merging this head."
 
-    def run_approval(self, entries, module=gate):
+    def run_approval(self, entries, module=gate, withdrawals=()):
         task = "---\nprofile: pilot\ngates:\n    records:\n        - stage: validation\n          attempts:\n"
         for n, (actor, reason) in enumerate(entries, 1):
             task += (f"            - id: gate-attempt:task-validation-{n}\n"
@@ -1722,6 +1722,9 @@ class BoundApprovalTests(unittest.TestCase):
                 task += (f"              resolution:\n                by: {actor}\n"
                          f"                at: 2026-11-05T10:00:{n:02d}Z\n"
                          f"                decision: approve\n                reason: {json.dumps(reason, ensure_ascii=False)}\n")
+            if n in withdrawals:
+                task += ("              withdrawal:\n                by: agent:first-officer\n"
+                         f"                at: 2026-11-05T11:00:{n:02d}Z\n                reason: approval revoked\n")
         task += "---\n"
         def setup(d):
             for n in range(1, len(entries) + 1):
@@ -1752,6 +1755,24 @@ class BoundApprovalTests(unittest.TestCase):
         for reasons, expected in (((self.quoted(), 'Captain 「准」'), gate.ASK_UNQUOTED),
                                   (('Captain 「准」', self.quoted()), gate.ASK)):
             self.assertEqual(self.run_approval([('person:captain', r) for r in reasons]), expected)
+
+    def test_withdrawn_quoted_approval_cannot_mask_an_active_unquoted_approval(self):
+        entries = [('person:captain', 'Captain 「准」'), ('person:captain', self.quoted())]
+        self.assertEqual(self.run_approval(entries, withdrawals=(2,)), gate.ASK_UNQUOTED)
+
+    def test_withdrawn_approval_without_an_effective_captain_grant_asks_separately(self):
+        for entries in ([('person:captain', self.quoted())],
+                        [('person:captain', self.quoted()), ('agent:first-officer', 'repair under revoked grant')]):
+            with self.subTest(entries=entries):
+                self.assertEqual(self.run_approval(entries, withdrawals=(1,)), gate.ASK_UNQUOTED)
+
+    def test_withdrawal_leaves_active_quoted_approvals_and_new_pre_asks_unchanged(self):
+        for entries, withdrawals in (([('person:captain', 'Captain 「准」'), ('person:captain', self.quoted())], (1,)),
+                                     ([('person:captain', self.quoted()), ('person:captain', self.quoted())], (2,)),
+                                     ([('person:captain', self.quoted()), ('person:captain', 'Captain 「准」')], (2,)),
+                                     ([('person:captain', self.quoted()), (None, None)], (1,))):
+            with self.subTest(entries=entries, withdrawals=withdrawals):
+                self.assertEqual(self.run_approval(entries, withdrawals=withdrawals), gate.ASK)
 
     def test_question_reminder_reaches_cli_only_on_pass(self):
         with tempfile.TemporaryDirectory() as d:
