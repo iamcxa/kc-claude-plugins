@@ -85,18 +85,18 @@ flowchart TD
     B --> C{a family at exactly two?}
     C -- no --> Z[exit 0: summary line]
     C -- yes --> D{an owed chief-engineer line already carries STEP_BACK?}
-    D -- yes --> Z2[no reminder: unchanged dedupe]
+    D -- yes --> Z
     D -- no --> E{a valid Step back line for that event under FO alignment?}
     E -- yes --> F[no reminder for that event; summary counts the answer]
     E -- no --> G[next: reminder + the line to record]
     G --> H{a matching Step back line under another heading?}
-    H -- yes --> I[next: hint naming that heading]
-    H -- no --> J[exit 0, advisory]
+    H -- yes --> I[next: hint naming that heading] --> J
+    H -- no --> J[exit 0, advisory: printed next: lines]
     F --> Z
 ```
 
 - `check()` collects answered event keys from the FO alignment lines it already keeps (`alignment()`), then prints the count-two reminder only for families not answered. The validations/amendments reminder keeps its current text and appends `Then record `Step back: <event> — outcome: <answer>; test: <answer>; delete: <answer>` under ## FO alignment.` naming each unanswered family; each symptom reminder appends the same sentence with its own key.
-- A matching line outside `## FO alignment` adds one `next:` hint naming its heading, mirroring `hint()` for `Reviewer:` lines.
+- A matching line outside `## FO alignment` adds one `next:` hint naming its heading, mirroring `hint()` for `Reviewer:` lines; the hint compares the normalized key, as the answer test does.
 - The exit-0 summary gains `, and N step-back answer(s)` only when N > 0, so every existing output without an answer is unchanged.
 - Unchanged: when each family fires, the three questions, the count-three chief-engineer call and its waivers, the merge hold, `pr_watch.py` and `delivery_gate.py` (both forward only `next:` lines, so an answered task forwards none), and `dispatch_records.py` (see D2).
 
@@ -182,7 +182,7 @@ Recommended order: any; this task shares no file with the other batch 14 tasks. 
 
 **AC-3** — A line that does not count leaves the reminder: under another heading (plus a `next:` hint naming that heading), inside a fenced block, naming another event, or with an answer that is empty or only punctuation. Evidence: one test per case. Falsifier: dropping the `alignment()` filter makes the other-heading test fail.
 
-**AC-4** — Counts and calls are unchanged. All existing tests in `test_role_triggers.py` pass, with one expectation changed: `test_two_failed_reports_count_once_each_and_passing_reports_do_not_count` pins the reminder at 51 words and moves to 67 (run against the scratch prototype on 2026-11-05: that one assertion fails `67 != 51`, every other test passes; `test_the_space_class_is_the_one_design_surfaces_uses` errors outside the package folder on base and prototype alike, needing `design_surfaces.py` beside it); an answered `amendments` event plus a third replacing amendment still owes the chief-engineer line with the three questions, exit 1; with both families at two and one answered, the other still prints. Evidence: test run output. Falsifier: letting an answer clear the owed line makes the third-amendment test fail.
+**AC-4** — Counts and calls are unchanged. All existing tests in `test_role_triggers.py` pass, with one expectation changed: `test_two_failed_reports_count_once_each_and_passing_reports_do_not_count` pins the reminder at 51 words and moves to 67 (run against the scratch prototype on 2026-11-05: that one assertion fails `67 != 51`, every other test passes; `test_the_space_class_is_the_one_design_surfaces_uses` errors outside the package folder on base and prototype alike, needing `design_surfaces.py` beside it); `test_pr_watch.py` and `test_delivery_gate.py` assert the reminder only as a substring and its order before `record:`, and their word-count pins are on other lines (git grep at origin/main, 2026-11-05), so they pass unchanged; an answered `amendments` event plus a third replacing amendment still owes the chief-engineer line with the three questions, exit 1; with both families at two and one answered, the other still prints. Evidence: test run output. Falsifier: letting an answer clear the owed line makes the third-amendment test fail.
 
 **AC-5** — The symptom family. Two `implementation-N.md` dispatch records naming one symptom, with `Step back: implementation symptom "<name>" — …` (spacing and case differing from the header) under `## FO alignment`, print no reminder for that symptom; a second symptom at two still prints its own. Evidence: a test. Falsifier: comparing the key without normalization fails the differing-case test.
 
