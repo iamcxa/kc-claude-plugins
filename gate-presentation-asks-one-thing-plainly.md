@@ -3,7 +3,7 @@ title: FO's Captain-facing gate presentation asks one thing, leads with the conc
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'The Captain 「准」 (chat, 2026-11-05), answering 「決定：閘門一次問一件事這份設計進入實作嗎？核准即接受 D1（合併問句照綁定原文呈現，英文那句「核准也涵蓋…」放進中文問句裡）與 D2（待辦和構想閘門的回答對不上綁定問句時不擋，由觀察員在封存後回報）兩個建議。」; accepts the design and D1, D2 as recommended. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
