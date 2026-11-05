@@ -34,6 +34,14 @@ gates:
                 id: briefing:gate-summary-names-each-decline:ideation:attempt-1:revision-1
                 digest: sha256:709c01222965672f56d4570f0dc0f7810a6163f195e976b739d71dccada7e821
                 room-ref: ./gate-summary-names-each-decline/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:gate-summary-names-each-decline:ideation:1
+                briefing: briefing:gate-summary-names-each-decline:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-05T10:48:31.513279Z"
+                decision: hold
+                reason: 'The Captain 「可以，但是該怎樣紀錄合理的followup」 (chat, 2026-11-05), answering 「這張擱置，改開「刪掉第三輪婉拒要開待辦」的小任務，好嗎？」, after his 「退一步想想」. Override: recommended approve D1-D3; Captain chose hold and a replacement task; area: none. Basis: of 20 archived follow-up tasks filed from declined findings, 2 were built (verdict PASSED) and 18 were closed together on 2026-10-20 (「照建議關掉 19 張。」), most as already done on main by other work; 11 more sit in backlog.'
 ---
 
 ## Scope
