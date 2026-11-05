@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:extension-instruction-check-sees-every-listed-extension:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:extension-instruction-check-sees-every-listed-extension-validation-1
+              briefing:
+                id: briefing:extension-instruction-check-sees-every-listed-extension:validation:attempt-1:revision-1
+                digest: sha256:4bd095be8e33860dfa46f137b80f6f3c7b21c396b1249847ee7caf4e20786146
+                room-ref: ./extension-instruction-check-sees-every-listed-extension/review/validation/briefing-1
 started: 2026-11-05T10:52:54Z
 worktree: .worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension
 pr: iamcxa/kc-claude-plugins#787

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extension-instruction-check-sees-every-listed-extension:validation:attempt-1:revision-1",
+  "question": "決定：合併 #787（派工紀錄檢查看得到每個擴充的交代句）嗎？ Regular merge with --match-head-commit 272721000cce947c8f2dcdd3a40c22cdf11dee09, second of the batch 14 validation sitting. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:extension-instruction-check-sees-every-listed-extension:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e7ed3a1dd4a72ab70d505fb45df0c52296bbca91/extension-instruction-check-sees-every-listed-extension.md",
+      "rev": "sha256:c2b2883a0e677a049bfa7e3090ce7ae4aecc91539dab28cd0348930eedcae048",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of extension-instruction-check-sees-every-listed-extension, PR #787, in the batch 14 validation sitting.\nSufficiency: dispatch_records.py reads the three instruction forms the shipped extensions use and checks every record that starts a worker; the replay over the 12 batch 12 and 13 tasks flags 30 paseo and 7 roborev records today's check passes, with no validation or message record flagged (validation-1 report, Astra, 2026-11-05).\nNecessity: the three files are dispatch_records.py, test_dispatch_records.py and test_laws_check.py (git diff --name-only origin/main...head, FO 2026-11-05).\nAcceptance, run by FO in a fresh shell 2026-11-05, exit 0: /bin/bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/extension-instruction-check-sees-every-listed-extension/validation-1/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/extension-instruction-check-sees-every-listed-extension/captain-steps/1.md\nExternal rounds: 1.\nSecond reviewer: not triggered.\nCodex review: no major issues on this head.\nRoboRev: clean on 272721000, evidence=roborev:1513."
+    }
+  ]
+}
