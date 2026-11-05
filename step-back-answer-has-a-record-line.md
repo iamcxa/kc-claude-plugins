@@ -58,6 +58,8 @@ Consumer: every adopter FO at a second validation round or second relaxation, an
 - Non-goals: changing when the reminder fires or the three questions themselves.
 - Batch 14: the Captain 「可以」 (chat, 2026-11-05), answering 「這 5 張當下一批，可以嗎？」, which named this task.
 
+- Held 2026-11-05 at the ideation gate: the Captain 「可以」 (chat, 2026-11-05), answering 「這張先擱置，下一批手動試，好嗎？」. FO's reasons: the counted triggers miss a step-back owed at first proposal (one of the two this session that the Captain prompted himself); a self-answered line under a hold invites filler, and no record shows an answer changing direction. Trial: for the next batch, when role_triggers.py prints the step-back reminder, FO brings the three questions and its answers to the Captain as one item in the next sitting; after that batch, a direction change keeps this task, none deletes it.
+
 ## Budget
 - One package PR. Workflow word budget unchanged unless the design names a raise for the Captain.
 
