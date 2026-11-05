@@ -391,6 +391,11 @@ When the Captain chooses differently from the recommendation, FO writes
 resolution reason, so later workers find past rulings with `git grep 'Override:'` in
 the state checkout.
 
+A revise asking for what FO did not recommend, and his approval of a recommendation
+FO revised after pushback, also owe one, on the task they concern. Otherwise the reason
+carries `Recommendation: followed`. Before `gate record --actor person:captain`, FO runs
+`python3 <package>/scripts/decision_ledger.py --reason <file>`; nonzero holds the record.
+
 ## Decision records
 
 The implementation worker writes one ADR file per decision by its stage principles.
