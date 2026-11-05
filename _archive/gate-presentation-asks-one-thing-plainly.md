@@ -3,7 +3,7 @@ title: FO's Captain-facing gate presentation asks one thing, leads with the conc
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -81,10 +81,13 @@ gates:
                 reason: 'The Captain chose 「Merge (Recommended)」 (host question dialog, 2026-11-06), answering 「決定：合併 #788（閘門核准綁定引用的原問句，ADR 0062）嗎？ Regular merge with --match-head-commit 2493d57a17dcbe08489918b208c9bd5019450772, last of the batch 14 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-05T10:53:13Z
 worktree: .worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly
 pr: pr-merge:788
+verdict: PASSED
+completed: 2026-11-05T16:23:33Z
+archived: 2026-11-05T16:23:33Z
 ---
 
 ## Scope
