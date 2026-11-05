@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-11-05T10:53:03Z
 worktree: .worktrees/spacedock-ensign-override-recorded-when-captain-departs
-pr: iamcxa/kc-claude-plugins#786
+pr: pr-merge:786
 ---
 
 ## Scope
