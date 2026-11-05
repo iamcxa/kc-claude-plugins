@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:merge-guard-stops-unasked-merges:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:merge-guard-stops-unasked-merges-backlog-1
+              briefing:
+                id: briefing:merge-guard-stops-unasked-merges:backlog:attempt-1:revision-1
+                digest: sha256:2efdd5c216871bf4e2d6790a5df495093f1e61803f3f789039b79a219fc110fc
+                room-ref: ./merge-guard-stops-unasked-merges/review/backlog/briefing-1
 ---
 
 ## Scope

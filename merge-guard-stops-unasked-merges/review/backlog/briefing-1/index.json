@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-guard-stops-unasked-merges:backlog:attempt-1:revision-1",
+  "question": "決定：「合併前擋下沒人問過的合併」這張用 Pilot，照任務寫下的範圍、預算與停止條件進入構想嗎？核准即接受：構想階段先在隔離的 Claude 和 Codex 環境證明兩邊都擋得住（不動你自己的設定），如果某一邊只能用 deny 擋，那條路線另外問你。",
+  "artifacts": [
+    {
+      "id": "artifact:merge-guard-stops-unasked-merges:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d7e6c64680c57b31a8c9dc7be2495e7039ec5c57/merge-guard-stops-unasked-merges.md",
+      "rev": "sha256:ddcaa079ee039208fe3c0694ef3acc70c38cc5079921b32f1ae69f8faadb5110",
+      "mediaType": "text/markdown",
+      "summary": "Pilot. Stop a gh pr merge that no task's saved merge ask carries; ideation proves the hook or rule on both hosts in isolated state first; bite: Release PR #672 merged 2026-10-20 on a question that did not name it (observer report of special-role-calls-fire-when-needed)."
+    }
+  ]
+}
