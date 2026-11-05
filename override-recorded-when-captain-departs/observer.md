@@ -1,0 +1,55 @@
+# Observer report: override-recorded-when-captain-departs
+
+Window: commit that added the task file (8d07622ec, 2026-10-23) to state HEAD d67f7bc33 (2026-11-05 23:16:12 +0800); the rule-bearing activity is 2026-11-05. RULES: dev2 README, kc-dev-flow-2 0.35.0.
+Counts: violation 4, can't tell 3, ok 11, observed 1.
+
+## Findings
+
+violation | rule: "In scope notes and follow-ups, replace the main line with: \"Your final reply is your completion message: Paseo delivers it to FO when your turn ends. ...\"" (extensions/paseo/EXTENSION.md, Workers through Paseo; README `## Extensions`: "For a listed extension FO follows its `EXTENSION.md`: at a worker dispatch of its stage FO adds its instruction line to the scope notes") | evidence: dispatch/implementation-1.md, "Model: gpt-6.1-sol (Codex via Paseo, thinking xhigh" ... ends "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here)." with no replacement line (79ac21a05)
+
+violation | rule: same Paseo instruction, "do not send it with SendMessage or send_agent_prompt" (extensions/paseo/EXTENSION.md, Workers through Paseo; README `## Extensions`) | evidence: dispatch/ideation-1.md, "Model: claude-opus-5-5 (Claude via Paseo" ... "On a Claude worker through Paseo `main` is yourself, so also send it with Paseo's send_agent_prompt to the FO" (c7d050869)
+
+violation | rule: "Keep `Model:` and add this header to the normal dispatch record ... `Roster: source=repository; role=implementation; ...`" (references/model-roster.md, Stage launch or continuation; loaded by README `## Stages`: "Stage workers follow `<package>/references/model-roster.md`"; the sentence has no FO subject) | evidence: dispatch/ideation-1.md and dispatch/implementation-1.md carry `Model:` and no `Roster:` line; dispatch/validation-1.md carries `Roster: source=repository; role=validation; ...` (bdf702f58); `.dev2/model-roster.json` was committed 9530369cb 2026-11-05 10:34 +0800, before the first dispatch (17:15)
+
+violation | rule: "Each number or factual claim in a gate summary or PR body names the command that produced it and the date that produced it, or the report it repeats as `<whose> report, not run`" (Captain steps) | evidence: validation briefing summary, "Codex review: no major issues on this head." with no command, report or date (bf089a33a, review/validation/briefing-1/index.json); a replay of `delivery_gate.py question` on that text exits 0, so the script does not catch it
+
+can't tell | rule: "A follow-up message to a worker FO resumes is a dispatch too, with the same check and a checklist of the items that message asks" (Dispatch records, `## Stages`) | evidence: implementation report quotes an FO message, "RoboRev: FO runs it after you report; record it as delegated to FO, not run." (43aa80bf5), which changes dispatch/implementation-1.md's "Before reporting ... run roborev_gate.py"; no `dispatch/implementation-2.md` exists. The message itself is outside state (chat or Paseo)
+
+can't tell | rule: "A ruling settled at a gate ... is landed as an ADR before the next gate is presented" and "FO reserves the number when it dispatches implementation" (FO steps: decision records; Number guards) | evidence: no `## Number guards` section and no ADR line in the task; the implementation report says "FO explicitly confirmed no new ADR" (43aa80bf5), a confirmation not recorded in state. Whether D3-A and D4-A are rulings that bind later work is a judgement outside state
+
+can't tell | rule: "Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`" (Delivery) | evidence: merge/ask-1.json, "time": "2026-11-05T15:12:39Z", "head": "69d62c772c5f4fd28d9105c6f5d49516d559c947"; the briefing was added by bf089a33a at 2026-11-05T15:12:32Z (23:12:32 +0800), 7 seconds earlier, and ask-1 is the only file, so it cannot show the check ran before presenting
+
+ok | rule: "FO confirms both goal sufficiency and minimal necessity" (`validation` gate content) | evidence: merge/ask-1.json "sufficiency": "decision_ledger.py --reason holds a Captain gate reason that declares neither `Override:` nor `Recommendation: followed`; ..." and "necessity": "the four files are workflow.md's Override paragraph (+48 words, budget 5891 to 5939 per D2-A), decision_ledger.py, its tests and lint-skills.py's budget step ..."; the briefing summary carries both lines (c7933bebf, bf089a33a)
+
+ok | rule: "FO runs `python3 <package>/scripts/design_surfaces.py check`" (seed check at backlog; design check at ideation) | evidence: replay on `git archive` copies: backlog 41dc9caf2 with `--seed`, exit 0, "seed fields and FO alignment recorded"; ideation 90f32fcce, exit 0, "design surfaces presentable" (briefing uri shas, 45187151d, e8ebb5c5b)
+
+ok | rule: "FO runs `python3 <package>/scripts/dispatch_records.py <task folder>` before committing and fixes each part it lists" and "`--coverage <task> --stage <stage>`" (Stages) | evidence: replay at HEAD: "3 dispatch record(s) complete"; `--coverage override-recorded-when-captain-departs.md --stage` ideation, implementation, validation each exit 0 "dispatch coverage complete"
+
+ok | rule: "FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question file> --summary-file <summary file>`" (Delivery) | evidence: replay on the validation briefing question and summary: "gate text complete", exit 0; the summary declares "External rounds: 1." and "Second reviewer: Copilot because the PR changes approval or review rules." (bf089a33a). The run itself leaves no record
+
+ok | rule: "A Captain ruling is his reply to the question it settles, given after that question was put" (FO steps: review findings) | evidence: three rows, all `by: person:captain`; each reason's quoted question equals its briefing question verbatim, and each briefing commit precedes its resolution: backlog 45187151d 17:09:52 < d331e45e4 17:12:50; ideation e8ebb5c5b 17:50:23 < 5b2fd8d73 18:44:19; validation bf089a33a 23:12:32 < d67f7bc33 23:16:12
+
+ok | rule: "His plain approval accepts that recommendation only when the gate question says so" (FO steps: review findings) | evidence: ideation question "核准即接受 D1-A（記錄裁示前先檢查理由文字）、D2-A ... D3-A ... D4-A ... 四個建議"; the reason ends "Recommendation: followed." (e8ebb5c5b, 5b2fd8d73). The validation reason records his own choice, 「Merge (Recommended)」, not silence
+
+ok | rule: "a decision by `agent:first-officer` carries the grant it relies on" | evidence: decision_ledger.py lists three rows for this task, none by `agent:first-officer`
+
+ok | rule: "When the Captain chooses differently from the recommendation, FO writes `Override: ...` in the gate resolution reason" (FO steps: review findings) | evidence: all three rows have `"override": null`; no reason states a recommendation he departed from (backlog: "accepts the outcome, scope, budget and stop condition"; ideation and validation: "Recommendation: followed"). A departure made in chat and not written in the file is outside state
+
+ok | rule: "FO declines it in the committed gate summary, naming the finding ... candidate revision and the lines or evidence it rests on" and "FO counts rounds and records the count in the committed gate summary" (FO steps: review findings, steps 2 and 5) | evidence: "Declined: Deferred risk, validation F1 at 69d62c772: the check is a manual step and a wrong but well-formed `Recommendation: followed` passes (accepted limits of D1-A and D3-A in the approved Design; validation-1 replay of the step-back hold reason shows it)."; "External rounds: 1." (bf089a33a)
+
+ok | rule: "A listed extension that cannot run ... is reported as `<name> not run: <reason>` in the stage report or gate summary" (Extensions) | evidence: "copilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5787166964"; codex and roborev lines present: "RoboRev: clean on 69d62c772, evidence=roborev:1512." (bf089a33a)
+
+ok | rule: "FO runs the stage's minimal acceptance script under Captain steps, names its record on the summary's `Captain steps:` line, and returns an output that differs from the script through feedback" (`validation` gate content) | evidence: captain-steps/1.md "Ran: env -i bash --noprofile --norc, a fresh shell on this Mac, 2026-11-05T15:10:58Z, exit 0"; the summary has "Captain steps: .../captain-steps/1.md"; `diff captain-steps/1-output.log validation-1/acceptance.log` shows identical files; `delivery_gate.py steps` on the record exits 0 (ac98ce72a, bf089a33a)
+
+ok | rule: "FO confirms the validation ADR lint passes before presenting the gate" (FO steps: decision records) | evidence: validation report, "adr_lint.py docs/adr --since d37c6dc653e0f45d6ca630c2faa6121c0863a57e exited 0, \"58 ADR file(s) checked, 0 legacy\"" (d3b34fc00), before the briefing at bf089a33a
+
+ok | rule: "FO also records, under a `## FO alignment` heading ... whether FO direction alignment with the Captain is needed" (`backlog`) | evidence: "Alignment: needed at ideation; whether to widen the rule, check it at record time, or score the ledger is his to accept." / "Surfaces: none" / "Visible change: none" / "Release review: not needed: workflow maintenance, on no journey map." (efb489946)
+
+ok | rule (peers listed in `extensions:`): no Captain ruling quotes a peer's words | evidence: the three reasons quote 「准」 (chat) and 「Merge (Recommended)」 (host question dialog); the peer-relayed finding appears only in `## Scope` as "relayed, not a ruling in this session"
+
+observed | rule: `Reviewer:` line (ideation ran on a stronger model: README `ideation` stage `model: opus`; dispatch "claude-opus-5-5") | evidence: absent; `role_triggers.py STATE TASK --rev HEAD` prints "role triggers: 0 event(s) read at HEAD, each with a call or a waiver." and no `next:` line, exit 0
+
+## Coverage
+
+Read fully: the task file at HEAD (331 lines), the three dispatch records, the three briefing indexes, merge/ask-1.json, captain-steps/1.md and 1-output.log, review/copilot-not-run.txt, `git log` and per-commit diffs of the task file, the decision_ledger.py rows for this task, README `## Stages`, backlog and ideation gate content, `## FO steps: review findings`, `## Captain amendments`, `## Captain steps`, `## Dispatch facts`, `## Extensions`, Delivery authority, and the paseo extension and model-roster text it loads. Sampled: validation-1/ evidence files (read the stage report, acceptance.log, listings; not commands.json or mutations/). Not applicable in the window: `## Captain amendments` (no amendment entry), `Precedent:` (none written; ADR 0027 D4 is cited as a past ruling in Design and D3 was still put to him), `### FO declines` (decline sits in the gate summary), `ui` design check, db rules, a second validation send-back.
+Not evaluated (chat-only list, or no record): the five chat-only rules; whether FO answered his question "when the limitation arises" at the ideation gate; the merge sentinel and archive steps (after HEAD).
