@@ -239,3 +239,43 @@ Recommended order: this task, then adoption-asks-which-extensions, then extensio
 ### Summary
 
 The widened check reads all three scope-note forms the shipped EXTENSION.md files use and judges every fresh-worker record, so paseo's "Start in the assigned worktree" sentence is checked wherever the observer has been finding it missing; laws_check needs no change. Four Captain decisions: all Paseo workers, not only Codex (D1); first sentence only (D2); follow-up messages exempt, following #652's Decision 2 (D3); how FO handles the 11 live records the wider check newly flags (D4). The one ordering dependency is adoption-asks-which-extensions, which edits the same function.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and D1 to D4 within the three named files.
+  Branch spacedock-ensign/extension-instruction-check-sees-every-listed-extension; base d37c6dc653e0f45d6ca630c2faa6121c0863a57e; candidate 272721000cce947c8f2dcdd3a40c22cdf11dee09; fetched origin before edits, no version bump, clean product worktree.
+- DONE: AC-1 reader finds the three shipped instruction forms.
+  ExtensionInstructionTests reads the shipped files and requires exactly roborev, paseo and release-acceptance; removing the line-start anchor or restoring bullet-only parsing fails (/tmp/extension-instruction-mutations.json, controls 1-2).
+- DONE: AC-2 paseo applies to Claude/Codex Paseo headers and host=paseo rosters.
+  test_paseo_requires_the_sentence_for_each_supported_header proves missing/supplied/wrapped/not-run/unlisted/local cases; unconditional, Codex-only and exact-whitespace mutations fail (controls 3-5); header text below Scope notes does not select Paseo.
+- DONE: AC-3 every fresh-worker record is checked, messages remain exempt.
+  Later ideation/implementation/validation and later roborev cases fail without instructions; message and recovery records pass; first-record-only and message-inclusion mutations fail (controls 6-8).
+- DONE: AC-4 release-acceptance applies to an acceptance task's implementation-1 only.
+  test_release_acceptance_checks_an_acceptance_tasks_first_implementation_only exercises missing/supplied/not-run/ordinary/later-cycle records; dropping the frontmatter condition or selecting every implementation cycle fails (controls 9-10).
+- DONE: AC-5 read-only replay of the 12 archived batch-12/13 folders.
+  Candidate CLI --readme <workflow>/README.md yields paseo 30 (16 ideation, 14 implementation), roborev 7; 0.35.0 yields 0, and no validation/message record is named; Codex-only replay mutation fails the 30-count assertion (control 11). Commands, tasks, outputs and state 79fb4abf3f9c751c83e8d70dcfeaa654ff8774c4 are in /tmp/extension-instruction-replay.json.
+- DONE: AC-6 L2 parses the paseo diagnostic with laws_check.py unchanged.
+  test_a_missing_paseo_instruction_is_a_parseable_l2_violation runs the real history-law subprocess; changing the diagnostic prefix makes it fail (control 12), rather than accepting an unparseable run.
+- DONE: AC-7 detector-only diff and falsifiers.
+  git diff --name-only <base> HEAD lists scripts/dispatch_records.py, scripts/test_dispatch_records.py and scripts/test_laws_check.py under kc-dev-flow-2; a throwaway README diff is rejected by that exact whitelist (control 13). Every mutation ran with python3 -B and caches cleared; source bytes were restored and focused tests rerun successfully.
+- DONE: Package test suite and repository checks.
+  All 25 CI-listed package test commands exit 0; dispatch tests 115 (builder skip covered by the successful native-builder rerun), laws tests 65 (one optional replay skip below); lint-skills.py, scripts/version-parity-check.sh, adr_lint.py docs/adr --since <base>, number_guards.py check and design_surfaces.py check exit 0. Logs and command results: /tmp/extension-instruction-all-checks.json; native runtime Spacedock 0.27.3, not a claim of the CI-pinned 0.27.2 run.
+- DONE: comment_ratio.py within its maximum and unchanged workflow budget.
+  /tmp/extension-instruction-comments.log: code lines 99, comment lines 0, 0.0%, maximum 5% met; repository lint reports references/sd/workflow.md 5891 of 5891 words, WORKFLOW_WORD_BUDGET untouched.
+- DONE: Words-per-moment recount with wc -w.
+  /tmp/extension-instruction-words.json: existing paseo sentence 12 words, absent paseo diagnostic 24, absent roborev diagnostic 30; docstring 771 -> 824 (+53), extension paragraph 50 -> 103. Startup, record-writing and clean-run text are unchanged.
+- DONE: Compare the widened extension predicate on existing tasks and preserve FO ownership.
+  /tmp/extension-instruction-corpus.json: 106 dispatch folders, 64 changed, 245 added omissions (144 paseo, 101 roborev), 0 removed; all added entries are spawn records. The 11 live omissions match D4: their owning FO records the dated not-run reason before its next dispatch; no historical record was edited here.
+- DONE: Affected-document dispositions.
+  docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md unaffected: names-only live-ruling predicate unchanged; docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md unaffected: completion/publication authority unchanged; learning.md unaffected: historical practices retained, new parser-consumer case covered. doc_impact.py output: /tmp/extension-instruction-doc-impact.json; no new ADR or number reservation.
+- DONE: Commit locally and prepare the PR title/body for FO.
+  /tmp/impl-extension-instruction-check-sees-every-listed-extension-pr.md has the Conventional Commit title on line 1 and the body after it; no existing task PR found by the read-only GitHub head-branch query.
+- SKIPPED: One Draft PR / product-branch push, independent validation, RoboRev review and hosted CI.
+  FO owns publication and review. FO explicitly confirmed by Paseo message b313d1d1-f4eb-44df-956d-aff84cae4952 that the generated roborev_gate.py checklist line is a dispatch defect for this worker: delegated, not run; no evidence= or incomplete: review line is claimed. No PR opened: no push grant; CI cost per PR not measured, CI triggers unchanged.
+- SKIPPED: Optional pinned-history real-amendment replay.
+  DEV2_OBLIGATION_SOURCES was not supplied; test_laws_check.py reports one skip. This does not supply evidence for that unrelated five-record historical fixture.
+
+### Summary
+
+The Pilot candidate checks the three shipped scope-note forms on their applicable fresh-worker records, keeps follow-up messages exempt and detects the archived omissions with the approved counts. The locally committed candidate and prepared PR text are ready for FO publication, review and independent validation; shared-state report synchronization is separate from product delivery.
+
