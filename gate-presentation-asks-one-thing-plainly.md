@@ -210,6 +210,10 @@ Recommended order: after fo-write-checks-parse-top-level and comment-check-reach
 
 **D2. Where backlog and ideation mismatches are caught.** Recommend: the observer reports them after archive; no hold. What gets worse: a design approval given to a different text than the bound one (the batch-13 D7 case) is dispatched and only reported later. Alternative: `dispatch_records.py --names` holds `<stage>-1.md` until the approval that let the task in quotes its bound question; stronger, but a consumed answer has no supported repair route, so a held task waits on a new route that this task does not design.
 
+## Number guards
+
+ADR: 0060
+
 ## Stage Report: ideation
 
 - DONE: Decide where the four plain-language rules and the verbatim acceptance sentence live (README, a skill, or Spacedock present-gate) and what reads them, checking Spacedock present-gate and the question check in /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/delivery_gate.py first
