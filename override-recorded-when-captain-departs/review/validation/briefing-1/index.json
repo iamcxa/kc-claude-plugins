@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:override-recorded-when-captain-departs:validation:attempt-1:revision-1",
+  "question": "決定：合併 #786（漏寫 Override 的記錄前檢查）嗎？ Regular merge with --match-head-commit 69d62c772c5f4fd28d9105c6f5d49516d559c947, first of the batch 14 validation sitting. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:override-recorded-when-captain-departs:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ac98ce72a4b5f164e5d436569143ae88a4d619db/override-recorded-when-captain-departs.md",
+      "rev": "sha256:86ed3782d7b07a4ee2b0d368fd7f02c6ab48fac314d4465f1a409be393766fdc",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of override-recorded-when-captain-departs, PR #786, in the batch 14 validation sitting.\nSufficiency: decision_ledger.py --reason holds a Captain gate reason that declares neither `Override:` nor `Recommendation: followed`; the three observer-flagged resolutions replay as held and pass once declared, and the README states the widened Override rule (validation-1 report, Astra, 2026-11-05).\nNecessity: the four files are workflow.md's Override paragraph (+48 words, budget 5891 to 5939 per D2-A), decision_ledger.py, its tests and lint-skills.py's budget step (git diff --name-only origin/main...head, FO 2026-11-05).\nAcceptance, run by FO in a fresh shell 2026-11-05, exit 0: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/override-recorded-when-captain-departs/validation-1/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/override-recorded-when-captain-departs/captain-steps/1.md\nExternal rounds: 1.\nSecond reviewer: Copilot because the PR changes approval or review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5787166964\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: no major issues on this head.\nRoboRev: clean on 69d62c772, evidence=roborev:1512.\nDeclined: Deferred risk, validation F1 at 69d62c772: the check is a manual step and a wrong but well-formed `Recommendation: followed` passes (accepted limits of D1-A and D3-A in the approved Design; validation-1 replay of the step-back hold reason shows it)."
+    }
+  ]
+}

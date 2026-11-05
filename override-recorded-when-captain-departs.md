@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:override-recorded-when-captain-departs:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:override-recorded-when-captain-departs-validation-1
+              briefing:
+                id: briefing:override-recorded-when-captain-departs:validation:attempt-1:revision-1
+                digest: sha256:142fe9268dc2d8c72a3fd5957259e416cf99987070477000240d6a4e4e129bdc
+                room-ref: ./override-recorded-when-captain-departs/review/validation/briefing-1
 started: 2026-11-05T10:53:03Z
 worktree: .worktrees/spacedock-ensign-override-recorded-when-captain-departs
 pr: iamcxa/kc-claude-plugins#786
