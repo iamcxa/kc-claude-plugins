@@ -275,3 +275,43 @@ The four writing rules and "show the bound question verbatim, record `answering 
 ### Summary
 
 The local candidate prints the approved gate-writing reminder and withholds the carried merge grant when the recorded Captain approval omits the whole bound question. The five historical replays, configured Observer run and mutation controls support that bounded change; chat fidelity, publication, independent validation, RoboRev and hosted CI remain FO-owned. Reproduce delivery replays with GATE_PRESENTATION_STATE set to this state checkout, GATE_PRESENTATION_BASE=d37c6dc653e0f45d6ca630c2faa6121c0863a57e and GATE_PRESENTATION_EVIDENCE set to an external directory, then python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_delivery_gate.py; the other required suites use test_design_surfaces.py, test_decision_ledger.py and test_pr_watch.py.
+
+## Stage Report: implementation
+
+- DONE: Confirm and repair the High finding FO reported from RoboRev job 1514 on 3196dd4c3.
+  Released workflow: FO checks a recorded validation approval before merge; harm: a withdrawn quoted approval restores ASK over an active unquoted approval; boundary: contract[kc-dev-flow-2/references/sd/workflow.md#delivery-authority] requires an effective Captain grant; trigger: three assertion failures against 3196dd4c3 in /tmp/opencode/gate-presentation-repair/red.log.
+- DONE: Implement the authorized repair within the approved eight-file scope, without changing profile, version or ruling.
+  Only delivery_gate.py and test_delivery_gate.py changed since 3196dd4c3; withdrawn attempts are excluded from both Captain selection and effective-resolution checks; missing effective grant asks separately, while a fresh unanswered attempt and an active quoting grant retain ASK. ASK_UNQUOTED now states the missing effective grant accurately and remains 39 words.
+- DONE: Commit locally on the assigned branch from the original origin/main base.
+  Branch spacedock-ensign/gate-presentation-asks-one-thing-plainly; base d37c6dc653e0f45d6ca630c2faa6121c0863a57e; previous 3196dd4c3c0de7d211972dfcdd48a56f0ae0c753; new candidate 73db59bef6d1327e8b8c810b4f57601664aee1ef; clean assigned worktree, no product push by this worker; candidate.json binds paths and identity.
+- DONE: AC-1 — reminder placement, pass/failure output and watcher seed behavior remain covered.
+  Fresh 213-test design and 134-test watcher suites pass; original entry-print, missing-status and dropped-print controls fail at this repair; original-controls/mutations.json under the repair evidence directory.
+- DONE: AC-2 — the five committed historical validation snapshots still ask separately and save ASK_UNQUOTED.
+  Fresh HistoricalBoundQuestionTests ran with GATE_PRESENTATION_STATE, GATE_PRESENTATION_BASE and GATE_PRESENTATION_EVIDENCE declared; base/repair outputs and saved next fields are in historical-replays.json; prefix, any-quote and oldest-approval mutations are caught.
+- DONE: AC-3 — quoted, whitespace, pre-ask and FO repair cases pass, with withdrawal regressions added.
+  Three new regression test methods exercise real parsing, printed next and saved next: revoked quote masking active unquoted approval, no remaining grant with/without FO repair, active quoting grants in both withdrawal orders and a fresh unanswered attempt. green.log passes; all three repair mutants fail, including restoring withdrawn rows, treating withdrawal as pending and defaulting a missing grant to merge.
+- DONE: AC-4 — nested brackets and ledger output compatibility remain satisfied.
+  Fresh 10-test ledger suite passes. decision_ledger.py is byte-identical to 3196dd4c3, so the previous frozen-state proof is retained: state 79fb4abf3f9c751c83e8d70dcfeaa654ff8774c4, 399 rows/420525 bytes, sha256 aff64d3b888718ad96bc809dce9203a613b5a0826c64049989c827eab52cfd75. Nested-regex mutant rerun is caught; no new ledger schema or helper change.
+- DONE: AC-5 — retain the configured Observer's ideation violation evidence.
+  FO's unedited Claude Sonnet report /tmp/ac5-observer-report.md is retained, not rerun; observer instructions and comparison helper are byte-identical to the previously exercised candidate. The changed ideation question remains its violation, and double outer brackets remain the approved rule.
+- DONE: AC-6 — reading costs remain the approved deltas on the current base.
+  Fresh recount-candidate.json matches the previous candidate's normal outputs byte-for-byte after the same path normalization; ASK_FORM remains 62 words, ASK_UNQUOTED 39. reading-proof.json retains current startup 7151, idle 906/860, archive 333, normal merge 2429 and gate-prepare +62; the old design table's absolute baseline remains stale.
+- DONE: AC-7 — rerun all four suites and ADR lint at the repair.
+  157 delivery + 213 design + 10 ledger + 134 watcher = 510 passed and four existing optional design-corpus skips; required five historical snapshots ran. tests.json and suite-summary.json hold results; adr-lint.log checks 59 ADR files including required 0060, exit 0. ADR bytes and Captain provenance are unchanged.
+- DONE: Run falsifiers with python3 -B and caches cleared.
+  mutations.json records 3/3 repair mutants caught; original-controls/mutations.json records 12/12 original code mutants caught. These are expected failing runs, separate from the green suites.
+- DONE: Repository skill lint, task design check, number guards and comment ratio pass.
+  skills-lint.log, task-design-check.log and number-guards.log exit 0; guard binds d37c6dc653e0 to 73db59bef6d1. comment-ratio.log: 229 code lines, 3 comment lines, 1.3%, within 5%; no migration path declared.
+- DONE: Rerun doc_impact.py and review every listed document.
+  docs/adr/0011 unaffected: ledger/delegation unchanged; 0041 unaffected: seed holds unchanged; 0044 unaffected: legacy/summary checks retained; 0051 unaffected: round-count check retained; 0057 unaffected: amendment comparison untouched.
+  kc-dev-flow-2/skills/maintain-flow/SKILL.md unaffected: ledger command/output unchanged; docs/adr/0060-a-gate-approval-grants-what-its-quoted-bound-question-says.md and kc-dev-flow-2/skills/observer/SKILL.md remain updated by the original task and unchanged by this repair. doc-impact.json lists all eight.
+- DONE: Update the prepared Conventional Commit PR title/body for FO.
+  /tmp/impl-gate-presentation-asks-one-thing-plainly-pr.md names the new candidate, repair and fresh evidence. Repair artifacts are /tmp/opencode/gate-presentation-repair; original unchanged acceptance evidence remains /tmp/opencode/gate-presentation.
+- SKIPPED: Product push, PR publication/update, fresh RoboRev, independent validation and hosted CI.
+  FO explicitly owns these steps and reported pushing 3196dd4c3; this worker has not pushed 73db59bef. Job 1514 is a reported finding on the prior candidate, not a clean review of this repair.
+- SKIPPED: CI cost measurement.
+  No CI trigger changed; cost per PR not measured.
+
+### Summary
+
+The High finding is confirmed and repaired: withdrawn validation attempts cannot supply a merge grant or make a revoked attempt count as an answered effective approval. This complete report supersedes the earlier implementation report for candidate 3196dd4c3; the current candidate is 73db59bef6d1327e8b8c810b4f57601664aee1ef. Fresh suites and 15 code mutation controls pass their required outcomes; FO retains publication, RoboRev rerun, independent validation and hosted CI ownership.
