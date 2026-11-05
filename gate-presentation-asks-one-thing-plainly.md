@@ -62,6 +62,10 @@ gates:
                 id: briefing:gate-presentation-asks-one-thing-plainly:validation:attempt-2:revision-1
                 digest: sha256:e40ae182bc79601c461357b756e6de8d697843a963070398477975587fa69255
                 room-ref: ./gate-presentation-asks-one-thing-plainly/review/validation/briefing-2
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-05T16:14:14.630764Z"
+                reason: Summary missed the Copilot not-read line for head 2493d57a1 that delivery_gate.py check requires; re-preparing with it.
 started: 2026-11-05T10:53:13Z
 worktree: .worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly
 pr: iamcxa/kc-claude-plugins#788
