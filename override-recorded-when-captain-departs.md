@@ -34,6 +34,17 @@ gates:
                 id: briefing:override-recorded-when-captain-departs:ideation:attempt-1:revision-1
                 digest: sha256:ccda93efe92ebbf2059e4c7820788d025f2ae24288b1c9d049bcb91ab44dc945
                 room-ref: ./override-recorded-when-captain-departs/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:override-recorded-when-captain-departs:ideation:1
+                briefing: briefing:override-recorded-when-captain-departs:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-05T10:44:19.014698Z"
+                decision: approve
+                reason: 'The Captain 「准」 (chat, 2026-11-05), answering 「決定：漏寫 Override 這份設計進入實作嗎？核准即接受 D1-A（記錄裁示前先檢查理由文字）、D2-A（README 加 48 字，字數上限 5891 調到 5939）、D3-A（不加反向防護）、D4-A（不做裁示紀錄評分器）四個建議。」, after asking when the limitation arises; accepts the design and D1-A to D4-A as recommended. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
