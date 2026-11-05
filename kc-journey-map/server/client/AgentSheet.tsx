@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { TldrawUiDialogHeader, TldrawUiDialogTitle, TldrawUiDialogCloseButton, TldrawUiDialogBody } from 'tldraw'
 import { journeyApi } from './api'
 import './agent-sheet.css'
 type Entry = { backendId: string; memberId: string; label: string }
@@ -13,8 +14,8 @@ const errors: Record<string,string> = {
 function Scopes({ scopes }: { scopes: Scope[] }) {
  return <ul className="agent-scopes">{scopes.map(scope=><li key={scope.roomId}><strong>畫布：{scope.roomId}</strong><p>完整紀錄新增、修改、刪除與整份文件取代</p><p>素材讀寫：{scope.assets?'允許':'未配置'}</p><p>本機儲存目錄：{scope.saveDirectory||'未配置'}</p><p>可讀儲存庫文件：{scope.repositories.length?scope.repositories.join('、'):'未配置'}</p></li>)}</ul>
 }
-export function AgentSheet({ entry }: { entry: Entry }) {
- const [enabled,setEnabled]=useState(false),[open,setOpen]=useState(false),[busy,setBusy]=useState(false),[problem,setProblem]=useState(''),[notice,setNotice]=useState('')
+export function AgentSheet({ entry, native=false, onClose }: { entry: Entry; native?: boolean; onClose?:()=>void }) {
+ const [enabled,setEnabled]=useState(native),[open,setOpen]=useState(native),[busy,setBusy]=useState(false),[problem,setProblem]=useState(''),[notice,setNotice]=useState('')
  const [code,setCode]=useState(''),[consent,setConsent]=useState<Consent|null>(null),[families,setFamilies]=useState<Family[]>([]),[confirmation,setConfirmation]=useState<string|null>(null),[pending,setPending]=useState<string[]>([])
  const [theme,setTheme]=useState('light')
  const dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement>(null),consentCode=useRef('')
@@ -41,16 +42,14 @@ export function AgentSheet({ entry }: { entry: Entry }) {
   setPending(current=>current.filter(id=>!result.families.some((f:Family)=>f.id===id && f.revoked)))
  }
  useEffect(()=>{
+  if(native){void perform(inventory);return}
   if(!open || !dialog.current)return
   const element=dialog.current;element.showModal();element.querySelector<HTMLElement>('h2')?.focus()
   void perform(inventory)
   return()=>{element.close();trigger.current?.focus()}
  },[open])
- if(!enabled)return <div className="human-entry-identity">{entry.label} · 身分已驗證</div>
- return <><div className="agent-account" data-theme={theme}><span>{entry.label} · 身分已驗證</span><button ref={trigger} onClick={()=>setOpen(true)}>帳號與代理</button></div>{open&&createPortal(
-  <dialog ref={dialog} className="agent-sheet" data-theme={theme} aria-labelledby="agent-title" onCancel={event=>{event.preventDefault();if(!busy)setOpen(false)}}>
-   <header><h2 id="agent-title" tabIndex={-1}>帳號與代理</h2><button aria-label="關閉帳號與代理" disabled={busy} onClick={()=>setOpen(false)}>×</button></header>
-   <div className="agent-sheet-body" aria-busy={busy}>
+ if(!enabled)return native ? <><TldrawUiDialogHeader><TldrawUiDialogTitle>我的 agent</TldrawUiDialogTitle><TldrawUiDialogCloseButton/></TldrawUiDialogHeader><TldrawUiDialogBody>代理配對目前未啟用。</TldrawUiDialogBody></> : <div className="human-entry-identity">{entry.label} · 身分已驗證</div>
+ const content=<div className="agent-sheet-body" aria-busy={busy}>
     <p>{entry.label} · 已驗證的人類 · {entry.memberId}</p><p>後端：{entry.backendId}</p>
     <p role="status">{busy?'正在確認目前權限…':problem||notice}</p>
     <h3>配對新的代理安裝</h3>
@@ -65,5 +64,10 @@ export function AgentSheet({ entry }: { entry: Entry }) {
     {!busy&&!families.length&&<p>目前沒有代理安裝。</p>}
     {families.map(f=><section className="agent-family" key={f.id}><h3>{f.label}</h3><p>自行填寫的名稱 · 安裝 {f.installationId}</p><p>授權成員：{f.memberId}</p><p>授權家族：{f.id}</p><Scopes scopes={f.scopes}/>{f.revoked?<><p>新請求已拒絕；舊安裝不會復活。</p><p>{f.streamsStopped==='stopped'?'所有已登記連線已確認關閉。':f.streamsStopped==='stopping'?'正在停止既有連線；尚未確認全部關閉。':'既有連線停止結果未確認；請更新清單。'}</p><p>請回原安裝確認撤銷，再啟動全新配對。</p></>:pending.includes(f.id)?<p>撤銷待確認。此處未確認完成；請保留暫停狀態並更新清單。</p>:<><p>目前授權有效。安裝端若顯示更新或安全儲存結果不明，必須停止呼叫，只能確認舊授權撤銷後重新配對。</p>{confirmation===f.id?<><p>確認撤銷這個安裝的所有畫布權限？</p><div className="agent-actions"><button className="destructive" disabled={busy} onClick={()=>void perform(async()=>{setPending(current=>[...current,f.id]);await post('revoke',{familyId:f.id});await inventory();setConfirmation(null)})}>確認撤銷此安裝</button><button className="secondary" disabled={busy} onClick={()=>setConfirmation(null)}>取消撤銷</button></div></>:<button className="secondary" disabled={busy} onClick={()=>setConfirmation(f.id)}>撤銷此安裝</button>}</>}</section>)}
    </div>
+ if(native)return <><TldrawUiDialogHeader><TldrawUiDialogTitle>我的 agent</TldrawUiDialogTitle><TldrawUiDialogCloseButton/></TldrawUiDialogHeader><TldrawUiDialogBody className="journey-private-dialog journey-native-agents">{content}</TldrawUiDialogBody></>
+ return <><div className="agent-account" data-theme={theme}><span>{entry.label} · 身分已驗證</span><button ref={trigger} onClick={()=>setOpen(true)}>帳號與代理</button></div>{open&&createPortal(
+  <dialog ref={dialog} className="agent-sheet" data-theme={theme} aria-labelledby="agent-title" onCancel={event=>{event.preventDefault();if(!busy)setOpen(false)}}>
+   <header><h2 id="agent-title" tabIndex={-1}>帳號與代理</h2><button aria-label="關閉帳號與代理" disabled={busy} onClick={()=>setOpen(false)}>×</button></header>
+   {content}
   </dialog>,document.body)}</>
 }

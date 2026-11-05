@@ -5,3 +5,11 @@
 @media(max-width:480px){.agent-sheet{inset:56px 0 0;width:100vw;max-width:100vw;height:calc(100dvh - 56px);max-height:calc(100dvh - 56px);border:0;border-radius:0}}
 
 body:has(.agent-account) .journey-canvas-root{top:56px!important}
+
+.journey-native-agents{--agent-bg:var(--tl-color-panel);--agent-fg:var(--tl-color-text-1);--agent-border:var(--tl-color-divider);--agent-action:var(--tl-color-primary);--agent-danger:var(--tl-color-danger)}
+.journey-native-agents button,.journey-native-agents input{min-height:44px;min-width:44px;font:inherit}
+.journey-native-agents input{width:100%;box-sizing:border-box;border:1px solid var(--agent-border);border-radius:6px;background:var(--agent-bg);color:var(--agent-fg);padding:8px}
+.journey-native-agents .secondary{background:transparent;color:var(--agent-fg);border-color:var(--agent-border)}
+.journey-native-agents .destructive{background:var(--agent-danger);color:white}
+.journey-native-agents button:disabled{opacity:.55;cursor:wait}
+.journey-native-agents button:focus-visible,.journey-native-agents input:focus-visible{outline:3px solid #e39b00;outline-offset:2px}

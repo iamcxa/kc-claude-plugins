@@ -9,7 +9,7 @@ import { createServer as createVite } from 'vite'
 export const root=new URL('..',import.meta.url).pathname.replace(/\/$/,'')
 export const hash=value=>createHash('sha256').update(value).digest('hex')
 const port=()=>new Promise(resolve=>{const socket=createServer();socket.listen(0,'127.0.0.1',()=>{const value=socket.address().port;socket.close(()=>[3757,5878].includes(value)?port().then(resolve):resolve(value))})})
-export async function startFixture(){
+export async function startFixture({nativeAccount=true,agentPairing=false}={}){
  const scratch=await mkdtemp(join(tmpdir(),'native-account-')),apiPort=await port(),uiPort=await port(),origin='http://127.0.0.1:'+uiPort
  const secret='s'.repeat(43),bearer='synthetic.'+secret,issuer='local:synthetic-native'
  const configFile=join(scratch,'human.json'),grantsFile=join(scratch,'grants.json'),dataDir=join(scratch,'data'),saveDir=join(scratch,'save')
@@ -19,7 +19,7 @@ export async function startFixture(){
   {id:'owner',issuer,subject:'uid:'+process.geteuid(),label:'Synthetic owner',role:'operator',rooms:['one','two'].map(id=>({id,expiresAt:Date.now()+3600_000}))},
   {id:'member',issuer,subject:'ordinary',label:'Synthetic member',role:'operator',rooms:[{id:'one',expiresAt:Date.now()+3600_000}]}]}),{mode:0o600})
  const logs=[]
- const child=spawn(process.execPath,['--import','tsx','server/canvas-server.ts'],{cwd:root,stdio:['pipe','pipe','pipe'],env:{...process.env,JOURNEY_PRIVATE_DIR:dataDir,JOURNEY_GRANTS_FILE:grantsFile,JOURNEY_HUMAN_CONFIG:configFile,JOURNEY_ORIGIN:origin,JOURNEY_API_PORT:String(apiPort),JOURNEY_CONTROL_STDIO:'1',JOURNEY_NATIVE_ACCOUNT:'true',JOURNEY_SAVE_DIR:saveDir}})
+ const child=spawn(process.execPath,['--import','tsx','server/canvas-server.ts'],{cwd:root,stdio:['pipe','pipe','pipe'],env:{...process.env,JOURNEY_PRIVATE_DIR:dataDir,JOURNEY_GRANTS_FILE:grantsFile,JOURNEY_HUMAN_CONFIG:configFile,JOURNEY_ORIGIN:origin,JOURNEY_API_PORT:String(apiPort),JOURNEY_CONTROL_STDIO:'1',JOURNEY_NATIVE_ACCOUNT:String(nativeAccount),JOURNEY_AGENT_PAIRING:String(agentPairing),JOURNEY_SAVE_DIR:saveDir}})
  child.stdout.on('data',value=>logs.push(String(value)))
  child.stderr.on('data',value=>logs.push(String(value)))
  const api=(path,options={})=>fetch('http://127.0.0.1:'+apiPort+path,{...options,headers:{Authorization:'Bearer '+bearer,...options.headers}})
