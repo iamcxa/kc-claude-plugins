@@ -34,6 +34,14 @@ gates:
                 id: briefing:step-back-answer-has-a-record-line:ideation:attempt-1:revision-1
                 digest: sha256:cf543f1fe0299a259ba4c03f191053dbe2f89ee6d72ccb1d612a3e0a6b2c7eb5
                 room-ref: ./step-back-answer-has-a-record-line/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:step-back-answer-has-a-record-line:ideation:1
+                briefing: briefing:step-back-answer-has-a-record-line:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-05T10:38:18.360884Z"
+                decision: hold
+                reason: 'The Captain 「可以」 (chat, 2026-11-05), answering 「這張先擱置，下一批手動試，好嗎？」, after asking 「這個做法真的可以來讓退一步想想發生在該發生的時候嗎？」. Hold: neither the advisory line nor a hold variant is built. Trial by hand for the next batch: when role_triggers.py prints the step-back reminder, FO brings the three questions with its own answers to the Captain as one item in the next sitting; after that batch, a direction change keeps the task, none deletes it. Recommendation followed.'
 ---
 
 When `role_triggers.py` prints the step-back reminder for a task, FO writes its answers to the three questions on one fixed line in the task, and `role_triggers.py` stops printing the reminder for that round once the line is there.
