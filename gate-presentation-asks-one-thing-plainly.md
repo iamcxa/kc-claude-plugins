@@ -66,6 +66,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-05T16:14:14.630764Z"
                 reason: Summary missed the Copilot not-read line for head 2493d57a1 that delivery_gate.py check requires; re-preparing with it.
+            - id: gate-attempt:gate-presentation-asks-one-thing-plainly-validation-3
+              briefing:
+                id: briefing:gate-presentation-asks-one-thing-plainly:validation:attempt-3:revision-1
+                digest: sha256:f1eb907e65d7193cb7c45c11af447c6e99d759380dc80eb992c46b59e9bda945
+                room-ref: ./gate-presentation-asks-one-thing-plainly/review/validation/briefing-3
 started: 2026-11-05T10:53:13Z
 worktree: .worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly
 pr: iamcxa/kc-claude-plugins#788

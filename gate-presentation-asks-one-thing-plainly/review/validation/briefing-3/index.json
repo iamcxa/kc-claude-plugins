@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gate-presentation-asks-one-thing-plainly:validation:attempt-3:revision-1",
+  "question": "決定：合併 #788（閘門核准綁定引用的原問句，ADR 0062）嗎？ Regular merge with --match-head-commit 2493d57a17dcbe08489918b208c9bd5019450772, last of the batch 14 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:gate-presentation-asks-one-thing-plainly:validation:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/3fc233adc9a0a3ef20b066f1b11aab380bf50f30/gate-presentation-asks-one-thing-plainly.md",
+      "rev": "sha256:fedb9140e3d795bc2812c78420ede991d3481b8399c94e005d32ae47090f41a9",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of gate-presentation-asks-one-thing-plainly, PR #788, in the batch 14 validation sitting, after validation-2.\nSufficiency: the pre-gate checks print the 62-word reminder; delivery_gate.py stops the direct-merge line when the recorded validation answer does not quote the bound question, a withdrawn approval no longer counts, and #786's reason check still works beside quotes_bound_question after the merge of origin/main (validation-2 report, Astra, 2026-11-06: 519 tests passed, 19 mutants caught, five historical replays).\nNecessity: the eight files are delivery_gate.py, design_surfaces.py, decision_ledger.py (quotes_bound_question), their three test files, the observer skill and ADR 0062 (gh pr view 788 --json files, FO 2026-11-06).\nAcceptance, run by FO in a fresh shell 2026-11-06, exit 0: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-presentation-asks-one-thing-plainly/validation-2/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-presentation-asks-one-thing-plainly/captain-steps/2.md\nExternal rounds: 2.\nExternal round sources: Codex reviewed 73db59bef and 2493d57a1 (PR comments read by FO 2026-11-06).\nSecond reviewer: Copilot because the PR changes approval and merge rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5787167706\nCopilot retry: available when the Captain confirms quota is back.\nCopilot not read: 2493d57a17dcbe08489918b208c9bd5019450772; last refusal: 73db59bef\nCodex review: \"Didn't find any major issues\" on 2493d57a1 (codex-review-receipt comment on #788, read by FO 2026-11-06).\nRoboRev: clean on 2493d57a1, evidence=roborev:1528 (FO run 2026-11-06).\nDeclined: Deferred risk, validation-1 F1 at 73db59bef, unchanged at 2493d57a1: an annotated YAML status value suppresses the reminder on a passing seed check (none of the 192 pinned tasks uses that form; validation-1 report keeps the reproduction)."
+    }
+  ]
+}
