@@ -1,7 +1,7 @@
 ---
 title: The dispatch-record check sees every listed extension's scope-note instruction, the paseo one included
 variant: kc-dev-flow-2
-status: ideation
+status: implementation
 profile: pilot
 merge: pr
 gates:
@@ -44,7 +44,7 @@ gates:
                 reason: 'The Captain 「可以」 (chat, 2026-11-05), answering 「決定：派工交代句檢查這份設計進入實作嗎？核准即接受 D1（經 Paseo 開的工人不分 Claude 或 Codex 都要有那句）、D2（只檢查第一句）、D3（對已在跑的工人的後續訊息不檢查）、D4（別的 FO 的進行中任務被新抓到的紀錄，由該 FO 在下次派工前補一行 <name> not run: 並註明日期）四個建議。」; accepts the design and D1 to D4 as recommended. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 `dispatch_records.py` holds a dispatch record that lacks the scope-note instruction of any extension the workflow README lists, not only the instructions that name a package script.
