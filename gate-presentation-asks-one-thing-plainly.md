@@ -71,6 +71,17 @@ gates:
                 id: briefing:gate-presentation-asks-one-thing-plainly:validation:attempt-3:revision-1
                 digest: sha256:f1eb907e65d7193cb7c45c11af447c6e99d759380dc80eb992c46b59e9bda945
                 room-ref: ./gate-presentation-asks-one-thing-plainly/review/validation/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:gate-presentation-asks-one-thing-plainly:validation:3
+                briefing: briefing:gate-presentation-asks-one-thing-plainly:validation:attempt-3:revision-1
+                by: person:captain
+                at: "2026-11-05T16:17:54.739285Z"
+                decision: approve
+                reason: 'The Captain chose 「Merge (Recommended)」 (host question dialog, 2026-11-06), answering 「決定：合併 #788（閘門核准綁定引用的原問句，ADR 0062）嗎？ Regular merge with --match-head-commit 2493d57a17dcbe08489918b208c9bd5019450772, last of the batch 14 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-05T10:53:13Z
 worktree: .worktrees/spacedock-ensign-gate-presentation-asks-one-thing-plainly
 pr: iamcxa/kc-claude-plugins#788
