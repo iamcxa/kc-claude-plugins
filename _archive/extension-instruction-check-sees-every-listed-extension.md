@@ -1,7 +1,7 @@
 ---
 title: The dispatch-record check sees every listed extension's scope-note instruction, the paseo one included
 variant: kc-dev-flow-2
-status: validation
+status: done
 profile: pilot
 merge: pr
 gates:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「Merge (Recommended)」 (host question dialog, 2026-11-05), answering 「決定：合併 #787（派工紀錄檢查看得到每個擴充的交代句）嗎？ Regular merge with --match-head-commit 272721000cce947c8f2dcdd3a40c22cdf11dee09, second of the batch 14 validation sitting. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-05T10:52:54Z
 worktree: .worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension
 pr: pr-merge:787
+verdict: PASSED
+completed: 2026-11-05T15:38:08Z
+archived: 2026-11-05T15:38:08Z
 ---
 
 `dispatch_records.py` holds a dispatch record that lacks the scope-note instruction of any extension the workflow README lists, not only the instructions that name a package script.
