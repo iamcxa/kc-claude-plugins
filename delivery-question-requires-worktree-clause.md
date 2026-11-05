@@ -15,6 +15,8 @@ status: backlog
 - Upstream first: README Delivery authority ("removing its clean, pushed worktree"); `delivery_gate.py` question clause checks (`ASK_FORM` and the existing clause list).
 - Non-goals: changing who may remove a worktree.
 
+- Batch 15: the Captain 「可以」 (chat, 2026-11-06), answering 「第 15 批做這 2 張，可以嗎？其他 4 張要退休或擱置，我下一題再問你。」, which named this task.
+
 ## Budget
 - One package PR; the workflow word budget does not rise.
 
