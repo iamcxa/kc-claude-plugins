@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-05T10:52:54Z
+worktree: .worktrees/spacedock-ensign-extension-instruction-check-sees-every-listed-extension
 ---
 
 `dispatch_records.py` holds a dispatch record that lacks the scope-note instruction of any extension the workflow README lists, not only the instructions that name a package script.
