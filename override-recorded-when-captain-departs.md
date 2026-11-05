@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:override-recorded-when-captain-departs:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:override-recorded-when-captain-departs-ideation-1
+              briefing:
+                id: briefing:override-recorded-when-captain-departs:ideation:attempt-1:revision-1
+                digest: sha256:ccda93efe92ebbf2059e4c7820788d025f2ae24288b1c9d049bcb91ab44dc945
+                room-ref: ./override-recorded-when-captain-departs/review/ideation/briefing-1
 ---
 
 ## Scope

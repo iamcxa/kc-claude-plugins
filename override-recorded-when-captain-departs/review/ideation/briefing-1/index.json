@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:override-recorded-when-captain-departs:ideation:attempt-1:revision-1",
+  "question": "決定：漏寫 Override 這份設計進入實作嗎？核准即接受 D1-A（記錄裁示前先檢查理由文字）、D2-A（README 加 48 字，字數上限 5891 調到 5939）、D3-A（不加反向防護）、D4-A（不做裁示紀錄評分器）四個建議。",
+  "artifacts": [
+    {
+      "id": "artifact:override-recorded-when-captain-departs:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/90f32fcced770984eeeb4566a0bbb1667d97eff6/override-recorded-when-captain-departs.md",
+      "rev": "sha256:28b3283083e345bf660912044f1c11cef739ee8055e95ef272fa93d8a77787b7",
+      "mediaType": "text/markdown",
+      "summary": "Pre-record reason check (decision_ledger.py) requires Override: or Recommendation: followed; holds the 3 flagged replays; D1-D4, README +48 words."
+    }
+  ]
+}
