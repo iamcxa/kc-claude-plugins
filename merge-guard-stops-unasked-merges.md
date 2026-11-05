@@ -15,6 +15,17 @@ gates:
                 id: briefing:merge-guard-stops-unasked-merges:backlog:attempt-1:revision-1
                 digest: sha256:2efdd5c216871bf4e2d6790a5df495093f1e61803f3f789039b79a219fc110fc
                 room-ref: ./merge-guard-stops-unasked-merges/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:merge-guard-stops-unasked-merges:backlog:1
+                briefing: briefing:merge-guard-stops-unasked-merges:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-05T17:17:58.121514Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-06), answering 「決定：「合併前擋下沒人問過的合併」這張用 Pilot，照任務寫下的範圍、預算與停止條件進入構想嗎？核准即接受：構想階段先在隔離的 Claude 和 Codex 環境證明兩邊都擋得住（不動你自己的設定），如果某一邊只能用 deny 擋，那條路線另外問你。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
