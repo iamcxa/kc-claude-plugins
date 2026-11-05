@@ -1,0 +1,21 @@
+{
+  "class": "never",
+  "head": "69d62c772c5f4fd28d9105c6f5d49516d559c947",
+  "model": "not run",
+  "necessity": "the four files are workflow.md's Override paragraph (+48 words, budget 5891 to 5939 per D2-A), decision_ledger.py, its tests and lint-skills.py's budget step (git diff --name-only origin/main...head, ",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F1 Deferred risk: The required'",
+    "point: deferred: 'Declined: Deferred risk, validation F1 at'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/decision_ledger.py'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_decision_ledger.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#786",
+  "sufficiency": "decision_ledger.py --reason holds a Captain gate reason that declares neither `Override:` nor `Recommendation: followed`; the three observer-flagged resolutions replay as held and pass once declared, ",
+  "time": "2026-11-05T15:12:39Z",
+  "verdict": "ask"
+}
