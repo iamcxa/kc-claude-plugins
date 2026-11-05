@@ -1,4 +1,4 @@
-# Canonical recoverable plan; current authority: private-entry.md.
+# Canonical private-slice plan; accepted design: private-entry.md; boundaries updated 2026-11-05.
 # Question answers are accepted design dispositions, never runtime passes.
 journey: draw-a-journey
 title: Draw a map with this skill
@@ -37,13 +37,11 @@ steps:
       - id: cite-the-code-each-step-runs
         card: Cite the code each step runs
         release: r2
-        status: exists
-        evidence: systemText
+        status: unverified
       - id: name-what-must-stay-true
         card: Name what must stay true
         release: r2
-        status: exists
-        evidence: ruleText
+        status: unverified
     system:
       - docs/journey/<slug>.yaml in the repository being described — steps, rules, slices, status
       - "No coordinates are stored: layout is computed from order, so a move is a one-line diff"
@@ -151,8 +149,7 @@ steps:
       - id: hand-someone-a-link-to-board
         card: Hand someone a link to the board
         release: null
-        status: exists
-        evidence: startTunnel
+        status: unverified
       - id: share-without-edit-rights
         card: Let them read it without handing over edit rights
         release: null
@@ -174,14 +171,69 @@ steps:
     rules:
       - share-is-not-read-only
       - link-dies-with-the-process
+  - id: enroll-private-member
+    card: Owner adds a person to specified private rooms
+    activity: Let a specified person in
+    stories:
+      - id: add-private-member-with-room-grants
+        card: Add a specified email with explicit room permissions
+        release: r7-members
+        status: unverified
+        questions:
+          - id: q-member-enrollment-operator-proof
+            ask: Who may run the command, and how is delegated operator authority proved?
+          - id: q-member-enrollment-identity-binding
+            ask: How does verified email bind to one immutable provider subject?
+          - id: q-member-enrollment-commit-receipt
+            ask: What receipt proves the exact member, backend, rooms and grant outcome?
+    note: "Accepted slice r7-members (Enroll one private member): private-member-enrollment. Dependencies:
+      r5-pair-and-stop, r4-return-and-recover. Source private-member-enrollment; equivalent patches
+      in private-host-parity; commits b06be1b, d56f979, 3cff098, e2dd24e, 530c876, 04a712e. Local
+      signed-provider fixtures, created/unchanged/conflict/unknown, atomic rollback, restart and
+      ordinary-member/agent denial. Real recipient email-code login and grants require later bounded
+      cloud acceptance. Earlier two-email identity-only success is narrower evidence.
+      Removal/deferral test: No invitation UI, automatic first-login grants, reenable, room creation
+      or operator promotion. The CLI recipient needs no terminal."
+    rules:
+      - private-entry-identity
+      - private-room-data
+      - private-agent-boundary
+      - private-member-enrollment
+      - private-scope
+    system:
+      - Candidate scope only; current-main delivery is not established. See the named task Scope,
+        Acceptance criteria and latest Stage Report summary in docs/dev2/.spacedock-state/.
+  - id: setup-private-host
+    card: Sets up the private host
+    activity: Prepare my private canvas
+    stories:
+      - id: set-up-cloudflare-with-one-command
+        card: Set up a private Cloudflare canvas with one command
+        release: r7-setup
+        status: gap
+        questions:
+          - id: q-setup-execution-boundary
+            ask: Accept a separately scoped installer after hosted journey proof?
+    system:
+      - "Design only: private-native-ui-deploy-design/design/deploy-design.md and AC-2;
+        implementation-36/next-cloud-proposal.md describes a bounded one-use test harness, not a
+        consumer setup command."
+    rules:
+      - private-entry-identity
+      - private-room-data
+      - private-agent-boundary
+      - private-scope
+    note: "New implementation: offline exact payload/routing and credential-boundary tests, then
+      separately authorized fresh/repeated/partial-failure cloud setup plus human entry and
+      exact-owned cleanup. The round36 one-use harness is not a shipped installer."
   - id: private-entry
     card: Signs in and enters the intended private canvas
     activity: Enter my private canvas
     stories:
       - id: land-on-the-board-i-shared
         card: Have them land on the board I shared, not an empty one
-        release: r4
-        status: gap
+        release: r4-entry
+        status: exists
         questions:
           - id: q-r4-no-room-choice
             ask: With no room requested, should entry restore the last permitted room or use a configured first
@@ -200,30 +252,33 @@ steps:
             answer: >-
               Preserve the original qnow-day2 ID, records and links. No replacement, copy, clear, implicit empty creation or data migration.
               local review record: interrogation-v2-triage.md#theme-07 (not published)
+        evidence: registeredHumanRoom
     system:
-      - "Current: server/host/policy.ts authenticate/exchange validates grants and creates 15-minute
-        grant-backed cookies; it does not bind verified human accounts."
-      - "Proposed: a login-only Cloudflare Access route validates signed issuer/audience/expiry
-        identity, resolves an enabled app member, and creates a short app session. Same-origin app
-        APIs deny absent credentials."
+      - "Current main: server/host/human.ts humanRoute handles /auth/entry;
+        humanFromHeaders/currentHuman verify the human session and registeredHumanRoom requires the
+        exact currently permitted registered room before document admission."
+      - "Current main: server/host/transport.ts handle routes humanRoute before document
+        operations; server/host/human-provider.ts verifyCloudflareIdentity validates signed provider
+        identity. Human entry remains opt-in and default off."
     cites:
       - kc-claude-plugins
     rules:
       - private-entry-identity
       - private-room-selection
       - private-scope
-    note: Accepted 2026-10-19 design. The opt-in first-story candidate has local Node browser/owner-peer
-      and simulated-provider Worker evidence only. Exact-room entry preserves original IDs/data.
-      Sites remains legacy; actual provider setup and activation are unrun.
+    note: "Slice 1 (r4-entry), merged via #778. The original room IDs/data and existing
+      write/concurrency rules are preserved. registeredHumanRoom is implementation evidence on main;
+      historical local Node/Worker proofs do not establish hosted provider acceptance, stream safety
+      or activation. Catalog is the separately merged slice 2; return/drafts and agents remain later
+      work."
   - id: choose-private-room
     card: Chooses another permitted room from the canvas
     activity: Choose my room
     stories:
       - id: switch-my-permitted-rooms
         card: Switch my permitted rooms without leaving the canvas
-        release: r4
-        status: unverified
-        evidence: permittedRoomCatalog
+        release: r4-catalog
+        status: exists
         questions:
           - id: q-r4-fourth-room-registration
             ask: Which existing registration procedure can add a permitted fourth room without a new frontend
@@ -241,27 +296,32 @@ steps:
             answer: >-
               Confirm source edits before switching; retain the original editor on failed confirmation or target admission. A denied URL never selects another room automatically. Revoked-source work stays frozen; another room requires an explicit new context.
               local review record: interrogation-v2-triage.md#theme-04 (not published)
+        evidence: permittedRoomCatalog
     system:
-      - "Current: server/client/RoomSelector.tsx RoomPageMenu integrates the room menu with the
-        native canvas toolbar."
-      - "Proposed: app-member room grants filter one catalog; menu labels never authorize. A/B are
-        legacy test rooms; Day2 means qnow-day2."
+      - "Current main: server/host/human.ts permittedRoomCatalog serves /auth/rooms from registered
+        room metadata intersected with current human grants; it does not read documents or sample
+        health."
+      - "Current main: server/client/RoomSelector.tsx RoomPageMenu renders the native room menu;
+        App.tsx stages target sync after confirmRoomSwitch, retains the source editor on failure,
+        and changes URL/history only after successful target activation."
     cites:
       - kc-claude-plugins
     rules:
       - private-room-data
       - private-room-selection
       - private-scope
-    note: Accepted design preserves native selector, existing room IDs/data and operator registration.
-      First-entry selection is in the first candidate; full catalog and switching acceptance remain
-      separate. No room-management platform.
+    note: "Slice 2 (r4-catalog), merged via #779. permittedRoomCatalog is implementation evidence on
+      main. Local catalog/switching evidence remains narrower than hosted or human journey
+      acceptance. Keep source edits on failed or stale confirmation; denied source work stays frozen
+      and an explicit separate context can open another room. Default-off human entry remains
+      unchanged. Slice 2b adds only native account view/logout before safe pairing."
   - id: return-private-room
     card: Returns to the same permitted room
     activity: Return to my work
     stories:
       - id: resume-my-authorized-room
         card: Return to my room after reload or sign-in
-        release: r4
+        release: r4-return-and-recover
         status: unverified
         questions:
           - id: q-r4-unsent-work-boundary
@@ -308,17 +368,29 @@ steps:
     rules:
       - private-room-data
       - private-failure-visible
-    note: Accepted design requires same-person/current-room review and explicit restoration against
+    note: >-
+      Accepted design requires same-person/current-room review and explicit restoration against
       current cloud state. Durable local acknowledgement differs from cloud sync. No automatic
       write/merge, cross-origin migration or guaranteed hosted export. Draft implementation and
       runtime proof remain owed.
+
+      Accepted slice r4-return-and-recover (Return to work and recover safely): private-return-context;
+      private-access-recovery. Dependencies: r4-catalog, r5-pair-and-stop. Source
+      private-return-context + private-access-recovery; lifetime fixes from private-host-parity;
+      commits fd5aca4, 1f458f1, ad9b448, 65e96a0, 634e425, 7cf84f8, 3af3637, c213867, 8c0ae1f,
+      bccb1c1, 7e5e040. Local durable browser transactions, account/room changes,
+      quota/failure/reload, typed denial and no automatic flush; exact-version cleanup needs cloud
+      acknowledgment. Port the accepted fourteen-day original-event bound and matching draft
+      validator together; do not reinterpret inherited seven-day tests as current acceptance.
+      Removal/deferral test: Pairing dependency is real in existing code: merge 3c664b9 has catalog
+      and revocation parents. Whole existing return branch is not an r4-only change.
   - id: recover-private-access
     card: Understands unavailable access and chooses a safe next step
     activity: Recover my access
     stories:
       - id: understand-room-access-failure
         card: See why my room cannot open and recover safely
-        release: r6
+        release: r4-return-and-recover
         status: unverified
         questions:
           - id: q-r4-expiry-no-renewal
@@ -344,8 +416,8 @@ steps:
               local review record: interrogation-v2-triage.md#theme-19 (not published)
       - id: revoke-delegated-agent-access
         card: Revoke one agent or disable its authorizing member
-        release: r6
-        status: gap
+        release: r5-pair-and-stop
+        status: unverified
         questions:
           - id: q-revoke-bound
             ask: What bounded behavior makes app revocation and provider-policy removal distinct?
@@ -377,11 +449,33 @@ steps:
     rules:
       - private-entry-identity
       - private-failure-visible
-    note: Complete design confirmed 2026-10-19. Recovery retains original human work and identity/room
+    note: >-
+      Complete design confirmed 2026-10-19. Recovery retains original human work and identity/room
       context, requires explicit restoration, and preserves drafts through unknown outcomes.
       Stream-stop, durable storage/manual deletion, permission-regrant review and apply receipts
       remain later implementation/runtime work. No private agent transcripts or credentials are
       persisted as human drafts.
+
+      Accepted slice r5-pair-and-stop (Pair and revoke one agent safely): private-agent-pairing;
+      private-delegation-revoke. Dependencies: r4-entry. Source private-agent-pairing +
+      private-delegation-revoke; commits ee016f1, b4f9458, 0976749, 6d35f5c, cd25067, c0c2a89,
+      17f47d0. Local protected-store/atomic rotation and consent tests; real local Node/workerd
+      sockets exercise refusal, missed fanout, lease stop, cold wake, original expiry and no
+      revival. Separate denial receipt from observed stop. Hosted lease scheduling still requires
+      host parity. Removal/deferral test: Native-model coediting is later; pairing and revocation
+      stay together because removing stop protection repeats an observed disclosure.
+
+
+      Accepted slice r4-return-and-recover (Return to work and recover safely): private-return-context;
+      private-access-recovery. Dependencies: r4-catalog, r5-pair-and-stop. Source
+      private-return-context + private-access-recovery; lifetime fixes from private-host-parity;
+      commits fd5aca4, 1f458f1, ad9b448, 65e96a0, 634e425, 7cf84f8, 3af3637, c213867, 8c0ae1f,
+      bccb1c1, 7e5e040. Local durable browser transactions, account/room changes,
+      quota/failure/reload, typed denial and no automatic flush; exact-version cleanup needs cloud
+      acknowledgment. Port the accepted fourteen-day original-event bound and matching draft
+      validator together; do not reinterpret inherited seven-day tests as current acceptance.
+      Removal/deferral test: Pairing dependency is real in existing code: merge 3c664b9 has catalog
+      and revocation parents. Whole existing return branch is not an r4-only change.
   - id: workshop
     card: Moves the cards around with other people
     activity: Talk over it
@@ -408,14 +502,60 @@ steps:
       - kc-claude-plugins
     rules:
       - handmade-cards-survive
+  - id: native-private-controls
+    card: Manages my account from the canvas
+    activity: Control my access
+    stories:
+      - id: see-my-account-and-log-out
+        card: See My account and log out safely
+        release: r4-account
+        status: unverified
+        note: "Slice 2b: the native 「我的帳號」 account view and browser-session logout only. Build on merged
+          entry and catalog; pairing, own-agent controls and current-room member readback stay in
+          r7-native-controls. Cancel or explicit logout retains unconfirmed frozen work and a
+          close/reload warning; logout neither revokes independent installations nor deletes drafts.
+          Local interaction, delayed replies, focus and re-entry require new proof; no hosted
+          acceptance is claimed."
+      - id: manage-my-native-account
+        card: Manage my agents and view current-room members
+        release: r7-native-controls
+        status: unverified
+        note: "Remaining native-controls scope after slice 2b: own-agent controls and guarded
+          current-room member readback. Account view and browser logout belong only to
+          see-my-account-and-log-out; invitations and removal remain deferred."
+      - id: invite-member-from-native-canvas
+        card: Invite a member from the current room
+        status: gap
+        note: Accepted design only; recipient verifies identity before explicit owner final confirmation. No
+          runtime admission in this proposal.
+      - id: remove-member-from-current-room
+        card: Remove a member from only the current room
+        status: gap
+        note: Accepted design only; unique owner, no self-removal or cross-room removal. Separate future
+          task and membership decision.
+    system:
+      - "Candidate kc-journey-map/docs/native-account.md and server/host/human-store.ts: create-once
+        owner:<backendId> metadata; guarded account/current-room reads. Native UI controls do not
+        proxy operator credentials."
+    rules:
+      - private-entry-identity
+      - private-agent-boundary
+      - private-room-data
+      - private-failure-visible
+      - private-scope
+    note: Historical candidate evidence covers owner/member/agent authority negatives and native
+      desktop/mobile-width controls. Integrate the remaining own-agent and guarded current-room
+      member controls after return/recovery and safe pairing, preserving account/logout from slice
+      2b. Recheck delayed replies, focus and source acknowledgment on the new SHA; physical-device
+      keyboard acceptance remains human work. Invitation/removal runtime remains deferred.
   - id: agent-collaboration
     card: Works with an authorized agent in the chosen room
     activity: Work with my agent
     stories:
       - id: pair-my-agent-installation
         card: Approve a named agent installation for selected rooms
-        release: r5
-        status: gap
+        release: r5-pair-and-stop
+        status: unverified
         questions:
           - id: q-pair-human-binding
             ask: How is a pairing code bound to its initiating client and verified authorizer?
@@ -451,7 +591,7 @@ steps:
               local review record: design-brief.md#accepted-persistent-installation-renewal-direction (not published)
       - id: collaborate-in-my-permitted-room
         card: Work with my authorized agent in the same room
-        release: r5
+        release: r5-coedit
         status: unverified
         questions:
           - id: q-r4-independent-agent-rights
@@ -475,8 +615,9 @@ steps:
               Show server-derived recent activity and installation identity separately from self-reported labels. Stateless tool calls are not fabricated online/model presence; no cryptographic per-record model attribution is added.
               local review record: interrogation-v2-triage.md#theme-14 (not published)
     system:
-      - "Current: server/host/policy.ts Grant has a principalId label and room list; transport.ts
-        exposes native /mcp; neither proves a verified human binding."
+      - "Current main: server/host/policy.ts authenticate supports verified human sessions and
+        legacy grants; transport.ts exposes /mcp. Per-installation pairing, rotation and delegated
+        stream-stop behavior remain later slices."
       - "Proposed: bounded pairing helper issues an independent app credential per installation,
         authorized by a verified enabled member. Effective rooms intersect current member and
         delegated room grants."
@@ -489,15 +630,33 @@ steps:
     note: "Complete design confirmed 2026-10-19: persistent installation consent, automatic normal
       renewal, exact current-authority intersection and family revoke. Conservative unknown-refresh
       repair requires confirmed revoke then fresh human pairing. Helper/native-client/secure
-      storage/rotation proof remain owed; room data/concurrency are unchanged."
+      storage/rotation proof remain owed; room data/concurrency are unchanged.
+
+      Accepted slice r5-pair-and-stop (Pair and revoke one agent safely): private-agent-pairing;
+      private-delegation-revoke. Dependencies: r4-entry. Source private-agent-pairing +
+      private-delegation-revoke; commits ee016f1, b4f9458, 0976749, 6d35f5c, cd25067, c0c2a89,
+      17f47d0. Local protected-store/atomic rotation and consent tests; real local Node/workerd
+      sockets exercise refusal, missed fanout, lease stop, cold wake, original expiry and no
+      revival. Separate denial receipt from observed stop. Hosted lease scheduling still requires
+      host parity. Removal/deferral test: Native-model coediting is later; pairing and revocation
+      stay together because removing stop protection repeats an observed disclosure.
+
+
+      Accepted slice r5-coedit (Human and native agents coedit): private-agent-coedit. Dependencies:
+      r5-pair-and-stop, r4-return-and-recover. Source private-agent-coedit; commits 8bfb46f,
+      9d5255c, cd73bd4, ff930c4, cc22854. Real native client tool calls and human pointer/keyboard
+      edits with browser readback and cleanup, bound to the new integrated SHA. Raw HTTP or tool
+      discovery alone fails. Local evidence exists historically; hosted native use remains owed.
+      Removal/deferral test: Enrollment UI, automatic setup and function-model authoring do not
+      change this shared-room result."
   - id: host-private-journey
     card: Uses the same journey on the selected host
     activity: Keep host choice portable
     stories:
       - id: use-common-api-across-hosts
         card: Use one room contract on Node or Cloudflare
-        release: r7
-        status: gap
+        release: r7-host-parity
+        status: unverified
         questions:
           - id: q-host-parity
             ask: Which host obligations must match while keeping Cloudflare Free?
@@ -512,10 +671,21 @@ steps:
       - private-room-data
       - private-agent-boundary
       - private-scope
-    note: Accepted design requires shared admission/error behavior with explicit host capability
+    note: >-
+      Accepted design requires shared admission/error behavior with explicit host capability
       differences, Cloudflare Free and local-only usage detail. Local adapter tests are not real
       provider/Free workload acceptance. No deployment, provider/account changes, Sites removal or
       original-data migration is authorized.
+
+      Accepted slice r7-host-parity (Accept the journey on both hosts): private-host-parity. Dependencies:
+      r4-entry, r4-catalog, r5-pair-and-stop, r4-return-and-recover, r5-coedit, r7-members,
+      r7-native-controls. Source private-host-parity; commits 43e0ed4, de5a25a, 9fd7fe5, 79944bd.
+      First current-main local adapter matrix; then separately authorized cloud identity, member
+      grants, logout/re-entry, native coedit, denial/lease/wake and quota/usage receipts; then a
+      human operates the complete path. Receipt25 proves two identities only; run36 proves
+      root/assets/config, not human acceptance. Removal/deferral test: Use a reviewed explicit setup
+      procedure first; a consumer one-command installer is not needed to prove the hosted product
+      contract. Hosted proof can reveal required product corrections in this slice.
   - id: readback
     card: Takes the changes back into the file
     activity: Fold it back in
@@ -635,21 +805,46 @@ releases:
     name: RELEASE 3
     goal: Author a function model, iterate on it quickly, and hand one agreed Development Brief to
       development planning.
-  - id: r4
-    name: RELEASE 4 · ACCEPTED DESIGN
-    goal: A verified human enters and returns to the intended permitted canvas through one native entry.
-  - id: r5
-    name: RELEASE 5 · ACCEPTED DESIGN
-    goal: A verified human pairs one agent installation and coedits the same permitted room with a
-      distinct actor.
-  - id: r6
-    name: RELEASE 6 · ACCEPTED DESIGN
-    goal: A human safely recovers expired sessions and independently revokes agents or members without
-      losing same-tab work.
-  - id: r7
-    name: RELEASE 7 · ACCEPTED DESIGN
-    goal: The complete private journey has equivalent Node and Cloudflare admission with local Free-plan
-      usage proof.
+  - id: r4-entry
+    name: Private entry foundation · MERGED · DEFAULT OFF
+    goal: A preconfigured verified human opens the exact permitted synthetic room locally; the merged
+      foundation stays disabled.
+  - id: r4-catalog
+    name: Choose another permitted room · MERGED · DEFAULT OFF
+    goal: A preconfigured human switches between permitted synthetic rooms and keeps the source editor
+      on failure.
+  - id: r4-account
+    name: See My account and log out · ACCEPTED SLICE 2b
+    goal: A signed-in human opens the native 「我的帳號」 view and explicitly logs out safely, retaining
+      unconfirmed work and a clear path to sign in again.
+  - id: r5-pair-and-stop
+    name: Pair and revoke one agent safely · ACCEPTED SLICE
+    goal: A verified human pairs one exact installation, then revokes it while other authorized actors
+      continue.
+  - id: r4-return-and-recover
+    name: Return to work and recover safely · ACCEPTED SLICE
+    goal: The same human returns to the permitted room and explicitly restores an acknowledged draft
+      after access recovery.
+  - id: r5-coedit
+    name: Human and native agents coedit · ACCEPTED SLICE
+    goal: A human and separate Claude and Codex installations edit one permitted room, with attribution
+      and second-room refusal.
+  - id: r7-members
+    name: Enroll one private member · ACCEPTED SLICE
+    goal: The private operator enrolls one verified recipient into exactly the approved existing rooms
+      and receives a truthful result.
+  - id: r7-native-controls
+    name: Use native account controls · ACCEPTED SLICE
+    goal: A human manages own agents and reads guarded current-room membership inside the native canvas,
+      preserving the earlier account/logout slice.
+  - id: r7-host-parity
+    name: Accept the journey on both hosts · ACCEPTED SLICE
+    goal: The accepted private journey behaves consistently on local Node and a bounded Cloudflare Free
+      installation.
+  - id: r7-setup
+    name: Set up Cloudflare with one command · ACCEPTED SLICE
+    goal: The owner previews and authorizes one supported setup command that returns a usable private
+      entry and safe rerun/cleanup results.
 ownership:
   - id: own-author
     owner: The engineer
@@ -724,21 +919,35 @@ rules:
     text: Agent rooms intersect current authorizer grants and delegated grants; expiry/revoke/disable
       deny reads and writes. Denied operations change nothing.
   - id: private-scope
-    text: Accepted 2026-10-19 design; Pilot implementation in four slices. Preserve room
-      engine/data/concurrency. Cloudflare Free; detailed usage receipts remain local. Formal merge
-      needs separate Captain confirmation.
+    text: The 2026-10-19 four-slice design is historical scope. The Captain accepted the nine finer
+      private slices plus account/logout slice 2b, ordered after catalog and before pairing.
+      Preserve room engine/data/concurrency, Free-only hosting and local-only usage detail. Entry
+      and catalog are merged; each later slice needs current-main integration proof. Development
+      admission, hosted acceptance and activation remain separate decisions.
+  - id: private-member-enrollment
+    text: |
+      Only the owner or an explicitly authorized assistant may use the private management command
+      to add the specified email/member and explicit existing-room permissions. Email-code login
+      verifies the recipient; provider allowlisting alone is not application enrollment. Ordinary
+      members and agent families gain no administrative authority. No sharing UI, public invitation
+      endpoint, re-enable, new per-action permission model or canvas/data/concurrency change.
 status:
-  unproven: "2026-10-19: complete technical design confirmed for Pilot implementation in four slices,
-    eight stories (3/2/2/1), and 31 design question dispositions. Historical QA references to
-    pending overall design approval are superseded by this confirmation and private-entry.md. This
-    first-entry and room-catalog source candidates have local synthetic evidence only; independent
-    validation and actual provider, stream stop, installation storage, draft durability and Free
-    workload proofs remain separate. No whole-journey runtime acceptance or activation is claimed."
-  unmerged: This planning source records scoped observations and accepted direction; it does not
-    report current repository-wide PR or merge state.
-  undeployed: The new verified-human entry is opt-in and the deployed default is unchanged. No
-    provider configuration, live credential changes, original-room writes or deployment have been
-    performed.
+  unproven: "2026-11-05: nine accepted private slices plus account/logout slice 2b are mapped in
+    order. Only entry and catalog have implementation evidence on origin/main 8dc13b6. Later private
+    stories retain proposal gap/unverified status; six r3 stories remain unverified. Stale legacy
+    symbols systemText, ruleText and startTunnel are downgraded to unverified as in the reviewed
+    proposal. This map update runs source lint only, with no canvas or runtime acceptance. Local
+    code existence does not establish hosted provider login, stream-stop safety, secure installation
+    storage, draft recovery, physical-device use or Free-plan workload acceptance. Fit/appetite and
+    per-slice development admission are separate."
+  unmerged: "Entry slice 1 and catalog slice 2 are on origin/main 8dc13b6 via #778 and #779.
+    Account/logout slice 2b and all remaining private slices are not established on main; historical
+    stacked branches are source material, not independently validated landable heads. This docs
+    branch is a local-only commit for FO review, with no push or pull request."
+  undeployed: Human entry remains opt-in/default off. Historical implementation-25 proved two email
+    identities only; implementation-36 reached root/assets/config and login UI without human canvas
+    acceptance, and its cleanup record reports temporary resource removal. This map update performs
+    no deployment, provider/account change or activation and claims no current hosted acceptance.
   irreversible: Deleting a room loses unexported native edits. Read back edits or export a .tldr
     backup first; generated contracts can be rebuilt.
-  as_of: 2026-10-19
+  as_of: 2026-11-05
