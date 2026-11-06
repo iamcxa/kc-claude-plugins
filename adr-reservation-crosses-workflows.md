@@ -72,9 +72,9 @@ When a First Officer (FO) reserves an ADR number, `number_guards.py reserve` now
 
 ### Replay of the 0060 collision
 
-On 2026-11-05 this workflow's task `gate-presentation-asks-one-thing-plainly` held `ADR: 0060` in its `## Number guards`, pushed on `origin/spacedock-state/dev2`. The kc-journey-map private-host FO renumbered its slice-3 branch "ADR 改號為 0060/0061" by reading `origin/main` and open PRs (its state `private-host-parity/fo-notes/overnight-plan-20261104.md`, read-only); no task of that workflow carries an `ADR: 0060` line, so `reserve` was never run for those numbers. #789 (`a7c0bdbe0`) landed `docs/adr/0060` and `0061` at 23:31 +0800, and this workflow's #788 then failed R5 and renumbered to 0062 (`b804d81d3`). The journey-map state checkout has zero remotes (`git remote -v` empty) and branch name `spacedock-state/dev2`.
+On 2026-11-05 this workflow's task `gate-presentation-asks-one-thing-plainly` held `ADR: 0060` in its `## Number guards`, pushed on `origin/spacedock-state/dev2`. The kc-journey-map private-host FO renumbered its slice-3 branch: 「ADR 改號為 0060/0061」 (its state `private-host-parity/fo-notes/overnight-plan-20261104.md`, read-only). The dev2 FO's report of 2026-11-06 says those workers checked `origin/main` and open PRs only. No journey-map task records `ADR: 0060` under `## Number guards`. #789 (`a7c0bdbe0`) landed `docs/adr/0060` and `0061` at 23:31 +0800, and this workflow's #788 then failed R5 and renumbered to 0062 (`b804d81d3`). The journey-map state checkout has zero remotes (`git remote -v` empty) and branch name `spacedock-state/dev2`.
 
-So the half that would have stopped #789 is `check` at the merge ask (R8, AC-2), not `reserve`: its FO never ran `reserve`. `reserve` (AC-1) stops the next reservation from repeating it.
+From that checkout, 0.35.0 `reserve` prints 0060 (replay A1), so running it would not have helped. Under the candidate, `reserve` prints a free number (AC-1). If a number is chosen without `reserve`, as here, `check` refuses 0060 at the merge ask (R8, AC-2). Both halves are in the stop condition.
 
 A second bite of the same blindness, inside one workflow: `release-acceptance/index.md` (folder form) recorded `ADR: 0031` at 2026-10-23 11:46 +0800 (state commit `ed51606ce`); `ops-inbox-r1-setup-and-isolation.md` recorded `ADR: 0031` at 13:26 (`ed16df78b`). `reserve` globs only `*.md`, so it never read the folder-form task; ops-inbox renumbered to 0040 after #714 merged 0031.
 
@@ -109,7 +109,7 @@ rm -rf "$R"
 
 Run 2026-11-06 against the 0.35.0 package script: A1 `ADR: 0060`; A2 `PASS: no findings` (exit 0); A3 `PASS: no findings`; B1 `ADR: 0060`. Both collisions reproduce. The candidate owes A1 `ADR: 0061`, A2 `FAIL R8` exit 1, A3 PASS exit 0, B1 `ADR: 0061`.
 
-A disposable prototype of the holder scan (outside the repository, not kept) read this machine's real state on 2026-11-06. From the journey-map state directory with this repository's refs, the holders were its own 0030 to 0035 plus 0009, 0015, 0040 and 0063 on `origin/spacedock-state/dev2`; with `main` at 0062, `reserve` would print `ADR: 0064` there. That is the number a person told the journey-map FO by hand on 2026-11-06.
+A disposable prototype of the holder scan (outside the repository, not kept) read this machine's real state on 2026-11-06. From the journey-map state directory with this repository's refs, the holders were its own 0030 to 0035 plus 0009, 0015, 0040 and 0063 on `origin/spacedock-state/dev2`; with `main` at 0062, `reserve` would print `ADR: 0064` there. That matches the line the dev2 FO recorded on 2026-11-06: journey-map work takes 0064 or later.
 
 ### Chain checked
 
@@ -162,7 +162,7 @@ Counted with `lint-skills.py` `normalized_words` on `origin/main` `kc-dev-flow-2
 - Not atomic: between `reserve` and the state push, a second FO can take the same number. Both candidates then get R8, and the first one checked renumbers. Window: minutes. The bite was a day-long gap.
 - A `state-branch:` outside `spacedock-state/` is not read.
 - The one-number-per-kind-per-task rule is not enforced here. The journey-map data shows one task holding five ADR lines, and 0032 held by two tasks. That is outside this task.
-- `--help` and the module docstring name R8; `test_number_guards.py` `HelpTests` moves from R1-R7 to R1-R8.
+- `--help` and the module docstring name R8; `test_number_guards.py` `HelpTests` moves from R1-R7 to R1-R8. Existing fixtures have no `origin`, so every `check` there prints the local-refs-only line; tests that compare the whole output move to `assertIn`.
 
 ### ADR
 
@@ -220,7 +220,7 @@ Verified by: CI run on the PR head.
 ## Stage Report: ideation
 
 - DONE: Design how a reserved ADR number in one workflow is seen by another workflow writing ADRs to the same repository (/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py and the Number guards rule), with a replay of the 0060 collision between this workflow and kc-journey-map #789
-  Design § Proposition, FAQ, Flow: `reserve`/`check` read live holders on every `origin/spacedock-state/*` branch plus own `*/index.md`; new R8. The replay script reproduces 0060 (A1, A2) and the same-workflow 0031 (B1) at 0.35.0; it shows `check` R8, not `reserve`, would have stopped #789.
+  Design § Proposition, FAQ, Flow: `reserve`/`check` read live holders on every `origin/spacedock-state/*` branch plus own `*/index.md`; new R8. The replay script reproduces 0060 (A1, A2) and the same-workflow 0031 (B1) at 0.35.0; `check` R8 stops a number chosen without `reserve`, as #789's was; `reserve` stops it at reservation.
 - DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (delivery-check-passes-a-skipped-by-design-run, codex-security-only-prompts-code-review, delivery-check-resolves-links-from-the-task, decline-becomes-task-only-with-a-bite) and live task of other sessions (adoption-asks-which-extensions, adr-silent-undo-probe, captain-ruling-sources-checked (held), comment-check-reaches-delivery-gate, dispatch-carries-reserved-adr-number, fo-write-checks-parse-top-level, gate-summary-names-each-decline (held), step-back-answer-has-a-record-line (held), merge-guard-stops-unasked-merges (held), journey-canvas-hosted-poc, picky-reviewers-may-run-on-gemini, seed-check-requires-alignment-result, archive-waits-for-observer-report, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot, adr-required-statement, journey-server-host-pilot (stalled, held or driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
   Five files named, each with its overlapping tasks; the budget table is shared by 11 tasks; `adr-required-statement` touches the adjacent Number guards line; recommended order given.
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
@@ -242,4 +242,4 @@ Verified by: CI run on the PR head.
 
 ### Summary
 
-Reservations stay where FO already writes them, the `ADR:` lines in each workflow's pushed state branch. `number_guards.py` fetches and reads every `origin/spacedock-state/*` branch and its own folder-form tasks, and a new check rule R8 refuses an added ADR number another live task holds. The 0060 bite would have been stopped by R8 at the merge ask, because journey-map never ran `reserve`. The design found a second bite of the same blindness: the 0031 folder-form miss. The open item is the Captain's D1. Until the journey-map workflow pushes its state under a unique `state-branch:`, this workflow cannot see its reservations. Its directory basename `dev2` would also collide with this workflow's branch if it added `origin` without that setting. The README falls by 6 words.
+Reservations stay where FO already writes them, the `ADR:` lines in each workflow's pushed state branch. `number_guards.py` fetches and reads every `origin/spacedock-state/*` branch and its own folder-form tasks, and a new check rule R8 refuses an added ADR number another live task holds. In the 0060 bite, 0.35.0 `reserve` from the journey-map checkout prints 0060 too. The candidate's `reserve` gives a free number, and R8 refuses at the merge ask a number chosen by hand. The design found a second bite of the same blindness: the 0031 folder-form miss. The open item is the Captain's D1. Until the journey-map workflow pushes its state under a unique `state-branch:`, this workflow cannot see its reservations. Its directory basename `dev2` would also collide with this workflow's branch if it added `origin` without that setting. The README falls by 6 words.
