@@ -3,7 +3,7 @@ title: The delivery question check requires the worktree-removal clause the READ
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-06), answering 「決定：「合併問句要有移除 worktree 那一句」這份設計進入實作嗎？核准即接受 D1（合併當下的 check 不再另外檢查這一句）與 D2（這一句要照 README 原文寫「clean, pushed」）兩個建議。」; accepts D1 and D2 as recommended. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 `delivery_gate.py question` holds a validation gate question that omits "removing its clean, pushed worktree", so an approval cannot be read as covering a cleanup it never named.
