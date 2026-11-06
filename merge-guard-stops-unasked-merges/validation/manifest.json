@@ -16,6 +16,6 @@
   "acceptance_script_sha256": "3aa364c3efd9d0dbe79a4913d89ef5b202f33447dfd5d786f385490a38baf375",
   "native_interactive_session": 89581,
   "native_interactive_exit": 0,
-  "state_push": "not run; dispatch forbids push",
+  "state_push": "The explicitly prescribed spacedock state commit helper automatically committed and pushed state; no product push or separate git push was run.",
   "delivery": "FO-owned; 793 first; 794 remains draft/open"
 }

@@ -49,5 +49,7 @@ No new Material, Deferred risk, Polish or Needs decision finding was established
 
 Native isolation followed the implementation's recorded allowance: normal HOME/auth, Claude --setting-sources project plus temporary settings, headless no-session-persistence, Codex ignore-user-config/ephemeral and rules read-only. Initial sandbox host attempts failed before inference; authorized retries outside it produced the cited evidence. Interactive Claude wrote its own temporary-path trust/session metadata. No Captain hook settings or rules were edited; no real merge was attempted. All owned native processes finished; the interactive session exited 0 and fake log stayed empty. Test exports/evidence are retained under /tmp for review; CLI trust/session metadata is not deleted.
 
-Validation recommends PASSED for this SHA. FO retains #793-first integration, independent review disposition, ready/merge gate, state push and post-release registration/rollout; none is implied by this report.
+Validation recommends PASSED for this SHA. FO retains #793-first integration, independent review disposition, ready/merge gate and post-release registration/rollout; none is implied by this report.
 
+
+The prescribed spacedock state commit command reported “Committed and pushed” for this task; state synchronization is performed by that helper. No product branch or separate push command was issued.

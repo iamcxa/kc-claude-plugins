@@ -428,5 +428,5 @@ The Pilot implementation is committed locally at `871c6b2f4ebccfc2c67df91d7d39ad
 
 ### Summary
 
-PASSED for PR #794 at 871c6b2f4ebccfc2c67df91d7d39ad038aa0710f within the approved Pilot boundary; no new Material, Deferred risk, Polish or Needs decision finding was established. Records do not authenticate approval, Paseo agents may answer requests, registration remains manual and untested on Captain settings, and recount approvals are synthetic; each implementation limit is retained in validation/evidence.md. FO owns #793-first integration, later-head checks, review/gate/ready/merge, state push and rollout; this report grants none of them.
+PASSED for PR #794 at 871c6b2f4ebccfc2c67df91d7d39ad038aa0710f within the approved Pilot boundary; no new Material, Deferred risk, Polish or Needs decision finding was established. Records do not authenticate approval, Paseo agents may answer requests, registration remains manual and untested on Captain settings, and recount approvals are synthetic; each implementation limit is retained in validation/evidence.md. FO owns #793-first integration, later-head checks, review/gate/ready/merge and rollout; this report grants none of them. The prescribed spacedock state commit helper commits and pushes this task state automatically; no product push or separate push command was run.
 
