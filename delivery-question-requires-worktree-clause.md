@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-11-06T01:30:12Z
 worktree: .worktrees/spacedock-ensign-delivery-question-requires-worktree-clause
+pr: iamcxa/kc-claude-plugins#793
 ---
 
 `delivery_gate.py question` holds a validation gate question that omits "removing its clean, pushed worktree", so an approval cannot be read as covering a cleanup it never named.
