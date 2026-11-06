@@ -1,0 +1,11 @@
+{
+  "base": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+  "candidate": "1ca2625de0706e5494f73e010a394f8e5194b2a1",
+  "branch": "spacedock-ensign/delivery-check-passes-a-skipped-by-design-run",
+  "product_files": [
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py"
+  ],
+  "fo_text_diff": [],
+  "fo_text_mutation_caught": true
+}

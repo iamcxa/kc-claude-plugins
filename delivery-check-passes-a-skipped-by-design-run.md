@@ -212,3 +212,44 @@ Recommended order: merge-guard-stops-unasked-merges first (already in validation
 ### Summary
 
 The design repairs `runs_problem`. A whole workflow run skipped by its own conditions settles only in a repository that reports required checks to GitHub, and only when each of them has a pass. A new `required_problem` holds a required check that failed, is pending, or was only skipped. Relay and web, which report none, keep today's hold. The prototype and replay of qnow #1338 (a reduced fixture, script and diff under `ideation/`) pass #1338 and still hold every failing shape. One decision is left for the Captain, D1: adding the `gh pr checks --required` call, which reverses #680's "no new gh call" pin. No repository file, branch or commit was written.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria, D1 as recommended, only in the named functions and files.
+  Candidate `1ca2625de0706e5494f73e010a394f8e5194b2a1`, branch `spacedock-ensign/delivery-check-passes-a-skipped-by-design-run`, based on fetched `origin/main` `ba055b8a7a55a787ac989c4cef52d07dd75661ad`; only `kc-dev-flow-2/scripts/delivery_gate.py` and `test_delivery_gate.py` changed. No versions or ADRs changed.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins.
+  No PR opened: no push grant. Product commit is local; FO owns branch push and Draft PR creation. The read-only all-state branch PR lookup returned `[]` before work.
+- DONE: AC-1, the #1338 replay passes and a sole completed skipped run settles beside passed required names.
+  `implementation/{base,candidate}-replay.log`: first row exit 1/0 respectively; `RequiredChecksTests.test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass` passes; removing skipped from settled conclusions makes its assertions fail.
+- DONE: AC-2, failed or pending required checks and other unsuccessful workflow runs hold.
+  Replay failure/pending rows exit 1; new tests reject failure/cancelled/neutral/in_progress runs despite passed required checks and reject fail/pending required buckets; adding failure to settled conclusions or accepting every bucket makes assertions fail.
+- DONE: AC-3, an unexpectedly skipped required name holds.
+  Replay prints `required check without a pass on this head: 'ci-gate'`, exit 1; the only-skipping unit row holds beside a green rollup; dropping required_problem or counting skipping as pass makes assertions fail.
+- DONE: AC-4, repositories reporting no required checks retain the skipped-run hold.
+  Replay no-required row exits 1; the unchanged skipped-workflow test passes; settling skipped unconditionally makes it fail. Full `python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_delivery_gate.py`: 170 cases, exit 0, 1 existing skip.
+- DONE: AC-5, required-check reads fail closed.
+  Error/unparseable/invalid-shape rows exit 2 with `cannot read the pull request` and no saved ask; suppressing read errors or JSON parsing makes assertions fail. The empty-stdout exit-8 row also proves AC-7's counterexample holds with exit 2.
+- DONE: AC-6, exactly one gh call is added (D1).
+  Renamed `SettledChecksTests.test_required_check_read_adds_one_gh_call` pins four calls, ending `pr checks 9 --repo o/r --required --json name,bucket`; removing or duplicating the call makes assertions fail.
+- DONE: AC-7, the gh contract holds live, read-only; validation must refresh it.
+  `implementation/live-contract.json`, 2026-11-06 16:23 UTC, gh 2.103.0: relay #477 exit 1/no-required stderr; qnow #1338 exit 0/JSON; qnow #1316 has failed required ci-gate entries and exit 0/JSON. Nonzero JSON fail/pending buckets are also exercised by the stub tests.
+- DONE: AC-8, no FO-read text changes and merge-ask words are measured.
+  `fo-text-diff.log` is empty; candidate replay words are 84/85/85/49/58/56 against base 56/87/87/58/58/56. `AC-8-fo-text-mutation.log` rejects an altered workflow copy; exact product-file allowlist and unchanged workflow bytes pass.
+- DONE: Every behavioral falsifier is run with python3 -B and cleared caches.
+  `implementation/mutations.py` creates a fresh cache-free copy per mutation; all 10 mutants exit 1 through assertion failures, with no errors or caches. Fresh Bash `acceptance.sh` reruns replay exits/words, boundary tests, mutations and scope proof; exit 0 in `fresh-shell.log`.
+- DONE: Repository lint-skills.py, package adr_lint.py, number_guards.py check, comment_ratio.py, and design_surfaces.py check.
+  All exit 0; 61 ADRs checked, number guards no findings (migration checks skipped: no migrations-path), comment ratio 100 code/0 comment lines = 0.0% within 5%; repository lint reports workflow 5939/5939 words. Exact commands/package paths are in `implementation/README.md`.
+- DONE: Run appropriate existing consumer checks and report what ran.
+  `implementation/tests.json`: delivery 170, pr_watch 134, dispatch_records 115, validation_security 5, design_surfaces 213: 637 cases, no failures, 6 existing skips; the full package suite was not run.
+- DONE: Affected-document dispositions from doc_impact.py.
+  `docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md`: unaffected, question/summary reviewer source boundaries unchanged; `docs/adr/0051-the-merge-ask-check-requires-the-round-count.md`: unaffected, round-count rule unchanged; `docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md`: unaffected, approval binding and merge wording unchanged. `doc-verdicts.json` binds each read to base SHA and SHA-256.
+- DONE: Commit locally, no push; PR title/body prepared for FO.
+  Product tree clean at the candidate above; `/tmp/impl-delivery-check-passes-a-skipped-by-design-run-pr.md` holds the Conventional Commit title then body, also retained as `implementation/prepared-pr.md`. Shared state evidence/report committed path-scoped and synced separately.
+- SKIPPED: RoboRev local review and hosted CI results.
+  roborev not run: FO runs it after this report because the Codex sandbox cannot reach the local daemon. Hosted CI not run: product branch is not published; neither is claimed clean.
+- DONE: CI cost measured or stated as not measured.
+  CI cost per PR not measured; CI triggers unchanged. Approved D1 adds one read-only gh request per delivery check; no latency or billing claim is made.
+
+### Summary
+
+The approved Pilot repair settles completed skipped workflow runs where the required list is non-empty and each required name has a pass, while preserving failed/pending/unexpected-skip holds. The exact local candidate, reproducible evidence and prepared PR text are ready for FO; no product push, PR, ready, merge, review request or version bump was performed. Validation must refresh live evidence; publication, RoboRev and hosted CI remain FO-owned.

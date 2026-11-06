@@ -1,0 +1,22 @@
+== #1338 as read: exit 1, printed words 56
+    1 of 2 workflow runs on this head are not finished and successful: 'Release Gate'
+    next: hold the ask until every workflow run on this head has finished green.
+== pg-tests FAILURE: exit 1, printed words 87
+    1 of 22 checks on this head are not finished and successful: 'pr-test / pg-tests'
+    2 of 2 workflow runs on this head are not finished and successful: 'Release Gate' 'PR Checking'
+    next: hold the ask until the required CI has finished green on this head.
+    next: hold the ask until every workflow run on this head has finished green.
+== pg-tests pending: exit 1, printed words 87
+    1 of 22 checks on this head are not finished and successful: 'pr-test / pg-tests'
+    2 of 2 workflow runs on this head are not finished and successful: 'Release Gate' 'PR Checking'
+    next: hold the ask until the required CI has finished green on this head.
+    next: hold the ask until every workflow run on this head has finished green.
+== PR Checking skipped whole (unexpected), required ci-gate only skipped: exit 1, printed words 58
+    2 of 2 workflow runs on this head are not finished and successful: 'Release Gate' 'PR Checking'
+    next: hold the ask until every workflow run on this head has finished green.
+== same, repo reports no required checks (relay/web): exit 1, printed words 58
+    2 of 2 workflow runs on this head are not finished and successful: 'Release Gate' 'PR Checking'
+    next: hold the ask until every workflow run on this head has finished green.
+== Release Gate run failed: exit 1, printed words 56
+    1 of 2 workflow runs on this head are not finished and successful: 'Release Gate'
+    next: hold the ask until every workflow run on this head has finished green.

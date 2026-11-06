@@ -1,0 +1,20 @@
+[
+  {
+    "doc": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+    "verdict": "unaffected: question/summary reviewer source boundaries are unchanged; the new CI read is confined to check.",
+    "commit": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+    "sha256": "9ca2c99453255fc4e90452f47baf2fdaf44a766b3888f50985445f86353ba132"
+  },
+  {
+    "doc": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "verdict": "unaffected: the External rounds count declaration and its pre-ask enforcement are unchanged.",
+    "commit": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+    "sha256": "43899808ea25e44156e3d645e985d9f4a967db2206702f0a2180fb9c36c3dab2"
+  },
+  {
+    "doc": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "verdict": "unaffected: validation approval binding, merge question text and candidate comparison are unchanged.",
+    "commit": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+    "sha256": "c897fee1fb109d3e67eecbaee9f363f663e49e5bd4230b48a8cb3e884d35c8d9"
+  }
+]

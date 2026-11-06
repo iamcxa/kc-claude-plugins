@@ -1,0 +1,31 @@
+{
+  "at": "2026-11-06T16:23:18Z",
+  "timezone": "UTC",
+  "gh_version": "2.103.0",
+  "reads": [
+    {
+      "repo": "spacedock-dev/subspace-relay",
+      "pr": 477,
+      "exit": 1,
+      "stdout": "relay-required.json",
+      "stderr": "relay-required.err",
+      "result": "no required checks reported"
+    },
+    {
+      "repo": "iamcxa/qnow",
+      "pr": 1338,
+      "exit": 0,
+      "stdout": "qnow1338-required.json",
+      "stderr": "qnow1338-required.err",
+      "result": "JSON: pass/skipping/pass for ci-gate"
+    },
+    {
+      "repo": "iamcxa/qnow",
+      "pr": 1316,
+      "exit": 0,
+      "stdout": "qnow1316-required.json",
+      "stderr": "qnow1316-required.err",
+      "result": "JSON: fail/skipping/fail for ci-gate"
+    }
+  ]
+}

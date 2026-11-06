@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_a_required_name_with_only_skipping_entries_holds_a_skipped_run (test_delivery_gate.RequiredChecksTests.test_a_required_name_with_only_skipping_entries_holds_a_skipped_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/skipped-run-mutation-u9n426h8/kc-dev-flow-2/scripts/test_delivery_gate.py", line 709, in test_a_required_name_with_only_skipping_entries_holds_a_skipped_run
+    self.assertEqual(result.code, 1, result.out)
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.169s
+
+FAILED (failures=1)

@@ -1,0 +1,45 @@
+FF
+======================================================================
+FAIL: test_required_check_read_adds_one_gh_call (test_delivery_gate.SettledChecksTests.test_required_check_read_adds_one_gh_call) [plain]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/skipped-run-mutation-x_lsct48/kc-dev-flow-2/scripts/test_delivery_gate.py", line 666, in test_required_check_read_adds_one_gh_call
+    self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
+AssertionError: Lists differ: ['pr [300 chars]ucket', 'pr checks 9 --repo o/r --required --json name,bucket'] != ['pr [300 chars]ucket']
+
+First list contains 1 additional elements.
+First extra element 4:
+'pr checks 9 --repo o/r --required --json name,bucket'
+
+  ['pr view 9 --repo o/r --json '
+   'headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles',
+   'api --paginate repos/o/r/pulls/9/files',
+   'api '
+   'repos/o/r/actions/runs?head_sha=40c714a600000000000000000000000000000000&per_page=100',
+-  'pr checks 9 --repo o/r --required --json name,bucket',
+   'pr checks 9 --repo o/r --required --json name,bucket']
+
+======================================================================
+FAIL: test_required_check_read_adds_one_gh_call (test_delivery_gate.SettledChecksTests.test_required_check_read_adds_one_gh_call) [skipped and neutral]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/skipped-run-mutation-x_lsct48/kc-dev-flow-2/scripts/test_delivery_gate.py", line 666, in test_required_check_read_adds_one_gh_call
+    self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
+AssertionError: Lists differ: ['pr [300 chars]ucket', 'pr checks 9 --repo o/r --required --json name,bucket'] != ['pr [300 chars]ucket']
+
+First list contains 1 additional elements.
+First extra element 4:
+'pr checks 9 --repo o/r --required --json name,bucket'
+
+  ['pr view 9 --repo o/r --json '
+   'headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles',
+   'api --paginate repos/o/r/pulls/9/files',
+   'api '
+   'repos/o/r/actions/runs?head_sha=40c714a600000000000000000000000000000000&per_page=100',
+-  'pr checks 9 --repo o/r --required --json name,bucket',
+   'pr checks 9 --repo o/r --required --json name,bucket']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.700s
+
+FAILED (failures=2)

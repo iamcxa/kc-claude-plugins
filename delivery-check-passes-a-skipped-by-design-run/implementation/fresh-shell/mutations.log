@@ -1,0 +1,10 @@
+AC-1-reject-intended-skip caught
+AC-2-settle-failure caught
+AC-2-accept-every-bucket caught
+AC-3-drop-required-hold caught
+AC-3-count-skipping-as-pass caught
+AC-4-settle-unconditionally caught
+AC-5-suppress-read-error caught
+AC-5-suppress-json-error caught
+AC-6-remove-call caught
+AC-6-add-call caught

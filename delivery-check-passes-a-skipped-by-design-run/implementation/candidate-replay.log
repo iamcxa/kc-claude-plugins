@@ -1,0 +1,22 @@
+== #1338 as read: exit 0, printed words 84
+    PR head 9ad9bb170ead3119ce96a547b5a5fce64e6e3bb8 equals dispatched candidate 9ad9bb170ead3119ce96a547b5a5fce64e6e3bb8; no second reviewer outcome is missing
+    next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+== pg-tests FAILURE: exit 1, printed words 85
+    1 of 22 checks on this head are not finished and successful: 'pr-test / pg-tests'
+    1 of 2 workflow runs on this head are not finished and successful: 'PR Checking'
+    next: hold the ask until the required CI has finished green on this head.
+    next: hold the ask until every workflow run on this head has finished green.
+== pg-tests pending: exit 1, printed words 85
+    1 of 22 checks on this head are not finished and successful: 'pr-test / pg-tests'
+    1 of 2 workflow runs on this head are not finished and successful: 'PR Checking'
+    next: hold the ask until the required CI has finished green on this head.
+    next: hold the ask until every workflow run on this head has finished green.
+== PR Checking skipped whole (unexpected), required ci-gate only skipped: exit 1, printed words 49
+    required check without a pass on this head: 'ci-gate'
+    next: hold the ask until each required check has passed on this head.
+== same, repo reports no required checks (relay/web): exit 1, printed words 58
+    2 of 2 workflow runs on this head are not finished and successful: 'Release Gate' 'PR Checking'
+    next: hold the ask until every workflow run on this head has finished green.
+== Release Gate run failed: exit 1, printed words 56
+    1 of 2 workflow runs on this head are not finished and successful: 'Release Gate'
+    next: hold the ask until every workflow run on this head has finished green.

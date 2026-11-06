@@ -1,0 +1,31 @@
+FF
+======================================================================
+FAIL: test_a_required_read_error_or_unparseable_stdout_holds_without_a_record (test_delivery_gate.RequiredChecksTests.test_a_required_read_error_or_unparseable_stdout_holds_without_a_record) (stdout='not JSON', stderr='', code='0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/skipped-run-mutation-psg57vhv/kc-dev-flow-2/scripts/test_delivery_gate.py", line 731, in test_a_required_read_error_or_unparseable_stdout_holds_without_a_record
+    self.assertEqual(result.code, 2, result.out)
+AssertionError: 0 != 2 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+
+
+======================================================================
+FAIL: test_a_required_read_error_or_unparseable_stdout_holds_without_a_record (test_delivery_gate.RequiredChecksTests.test_a_required_read_error_or_unparseable_stdout_holds_without_a_record) (stdout='not JSON', stderr='no required checks reported', code='1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/skipped-run-mutation-psg57vhv/kc-dev-flow-2/scripts/test_delivery_gate.py", line 731, in test_a_required_read_error_or_unparseable_stdout_holds_without_a_record
+    self.assertEqual(result.code, 2, result.out)
+AssertionError: 0 != 2 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.025s
+
+FAILED (failures=2)
