@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-check-resolves-links-from-the-task:ideation:attempt-1:revision-1",
+  "question": "決定：「交付檢查從任務資料夾解析路徑」這份設計進入實作嗎？核准即接受 D1（只被驗證報告點名的證據檔，只有程式碼區塊裡的指令算步驟，一般文字連結不算）與設計裡記在 D1 旁的兩項附帶改動。",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-check-resolves-links-from-the-task:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c0e703c449174bac6fc6a55d4defd8991234d967/delivery-check-resolves-links-from-the-task.md",
+      "rev": "sha256:67874bba49e3125be410a22824dd7af243da5bac68d17731e429a890c74d3ba2",
+      "mediaType": "text/markdown",
+      "summary": "Two defects: relative .md names resolved from the shell's cwd (fix: task folder) and web routes in the validator's report checked as paths (fix: check only FO text and Asked: lines); #793 and #1338 replays (ideation report, Opus, 2026-11-06). D1 plus two attached changes."
+    }
+  ]
+}

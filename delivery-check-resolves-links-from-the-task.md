@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:delivery-check-resolves-links-from-the-task:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:delivery-check-resolves-links-from-the-task-ideation-1
+              briefing:
+                id: briefing:delivery-check-resolves-links-from-the-task:ideation:attempt-1:revision-1
+                digest: sha256:ac750324b224edef0512bde25045053e66921f07efb416fe33a98da49558d5fa
+                room-ref: ./delivery-check-resolves-links-from-the-task/review/ideation/briefing-1
 ---
 
 `delivery_gate.py question` and `check` read a relative `.md` path named in the gate text or the validation report from the task's own folder, so the result does not depend on where FO runs the command.
