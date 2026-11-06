@@ -3,7 +3,7 @@ title: The delivery check resolves a report's relative Markdown links against th
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-07), answering 「決定：「交付檢查從任務資料夾解析路徑」這份設計進入實作嗎？核准即接受 D1（只被驗證報告點名的證據檔，只有程式碼區塊裡的指令算步驟，一般文字連結不算）與設計裡記在 D1 旁的兩項附帶改動。」. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 `delivery_gate.py question` and `check` read a relative `.md` path named in the gate text or the validation report from the task's own folder, so the result does not depend on where FO runs the command.
