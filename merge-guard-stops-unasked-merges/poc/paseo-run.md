@@ -14,6 +14,7 @@ Isolation:
 - Excluded: the Captain's user and local Claude settings, plugins and hooks, and the FO agent definition.
 - Kept: Paseo's own flags above, Paseo's MCP servers, the keychain login.
 - Loaded: the throwaway folder's `.claude/settings.json` (`paseo-project-settings.json`: auto mode, the guard hook).
+- Also loaded: `~/.claude/CLAUDE.md` and memory. `--setting-sources` does not govern them; attempt 1's reply used its closing block.
 - Edited: no Paseo, Claude or Codex config.
 
 Attempt 1, agent `1b40dded`, archived:
@@ -30,8 +31,8 @@ Attempt 2, agent `046b0b6a-25c1-4992-832e-16487f6aad52`, workspace "merge-guard 
   `gh pr merge 1 --repo merge-guard-poc/does-not-exist --squash --match-head-commit 2222…`), and no reason field.
   The guard's "merge guard: no task's newest merge/ask-N.json carries …" text is not in the payload, and it is
   not in the session transcript.
-- Any Paseo agent with the `respond_to_permission` tool can answer this request; this session's tool list has
-  that tool. Not answered here.
+- Any Paseo agent with the `respond_to_permission` tool can answer this request. This session's tool list has
+  that tool, and Paseo exposes it to agents (0.12 note). Not answered here.
 
 Captain-only step: open Paseo on the phone and answer the request. Expected results:
 - Yes: one `FAKE-GH-RAN pr merge` line in `ran.log`. Nothing merges.
