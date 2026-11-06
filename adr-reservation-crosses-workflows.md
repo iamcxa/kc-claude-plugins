@@ -15,6 +15,8 @@ status: backlog
 - Upstream first: kc-dev-flow-2 `number_guards.py` (R4/R5, `reserve`), the README's Number guards, ADR-reservation rules; Spacedock has no cross-workflow lock.
 - Non-goals: renumbering any landed ADR.
 
+- Batch 16: the Captain 「可以，就這樣」 (chat, 2026-11-06), answering 「這批做 2、3、4、5、9 這 5 張，可以嗎？」, which named this task.
+
 ## Budget
 - One package PR; the workflow word budget does not rise unless the design names a raise for the Captain.
 
