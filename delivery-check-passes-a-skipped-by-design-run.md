@@ -3,7 +3,7 @@ title: delivery_gate.py check does not hold on a workflow run skipped by design
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
