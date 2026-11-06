@@ -3,7 +3,7 @@ title: The delivery question check requires the worktree-removal clause the READ
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-06), answering 「決定：合併 #793（合併問句要有移除 worktree 那一句）嗎？ Regular merge with --match-head-commit 5b3e290a7eaceb0fe70f489d25d622314598b9f0, the batch 15 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-06T01:30:12Z
 worktree: .worktrees/spacedock-ensign-delivery-question-requires-worktree-clause
 pr: pr-merge:793
+verdict: PASSED
+completed: 2026-11-06T04:11:10Z
+archived: 2026-11-06T04:11:10Z
 ---
 
 `delivery_gate.py question` holds a validation gate question that omits "removing its clean, pushed worktree", so an approval cannot be read as covering a cleanup it never named.
