@@ -228,3 +228,7 @@ The design lands one ADR recording the three holds and the rulings on D1 to D3: 
 ### Summary
 
 The design adds three holds to the decline checks FO already runs before the validation gate and the merge ask: an unlabelled decline, fewer declined items than the validator, security and built-screen declines owed, and a round-3+ external-review decline with no receiving task. Replays read each task at the commit its briefing binds; across 459 gate texts in four adopters the round-3 rule holds exactly the three observer violations of batches 12 and 13. Three decisions go to the Captain; D1 recommends a word rule against the ADR 0027 D4 precedent, with the measured reason it differs. Implementation should follow fo-write-checks-parse-top-level, which owns `declined_items`. Adopter state was read only; a `git fetch` in the relay workspace and its state checkout updated remote-tracking refs only.
+
+## Ruling carried from another task
+
+- 2026-11-07: the Captain chose 「核准（建議）」 (host question dialog) at the ideation gate of decline-becomes-task-only-with-a-bite, whose bound question named this task: 「…D2（擱置中的 gate-summary-names-each-decline 恢復時拿掉它的第 3 條）。」 When this task resumes, its rule 3 (hold a round-3 decline that names no receiving task) is struck.
