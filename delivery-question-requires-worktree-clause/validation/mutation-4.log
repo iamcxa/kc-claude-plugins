@@ -1,0 +1,15 @@
+test_the_merge_time_check_does_not_judge_the_hold_out_clause (test_delivery_gate.QuestionTests.test_the_merge_time_check_does_not_judge_the_hold_out_clause) ... FAIL
+
+======================================================================
+FAIL: test_the_merge_time_check_does_not_judge_the_hold_out_clause (test_delivery_gate.QuestionTests.test_the_merge_time_check_does_not_judge_the_hold_out_clause)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1981, in test_the_merge_time_check_does_not_judge_the_hold_out_clause
+    self.assertNotIn("worktree", out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 'worktree' unexpectedly found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nmissing worktree removal clause\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.130s
+
+FAILED (failures=1)

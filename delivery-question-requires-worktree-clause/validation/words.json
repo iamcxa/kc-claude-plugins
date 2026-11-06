@@ -1,0 +1,14 @@
+{
+  "new_hold_lines": [
+    {
+      "text": "the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree",
+      "words": 19
+    },
+    {
+      "text": "next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.",
+      "words": 19
+    }
+  ],
+  "help_added_words": 17,
+  "grant_words": 6
+}

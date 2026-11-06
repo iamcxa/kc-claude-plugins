@@ -1,0 +1,161 @@
+[
+  {
+    "name": "replay-candidate",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-question-requires-worktree-clause/ideation/replay_question.py",
+      "/tmp/opencode/validation-delivery-worktree-clause/candidate",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state"
+    ],
+    "cwd": "/tmp/opencode/validation-delivery-worktree-clause/candidate",
+    "exit": 0,
+    "log": "/tmp/opencode/validation-delivery-worktree-clause/replay-candidate.log"
+  },
+  {
+    "name": "replay-base",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-question-requires-worktree-clause/ideation/replay_question.py",
+      "/tmp/opencode/validation-delivery-worktree-clause/base",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state"
+    ],
+    "cwd": "/tmp/opencode/validation-delivery-worktree-clause/base",
+    "exit": 0,
+    "log": "/tmp/opencode/validation-delivery-worktree-clause/replay-base.log"
+  },
+  {
+    "name": "question-tests",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "test_delivery_gate.QuestionTests"
+    ],
+    "cwd": "/tmp/opencode/validation-delivery-worktree-clause/candidate/kc-dev-flow-2/scripts",
+    "exit": 0,
+    "log": "/tmp/opencode/validation-delivery-worktree-clause/question-tests.log"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/tmp/opencode/validation-delivery-worktree-clause/candidate",
+    "exit": 0,
+    "log": "/tmp/opencode/validation-delivery-worktree-clause/lint.log"
+  },
+  {
+    "name": "parity",
+    "command": [
+      "bash",
+      "scripts/version-parity-check.sh"
+    ],
+    "cwd": "/tmp/opencode/validation-delivery-worktree-clause/candidate",
+    "exit": 128,
+    "log": "/tmp/opencode/validation-delivery-worktree-clause/parity.log"
+  },
+  {
+    "name": "adr",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "b804d81d3abc94c9c321326dc75e7cac927c5252",
+      "--require",
+      "0023",
+      "0044",
+      "0051",
+      "0062"
+    ],
+    "cwd": "/tmp/opencode/validation-delivery-worktree-clause/candidate",
+    "exit": 0,
+    "log": "/tmp/opencode/validation-delivery-worktree-clause/adr.log"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-question-requires-worktree-clause",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-question-requires-worktree-clause.md",
+      "--base",
+      "b804d81d3abc94c9c321326dc75e7cac927c5252",
+      "--head",
+      "5b3e290a7eaceb0fe70f489d25d622314598b9f0"
+    ],
+    "cwd": "/tmp/opencode/validation-delivery-worktree-clause/candidate",
+    "exit": 0,
+    "log": "/tmp/opencode/validation-delivery-worktree-clause/number-guards.log"
+  },
+  {
+    "name": "comments",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "b804d81d3abc94c9c321326dc75e7cac927c5252",
+      "5b3e290a7eaceb0fe70f489d25d622314598b9f0",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-question-requires-worktree-clause",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/tmp/opencode/validation-delivery-worktree-clause/candidate",
+    "exit": 0,
+    "log": "/tmp/opencode/validation-delivery-worktree-clause/comments.log"
+  },
+  {
+    "name": "design",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-question-requires-worktree-clause.md"
+    ],
+    "cwd": "/tmp/opencode/validation-delivery-worktree-clause/candidate",
+    "exit": 0,
+    "log": "/tmp/opencode/validation-delivery-worktree-clause/design.log"
+  },
+  {
+    "name": "docs",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "b804d81d3abc94c9c321326dc75e7cac927c5252",
+      "5b3e290a7eaceb0fe70f489d25d622314598b9f0",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-question-requires-worktree-clause"
+    ],
+    "cwd": "/tmp/opencode/validation-delivery-worktree-clause/candidate",
+    "exit": 0,
+    "log": "/tmp/opencode/validation-delivery-worktree-clause/docs.log"
+  },
+  {
+    "name": "dispatch",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-question-requires-worktree-clause"
+    ],
+    "cwd": "/tmp/opencode/validation-delivery-worktree-clause/candidate",
+    "exit": 1,
+    "log": "/tmp/opencode/validation-delivery-worktree-clause/dispatch.log"
+  }
+]

@@ -293,3 +293,48 @@ The local candidate requires a merge-naming gate question to include removal of 
 This report supersedes the earlier implementation report by adding the three missing indented evidence lines. Product candidate 5b3e290a7eaceb0fe70f489d25d622314598b9f0 and the original recorded test results are unchanged; no product check was rerun for this report-only correction.
 
 The local candidate requires a merge-naming gate question to include removal of its clean, pushed worktree; a clause only in the summary is held. All five acceptance criteria and their mutations passed, with the existing optional suite skips and replay boundaries stated above. Implementation and prepared PR text are ready for FO publication, independent validation and review; this report grants no merge or worktree-removal authority.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #793 head 5b3e290a against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states.
+  PASSED: 5b3e290a7eaceb0fe70f489d25d622314598b9f0 against b804d81d3abc94c9c321326dc75e7cac927c5252; both exported with git archive, no product edits; primary evidence is in delivery-question-requires-worktree-clause/validation/ (below: validation/).
+- DONE: Judge D1, D2 as approved; replay the #786 and #787 questions (held) and the #788 question (passes).
+  D1 keeps merge-time check unchanged; D2 requires clean/pushed. Literal questions match state 846c4202b2a7e70bd08eee1d31406502f350aa0d; validation/replay-candidate.log exits 1/1/0 versus validation/replay-base.log 0/0/0. PR #794 remains a separate later integration; no agents launched.
+- DONE: AC-1 historical question behavior and its falsifier.
+  Recorded-question test and replay pass; deleting the new question condition causes the two missing-clause assertions to fail (validation/mutation-1.log); the same new test fails twice against base, with no runtime errors.
+- DONE: AC-2 question-file-only grant, owed only when combined text names the merge.
+  Summary-only removal is held, appended question removal and nonmerge text pass; matching combined text instead makes the summary-only assertion fail (validation/mutation-2.log).
+- DONE: AC-3 usual removal wording passes and non-grant examples are held.
+  Remove/removes/removing, uppercase/plural pass; keeping, missing/reordered qualifiers and full-stop/semicolon/newline splits are held. Reducing the pattern to worktree breaks eight assertions, zero errors (validation/mutation-3.log).
+- DONE: AC-4 merge-time check unchanged.
+  validation/check-parity.json records identical exit 0 and output for #786 on base/candidate with synthetic valid task/gh facts; moving the condition into unguarded text_problems breaks the no-worktree-output assertion (validation/mutation-4.log).
+- DONE: AC-5 exact passing output, workflow budget and required repository checks.
+  Both named exact-output tests pass and extra passing output fails (validation/mutation-5.log); workflow bytes/diff unchanged; lint PASS, 5939/5939 words; version parity exits 0 with read-only Git metadata (validation/acceptance.log, parity-with-readonly-git.log).
+- DONE: Full package suite and newly refusing verdict comparison rerun independently.
+  validation/suite.xml records 25 passing commands, 1156 unittest cases including 11 skips; delivery tests 162 cases/1 skip. validation/corpus-verdicts.json records 131 questions, 68 merge-naming, 24 intended new holds, all other verdicts unchanged; five mutants caught without errors or caches (fresh-proof.log).
+- SKIPPED: Eleven existing optional tests, live merge/removal and independent RoboRev rerun.
+  Four design historical/native, four release/node/yaml, and one each dispatch builder, historical delivery and laws replay lack declared optional inputs; validation/README.md lists them. Native CLI 0.27.2/plugin 0.27.3 is bounded local evidence; RoboRev 1544 is FO-reported, not rerun; no delivery authority claimed.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output.
+  Five steps: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-question-requires-worktree-clause/validation/acceptance.sh; exit 0, validation/acceptance.log ends acceptance PASS; prerequisites, expected observations and limits are in the script and README.md.
+- DONE: Loaded-package adr_lint.py docs/adr --since <base>, with its exit code; number and comment guards.
+  python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since b804d81d3abc94c9c321326dc75e7cac927c5252 --require 0023 0044 0051 0062: exit 0, 61 records/0 legacy; number guard PASS; comments 0/64, 0.0% <= 5%; see validation/adr.log, number-guards.log, comments.log.
+- DONE: design_surfaces.py, doc_impact.py and every implementation document disposition.
+  Both exit 0; design presentable; doc impact lists exactly ADR 0044, 0051 and 0062 (validation/design.log, docs.log). No diagram, workflow, version or CI configuration changed; CI cost per PR was not measured.
+- DONE: ADR 0044 unaffected assessment verified.
+  Optional summary reviewer/count behavior and legacy combined calls still pass; the new removal grant deliberately reads the question separately, consistent with the approved scope and validation/question-tests.log.
+- DONE: ADR 0051 unaffected assessment verified.
+  Diff changes no merge-time round-count logic; merge-check tests and base/candidate output parity preserve that protected behavior (validation/check-parity.json).
+- DONE: ADR 0062 unaffected assessment verified.
+  Candidate changes neither decision_ledger.py nor quoted-question comparison; the existing package tests pass and this condition adds no merge authority (validation/suite.xml).
+- DONE: Implementation limits, necessity and sufficient accepted behavior assessed.
+  Presence-only negation passes, Chinese-only removal is held, and no real cleanliness is checked (validation/limits.json); these are approved limits. Recorded questions use fixtures because archived step paths are obsolete. Base misses the two incidents; one pattern/condition plus supporting tests and help text suffices. Hold adds 19+19 words, grant 6, help 17; pass/lifecycle text unchanged (validation/words.json).
+- DONE: Dispatch records read and checked; your verdict naming the head, with findings classified by the workflow's Review-finding disposition.
+  Initial dispatch_records.py exit 1 was an FO record defect; FO correction e0b47efc0d7bf7acd6e0878f6b0ae9196545ab35 preserves sent text and dates the added annotation. Independent rerun exits 0: 4 dispatch record(s) complete (validation/dispatch.log, dispatch-corrected.log).
+
+### Findings
+
+- F1 Polish — fixed FO record defect: validation of the normal worker dispatch was refused because its explicit FO-owned review delegation lacked the parser-recognized roborev not run line; no product behavior or accepted boundary was lost. FO appended the truthful dated line in e0b47efc0d7bf7acd6e0878f6b0ae9196545ab35, and the checker now passes. No open Material, Deferred risk, Polish or Needs decision findings; approved known limits remain above.
+
+### Summary
+
+PASSED PR #793 head 5b3e290a7eaceb0fe70f489d25d622314598b9f0: all five acceptance criteria, all five falsifiers, the full available suite and the fresh-shell acceptance script passed. The FO record defect is corrected; 11 optional tests and the stated live/semantic limits remain unverified, and FO retains gate, delivery and subsequent PR #794 integration ownership.

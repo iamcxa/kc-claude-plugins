@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-question-requires-worktree-clause/validation/prove.py", line 85, in <module>
+    assert not caches, caches
+           ^^^^^^^^^^
+AssertionError: [PosixPath('/tmp/opencode/validation-delivery-worktree-clause/candidate/kc-dev-flow-2/scripts/__pycache__/test_delivery_gate.cpython-311.pyc'), PosixPath('/tmp/opencode/validation-delivery-worktree-clause/candidate/kc-dev-flow-2/scripts/__pycache__/decision_ledger.cpython-311.pyc'), PosixPath('/tmp/opencode/validation-delivery-worktree-clause/candidate/kc-dev-flow-2/scripts/__pycache__/role_triggers.cpython-311.pyc'), PosixPath('/tmp/opencode/validation-delivery-worktree-clause/candidate/kc-dev-flow-2/scripts/__pycache__/design_surfaces.cpython-311.pyc'), PosixPath('/tmp/opencode/validation-delivery-worktree-clause/candidate/kc-dev-flow-2/scripts/__pycache__/delivery_gate.cpython-311.pyc'), PosixPath('/tmp/opencode/validation-delivery-worktree-clause/candidate/kc-dev-flow-2/scripts/__pycache__/number_guards.cpython-311.pyc')]

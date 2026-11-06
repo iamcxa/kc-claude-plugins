@@ -1,0 +1,17 @@
+test_a_question_that_names_the_merge_without_the_hold_out_clause_is_refused (test_delivery_gate.QuestionTests.test_a_question_that_names_the_merge_without_the_hold_out_clause_is_refused) ... ok
+test_both_wordings_in_use_and_a_question_that_names_no_merge_pass (test_delivery_gate.QuestionTests.test_both_wordings_in_use_and_a_question_that_names_no_merge_pass) ... ok
+test_claim_source_reminder_on_pass_hold_and_unreadable_input (test_delivery_gate.QuestionTests.test_claim_source_reminder_on_pass_hold_and_unreadable_input) ... ok
+test_hold_out_and_removal_problems_are_both_reported (test_delivery_gate.QuestionTests.test_hold_out_and_removal_problems_are_both_reported) ... ok
+test_legacy_combined_text_still_accepts_no_round_count (test_delivery_gate.QuestionTests.test_legacy_combined_text_still_accepts_no_round_count) ... ok
+test_mutation_accepting_any_merge_word_lets_the_clause_less_question_pass (test_delivery_gate.QuestionTests.test_mutation_accepting_any_merge_word_lets_the_clause_less_question_pass) ... ok
+test_mutation_accepting_any_worktree_word_grants_keeping_it (test_delivery_gate.QuestionTests.test_mutation_accepting_any_worktree_word_grants_keeping_it) ... ok
+test_recorded_merge_questions_require_the_worktree_removal_clause (test_delivery_gate.QuestionTests.test_recorded_merge_questions_require_the_worktree_removal_clause) ... ok
+test_removal_in_the_summary_does_not_grant_it_in_the_question (test_delivery_gate.QuestionTests.test_removal_in_the_summary_does_not_grant_it_in_the_question) ... ok
+test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) ... ok
+test_the_merge_time_check_does_not_judge_the_hold_out_clause (test_delivery_gate.QuestionTests.test_the_merge_time_check_does_not_judge_the_hold_out_clause) ... ok
+test_the_other_text_checks_run_and_an_unreadable_input_exits_2 (test_delivery_gate.QuestionTests.test_the_other_text_checks_run_and_an_unreadable_input_exits_2) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.422s
+
+OK

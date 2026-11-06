@@ -1,0 +1,23 @@
+[
+  {
+    "name": "negated removal is presence-only",
+    "status": "passed",
+    "expected": 0,
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\n"
+  },
+  {
+    "name": "Chinese-only removal is held",
+    "status": "passed",
+    "expected": 1,
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nthe gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree\nnext: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.\n"
+  },
+  {
+    "name": "no repository inspection accompanies grant",
+    "status": "passed",
+    "expected": 0,
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\n"
+  }
+]

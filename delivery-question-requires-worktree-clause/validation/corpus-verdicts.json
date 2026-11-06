@@ -1,0 +1,1053 @@
+{
+  "snapshot": "846c4202b2a7e70bd08eee1d31406502f350aa0d",
+  "results": [
+    {
+      "path": "_archive/adr-protected-path-guard/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 1,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/adr-reserved-when-design-names-one/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/agent-reads-governing-adr/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/amendment-form-check/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/batch-reaches-each-gate-together/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/batch10-after-release-obligations/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/board-optout/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/canvas-document-popup/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/captain-amendment-form-checked/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/captain-question-load/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/chat-only-evidence-observer-blind/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/claims-name-their-source/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/codex-reader-counts-code-review-only/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/codex-reader-reads-receipt-marker/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/codex-reader-resolved-mark-adr/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/codex-reader-same-head-unresolved/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/codex-review-hang-detected/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/commissioned-by-names-spacedock/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 1,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/copilot-not-run-line-carries-quote/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/copilot-quota-refusal-is-not-a-review/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/db-surface-without-migrations/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 1,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/delivery-gate-reads-folder-tasks/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/delivery-gate-settles-skipped-checks/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/delivery-gate-verdict-form/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/design-director-runs-ui-design-review/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/dev2-laws-check/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/diagnosis-rounds-count-toward-step-back/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/dispatch-and-report-hygiene/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/dispatch-and-report-hygiene/review/validation/briefing-2/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/dispatch-and-report-hygiene/review/validation/briefing-3/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/extension-defaults-and-install-choice/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/extension-instruction-check-sees-every-listed-extension/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/extension-instruction-reaches-dispatch/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/extension-instruction-reaches-dispatch/review/validation/briefing-2/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/fo-answers-own-worker-permissions-by-listed-id/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/fo-batch-sittings/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 1,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/fo-interviews-extension/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/fo-interviews-extension/review/validation/briefing-2/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/fo-lifecycle-mod/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/fo-record-checks/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/fo-tries-what-it-asks-the-captain/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/fo-write-checks/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/fo-write-rules-checked/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 1,
+      "candidate_exit": 1,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/fo-written-lines-checked-before-dispatch/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/followup-dispatch-records-checked/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/gate-presentation-asks-one-thing-plainly/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/gate-presentation-asks-one-thing-plainly/review/validation/briefing-2/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/gate-presentation-asks-one-thing-plainly/review/validation/briefing-3/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/gate-requires-recorded-reviews/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/ideation-gaps/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/idle-hook-names-merged-tasks-without-learn/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/idle-names-failing-seeds/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 1,
+      "candidate_exit": 1,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/journey-map-dev2-contract/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/journey-probe-finds-nested-maps/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/journey-render-keeps-annotations/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/kc-adr-format-source/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/kc-adr-format-source/review/validation/briefing-2/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 1,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/kc-adr-tools-with-dev2-copy/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/kc-decision-log-cli/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/learn-delivery-follow-through/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/learning-serialize-evaluation/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/merge-ask-holds-missing-clauses/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/merge-gatekeeper/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/migration-and-number-guards/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/model-roster-per-repo/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/model-roster-question-needs-both-families/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/names-check-before-dispatch/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/names-check-says-what-it-skipped/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/new-work-starts-from-a-story-map/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/number-guards-readme-shrink/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/observer-before-merge-guard/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/observer-before-merge-guard/review/validation/briefing-2/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/ops-metric-event-protocol/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/ops-metric-event-protocol/review/validation/briefing-2/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/ops-metric-event-protocol/review/validation/briefing-3/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/override-recorded-when-captain-departs/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/paseo-codex-dispatch-practice/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/paseo-codex-dispatch-practice/review/validation/briefing-2/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/paseo-human-surfaces-visible-and-reachable/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/paseo-human-surfaces-visible-and-reachable/review/validation/briefing-2/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/patch-0102/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/patch-0103/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/peer-status-reaches-fresh/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/peers-paseo-rule-matches-practice/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/peers-rules-name-each-host-binding/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/poc-no-migrations/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/pr-watch-state-per-session/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/prod-security-review-gates/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/prod-security-validation-gate/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/read-adr-honors-adr-folder/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/read-adr-reporting-rule-followup/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/reflow-order/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/release-acceptance/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/release-please-exclude-paths/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/release-please-exclude-paths/review/validation/briefing-2/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/release-review-staleness-held-at-dispatch/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/release-review/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/release-review/review/validation/briefing-2/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/release-walk-due-trigger/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/release-walk-off-production-before-release/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/release-walk-picky-reviewers-and-director/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/reused-worker-dispatch-leaves-a-record/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/review-cadence/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/review-cadence/review/validation/briefing-2/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/rewritten-criteria-checked-against-captain-words/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/role-triggers-owe-ce-on-review-drift/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/second-round-prompts-a-step-back/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/seed-check-requires-schema-fields/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/special-role-calls-fire-when-needed/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/special-role-triggers/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/special-roles-follow-the-model-table/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/stage-report-correction-path/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/stage-report-correction-path/review/validation/briefing-2/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/ui-design-review-in-ideation/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/validation-gate-requires-the-question-check/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/validation-rerun-waits-for-captain-ruling/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/worker-completion-goes-to-main/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/worker-completion-goes-to-main/review/validation/briefing-2/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/worker-completion-reaches-fo-on-paseo/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": true,
+      "base_exit": 0,
+      "candidate_exit": 1,
+      "disposition": "intended missing clean, pushed worktree clause"
+    },
+    {
+      "path": "_archive/worker-knows-the-team-and-asks-early/review/validation/briefing-1/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/worker-knows-the-team-and-asks-early/review/validation/briefing-2/index.json",
+      "names_merge": true,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/worker-loads-declared-package/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/workflow-budget-ratchet/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 1,
+      "candidate_exit": 1,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "_archive/workflow-checkout-must-match-trunk-readme/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "adr-required-statement/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "journey-server-host-pilot/review/validation/briefing-1/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "journey-server-host-pilot/review/validation/briefing-2/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "journey-server-host-pilot/review/validation/briefing-3/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "journey-server-host-pilot/review/validation/briefing-4/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "journey-server-host-pilot/review/validation/briefing-5/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    },
+    {
+      "path": "journey-server-host-pilot/review/validation/briefing-6/index.json",
+      "names_merge": false,
+      "changed": false,
+      "base_exit": 0,
+      "candidate_exit": 0,
+      "disposition": "unchanged"
+    }
+  ]
+}

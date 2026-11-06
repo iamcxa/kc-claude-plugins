@@ -1,0 +1,27 @@
+[
+  {
+    "name": "AC-1 remove the new condition",
+    "status": "passed",
+    "message": "2 assertions fail; 0 errors"
+  },
+  {
+    "name": "AC-2 read the combined text",
+    "status": "passed",
+    "message": "1 assertions fail; 0 errors"
+  },
+  {
+    "name": "AC-3 accept any worktree word",
+    "status": "passed",
+    "message": "8 assertions fail; 0 errors"
+  },
+  {
+    "name": "AC-4 check judges the clause",
+    "status": "passed",
+    "message": "1 assertions fail; 0 errors"
+  },
+  {
+    "name": "AC-5 print an extra passing line",
+    "status": "passed",
+    "message": "1 assertions fail; 0 errors"
+  }
+]

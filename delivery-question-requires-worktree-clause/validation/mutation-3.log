@@ -1,0 +1,86 @@
+test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) ... 
+  test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='and keeping its clean, pushed worktree') ... FAIL
+  test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the candidate worktree') ... FAIL
+  test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the clean worktree') ... FAIL
+  test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the pushed worktree') ... FAIL
+  test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the pushed, clean worktree') ... FAIL
+  test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the clean. Pushed worktree') ... FAIL
+  test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the clean; pushed worktree') ... FAIL
+  test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the clean, pushed\nworktree') ... FAIL
+
+======================================================================
+FAIL: test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='and keeping its clean, pushed worktree')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1926, in test_removal_wording_names_clean_pushed_worktrees_in_one_sentence
+    self.assertEqual(self.ask(text + " " + removal)[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the candidate worktree')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1926, in test_removal_wording_names_clean_pushed_worktrees_in_one_sentence
+    self.assertEqual(self.ask(text + " " + removal)[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the clean worktree')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1926, in test_removal_wording_names_clean_pushed_worktrees_in_one_sentence
+    self.assertEqual(self.ask(text + " " + removal)[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the pushed worktree')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1926, in test_removal_wording_names_clean_pushed_worktrees_in_one_sentence
+    self.assertEqual(self.ask(text + " " + removal)[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the pushed, clean worktree')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1926, in test_removal_wording_names_clean_pushed_worktrees_in_one_sentence
+    self.assertEqual(self.ask(text + " " + removal)[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the clean. Pushed worktree')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1926, in test_removal_wording_names_clean_pushed_worktrees_in_one_sentence
+    self.assertEqual(self.ask(text + " " + removal)[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the clean; pushed worktree')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1926, in test_removal_wording_names_clean_pushed_worktrees_in_one_sentence
+    self.assertEqual(self.ask(text + " " + removal)[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) (removal='remove the clean, pushed\nworktree')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1926, in test_removal_wording_names_clean_pushed_worktrees_in_one_sentence
+    self.assertEqual(self.ask(text + " " + removal)[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.034s
+
+FAILED (failures=8)

@@ -1,0 +1,9 @@
+[
+  {
+    "severity": "info",
+    "title": "FO dispatch record omitted the recognized review-delegation line",
+    "file": "delivery-question-requires-worktree-clause/dispatch/implementation-1.md",
+    "detail": "Polish: the record already assigned RoboRev to FO; dispatch_records.py initially exited 1. FO appended a dated correction, preserving the original wording; independent rerun exits 0 with 4 dispatch records complete. No change to candidate.",
+    "status": "fixed"
+  }
+]

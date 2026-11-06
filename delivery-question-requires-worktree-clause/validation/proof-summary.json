@@ -1,0 +1,10 @@
+{
+  "mutants_caught": 5,
+  "historical_fixtures_exact": true,
+  "base_rejects_new_cases": true,
+  "check_output_equal": true,
+  "validation_questions": 131,
+  "merge_questions": 68,
+  "changed": 24,
+  "bytecode_caches": 0
+}

@@ -1,0 +1,32 @@
+test_recorded_merge_questions_require_the_worktree_removal_clause (test_delivery_gate.QuestionTests.test_recorded_merge_questions_require_the_worktree_removal_clause) ... 
+  test_recorded_merge_questions_require_the_worktree_removal_clause (test_delivery_gate.QuestionTests.test_recorded_merge_questions_require_the_worktree_removal_clause) (number=786) ... FAIL
+  test_recorded_merge_questions_require_the_worktree_removal_clause (test_delivery_gate.QuestionTests.test_recorded_merge_questions_require_the_worktree_removal_clause) (number=787) ... FAIL
+
+======================================================================
+FAIL: test_recorded_merge_questions_require_the_worktree_removal_clause (test_delivery_gate.QuestionTests.test_recorded_merge_questions_require_the_worktree_removal_clause) (number=786)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1899, in test_recorded_merge_questions_require_the_worktree_removal_clause
+    self.assertEqual(code, 0 if number == 788 else 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+======================================================================
+FAIL: test_recorded_merge_questions_require_the_worktree_removal_clause (test_delivery_gate.QuestionTests.test_recorded_merge_questions_require_the_worktree_removal_clause) (number=787)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1899, in test_recorded_merge_questions_require_the_worktree_removal_clause
+    self.assertEqual(code, 0 if number == 788 else 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.011s
+
+FAILED (failures=2)

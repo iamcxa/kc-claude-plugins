@@ -1,0 +1,15 @@
+test_removal_in_the_summary_does_not_grant_it_in_the_question (test_delivery_gate.QuestionTests.test_removal_in_the_summary_does_not_grant_it_in_the_question) ... FAIL
+
+======================================================================
+FAIL: test_removal_in_the_summary_does_not_grant_it_in_the_question (test_delivery_gate.QuestionTests.test_removal_in_the_summary_does_not_grant_it_in_the_question)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1910, in test_removal_in_the_summary_does_not_grant_it_in_the_question
+    self.assertEqual(self.ask(text, summary=removal)[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)

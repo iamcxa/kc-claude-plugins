@@ -1,0 +1,31 @@
+test_legacy_combined_text_still_accepts_no_round_count (test_delivery_gate.QuestionTests.test_legacy_combined_text_still_accepts_no_round_count) ... FAIL
+
+======================================================================
+FAIL: test_legacy_combined_text_still_accepts_no_round_count (test_delivery_gate.QuestionTests.test_legacy_combined_text_still_accepts_no_round_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/delivery-clause-acceptance.y8KefT/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1943, in test_legacy_combined_text_still_accepts_no_round_count
+    self.assertEqual(self.ask("Deliver it."), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0, '[140 chars]n`.\nextra passing line\ngate text complete\nn[377 chars].\n') != (0, '[140 chars]n`.\ngate text complete\nnext: before gate pre[357 chars].\n')
+
+First differing element 1:
+'next[136 chars]n`.\nextra passing line\ngate text complete\nn[376 chars]`.\n'
+'next[136 chars]n`.\ngate text complete\nnext: before gate pre[356 chars]`.\n'
+
+  (0,
+   'next: each number or factual claim in this text and the PR body names the '
+   'command and date that produced it, or says `<whose> report, not run`.\n'
+-  'extra passing line\n'
+   'gate text complete\n'
+   'next: before gate prepare, write the question the Captain answers: one '
+   'decision; its first sentence says what he decides and what you recommend; '
+   'plain words before ids and paths, and any term he has not seen expanded in '
+   'eight words or fewer; one sentence saying what approving accepts. Show him '
+   'this bound question verbatim and record his answer as `answering 「<that '
+   'question>」`.\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)
