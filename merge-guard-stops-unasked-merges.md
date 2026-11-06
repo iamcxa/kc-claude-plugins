@@ -308,6 +308,10 @@ The design: a package `merge_guard.py` that each machine registers in user-level
 
 Not exercised: Paseo-hosted sessions, where a peer agent can answer a permission prompt; Codex interactive and app-server sessions; and Codex registration via `~/.codex/hooks.json`. Two POC side effects: Claude recorded trust for `/tmp/merge-guard-poc/work` in the operator's global Claude state, and Claude Code's own background `gh` calls hit the fake `gh`.
 
+### AC-10 observation (FO, 2026-11-06)
+
+The Captain 「看得到，也答了」 (host question dialog, 2026-11-06): the guard's ask reached his phone in Paseo and he answered it there; he allowed it, and the fake gh logged one FAKE-GH-RAN line at 2026-11-06T01:01:48Z (record: merge-guard-stops-unasked-merges/captain-steps/1.md).
+
 ## Stage Report: ideation (cycle 2)
 
 - DONE: Under the Captain's revise of 2026-11-06 (read its reason in the ideation gate record), keep D1 and D2 and add: (1) a run in a Paseo-hosted Claude session, isolated from his own settings, showing whether the guard's ask reaches the Captain's Paseo phone view and can be answered there; set it up, then hand FO the one step only he can do (look and answer on his phone) instead of answering it yourself; (2) a record route so a Release, workflow-sync or learning PR the Captain approved in chat carries a merge record before FO merges it and is not stopped, with the replay recount; update the design, criteria and decisions
