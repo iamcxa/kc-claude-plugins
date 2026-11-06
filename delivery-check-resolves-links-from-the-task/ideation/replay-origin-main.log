@@ -1,0 +1,6 @@
+#793 from /Users/kent/conductor/workspaces/kc-claude-plugins/colombo: Captain steps record fails: message S5: unrecorded command or link '/plugin marketplace add iamcxa/kc-claude-plugins'
+#793 from /tmp/dl-replay/state/delivery-question-requires-worktree-clause: gate text complete
+#793 from /tmp/dl-replay/state: gate text complete
+#1338 from /Users/kent/conductor/repos/qnow-adopt-dev2: Captain steps record fails: message S4: missing path /api/office/me
+#1338 from /tmp/dl-replay/qstate/preview-sign-in-wildcard: Captain steps record fails: message S4: missing path /api/office/me
+#1338 from /tmp/dl-replay/qstate: Captain steps record fails: message S4: missing path /api/office/me

@@ -1,0 +1,64 @@
+--- base/scripts/delivery_gate.py	2026-11-06 22:43:45
++++ kc-dev-flow-2/scripts/delivery_gate.py	2026-11-06 22:43:45
+@@ -744,8 +744,16 @@
+         return False
+ 
+ 
+-def inspect_steps(record_path, message):
++def named_file(folder, value):
++    path = Path(value).expanduser()
++    if path.is_absolute():
++        return path
++    return (folder.parent if path.parts[:1] == (folder.name,) else folder) / path
++
++
++def inspect_steps(record_path, message, folder, evidence=""):
+     text = record_path.read_text()
++    message = message + "\n" + evidence
+     header = re.split(r"^### Step \d+[ \t]*$", text, maxsplit=1, flags=re.M)[0]
+     candidates = re.findall(r"^Candidate:[ \t]*([^\n]*)$", header, re.M)
+     problems = []
+@@ -758,9 +766,10 @@
+         problems.append("record has no Step 1")
+     observed = {normalized(fields["Observed"]) for _, fields in steps if fields.get("Observed", "").strip()}
+     path_text = FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], message)
++    asked_paths = FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], message[:len(message) - len(evidence) - 1])
+     texts = [message]
+     commands = fenced_steps(message)
+-    markdown = [Path(re.sub(r":\d+(?::\d+)?$", "", value)).expanduser() for value in
++    markdown = [named_file(folder, re.sub(r":\d+(?::\d+)?$", "", value)) for value in
+                 re.findall(r"(?<![\w:/])(?:[~./\w-]+/)?[\w.-]+\.md(?::\d+(?::\d+)?)?", URL.sub(" ", path_text))]
+     for path in dict.fromkeys(absolute_paths(path_text) + markdown):
+         if path.suffix.lower() == ".md" and path.is_file() and path.resolve() != record_path.resolve():
+@@ -789,7 +798,7 @@
+         for path in absolute_paths(fields.get("Asked", "")):
+             if not path.exists():
+                 problems.append(f"step {number} S4: missing path {path}")
+-    for path in absolute_paths(path_text):
++    for path in absolute_paths(asked_paths):
+         if not path.exists():
+             problems.append(f"message S4: missing path {path}")
+     required_commands = [body for body in commands if normalized(body) not in observed]
+@@ -804,7 +813,8 @@
+ 
+ def steps(args):
+     try:
+-        problems, _, count, left = inspect_steps(Path(args.record).expanduser(), Path(args.text_file).read_text())
++        record = Path(args.record).expanduser()
++        problems, _, count, left = inspect_steps(record, Path(args.text_file).read_text(), record.resolve().parent.parent)
+     except (OSError, UnicodeDecodeError) as error:
+         emit(f"cannot read input: {error}")
+         return 2
+@@ -819,9 +829,10 @@
+     declarations = re.findall(r"^Captain steps:[ \t]*(.*)$", "\n".join(outside_fences(summary)), re.M)
+     if len(declarations) != 1 or not declarations[0].strip():
+         return ["gate text needs one Captain steps: <record path> line"]
+-    path = Path(declarations[0].strip().strip("`\"")).expanduser()
++    folder = task_folder(task)
++    path = named_file(folder, declarations[0].strip().strip("`\""))
+     report = (VALIDATION_SECTION.findall(task.read_text()) or [""])[-1]
+-    problems, candidate, _, _ = inspect_steps(path, gate_text + "\n" + report)
++    problems, candidate, _, _ = inspect_steps(path, gate_text, folder, report)
+     if problems:
+         return [f"Captain steps record fails: {problems[0]}"]
+     candidates, _ = dispatched_candidates(task)
