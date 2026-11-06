@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:codex-security-only-prompts-code-review:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:codex-security-only-prompts-code-review-backlog-1
+              briefing:
+                id: briefing:codex-security-only-prompts-code-review:backlog:attempt-1:revision-1
+                digest: sha256:036c3c1b1b763868cc783b981196ebe1f30eb7c13e00854355254de2297a8618
+                room-ref: ./codex-security-only-prompts-code-review/review/backlog/briefing-1
 ---
 
 When Codex has posted only its security-review summary on a PR head, codex_review.py (or pr_watch.py) prints a next line that asks FO to request `@codex review`, so a merge ask is not prepared on a head with no code review.
