@@ -53,6 +53,17 @@ gates:
                 id: briefing:delivery-question-requires-worktree-clause:validation:attempt-1:revision-1
                 digest: sha256:c45b46b749be54808ac1eca4b7442fb09d9e87fc71f5ce125473b3402c2bfbcf
                 room-ref: ./delivery-question-requires-worktree-clause/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-question-requires-worktree-clause:validation:1
+                briefing: briefing:delivery-question-requires-worktree-clause:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-06T04:06:10.460187Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-06), answering 「決定：合併 #793（合併問句要有移除 worktree 那一句）嗎？ Regular merge with --match-head-commit 5b3e290a7eaceb0fe70f489d25d622314598b9f0, the batch 15 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-06T01:30:12Z
 worktree: .worktrees/spacedock-ensign-delivery-question-requires-worktree-clause
 pr: iamcxa/kc-claude-plugins#793
