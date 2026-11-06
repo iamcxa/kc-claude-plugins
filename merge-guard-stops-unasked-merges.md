@@ -3,7 +3,7 @@ title: A gh pr merge that no task's saved merge ask carries is stopped for the C
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
