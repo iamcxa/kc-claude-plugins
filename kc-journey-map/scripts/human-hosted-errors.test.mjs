@@ -3,14 +3,10 @@ import { test } from 'node:test'
 import { build } from 'esbuild'
 import { Miniflare } from 'miniflare'
 
-// Break caught: the registry's masked error must be logged, while the original
-// authentication denial survives a failed receipt in real local workerd.
 test('local Cloudflare preserves denial and logs sanitized registry/provider failures', async () => {
  const origin = 'https://entry.synthetic.invalid'
  const config = { version: 1, backendId: 'synthetic', origin, mode: 'cloudflare', issuer: 'https://synthetic.cloudflareaccess.com', audience: 'synthetic', members: [] }
  const bundle = await build({ entryPoints: [new URL('../server/host/cloudflare.ts', import.meta.url).pathname], bundle: true, write: false, format: 'esm', platform: 'browser', conditions: ['workerd', 'worker', 'browser'], external: ['cloudflare:workers'], logLevel: 'silent' })
- // Fault injection stays in this test subclass, after normal bootstrap. The
- // real human operation, transaction, registry catch and HTTP route still run.
  const script = bundle.outputFiles[0].text.replace('export {', `
 class FaultRegistry extends JourneyRegistry {
  async fetch(req) { this.failWrites = true; return super.fetch(req); }
@@ -44,7 +40,6 @@ export {`).replace('JourneyRegistry,', 'FaultRegistry as JourneyRegistry,')
   assert.equal(response.status, 503)
   assert.deepEqual(await response.json(), { error: 'metadata unavailable' })
   assert.equal(response.headers.get('set-cookie'), null)
-  // Runtime stderr is a separate stream from the HTTP response.
   for (let i = 0; i < 50 && !lines.join('').includes('provider-start'); i++) await new Promise(resolve => setTimeout(resolve, 10))
   const logged = lines.join('')
   assert.match(logged, /record-denial/)

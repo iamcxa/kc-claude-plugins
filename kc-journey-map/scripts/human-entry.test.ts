@@ -147,7 +147,6 @@ test('entry preserves explicit empty/denied target and empty inventory without c
  assert.equal(store.list('room:', 100).length, 0)
 })
 
-// Break caught: a failed receipt must not replace the authentication denial.
 test('Node entry preserves 401 and category when the denial write fails', async () => {
  const { store } = fixture(), put = store.put
  store.put = (key, value) => {
