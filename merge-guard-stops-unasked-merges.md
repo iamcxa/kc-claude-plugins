@@ -60,6 +60,7 @@ gates:
                 state: consumed
 started: 2026-11-06T01:30:26Z
 worktree: .worktrees/spacedock-ensign-merge-guard-stops-unasked-merges
+pr: iamcxa/kc-claude-plugins#794
 ---
 
 ## Scope
