@@ -1,0 +1,20 @@
+{
+  "class": "never",
+  "head": "1ca2625de0706e5494f73e010a394f8e5194b2a1",
+  "model": "not run",
+  "necessity": "the two files are delivery_gate.py and test_delivery_gate.py (gh pr view 797 --json files, FO 2026-11-06).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F1 Deferred risk: GitHub may'",
+    "point: deferred: '- F1 Deferred risk: GitHub may'",
+    "point: deferred: 'Declined: Deferred risk, validation-1 F1 GitHub'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#797",
+  "sufficiency": "the qnow #1338 replay moves from held (exit 1) to passed (exit 0) while failed, pending, only-skipped required checks and repositories with no required checks still hold (validation-1 report, Astra, 2",
+  "time": "2026-11-06T16:52:30Z",
+  "verdict": "ask"
+}
