@@ -117,6 +117,33 @@ class PrWatchTests(unittest.TestCase):
         self.assertFalse(watch.outcome("codex", "running", "stalled(2026-10-10T10:00:00Z)"))
         self.assertEqual(watch.facts(REF, snap(codex="stalled(t)", **{"watch-codex": True})), f"fact: {REF} OPEN draft=False checks=green codex=stalled(t)")
 
+    def test_wait_asks_once_per_security_only_head_without_counting_a_round(self):
+        output = ("not reviewed: Codex reviewed aaaaaaaaa for security only; security-only=summary:9\n"
+                  "next: comment `@codex review` on the PR once; a security review is no round and never clean.\n")
+        with mock.patch.object(watch.subprocess, "run", return_value=subprocess.CompletedProcess([], 4, output, "")):
+            self.assertEqual(watch.codex("o/r", "1"), ("security-only(summary:9)", "-"))
+        self.assertFalse(watch.outcome("codex", "not-reviewed", "security-only(summary:9)"))
+        secured = lambda head="aaaaaaaaa": snap(codex="security-only(summary:9)", head=head, **{"watch-codex": True})
+        asks = "next: comment `@codex review` on o/r#1 once"
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [secured()], state)
+            code, first, slept = self.wait_with_clock(state, [secured()] * 2, 60)
+            self.assertEqual((code, slept), (0, 0))
+            self.assertIn(asks, first)
+            self.assertEqual(json.loads(state.read_text())[REF].get("codex-asked"), "aaaaaaaaa")
+            clean = snap(codex="clean", **{"codex-evidence": "summary:5", "watch-codex": True})
+            code, again, slept = self.wait_with_clock(state, [secured()] * 2 + [clean], 60)
+            self.assertEqual((code, slept), (0, 2))
+            self.assertNotIn(asks, again)
+            code, other, slept = self.wait_with_clock(state, [secured("bbbbbbbbb")] * 2, 60)
+            self.assertEqual((code, slept), (0, 0))
+            self.assertIn(asks, other)
+            self.assertEqual(json.loads(state.read_text())[REF].get("codex-asked"), "bbbbbbbbb")
+        self.assertEqual(len(first.splitlines()), 2)
+        self.assertLessEqual(len(first.split()), 26)
+        self.assertNotIn("evidence=", first)
+
     def test_wait_asks_for_one_re_request_then_names_codex_unread_once_per_head(self):
         stalled = lambda since, head="aaaaaaaaa": snap(codex=f"stalled({since})", head=head, **{"watch-codex": True})
         clean = snap(codex="clean", **{"codex-evidence": "summary:5"})

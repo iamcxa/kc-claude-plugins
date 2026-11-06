@@ -36,6 +36,9 @@ the `next:` line to comment `@codex review` once; a stall with a different SINCE
 more with the line for the merge ask as `codex not run: review stalled twice on <head>`. The mark that FO asked
 is in the per-session state file, so a new session asks once more.
 
+A security-only Codex summary is no outcome. wait stops once per head with the request for a code review,
+and records `codex-asked` in the per-session state file.
+
 A merged or closed PR is reported once, then dropped. The codex and copilot columns are read
 only for a PR added with --codex or --copilot, from that extension's reader when it is
 present. Exit 2 is a configuration error.
@@ -129,8 +132,10 @@ def reader(script, repo, number, words=None):
     evidence = (re.findall(r"evidence=(\S+)", done.stdout) or [None])[-1]
     verdict = (words or {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed", 5: "unrecognized", 6: "stalled"}
                ).get(done.returncode, "error")
-    odd = re.findall(r"(?:unrecognized|stalled)=(\S+)", done.stdout)
-    return (f"{verdict}({odd[-1]})" if odd and verdict in ("unrecognized", "stalled") else verdict), evidence or "-"
+    if done.returncode == 4 and "security-only=" in done.stdout:
+        verdict = "security-only"
+    odd = re.findall(r"(?:unrecognized|stalled|security-only)=(\S+)", done.stdout)
+    return (f"{verdict}({odd[-1]})" if odd and verdict in ("unrecognized", "stalled", "security-only") else verdict), evidence or "-"
 
 
 def codex(repo, number):
@@ -237,6 +242,18 @@ def stall_lines(state, read):
                   [f"{ref} codex={word}: running past the stall limit.",
                    f"next: comment `@codex review` on {ref} once; a stalled review is no round and never clean."])
         update(state, put={ref: {"codex-stalled": {"head": head, "since": since, "step": 2 if again else 1}}}, keep_flags=True)
+    return lines
+
+
+def security_only_lines(state, read):
+    lines = []
+    for ref, snap in load(state).items():
+        word, head = snap.get("codex", ""), snap.get("head")
+        if ref not in read or not word.startswith("security-only(") or snap.get("codex-asked") == head:
+            continue
+        lines += [f"{ref} codex={word}: security review only.",
+                  f"next: comment `@codex review` on {ref} once; a security review is no round and never clean."]
+        update(state, put={ref: {"codex-asked": head}}, keep_flags=True)
     return lines
 
 
@@ -696,7 +713,7 @@ def main(argv=None, look=look, sleep=time.sleep, ask=gh, clock=time.time):
             if any(decisive for _, decisive in changes) or not watching:
                 print("\n".join([line for line, _ in changes] + nexts or ["watch list is empty"]))
                 return 0
-            gave_up = unread_lines(opts.state, first, clock, read) + stall_lines(opts.state, read)
+            gave_up = unread_lines(opts.state, first, clock, read) + stall_lines(opts.state, read) + security_only_lines(opts.state, read)
             if gave_up:
                 print("\n".join([line for line, _ in changes] + gave_up))
                 return 0

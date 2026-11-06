@@ -191,6 +191,34 @@ class CodexReviewTests(unittest.TestCase):
         self.assertEqual(self.check(comments=[old_shape])[0], 4)
         self.assertEqual(self.check(comments=[marker(HEAD, "completed", security=sec, user=PERSON)])[0], 4)
 
+    def test_a_security_only_summary_asks_for_a_code_review_without_counting_a_round(self):
+        secured = side(HEAD, "completed")
+        for code in (NONE, side(OLD, "completed", True), side(OLD, "running")):
+            with self.subTest(code=code):
+                status, line = self.check(comments=[marker(None, None, code=code, security=secured)])
+                self.assertEqual(status, 4)
+                self.assertEqual(line.splitlines(), [
+                    f"not reviewed: Codex reviewed {HEAD[:9]} for security only; security-only=summary:9",
+                    "next: comment `@codex review` on the PR once; a security review is no round and never clean."])
+                self.assertNotIn("evidence=", line)
+                self.assertLessEqual(len(line.split()), 26)
+        cases = [
+            (NONE, NONE),
+            (side(HEAD, "completed"), secured),
+            (side(HEAD, "running"), secured),
+            (side(HEAD, "completed", True), secured),
+            (side(HEAD, "failed"), secured),
+            (NONE, side(HEAD, "running")),
+            (NONE, side(OLD, "completed")),
+        ]
+        for code, security in cases:
+            with self.subTest(code=code, security=security):
+                self.assertNotIn("security-only=", self.check(comments=[marker(None, None, code=code, security=security)])[1])
+        summary = marker(None, None, code=NONE, security=secured)
+        self.assertEqual(self.check(comments=[summary, said(HEAD[:10], at=T2)])[0], 0)
+        self.assertNotIn("security-only=", self.check(comments=[summary, said(HEAD[:10], at=T2)])[1])
+        self.assertNotIn("security-only=", self.check(comments=[{**summary, "user": PERSON}])[1])
+
     def test_a_summary_edit_after_the_code_review_does_not_make_a_second_round(self):
         ident = lambda line: line.split("evidence=")[1].split(" at ")[0]
         sec = side(HEAD, "completed")
