@@ -1,0 +1,27 @@
+F
+======================================================================
+FAIL: test_carried_merge_has_no_live_gh_lookup (__main__.MergeGuardTests.test_carried_merge_has_no_live_gh_lookup)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-5u5sb975/test_merge_guard.py", line 213, in test_carried_merge_has_no_live_gh_lookup
+    self.assertEqual(self.verdict(), "pass")
+                     ^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-5u5sb975/test_merge_guard.py", line 39, in verdict
+    return guard.verdict(command or self.command, self.root, [self.state])[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-5u5sb975/merge_guard.py", line 208, in verdict
+    subprocess.run(["gh", "pr", "view"], check=True)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/unittest/mock.py", line 1124, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/unittest/mock.py", line 1128, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/unittest/mock.py", line 1183, in _execute_mock_call
+    raise effect
+AssertionError: unexpected subprocess
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)

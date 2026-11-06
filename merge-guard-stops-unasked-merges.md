@@ -499,3 +499,40 @@ This complete report supersedes the earlier implementation report. The requested
 ### Summary
 
 This report supersedes the earlier implementation reports for local candidate b82f20de6c8e5b868695d03aa4bbcb97e77dd877. Explicit deferred routes now stop with the FO policy reason, and the no-queue assumption is visible in adoption and ADR 0063; the hook stays offline under FO's ruling. Publication and fresh independent validation/review remain FO work; prior native and phone evidence is retained at its original scope.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #794 head b82f20de against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at b82f20de6c8e5b868695d03aa4bbcb97e77dd877, pinned base b804d81d3abc94c9c321326dc75e7cac927c5252; all seven exported files equal candidate blobs. Commands, ten-criterion evidence, falsifiers and limit judgments: validation-2/evidence.md.
+- DONE: Revalidation at the new head after two repairs: Codex round 1 P2 (gh global flags before pr merge, plus sibling forms: gh api merge endpoint, GraphQL, env/command wrappers, absolute path, GH_REPO/GH_HOST) and RoboRev job 1548 High (--auto and other explicit deferred merges). FO ruled no live merge-queue query; the stated limit is in adoption.md and the ADR draft (see the implementation report). Re-judge every criterion; the Captain allowed this task's remaining isolated fake-gh host tests (fake gh, nonexistent repo, temporary settings, same runner). Do not start agents you were not asked to
+  Both repair classes pass 45 guard tests, 22 parser-repair and 17 deferred-form falsifiers plus six original invariant mutations. Twenty-one current-head native cases and one interactive run support host behavior; no new review agents. No live queue lookup; FO's no-queue observation remains attributed to FO.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation-2/acceptance.sh has five steps; its exact fresh-bash invocation and expected observations are in evidence.md; acceptance.log records exit 0. Both resolved-package and dispatch-path ADR checks with --since b804d81d3abc94c9c321326dc75e7cac927c5252 --require 0063 exit 0: 62 records, zero legacy.
+- DONE: AC-1 and AC-2 identity, newest records and uncommitted disk discovery
+  45 guard tests pass; oldest-record, removed _merges, Codex-ask and committed-only-read mutations fail their named cases. Uncommitted linked-state records carry; other-branch records stop. validation-2/unit.log and mutation logs.
+- DONE: AC-3 fail closed on both native hosts
+  Missing scripts and exceptions exit 2; unreadable records ask/deny; all execute zero fake commands. Removing || exit 2 makes Claude execute once. validation-2/native-results.json and native/ contain invocation, hook and fake-call logs.
+- DONE: AC-4 Claude auto-mode interception and interactive confirmation
+  Uncarried headless command appears in permission_denials; carried executes once. Interactive prompt includes command/reason; FO-authorized Esc cancels, fake log stays empty, session 32659 exits 0. No keys after FO's later no-more-keys message; interactive.log and interactive-observation.json.
+- DONE: AC-5 Codex interception with and without operator rules
+  Uncarried command is denied with --ignore-rules and with rules loaded, zero fake commands; carried executes once. A native deny-to-ask mutation executes once, proving the selected refusal boundary. validation-2/native-results.json.
+- DONE: AC-6 replay and recount with its original-bite falsifier
+  54 pass/30 stop, then 74 pass/10 stop; no ideation differences. #672 lacks head 6c972e7 and stops. Removing the question-head check gives 75/9 and #672 passes; synthetic ancillary approvals remain an explicit limit.
+- DONE: AC-7 adoption instructions and AC-8 bounded delivery wording/ADR
+  Registration bodies and documented limits checked; stale no-hook claim absent; lint passes at unchanged 5939-word budget. Delivery suite: 156 pass/one existing skip. Removing wrapper documentation or reverting the record reminder fails its counterexample; only the seven designed files changed.
+- DONE: AC-9 record creation/refusal and workflow compatibility
+  Next numbering, URL/#number, head/answer requirements and no-write refusals pass; removing the digit boundary accepts #6720 and fails the test. Copied-workflow status output is identical before/after _merges, both exit 0 (validation-2/status.json).
+- DONE: AC-10 retained Captain-only phone evidence
+  captain-steps/1.md records 「看得到，也答了」, no pending permission and one fake call after Yes. Removed-answer control fails evidence integrity; no new phone or package-on-device claim.
+- DONE: Required audits, documents, reading cost and necessity
+  Number/design/dispatch/document/diff checks exit 0; 581 code/3 comment lines = 0.5%, maximum 5%. ADRs 0044/0051/0062 unaffected, 0063 updated, package README unaffected, with reasons in evidence.md. ASK 40→57, ASK_UNQUOTED 39→56, adoption 2347→2760, workflow unchanged; CI cost per PR not measured, triggers unchanged.
+- DONE: Rejudge implementation limits and final external/cleanup state
+  No new Material, Deferred risk, Polish or Needs decision finding. Queue premise, script/network boundary, conservative false stops, unauthenticated records, Paseo peer approval and manual registration remain explicit. Product clean at candidate; native processes exited. PR #794 OPEN/non-draft at candidate; #793 OPEN/non-draft, integration remains FO-owned.
+- SKIPPED: Product publication, external reviews, merge decision and operator registration
+  Worker made no product push, PR comment/review request, ready or merge action. Final provider metadata reports successful applicable CI and skipped deploy; RoboRev/external review and sibling-first integration stay with FO. The prescribed state helper handles only this task's report/evidence commit and synchronization.
+
+### Summary
+
+PASSED for PR #794 at b82f20de6c8e5b868695d03aa4bbcb97e77dd877 within the accepted Pilot boundary. This complete report supersedes the earlier validation report at 871c6b2f; both repair classes and current-head native failures/successes were independently exercised, including the interactive stop canceled by Esc. FO retains the delivery gate, #793-first integration, later-head checks, merge and rollout; this verdict grants none of them.
+

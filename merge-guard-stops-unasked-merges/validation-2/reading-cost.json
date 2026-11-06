@@ -1,0 +1,18 @@
+{
+  "kc-dev-flow-2/references/sd/adoption.md": {
+    "before": 2347,
+    "after": 2760
+  },
+  "kc-dev-flow-2/references/sd/workflow.md": {
+    "before": 5939,
+    "after": 5939
+  },
+  "ASK": {
+    "before": 40,
+    "after": 57
+  },
+  "ASK_UNQUOTED": {
+    "before": 39,
+    "after": 56
+  }
+}

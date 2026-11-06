@@ -1,0 +1,11 @@
+Reading additional input from stdin...
+{"type":"thread.started","thread_id":"01a1aef6-1041-7e73-a275-387a1e2f84bf"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"item.completed","item":{"id":"item_1","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"turn.started"}
+2026-11-06T03:45:25.337572Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://codex-app.tldraw.xyz/.well-known/oauth-protected-resource/mcp\", scope=\"openid profile email offline_access\"" })
+2026-11-06T03:45:26.030265Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://ai.todoist.net/.well-known/oauth-protected-resource/mcp\"" })
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"I’ll run the command once and report the result.\n"}}
+2026-11-06T03:45:31.773568Z ERROR codex_core::tools::router: error=Command blocked by PreToolUse hook: merge guard: cannot check merge: FO never enables auto-merge; API merges or opaque GraphQL need synchronous gh pr merge with --match-head-commit; ask the Captain before this merge. If the Captain approved this merge by a question naming the PR and its head, run merge_guard.py record and retry; otherwise ask him; on this host only he can run this merge.. Command: /tmp/merge-guard-validation-b82f20de/evidence/native/codex-graphql/gh api graphql --input request.json
+{"type":"item.completed","item":{"id":"item_3","type":"agent_message","text":"Blocked before execution by the automatic approval hook: it rejected the GraphQL command under its merge restrictions. No retry or workaround attempted.\n\n```text\nRemaining: none\nNext: none (me)\nClosable: unverified\n```"}}
+{"type":"turn.completed","usage":{"input_tokens":41209,"cached_input_tokens":32512,"cache_write_input_tokens":0,"output_tokens":121,"reasoning_output_tokens":0}}

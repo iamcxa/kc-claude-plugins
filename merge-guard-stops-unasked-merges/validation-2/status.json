@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/Users/kent/.local/bin/spacedock",
+    "status",
+    "--workflow-dir",
+    "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-guard-status-ffb47e4x"
+  ],
+  "before": "ID     SLUG                           STATUS               TITLE                          SCORE\n--     ----                           ------               -----                          -----\ntask   task                           backlog              status fixture                 \n",
+  "after": "ID     SLUG                           STATUS               TITLE                          SCORE\n--     ----                           ------               -----                          -----\ntask   task                           backlog              status fixture                 \n",
+  "exit": [
+    0,
+    0
+  ],
+  "stderr": [
+    "",
+    ""
+  ],
+  "same": true
+}

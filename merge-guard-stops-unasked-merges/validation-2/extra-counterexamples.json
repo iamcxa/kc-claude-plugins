@@ -1,0 +1,16 @@
+[
+  {
+    "name": "AC-7 wrapper omission",
+    "status": "passed"
+  },
+  {
+    "name": "AC-10 missing Captain observation",
+    "status": "passed",
+    "message": "evidence integrity only"
+  },
+  {
+    "name": "AC-8 removed reminder",
+    "status": "passed",
+    "message": "removed record reminder rejected by existing assertion"
+  }
+]

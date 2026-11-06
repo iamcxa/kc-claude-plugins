@@ -1,0 +1,6 @@
+{
+  "head": "b82f20de6c8e5b868695d03aa4bbcb97e77dd877",
+  "base": "b804d81d3abc94c9c321326dc75e7cac927c5252",
+  "export": "/tmp/merge-guard-validation-b82f20de/export",
+  "native_runner": "existing repair-1 runner; only candidate/evidence paths and auto/async cases adjusted"
+}

@@ -1,0 +1,914 @@
+diff --git a/.github/workflows/kc-dev-flow-2-tests.yml b/.github/workflows/kc-dev-flow-2-tests.yml
+index f7dd68fd7..73a55bb4d 100644
+--- a/.github/workflows/kc-dev-flow-2-tests.yml
++++ b/.github/workflows/kc-dev-flow-2-tests.yml
+@@ -70,6 +70,9 @@ jobs:
+       - name: test_dispatch_records.py
+         run: python3 kc-dev-flow-2/scripts/test_dispatch_records.py
+ 
++      - name: test_merge_guard.py
++        run: python3 kc-dev-flow-2/scripts/test_merge_guard.py
++
+       - name: test_delivery_gate.py
+         run: python3 kc-dev-flow-2/scripts/test_delivery_gate.py
+ 
+diff --git a/docs/adr/0063-a-merge-no-record-carries-is-stopped-by-a-user-registered-hook.md b/docs/adr/0063-a-merge-no-record-carries-is-stopped-by-a-user-registered-hook.md
+new file mode 100644
+index 000000000..38bb91660
+--- /dev/null
++++ b/docs/adr/0063-a-merge-no-record-carries-is-stopped-by-a-user-registered-hook.md
+@@ -0,0 +1,77 @@
++# 0063. A merge no record carries is stopped by a user-registered hook
++
++Date: 2026-11-06
++
++## Status
++
++Accepted
++
++## Context
++
++Release PR #672 merged although the delivery question did not name its merge.
++The task merge-guard-stops-unasked-merges proved with fake gh commands that
++Claude's pre-tool hook can ask under auto mode, while Codex 0.162.1 ignores
++ask and honors deny even against an allow rule. Codex gaining a pre-tool hook
++meets ADR 0003's reopen condition; secret-read enforcement stays adopter-owned.
++ADRs 0023 and 0062 still govern what a question grants.
++
++## Decision
++
++**Words:** 「補」 — Captain, chat, 2026-11-06, first ideation gate revision.
++
++**Asked:** 「要照我的建議退回補這兩件事嗎？」 The recorded revision kept
++D1 (Codex deny) and D2 (user registration), and requested the Paseo phone
++observation and a record route for chat-approved ancillary PRs.
++
++**Words:** 「准」 — Captain, chat, 2026-11-06, second ideation gate.
++
++**Asked:** 「決定：「合併前擋下沒人問過的合併」第二輪設計進入實作嗎？核准即接受 D1（Codex 上沒有紀錄的合併一律拒絕）、D2（套件出腳本，由你在每台機器的使用者設定註冊）、D3（Release、同步、learning PR 在你核准、問句寫明編號和版本後，由 FO 先存紀錄再合併）與 D4（Paseo 上的 Claude FO 被擋時用「要問人」，請求會送到你手機）四個建議。」
++
++**Options considered:**
++- D1: deny an uncarried Codex merge; ask is ignored by the tested host.
++- D2: ship a package script with per-machine user registration; shipping a
++  plugin hook would also affect unrelated projects.
++- D3: save a Release, workflow-sync or learning PR's question, answer, number
++  and full head before merging; without this route they stop each time.
++- D4: keep Claude ask in Paseo; deny would require manual merges instead.
++
++**Recommended:** D1 through D4 as recorded in the approved second ideation gate.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/merge_guard.py` — host decisions and record checks.
++
++The package supplies the script, record command and registration instructions;
++the operator installs the user hook. A parsed merge passes this guard when
++some folder's newest merge ask carries its PR and head prefix. An uncarried
++merge asks on Claude and denies on Codex. Missing or failing scripts block
++through the documented `|| exit 2` wrapper. Other host permission checks remain.
++FO saves a chat-approved ancillary PR before merging, after a question naming
++its number and head. Records do not authenticate the Captain or judge intent.
++
++FO never enables auto-merge. Explicit `--auto` forms, asynchronous REST merges
++and GraphQL auto-merge or enqueue calls stop even with a matching record.
++The guard assumes the target branch has no merge queue: plain `gh pr merge`
++can enable auto-merge or enqueue on a branch requiring one. A repository that
++enables a queue must be revisited before relying on this guard. The hook does
++no live queue lookup and does not add or require `--admin`.
++
++FO's repair ruling on 2026-11-06 retained that offline boundary after checking
++GraphQL `repository.mergeQueue(branch:)`: no queue on `main` in
++`iamcxa/kc-claude-plugins`, `spacedock-dev/subspace-relay`,
++`spacedock-dev/subspace-web` or `iamcxa/qnow` (FO-reported observation).
++
++## Consequences
++
++The ideation replay stopped 30 of 84 merges; synthetic ancillary-PR questions
++reduced it to 10, with #672 still stopped because its question lacked the head.
++About nine further stops per fourteen days is an assumption from that sample.
++The Captain reported 「看得到，也答了」 on his phone; the recorded fake gh ran
++once after his yes. Paseo shows the command without the reason, and another
++agent can answer the request. This guard catches a mistaken merge request,
++not a malicious agent with the same filesystem or permission tools.
++
++Each machine stays unguarded until registered. A Release PR's changed head
++needs another approval. A text mention may stop too; a merge of another repo
++from this cwd stops if its records are not among this repo's state worktrees.
++No Captain settings, workflow template, mods or parked Merges line change.
++Revisit if the host decision behavior or Paseo phone delivery changes.
+diff --git a/kc-dev-flow-2/references/sd/adoption.md b/kc-dev-flow-2/references/sd/adoption.md
+index c225adb17..25d9a12b2 100644
+--- a/kc-dev-flow-2/references/sd/adoption.md
++++ b/kc-dev-flow-2/references/sd/adoption.md
+@@ -143,7 +143,65 @@ the user's settings, with this contract:
+   keychain password read), and its message names `<wrapper>`;
+ - the patterns are the adopter's, since they follow its stack;
+ - a refused command that only mentions a reader is rephrased, never split or encoded;
+-- Codex has no equivalent hook, so there the `Secrets:` line is the only control.
++- Codex's pre-tool hook can only deny.
++
++## Merge guard
++
++Each machine registers `<package>/scripts/merge_guard.py` at a stable absolute
++path in user settings; this package ships no hook registration (ADR 0063).
++Merge these entries into existing settings, preserving other hooks.
++Claude `~/.claude/settings.json` (Paseo-hosted Claude sessions load it too):
++
++```json
++{"hooks":{"PreToolUse":[{"matcher":"Bash","hooks":[{"type":"command","command":"python3 <package>/scripts/merge_guard.py claude || exit 2"}]}]}}
++```
++
++Codex `~/.codex/hooks.json`:
++
++```json
++{"hooks":{"PreToolUse":[{"matcher":"","hooks":[{"type":"command","command":"python3 <package>/scripts/merge_guard.py codex || exit 2","timeout":10}]}]}}
++```
++
++Launch Codex in a trusted repository and approve the reviewed hook's trust
++prompt; a hook change needs trust again. Codex is deny-only: `ask` is ignored.
++Keep `|| exit 2`: a script failure must block the command. Claude asks on an
++uncarried merge; Paseo shows the command without the reason, and another Paseo
++agent can answer. Codex refuses and FO asks the Captain in chat.
++
++For a Release, workflow-sync or learning PR approved in chat, first run:
++
++```sh
++python3 <package>/scripts/merge_guard.py record <state-dir> --pr owner/repo#123 --head <40-hex-head> --question-file <approved-question-file> --answer '<his words>'
++```
++
++The question must name the PR number and the head's first seven hex characters.
++State-commit and push the printed `_merges/…/merge/ask-N.json`, then merge with
++`--match-head-commit` at that head. A changed head needs another approval.
++The guard reads disk in this repository's linked `spacedock-state/*` worktrees,
++including archived tasks and `_merges`; it uses the highest-numbered ask per
++folder. The record checks names, not approval intent or who said the words.
++
++The guard parses global `-R`/`--repo` flags and literal `env`, `command` and
++executable-path forms. FO never enables auto-merge: `--auto` (including `=…`
++forms) stops even with a matching record. REST `pulls/N/merge` and
++`pulls/N/merge-async` endpoints, GraphQL calls (including auto-merge, enqueue,
++opaque files and reads), unknown gh aliases, `extension exec`, unknown merge
++flags and unparseable wrappers stop; use synchronous
++`gh pr merge --match-head-commit` for a recorded merge. `--disable-auto` cancels
++auto-merge; it does not enable a deferred merge. Shell text inspection
++requires an explicit repository under inherited `GH_REPO` and stops a `GH_HOST`
++other than `github.com`. It does not resolve generated commands, other executable
++names or direct curl/SDK calls; those stay outside this gh guard.
++
++The guard assumes the target branch has no merge queue. On a branch requiring
++one, plain `gh pr merge` can enable auto-merge or enqueue without `--auto`.
++Revisit the guard before relying on it in any repository that enables a queue;
++it does no live queue lookup and does not add or require `--admin`.
++
++The 2026-11-06 ideation replay stopped 30 of 84 historical merges; synthetic
++questions for approved-record candidates reduced that to 10, including the
++original unasked Release PR. Expect about nine further stops per fourteen days
++under that assumption. Registration is the operator's action after release.
+ 
+ ## Resetting a branch database
+ 
+diff --git a/kc-dev-flow-2/scripts/delivery_gate.py b/kc-dev-flow-2/scripts/delivery_gate.py
+index 59d08a0e8..2d5e16bec 100644
+--- a/kc-dev-flow-2/scripts/delivery_gate.py
++++ b/kc-dev-flow-2/scripts/delivery_gate.py
+@@ -110,9 +110,9 @@ FINDING = re.compile(r"^\s*[-*]\s*\*{0,2}F\d+\*{0,2}\s*[:(]?\s*\(?\s*(?:Deferred
+ MAX_POINTS = 12
+ CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
+                  "Necessity": "who uses this change and what breaks without it"}
+-ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."
++ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it."
+ # see docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md
+-ASK_UNQUOTED = "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time."
++ASK_UNQUOTED = "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it."
+ ASK_FORM = "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`."
+ CLAIM_SOURCE = "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`."
+ 
+diff --git a/kc-dev-flow-2/scripts/merge_guard.py b/kc-dev-flow-2/scripts/merge_guard.py
+new file mode 100644
+index 000000000..2ae22e1b3
+--- /dev/null
++++ b/kc-dev-flow-2/scripts/merge_guard.py
+@@ -0,0 +1,290 @@
++#!/usr/bin/env python3
++"""Stop an uncarried gh pr merge; record a separately approved PR/head.
++
++Usage: merge_guard.py claude|codex (hook JSON on stdin)
++       merge_guard.py record STATE --pr OWNER/REPO#N --head SHA --question-file FILE --answer WORDS
++"""
++import argparse
++import datetime
++import json
++import os
++import posixpath
++import re
++import shlex
++import subprocess
++import sys
++from pathlib import Path
++from urllib.parse import unquote, urlsplit
++
++# see docs/adr/0063-a-merge-no-record-carries-is-stopped-by-a-user-registered-hook.md
++MERGE = re.compile(r"\bgh\b[\s\S]*(?:\bpr\b[\s\S]*\bmerge\b|/pulls/[^/\s]+/merge|\bgraphql\b)")
++SHELL_END = {";", "&&", "||", "|", "&", "(", ")", ">", ">>", "<", "<<"}
++BUILTINS = set("auth browse codespace discussion gist issue org project release repo skill cache run workflow alias attestation completion config extension gpg-key label licenses ruleset search secret ssh-key status variable help".split())
++PR_COMMANDS = set("checks checkout close comment create diff edit list lock ready reopen review status unlock update-branch view --help".split())
++ASK_FILE = re.compile(r"ask-(\d+)\.json")
++PR = re.compile(r"([\w.-]+)/([\w.-]+)#([1-9]\d*)")
++REPO = re.compile(r"[\w.-]+/[\w.-]+")
++
++
++def git(cwd, *args):
++    return subprocess.run(["git", "-C", str(cwd), *args], check=True,
++                          capture_output=True, text=True).stdout.strip()
++
++
++def state_roots(cwd):
++    roots = []
++    for entry in git(cwd, "worktree", "list", "--porcelain").split("\n\n"):
++        lines = entry.splitlines()
++        if any(line.startswith("branch refs/heads/spacedock-state/") for line in lines):
++            roots.append(Path(next(line[9:] for line in lines if line.startswith("worktree "))))
++    return roots
++
++
++def newest_records(roots):
++    records = []
++    for root in roots:
++        for pattern in ("*/merge", "_archive/*/merge", "_merges/*/merge"):
++            for folder in root.glob(pattern):
++                asks = [(int(m.group(1)), p) for p in folder.glob("ask-*.json")
++                        if (m := ASK_FILE.fullmatch(p.name))]
++                if asks:
++                    record = json.loads(max(asks)[1].read_text())
++                    if not isinstance(record, dict):
++                        raise ValueError("merge record is not an object")
++                    records.append(record)
++    return records
++
++
++def repo_args(args):
++    cleaned, repo, k = [], None, 0
++    while k < len(args):
++        arg = args[k]
++        value = None
++        if arg in ("--repo", "-R"):
++            k += 1
++            value = args[k] if k < len(args) else ""
++        elif arg.startswith("--repo="):
++            value = arg.split("=", 1)[1]
++        elif arg.startswith("-R"):
++            value = arg[2:].removeprefix("=")
++        else:
++            cleaned.append(arg)
++        if value is not None:
++            if not REPO.fullmatch(value) or (repo and repo.lower() != value.lower()):
++                raise ValueError("the repository flags are missing, unsupported or disagree")
++            repo = value
++        k += 1
++    return cleaned, repo
++
++
++def check_wrapper(prefix):
++    while prefix:
++        wrapper, prefix = Path(prefix[0]).name, prefix[1:]
++        if wrapper not in ("env", "command"):
++            raise ValueError("the gh wrapper cannot be parsed")
++        if wrapper == "command" and prefix and prefix[0] == "-p":
++            prefix = prefix[1:]
++        if prefix and prefix[0] == "--":
++            prefix = prefix[1:]
++
++
++def check_api(args):
++    endpoint, k = None, 0
++    valued = set("-X --method -f --raw-field -F --field -H --header --hostname --input --cache -q --jq -p --preview -t --template".split())
++    switches = set("-i --include --paginate --silent --slurp --verbose --allow-escape-sequences".split())
++    while k < len(args):
++        arg = args[k]
++        if arg in valued:
++            k += 1
++            if k == len(args):
++                raise ValueError("the gh api flag has no value")
++        elif arg in switches:
++            pass
++        elif arg.startswith("--") and "=" in arg and arg.split("=", 1)[0] in valued:
++            pass
++        elif len(arg) > 2 and arg[:2] in valued:
++            pass
++        elif arg.startswith("-") or endpoint is not None:
++            raise ValueError("the gh api command cannot be parsed")
++        else:
++            endpoint = arg
++        k += 1
++    if not endpoint or any(char in endpoint for char in "$`\\()"):
++        raise ValueError("the gh api endpoint cannot be parsed")
++    for _ in range(8):
++        decoded = unquote(endpoint)
++        if decoded == endpoint:
++            break
++        endpoint = decoded
++    if "%" in endpoint:
++        raise ValueError("the gh api endpoint cannot be decoded")
++    path = posixpath.normpath(urlsplit(endpoint).path)
++    if re.search(r"(?:^|/)pulls/[^/]+/merge-async(?:/|$)", path):
++        raise ValueError("FO never enables auto-merge; asynchronous merges and merge queues are not carried by a saved head")
++    if path == "graphql" or path.endswith("/graphql") or re.search(r"(?:^|/)pulls/[^/]+/merge(?:/|$)", path):
++        raise ValueError("FO never enables auto-merge; API merges or opaque GraphQL need synchronous gh pr merge with --match-head-commit")
++
++
++def parse(command, cwd):
++    lexer = shlex.shlex(command, posix=True, punctuation_chars=";&|()<>")
++    lexer.whitespace_split = True
++    lexer.commenters = ""
++    words = list(lexer)
++    merges = []
++    for i, word in enumerate(words):
++        if Path(word).name != "gh":
++            continue
++        end = next((j for j in range(i + 1, len(words)) if words[j] in SHELL_END), len(words))
++        args, repo = repo_args(words[i + 1:end])
++        if args[:2] == ["pr", "merge"]:
++            start = max((j + 1 for j in range(i) if words[j] in SHELL_END), default=0)
++            check_wrapper(words[start:i])
++            merges.append((args[2:], repo, start > 0))
++        elif args[:1] == ["api"]:
++            check_api(args[1:])
++        elif (not args or (args[0] == "pr" and (len(args) < 2 or args[1] not in PR_COMMANDS))
++              or (args[0] not in BUILTINS | {"pr", "--version", "--help"})
++              or args[:2] == ["extension", "exec"]):
++            raise ValueError("the gh command or alias cannot be parsed")
++    if not merges:
++        if MERGE.search(command):
++            raise ValueError("the merge command cannot be parsed")
++        return None
++    if len(merges) != 1:
++        raise ValueError("more than one gh pr merge in one command")
++    args, repo, context_changed = merges[0]
++    number = head = None
++    valued = {"--subject", "--body", "--body-file", "--author-email", "-t", "-b", "-F", "-A"}
++    switches = {"--admin", "--disable-auto", "--delete-branch", "--merge", "--rebase", "--squash", "--help"}
++    k = 0
++    while k < len(args):
++        arg = args[k]
++        if arg.split("=", 1)[0] == "--auto":
++            raise ValueError("FO never enables auto-merge; a saved head does not authorize a deferred merge")
++        elif arg == "--match-head-commit":
++            k += 1
++            head = args[k] if k < len(args) else ""
++        elif arg.startswith("--match-head-commit="):
++            head = arg.split("=", 1)[1]
++        elif arg in valued:
++            k += 1
++            if k == len(args):
++                raise ValueError("the merge flag has no value")
++        elif "=" in arg and arg.split("=", 1)[0] in valued | switches:
++            pass
++        elif arg in switches or re.fullmatch(r"-[dmrs]+", arg):
++            pass
++        elif arg.startswith("-"):
++            raise ValueError("the merge flag cannot be parsed")
++        else:
++            if number is not None:
++                raise ValueError("the merge command has multiple PR arguments")
++            number = arg
++        k += 1
++    if number and (m := re.fullmatch(r"https://github\.com/([^/]+/[^/]+)/pull/([1-9]\d*)/?", number)):
++        url_repo, number = m.groups()
++        if repo and repo.lower() != url_repo.lower():
++            raise ValueError("the PR URL and --repo disagree")
++        repo = url_repo
++    if repo is None:
++        if context_changed or os.environ.get("GH_REPO"):
++            raise ValueError("the shell context or GH_REPO needs an explicit repository")
++        remote = git(cwd, "remote", "get-url", "origin")
++        m = re.fullmatch(r"(?:https://github\.com/|git@github\.com:|ssh://git@github\.com/)([^/]+/[^/]+?)(?:\.git)?/?", remote)
++        repo = m.group(1) if m else None
++    if os.environ.get("GH_HOST", "github.com").lower() not in ("", "github.com"):
++        raise ValueError("GH_HOST must be github.com for this merge guard")
++    if not (number and re.fullmatch(r"[1-9]\d*", number) and repo and REPO.fullmatch(repo)
++            and head and re.fullmatch(r"[0-9a-fA-F]{7,40}", head)):
++        raise ValueError("the merge needs a PR number, repository and 7-to-40-hex --match-head-commit")
++    return f"{repo}#{number}".lower(), head.lower()
++
++
++def verdict(command, cwd, roots=None):
++    try:
++        target = parse(command, cwd)
++        if target is None:
++            return "pass", None
++        pr, head = target
++        records = newest_records(state_roots(cwd) if roots is None else roots)
++        for record in records:
++            saved = str(record.get("head", "")).lower()
++            if (str(record.get("pr", "")).lower() == pr
++                    and re.fullmatch(r"[0-9a-f]{40}", saved) and saved.startswith(head)):
++                return "pass", None
++        return "stop", f"no task's newest merge/ask-N.json carries {pr} at {head}"
++    except (OSError, ValueError, subprocess.SubprocessError) as error:
++        return "stop", f"cannot check merge: {error}"
++
++
++def record(argv):
++    parser = argparse.ArgumentParser(prog="merge_guard.py record")
++    parser.add_argument("state", type=Path)
++    for name in ("pr", "head", "question-file", "answer"):
++        parser.add_argument("--" + name, required=True)
++    args = parser.parse_args(argv)
++    try:
++        question = Path(args.question_file).read_text()
++    except OSError as error:
++        print(f"cannot read question: {error}")
++        return 1
++    match = PR.fullmatch(args.pr)
++    problems = []
++    if not match:
++        problems.append("--pr must look like owner/repo#N")
++    if not re.fullmatch(r"[0-9a-fA-F]{40}", args.head):
++        problems.append("--head must be the full 40-hex head")
++    if match and not re.search(rf"(?:#|/pull/){match.group(3)}(?!\d)", question):
++        problems.append(f"the question does not name #{match.group(3)}")
++    if args.head[:7].lower() not in question.lower():
++        problems.append(f"the question does not name head {args.head[:7]}")
++    if not args.answer.strip():
++        problems.append("--answer is empty")
++    if problems:
++        print("\n".join(problems))
++        return 1
++    folder = args.state / "_merges" / "-".join(match.groups()) / "merge"
++    folder.mkdir(parents=True, exist_ok=True)
++    numbers = [int(m.group(1)) for p in folder.glob("ask-*.json") if (m := ASK_FILE.fullmatch(p.name))]
++    number = max(numbers, default=0) + 1
++    data = {"pr": args.pr, "head": args.head.lower(), "verdict": "captain-approved-in-chat",
++            "question": question.strip()[:600], "answer": args.answer.strip()[:200],
++            "time": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
++    while True:
++        path = folder / f"ask-{number}.json"
++        try:
++            with path.open("x") as stream:
++                stream.write(json.dumps(data, indent=2, sort_keys=True) + "\n")
++            break
++        except FileExistsError:
++            number += 1
++    print(f"record: {path}")
++    return 0
++
++
++def main():
++    if len(sys.argv) > 1 and sys.argv[1] == "record":
++        return record(sys.argv[2:])
++    parser = argparse.ArgumentParser()
++    parser.add_argument("host", choices=("claude", "codex"))
++    host = parser.parse_args().host
++    payload = json.load(sys.stdin)
++    tool_input = payload.get("tool_input") or {}
++    command = tool_input.get("command") or tool_input.get("cmd") or ""
++    if isinstance(command, list):
++        command = " ".join(command)
++    result, why = verdict(command, payload.get("cwd") or os.getcwd())
++    if result == "pass":
++        return 0
++    reason = f"merge guard: {why}; ask the Captain before this merge."
++    if host == "codex":
++        reason += (" If the Captain approved this merge by a question naming the PR and its head, "
++                   "run merge_guard.py record and retry; otherwise ask him; on this host only he can run this merge.")
++    print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse",
++                     "permissionDecision": "ask" if host == "claude" else "deny",
++                     "permissionDecisionReason": reason}}))
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/kc-dev-flow-2/scripts/test_delivery_gate.py b/kc-dev-flow-2/scripts/test_delivery_gate.py
+index 316f4f93f..bf17e35af 100644
+--- a/kc-dev-flow-2/scripts/test_delivery_gate.py
++++ b/kc-dev-flow-2/scripts/test_delivery_gate.py
+@@ -274,7 +274,7 @@ class DeliveryGateTests(unittest.TestCase):
+ 
+     def test_each_exit_ends_with_the_next_line_for_the_ask(self):
+         cases = (
+-            (0, dict(), ["next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."]),
++            (0, dict(), ["next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it."]),
+             (1, dict(head="7679ab7a"), ["next: hold the ask; revalidate this head or tell the Captain the difference."]),
+             (1, dict(text=COPILOT_UNSTATED), ["next: hold the ask until each second reviewer has an outcome."]),
+             (1, dict(head="7679ab7a", text=COPILOT_UNSTATED),
+@@ -309,7 +309,7 @@ SECURITY = (f"Security review (validation): security/validation-1.yaml at {HEAD4
+             "Security finding (validation 1) 2: Needs decision: add the sentence\n"
+             "Security finding (validation 1) 3: declined: stated unverified\n")
+ EQUALS = CLAIM_SOURCE + "\n" + f"PR head {HEAD40[:8]} equals dispatched candidate {HEAD40[:8]}; no second reviewer outcome is missing\n"
+-PILOT_OUT = EQUALS + "class: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n"
++PILOT_OUT = EQUALS + "class: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it.\n"
+ 
+ 
+ class ProdSecurityReviewTests(unittest.TestCase):
+@@ -333,13 +333,13 @@ class ProdSecurityReviewTests(unittest.TestCase):
+ 
+     def test_a_pilot_task_prints_the_two_old_lines_with_a_class_and_a_record_line_between(self):
+         self.assertEqual(self.run_gate(profile="pilot", review="", report=None), (0, PILOT_OUT))
+-        self.assertLessEqual(len(PILOT_OUT.split()), 68 + 27)
++        self.assertLessEqual(len(PILOT_OUT.split()), 68 + 27 + 17)
+ 
+     def test_a_prod_task_with_a_disposed_review_gets_one_more_line_of_ten_words(self):
+         code, out = self.run_gate()
+         self.assertEqual(code, 0, out)
+         note = "validation security review security/validation-1.yaml: 3 findings, 1 declined, 2 decisions\n"
+-        self.assertEqual(out, EQUALS + note + "point: deferred: 'Security finding (validation 1) 3: declined:'\npoint: profile: 'prod'\nclass: never (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n")
++        self.assertEqual(out, EQUALS + note + "point: deferred: 'Security finding (validation 1) 3: declined:'\npoint: profile: 'prod'\nclass: never (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it.\n")
+         self.assertEqual(len(note.split()), 10)
+ 
+     def test_a_prod_task_with_a_hole_in_its_review_exits_1_and_holds_the_ask(self):
+@@ -875,7 +875,7 @@ class CodexP1Tests(unittest.TestCase):
+                 self.assertEqual(result.code, 0, result.out)
+                 self.assertIn("point: profile: 'prod'", result.lines, result.out)
+                 self.assertIn("class: never (verdict ask)", result.lines, result.out)
+-                self.assertEqual(nexts(result), [CLAIM_SOURCE, "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."], result.out)
++                self.assertEqual(nexts(result), [CLAIM_SOURCE, "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it."], result.out)
+ 
+     def test_an_instruction_directory_at_any_depth_is_never(self):
+         for path in ("packages/foo/agents/x.md", "a/b/c/references/r.md", "x/y/skills/z/SKILL.md", "p/q/extensions/e.py"):
+@@ -1179,7 +1179,7 @@ LATE_DECLINES = {
+         'Declined, with reasons: P2, an amendment range such as 1 to 3 names only its ends [a false hold, never a missed one; on 2026-10-19 --names over the 8 committed records that write a range printed no amendment line]; Deferred risk, a prose line beginning with the reserved text passes [no record does this; material only if one hides an unrecorded number]; Deferred risk, a two-word bracket proves a bracket, not a reason [recorded as a known limit in ADR 0025]; Deferred risk, any amendment phrase in any checklist of the folder passes [the observer still reads the checklist]; Polish, AC-4 says 12 declined items where the count is 13 [a count in the task text, read by no gate].'),
+ }
+ 
+-SENTENCE = "Every other PR, the Release PR included, is asked one at a time."
++SENTENCE = "Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it."
+ PASS_NEXT = ("next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. "
+              + SENTENCE)
+ SRC_BULLETS = [
+@@ -1210,7 +1210,7 @@ class FoWriteRuleTests(unittest.TestCase):
+     def test_the_pass_line_is_the_ask_plus_one_named_carry_sentence_and_a_hold_prints_no_ask(self):
+         result = run_check()
+         self.assertEqual((result.code, nexts(result)), (0, [CLAIM_SOURCE, PASS_NEXT]))
+-        self.assertEqual(len(nexts(result)[1].split()), 40)
++        self.assertEqual(len(nexts(result)[1].split()), 57)
+         self.assertEqual(result.written["ask-1.json"]["next"], nexts(result)[1])
+         held = run_check(facts=dict(isDraft=True))
+         self.assertEqual(held.code, 1)
+diff --git a/kc-dev-flow-2/scripts/test_merge_guard.py b/kc-dev-flow-2/scripts/test_merge_guard.py
+new file mode 100644
+index 000000000..9a4f9d51f
+--- /dev/null
++++ b/kc-dev-flow-2/scripts/test_merge_guard.py
+@@ -0,0 +1,363 @@
++#!/usr/bin/env python3
++"""Exercise merge authorization, disk discovery, and record refusals."""
++import contextlib
++import importlib.util
++import io
++import json
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import unittest
++from unittest.mock import patch
++
++SCRIPT = Path(__file__).with_name("merge_guard.py")
++spec = importlib.util.spec_from_file_location("merge_guard", SCRIPT)
++guard = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(guard)
++HEAD = "1234567890abcdef1234567890abcdef12345678"
++OTHER = "a" * 40
++PR = "owner/repo#672"
++
++
++class MergeGuardTests(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory()
++        self.addCleanup(self.temp.cleanup)
++        self.root = Path(self.temp.name)
++        self.state = self.root / "state"
++        self.state.mkdir()
++        self.command = f"gh pr merge 672 --repo owner/repo --squash --match-head-commit {HEAD}"
++
++    def saved(self, task="task", number=1, head=HEAD, pr=PR, root=None):
++        path = (root or self.state) / task / "merge" / f"ask-{number}.json"
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(json.dumps({"pr": pr, "head": head}))
++        return path
++
++    def verdict(self, command=None):
++        return guard.verdict(command or self.command, self.root, [self.state])[0]
++
++    def test_carried_full_and_prefix(self):
++        self.saved()
++        for head in (HEAD, HEAD[:7]):
++            self.assertEqual(self.verdict(self.command.replace(HEAD, head)), "pass")
++
++    def test_newest_record_supersedes_older(self):
++        self.saved(number=2)
++        self.saved(number=10, head=OTHER)
++        self.assertEqual(self.verdict(), "stop")
++
++    def test_other_pr_repo_and_invalid_saved_head(self):
++        for pr, head in (("owner/repo#673", HEAD), ("other/repo#672", HEAD), (PR, HEAD[:8])):
++            with self.subTest(pr=pr, head=head):
++                self.saved(pr=pr, head=head)
++                self.assertEqual(self.verdict(), "stop")
++
++    def test_missing_short_nonhex_or_long_command_head(self):
++        self.saved()
++        commands = [self.command.split(" --match-head-commit")[0]]
++        commands += [self.command.replace(HEAD, h) for h in (HEAD[:6], "z" * 40, HEAD + "a")]
++        for command in commands:
++            self.assertEqual(self.verdict(command), "stop", command)
++
++    def test_two_merges_stop(self):
++        self.saved()
++        self.assertEqual(self.verdict(self.command + " && " + self.command), "stop")
++
++    def test_flag_url_and_shell_sequence_forms(self):
++        self.saved()
++        forms = [self.command.replace("--repo owner/repo", "-R owner/repo"),
++                 self.command.replace("--repo owner/repo", "--repo=owner/repo"),
++                 self.command.replace("672 --repo owner/repo", "https://github.com/owner/repo/pull/672"),
++                 self.command.replace("--match-head-commit ", "--match-head-commit="),
++                 self.command.replace("gh pr", "/tmp/bin/gh pr"),
++                 "pwd && " + self.command, self.command + " > /tmp/merge.log"]
++        for command in forms:
++            self.assertEqual(self.verdict(command), "pass", command)
++
++    def assert_guarded_form(self, command):
++        self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
++        self.saved()
++        self.assertEqual(self.verdict(command), "pass", command)
++        self.assertEqual(self.verdict(command.replace(HEAD, OTHER)), "stop", command)
++
++    def test_global_short_repo_before_subcommand(self):
++        self.assert_guarded_form(f"gh -R owner/repo pr merge 672 --squash --match-head-commit {HEAD}")
++        self.assertEqual(self.verdict("gh -R owner/repo pr merge 672 --squash"), "stop")
++
++    def test_global_long_repo_before_subcommand(self):
++        self.assert_guarded_form(f"gh --repo owner/repo pr merge 672 --match-head-commit {HEAD}")
++
++    def test_global_equals_repo_before_subcommand(self):
++        self.assert_guarded_form(f"gh --repo=owner/repo pr merge 672 --match-head-commit {HEAD}")
++
++    def test_attached_and_interleaved_repo_flags(self):
++        for option in ("-Rowner/repo", "-R=owner/repo"):
++            self.assert_guarded_form(f"gh {option} pr --repo owner/repo merge 672 --match-head-commit {HEAD}")
++
++    def test_env_wrapper(self):
++        self.assert_guarded_form(f"env -- gh -R owner/repo pr merge 672 --match-head-commit {HEAD}")
++
++    def test_command_wrapper(self):
++        self.assert_guarded_form(f"command -p -- gh -R owner/repo pr merge 672 --match-head-commit {HEAD}")
++
++    def test_absolute_gh_with_global_flags(self):
++        self.assert_guarded_form(f"/opt/homebrew/bin/gh --repo=owner/repo pr merge 672 --match-head-commit {HEAD}")
++
++    def test_quoted_words(self):
++        self.assert_guarded_form(f"'gh' '-R' 'owner/repo' 'pr' 'merge' '672' '--match-head-commit' '{HEAD}'")
++
++    def test_shell_spelling_of_gh(self):
++        for executable in (r"g\h", 'g""h', '"g"h'):
++            self.assert_guarded_form(f"{executable} -R owner/repo pr merge 672 --match-head-commit {HEAD}")
++
++    def test_rest_merge_endpoint_stops_even_with_record(self):
++        self.saved()
++        for endpoint in ("repos/owner/repo/pulls/672/merge", "/repos/owner/repo/pulls/672/merge",
++                         "https://api.github.com/repos/owner/repo/pulls/672/merge",
++                         "repos/{owner}/{repo}/pulls/672/merge", "repos/owner/repo/pulls/672/%6derge",
++                         "repos/owner/repo/pulls/1/../672/merge", "repos/owner/repo/pulls//672/merge"):
++            command = f"gh api -X PUT {endpoint} -f sha={HEAD}"
++            self.assertEqual(self.verdict(command), "stop", command)
++        self.assertEqual(self.verdict("gh api --method=GET repos/owner/repo/pulls/672/merge"), "stop")
++
++    def test_graphql_and_opaque_api_stops(self):
++        self.saved()
++        for command in ("gh api graphql -f 'query=mutation {mergePullRequest(input:{pullRequestId:\"x\"}){clientMutationId}}'",
++                        "gh api graphql -f 'query=mutation {enablePullRequestAutoMerge(input:{pullRequestId:\"x\"}){clientMutationId}}'",
++                        "gh api graphql --input request.json", "gh api graphql -F query=@query.graphql",
++                        'gh api "$ENDPOINT" -X PUT --input request.json'):
++            self.assertEqual(self.verdict(command), "stop", command)
++
++    def assert_deferred_stops(self, command):
++        result, reason = guard.verdict(command, self.root, [self.state])
++        self.assertEqual(result, "stop", command)
++        self.assertIn("FO never enables auto-merge", reason, command)
++
++    def test_auto_flag_stops_with_matching_record(self):
++        self.saved()
++        for flag in ("--auto", "--auto=true", "--auto=1", "--auto=t",
++                     "--auto=false", "--auto=0", "--auto=", "--auto=unknown"):
++            self.assert_deferred_stops(self.command + " " + flag)
++
++    def test_auto_flag_positions_and_wrappers_stop(self):
++        self.saved()
++        for prefix in ("gh --repo owner/repo", "env -- gh -R owner/repo",
++                       "command -p -- /opt/bin/gh --repo=owner/repo"):
++            for args in (f"--auto 672 --match-head-commit {HEAD}",
++                         f"672 --auto=true --match-head-commit {HEAD}"):
++                self.assert_deferred_stops(f"{prefix} pr merge {args}")
++
++    def test_rest_async_merge_stops_with_matching_record(self):
++        self.saved()
++        for action in ("", " -f merge_action=default", " -f merge_action=direct_merge",
++                       " -f merge_action=merge_queue", " --input request.json"):
++            self.assert_deferred_stops(f"gh api -X PUT repos/owner/repo/pulls/672/merge-async -f sha={HEAD}" + action)
++
++    def test_rest_async_encoded_and_path_forms_stop(self):
++        self.saved()
++        for endpoint in ("/repos/owner/repo/pulls/672/merge-async",
++                         "https://api.github.com/repos/owner/repo/pulls/672/merge-async",
++                         "repos/{owner}/{repo}/pulls/672/merge-async",
++                         "repos/owner/repo/pulls/672/%6derge%2dasync",
++                         "repos/owner/repo/pulls/1/../672/merge-async",
++                         "repos/owner/repo/pulls//672/merge-async?x=1"):
++            self.assert_deferred_stops(f"command gh api --method=PUT {endpoint} --input request.json")
++
++    def test_rest_async_encoded_endpoint_stops(self):
++        self.saved()
++        self.assert_deferred_stops("gh api -X PUT repos/owner/repo/pulls/672/%6derge%2dasync -f merge_action=merge_queue")
++
++    def test_graphql_auto_merge_stops_with_matching_record(self):
++        self.saved()
++        self.assert_deferred_stops("gh api graphql -f 'query=mutation {enablePullRequestAutoMerge(input:{pullRequestId:\"x\"}){clientMutationId}}'")
++
++    def test_graphql_enqueue_stops_with_matching_record(self):
++        self.saved()
++        self.assert_deferred_stops("gh api graphql -f 'query=mutation {enqueuePullRequest(input:{pullRequestId:\"x\"}){clientMutationId}}'")
++
++    def test_graphql_deferred_opaque_and_encoded_forms_stop(self):
++        self.saved()
++        for command in ("gh api graphql --input request.json",
++                        "gh api /graphql -F query=@enqueue.graphql",
++                        "env gh api https://api.github.com/%67raphql --input request.json"):
++            self.assert_deferred_stops(command)
++
++    def test_unknown_merge_flags_stop(self):
++        self.saved()
++        for flag in ("--queue", "--merge-when-ready", "--future-mode=value", "-z"):
++            self.assertEqual(self.verdict(self.command + " " + flag), "stop", flag)
++
++    def test_synchronous_flags_and_cancelling_auto_still_pass(self):
++        self.saved()
++        for flags in ("--disable-auto", "--disable-auto=false", "--admin", "-d",
++                      "--delete-branch=false", "--subject '--auto'", "-t '--auto'",
++                      "-b 'merge body'", "-F message.txt", "-A dev@example.invalid"):
++            self.assertEqual(self.verdict(self.command + " " + flags), "pass", flags)
++
++    def test_deferred_reason_reaches_both_hosts(self):
++        self.saved()
++        for host, decision in (("claude", "ask"), ("codex", "deny")):
++            payload = json.dumps({"cwd": str(self.root), "tool_input": {"command": self.command + " --auto"}})
++            with patch.object(guard, "state_roots", return_value=[self.state]), patch.object(sys, "argv", [str(SCRIPT), host]), patch.object(sys, "stdin", io.StringIO(payload)), contextlib.redirect_stdout(io.StringIO()) as out:
++                self.assertEqual(guard.main(), 0)
++            self.assertTrue(out.getvalue(), "a deferred command must emit a host decision")
++            result = json.loads(out.getvalue())["hookSpecificOutput"]
++            self.assertEqual(result["permissionDecision"], decision)
++            self.assertIn("FO never enables auto-merge", result["permissionDecisionReason"])
++
++    def test_carried_merge_has_no_live_gh_lookup(self):
++        self.saved()
++        with patch.object(guard.subprocess, "run", side_effect=AssertionError("unexpected subprocess")):
++            self.assertEqual(self.verdict(), "pass")
++
++    def test_ambiguous_wrappers_options_and_shell_text_stop(self):
++        self.saved()
++        merge = f"gh -R owner/repo pr merge 672 --match-head-commit {HEAD}"
++        for command in ("env GH_HOST=other.example " + merge,
++                        "env -C /tmp " + merge, "sudo " + merge,
++                        "bash -c '" + merge + "'", "echo '" + merge + "'",
++                        merge.replace("-R owner/repo", "--unknown value"), merge + " '",
++                        f"gh -R owner/repo pr merge 672 --match-head-commit {HEAD} && " + merge):
++            self.assertEqual(self.verdict(command), "stop", command)
++
++    def test_unknown_gh_alias_or_dynamic_subcommand_stops(self):
++        for command in ("gh my-merge 672", "gh extension exec merge-helper 672", 'gh "$ACTION" 672'):
++            self.assertEqual(self.verdict(command), "stop", command)
++
++    def test_implicit_repo_after_shell_context_change_stops(self):
++        self.saved()
++        with patch.object(guard, "git", return_value="https://github.com/owner/repo.git"):
++            self.assertEqual(self.verdict(f"cd /another/repo && gh pr merge 672 --match-head-commit {HEAD}"), "stop")
++
++    def test_inherited_repo_override_needs_explicit_repo(self):
++        self.saved()
++        with patch.dict(guard.os.environ, {"GH_REPO": "other/repo"}), patch.object(guard, "git", return_value="https://github.com/owner/repo.git"):
++            self.assertEqual(self.verdict(self.command.replace(" --repo owner/repo", "")), "stop")
++            self.assertEqual(self.verdict(), "pass")
++
++    def test_inherited_host_override_stops(self):
++        self.saved()
++        with patch.dict(guard.os.environ, {"GH_HOST": "other.example"}):
++            self.assertEqual(self.verdict(), "stop")
++
++    def test_readonly_gh_commands_pass(self):
++        for command in ("gh -R owner/repo pr view 672", "gh api repos/owner/repo/pulls/672",
++                        "gh api -X GET repos/owner/repo/pulls/672", "gh issue list", "gh --version"):
++            self.assertEqual(self.verdict(command), "pass", command)
++
++    def test_origin_fallback(self):
++        self.saved()
++        command = self.command.replace(" --repo owner/repo", "")
++        for remote in ("https://github.com/owner/repo.git", "git@github.com:owner/repo.git",
++                       "ssh://git@github.com/owner/repo.git"):
++            with patch.object(guard, "git", return_value=remote):
++                self.assertEqual(self.verdict(command), "pass")
++
++    def test_archived_newest(self):
++        self.saved(task="_archive/task", number=2)
++        self.assertEqual(self.verdict(), "pass")
++        self.saved(task="_archive/task", number=3, head=OTHER)
++        self.assertEqual(self.verdict(), "stop")
++
++    def test_merges_folder_newest(self):
++        self.saved(task="_merges/owner-repo-672")
++        self.assertEqual(self.verdict(), "pass")
++        self.saved(task="_merges/owner-repo-672", number=2, head=OTHER)
++        self.assertEqual(self.verdict(), "stop")
++
++    def test_nonmerge_passes_but_mentions_or_unparseable_stop(self):
++        self.saved()
++        self.assertEqual(self.verdict("git status --short"), "pass")
++        for command in ("echo '" + self.command + "'", "echo " + self.command,
++                        self.command + " '", self.command.replace("--squash", "--repo other/repo")):
++            self.assertEqual(self.verdict(command), "stop", command)
++
++    def test_unreadable_invalid_or_exception_stops_even_beside_match(self):
++        self.saved()
++        bad = self.saved(task="bad")
++        bad.write_text("not JSON")
++        self.assertEqual(self.verdict(), "stop")
++        bad.write_text("[]")
++        self.assertEqual(self.verdict(), "stop")
++        with patch.object(guard, "newest_records", side_effect=PermissionError("unreadable")):
++            self.assertEqual(self.verdict(), "stop")
++
++    def test_host_outputs(self):
++        for host, decision in (("claude", "ask"), ("codex", "deny")):
++            payload = json.dumps({"cwd": str(self.root), "tool_input": {"command": self.command}})
++            result = subprocess.run([sys.executable, "-B", str(SCRIPT), host], input=payload,
++                                    capture_output=True, text=True)
++            self.assertEqual(result.returncode, 0, result.stderr)
++            out = json.loads(result.stdout)["hookSpecificOutput"]
++            self.assertEqual(out["permissionDecision"], decision)
++            if host == "codex":
++                self.assertIn("merge_guard.py record", out["permissionDecisionReason"])
++        self.saved()
++        with patch.object(guard, "state_roots", return_value=[self.state]), patch.object(sys, "argv", [str(SCRIPT), "codex"]), patch.object(sys, "stdin", io.StringIO(payload)), contextlib.redirect_stdout(io.StringIO()) as out:
++            self.assertEqual(guard.main(), 0)
++        self.assertEqual(out.getvalue(), "")
++
++    def test_linked_worktree_discovery_reads_uncommitted_disk(self):
++        repo = self.root / "repo"
++        repo.mkdir()
++        def git(*args):
++            return subprocess.run(["git", "-C", str(repo), *args], check=True,
++                                  capture_output=True, text=True).stdout
++        git("init", "-q")
++        git("-c", "user.name=Merge Test", "-c", "user.email=merge@example.invalid", "commit", "--allow-empty", "-qm", "fixture")
++        linked = self.root / "linked state"
++        git("worktree", "add", "-qb", "spacedock-state/x", str(linked))
++        self.saved(root=linked)
++        self.assertIn("?? task/", subprocess.check_output(["git", "-C", str(linked), "status", "--short"], text=True))
++        self.assertEqual(guard.verdict(self.command, repo)[0], "pass")
++        subprocess.run(["git", "-C", str(linked), "switch", "-qc", "other"], check=True)
++        self.assertEqual(guard.verdict(self.command, repo)[0], "stop")
++
++
++class RecordTests(unittest.TestCase):
++    setUp = MergeGuardTests.setUp
++    saved = MergeGuardTests.saved
++    verdict = MergeGuardTests.verdict
++
++    def record(self, question=None, head=HEAD, answer="准"):
++        question_file = self.root / "question.txt"
++        question_file.write_text(question if question is not None else f"Merge #672 at {HEAD[:7]}?")
++        output = io.StringIO()
++        with contextlib.redirect_stdout(output):
++            code = guard.record([str(self.state), "--pr", PR, "--head", head,
++                                 "--question-file", str(question_file), "--answer", answer])
++        return code, output.getvalue()
++
++    def test_record_saves_next_number_and_guard_reads_it(self):
++        self.saved(task="_merges/owner-repo-672", number=9, head=OTHER)
++        self.assertEqual(self.record()[0], 0)
++        path = self.state / "_merges/owner-repo-672/merge/ask-10.json"
++        data = json.loads(path.read_text())
++        self.assertEqual((data["pr"], data["head"], data["answer"]), (PR, HEAD, "准"))
++        self.assertEqual(self.verdict(), "pass")
++        self.assertEqual(self.record(f"Merge https://github.com/owner/repo/pull/672 at {HEAD[:7]}?")[0], 0)
++        self.assertTrue(path.with_name("ask-11.json").exists())
++
++    def test_record_refuses_missing_number_digit_suffix_head_answer_and_invalid_head(self):
++        for kwargs in ({"question": f"Merge at {HEAD[:7]}?"},
++                       {"question": f"Merge #6720 at {HEAD[:7]}?"},
++                       {"question": "Merge #672?"}, {"answer": "  "}, {"head": HEAD[:8]}):
++            with self.subTest(kwargs=kwargs):
++                code, output = self.record(**kwargs)
++                self.assertEqual(code, 1)
++                self.assertTrue(output.strip())
++                self.assertFalse((self.state / "_merges").exists())
++
++    def test_record_reports_each_problem_and_caps_saved_text(self):
++        code, output = self.record(question="wrong", head="z" * 40, answer="")
++        self.assertEqual(code, 1)
++        self.assertEqual(len(output.splitlines()), 4)
++        self.assertEqual(self.record(f"Merge #672 at {HEAD[:7]}? " + "x" * 700, answer="a" * 300)[0], 0)
++        data = json.loads(next((self.state / "_merges").glob("*/merge/ask-*.json")).read_text())
++        self.assertEqual((len(data["question"]), len(data["answer"])), (600, 200))
++
++
++if __name__ == "__main__":
++    unittest.main()

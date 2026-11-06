@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_unknown_merge_flags_stop (__main__.MergeGuardTests.test_unknown_merge_flags_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-lul39y1n/test_merge_guard.py", line 190, in test_unknown_merge_flags_stop
+    self.assertEqual(self.verdict(self.command + " " + flag), "stop", flag)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : --queue
+
+----------------------------------------------------------------------
+Ran 1 test in 0.009s
+
+FAILED (failures=1)

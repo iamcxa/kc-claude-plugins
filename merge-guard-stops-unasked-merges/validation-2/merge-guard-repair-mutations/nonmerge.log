@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_readonly_gh_commands_pass (__main__.MergeGuardTests.test_readonly_gh_commands_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-repair-mutant-p9vcuk42/test_merge_guard.py", line 248, in test_readonly_gh_commands_pass
+    self.assertEqual(self.verdict(command), "pass", command)
+AssertionError: 'stop' != 'pass'
+- stop
++ pass
+ : gh -R owner/repo pr view 672
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

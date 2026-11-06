@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_graphql_deferred_opaque_and_encoded_forms_stop (__main__.MergeGuardTests.test_graphql_deferred_opaque_and_encoded_forms_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-040bfotx/test_merge_guard.py", line 185, in test_graphql_deferred_opaque_and_encoded_forms_stop
+    self.assert_deferred_stops(command)
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-040bfotx/test_merge_guard.py", line 135, in assert_deferred_stops
+    self.assertEqual(result, "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh api graphql --input request.json
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

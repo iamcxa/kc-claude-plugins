@@ -1,0 +1,9 @@
+{
+  ".github/workflows/kc-dev-flow-2-tests.yml": "6a1cda12b51197de6efd6a4498267fc4b7a8e68a9a41bc46d51e0e18e2315826",
+  "docs/adr/0063-a-merge-no-record-carries-is-stopped-by-a-user-registered-hook.md": "64922b715e9794e6516528178ae1f29a484716e961e53bc4e9c1567304b85948",
+  "kc-dev-flow-2/references/sd/adoption.md": "0ff958c61ec0321be692f064d52f8f2e7b722544bd5fbb514e6518d0a8300f5f",
+  "kc-dev-flow-2/scripts/delivery_gate.py": "e7cf1764b706ca887744a4ef78d22f28afe34451c53bfb0df780ae9b70eacce6",
+  "kc-dev-flow-2/scripts/merge_guard.py": "8d3ba94ac4fb389568c170198b41a2aef7d66d5584cf2fcc1bacbe5fbc6347c2",
+  "kc-dev-flow-2/scripts/test_delivery_gate.py": "e6c0228ad0177702601727e4325a7eed148dbf109ad77978e8eecfc2a7d5ad86",
+  "kc-dev-flow-2/scripts/test_merge_guard.py": "ad82c88d7b7115fd0ad485a35a89e0492aa5483aeb620242a974c9129916bb23"
+}

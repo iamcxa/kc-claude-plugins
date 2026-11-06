@@ -1,0 +1,6 @@
+docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md	review	kc-dev-flow-2/scripts/delivery_gate.py
+docs/adr/0051-the-merge-ask-check-requires-the-round-count.md	review	kc-dev-flow-2/scripts/delivery_gate.py
+docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md	review	kc-dev-flow-2/scripts/delivery_gate.py
+docs/adr/0063-a-merge-no-record-carries-is-stopped-by-a-user-registered-hook.md	updated	kc-dev-flow-2/scripts/merge_guard.py
+kc-dev-flow-2/README.md	review	.github/workflows/kc-dev-flow-2-tests.yml
+5 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

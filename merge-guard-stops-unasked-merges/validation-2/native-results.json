@@ -1,0 +1,284 @@
+[
+  {
+    "name": "claude-match",
+    "status": "passed",
+    "host": "claude",
+    "mode": "match",
+    "exit": 0,
+    "fake_runs": 1,
+    "hook_exits": [
+      0
+    ],
+    "decisions": []
+  },
+  {
+    "name": "claude-missing",
+    "status": "passed",
+    "host": "claude",
+    "mode": "missing",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      2
+    ],
+    "decisions": []
+  },
+  {
+    "name": "claude-exception",
+    "status": "passed",
+    "host": "claude",
+    "mode": "exception",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      2
+    ],
+    "decisions": []
+  },
+  {
+    "name": "claude-unreadable",
+    "status": "passed",
+    "host": "claude",
+    "mode": "unreadable",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "ask"
+    ]
+  },
+  {
+    "name": "claude-auto",
+    "status": "passed",
+    "host": "claude",
+    "mode": "auto",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "ask"
+    ]
+  },
+  {
+    "name": "claude-async",
+    "status": "passed",
+    "host": "claude",
+    "mode": "async",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "ask"
+    ]
+  },
+  {
+    "name": "claude-nomatch",
+    "status": "passed",
+    "host": "claude",
+    "mode": "nomatch",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0,
+      0
+    ],
+    "decisions": [
+      "ask",
+      "ask"
+    ]
+  },
+  {
+    "name": "claude-api",
+    "status": "passed",
+    "host": "claude",
+    "mode": "api",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "ask"
+    ]
+  },
+  {
+    "name": "claude-graphql",
+    "status": "passed",
+    "host": "claude",
+    "mode": "graphql",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "ask"
+    ]
+  },
+  {
+    "name": "codex-match",
+    "status": "passed",
+    "host": "codex",
+    "mode": "match",
+    "exit": 0,
+    "fake_runs": 1,
+    "hook_exits": [
+      0
+    ],
+    "decisions": []
+  },
+  {
+    "name": "codex-missing",
+    "status": "passed",
+    "host": "codex",
+    "mode": "missing",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      2
+    ],
+    "decisions": []
+  },
+  {
+    "name": "codex-exception",
+    "status": "passed",
+    "host": "codex",
+    "mode": "exception",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      2
+    ],
+    "decisions": []
+  },
+  {
+    "name": "codex-unreadable",
+    "status": "passed",
+    "host": "codex",
+    "mode": "unreadable",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "deny"
+    ]
+  },
+  {
+    "name": "codex-auto",
+    "status": "passed",
+    "host": "codex",
+    "mode": "auto",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "deny"
+    ]
+  },
+  {
+    "name": "codex-async",
+    "status": "passed",
+    "host": "codex",
+    "mode": "async",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "deny"
+    ]
+  },
+  {
+    "name": "codex-nomatch",
+    "status": "passed",
+    "host": "codex",
+    "mode": "nomatch",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "deny"
+    ]
+  },
+  {
+    "name": "codex-api",
+    "status": "passed",
+    "host": "codex",
+    "mode": "api",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "deny"
+    ]
+  },
+  {
+    "name": "codex-graphql",
+    "status": "passed",
+    "host": "codex",
+    "mode": "graphql",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "deny"
+    ]
+  },
+  {
+    "name": "codex-rules",
+    "status": "passed",
+    "host": "codex",
+    "mode": "rules",
+    "exit": 0,
+    "fake_runs": 0,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "deny"
+    ]
+  },
+  {
+    "name": "claude-no-wrapper",
+    "status": "passed",
+    "host": "claude",
+    "mode": "no-wrapper",
+    "exit": 0,
+    "fake_runs": 1,
+    "hook_exits": [
+      1
+    ],
+    "decisions": []
+  },
+  {
+    "name": "codex-ask-mutant",
+    "status": "passed",
+    "host": "codex",
+    "mode": "ask-mutant",
+    "exit": 0,
+    "fake_runs": 1,
+    "hook_exits": [
+      0
+    ],
+    "decisions": [
+      "ask"
+    ]
+  }
+]

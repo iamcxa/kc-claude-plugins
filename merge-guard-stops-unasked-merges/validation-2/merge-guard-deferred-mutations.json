@@ -1,0 +1,87 @@
+[
+  {
+    "name": "bare-and-equals-auto",
+    "status": "passed",
+    "message": "MergeGuardTests.test_auto_flag_stops_with_matching_record rejects mutant by assertion"
+  },
+  {
+    "name": "wrapped-auto",
+    "status": "passed",
+    "message": "MergeGuardTests.test_auto_flag_positions_and_wrappers_stop rejects mutant by assertion"
+  },
+  {
+    "name": "both-hosts-auto",
+    "status": "passed",
+    "message": "MergeGuardTests.test_deferred_reason_reaches_both_hosts rejects mutant by assertion"
+  },
+  {
+    "name": "equals-auto",
+    "status": "passed",
+    "message": "MergeGuardTests.test_auto_flag_stops_with_matching_record rejects mutant by assertion"
+  },
+  {
+    "name": "rest-async-encoded",
+    "status": "passed",
+    "message": "MergeGuardTests.test_rest_async_encoded_endpoint_stops rejects mutant by assertion"
+  },
+  {
+    "name": "graphql-auto",
+    "status": "passed",
+    "message": "MergeGuardTests.test_graphql_auto_merge_stops_with_matching_record rejects mutant by assertion"
+  },
+  {
+    "name": "graphql-enqueue",
+    "status": "passed",
+    "message": "MergeGuardTests.test_graphql_enqueue_stops_with_matching_record rejects mutant by assertion"
+  },
+  {
+    "name": "graphql-opaque",
+    "status": "passed",
+    "message": "MergeGuardTests.test_graphql_deferred_opaque_and_encoded_forms_stop rejects mutant by assertion"
+  },
+  {
+    "name": "unknown-flags",
+    "status": "passed",
+    "message": "MergeGuardTests.test_unknown_merge_flags_stop rejects mutant by assertion"
+  },
+  {
+    "name": "body-is-not-auto",
+    "status": "passed",
+    "message": "MergeGuardTests.test_synchronous_flags_and_cancelling_auto_still_pass rejects mutant by assertion"
+  },
+  {
+    "name": "no-live-query",
+    "status": "passed",
+    "message": "MergeGuardTests.test_carried_merge_has_no_live_gh_lookup rejects mutant by assertion"
+  },
+  {
+    "name": "previous-auto_flag_stops_with_matching_record",
+    "status": "passed",
+    "message": "MergeGuardTests.test_auto_flag_stops_with_matching_record rejects mutant by assertion"
+  },
+  {
+    "name": "previous-auto_flag_positions_and_wrappers_stop",
+    "status": "passed",
+    "message": "MergeGuardTests.test_auto_flag_positions_and_wrappers_stop rejects mutant by assertion"
+  },
+  {
+    "name": "previous-rest_async_encoded_endpoint_stops",
+    "status": "passed",
+    "message": "MergeGuardTests.test_rest_async_encoded_endpoint_stops rejects mutant by assertion"
+  },
+  {
+    "name": "previous-unknown_merge_flags_stop",
+    "status": "passed",
+    "message": "MergeGuardTests.test_unknown_merge_flags_stop rejects mutant by assertion"
+  },
+  {
+    "name": "previous-synchronous_flags_and_cancelling_auto_still_pass",
+    "status": "passed",
+    "message": "MergeGuardTests.test_synchronous_flags_and_cancelling_auto_still_pass rejects mutant by assertion"
+  },
+  {
+    "name": "previous-deferred_reason_reaches_both_hosts",
+    "status": "passed",
+    "message": "MergeGuardTests.test_deferred_reason_reaches_both_hosts rejects mutant by assertion"
+  }
+]

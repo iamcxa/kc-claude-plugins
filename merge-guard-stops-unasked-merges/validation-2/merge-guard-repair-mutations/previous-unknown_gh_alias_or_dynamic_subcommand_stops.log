@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_unknown_gh_alias_or_dynamic_subcommand_stops (__main__.MergeGuardTests.test_unknown_gh_alias_or_dynamic_subcommand_stops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-repair-mutant-41cp9z4g/test_merge_guard.py", line 227, in test_unknown_gh_alias_or_dynamic_subcommand_stops
+    self.assertEqual(self.verdict(command), "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh my-merge 672
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

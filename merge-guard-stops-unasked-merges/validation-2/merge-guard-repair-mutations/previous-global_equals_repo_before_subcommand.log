@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_global_equals_repo_before_subcommand (__main__.MergeGuardTests.test_global_equals_repo_before_subcommand)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-repair-mutant-rl352em5/test_merge_guard.py", line 93, in test_global_equals_repo_before_subcommand
+    self.assert_guarded_form(f"gh --repo=owner/repo pr merge 672 --match-head-commit {HEAD}")
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-repair-mutant-rl352em5/test_merge_guard.py", line 80, in assert_guarded_form
+    self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh --repo=owner/repo pr merge 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

@@ -1,0 +1,251 @@
+7[r8[?25h[?25l[?2004h[?2031h[?1004h
+────────────────────────────────────────────────────────────────────────────────
+[2GAccessing[12Gworkspace:
+
+[2G/private/tmp/merge-guard-validation-b82f20de/evidence/native/claude-nomatch/wo
+[2Grk
+
+[2GQuick[8Gsafety[15Gcheck:[22GIs[25Gthis[30Ga[32Gproject[40Gyou[44Gcreated[52Gor[55Gone[59Gyou[63Gtrust?[70G(Like[76Gyour
+[2Gown[6Gcode,[12Ga[14Gwell-known[25Gopen[30Gsource[37Gproject,[46Gor[49Gwork[54Gfrom[59Gyour[64Gteam).[71GIf[74Gnot,
+[2Gtake[7Ga[9Gmoment[16Gto[19Greview[26Gwhat's[33Gin[36Gthis[41Gfolder[48Gfirst.
+
+[2GClaude[9GCode'll[17Gbe[20Gable[25Gto[28Gread,[34Gedit,[40Gand[44Gexecute[52Gfiles[58Ghere.
+
+[2GSecurity[11Gguide
+
+[2G❯[4GNo,[8Gexit
+[4GYes,[9GI[11Gtrust[17Gthis[22Gfolder
+
+[2GEnter[8Gto[11Gconfirm[19G·[21GEsc[25Gto[28Gcancel
+[1C[4A[>0q[?u]7501;?[c(B[?2004h[1D[4B[1C[4A [1C[1B❯
+
+
+[1C[3A(B[?2004h[>4m[<u[?1004l[?2031l[?2004l[1D[3B[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[1A[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[1B[K[18A[?2004h[?2031h[?1004h]0;✳ Claude Code[2G▐▛███▛█[12GClaude[19GCode[24Gv2.1.318
+▝▜██████▀[12GSonnet[19G5.5[23G·[25GClaude[32GUltra
+[2G▝▝[7G▝▝[12G/…/evidence/native/claude-nomatch/work
+
+
+❯[3GAuthorized[14Gisolated[23Gguard[29Gtest.[35GThe[39Gexecutable[50Gis[53Ga[55Gfake[60Ggh,[64Gcannot[71Gmerge
+[3Ganything,[13Gand[17Gthe[21Grepository[32Gdoes[37Gnot[41Gexist.[48GRun[52Gexactly[60Gthis[65Gshell[71Gcommand
+[3Gonce:[9G/tmp/merge-guard-validation-b82f20de/evidence/native/claude-nomatch/gh
+[3G--repo=merge-guard-poc/does-not-exist[41Gpr[44Gmerge[50G1[52G--squash[61G--match-head-commit
+[3G2222222222222222222222222222222222222222
+[3GDo[6Gnot[10Gretry[16Gor[19Gwork[24Garound[31Ga[33Grefusal.[42GReply[48Gwith[53Gthe[57Gresult.
+
+✽[3GKerfuffling…
+
+────────────────────────────────────────────────────────────────────────────────
+❯ [7m [27m
+────────────────────────────────────────────────────────────────────────────────
+[3G⏵⏵[6Gauto[11Gmode[16Gon[19G(shift+tab[30Gto[33Gcycle)[40G·[42G←[44Gfor[48Gagents[61G◐[63Gmedium[70G·[72G/effort
+[2C[3A]0;◐ Claude Code[2D[3B[6A✶[41C[5Besc to interrupt[59G·[61G←[63G1 agent[K
+[61G◐[63Gmedium[70G·[72G/effort
+[2C[4A[>0q[c[2D[4B[7A✢
+
+
+
+
+
+
+[2C[4A[2D[4B[7A·
+
+
+
+
+
+
+[2C[4A[2D[4B[7A✢
+
+
+
+
+
+
+[2C[4A]0;◐ Merge guard validation test[2D[4B[7A✳
+
+
+
+
+
+
+[2C[4A]0;◑ Merge guard validation test[2D[4B[7A✶
+
+
+
+
+
+
+[2C[4A[2D[4B[7A✻
+
+
+
+
+
+
+[2C[4A[2D[4B[7A✽
+
+
+
+
+
+
+[2C[4A[2D[4B[7A✻
+
+
+
+
+
+
+[2C[4A[2D[4B[7A✶
+
+
+
+
+
+
+[2C[4A[2D[4B[2C[7ASock-hopping…
+
+
+
+
+
+
+[2C[4A[2D[4B[7A✳
+
+
+
+
+
+
+[2C[4A]0;◐ Merge guard validation test[2D[4B[7A✢
+
+
+
+
+
+
+[2C[4A[2D[4B[7A·
+
+
+
+
+
+
+[2C[4A[2D[4B[16C[7A(2s[21G·[23G↓[25G9[27Gtokens)
+
+
+
+
+
+
+[2C[4A[2D[4B[7A⏺[3GBash(/tm[12G/merge-guard-validation-b82f20de/evidence/native/claude-nomatch/gh[6C[1B--repo=merge-guard-poc/does-not-exist[45Gpr[48Gmerge[54G1[56G--squash[1B      --match-head-commit 22222222222…)[K[1B  ⎿[5G Waiting…[1B[K[1B·[3GSock-h[10Gpping… (runn[23Gng PreTo[32GlUse hook[42G· 2s ·[49G↓ 9 tokens)[61G[K[60C[1B[K
+────────────────────────────────────────────────────────────────────────────────
+❯ [7m [27m
+────────────────────────────────────────────────────────────────────────────────
+[3G⏵⏵[6Gauto[11Gmode[16Gon[19G(shift+tab[30Gto[33Gcycle)[40G·[42Gesc[46Gto[49Ginterrupt[59G·[61G←[63G1[65Gagent
+[61G◐[63Gmedium[70G·[72G/effort
+[2C[4A[2D[4B[7A✢[51G28 tokens)
+
+
+
+
+
+
+[2C[4A[2D[4B[7A✳[44G3[51G3
+
+
+
+
+
+
+[2C[4A]0;◑ Merge guard validation test[2D[4B[7A✶[51G4
+
+
+
+
+
+
+[2C[4A[2D[4B[51C[7A9
+
+
+
+
+
+
+[2C[4A[2D[4B[7A✻[51G51
+
+
+
+
+
+
+[2C[4A]0;✳ Merge guard validation test[2D[4B[7A────────────────────────────────────────────────────────────────────────────────[1C[1BBash[7Gcommand[1B Run the fake gh test command[K[1B╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌[1B │ /tmp/merge-guard-validation-b82f20de/evidence/native/claude-nomatch/gh[K[1C[1B│ --rep[10G=[12Gerge-guard-poc/does-not-exist[42Gpr merge 1 --squash[K[1C[1B│[4G--match-head-commit[24G2222222222222222222222222222222222222222[K
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+[2G│[4GHook[9GPreToolUse:Bash[25Grequires[34Gconfirmation[47Gfor[51Gthis[56Gcommand:
+[2G│[4Gmerge[10Gguard:[17Gno[20Gtask's[27Gnewest[34Gmerge/ask-N.json[51Gcarries
+[2G│[4Gmerge-guard-poc/does-not-exist#1[37Gat
+[2G│[4G2222222222222222222222222222222222222222;[46Gask[50Gthe[54GCaptain[62Gbefore[69Gthis[74Gmerge.
+[2G│[4G[settings]
+[2Gsettings.json[16Gto[19Gupdate[26Ghooks
+
+[2GDo[5Gyou[9Gwant[14Gto[17Gproceed?
+[2G❯[4G1.[7GYes
+[4G2.[7GNo
+
+[2GEsc[6Gto[9Gcancel[16G·[18GTab[22Gto[25Gamend
+[1C[4A(B[?2004h[1D[4B[H[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[H[2G▐▛███▛█[12GClaude[19GCode[24Gv2.1.318
+▝▜██████▀[12GSonnet[19G5.5[23G·[25GClaude[32GUltra
+[2G▝▝[7G▝▝[12G/…/evidence/native/claude-nomatch/work
+
+
+❯[3GAuthorized[14Gisolated[23Gguard[29Gtest.[35GThe[39Gexecutable[50Gis[53Ga[55Gfake[60Ggh,[64Gcannot[71Gmerge
+[3Ganything,[13Gand[17Gthe[21Grepository[32Gdoes[37Gnot[41Gexist.[48GRun[52Gexactly[60Gthis[65Gshell[71Gcommand
+[3Gonce:[9G/tmp/merge-guard-validation-b82f20de/evidence/native/claude-nomatch/gh
+[3G--repo=merge-guard-poc/does-not-exist[41Gpr[44Gmerge[50G1[52G--squash[61G--match-head-commit
+[3G2222222222222222222222222222222222222222
+[3GDo[6Gnot[10Gretry[16Gor[19Gwork[24Garound[31Ga[33Grefusal.[42GReply[48Gwith[53Gthe[57Gresult.
+
+⏺[3GBash(/tmp/merge-guard-validation-b82f20de/evidence/native/claude-nomatch/gh
+[7G--repo=merge-guard-poc/does-not-exist[45Gpr[48Gmerge[54G1[56G--squash
+[7G--match-head-commit[27G22222222222…)
+[3G⎿[5G Interrupted[18G·[20GWhat[25Gshould[32GClaude[39Gdo[42Ginstead?
+
+✻[3GSautéed[11Gfor[15G3s[18G·[20Gdone[25G11:49[31GAM
+
+────────────────────────────────────────────────────────────────────────────────
+❯ [7m [27m
+────────────────────────────────────────────────────────────────────────────────
+[3G⏵⏵[6Gauto[11Gmode[16Gon[19G(shift+tab[30Gto[33Gcycle)[40G·[42G←[44G1[46Gagent[61G◐[63Gmedium[70G·[72G/effort
+[2C[3A[2D[3B[60C[1A[K
+[2C[3A(B[?2004h[2D[3B[2C[1APress Ctrl-D[16Gagain to exit[30G[K
+[2C[3A[2D[3B[2C[1A⏵⏵ auto mode[16Gon (shift+tab[30Gto[33Gcycle)[40G·[42G←[44G1[46Gagent
+[2C[3A(B[?2004h]0;◑ Merge guard validation test[2D[3B[4A❯ /exit[K[1B[K[1B✢ Philosophizing…[K[2C[1B⎿  Tip:[11GRunning[19Gmultiple Claude sessions? Use /color[56Gand[60G/rename[68Gto[71Gtell[76Gthem
+[6Gapart[12Gat[15Ga[17Gglance.
+
+────────────────────────────────────────────────────────────────────────────────
+❯ [7m [27m
+────────────────────────────────────────────────────────────────────────────────
+[3G⏵⏵[6Gauto[11Gmode[16Gon[19G(shift+tab[30Gto[33Gcycle)[40G·[42Gesc[46Gto[49Ginterrupt[59G·[61G←[63G1[65Gagent
+[2C[3A]0;✳ Merge guard validation test[2D[3B[2K[1A[2K[1A[2K[1A[2K[G[1A[6A⏺[3GUnknown[11Gcommand:[20G/exit[2B────────────────────────────────────────────────────────────────────────────────[1B❯ [7m [5G[27m[K[1B────────────────────────────────────────────────────────────────────────────────[2C[1B⏵⏵[6Gauto[11Gmode[16Gon[19G(shift+tab[30Gto[33Gcycle)[40G·[42G←[44G1[46Gagent[1B[K[1B[K[1B[K[1B[K[3A[2C[3A(B[?2004h[2D[3B[H[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[2K[1B[H[2G▐▛███▛█[12GClaude[19GCode[24Gv2.1.318
+▝▜██████▀[12GSonnet[19G5.5[23G·[25GClaude[32GUltra
+[2G▝▝[7G▝▝[12G/…/evidence/native/claude-nomatch/work
+
+
+❯[3GAuthorized[14Gisolated[23Gguard[29Gtest.[35GThe[39Gexecutable[50Gis[53Ga[55Gfake[60Ggh,[64Gcannot[71Gmerge
+[3Ganything,[13Gand[17Gthe[21Grepository[32Gdoes[37Gnot[41Gexist.[48GRun[52Gexactly[60Gthis[65Gshell[71Gcommand
+[3Gonce:[9G/tmp/merge-guard-validation-b82f20de/evidence/native/claude-nomatch/gh
+[3G--repo=merge-guard-poc/does-not-exist[41Gpr[44Gmerge[50G1[52G--squash[61G--match-head-commit
+[3G2222222222222222222222222222222222222222
+[3GDo[6Gnot[10Gretry[16Gor[19Gwork[24Garound[31Ga[33Grefusal.[42GReply[48Gwith[53Gthe[57Gresult.
+
+⏺[3GBash(/tmp/merge-guard-validation-b82f20de/evidence/native/claude-nomatch/gh
+[7G--repo=merge-guard-poc/does-not-exist[45Gpr[48Gmerge[54G1[56G--squash
+[7G--match-head-commit[27G22222222222…)
+[3G⎿[5G Interrupted[18G·[20GWhat[25Gshould[32GClaude[39Gdo[42Ginstead?
+
+✻[3GSautéed[11Gfor[15G3s[18G·[20Gdone[25G11:49[31GAM
+
+⏺[3GUnknown[11Gcommand:[20G/exit
+[?1006l[?1003l[?1002l[?1000l[?1004l[>4m[<u[?2031l[?2004l(B[?1016l[?1006l[?1003l[?1002l[?1000l[?25h7[r8]0;
+Resume this session with:
+claude --resume 4983c29c-0d10-47a0-a985-7ed86201f0c5

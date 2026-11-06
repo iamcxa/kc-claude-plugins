@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "fo_authorization_message": "8b42b6b3-2223-4d88-8421-d347e6000219",
+  "trust": "Down then read cursor; Enter selected Yes for throwaway folder only",
+  "prompt": "Do you want to proceed?",
+  "reason": "merge guard: no task\u2019s newest merge/ask-N.json carries merge-guard-poc/does-not-exist#1 at 2222222222222222222222222222222222222222; ask the Captain before this merge.",
+  "action": "Esc",
+  "observed": "Interrupted",
+  "fake_runs": 0,
+  "session_exit": 0,
+  "session_id": 32659,
+  "keys_after_fo_stop_message": false
+}

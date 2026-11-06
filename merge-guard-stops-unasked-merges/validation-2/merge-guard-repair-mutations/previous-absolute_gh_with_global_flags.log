@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_absolute_gh_with_global_flags (__main__.MergeGuardTests.test_absolute_gh_with_global_flags)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-repair-mutant-cxhtj2yw/test_merge_guard.py", line 106, in test_absolute_gh_with_global_flags
+    self.assert_guarded_form(f"/opt/homebrew/bin/gh --repo=owner/repo pr merge 672 --match-head-commit {HEAD}")
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-repair-mutant-cxhtj2yw/test_merge_guard.py", line 80, in assert_guarded_form
+    self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : /opt/homebrew/bin/gh --repo=owner/repo pr merge 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)
