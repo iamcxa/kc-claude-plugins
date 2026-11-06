@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:merge-guard-stops-unasked-merges:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:merge-guard-stops-unasked-merges-ideation-1
+              briefing:
+                id: briefing:merge-guard-stops-unasked-merges:ideation:attempt-1:revision-1
+                digest: sha256:32a2614d33895800e9cadc79fa02c7e1f80103807674198ca096347cb03574e6
+                room-ref: ./merge-guard-stops-unasked-merges/review/ideation/briefing-1
 ---
 
 ## Scope

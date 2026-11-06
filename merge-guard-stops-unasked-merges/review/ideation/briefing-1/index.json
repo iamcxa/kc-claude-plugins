@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-guard-stops-unasked-merges:ideation:attempt-1:revision-1",
+  "question": "決定：「合併前擋下沒人問過的合併」這份設計進入實作嗎？核准即接受 D1（Codex 上沒有紀錄的合併一律拒絕，由你親手合併）與 D2（套件出 merge_guard.py 腳本，由你在每台機器的使用者設定裡註冊，不出 plugin hook）兩個建議。",
+  "artifacts": [
+    {
+      "id": "artifact:merge-guard-stops-unasked-merges:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/8ffd6dfa3e021c1967aeaeabd7cf0cb61db48aae/merge-guard-stops-unasked-merges.md",
+      "rev": "sha256:3f6fbaf5a4a33ff66a4ad1a855833336ca352a47034d4becceb5a911df7c586c",
+      "mediaType": "text/markdown",
+      "summary": "POC on both hosts in isolated state (ideation report, Opus, 2026-11-06): Claude hook ask prompts a person under auto and becomes a denial headless; Codex ignores ask silently, so only deny stops a merge; replay over #672 and 83 later merges stops #672 and 29 others (10 Release, 9 sync, 11 other), passes 54. Design: package merge_guard.py, user-level registration per host, ADR reserved at dispatch. D1-D2 coupled."
+    }
+  ]
+}
