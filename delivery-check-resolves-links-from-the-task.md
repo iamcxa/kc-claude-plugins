@@ -98,6 +98,7 @@ flowchart TD
   - New `named_file(folder, value)`: an absolute or `~` path is used as written. A relative name whose first part is the folder's own name resolves from the folder's parent. Any other relative name resolves from the folder. This is the `preview_target` convention, plus the `<slug>/` form.
   - `inspect_steps(record_path, message, folder, evidence="")`: Markdown names in the message and the evidence resolve through `named_file`. The `message S4` loop reads only `message` (FO's gate text); `evidence` (the validation report) still feeds S1 matching, card discovery and S5.
   - `captain_step_problems`: it resolves the `Captain steps:` path through `named_file(task_folder(task), …)` and passes the report as `evidence`.
+  - `question`'s task argument is used as written, like any CLI argument; the folder derived from it stays consistent with it. The implementation keeps FO's text in its own variable rather than slicing the joined message.
   - `steps`: it passes `record.resolve().parent.parent` as the folder, because the workflow places the record at `<task>/captain-steps/<N>.md` (references/sd/workflow.md § Captain steps).
   - The module docstring, `steps` paragraph: one sentence on the base and one on report paths (`--help` only; no emitted string changes).
 - `kc-dev-flow-2/scripts/test_delivery_gate.py`: new tests for the ACs below. The existing `test_relative_markdown_card_is_read_by_the_real_cli` puts its record at the temporary root and relies on the current directory. It moves to the documented `captain-steps/1.md` layout with the CLI run from a different directory. With `extensions/` present, `python3 -B -m unittest test_delivery_gate` on the D1 prototype ran 162 tests: 161 pass and this one fails (`ideation/prototype-links-tests.log`, 2026-11-06). It is the only existing test whose result changes.
@@ -115,9 +116,11 @@ Counted with `wc -w` on stdout (replay, 2026-11-06). The base is origin/main `ba
 | merge ask (`check`) | unchanged: `check` is not touched | unchanged, 0 |
 | validation-gate preparation (`question`), #793 run from the repository root | 58 words of hold output, then 92 words after the rerun from the task folder that batch 15 needed | 92 words, one run |
 | validation-gate preparation, a pass from any directory | 92 | 92 |
-| `--help` (not a lifecycle moment) | 1085 | about +40 (two docstring sentences) |
+| `--help` (not a lifecycle moment) | 1085 | two docstring sentences, not yet written, not counted |
 
 ### Needs decision
+
+Approval of this design also accepts, separately from D1: (a) a repository-relative document named in a report (`CLAUDE.md`, `docs/adr/…`, a `SKILL.md`) is never read as a step card; today it is read when FO runs from the repository root (40 kc-claude-plugins and 17 qnow tasks); (b) an absolute path that appears only in the validator's report is no longer checked for existence, while FO's text and `Asked:` lines still are.
 
 **D1 — Links in files named only by the validator's report.** Once the base is pinned, the #1338 replay still holds from every directory. The validator's evidence README (`preview-sign-in-wildcard/evidence/validation-1/README.md`, named in the report) lists staging, localhost and PR links that are not Captain asks, and each becomes `S5: unrecorded command or link`. Before the fix, that file was read only when FO happened to run from the state root. The Captain waived exactly this (「豁免網址路徑誤判」). The backlog non-goal says "changing which links count as steps" is out of scope, so this needs his ruling.
 - Recommendation: accept AC-7. Prose links count from FO's text and from files it names; a file named only by the report adds its fenced commands, not its prose links. The fenced command class that motivated ADR 0054 (a validator-written `captain-card.md` with a fenced script) is still caught.
@@ -164,7 +167,7 @@ Recommended order: merge-guard-stops-unasked-merges first (it is in validation);
 - DONE: A `### Batch overlap` section naming each file the design would change and each other batch task and live task of other sessions that changes the same file or check, so FO can order implementation
   Five tasks share `delivery_gate.py` and `test_delivery_gate.py`, in disjoint functions. merge-guard-stops-unasked-merges lands first; adr-reservation-crosses-workflows changes an imported function and needs a suite rerun; qnow's own false-positive task is covered.
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
-  `### Words FO reads at each moment`: every moment is unchanged except validation-gate preparation from the repository root, which goes from 58 + 92 words (hold, then rerun) to 92 words, one run. `--help` gains about 40 words.
+  `### Words FO reads at each moment`: every moment is unchanged except validation-gate preparation from the repository root, which goes from 58 + 92 words (hold, then rerun) to 92 words, one run. `--help` gains two sentences, not yet counted.
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
   AC-1 to AC-7, each with its own falsifier; one decision, D1 (links in report-only files), recommended with its cost and a count of 4/109 and 5/68 tasks.
   AC-1 relative name resolves from the task folder: not yet verified as a test; the #793 replay passing from three directories on the prototype is current evidence.
