@@ -1,10 +1,11 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
-import { clientApiProxy } from './server/client-api-proxy.ts'
+import { clientApiProxy, shareClientMode } from './server/client-api-proxy.ts'
 
 const API = `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
 
 export default defineConfig(() => ({
+ define: { 'import.meta.env.VITE_JOURNEY_HUMAN_ENTRY': JSON.stringify(shareClientMode().human ? 'true' : 'false') },
 	plugins: [react()],
 	root: import.meta.dirname + '/server/client',
 	server: {

@@ -8,8 +8,9 @@ import { HostError, operate } from './core'
 import { currentGrant, validateGrants, type Grant, type Admission, type Metadata } from './policy'
 import type { Host } from './transport'
 import { pruneExpiredSessions } from './session-retention'
-import { bootstrapHuman, humanOperation, validateHumanConfig, type HumanConfig, type SyncMetadata } from './human-store'
+import { bootstrapHuman, humanOperation, type HumanConfig, type SyncMetadata } from './human-store'
 import { bootstrapAgent, agentOperation, captureAgent, agentResult, type AgentScope } from './agent-store'
+import { nodeHumanConfig } from './node-human-config'
 import { securityOperation, matchesTarget } from './security-store'
 import { canSend, renewLease, type StreamLease } from './stream-lease'
 import { loadAsset, storeAsset } from '../assets'
@@ -89,10 +90,8 @@ export class NodeHost implements Host {
   }
   this.meta.security = async (operation, input) => operation==='progress'?this.notifyResult({operationId:input.operationId}):atomic(() => securityOperation(sync, operation, input))
   this.meta.human = async (operation, input) => { const result=atomic(() => humanOperation(sync, operation, input));if(result?.operationId)result.denialCommitObservedAt=Date.now();return this.notifyResult(result) }
-  if (process.env.JOURNEY_HUMAN_CONFIG) {
-   if (!this.private) throw new Error('human entry requires private storage')
-   this.humanConfig = validateHumanConfig(JSON.parse(readFileSync(process.env.JOURNEY_HUMAN_CONFIG, 'utf8')), this.origin)
-   if (this.humanConfig.mode === 'local' && this.humanConfig.localOwnerUid !== process.geteuid?.()) throw new Error('local owner must be the service OS account')
+  this.humanConfig = nodeHumanConfig()
+  if (this.humanConfig) {
    atomic(() => bootstrapHuman(sync, this.humanConfig!))
   }
   if (this.agentPairing && (!this.private || !this.humanConfig)) throw new Error('agent pairing requires private verified human entry')
