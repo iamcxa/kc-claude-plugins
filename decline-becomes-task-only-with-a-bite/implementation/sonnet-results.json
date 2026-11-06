@@ -1,0 +1,116 @@
+[
+  {
+    "name": "candidate-1",
+    "agent": "4d4fd590-4dc6-44ee-8a05-04e928339bb1",
+    "requested_model": "claude/sonnet",
+    "prompt": "candidate-1.prompt.md",
+    "activity": "candidate-1.activity.json",
+    "archived": true,
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "ok",
+      "D": "violation"
+    },
+    "step5_taskless_decline_violation": false
+  },
+  {
+    "name": "candidate-2",
+    "agent": "f268bf99-1a8e-4eea-819c-937495590e1e",
+    "requested_model": "claude/sonnet",
+    "prompt": "candidate-2.prompt.md",
+    "activity": "candidate-2.activity.json",
+    "archived": true,
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "ok",
+      "D": "violation"
+    },
+    "step5_taskless_decline_violation": false
+  },
+  {
+    "name": "base",
+    "agent": "a8a297d3-6f5f-4e1a-896b-99b5450611bd",
+    "requested_model": "claude/sonnet",
+    "prompt": "base.prompt.md",
+    "activity": "base.activity.json",
+    "archived": true,
+    "verdicts": {
+      "A": "violation",
+      "B": "violation",
+      "C": "violation",
+      "D": "violation"
+    },
+    "step5_taskless_decline_violation": false
+  },
+  {
+    "name": "missing-bite-1",
+    "agent": "9ca06dfd-5258-48a8-ace6-321127ec95e8",
+    "requested_model": "claude/sonnet",
+    "prompt": "missing-bite-1.prompt.md",
+    "activity": "missing-bite-1.activity.json",
+    "archived": true,
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "ok",
+      "D": "violation"
+    },
+    "status": "failed: falsifier confounded",
+    "step5_taskless_decline_violation": false
+  },
+  {
+    "name": "missing-bite-2",
+    "agent": "b434816c-ed04-4f53-9e37-1a765b30d89a",
+    "requested_model": "claude/sonnet",
+    "prompt": "missing-bite-2.prompt.md",
+    "activity": "missing-bite-2.activity.json",
+    "archived": true,
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "violation",
+      "D": "violation"
+    },
+    "status": "failed: falsifier confounded",
+    "step5_taskless_decline_violation": false
+  },
+  {
+    "name": "observer-candidate",
+    "agent": "152377c2-023c-4313-af2f-662dc0b0670c",
+    "requested_model": "claude/sonnet",
+    "prompt": "observer-candidate.prompt.md",
+    "activity": "observer-candidate.activity.json",
+    "archived": true,
+    "step5_taskless_decline_violation": false
+  },
+  {
+    "name": "observer-base",
+    "agent": "089d77cc-ae54-43ea-a91c-df4b44af76a8",
+    "requested_model": "claude/sonnet",
+    "prompt": "observer-base.prompt.md",
+    "activity": "observer-base.activity.json",
+    "archived": true,
+    "step5_taskless_decline_violation": false,
+    "status": "untested: observer omitted the target check"
+  },
+  {
+    "name": "observer-bounded-candidate",
+    "agent": "97fc6186-d561-4cec-8c9d-4e1101236bb6",
+    "requested_model": "claude/sonnet",
+    "prompt": "observer-bounded-candidate.prompt.md",
+    "activity": "observer-bounded-candidate.activity.json",
+    "archived": true,
+    "step5_taskless_decline_violation": false
+  },
+  {
+    "name": "observer-bounded-base",
+    "agent": "e7a1c1d7-dae2-49e4-abf9-f3762d98db1c",
+    "requested_model": "claude/sonnet",
+    "prompt": "observer-bounded-base.prompt.md",
+    "activity": "observer-bounded-base.activity.json",
+    "archived": true,
+    "step5_taskless_decline_violation": true
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "task": "fo-tries-what-it-asks-the-captain",
+    "bound": "5ef7c2cc70c0d753b4f8e782d15788dd8bd65f79",
+    "declined": 3,
+    "problems": []
+  },
+  {
+    "task": "model-roster-question-needs-both-families",
+    "bound": "05a0d54831ad6ec974b5bfa1c24e070516bdcb54",
+    "declined": 2,
+    "problems": []
+  },
+  {
+    "task": "rewritten-criteria-checked-against-captain-words",
+    "bound": "38dea423e0eaeb1bbe48629c44b08b8cf77f893a",
+    "declined": 3,
+    "problems": []
+  }
+]

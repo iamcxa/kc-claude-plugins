@@ -1,0 +1,34 @@
+[
+  {
+    "doc": "docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md",
+    "state": "updated",
+    "terms": [
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "disposition": "updated: records the accepted ruling and test pointer"
+  },
+  {
+    "doc": "kc-dev-flow-2/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "disposition": "unaffected: retains the same lint and native-dispatch commands; no decline-rule copy"
+  },
+  {
+    "doc": "kc-dev-flow-2/references/sd/adoption.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "disposition": "unaffected: describes native graph, mod and split-root coverage, which remains covered"
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "disposition": "unaffected: historical pinning practice and prior task evidence remain accurate"
+  }
+]

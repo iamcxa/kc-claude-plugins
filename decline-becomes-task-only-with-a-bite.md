@@ -193,3 +193,40 @@ ADR: 0064
 ### Summary
 
 Step 5 is rewritten in the same 53 words: a round-3 decline keeps its finding and bracketed reason in the gate summary, and becomes a backlog task only on an observed failure naming who it hurts, a repeat, or a Captain ask. delivery_gate.py and the observer need no code change, because the gate already holds the reason and the observer reads step 5 from the README. A fresh-reader replay read the three batch 12/13 violations as compliant and still asked for a task on a bite case. The change reverses ADR 0010, so it lands a superseding ADR (D1), and it contradicts the held gate-summary-names-each-decline rule 3 (D2).
+
+## Stage Report: implementation
+
+- DONE: Implement the approved four-file design from origin/main, with D1 and D2 as recommended in the ideation gate
+  Branch spacedock-ensign/decline-becomes-task-only-with-a-bite; base ba055b8a7a55a787ac989c4cef52d07dd75661ad; candidate ae7750375bc19e482f829edc9a041d95fb280693. Exactly workflow.md, test_sd_dispatch.py, ADR 0010 and new ADR 0064 changed; no version bump. D2 is recorded in 0064; FO removes the held task's rule 3 and AC-3 when it resumes.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) in iamcxa/kc-claude-plugins
+  no PR opened: no push grant; product branch not pushed. Prepared title/body: /tmp/impl-decline-becomes-task-only-with-a-bite-pr.md (durable copy implementation/pr.md); FO owns push and Draft PR creation.
+- DONE: ADR 0064 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  0064 quotes the source, backlog question/approval and ideation D1/D2 question/approval verbatim; ADR 0010 Status is Superseded by 0064. acceptance.py verifies both bound Asked lines against the task source; restoring 0010 Accepted leaves opposite accepted rulings (old-adr-accepted.log).
+- DONE: AC-1 — new step 5 without a workflow word-budget rise
+  implementation/lint.log: repository lint exit 0, 5939 of 5939 words; sentence 53 -> 53, lint-skills.py byte-unchanged. restore-old.log: restoring old step 5 trips the actual ROUND_RULE assertion, "round rule missing from workflow.md".
+- DONE: AC-2 — updated wording pins and native dispatch checks
+  pins-candidate.log: no gaps, proposed swap matches 1; pins-base.log: three proposed pins absent, swap 0. dispatch.log: native test_sd_dispatch.py exits 0 with SD plugin root 0.27.3; remove-clause.log: deleting the observed-failure phrase trips the same real assertion.
+- DONE: AC-3 — delivery_gate.py unchanged and the three archived declines pass, with bracket falsifier
+  At state 79af09021bcfdb30267aabbc4f2dc150ac05a6dd, gate-replays.json/replay-gate.log record 3/2/3 items and decline problems none; candidate script bytes equal base. remove-bracket.log: removing one archived reason's delimiters reports "declined item has no reason".
+- DONE: AC-4 primary replay — two fresh Sonnet candidate runs and one base run, with no tools
+  candidate-1 (4d4fd590), candidate-2 (f268bf99): A/B/C ok and D violation, quoting the bite clause; base (a8a297d3): A/B/C violation. sonnet-runs.json lists full ids, explicit claude/sonnet requests and each exact *.prompt.md/*.activity.json; each no-tools run has two activities only.
+- FAILED: falsifier confounded — AC-4's bite-clause deletion does not make D ok
+  Both 9ca06dfd-5258-48a8-ace6-321127ec95e8 and b434816c-ed04-4f53-9e37-1a765b30d89a still quote "A finding assessed Material, or labelled P1 by the reviewer, blocks in every round" and read D as violation. Exact mutated rule and quoted harm reason: implementation/falsifier-confounded.md; original prompts/results: missing-bite-{1,2}.*. FO message-4 routes this to the Captain; no substitute falsifier or product edit.
+- DONE: AC-5 — actual observer replay with candidate/base README and the archived target task
+  Full candidate 152377c2 and bounded candidate 97fc6186 have no step-5 violation for comment 4455001433; bounded base e7a1c1d7 reports that exact violation. FROM ea9904b30b9dcf2418a335e9ef91b715320d4557, TO 79af09021bcf. Initial base 089d77cc omitted the target check; its unedited report is retained and not counted as proof. sonnet-results.json verifies the contrast; all nine agents archived after recording.
+- DONE: AC-6 and required lint/guard checks at the candidate
+  adr-lint.log: --since ba055b8a7a55a787ac989c4cef52d07dd75661ad --require 0064 exits 0 (62 ADR files checked, 0 legacy); number-guards.log and design-surfaces.log exit 0. comment-ratio.log exits 0: 1 comment / 6 code lines, 16.7%; 5% maximum is not enforced below 20 added code lines.
+- DONE: FO follow-ups message-1, message-3 and message-4 applied; message-2 withdrawn
+  Fresh Paseo Claude/Sonnet only, read-only prompts, exact evidence and archived agents. Message-3 preserves the ADR 0047 supersession assertion by splitting its path: explicitly approved workaround for adr_lint's pointer-scan false positive, not a lint fix; native tests and ADR lint rerun green. Message-4's single independent mutation repeat is recorded above.
+- DONE: Affected retained documents assessed and temporary/product additions mapped to the accepted goal
+  doc-impact-disposition.json: ADR 0064 updated; kc-dev-flow-2/README.md unaffected (same test commands), references/sd/adoption.md unaffected (same graph/mod/split-root coverage), learning.md unaffected (historical pinning practice remains accurate). The four product files map to the rule, its pins and accepted supersession; no new runtime abstraction.
+- DONE: Reproducible acceptance evidence and fresh-shell run
+  implementation/acceptance.py and acceptance.sh export fresh base/candidate copies, clear caches, use python3 -B and exercise named falsifiers; tests.json and fresh-shell.log record 11 deterministic groups passing. verify-sonnet.py and acceptance-summary.json retain the separate failed AC-4 falsifier; no all-criteria-green claim.
+- SKIPPED: Product push, PR opening, RoboRev and CI
+  FO owns publication and exact-head review. roborev not run: FO runs RoboRev because the Codex sandbox cannot reach its daemon. CI not run; cost per PR not measured, CI files/triggers unchanged. Adopted docs/dev2/README.md sync and the held sibling task remain FO's later work.
+
+### Summary
+
+ADRs: 0010, 0064
+
+Candidate ae7750375bc19e482f829edc9a041d95fb280693 implements the approved decline rule and decision supersession in four files; deterministic acceptance and the bounded observer contrast pass. AC-4's specified falsifier remains FAILED: falsifier confounded under both independent Sonnet runs, per FO message-4; the Captain must dispose of that evidence at the gate, and FO still owns publication, RoboRev and CI.

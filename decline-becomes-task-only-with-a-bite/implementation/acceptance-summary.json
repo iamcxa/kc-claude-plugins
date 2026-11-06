@@ -1,0 +1,32 @@
+[
+  {
+    "name": "AC-1 wording and word budget",
+    "status": "passed"
+  },
+  {
+    "name": "AC-2 wording pins and native dispatch",
+    "status": "passed"
+  },
+  {
+    "name": "AC-3 archived gate declines and bracket falsifier",
+    "status": "passed"
+  },
+  {
+    "name": "AC-4 candidate twice and base once",
+    "status": "passed"
+  },
+  {
+    "name": "AC-4 falsifier confounded",
+    "status": "failed",
+    "message": "Both independent clause-deletion runs still classify D as a Material/P1 violation; FO message-4 routes this to the Captain."
+  },
+  {
+    "name": "AC-5 bounded candidate/base observer replay",
+    "status": "passed",
+    "message": "Initial full-window base observer omitted the target check; both initial reports retained, then repeated with explicit FROM."
+  },
+  {
+    "name": "AC-6 ADR ruling and supersession",
+    "status": "passed"
+  }
+]

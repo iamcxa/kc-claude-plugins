@@ -1,0 +1,74 @@
+[
+  {
+    "name": "candidate-1",
+    "agentId": "4d4fd590-4dc6-44ee-8a05-04e928339bb1",
+    "model": "claude/sonnet",
+    "prompt_file": "candidate-1.prompt.md",
+    "activity_file": "candidate-1.activity.json",
+    "archived": true
+  },
+  {
+    "name": "candidate-2",
+    "agentId": "f268bf99-1a8e-4eea-819c-937495590e1e",
+    "model": "claude/sonnet",
+    "prompt_file": "candidate-2.prompt.md",
+    "activity_file": "candidate-2.activity.json",
+    "archived": true
+  },
+  {
+    "name": "base",
+    "agentId": "a8a297d3-6f5f-4e1a-896b-99b5450611bd",
+    "model": "claude/sonnet",
+    "prompt_file": "base.prompt.md",
+    "activity_file": "base.activity.json",
+    "archived": true
+  },
+  {
+    "name": "missing-bite-1",
+    "agentId": "9ca06dfd-5258-48a8-ace6-321127ec95e8",
+    "model": "claude/sonnet",
+    "prompt_file": "missing-bite-1.prompt.md",
+    "activity_file": "missing-bite-1.activity.json",
+    "archived": true
+  },
+  {
+    "name": "missing-bite-2",
+    "agentId": "b434816c-ed04-4f53-9e37-1a765b30d89a",
+    "model": "claude/sonnet",
+    "prompt_file": "missing-bite-2.prompt.md",
+    "activity_file": "missing-bite-2.activity.json",
+    "archived": true
+  },
+  {
+    "name": "observer-candidate",
+    "agentId": "152377c2-023c-4313-af2f-662dc0b0670c",
+    "model": "claude/sonnet",
+    "prompt_file": "observer-candidate.prompt.md",
+    "activity_file": "observer-candidate.activity.json",
+    "archived": true
+  },
+  {
+    "name": "observer-base",
+    "agentId": "089d77cc-ae54-43ea-a91c-df4b44af76a8",
+    "model": "claude/sonnet",
+    "prompt_file": "observer-base.prompt.md",
+    "activity_file": "observer-base.activity.json",
+    "archived": true
+  },
+  {
+    "name": "observer-bounded-candidate",
+    "agentId": "97fc6186-d561-4cec-8c9d-4e1101236bb6",
+    "model": "claude/sonnet",
+    "prompt_file": "observer-bounded-candidate.prompt.md",
+    "activity_file": "observer-bounded-candidate.activity.json",
+    "archived": true
+  },
+  {
+    "name": "observer-bounded-base",
+    "agentId": "e7a1c1d7-dae2-49e4-abf9-f3762d98db1c",
+    "model": "claude/sonnet",
+    "prompt_file": "observer-bounded-base.prompt.md",
+    "activity_file": "observer-bounded-base.activity.json",
+    "archived": true
+  }
+]
