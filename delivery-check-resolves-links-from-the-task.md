@@ -16,6 +16,8 @@ status: backlog
 - Upstream first: `delivery_gate.py` `inspect_steps` (the `markdown` path list and `Path(...)` resolution) and `captain_step_problems`.
 - Non-goals: changing which links count as steps.
 
+- Batch 16: the Captain 「可以，就這樣」 (chat, 2026-11-06), answering 「這批做 2、3、4、5、9 這 5 張，可以嗎？」, which named this task.
+
 ## Budget
 - One package PR; the workflow word budget does not rise.
 
