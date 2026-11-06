@@ -1,0 +1,17 @@
+Reading additional input from stdin...
+{"type":"thread.started","thread_id":"01a1aea8-3993-7243-9381-63c6124f5c1f"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"item.completed","item":{"id":"item_1","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"turn.started"}
+2026-11-06T02:20:24.838320Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://codex-app.tldraw.xyz/.well-known/oauth-protected-resource/mcp\", scope=\"openid profile email offline_access\"" })
+2026-11-06T02:20:25.542398Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://ai.todoist.net/.well-known/oauth-protected-resource/mcp\"" })
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"I’ll run the command once and report the result.\n"}}
+2026-11-06T02:20:31.648471Z ERROR codex_core::tools::router: error=Command blocked by PreToolUse hook: Traceback (most recent call last):
+  File "/tmp/validate-merge-guard-871c6b2-z7onrnpk/native/codex-exception/exception.py", line 193, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/tmp/validate-merge-guard-871c6b2-z7onrnpk/native/codex-exception/exception.py", line 168, in main
+    raise RuntimeError("injected native exception")
+RuntimeError: injected native exception. Command: /tmp/validate-merge-guard-871c6b2-z7onrnpk/native/codex-exception/gh pr merge 1 --repo merge-guard-poc/does-not-exist --squash --match-head-commit 2222222222222222222222222222222222222222
+{"type":"item.completed","item":{"id":"item_3","type":"agent_message","text":"The command was blocked before execution by a PreToolUse hook: `RuntimeError: injected native exception`. No retry or workaround was attempted.\n\n```text\nRemaining: none\nNext: none (me)\nClosable: unverified\n```"}}
+{"type":"turn.completed","usage":{"input_tokens":41586,"cached_input_tokens":32768,"cache_write_input_tokens":0,"output_tokens":163,"reasoning_output_tokens":0}}

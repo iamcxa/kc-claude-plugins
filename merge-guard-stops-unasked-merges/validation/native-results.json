@@ -1,0 +1,120 @@
+[
+  {
+    "name": "claude-deny-retry",
+    "host_exit": "0",
+    "fake_merges": 0,
+    "hook_exit": [
+      0
+    ],
+    "decision": [
+      "ask"
+    ]
+  },
+  {
+    "name": "claude-exception",
+    "host_exit": "0",
+    "fake_merges": 0,
+    "hook_exit": [
+      2
+    ],
+    "decision": []
+  },
+  {
+    "name": "claude-match",
+    "host_exit": "0",
+    "fake_merges": 1,
+    "hook_exit": [
+      0
+    ],
+    "decision": []
+  },
+  {
+    "name": "claude-missing",
+    "host_exit": "0",
+    "fake_merges": 0,
+    "hook_exit": [
+      2
+    ],
+    "decision": []
+  },
+  {
+    "name": "claude-no-wrapper",
+    "host_exit": "0",
+    "fake_merges": 1,
+    "hook_exit": [
+      1
+    ],
+    "decision": []
+  },
+  {
+    "name": "claude-unreadable",
+    "host_exit": "0",
+    "fake_merges": 0,
+    "hook_exit": [
+      0
+    ],
+    "decision": [
+      "ask"
+    ]
+  },
+  {
+    "name": "codex-deny-retry",
+    "host_exit": "0",
+    "fake_merges": 0,
+    "hook_exit": [
+      0
+    ],
+    "decision": [
+      "deny"
+    ]
+  },
+  {
+    "name": "codex-exception",
+    "host_exit": "0",
+    "fake_merges": 0,
+    "hook_exit": [
+      2
+    ],
+    "decision": []
+  },
+  {
+    "name": "codex-match",
+    "host_exit": "0",
+    "fake_merges": 1,
+    "hook_exit": [
+      0
+    ],
+    "decision": []
+  },
+  {
+    "name": "codex-missing",
+    "host_exit": "0",
+    "fake_merges": 0,
+    "hook_exit": [
+      2
+    ],
+    "decision": []
+  },
+  {
+    "name": "codex-rules",
+    "host_exit": "0",
+    "fake_merges": 0,
+    "hook_exit": [
+      0
+    ],
+    "decision": [
+      "deny"
+    ]
+  },
+  {
+    "name": "codex-unreadable",
+    "host_exit": "0",
+    "fake_merges": 0,
+    "hook_exit": [
+      0
+    ],
+    "decision": [
+      "deny"
+    ]
+  }
+]

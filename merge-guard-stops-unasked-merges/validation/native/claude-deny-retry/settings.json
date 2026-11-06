@@ -1,0 +1,1 @@
+{"permissions": {"defaultMode": "auto"}, "hooks": {"PreToolUse": [{"matcher": "Bash", "hooks": [{"type": "command", "command": "python3 /tmp/validate-merge-guard-871c6b2-z7onrnpk/native/claude-deny-retry/proxy.py"}]}]}}

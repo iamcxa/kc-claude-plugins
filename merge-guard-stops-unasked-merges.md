@@ -396,3 +396,37 @@ The Captain 「看得到，也答了」 (host question dialog, 2026-11-06): the 
 ### Summary
 
 The Pilot implementation is committed locally at `871c6b2f4ebccfc2c67df91d7d39ad038aa0710f`, with all ten criteria supported at their stated evidence boundaries and the named mutations exercised. The package supplies the guard and record route; a record is not proof of who approved it, Paseo agents can answer another agent's ask, and operator registration is still required. FO owns publication, independent validation, RoboRev and hosted CI; the code worktree is clean.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #794 head 871c6b2f against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED: 871c6b2f4ebccfc2c67df91d7d39ad038aa0710f against base b804d81d3abc94c9c321326dc75e7cac927c5252; exported candidate bytes verified; detailed commands, evidence boundaries and all ten criteria in validation/evidence.md.
+- DONE: Judge D1 to D4 as approved and ADR 0063; re-run the host proofs only through isolated settings as the implementation report records (fake gh, nonexistent repo, never the Captain's own settings), and the replay; AC-10 is the Captain's phone observation recorded in captain-steps/1.md. #793 also edits /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/delivery_gate.py and merges first. Do not start agents you were not asked to
+  Approved four-decision question and ADR agree; native proofs pass with temporary settings and fake gh. #793 still OPEN/draft at the observed 5b3e290a; its first-merge order and changed-head integration remain FO-owned. No review agents created.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation/acceptance.sh has five steps; fresh /bin/bash --noprofile --norc run exits 0, observed output in validation/acceptance.log; ADR check with --since b804d81d3abc94c9c321326dc75e7cac927c5252 --require 0063 exits 0 (62 records/0 legacy).
+- DONE: AC-1 and AC-2 identity, newest-record and on-disk discovery
+  16 tests pass; newest-to-oldest, Codex ask, removed _merges glob and committed-only reads each fail their named test; other-branch fixture stops. validation/unit.log and merge-guard-mutations.json.
+- DONE: AC-3 failure boundary on both native hosts
+  Missing script and injected exception give hook exit 2; unreadable records ask/deny; zero fake merges. Without || exit 2, Claude hook exits 1 and the fake merge runs once; validation/native-results.json and native/ logs.
+- DONE: AC-4 Claude native auto mode and interactive prompt
+  Headless unmatched is permission_denials/zero fake merges; matched runs once. Interactive shows the command, guard reason and “Do you want to proceed?”; FO-authorized Esc cancels with zero fake merges. Session 89581 exited 0; no further keys sent after FO's closing instruction.
+- DONE: AC-5 Codex native refusal with and without operator rules
+  Unmatched deny stops both; rules-loaded payload is plain gh pr merge, login=false and fake gh PATH. Matching record runs once; Codex ask mutant fails host-output test. validation/native/ and native-results.json.
+- DONE: AC-6 replay and recount
+  54 pass/30 stop then 74 pass/10 stop, no differences from ideation; #672 refused for absent head 6c972e7. Head-check mutant gives 75 pass/9 stop and passes #672; synthetic ancillary approvals remain an explicit assumption.
+- DONE: AC-7 adoption instructions and AC-8 bounded implementation/ADR
+  Both wrappers/registrations and record route checked; lint exits 0 at unchanged 5939-word budget. Seven named files only; delivery suite 156 passed/1 pre-existing skip. Removing documented wrapper or reverting the reminder fails its counterexample; validation/extra-counterexamples.json and delivery-mutant.log.
+- DONE: AC-9 record command and state-view compatibility
+  Number/head/answer refusals write nothing; numbering/URL forms pass; digit-boundary mutant fails. Copy of adopted workflow gives byte-identical status before/after _merges, both exit 0; validation/status.json.
+- DONE: AC-10 evidence at its Captain-only boundary
+  Read captain-steps/1.md: 「看得到，也答了」, no pending permission and one fake merge after Yes. Removed-answer negative control fails evidence integrity; no new phone observation or package-on-phone claim.
+- DONE: Required audits, affected-document dispositions, sufficiency and necessity
+  Number/design/dispatch/doc checks and diff --check exit 0; comments 349 code/3 comment lines = 0.9% (max 5%). ADRs 0044/0051/0062 unaffected, 0063 updated, package README unaffected; reasons and without-change evidence in validation/evidence.md.
+- DONE: Limits, reading cost, external state and cleanup
+  ASK 40→57, ASK_UNQUOTED 39→56, adoption 2347→2598, workflow unchanged. CI cost per PR not measured; triggers unchanged. Native processes ended, fake interactive log empty; final PR read remains OPEN/draft at validated SHA; product worktree clean.
+
+### Summary
+
+PASSED for PR #794 at 871c6b2f4ebccfc2c67df91d7d39ad038aa0710f within the approved Pilot boundary; no new Material, Deferred risk, Polish or Needs decision finding was established. Records do not authenticate approval, Paseo agents may answer requests, registration remains manual and untested on Captain settings, and recount approvals are synthetic; each implementation limit is retained in validation/evidence.md. FO owns #793-first integration, later-head checks, review/gate/ready/merge, state push and rollout; this report grants none of them.
+

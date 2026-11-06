@@ -1,0 +1,17 @@
+{
+  "claude": {
+    "exit": 0,
+    "output": "2.1.318 (Claude Code)",
+    "stderr": ""
+  },
+  "codex": {
+    "exit": 0,
+    "output": "codex-cli 0.162.1",
+    "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Operation not permitted (os error 1)"
+  },
+  "/Users/kent/.local/bin/spacedock": {
+    "exit": 0,
+    "output": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "AC-7 documented wrapper omission",
+    "status": "passed"
+  },
+  {
+    "name": "AC-8 missing record reminder",
+    "status": "passed"
+  },
+  {
+    "name": "AC-10 missing recorded human observation",
+    "status": "passed",
+    "message": "missing phone observation rejected; evidence integrity only, no new phone observation"
+  }
+]

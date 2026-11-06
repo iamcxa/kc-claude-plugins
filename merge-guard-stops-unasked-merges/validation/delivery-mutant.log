@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_the_pass_line_is_the_ask_plus_one_named_carry_sentence_and_a_hold_prints_no_ask (__main__.FoWriteRuleTests.test_the_pass_line_is_the_ask_plus_one_named_carry_sentence_and_a_hold_prints_no_ask)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-merge-guard-871c6b2-z7onrnpk/delivery-mutant/test_delivery_gate.py", line 1212, in test_the_pass_line_is_the_ask_plus_one_named_carry_sentence_and_a_hold_prints_no_ask
+    self.assertEqual((result.code, nexts(result)), (0, [CLAIM_SOURCE, PASS_NEXT]))
+AssertionError: Tuples differ: (0, [[343 chars] time.']) != (0, [[343 chars] time; after his yes to a question naming its [61 chars]t.'])
+
+First differing element 1:
+['nex[339 chars] time.']
+['nex[339 chars] time; after his yes to a question naming its [60 chars]it.']
+
+Diff is 707 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.318s
+
+FAILED (failures=1)

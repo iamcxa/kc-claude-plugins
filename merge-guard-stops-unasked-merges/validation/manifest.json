@@ -1,0 +1,21 @@
+{
+  "candidate": "871c6b2f4ebccfc2c67df91d7d39ad038aa0710f",
+  "base": "b804d81d3abc94c9c321326dc75e7cac927c5252",
+  "export": "/tmp/validate-merge-guard-871c6b2-z7onrnpk/source",
+  "date": "2026-11-06",
+  "verdict": "PASSED",
+  "source_sha256": {
+    ".github/workflows/kc-dev-flow-2-tests.yml": "6a1cda12b51197de6efd6a4498267fc4b7a8e68a9a41bc46d51e0e18e2315826",
+    "docs/adr/0063-a-merge-no-record-carries-is-stopped-by-a-user-registered-hook.md": "26c08f07586c12216c8c1865655b6a4d5ed0a49d97f4ad04826d759da9526a4c",
+    "kc-dev-flow-2/references/sd/adoption.md": "c897846e281cef1a72f26c21ea956931cbf266ec6c0e4144b202a97fa62ea49c",
+    "kc-dev-flow-2/scripts/delivery_gate.py": "e7cf1764b706ca887744a4ef78d22f28afe34451c53bfb0df780ae9b70eacce6",
+    "kc-dev-flow-2/scripts/merge_guard.py": "70e8cc5aea3f06a2d561355572881b9e2ef65c6837d8b266081a397b92b703ef",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "e6c0228ad0177702601727e4325a7eed148dbf109ad77978e8eecfc2a7d5ad86",
+    "kc-dev-flow-2/scripts/test_merge_guard.py": "419d24c5d4d79f021d6f6b1480e75790c67d262bdc552ad07d699df53594552e"
+  },
+  "acceptance_script_sha256": "3aa364c3efd9d0dbe79a4913d89ef5b202f33447dfd5d786f385490a38baf375",
+  "native_interactive_session": 89581,
+  "native_interactive_exit": 0,
+  "state_push": "not run; dispatch forbids push",
+  "delivery": "FO-owned; 793 first; 794 remains draft/open"
+}

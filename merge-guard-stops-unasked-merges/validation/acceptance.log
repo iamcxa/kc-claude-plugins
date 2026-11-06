@@ -1,0 +1,20 @@
+Step 1: candidate export matches 871c6b2f4ebccfc2c67df91d7d39ad038aa0710f
+................
+----------------------------------------------------------------------
+Ran 16 tests in 0.429s
+
+OK
+uncarried: stop
+record: saved in temporary state
+carried: pass
+moved-head: stop
+..................................................................................s..........................................................................
+----------------------------------------------------------------------
+Ran 157 tests in 81.740s
+
+OK (skipped=1)
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+62 ADR file(s) checked, 0 legacy
+Acceptance passed; no hook installed and no merge executed.

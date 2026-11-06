@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/Users/kent/.local/bin/spacedock",
+    "status",
+    "--workflow-dir",
+    "/tmp/validate-merge-guard-871c6b2-z7onrnpk/status-workflow-copy-ydw_2rbe"
+  ],
+  "before": "ID     SLUG                           STATUS               TITLE                          SCORE\n--     ----                           ------               -----                          -----\ntask   task                           backlog              status fixture                 \n",
+  "after": "ID     SLUG                           STATUS               TITLE                          SCORE\n--     ----                           ------               -----                          -----\ntask   task                           backlog              status fixture                 \n",
+  "exit": [
+    0,
+    0
+  ],
+  "stderr": [
+    "",
+    ""
+  ],
+  "same": true,
+  "fixture": "copy of adopted README plus one throwaway task"
+}
