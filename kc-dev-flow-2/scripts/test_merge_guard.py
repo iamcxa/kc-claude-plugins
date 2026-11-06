@@ -76,6 +76,84 @@ class MergeGuardTests(unittest.TestCase):
         for command in forms:
             self.assertEqual(self.verdict(command), "pass", command)
 
+    def assert_guarded_form(self, command):
+        self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+        self.saved()
+        self.assertEqual(self.verdict(command), "pass", command)
+        self.assertEqual(self.verdict(command.replace(HEAD, OTHER)), "stop", command)
+
+    def test_global_short_repo_before_subcommand(self):
+        self.assert_guarded_form(f"gh -R owner/repo pr merge 672 --squash --match-head-commit {HEAD}")
+        self.assertEqual(self.verdict("gh -R owner/repo pr merge 672 --squash"), "stop")
+
+    def test_global_long_repo_before_subcommand(self):
+        self.assert_guarded_form(f"gh --repo owner/repo pr merge 672 --match-head-commit {HEAD}")
+
+    def test_global_equals_repo_before_subcommand(self):
+        self.assert_guarded_form(f"gh --repo=owner/repo pr merge 672 --match-head-commit {HEAD}")
+
+    def test_attached_and_interleaved_repo_flags(self):
+        for option in ("-Rowner/repo", "-R=owner/repo"):
+            self.assert_guarded_form(f"gh {option} pr --repo owner/repo merge 672 --match-head-commit {HEAD}")
+
+    def test_env_wrapper(self):
+        self.assert_guarded_form(f"env -- gh -R owner/repo pr merge 672 --match-head-commit {HEAD}")
+
+    def test_command_wrapper(self):
+        self.assert_guarded_form(f"command -p -- gh -R owner/repo pr merge 672 --match-head-commit {HEAD}")
+
+    def test_absolute_gh_with_global_flags(self):
+        self.assert_guarded_form(f"/opt/homebrew/bin/gh --repo=owner/repo pr merge 672 --match-head-commit {HEAD}")
+
+    def test_quoted_words(self):
+        self.assert_guarded_form(f"'gh' '-R' 'owner/repo' 'pr' 'merge' '672' '--match-head-commit' '{HEAD}'")
+
+    def test_shell_spelling_of_gh(self):
+        for executable in (r"g\h", 'g""h', '"g"h'):
+            self.assert_guarded_form(f"{executable} -R owner/repo pr merge 672 --match-head-commit {HEAD}")
+
+    def test_rest_merge_endpoint_stops_even_with_record(self):
+        self.saved()
+        for endpoint in ("repos/owner/repo/pulls/672/merge", "/repos/owner/repo/pulls/672/merge",
+                         "https://api.github.com/repos/owner/repo/pulls/672/merge",
+                         "repos/{owner}/{repo}/pulls/672/merge", "repos/owner/repo/pulls/672/%6derge",
+                         "repos/owner/repo/pulls/1/../672/merge", "repos/owner/repo/pulls//672/merge"):
+            command = f"gh api -X PUT {endpoint} -f sha={HEAD}"
+            self.assertEqual(self.verdict(command), "stop", command)
+        self.assertEqual(self.verdict("gh api --method=GET repos/owner/repo/pulls/672/merge"), "stop")
+
+    def test_graphql_and_opaque_api_stops(self):
+        self.saved()
+        for command in ("gh api graphql -f 'query=mutation {mergePullRequest(input:{pullRequestId:\"x\"}){clientMutationId}}'",
+                        "gh api graphql -f 'query=mutation {enablePullRequestAutoMerge(input:{pullRequestId:\"x\"}){clientMutationId}}'",
+                        "gh api graphql --input request.json", "gh api graphql -F query=@query.graphql",
+                        'gh api "$ENDPOINT" -X PUT --input request.json'):
+            self.assertEqual(self.verdict(command), "stop", command)
+
+    def test_ambiguous_wrappers_options_and_shell_text_stop(self):
+        self.saved()
+        merge = f"gh -R owner/repo pr merge 672 --match-head-commit {HEAD}"
+        for command in ("env GH_HOST=other.example " + merge,
+                        "env -C /tmp " + merge, "sudo " + merge,
+                        "bash -c '" + merge + "'", "echo '" + merge + "'",
+                        merge.replace("-R owner/repo", "--unknown value"), merge + " '",
+                        f"gh -R owner/repo pr merge 672 --match-head-commit {HEAD} && " + merge):
+            self.assertEqual(self.verdict(command), "stop", command)
+
+    def test_unknown_gh_alias_or_dynamic_subcommand_stops(self):
+        for command in ("gh my-merge 672", "gh extension exec merge-helper 672", 'gh "$ACTION" 672'):
+            self.assertEqual(self.verdict(command), "stop", command)
+
+    def test_implicit_repo_after_shell_context_change_stops(self):
+        self.saved()
+        with patch.object(guard, "git", return_value="https://github.com/owner/repo.git"):
+            self.assertEqual(self.verdict(f"cd /another/repo && gh pr merge 672 --match-head-commit {HEAD}"), "stop")
+
+    def test_readonly_gh_commands_pass(self):
+        for command in ("gh -R owner/repo pr view 672", "gh api repos/owner/repo/pulls/672",
+                        "gh api -X GET repos/owner/repo/pulls/672", "gh issue list", "gh --version"):
+            self.assertEqual(self.verdict(command), "pass", command)
+
     def test_origin_fallback(self):
         self.saved()
         command = self.command.replace(" --repo owner/repo", "")

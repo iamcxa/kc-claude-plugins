@@ -8,14 +8,19 @@ import argparse
 import datetime
 import json
 import os
+import posixpath
 import re
 import shlex
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 # see docs/adr/0063-a-merge-no-record-carries-is-stopped-by-a-user-registered-hook.md
-MERGE = re.compile(r"(?<![\w/-])(?:[\w./-]*/)?gh\s+pr\s+merge\b")
+MERGE = re.compile(r"\bgh\b[\s\S]*(?:\bpr\b[\s\S]*\bmerge\b|/pulls/[^/\s]+/merge|\bgraphql\b)")
+SHELL_END = {";", "&&", "||", "|", "&", "(", ")", ">", ">>", "<", "<<"}
+BUILTINS = set("auth browse codespace discussion gist issue org project release repo skill cache run workflow alias attestation completion config extension gpg-key label licenses ruleset search secret ssh-key status variable help".split())
+PR_COMMANDS = set("checks checkout close comment create diff edit list lock ready reopen review status unlock update-branch view --help".split())
 ASK_FILE = re.compile(r"ask-(\d+)\.json")
 PR = re.compile(r"([\w.-]+)/([\w.-]+)#([1-9]\d*)")
 REPO = re.compile(r"[\w.-]+/[\w.-]+")
@@ -50,32 +55,109 @@ def newest_records(roots):
     return records
 
 
+def repo_args(args):
+    cleaned, repo, k = [], None, 0
+    while k < len(args):
+        arg = args[k]
+        value = None
+        if arg in ("--repo", "-R"):
+            k += 1
+            value = args[k] if k < len(args) else ""
+        elif arg.startswith("--repo="):
+            value = arg.split("=", 1)[1]
+        elif arg.startswith("-R"):
+            value = arg[2:].removeprefix("=")
+        else:
+            cleaned.append(arg)
+        if value is not None:
+            if not REPO.fullmatch(value) or (repo and repo.lower() != value.lower()):
+                raise ValueError("the repository flags are missing, unsupported or disagree")
+            repo = value
+        k += 1
+    return cleaned, repo
+
+
+def check_wrapper(prefix):
+    while prefix:
+        wrapper, prefix = Path(prefix[0]).name, prefix[1:]
+        if wrapper not in ("env", "command"):
+            raise ValueError("the gh wrapper cannot be parsed")
+        if wrapper == "command" and prefix and prefix[0] == "-p":
+            prefix = prefix[1:]
+        if prefix and prefix[0] == "--":
+            prefix = prefix[1:]
+
+
+def check_api(args):
+    endpoint, k = None, 0
+    valued = set("-X --method -f --raw-field -F --field -H --header --hostname --input --cache -q --jq -p --preview -t --template".split())
+    switches = set("-i --include --paginate --silent --slurp --verbose --allow-escape-sequences".split())
+    while k < len(args):
+        arg = args[k]
+        if arg in valued:
+            k += 1
+            if k == len(args):
+                raise ValueError("the gh api flag has no value")
+        elif arg in switches:
+            pass
+        elif arg.startswith("--") and "=" in arg and arg.split("=", 1)[0] in valued:
+            pass
+        elif len(arg) > 2 and arg[:2] in valued:
+            pass
+        elif arg.startswith("-") or endpoint is not None:
+            raise ValueError("the gh api command cannot be parsed")
+        else:
+            endpoint = arg
+        k += 1
+    if not endpoint or any(char in endpoint for char in "$`\\()"):
+        raise ValueError("the gh api endpoint cannot be parsed")
+    for _ in range(8):
+        decoded = unquote(endpoint)
+        if decoded == endpoint:
+            break
+        endpoint = decoded
+    if "%" in endpoint:
+        raise ValueError("the gh api endpoint cannot be decoded")
+    path = posixpath.normpath(urlsplit(endpoint).path)
+    if path == "graphql" or path.endswith("/graphql") or re.search(r"(?:^|/)pulls/[^/]+/merge(?:/|$)", path):
+        raise ValueError("API merges or opaque GraphQL need gh pr merge with --match-head-commit")
+
+
 def parse(command, cwd):
     lexer = shlex.shlex(command, posix=True, punctuation_chars=";&|()<>")
     lexer.whitespace_split = True
     lexer.commenters = ""
     words = list(lexer)
-    starts = [i for i in range(len(words) - 2)
-              if Path(words[i]).name == "gh" and words[i + 1:i + 3] == ["pr", "merge"]]
-    if len(starts) != 1:
-        raise ValueError("the merge command cannot be parsed")
-    i = starts[0]
-    if i and words[i - 1] not in (";", "&&", "||", "|", "("):
-        raise ValueError("the merge command cannot be parsed")
-    args = words[i + 3:]
-    number = repo = head = None
+    merges = []
+    for i, word in enumerate(words):
+        if Path(word).name != "gh":
+            continue
+        end = next((j for j in range(i + 1, len(words)) if words[j] in SHELL_END), len(words))
+        args, repo = repo_args(words[i + 1:end])
+        if args[:2] == ["pr", "merge"]:
+            start = max((j + 1 for j in range(i) if words[j] in SHELL_END), default=0)
+            check_wrapper(words[start:i])
+            merges.append((args[2:], repo, start > 0))
+        elif args[:1] == ["api"]:
+            check_api(args[1:])
+        elif (not args or (args[0] == "pr" and (len(args) < 2 or args[1] not in PR_COMMANDS))
+              or (args[0] not in BUILTINS | {"pr", "--version", "--help"})
+              or args[:2] == ["extension", "exec"]):
+            raise ValueError("the gh command or alias cannot be parsed")
+    if not merges:
+        if MERGE.search(command):
+            raise ValueError("the merge command cannot be parsed")
+        return None
+    if len(merges) != 1:
+        raise ValueError("more than one gh pr merge in one command")
+    args, repo, context_changed = merges[0]
+    number = head = None
     k = 0
-    while k < len(args) and args[k] not in (";", "&&", "||", "|", ")", ">", ">>", "<"):
+    while k < len(args):
         arg = args[k]
-        if arg in ("--repo", "-R", "--match-head-commit"):
+        if arg == "--match-head-commit":
             k += 1
-            value = args[k] if k < len(args) else ""
-            if arg == "--match-head-commit":
-                head = value
-            else:
-                repo = value
-        elif arg.startswith("--repo="):
-            repo = arg.split("=", 1)[1]
+            head = args[k] if k < len(args) else ""
         elif arg.startswith("--match-head-commit="):
             head = arg.split("=", 1)[1]
         elif arg in ("--subject", "--body", "--body-file", "--author-email"):
@@ -91,6 +173,8 @@ def parse(command, cwd):
             raise ValueError("the PR URL and --repo disagree")
         repo = url_repo
     if repo is None:
+        if context_changed:
+            raise ValueError("the shell context needs an explicit repository")
         remote = git(cwd, "remote", "get-url", "origin")
         m = re.fullmatch(r"(?:https://github\.com/|git@github\.com:|ssh://git@github\.com/)([^/]+/[^/]+?)(?:\.git)?/?", remote)
         repo = m.group(1) if m else None
@@ -101,13 +185,11 @@ def parse(command, cwd):
 
 
 def verdict(command, cwd, roots=None):
-    hits = list(MERGE.finditer(command))
-    if not hits:
-        return "pass", None
-    if len(hits) > 1:
-        return "stop", "more than one gh pr merge in one command"
     try:
-        pr, head = parse(command, cwd)
+        target = parse(command, cwd)
+        if target is None:
+            return "pass", None
+        pr, head = target
         records = newest_records(state_roots(cwd) if roots is None else roots)
         for record in records:
             saved = str(record.get("head", "")).lower()
