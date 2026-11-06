@@ -3,7 +3,7 @@ title: The delivery check resolves a report's relative Markdown links against th
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
