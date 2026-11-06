@@ -15,6 +15,17 @@ gates:
                 id: briefing:delivery-check-passes-a-skipped-by-design-run:backlog:attempt-1:revision-1
                 digest: sha256:7c0597c313a651f965eef34859be7ed0867804870b15a4e8c24191cf201f2f25
                 room-ref: ./delivery-check-passes-a-skipped-by-design-run/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-check-passes-a-skipped-by-design-run:backlog:1
+                briefing: briefing:delivery-check-passes-a-skipped-by-design-run:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-06T14:28:23.458368Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-06), answering 「決定：第 16 批這五張（跳過的 CI 不擋、Codex 只貼安全摘要時提醒、交付檢查的相對路徑、ADR 編號跨流程預留、婉拒只在出過事時開任務）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？核准即接受「婉拒只在出過事時開任務」任務裡寫的標準（指出真的錯並說得出誰受害、再次出現、或你要求）。要改哪張直接說。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 `delivery_gate.py check` treats a workflow run that its own conditions skip on purpose as no hold, while still holding a failed, pending or unexpectedly skipped required check.
