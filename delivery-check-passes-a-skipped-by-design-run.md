@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:delivery-check-passes-a-skipped-by-design-run:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:delivery-check-passes-a-skipped-by-design-run-validation-1
+              briefing:
+                id: briefing:delivery-check-passes-a-skipped-by-design-run:validation:attempt-1:revision-1
+                digest: sha256:b6446181be55f11d700ed75b9e6bb2d1aedfb48150581d6b803c6f895bd023b0
+                room-ref: ./delivery-check-passes-a-skipped-by-design-run/review/validation/briefing-1
 started: 2026-11-06T16:11:45Z
 worktree: .worktrees/spacedock-ensign-delivery-check-passes-a-skipped-by-design-run
 pr: iamcxa/kc-claude-plugins#797
