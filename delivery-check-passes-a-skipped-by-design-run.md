@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:delivery-check-passes-a-skipped-by-design-run:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:delivery-check-passes-a-skipped-by-design-run-ideation-1
+              briefing:
+                id: briefing:delivery-check-passes-a-skipped-by-design-run:ideation:attempt-1:revision-1
+                digest: sha256:94bbe380f44edc6f10c7c1c4e927880eefe0bfa92ae24ef93e5f8d26775d17fc
+                room-ref: ./delivery-check-passes-a-skipped-by-design-run/review/ideation/briefing-1
 ---
 
 `delivery_gate.py check` treats a workflow run that its own conditions skip on purpose as no hold, while still holding a failed, pending or unexpectedly skipped required check.

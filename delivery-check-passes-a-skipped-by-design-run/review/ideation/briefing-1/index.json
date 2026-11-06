@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-check-passes-a-skipped-by-design-run:ideation:attempt-1:revision-1",
+  "question": "決定：「刻意跳過的 CI 不擋」這份設計進入實作嗎？核准即接受 D1（每次交付檢查多一次 gh pr checks --required 呼叫，推翻 #680 的「不新增 gh 呼叫」）。",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-check-passes-a-skipped-by-design-run:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/2394b7eef50bba039b386e9c472c005ea32e7649/delivery-check-passes-a-skipped-by-design-run.md",
+      "rev": "sha256:07b452b287a0b1dbdd966b927717ed64b579d3446137f089dad3fc239b6db636",
+      "mediaType": "text/markdown",
+      "summary": "A run skipped by its own conditions settles only where required checks are reported and all pass; a failed, pending or skipped required check still holds; relay and web keep today's hold; qnow #1338 replay passes (ideation report, Opus, 2026-11-06). D1."
+    }
+  ]
+}
