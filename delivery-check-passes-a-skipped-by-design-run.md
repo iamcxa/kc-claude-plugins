@@ -3,7 +3,7 @@ title: delivery_gate.py check does not hold on a workflow run skipped by design
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-06), answering 「決定：「刻意跳過的 CI 不擋」這份設計進入實作嗎？核准即接受 D1（每次交付檢查多一次 gh pr checks --required 呼叫，推翻 #680 的「不新增 gh 呼叫」）。」. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 `delivery_gate.py check` treats a workflow run that its own conditions skip on purpose as no hold, while still holding a failed, pending or unexpectedly skipped required check.
