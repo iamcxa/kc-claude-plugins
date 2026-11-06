@@ -3,7 +3,7 @@ title: An ADR number reserved by one workflow's task is seen by every workflow t
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
