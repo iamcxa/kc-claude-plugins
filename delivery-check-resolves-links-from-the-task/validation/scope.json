@@ -1,0 +1,13 @@
+{
+  "changed_functions": [
+    "inspect_steps",
+    "steps",
+    "captain_step_problems"
+  ],
+  "added_functions": [
+    "named_file"
+  ],
+  "emit_calls": "unchanged",
+  "emit_mutation": "detected",
+  "workflow_bytes": "unchanged"
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "AC-1 cwd-based Markdown",
+    "status": "passed",
+    "message": "mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-1.log"
+  },
+  {
+    "name": "AC-2 drop slug base",
+    "status": "passed",
+    "message": "mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-2.log"
+  },
+  {
+    "name": "AC-3 steps use cwd",
+    "status": "passed",
+    "message": "mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-3.log"
+  },
+  {
+    "name": "AC-4 reports reenter S4",
+    "status": "passed",
+    "message": "mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-4.log"
+  },
+  {
+    "name": "AC-7 report prose links count",
+    "status": "passed",
+    "message": "mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-5.log"
+  },
+  {
+    "name": "AC-6 alter emitted text",
+    "status": "passed",
+    "message": "mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-6.log"
+  }
+]

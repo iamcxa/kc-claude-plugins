@@ -1,0 +1,8 @@
+{
+  "head": "97dceebedd68108ef8e67fa5455f1e578c910ad6",
+  "base": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-resolves-links-from-the-task",
+  "export": "/tmp/delivery-links-validation-o6ce1o3u",
+  "candidate": "/tmp/delivery-links-validation-o6ce1o3u/candidate",
+  "base_export": "/tmp/delivery-links-validation-o6ce1o3u/base"
+}

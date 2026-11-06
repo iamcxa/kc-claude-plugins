@@ -1,0 +1,12 @@
+[
+  {
+    "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "sha256": "effc796636f6b89d88dc7d9aa9e9b10b511f724081fa7b59c85438012e88951c",
+    "matches_candidate": true
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "sha256": "a78b103a46f86681e95d41e602c2e2d2f26fe6eebdc98e351957e14077d3ca08",
+    "matches_candidate": true
+  }
+]

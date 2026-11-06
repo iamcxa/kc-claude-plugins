@@ -1,0 +1,19 @@
+Step 1 PASS: exported 97dceebedd68108ef8e67fa5455f1e578c910ad6
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 1.893s
+
+OK
+Step 2 PASS: seven entrance tests
+AC-1 cwd-based Markdown passed mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-1.log
+AC-2 drop slug base passed mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-2.log
+AC-3 steps use cwd passed mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-3.log
+AC-4 reports reenter S4 passed mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-4.log
+AC-7 report prose links count passed mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-5.log
+AC-6 alter emitted text passed mutant exit=1; assertion failed as required; /tmp/delivery-links-acceptance.WEjTET/evidence/mutation-6.log
+Step 3 PASS: six assertion-killed mutations
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+Step 4 PASS: workflow lint
+Evidence: /tmp/delivery-links-acceptance.WEjTET

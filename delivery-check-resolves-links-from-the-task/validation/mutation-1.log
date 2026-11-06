@@ -1,0 +1,46 @@
+FFFF
+======================================================================
+FAIL: test_question_reads_task_card_from_repository_state_and_task_directories (test_delivery_gate.TaskFolderCaptainTests.test_question_reads_task_card_from_repository_state_and_task_directories) (recorded=True, cwd=PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpz2z1flpc/repository'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/delivery-link-mutant-l3m1_i5b/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1753, in test_question_reads_task_card_from_repository_state_and_task_directories
+    self.assertEqual(run.returncode, 0 if recorded else 1, run.stdout + run.stderr)
+AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+Captain steps record fails: step 2 S1: Asked text is not in the message
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+
+
+======================================================================
+FAIL: test_question_reads_task_card_from_repository_state_and_task_directories (test_delivery_gate.TaskFolderCaptainTests.test_question_reads_task_card_from_repository_state_and_task_directories) (recorded=True, cwd=PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpz2z1flpc/state'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/delivery-link-mutant-l3m1_i5b/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1753, in test_question_reads_task_card_from_repository_state_and_task_directories
+    self.assertEqual(run.returncode, 0 if recorded else 1, run.stdout + run.stderr)
+AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+Captain steps record fails: step 2 S1: Asked text is not in the message
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+
+
+======================================================================
+FAIL: test_question_reads_task_card_from_repository_state_and_task_directories (test_delivery_gate.TaskFolderCaptainTests.test_question_reads_task_card_from_repository_state_and_task_directories) (recorded=False, cwd=PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpz2z1flpc/repository'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/delivery-link-mutant-l3m1_i5b/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1754, in test_question_reads_task_card_from_repository_state_and_task_directories
+    self.assertNotIn("wrong-directory", run.stdout)
+AssertionError: 'wrong-directory' unexpectedly found in "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: message S5: unrecorded command or link 'printf wrong-directory'\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+
+======================================================================
+FAIL: test_question_reads_task_card_from_repository_state_and_task_directories (test_delivery_gate.TaskFolderCaptainTests.test_question_reads_task_card_from_repository_state_and_task_directories) (recorded=False, cwd=PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpz2z1flpc/state'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/delivery-link-mutant-l3m1_i5b/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1753, in test_question_reads_task_card_from_repository_state_and_task_directories
+    self.assertEqual(run.returncode, 0 if recorded else 1, run.stdout + run.stderr)
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.524s
+
+FAILED (failures=4)

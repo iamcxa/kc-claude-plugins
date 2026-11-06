@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head (test_delivery_gate.CaptainGateTests.test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/delivery-link-mutant-fm0sp4r8/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1684, in test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head
+    self.assertEqual(self.ask_gate(summary=summary), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
+AssertionError: Tuples differ: (0, '[150 chars]text altered\nnext: before gate prepare, write[346 chars].\n') != (0, '[150 chars]text complete\nnext: before gate prepare, writ[347 chars].\n')
+
+First differing element 1:
+'next[146 chars]text altered\nnext: before gate prepare, write[345 chars]`.\n'
+'next[146 chars]text complete\nnext: before gate prepare, writ[346 chars]`.\n'
+
+Diff is 677 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.011s
+
+FAILED (failures=1)

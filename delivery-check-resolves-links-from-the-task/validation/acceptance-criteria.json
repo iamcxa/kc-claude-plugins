@@ -1,0 +1,30 @@
+[
+  {
+    "name": "AC-1 任務相對路徑不依賴執行目錄",
+    "status": "passed"
+  },
+  {
+    "name": "AC-2 任務名稱前綴解析",
+    "status": "passed"
+  },
+  {
+    "name": "AC-3 steps 從紀錄所在任務解析",
+    "status": "passed"
+  },
+  {
+    "name": "AC-4 報告網頁路徑與真實缺檔分流",
+    "status": "passed"
+  },
+  {
+    "name": "AC-5 兩個歷史案例及基準反例",
+    "status": "passed"
+  },
+  {
+    "name": "AC-6 指定版本 CI 與輸出範圍不變",
+    "status": "passed"
+  },
+  {
+    "name": "AC-7 保留程式碼區塊、依來源計算連結",
+    "status": "passed"
+  }
+]

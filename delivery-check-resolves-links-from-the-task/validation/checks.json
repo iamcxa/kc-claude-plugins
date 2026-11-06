@@ -1,0 +1,100 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "message": "61 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "adr-lint-dispatch",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "message": "61 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task.md"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "message": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase ba055b8a7a55 head 97dceebedd68 merge-base ba055b8a7a55\n"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "97dceebedd68108ef8e67fa5455f1e578c910ad6",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "message": "code lines 125, comment lines 0, 0.0%\nmaximum 5% (package default) met\n"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "97dceebedd68108ef8e67fa5455f1e578c910ad6",
+      "--json"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "message": "[\n {\n  \"doc\": \"docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/delivery_gate.py\"\n  ]\n },\n {\n  \"doc\": \"docs/adr/0051-the-merge-ask-check-requires-the-round-count.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/delivery_gate.py\"\n  ]\n },\n {\n  \"doc\": \"docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/delivery_gate.py\"\n  ]\n }\n]\n"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task.md"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "message": "delivery-check-resolves-links-from-the-task.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "message": "3 dispatch record(s) complete\n"
+  }
+]

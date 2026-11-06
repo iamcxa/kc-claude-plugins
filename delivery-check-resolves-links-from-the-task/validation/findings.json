@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "low",
+    "title": "F1 Polish: implementation summary undercounts skipped tests",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task.md",
+    "line": 219,
+    "detail": "The implementation report says one skipped case; its five original suite logs and the independent rerun total eleven skips (4 design, 4 release acceptance, 1 dispatch, 1 delivery, 1 laws). The seven affected entrance tests ran; hosted CI at the candidate succeeds. No demonstrated product harm or unmet value criterion. See skip-evidence.json.",
+    "fix": "Use the corrected eleven-skip count and explicit unavailable-evidence limits in this validation report; no product change required.",
+    "status": "confirmed"
+  }
+]

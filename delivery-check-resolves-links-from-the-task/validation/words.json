@@ -1,0 +1,12 @@
+[
+  {
+    "label": "base",
+    "module_docstring_words": 1068,
+    "cli_help_words": 1085
+  },
+  {
+    "label": "candidate",
+    "module_docstring_words": 1096,
+    "cli_help_words": 1113
+  }
+]

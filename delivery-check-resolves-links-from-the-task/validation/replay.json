@@ -1,0 +1,28 @@
+[
+  {
+    "label": "candidate",
+    "exit": 0,
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task/ideation/replay.sh",
+      "/tmp/delivery-links-validation-o6ce1o3u/candidate/kc-dev-flow-2/scripts"
+    ],
+    "R": "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate",
+    "output": "#793 from /Users/kent/conductor/workspaces/kc-claude-plugins/colombo: gate text complete\n#793 from /tmp/delivery-links-validation-o6ce1o3u/replay-candidate/state/delivery-question-requires-worktree-clause: gate text complete\n#793 from /tmp/delivery-links-validation-o6ce1o3u/replay-candidate/state: gate text complete\n#1338 from /Users/kent/conductor/repos/qnow-adopt-dev2: gate text complete\n#1338 from /tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qstate/preview-sign-in-wildcard: gate text complete\n#1338 from /tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qstate: gate text complete\n"
+  },
+  {
+    "label": "base",
+    "exit": 0,
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task/ideation/replay.sh",
+      "/tmp/delivery-links-validation-o6ce1o3u/base/kc-dev-flow-2/scripts"
+    ],
+    "R": "/tmp/delivery-links-validation-o6ce1o3u/replay-base",
+    "output": "#793 from /Users/kent/conductor/workspaces/kc-claude-plugins/colombo: Captain steps record fails: message S5: unrecorded command or link '/plugin marketplace add iamcxa/kc-claude-plugins'\n#793 from /tmp/delivery-links-validation-o6ce1o3u/replay-base/state/delivery-question-requires-worktree-clause: gate text complete\n#793 from /tmp/delivery-links-validation-o6ce1o3u/replay-base/state: gate text complete\n#1338 from /Users/kent/conductor/repos/qnow-adopt-dev2: Captain steps record fails: message S4: missing path /api/office/me\n#1338 from /tmp/delivery-links-validation-o6ce1o3u/replay-base/qstate/preview-sign-in-wildcard: Captain steps record fails: message S4: missing path /api/office/me\n#1338 from /tmp/delivery-links-validation-o6ce1o3u/replay-base/qstate: Captain steps record fails: message S4: missing path /api/office/me\n"
+  }
+]

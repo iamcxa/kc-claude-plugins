@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_report_only_cards_require_fences_and_fo_named_cards_also_require_links (test_delivery_gate.TaskFolderCaptainTests.test_report_only_cards_require_fences_and_fo_named_cards_also_require_links)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/delivery-link-mutant-vwpb44ca/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1803, in test_report_only_cards_require_fences_and_fo_named_cards_also_require_links
+    self.assertEqual(run.returncode, 0, run.stdout)
+AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+Captain steps record fails: message S5: unrecorded command or link 'https://example.test/a'
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.172s
+
+FAILED (failures=1)

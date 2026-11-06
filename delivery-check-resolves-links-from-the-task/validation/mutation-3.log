@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_relative_markdown_card_is_read_by_the_real_cli (test_delivery_gate.CaptainStepsTests.test_relative_markdown_card_is_read_by_the_real_cli)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/delivery-link-mutant-qj9l26_1/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1638, in test_relative_markdown_card_is_read_by_the_real_cli
+    self.assertEqual(run.returncode, 1, run.stdout)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.092s
+
+FAILED (failures=1)

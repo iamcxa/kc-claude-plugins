@@ -1,0 +1,254 @@
+[
+  {
+    "name": "candidate #793 repository",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/candidate/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/state/delivery-question-requires-worktree-clause.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/summary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "message": "exit 0, expected 0; replay-candidate-793-repository.log"
+  },
+  {
+    "name": "candidate #793 state",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "cwd": "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/state",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/candidate/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/state/delivery-question-requires-worktree-clause.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/summary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "message": "exit 0, expected 0; replay-candidate-793-state.log"
+  },
+  {
+    "name": "candidate #793 task",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "cwd": "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/state/delivery-question-requires-worktree-clause",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/candidate/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/state/delivery-question-requires-worktree-clause.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/summary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "message": "exit 0, expected 0; replay-candidate-793-task.log"
+  },
+  {
+    "name": "candidate #1338 repository",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "cwd": "/Users/kent/conductor/repos/qnow-adopt-dev2",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/candidate/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qstate/preview-sign-in-wildcard.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qstate/preview-sign-in-wildcard/captain-steps/gate-question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qsummary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2"
+    ],
+    "message": "exit 0, expected 0; replay-candidate-1338-repository.log"
+  },
+  {
+    "name": "candidate #1338 state",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "cwd": "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qstate",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/candidate/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qstate/preview-sign-in-wildcard.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qstate/preview-sign-in-wildcard/captain-steps/gate-question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qsummary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2"
+    ],
+    "message": "exit 0, expected 0; replay-candidate-1338-state.log"
+  },
+  {
+    "name": "candidate #1338 task",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "cwd": "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qstate/preview-sign-in-wildcard",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/candidate/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qstate/preview-sign-in-wildcard.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qstate/preview-sign-in-wildcard/captain-steps/gate-question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-candidate/qsummary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2"
+    ],
+    "message": "exit 0, expected 0; replay-candidate-1338-task.log"
+  },
+  {
+    "name": "base #793 repository",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/base/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/state/delivery-question-requires-worktree-clause.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/summary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "message": "exit 1, expected 1; replay-base-793-repository.log"
+  },
+  {
+    "name": "base #793 state",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "cwd": "/tmp/delivery-links-validation-o6ce1o3u/replay-base/state",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/base/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/state/delivery-question-requires-worktree-clause.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/summary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "message": "exit 0, expected 0; replay-base-793-state.log"
+  },
+  {
+    "name": "base #793 task",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "cwd": "/tmp/delivery-links-validation-o6ce1o3u/replay-base/state/delivery-question-requires-worktree-clause",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/base/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/state/delivery-question-requires-worktree-clause.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/summary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "message": "exit 0, expected 0; replay-base-793-task.log"
+  },
+  {
+    "name": "base #1338 repository",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "cwd": "/Users/kent/conductor/repos/qnow-adopt-dev2",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/base/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/qstate/preview-sign-in-wildcard.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/qstate/preview-sign-in-wildcard/captain-steps/gate-question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/qsummary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2"
+    ],
+    "message": "exit 1, expected 1; replay-base-1338-repository.log"
+  },
+  {
+    "name": "base #1338 state",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "cwd": "/tmp/delivery-links-validation-o6ce1o3u/replay-base/qstate",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/base/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/qstate/preview-sign-in-wildcard.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/qstate/preview-sign-in-wildcard/captain-steps/gate-question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/qsummary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2"
+    ],
+    "message": "exit 1, expected 1; replay-base-1338-state.log"
+  },
+  {
+    "name": "base #1338 task",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "cwd": "/tmp/delivery-links-validation-o6ce1o3u/replay-base/qstate/preview-sign-in-wildcard",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/delivery-links-validation-o6ce1o3u/base/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/qstate/preview-sign-in-wildcard.md",
+      "--text-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/qstate/preview-sign-in-wildcard/captain-steps/gate-question.md",
+      "--summary-file",
+      "/tmp/delivery-links-validation-o6ce1o3u/replay-base/qsummary.md",
+      "--workflow-dir",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2"
+    ],
+    "message": "exit 1, expected 1; replay-base-1338-task.log"
+  }
+]

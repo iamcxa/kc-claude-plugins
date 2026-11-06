@@ -1,0 +1,67 @@
+[
+  {
+    "suite": "test_design_surfaces",
+    "implementation": {
+      "path": "/tmp/opencode/delivery-links/test_design_surfaces.log",
+      "skipped": 4,
+      "sha256": "acea17e3f3b91fc832d7d4a87a133c357a37f60c39be7a9d1861d586cf362e4b"
+    },
+    "validation": {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task/validation/test_design_surfaces.log",
+      "skipped": 4,
+      "sha256": "55c3b7f48c30aae6442568f3fe5e8629dce634bf7f6eb5e7bed7fd1bcd9dc9b1"
+    }
+  },
+  {
+    "suite": "test_release_acceptance",
+    "implementation": {
+      "path": "/tmp/opencode/delivery-links/test_release_acceptance.log",
+      "skipped": 4,
+      "sha256": "3165e63c5ed79d8541d539343c966b5d159dce40809580e79cb6173d597a9578"
+    },
+    "validation": {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task/validation/test_release_acceptance.log",
+      "skipped": 4,
+      "sha256": "2f58658a81dda235b37209038e0aad11517ab772270ecd9fbc0a9166081364f6"
+    }
+  },
+  {
+    "suite": "test_dispatch_records",
+    "implementation": {
+      "path": "/tmp/opencode/delivery-links/test_dispatch_records.log",
+      "skipped": 1,
+      "sha256": "55e550861c18170a953511665c68742bc610d90f3f3f3e42c2c900e2d03c0ab1"
+    },
+    "validation": {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task/validation/test_dispatch_records.log",
+      "skipped": 1,
+      "sha256": "f03ba2913cd58eee61065936104bd1b78592d825593861a9468c6ffce92e494c"
+    }
+  },
+  {
+    "suite": "test_delivery_gate",
+    "implementation": {
+      "path": "/tmp/opencode/delivery-links/test_delivery_gate.log",
+      "skipped": 1,
+      "sha256": "7ee5ecea1aad4481698bbd713891c82582c00a8eb2ae82981bf6fb3a07996f8e"
+    },
+    "validation": {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task/validation/test_delivery_gate.log",
+      "skipped": 1,
+      "sha256": "95bf30970711324fd07bdfd2e28f3670c3519ef4d133c984df34469fe39b1a10"
+    }
+  },
+  {
+    "suite": "test_laws_check",
+    "implementation": {
+      "path": "/tmp/opencode/delivery-links/test_laws_check.log",
+      "skipped": 1,
+      "sha256": "2fe7bde60c12da00dfa22129ce39f1ee4694cfaa13f3e996af28e9bb5a71712d"
+    },
+    "validation": {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task/validation/test_laws_check.log",
+      "skipped": 1,
+      "sha256": "bcff70fda264571059000c03a4704b68afe154b84c25377c8c573fd21c861573"
+    }
+  }
+]

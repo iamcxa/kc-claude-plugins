@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_question_reads_slug_prefixed_markdown_from_task_folder (test_delivery_gate.TaskFolderCaptainTests.test_question_reads_slug_prefixed_markdown_from_task_folder)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/delivery-link-mutant-btfe8e3h/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1762, in test_question_reads_slug_prefixed_markdown_from_task_folder
+    self.assertEqual(run.returncode, 1, run.stdout)
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.110s
+
+FAILED (failures=1)

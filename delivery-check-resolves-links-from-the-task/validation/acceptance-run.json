@@ -1,0 +1,12 @@
+{
+  "export": "/tmp/delivery-links-acceptance.WEjTET",
+  "command": [
+    "bash",
+    "--noprofile",
+    "--norc",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-resolves-links-from-the-task/validation/acceptance.sh"
+  ],
+  "steps": 4,
+  "entrance_tests": 7,
+  "mutations": 6
+}
