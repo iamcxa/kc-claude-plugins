@@ -15,6 +15,17 @@ gates:
                 id: briefing:codex-security-only-prompts-code-review:backlog:attempt-1:revision-1
                 digest: sha256:036c3c1b1b763868cc783b981196ebe1f30eb7c13e00854355254de2297a8618
                 room-ref: ./codex-security-only-prompts-code-review/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-security-only-prompts-code-review:backlog:1
+                briefing: briefing:codex-security-only-prompts-code-review:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-06T14:28:36.977647Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-06), answering 「決定：第 16 批這五張（跳過的 CI 不擋、Codex 只貼安全摘要時提醒、交付檢查的相對路徑、ADR 編號跨流程預留、婉拒只在出過事時開任務）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？核准即接受「婉拒只在出過事時開任務」任務裡寫的標準（指出真的錯並說得出誰受害、再次出現、或你要求）。要改哪張直接說。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 When Codex has posted only its security-review summary on a PR head, codex_review.py (or pr_watch.py) prints a next line that asks FO to request `@codex review`, so a merge ask is not prepared on a head with no code review.
