@@ -47,6 +47,17 @@ gates:
                 id: briefing:merge-guard-stops-unasked-merges:ideation:attempt-2:revision-1
                 digest: sha256:dd33c00484f02534a905cf0103e72b0c610f9052ef1edb1f5829750a18282c43
                 room-ref: ./merge-guard-stops-unasked-merges/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:merge-guard-stops-unasked-merges:ideation:2
+                briefing: briefing:merge-guard-stops-unasked-merges:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-06T01:05:01.373188Z"
+                decision: approve
+                reason: 'The Captain 「准」 (chat, 2026-11-06), answering 「決定：「合併前擋下沒人問過的合併」第二輪設計進入實作嗎？核准即接受 D1（Codex 上沒有紀錄的合併一律拒絕）、D2（套件出腳本，由你在每台機器的使用者設定註冊）、D3（Release、同步、learning PR 在你核准、問句寫明編號和版本後，由 FO 先存紀錄再合併）與 D4（Paseo 上的 Claude FO 被擋時用「要問人」，請求會送到你手機）四個建議。」; accepts D1 to D4 as recommended. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
