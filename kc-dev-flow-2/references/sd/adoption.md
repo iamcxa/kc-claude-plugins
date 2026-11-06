@@ -182,12 +182,21 @@ including archived tasks and `_merges`; it uses the highest-numbered ask per
 folder. The record checks names, not approval intent or who said the words.
 
 The guard parses global `-R`/`--repo` flags and literal `env`, `command` and
-executable-path forms. REST `pulls/N/merge` endpoints, GraphQL calls (reads
-included), unknown gh aliases, `extension exec` and unparseable wrappers stop;
-use `gh pr merge --match-head-commit` for a recorded merge. Shell text inspection
+executable-path forms. FO never enables auto-merge: `--auto` (including `=…`
+forms) stops even with a matching record. REST `pulls/N/merge` and
+`pulls/N/merge-async` endpoints, GraphQL calls (including auto-merge, enqueue,
+opaque files and reads), unknown gh aliases, `extension exec`, unknown merge
+flags and unparseable wrappers stop; use synchronous
+`gh pr merge --match-head-commit` for a recorded merge. `--disable-auto` cancels
+auto-merge; it does not enable a deferred merge. Shell text inspection
 requires an explicit repository under inherited `GH_REPO` and stops a `GH_HOST`
 other than `github.com`. It does not resolve generated commands, other executable
 names or direct curl/SDK calls; those stay outside this gh guard.
+
+The guard assumes the target branch has no merge queue. On a branch requiring
+one, plain `gh pr merge` can enable auto-merge or enqueue without `--auto`.
+Revisit the guard before relying on it in any repository that enables a queue;
+it does no live queue lookup and does not add or require `--admin`.
 
 The 2026-11-06 ideation replay stopped 30 of 84 historical merges; synthetic
 questions for approved-record candidates reduced that to 10, including the

@@ -119,8 +119,10 @@ def check_api(args):
     if "%" in endpoint:
         raise ValueError("the gh api endpoint cannot be decoded")
     path = posixpath.normpath(urlsplit(endpoint).path)
+    if re.search(r"(?:^|/)pulls/[^/]+/merge-async(?:/|$)", path):
+        raise ValueError("FO never enables auto-merge; asynchronous merges and merge queues are not carried by a saved head")
     if path == "graphql" or path.endswith("/graphql") or re.search(r"(?:^|/)pulls/[^/]+/merge(?:/|$)", path):
-        raise ValueError("API merges or opaque GraphQL need gh pr merge with --match-head-commit")
+        raise ValueError("FO never enables auto-merge; API merges or opaque GraphQL need synchronous gh pr merge with --match-head-commit")
 
 
 def parse(command, cwd):
@@ -152,17 +154,29 @@ def parse(command, cwd):
         raise ValueError("more than one gh pr merge in one command")
     args, repo, context_changed = merges[0]
     number = head = None
+    valued = {"--subject", "--body", "--body-file", "--author-email", "-t", "-b", "-F", "-A"}
+    switches = {"--admin", "--disable-auto", "--delete-branch", "--merge", "--rebase", "--squash", "--help"}
     k = 0
     while k < len(args):
         arg = args[k]
-        if arg == "--match-head-commit":
+        if arg.split("=", 1)[0] == "--auto":
+            raise ValueError("FO never enables auto-merge; a saved head does not authorize a deferred merge")
+        elif arg == "--match-head-commit":
             k += 1
             head = args[k] if k < len(args) else ""
         elif arg.startswith("--match-head-commit="):
             head = arg.split("=", 1)[1]
-        elif arg in ("--subject", "--body", "--body-file", "--author-email"):
+        elif arg in valued:
             k += 1
-        elif not arg.startswith("-"):
+            if k == len(args):
+                raise ValueError("the merge flag has no value")
+        elif "=" in arg and arg.split("=", 1)[0] in valued | switches:
+            pass
+        elif arg in switches or re.fullmatch(r"-[dmrs]+", arg):
+            pass
+        elif arg.startswith("-"):
+            raise ValueError("the merge flag cannot be parsed")
+        else:
             if number is not None:
                 raise ValueError("the merge command has multiple PR arguments")
             number = arg

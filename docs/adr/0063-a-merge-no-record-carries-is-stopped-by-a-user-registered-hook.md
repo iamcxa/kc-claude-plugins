@@ -48,6 +48,18 @@ through the documented `|| exit 2` wrapper. Other host permission checks remain.
 FO saves a chat-approved ancillary PR before merging, after a question naming
 its number and head. Records do not authenticate the Captain or judge intent.
 
+FO never enables auto-merge. Explicit `--auto` forms, asynchronous REST merges
+and GraphQL auto-merge or enqueue calls stop even with a matching record.
+The guard assumes the target branch has no merge queue: plain `gh pr merge`
+can enable auto-merge or enqueue on a branch requiring one. A repository that
+enables a queue must be revisited before relying on this guard. The hook does
+no live queue lookup and does not add or require `--admin`.
+
+FO's repair ruling on 2026-11-06 retained that offline boundary after checking
+GraphQL `repository.mergeQueue(branch:)`: no queue on `main` in
+`iamcxa/kc-claude-plugins`, `spacedock-dev/subspace-relay`,
+`spacedock-dev/subspace-web` or `iamcxa/qnow` (FO-reported observation).
+
 ## Consequences
 
 The ideation replay stopped 30 of 84 merges; synthetic ancillary-PR questions

@@ -130,6 +130,88 @@ class MergeGuardTests(unittest.TestCase):
                         'gh api "$ENDPOINT" -X PUT --input request.json'):
             self.assertEqual(self.verdict(command), "stop", command)
 
+    def assert_deferred_stops(self, command):
+        result, reason = guard.verdict(command, self.root, [self.state])
+        self.assertEqual(result, "stop", command)
+        self.assertIn("FO never enables auto-merge", reason, command)
+
+    def test_auto_flag_stops_with_matching_record(self):
+        self.saved()
+        for flag in ("--auto", "--auto=true", "--auto=1", "--auto=t",
+                     "--auto=false", "--auto=0", "--auto=", "--auto=unknown"):
+            self.assert_deferred_stops(self.command + " " + flag)
+
+    def test_auto_flag_positions_and_wrappers_stop(self):
+        self.saved()
+        for prefix in ("gh --repo owner/repo", "env -- gh -R owner/repo",
+                       "command -p -- /opt/bin/gh --repo=owner/repo"):
+            for args in (f"--auto 672 --match-head-commit {HEAD}",
+                         f"672 --auto=true --match-head-commit {HEAD}"):
+                self.assert_deferred_stops(f"{prefix} pr merge {args}")
+
+    def test_rest_async_merge_stops_with_matching_record(self):
+        self.saved()
+        for action in ("", " -f merge_action=default", " -f merge_action=direct_merge",
+                       " -f merge_action=merge_queue", " --input request.json"):
+            self.assert_deferred_stops(f"gh api -X PUT repos/owner/repo/pulls/672/merge-async -f sha={HEAD}" + action)
+
+    def test_rest_async_encoded_and_path_forms_stop(self):
+        self.saved()
+        for endpoint in ("/repos/owner/repo/pulls/672/merge-async",
+                         "https://api.github.com/repos/owner/repo/pulls/672/merge-async",
+                         "repos/{owner}/{repo}/pulls/672/merge-async",
+                         "repos/owner/repo/pulls/672/%6derge%2dasync",
+                         "repos/owner/repo/pulls/1/../672/merge-async",
+                         "repos/owner/repo/pulls//672/merge-async?x=1"):
+            self.assert_deferred_stops(f"command gh api --method=PUT {endpoint} --input request.json")
+
+    def test_rest_async_encoded_endpoint_stops(self):
+        self.saved()
+        self.assert_deferred_stops("gh api -X PUT repos/owner/repo/pulls/672/%6derge%2dasync -f merge_action=merge_queue")
+
+    def test_graphql_auto_merge_stops_with_matching_record(self):
+        self.saved()
+        self.assert_deferred_stops("gh api graphql -f 'query=mutation {enablePullRequestAutoMerge(input:{pullRequestId:\"x\"}){clientMutationId}}'")
+
+    def test_graphql_enqueue_stops_with_matching_record(self):
+        self.saved()
+        self.assert_deferred_stops("gh api graphql -f 'query=mutation {enqueuePullRequest(input:{pullRequestId:\"x\"}){clientMutationId}}'")
+
+    def test_graphql_deferred_opaque_and_encoded_forms_stop(self):
+        self.saved()
+        for command in ("gh api graphql --input request.json",
+                        "gh api /graphql -F query=@enqueue.graphql",
+                        "env gh api https://api.github.com/%67raphql --input request.json"):
+            self.assert_deferred_stops(command)
+
+    def test_unknown_merge_flags_stop(self):
+        self.saved()
+        for flag in ("--queue", "--merge-when-ready", "--future-mode=value", "-z"):
+            self.assertEqual(self.verdict(self.command + " " + flag), "stop", flag)
+
+    def test_synchronous_flags_and_cancelling_auto_still_pass(self):
+        self.saved()
+        for flags in ("--disable-auto", "--disable-auto=false", "--admin", "-d",
+                      "--delete-branch=false", "--subject '--auto'", "-t '--auto'",
+                      "-b 'merge body'", "-F message.txt", "-A dev@example.invalid"):
+            self.assertEqual(self.verdict(self.command + " " + flags), "pass", flags)
+
+    def test_deferred_reason_reaches_both_hosts(self):
+        self.saved()
+        for host, decision in (("claude", "ask"), ("codex", "deny")):
+            payload = json.dumps({"cwd": str(self.root), "tool_input": {"command": self.command + " --auto"}})
+            with patch.object(guard, "state_roots", return_value=[self.state]), patch.object(sys, "argv", [str(SCRIPT), host]), patch.object(sys, "stdin", io.StringIO(payload)), contextlib.redirect_stdout(io.StringIO()) as out:
+                self.assertEqual(guard.main(), 0)
+            self.assertTrue(out.getvalue(), "a deferred command must emit a host decision")
+            result = json.loads(out.getvalue())["hookSpecificOutput"]
+            self.assertEqual(result["permissionDecision"], decision)
+            self.assertIn("FO never enables auto-merge", result["permissionDecisionReason"])
+
+    def test_carried_merge_has_no_live_gh_lookup(self):
+        self.saved()
+        with patch.object(guard.subprocess, "run", side_effect=AssertionError("unexpected subprocess")):
+            self.assertEqual(self.verdict(), "pass")
+
     def test_ambiguous_wrappers_options_and_shell_text_stop(self):
         self.saved()
         merge = f"gh -R owner/repo pr merge 672 --match-head-commit {HEAD}"
