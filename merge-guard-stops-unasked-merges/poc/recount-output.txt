@@ -1,0 +1,14 @@
+672 release record exit 1 the question does not name head 6c972e7
+records: {('release', 'refused'): 1, ('learning', 'recorded'): 2, ('sync', 'recorded'): 9, ('release', 'recorded'): 9}
+672 release-please--branches--main stop
+789 spacedock-ensign/private-pairing-revoke stop
+785 spacedock-ensign/private-native-account stop
+784 docs/journey-private-slices stop
+779 spacedock-ensign/private-room-catalog stop
+778 spacedock-ensign/private-human-entry stop
+776 iamcxa/dev2-docs-site stop
+774 spacedock-ensign/release-walk-due-trigge stop
+762 chore/dev2-model-roster stop
+704 feat/story-map-kc-journey-map stop
+{('stop', 'release'): 1, ('stop', 'task-or-other'): 9, ('pass', 'task-or-other'): 65, ('pass', 'release'): 9} total 84
+ 

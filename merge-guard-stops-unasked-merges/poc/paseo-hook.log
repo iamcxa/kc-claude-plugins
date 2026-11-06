@@ -1,0 +1,2 @@
+{"host": "claude", "event": "PreToolUse", "tool": "Bash", "mode": "auto", "command": "cat /tmp/merge-guard-poc-paseo/bin/gh", "result": "pass", "why": null}
+{"host": "claude", "event": "PreToolUse", "tool": "Bash", "mode": "auto", "command": "/tmp/merge-guard-poc-paseo/bin/gh pr merge 1 --repo merge-guard-poc/does-not-exist --squash --match-head-commit 2222222222222222222222222222222222222222", "result": "stop", "why": "no task's newest merge/ask-N.json carries merge-guard-poc/does-not-exist#1 at 2222222222222222222222222222222222222222"}

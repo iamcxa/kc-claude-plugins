@@ -1,0 +1,17 @@
+2026-11-06T00:41:07Z
+--output-format
+stream-json
+--verbose
+--input-format
+stream-json
+--model
+claude-sonnet-5-5
+--permission-prompt-tool
+stdio
+--mcp-config
+{"mcpServers":{"paseo":{"type":"http","url":"http://127.0.0.1:6767/mcp/agents?callerAgentId=<agent>","headers":{"Authorization":"<redacted>"}},"shared-browser":{"type":"stdio","command":"/Applications/Paseo.app/Contents/Frameworks/Paseo Helper.app/Contents/MacOS/Paseo Helper","args":["/Users/kent/.paseo/plugin-data/shared-browser/.runtime-e20835d1-3058-4220-8b91-eae4e1720076/shared-browser-mcp.cjs"],"env":{"PASEO_HOME":"/Users/kent/.paseo","PASEO_SHARED_BROWSER_TICKET":"<redacted>","ELECTRON_RUN_AS_NODE":"1"}}}}
+--setting-sources=project
+--permission-mode
+auto
+--allow-dangerously-skip-permissions
+--include-partial-messages

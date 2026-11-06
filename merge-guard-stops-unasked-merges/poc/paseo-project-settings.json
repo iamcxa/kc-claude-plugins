@@ -1,0 +1,1 @@
+{"permissions":{"defaultMode":"auto"},"hooks":{"PreToolUse":[{"matcher":"Bash","hooks":[{"type":"command","command":"MERGE_GUARD_STATE=/tmp/merge-guard-poc-paseo/state python3 /tmp/merge-guard-poc-paseo/merge_guard.py claude"}]}]}}
