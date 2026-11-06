@@ -2742,7 +2742,12 @@ class DesignAdrTests(unittest.TestCase):
         result = subprocess.run([sys.executable, "-B", str(Path(records.__file__).with_name("number_guards.py")),
                                  "reserve", "--kind", "adr", "--repo", str(self.root), "--base", "HEAD",
                                  "--state-dir", str(self.root), "--task", str(self.task)], capture_output=True, text=True)
-        self.assertEqual((result.returncode, result.stdout, result.stderr), (0, "ADR: 0001\n", ""))
+        self.assertEqual((result.returncode, result.stdout, result.stderr), (
+            0, "ADR: 0001\n",
+            "warning: state checkout has no origin; no other workflow sees these reservations; "
+            "set a unique state-branch: before adding origin and push state to the repository\n"
+            "warning: state fetch failed; reading local origin/spacedock-state/* refs only; "
+            "reservations may be stale or invisible\n"))
         repaired = RAW_ADR_TASK + "\n## Number guards\n" + result.stdout
         self.task.write_text(repaired)
         self.record.write_text(RAW_ADR_RECORD + result.stdout)
