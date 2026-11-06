@@ -1,0 +1,40 @@
+FFF
+======================================================================
+FAIL: test_shell_spelling_of_gh (__main__.MergeGuardTests.test_shell_spelling_of_gh)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 113, in test_shell_spelling_of_gh
+    self.assert_guarded_form(f"{executable} -R owner/repo pr merge 672 --match-head-commit {HEAD}")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 80, in assert_guarded_form
+    self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : g\h -R owner/repo pr merge 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_rest_merge_endpoint_stops_even_with_record (__main__.MergeGuardTests.test_rest_merge_endpoint_stops_even_with_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 122, in test_rest_merge_endpoint_stops_even_with_record
+    self.assertEqual(self.verdict(command), "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh api -X PUT repos/owner/repo/pulls/1/../672/merge -f sha=1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_implicit_repo_after_shell_context_change_stops (__main__.MergeGuardTests.test_implicit_repo_after_shell_context_change_stops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 150, in test_implicit_repo_after_shell_context_change_stops
+    self.assertEqual(self.verdict(f"cd /another/repo && gh pr merge 672 --match-head-commit {HEAD}"), "stop")
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.005s
+
+FAILED (failures=3)

@@ -430,3 +430,38 @@ The Pilot implementation is committed locally at `871c6b2f4ebccfc2c67df91d7d39ad
 
 PASSED for PR #794 at 871c6b2f4ebccfc2c67df91d7d39ad038aa0710f within the approved Pilot boundary; no new Material, Deferred risk, Polish or Needs decision finding was established. Records do not authenticate approval, Paseo agents may answer requests, registration remains manual and untested on Captain settings, and recount approvals are synthetic; each implementation limit is retained in validation/evidence.md. FO owns #793-first integration, later-head checks, review/gate/ready/merge and rollout; this report grants none of them. The prescribed spacedock state commit helper commits and pushes this task state automatically; no product push or separate push command was run.
 
+
+## Stage Report: implementation
+
+- DONE: Repair Codex round 1 P2 on #794 (review comment 4488244343); recognize gh global -R, --repo and --repo= before pr merge.
+  Reproduced at 871c6b2f: each empty-record command passed before detection. Material: normal FO global-flag merge; unasked merge can execute; value-ac[AC-1] requires a stop; trigger is the red test run in `implementation/repair-1/merge-guard-repair-red.log`.
+- DONE: List and close sibling forms; stop commands that cannot be parsed; say why any form is left open.
+  Global/attached/interleaved repo flags, env/command wrappers, absolute paths, quoted/escaped gh, normalized/encoded REST PR-merge endpoints, GraphQL/opaque API input, unknown gh aliases/extension exec, ambiguous shell context and inherited GH_REPO/GH_HOST are covered; class list and reasons are in `implementation/repair-1/evidence.md`.
+- DONE: Add a test and a falsifier for each closed form (python3 -B).
+  Final guard suite 33 passed. Sixteen named new-form tests each reject the previous 871c6b2f source; six targeted mutants also fail, 22/22 rejected. Each mutant uses a fresh temporary module and python3 -B; original six invariant mutations also rejected (`merge-guard-repair-mutations.json`, `merge-guard-repair-original-mutants.log`).
+- DONE: Rerun the suites and the replay.
+  Final-head guard suite 33/33; delivery suite 156 passed/1 existing skip; lint exit 0. Supplementary discovery ran 982 tests, 975 passed/7 skipped before the final two environment tests, so it is not a claim of full final-head discovery; final affected suites were rerun (`merge-guard-repair-unit.log`, `merge-guard-repair-delivery.log`, `merge-guard-repair-package-suite.log`).
+- DONE: AC-1/2/9 record identity, latest-record selection, on-disk discovery and record command.
+  The 33-test suite retains the original full/prefix/latest/archive/_merges/linked-uncommitted/other-branch/record-refusal cases; original newest/Codex-ask/glob/disk/head/boundary mutants fail. Real Spacedock status output is byte-identical before/after _merges, both exit 0 (`merge-guard-repair-status.json`).
+- DONE: AC-3 fail closed and AC-4/5 host behavior on the final source.
+  Twenty headless cases plus one interactive case pass their expected outcomes: carried global-flag merges run once; uncarried, REST/GraphQL and inherited routing stops execute zero fake calls; Codex rules-loaded plain gh is denied. Missing/raising scripts block with exit 2; unreadable records ask/deny. Removing || exit 2 makes Claude run one fake call (`merge-guard-repair-final-native-results.json`, `native/`).
+- DONE: Interactive Claude auto-mode observation and native isolation.
+  Final script shows the global -R command, reason and yes/no prompt; no answer, zero fake calls. PID 12712 was captured and terminated, then ps confirmed absent. Normal HOME/auth is FO-authorized: project/temporary Claude settings, nonpersistent headless sessions; Codex ignores user config, uses ephemeral sessions and reads operator rules only in the rules case. No operator settings edited.
+- DONE: AC-6 replay/recount and its head-check falsifier.
+  Final script: 54 pass/30 stop, then 74 pass/10 stop, no differences from ideation; #672 lacks head 6c972e7 and stays stopped. Dropping record's head check gives 75 pass/9 stop and #672 passes (`merge-guard-repair-replay.log`, `merge-guard-repair-head-mutant.log`).
+- DONE: AC-7/8 adoption, ADR 0063 and bounded delivery wording.
+  Registration/record instructions retained and command limits documented; workflow stays 5939 words. ADR lint --since b804d81d3abc94c9c321326dc75e7cac927c5252 --require 0063 exits 0 (62 records/0 legacy). Repair changes three approved files; delivery_gate.py's only base-relative edits remain the D3 closing sentences; no workflow, mod or version edits.
+- DONE: AC-10 phone observation is recorded in captain-steps/1.md.
+  Retained Captain/FO evidence 「看得到，也答了」 and one fake merge after his answer; this repair claims no new device observation.
+- DONE: Commit locally on the same branch with no push, and name the new head.
+  Branch spacedock-ensign/merge-guard-stops-unasked-merges; base b804d81d3abc94c9c321326dc75e7cac927c5252; local repair commits 9c224ea54 and ebac86a561655d990d2fcd7ff3cd8dbb20e8eb65; clean code worktree. PR text updated at /tmp/impl-merge-guard-stops-unasked-merges-pr.md and `implementation/repair-1/prepared-pr.md`; no worker product push.
+- DONE: Required audits and affected-document dispositions.
+  Number/design/skill checks and diff --check exit 0; comment ratio 3/498 = 0.6%, max 5%. doc_impact: ADRs 0044/0051/0062 unaffected (summary/round/quoted-grant rules unchanged), ADR 0063 retained (same user-hook/host-decision ruling), package README unaffected (still no automatic hook installation; CI-listed test route unchanged). Logs and document JSON saved under repair-1.
+- DONE: State open boundaries, reading cost and evidence scope.
+  Named script bodies/generated executable names, direct curl/SDK calls, git branch writes and the non-PR REST /merges endpoint remain outside the saved PR-number/head contract; four non-executing examples and reasons in `merge-guard-repair-open-boundaries.json`. GraphQL reads and unknown aliases may be stopped conservatively. Adoption 2598→2672 words, ASK/ASK_UNQUOTED stay 57/56, workflow 5939; final manifest binds source SHA256.
+- SKIPPED: FO publication, fresh independent validation, RoboRev, hosted CI, ready/merge and operator registration.
+  Existing task PR #794 is FO-owned. CI cost per PR not measured; repair changes no CI triggers. Previous independent PASSED was at 871c6b2f, not this new head; FO must revalidate and review this candidate and retain the #793-first integration order.
+
+### Summary
+
+This complete report supersedes the earlier implementation report. The requested static gh bypass class is repaired at `ebac86a561655d990d2fcd7ff3cd8dbb20e8eb65` within the approved Pilot boundary, with fresh affected suites, replay, mutations and native evidence; the broader script/network boundary remains explicit. FO owns the next publication and independent-review steps; no product push or settings installation was performed.

@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_graphql_and_opaque_api_stops (__main__.MergeGuardTests.test_graphql_and_opaque_api_stops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-repair-mutant-gptqsws4/test_merge_guard.py", line 131, in test_graphql_and_opaque_api_stops
+    self.assertEqual(self.verdict(command), "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh api graphql -f 'query=mutation {mergePullRequest(input:{pullRequestId:"x"}){clientMutationId}}'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)

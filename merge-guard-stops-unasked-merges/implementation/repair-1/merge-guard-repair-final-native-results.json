@@ -1,0 +1,107 @@
+[
+  {
+    "name": "final-claude-api",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-claude-env",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-claude-exception",
+    "status": "passed",
+    "message": "Hook exit 2; fake invocations 0"
+  },
+  {
+    "name": "final-claude-graphql",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-claude-host",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-claude-match",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 1"
+  },
+  {
+    "name": "final-claude-missing",
+    "status": "passed",
+    "message": "Hook exit 2; fake invocations 0"
+  },
+  {
+    "name": "final-claude-no-wrapper",
+    "status": "passed",
+    "message": "Hook exit 1; fake invocations 1"
+  },
+  {
+    "name": "final-claude-repo",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-claude-unreadable",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-codex-api",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-codex-command",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-codex-exception",
+    "status": "passed",
+    "message": "Hook exit 2; fake invocations 0"
+  },
+  {
+    "name": "final-codex-graphql",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-codex-host",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-codex-match",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 1"
+  },
+  {
+    "name": "final-codex-missing",
+    "status": "passed",
+    "message": "Hook exit 2; fake invocations 0"
+  },
+  {
+    "name": "final-codex-repo",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-codex-rules",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-codex-unreadable",
+    "status": "passed",
+    "message": "Hook exit 0; fake invocations 0"
+  },
+  {
+    "name": "final-interactive",
+    "status": "passed",
+    "message": "Global -R merge held with reason and yes/no prompt; no answer, zero fake invocations; PID 12712 terminated"
+  }
+]

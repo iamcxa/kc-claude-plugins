@@ -1,0 +1,153 @@
+FF.F.FF.FFFF........F.F.F....
+======================================================================
+FAIL: test_absolute_gh_with_global_flags (__main__.MergeGuardTests.test_absolute_gh_with_global_flags)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 106, in test_absolute_gh_with_global_flags
+    self.assert_guarded_form(f"/opt/homebrew/bin/gh --repo=owner/repo pr merge 672 --match-head-commit {HEAD}")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 80, in assert_guarded_form
+    self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : /opt/homebrew/bin/gh --repo=owner/repo pr merge 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_ambiguous_wrappers_options_and_shell_text_stop (__main__.MergeGuardTests.test_ambiguous_wrappers_options_and_shell_text_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 136, in test_ambiguous_wrappers_options_and_shell_text_stop
+    self.assertEqual(self.verdict(command), "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : env GH_HOST=other.example gh -R owner/repo pr merge 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_attached_and_interleaved_repo_flags (__main__.MergeGuardTests.test_attached_and_interleaved_repo_flags)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 97, in test_attached_and_interleaved_repo_flags
+    self.assert_guarded_form(f"gh {option} pr --repo owner/repo merge 672 --match-head-commit {HEAD}")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 80, in assert_guarded_form
+    self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh -Rowner/repo pr --repo owner/repo merge 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_command_wrapper (__main__.MergeGuardTests.test_command_wrapper)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 103, in test_command_wrapper
+    self.assert_guarded_form(f"command -p -- gh -R owner/repo pr merge 672 --match-head-commit {HEAD}")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 80, in assert_guarded_form
+    self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : command -p -- gh -R owner/repo pr merge 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_env_wrapper (__main__.MergeGuardTests.test_env_wrapper)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 100, in test_env_wrapper
+    self.assert_guarded_form(f"env -- gh -R owner/repo pr merge 672 --match-head-commit {HEAD}")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 80, in assert_guarded_form
+    self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : env -- gh -R owner/repo pr merge 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_global_equals_repo_before_subcommand (__main__.MergeGuardTests.test_global_equals_repo_before_subcommand)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 93, in test_global_equals_repo_before_subcommand
+    self.assert_guarded_form(f"gh --repo=owner/repo pr merge 672 --match-head-commit {HEAD}")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 80, in assert_guarded_form
+    self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh --repo=owner/repo pr merge 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_global_long_repo_before_subcommand (__main__.MergeGuardTests.test_global_long_repo_before_subcommand)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 90, in test_global_long_repo_before_subcommand
+    self.assert_guarded_form(f"gh --repo owner/repo pr merge 672 --match-head-commit {HEAD}")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 80, in assert_guarded_form
+    self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh --repo owner/repo pr merge 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_global_short_repo_before_subcommand (__main__.MergeGuardTests.test_global_short_repo_before_subcommand)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 86, in test_global_short_repo_before_subcommand
+    self.assert_guarded_form(f"gh -R owner/repo pr merge 672 --squash --match-head-commit {HEAD}")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 80, in assert_guarded_form
+    self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh -R owner/repo pr merge 672 --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_graphql_and_opaque_api_stops (__main__.MergeGuardTests.test_graphql_and_opaque_api_stops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 126, in test_graphql_and_opaque_api_stops
+    self.assertEqual(self.verdict(command), "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh api graphql -f 'query=mutation {mergePullRequest(input:{pullRequestId:"x"}){clientMutationId}}'
+
+======================================================================
+FAIL: test_quoted_words (__main__.MergeGuardTests.test_quoted_words)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 109, in test_quoted_words
+    self.assert_guarded_form(f"'gh' '-R' 'owner/repo' 'pr' 'merge' '672' '--match-head-commit' '{HEAD}'")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 80, in assert_guarded_form
+    self.assertEqual(guard.verdict(command, self.root, [])[0], "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : 'gh' '-R' 'owner/repo' 'pr' 'merge' '672' '--match-head-commit' '1234567890abcdef1234567890abcdef12345678'
+
+======================================================================
+FAIL: test_rest_merge_endpoint_stops_even_with_record (__main__.MergeGuardTests.test_rest_merge_endpoint_stops_even_with_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 117, in test_rest_merge_endpoint_stops_even_with_record
+    self.assertEqual(self.verdict(command), "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh api -X PUT repos/owner/repo/pulls/672/merge -f sha=1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_unknown_gh_alias_or_dynamic_subcommand_stops (__main__.MergeGuardTests.test_unknown_gh_alias_or_dynamic_subcommand_stops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 140, in test_unknown_gh_alias_or_dynamic_subcommand_stops
+    self.assertEqual(self.verdict(command), "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh my-merge 672
+
+----------------------------------------------------------------------
+Ran 29 tests in 0.340s
+
+FAILED (failures=12)

@@ -1,0 +1,30 @@
+{
+  "base": "b804d81d3abc94c9c321326dc75e7cac927c5252",
+  "previous_candidate": "871c6b2f4ebccfc2c67df91d7d39ad038aa0710f",
+  "candidate": "ebac86a561655d990d2fcd7ff3cd8dbb20e8eb65",
+  "source_sha256": "2989bd43237accbe851be468435141e623dfb4348e08ed66ee88501f219d0e62",
+  "unit": {
+    "ran": 33,
+    "passed": 33
+  },
+  "delivery": {
+    "ran": 157,
+    "passed": 156,
+    "skipped": 1
+  },
+  "supplementary_package_discovery": {
+    "ran": 982,
+    "passed": 975,
+    "skipped": 7,
+    "scope": "Before the last two environment tests; final affected suites rerun separately."
+  },
+  "new_mutations_rejected": 22,
+  "original_mutations_rejected": 6,
+  "final_native_cases": 21,
+  "words": {
+    "ASK": 57,
+    "ASK_UNQUOTED": 56
+  },
+  "ci_cost_per_pr": "not measured; CI triggers unchanged by repair",
+  "code_publication": "no product push by worker; FO owns publication and fresh validation/review on #794"
+}

@@ -1,0 +1,16 @@
+final-claude-match claude match exit 0 fake merges 1
+
+final-codex-match codex match exit 0 fake merges 1
+
+final-claude-host claude host exit 0 fake merges 0
+
+final-codex-host codex host exit 0 fake merges 0
+
+final-claude-repo claude repo exit 0 fake merges 0
+
+final-codex-repo codex repo exit 0 fake merges 0
+
+final-claude-api claude api exit 0 fake merges 0
+
+final-codex-api codex api exit 0 fake merges 0
+

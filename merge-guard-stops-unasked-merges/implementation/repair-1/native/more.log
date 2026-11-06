@@ -1,0 +1,24 @@
+final-claude-missing claude missing exit 0 fake merges 0
+
+final-claude-exception claude exception exit 0 fake merges 0
+
+final-claude-unreadable claude unreadable exit 0 fake merges 0
+
+final-codex-missing codex missing exit 0 fake merges 0
+
+final-codex-exception codex exception exit 0 fake merges 0
+
+final-codex-unreadable codex unreadable exit 0 fake merges 0
+
+final-claude-no-wrapper claude no-wrapper exit 0 fake merges 1
+
+final-codex-rules codex rules exit 0 fake merges 0
+
+final-claude-env claude env exit 0 fake merges 0
+
+final-codex-command codex command exit 0 fake merges 0
+
+final-claude-graphql claude graphql exit 0 fake merges 0
+
+final-codex-graphql codex graphql exit 0 fake merges 0
+

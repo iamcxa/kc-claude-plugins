@@ -1,0 +1,27 @@
+FF
+======================================================================
+FAIL: test_inherited_repo_override_needs_explicit_repo (__main__.MergeGuardTests.test_inherited_repo_override_needs_explicit_repo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 155, in test_inherited_repo_override_needs_explicit_repo
+    self.assertEqual(self.verdict(self.command.replace(" --repo owner/repo", "")), "stop")
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+
+
+======================================================================
+FAIL: test_inherited_host_override_stops (__main__.MergeGuardTests.test_inherited_host_override_stops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 161, in test_inherited_host_override_stops
+    self.assertEqual(self.verdict(), "stop")
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.004s
+
+FAILED (failures=2)

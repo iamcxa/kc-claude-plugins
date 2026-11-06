@@ -1,0 +1,9 @@
+feat(kc-dev-flow-2): stop merges without a saved ask
+
+A merge command could evade the guard by putting gh's repository flags before `pr merge`. Parse repository flags throughout the command and recognize literal env/command wrappers, executable paths and shell quoting. A carried PR at its saved head passes; an uncarried merge asks on Claude and denies on Codex.
+
+REST PR-merge endpoints, GraphQL calls, unknown aliases/extensions and unparseable routing stop before execution. Inherited GH_REPO requires an explicit repo, and other GH_HOST values stop. The package includes the ancillary approval recorder, user registration instructions and ADR 0063. Operators register the hook after release; script bodies, direct HTTP/SDK calls and non-PR branch writes remain outside this command-text guard.
+
+Validation on 2026-11-06 at ebac86a561655d990d2fcd7ff3cd8dbb20e8eb65: 33 merge-guard tests passed; delivery suite 156 passed/1 existing skip; 22 new and 6 original mutations rejected. Twenty headless native cases plus one interactive case exercise global flags, matching records, API/GraphQL, environment routing, operator rules, wrapper failures and unreadable records. Replay is unchanged: 54 pass/30 stop, then 74 pass/10 stop with synthetic ancillary approvals; #672 stays stopped. Dropping the record head check lets #672 pass. ADR, number, skill/design and comment checks pass. A supplementary package discovery ran 982 tests/7 skips before the last two environment tests; final affected suites ran again. Raw evidence and source hash are in the task's implementation/repair-1 folder.
+
+CI cost per PR is not measured; triggers are unchanged. FO owns publication, fresh independent validation, RoboRev and hosted CI on this head. Existing Captain phone evidence is retained; no new phone observation is claimed.

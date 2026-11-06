@@ -1,0 +1,11 @@
+# Repair evidence
+
+The manifest binds the final code head and merge_guard.py SHA256. Native raw hook payloads, outputs and fake executable logs are under native/. The authoritative final run counts are in merge-guard-repair-final-native-results.json; the intermediate batch logger counted bare `pr merge` prefixes and is not used as proof.
+
+New-form falsifiers replace the repaired source with 871c6b2f and run each named form independently, plus six targeted mutants. Each executes in a fresh temporary module with python3 -B; no bytecode is copied. The original six mutations, head-check replay mutant and fail-closed native wrapper mutant were also rerun. Closed forms: global short/long/equals/attached/interleaved repo flags; env/command/path/quoted/escaped executable forms; REST PR-merge endpoints and encoded/normalized paths; GraphQL and opaque API input; malformed wrappers/options/multiple merges; unknown gh aliases/extensions; changed cwd without explicit repo; inherited GH_REPO/GH_HOST. Unit fixtures exercise empty, current and stale records.
+
+REST PR-merge endpoints and GraphQL reads are conservatively stopped too; a recorded merge uses gh pr merge --match-head-commit. Arbitrary script bodies and generated executable names are not resolved by shell text inspection. Direct curl/SDK calls, git branch writes and the non-PR REST /merges endpoint remain outside the task's saved PR-number/head contract; merge-guard-repair-open-boundaries.json records non-executing observations and reasons. This is not a host/network sandbox or approval authenticator.
+
+Supplementary package discovery ran 982 tests, with 975 passes and 7 skips, before the final environment-specific tests. Final-head merge and delivery suites, new mutations, audits, replay and native proofs were rerun separately. CLI-only Spacedock integration mains and hosted CI are not claimed by unittest discovery.
+
+Native isolation follows FO's authorized normal-HOME/auth route: Claude project-only settings plus temporary hook JSON, headless sessions nonpersistent; Codex ignores user config and uses ephemeral sessions, retaining operator rules read-only only in the rules case. No operator settings were edited. Interactive processes 33273 and 12712 were terminated by exact PID; the final PID check found no process. Phone evidence remains captain-steps/1.md.

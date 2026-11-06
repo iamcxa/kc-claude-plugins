@@ -1,0 +1,22 @@
+[
+  {
+    "command": "python3 merge.py",
+    "observed": "pass",
+    "reason": "Named script bodies are outside this shell-text gh guard."
+  },
+  {
+    "command": "curl -X PUT https://api.github.com/repos/owner/repo/pulls/672/merge",
+    "observed": "pass",
+    "reason": "Direct HTTP clients are outside the gh command contract."
+  },
+  {
+    "command": "git push origin HEAD:main",
+    "observed": "pass",
+    "reason": "Git branch writes are outside the saved PR/head merge contract."
+  },
+  {
+    "command": "gh api -X POST repos/owner/repo/merges -f base=main -f head=topic",
+    "observed": "pass",
+    "reason": "This is a branch merge, not the PR-numbered merge endpoint covered by this task."
+  }
+]

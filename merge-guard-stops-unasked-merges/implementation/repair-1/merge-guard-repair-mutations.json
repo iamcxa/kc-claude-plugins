@@ -1,0 +1,112 @@
+[
+  {
+    "name": "previous-global_short_repo_before_subcommand",
+    "status": "passed",
+    "message": "MergeGuardTests.test_global_short_repo_before_subcommand rejects mutant"
+  },
+  {
+    "name": "previous-global_long_repo_before_subcommand",
+    "status": "passed",
+    "message": "MergeGuardTests.test_global_long_repo_before_subcommand rejects mutant"
+  },
+  {
+    "name": "previous-global_equals_repo_before_subcommand",
+    "status": "passed",
+    "message": "MergeGuardTests.test_global_equals_repo_before_subcommand rejects mutant"
+  },
+  {
+    "name": "previous-attached_and_interleaved_repo_flags",
+    "status": "passed",
+    "message": "MergeGuardTests.test_attached_and_interleaved_repo_flags rejects mutant"
+  },
+  {
+    "name": "previous-env_wrapper",
+    "status": "passed",
+    "message": "MergeGuardTests.test_env_wrapper rejects mutant"
+  },
+  {
+    "name": "previous-command_wrapper",
+    "status": "passed",
+    "message": "MergeGuardTests.test_command_wrapper rejects mutant"
+  },
+  {
+    "name": "previous-absolute_gh_with_global_flags",
+    "status": "passed",
+    "message": "MergeGuardTests.test_absolute_gh_with_global_flags rejects mutant"
+  },
+  {
+    "name": "previous-quoted_words",
+    "status": "passed",
+    "message": "MergeGuardTests.test_quoted_words rejects mutant"
+  },
+  {
+    "name": "previous-shell_spelling_of_gh",
+    "status": "passed",
+    "message": "MergeGuardTests.test_shell_spelling_of_gh rejects mutant"
+  },
+  {
+    "name": "previous-rest_merge_endpoint_stops_even_with_record",
+    "status": "passed",
+    "message": "MergeGuardTests.test_rest_merge_endpoint_stops_even_with_record rejects mutant"
+  },
+  {
+    "name": "previous-graphql_and_opaque_api_stops",
+    "status": "passed",
+    "message": "MergeGuardTests.test_graphql_and_opaque_api_stops rejects mutant"
+  },
+  {
+    "name": "previous-ambiguous_wrappers_options_and_shell_text_stop",
+    "status": "passed",
+    "message": "MergeGuardTests.test_ambiguous_wrappers_options_and_shell_text_stop rejects mutant"
+  },
+  {
+    "name": "previous-unknown_gh_alias_or_dynamic_subcommand_stops",
+    "status": "passed",
+    "message": "MergeGuardTests.test_unknown_gh_alias_or_dynamic_subcommand_stops rejects mutant"
+  },
+  {
+    "name": "previous-implicit_repo_after_shell_context_change_stops",
+    "status": "passed",
+    "message": "MergeGuardTests.test_implicit_repo_after_shell_context_change_stops rejects mutant"
+  },
+  {
+    "name": "previous-inherited_repo_override_needs_explicit_repo",
+    "status": "passed",
+    "message": "MergeGuardTests.test_inherited_repo_override_needs_explicit_repo rejects mutant"
+  },
+  {
+    "name": "previous-inherited_host_override_stops",
+    "status": "passed",
+    "message": "MergeGuardTests.test_inherited_host_override_stops rejects mutant"
+  },
+  {
+    "name": "rest-endpoint",
+    "status": "passed",
+    "message": "MergeGuardTests.test_rest_merge_endpoint_stops_even_with_record rejects mutant"
+  },
+  {
+    "name": "graphql",
+    "status": "passed",
+    "message": "MergeGuardTests.test_graphql_and_opaque_api_stops rejects mutant"
+  },
+  {
+    "name": "wrappers",
+    "status": "passed",
+    "message": "MergeGuardTests.test_ambiguous_wrappers_options_and_shell_text_stop rejects mutant"
+  },
+  {
+    "name": "endpoint-normalization",
+    "status": "passed",
+    "message": "MergeGuardTests.test_rest_merge_endpoint_stops_even_with_record rejects mutant"
+  },
+  {
+    "name": "context",
+    "status": "passed",
+    "message": "MergeGuardTests.test_implicit_repo_after_shell_context_change_stops rejects mutant"
+  },
+  {
+    "name": "nonmerge",
+    "status": "passed",
+    "message": "MergeGuardTests.test_readonly_gh_commands_pass rejects mutant"
+  }
+]

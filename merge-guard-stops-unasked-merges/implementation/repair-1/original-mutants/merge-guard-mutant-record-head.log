@@ -1,0 +1,29 @@
+FFF
+======================================================================
+FAIL: test_record_refuses_missing_number_digit_suffix_head_answer_and_invalid_head (__main__.RecordTests.test_record_refuses_missing_number_digit_suffix_head_answer_and_invalid_head) (kwargs={'question': 'Merge #672?'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-mutant-5ys5you3/test_merge_guard.py", line 267, in test_record_refuses_missing_number_digit_suffix_head_answer_and_invalid_head
+    self.assertEqual(code, 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_record_refuses_missing_number_digit_suffix_head_answer_and_invalid_head (__main__.RecordTests.test_record_refuses_missing_number_digit_suffix_head_answer_and_invalid_head) (kwargs={'answer': '  '})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-mutant-5ys5you3/test_merge_guard.py", line 269, in test_record_refuses_missing_number_digit_suffix_head_answer_and_invalid_head
+    self.assertFalse((self.state / "_merges").exists())
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_record_refuses_missing_number_digit_suffix_head_answer_and_invalid_head (__main__.RecordTests.test_record_refuses_missing_number_digit_suffix_head_answer_and_invalid_head) (kwargs={'head': '12345678'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-mutant-5ys5you3/test_merge_guard.py", line 269, in test_record_refuses_missing_number_digit_suffix_head_answer_and_invalid_head
+    self.assertFalse((self.state / "_merges").exists())
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (failures=3)
