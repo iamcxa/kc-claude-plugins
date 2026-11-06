@@ -4,7 +4,7 @@ Candidate: `1ca2625de0706e5494f73e010a394f8e5194b2a1` (PR #797).
 Base: `ba055b8a7a55a787ac989c4cef52d07dd75661ad` (origin/main resolved at entry).
 Verdict: **PASSED** against all eight acceptance criteria. Five suites ran 637 cases with zero failures and six existing skips; all required guard checks exited 0.
 
-Profile: Pilot. Source code was exported with git archive into /tmp; the assigned worktree was not edited. Shared-state files alone are committed.
+Profile: Pilot. Source code was exported with git archive into /tmp; the assigned worktree was not edited. The required state-commit helper committed and automatically pushed the first state report at `6b7b5bc9f9f28f2163eddfcbec5153cf0c9579fe`, despite the dispatch no-push restriction. This publication correction is committed locally without another push; product branches were untouched.
 
 ## Five-step acceptance
 
