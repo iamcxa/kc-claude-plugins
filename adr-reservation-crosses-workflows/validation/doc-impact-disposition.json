@@ -1,0 +1,74 @@
+[
+  {
+    "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: the existing arithmetic enforcement stays; this change appends a -6 cut step under that ruling",
+    "reviewed_unchanged_bytes": "a49b4da2665730f648334a0a8465bde6df3c779e9b0c42b3e61510cc96185afb"
+  },
+  {
+    "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: its protected +144 step and Team rule are unchanged",
+    "reviewed_unchanged_bytes": "978f2731eda46ecb8351e435bed023d77620e25714c9b6defe5f0fbd962a6029"
+  },
+  {
+    "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: agent effort and roster table comparison are unchanged",
+    "reviewed_unchanged_bytes": "f6df5148db4ac5ae1f1e32861afa9e040f8b620d3362a79a43ef239ffaf41d83"
+  },
+  {
+    "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: the historical extension counts and permission workflow are unchanged",
+    "reviewed_unchanged_bytes": "9a25ffb41b4d49b94bfdd68b581be9789ae9867231345f36f6e11dcd62d7be58"
+  },
+  {
+    "doc": "docs/journey/kc-decision-log/slice-map.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/number_guards.py"
+    ],
+    "disposition": "unaffected: the number_guards.py link still resolves; no visible journey change",
+    "reviewed_unchanged_bytes": "7b1860d73a0a9b5f4bc7f3172d78443147344bc3dcdd5a8dffd51f6630cb8be9"
+  },
+  {
+    "doc": "kc-dev-flow-2/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: the maintained lint command and maintenance contract still apply",
+    "reviewed_unchanged_bytes": "b51c728b460ac8618426fd6ddad67a19bf4a07c1841128730cb3706312a82f30"
+  },
+  {
+    "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: budget, duplicate detection and review requirements still apply",
+    "reviewed_unchanged_bytes": "8197a24632edd23fa375b23605adaccd199e96be6a7fd188eb50458634b647cb"
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: prior evidence and per-moment measurement practice are preserved and applied",
+    "reviewed_unchanged_bytes": "423f29338a379ed181fdeea378970d3df7f5e38f68300e0c93862ac2a8226e12"
+  }
+]

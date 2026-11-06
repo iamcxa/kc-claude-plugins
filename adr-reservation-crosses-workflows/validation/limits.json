@@ -1,0 +1,22 @@
+[
+  {
+    "name": "non-atomic window",
+    "status": "passed",
+    "detail": "Two reserves before a state push both print 0061; once another task pushes 0061, check refuses with R8."
+  },
+  {
+    "name": "unpublished state invisible",
+    "status": "passed",
+    "detail": "Own unpushed holder 0062 raises own reserve to 0063; the other workflow sees only published 0060 and returns 0061."
+  },
+  {
+    "name": "namespace bound",
+    "status": "passed",
+    "detail": "A holder outside spacedock-state/* is not fetched/read; reserve returns 0060."
+  },
+  {
+    "name": "multiple numbers unchanged",
+    "status": "passed",
+    "detail": "Existing multiple ADR lines are returned unchanged; cardinality is not enforced."
+  }
+]

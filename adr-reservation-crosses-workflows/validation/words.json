@@ -1,0 +1,32 @@
+[
+  {
+    "name": "FO startup",
+    "before": 5993,
+    "after": 5987,
+    "better": "lower"
+  },
+  {
+    "name": "Worker Number guards",
+    "before": 222,
+    "after": 219,
+    "better": "lower"
+  },
+  {
+    "name": "Reserve bullet",
+    "before": 84,
+    "after": 84,
+    "better": "lower"
+  },
+  {
+    "name": "Check bullet",
+    "before": 44,
+    "after": 44,
+    "better": "lower"
+  },
+  {
+    "name": "Collision bullet",
+    "before": 204,
+    "after": 201,
+    "better": "lower"
+  }
+]

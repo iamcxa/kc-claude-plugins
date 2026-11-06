@@ -1,0 +1,32 @@
+[
+  {
+    "name": "FO startup, normalized words",
+    "before": 5993,
+    "after": 5987
+  },
+  {
+    "name": "Workflow lint budget, whitespace words",
+    "before": 5939,
+    "after": 5933
+  },
+  {
+    "name": "Worker Number guards, including heading",
+    "before": 224,
+    "after": 221
+  },
+  {
+    "name": "Reserve bullet",
+    "before": 84,
+    "after": 84
+  },
+  {
+    "name": "Check bullet",
+    "before": 44,
+    "after": 44
+  },
+  {
+    "name": "Collision bullet",
+    "before": 204,
+    "after": 201
+  }
+]

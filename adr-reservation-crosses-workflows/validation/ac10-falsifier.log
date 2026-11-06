@@ -1,0 +1,28 @@
+F
+======================================================================
+FAIL: test_raw_740_bytes_refuse_then_allocator_recovery_and_missing_line_controls (__main__.DesignAdrTests.test_raw_740_bytes_refuse_then_allocator_recovery_and_missing_line_controls)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/adr-reservation-validation-801/assertion-mutant/kc-dev-flow-2/scripts/test_dispatch_records.py", line 2745, in test_raw_740_bytes_refuse_then_allocator_recovery_and_missing_line_controls
+    self.assertEqual((result.returncode, result.stdout, result.stderr), (0, "ADR: 0001\n", ""))
+AssertionError: Tuples differ: (0, 'ADR: 0001\n', 'warning: state checkout has no origin; no[239 chars]e\n') != (0, 'ADR: 0001\n', '')
+
+First differing element 2:
+'warning: state checkout has no origin; no[238 chars]le\n'
+''
+
+- (0,
+-  'ADR: 0001\n',
++ (0, 'ADR: 0001\n', '')
+? +++               ++++
+
+-  'warning: state checkout has no origin; no other workflow sees these '
+-  'reservations; set a unique state-branch: before adding origin and push state '
+-  'to the repository\n'
+-  'warning: state fetch failed; reading local origin/spacedock-state/* refs '
+-  'only; reservations may be stale or invisible\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.304s
+
+FAILED (failures=1)

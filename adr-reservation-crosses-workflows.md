@@ -339,3 +339,39 @@ Implementation is handed back HOLD: the approved behavior passes its 37 tests, b
 ### Summary
 
 This dated addendum supersedes the earlier implementation report and resolves its one full-suite failure under FO's explicit sixth-file approval; exact diagnostic checking is retained. Reservations remain the existing task lines, now read across own flat/folder tasks and fetched origin state branches; R8 refuses another task's held ADR before the merge ask. D1 amends ADR 0002, and the workflow shrinks by six words. Limits remain the approved non-atomic reservation-to-push window, invisible unpushed/no-origin state, and stale local refs on a warned fetch failure; local transport checks do not prove native workers or hosted CI.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #801 head 6a0a4aec against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at `6a0a4aec60bb5900a0d363bae912acc5714f5974`, base `ba055b8a7a55a787ac989c4cef52d07dd75661ad`; archived candidate/base under `/tmp/adr-reservation-validation-801/`; full criterion/falsifier mapping and limits: `adr-reservation-crosses-workflows/validation/evidence.md`.
+- DONE: Judge the scope addition of one test-file assertion (implementation-1-message-1) and run the number guard check against the live spacedock-state branches read-only, stating which state checkouts it read
+  Authorized and necessary: AST comparison proves exactly one string constant changed, preserving full stderr/exit/stdout checks; reverting it fails the one integration replay. Live check exit 0 after successful remote fetch into isolated `/tmp/adr-reservation-validation-801/live.git`; shared refs/config and product bytes untouched.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Ran `bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/adr-reservation-crosses-workflows/validation/acceptance.sh`, exit 0; five steps/output/limits in adjacent `evidence.md` and `acceptance.log`; installed ADR lint with `--since ba055b8a7a55a787ac989c4cef52d07dd75661ad --require 0002` exits 0, 61 checked, 0 legacy.
+- DONE: AC-1 and AC-2 published cross-workflow reservation and merge-ask refusal.
+  Replay single-branch clone returns 0061; held 0060 refuses R8 with exact holder/renumber text, free 0061 passes; unchanged base returns 0060 and wrongly passes held 0060. Removing explicit fetch, origin scan or R8 each causes assertion failure (`mutations.json`, `replay-*.log`).
+- DONE: AC-3 and AC-4 folder tasks and branch-qualified exclusion.
+  Own folder reserves 0061 and refuses held 0060; remote folder counts; own pushed copy/override pass; same-branch sibling and foreign same-slug/no-origin holder refuse. Flat-only scan, whole-branch exclusion, missing origin probe and missing own-path exclusion each fail an assertion.
+- DONE: AC-5, AC-6 and AC-8 precedence, visible blind reads and help.
+  R5 suppresses R8 for a base-held number; both warning lines and cached-holder refusal pass; help names R1–R8 and all holder sources. Double-report, either missing warning and removed help R8 each fail; 11 behavioral/help mutations caught, 0 runtime errors, base fails 7 of 9 cross-workflow cases.
+- DONE: AC-7 and AC-9 words and the approved ADR amendment.
+  Independent line-based recount: startup 5993→5987, worker 224→221, Reserve 84→84, Check 44→44, Collision 204→201; lint 5933/5933. Only two approved passages differ; missing -6 step refuses. ADR 0002 quote and bound question match the gate; wrong quote and invalid Status controls refuse (`independent-words.json`, `context-checks.log`).
+- DONE: AC-10 local package, integration tests and actual candidate CI.
+  `python3 -B -m unittest discover -s kc-dev-flow-2/scripts`: 965 run, 7 optional-input skips, exit 0; number tests 37/37; dispatch 115 run/1 skip. GitHub run 42256304200 on exact candidate is completed/success, including number guards and pinned Spacedock integration (`ci-final.json`); restored empty-stderr assertion fails as intended.
+- DONE: Supplemental evidence, parser compatibility, comments and retained documents.
+  Codex 35, RoboRev extension 5, Copilot 15, journey 23 pass; release acceptance 122 run/4 skips; local model-free dispatch passes. Parser matches 142 committed tasks; all eight doc-impact dispositions verified. Comment 1/207=0.5% ≤5%; installed guards, lint, design surfaces, four dispatch records and diff checks exit 0 (`checks.json`, `tests.json`, `doc-impact-disposition.json`).
+- DONE: Exact live read scope and approved limitations.
+  On-disk read: only `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state` (74 siblings); fetched snapshots: origin/spacedock-state/{dev,dev-recovery-4b20a918,dev-recovery-9826ffcf,dev2,dev2-poc,ship,ship-flow}, 435 paths. Exact ref SHAs in `live-read-set.json`; no other disk state checkout or unpublished journey-map state read.
+- DONE: Goal sufficiency and minimal necessity at the candidate.
+  Published-holder reserve/check route works; unchanged-base replay fails the goal. Each retained change maps to the route, exclusion/diagnostic falsifier, budget or Captain ruling. Sixth-file expectation is the sole AST change and is required by AC-6; no new store, flag, remote write, version bump or CI change.
+- SKIPPED: Native model-worker execution, human gate, delivery-hook body, remote merge and independent RoboRev rerun.
+  Not promised by this command-only task; local dispatch tests explicitly exclude them. Optional historical/native inputs account for suite skips. FO owns RoboRev and delivery; PR-body review claim was read only. CI cost not measured, CI configuration unchanged.
+
+### Summary
+
+PASSED at `6a0a4aec60bb5900a0d363bae912acc5714f5974`; all ten criteria have rerun evidence and failing controls. No Material, Needs decision or Polish finding; accepted Deferred risks below remain bounded by the approved design. Report/evidence are state-only; no push performed under this validation dispatch. FO still owns the gate, state publication and delivery decision.
+
+- F1 Deferred risk: reservation/push race remains; two early reserves return 0061, then a published holder triggers R8. `value-ac[AC-2]` covers the published-holder check, not atomic allocation; accepting a visible holder would make this Material (`limits.json`, full four-field disposition in `evidence.md`).
+- F2 Deferred risk: unpublished/no-origin or outside-namespace state stays invisible; unique published state branches are required by ADR 0002. Correctly published holders being missed would make this Material; no-origin warning and visibility controls pass.
+- F3 Deferred risk: failed fetch can use stale refs with an explicit warning; `value-ac[AC-6]` permits this fallback. Silent blindness or ignoring cached visible holders would make this Material; both controls pass. Multiple ADR lines remain unenforced as accepted; `limits.json` demonstrates all four design bounds.

@@ -1,0 +1,7 @@
+[
+  {
+    "before": "",
+    "after": "warning: state checkout has no origin; no other workflow sees these reservations; set a unique state-branch: before adding origin and push state to the repository\nwarning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible\n",
+    "line": 2747
+  }
+]

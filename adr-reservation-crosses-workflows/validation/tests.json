@@ -1,0 +1,66 @@
+[
+  {
+    "name": "package-tests",
+    "status": "passed",
+    "count": 965,
+    "skipped": 7,
+    "message": "965 run, 7 skipped; exit 0; candidate 6a0a4aec60bb5900a0d363bae912acc5714f5974",
+    "log": "package-tests.log"
+  },
+  {
+    "name": "number-tests",
+    "status": "passed",
+    "count": 37,
+    "skipped": 0,
+    "message": "37 run, 0 skipped; exit 0; candidate 6a0a4aec60bb5900a0d363bae912acc5714f5974",
+    "log": "number-tests.log"
+  },
+  {
+    "name": "dispatch-tests",
+    "status": "passed",
+    "count": 115,
+    "skipped": 1,
+    "message": "115 run, 1 skipped; exit 0; candidate 6a0a4aec60bb5900a0d363bae912acc5714f5974",
+    "log": "dispatch-tests.log"
+  },
+  {
+    "name": "codex",
+    "status": "passed",
+    "count": 35,
+    "skipped": 0,
+    "message": "35 run, 0 skipped; exit 0; candidate 6a0a4aec60bb5900a0d363bae912acc5714f5974",
+    "log": "codex.log"
+  },
+  {
+    "name": "roborev",
+    "status": "passed",
+    "count": 5,
+    "skipped": 0,
+    "message": "5 run, 0 skipped; exit 0; candidate 6a0a4aec60bb5900a0d363bae912acc5714f5974",
+    "log": "roborev.log"
+  },
+  {
+    "name": "copilot",
+    "status": "passed",
+    "count": 15,
+    "skipped": 0,
+    "message": "15 run, 0 skipped; exit 0; candidate 6a0a4aec60bb5900a0d363bae912acc5714f5974",
+    "log": "copilot.log"
+  },
+  {
+    "name": "journey-map",
+    "status": "passed",
+    "count": 23,
+    "skipped": 0,
+    "message": "23 run, 0 skipped; exit 0; candidate 6a0a4aec60bb5900a0d363bae912acc5714f5974",
+    "log": "journey-map.log"
+  },
+  {
+    "name": "release-acceptance",
+    "status": "passed",
+    "count": 122,
+    "skipped": 4,
+    "message": "122 run, 4 skipped; exit 0; candidate 6a0a4aec60bb5900a0d363bae912acc5714f5974",
+    "log": "release-acceptance.log"
+  }
+]

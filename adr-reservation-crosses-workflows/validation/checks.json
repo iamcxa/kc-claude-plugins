@@ -1,0 +1,289 @@
+[
+  {
+    "name": "number-tests",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/number-tests.log"
+  },
+  {
+    "name": "dispatch-tests",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/dispatch-tests.log"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/lint.log"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "--require",
+      "0002"
+    ],
+    "env": {
+      "GIT_DIR": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/spacedock-ensign-adr-reservation-crosses-workflows",
+      "GIT_WORK_TREE": "/tmp/adr-reservation-validation-801/candidate",
+      "GIT_OPTIONAL_LOCKS": "0"
+    },
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/adr-lint.log"
+  },
+  {
+    "name": "installed-number-check",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-adr-reservation-crosses-workflows",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/adr-reservation-crosses-workflows.md",
+      "--base",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "--head",
+      "6a0a4aec60bb5900a0d363bae912acc5714f5974"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/installed-number-check.log"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "6a0a4aec60bb5900a0d363bae912acc5714f5974",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-adr-reservation-crosses-workflows",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/comment-ratio.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "6a0a4aec60bb5900a0d363bae912acc5714f5974",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-adr-reservation-crosses-workflows",
+      "--json"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/doc-impact.log"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/adr-reservation-crosses-workflows.md"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/design-surfaces.log"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/adr-reservation-crosses-workflows"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/dispatch-records.log"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-adr-reservation-crosses-workflows",
+      "diff",
+      "--check",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "6a0a4aec60bb5900a0d363bae912acc5714f5974"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/diff-check.log"
+  },
+  {
+    "name": "replay-candidate",
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/tmp/adr-reservation-validation-801/replay.sh",
+      "/tmp/adr-reservation-validation-801/candidate/kc-dev-flow-2/scripts/number_guards.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/replay-candidate.log"
+  },
+  {
+    "name": "replay-base",
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/tmp/adr-reservation-validation-801/replay.sh",
+      "/tmp/adr-reservation-validation-801/base/kc-dev-flow-2/scripts/number_guards.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/replay-base.log"
+  },
+  {
+    "name": "codex",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/adr-reservation-validation-801/candidate/kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/codex.log"
+  },
+  {
+    "name": "roborev",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/adr-reservation-validation-801/candidate/kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/roborev.log"
+  },
+  {
+    "name": "copilot",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/adr-reservation-validation-801/candidate/kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/copilot.log"
+  },
+  {
+    "name": "journey-map",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/adr-reservation-validation-801/candidate/kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/journey-map.log"
+  },
+  {
+    "name": "release-acceptance",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/adr-reservation-validation-801/candidate/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/release-acceptance.log"
+  },
+  {
+    "name": "sd-dispatch",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "env": {},
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/adr-reservation-validation-801/sd-dispatch.log"
+  },
+  {
+    "name": "package-tests",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "package-tests.log"
+  },
+  {
+    "name": "acceptance",
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/adr-reservation-crosses-workflows/validation/acceptance.sh"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "acceptance.log"
+  }
+]

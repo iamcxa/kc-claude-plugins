@@ -1,0 +1,62 @@
+[
+  {
+    "name": "AC1-no-explicit-fetch",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC1-no-origin-scan",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC2-no-r8",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC3-flat-only",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC4-skip-whole-own-branch",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC4-no-origin-probe",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC4-no-own-path-exclusion",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC5-double-report",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC6-no-origin-warning",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC6-no-fetch-warning",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC8-help-omits-r8",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "Goal without candidate change",
+    "status": "passed",
+    "message": "base: 9 tests, 7 assertion failures, 0 runtime errors"
+  }
+]
