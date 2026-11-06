@@ -15,6 +15,8 @@ When Codex has posted only its security-review summary on a PR head, codex_revie
 - Upstream first: kc-dev-flow-2 extensions/codex codex_review.py (exit 4 "not reviewed") and scripts/pr_watch.py.
 - Non-goals: requesting the review automatically (a PR comment stays FO's step).
 
+- Batch 16: the Captain 「可以，就這樣」 (chat, 2026-11-06), answering 「這批做 2、3、4、5、9 這 5 張，可以嗎？」, which named this task.
+
 ## Budget
 - One package PR; the workflow word budget does not rise unless the design names a raise for the Captain.
 
