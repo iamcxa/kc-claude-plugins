@@ -179,7 +179,7 @@ ADR: 0064
 ### Amendment 1 — 2026-11-07, chat
 Captain: 「補一筆案例再跑（建議）」 (host question dialog, 2026-11-07)
 Asked: 「「婉拒只在出過事才開任務」這張（PR #800）的反證失敗，Spacedock 不讓它進驗證。原因：第四筆案例的傷害本身就讓它成為『重大問題』，所以刪掉新句子後模型仍判違規，證明不了新句子必要。要怎麼處理？」 Option chosen: 「補一筆案例再跑（建議）」 — 「在反證裡加一筆『只有重複出現、沒有傷害』的案例，讓新句子成為唯一判準，再跑兩次 Sonnet。這會修改已核准的驗收條件，多一輪實作。」
-Supersedes: AC-4 (its falsifier sentence)
+Supersedes: AC-4
 
 ## Stage Report: ideation
 
