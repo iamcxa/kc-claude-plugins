@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:delivery-check-resolves-links-from-the-task:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:delivery-check-resolves-links-from-the-task-validation-1
+              briefing:
+                id: briefing:delivery-check-resolves-links-from-the-task:validation:attempt-1:revision-1
+                digest: sha256:43c11d71b0c10557466348524573c95c8f1518d0cfb1cd41a2351e801ae1aa1a
+                room-ref: ./delivery-check-resolves-links-from-the-task/review/validation/briefing-1
 started: 2026-11-06T16:11:53Z
 worktree: .worktrees/spacedock-ensign-delivery-check-resolves-links-from-the-task
 pr: iamcxa/kc-claude-plugins#799
