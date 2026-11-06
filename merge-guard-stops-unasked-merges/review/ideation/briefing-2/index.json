@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-guard-stops-unasked-merges:ideation:attempt-2:revision-1",
+  "question": "決定：「合併前擋下沒人問過的合併」第二輪設計進入實作嗎？核准即接受 D1（Codex 上沒有紀錄的合併一律拒絕）、D2（套件出腳本，由你在每台機器的使用者設定註冊）、D3（Release、同步、learning PR 在你核准、問句寫明編號和版本後，由 FO 先存紀錄再合併）與 D4（Paseo 上的 Claude FO 被擋時用「要問人」，請求會送到你手機）四個建議。",
+  "artifacts": [
+    {
+      "id": "artifact:merge-guard-stops-unasked-merges:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/d57ed9b75ba539019052d5352ab982190d8cab24/merge-guard-stops-unasked-merges.md",
+      "rev": "sha256:583fe2feb749f4271d6d071ebc9de3871284c151691e4fe604ab67200536b4de",
+      "mediaType": "text/markdown",
+      "summary": "Ideation cycle 2 (Opus, 2026-11-06): Paseo-hosted Claude run held the guard's ask as a pending Paseo request; the Captain saw and answered it on his phone (captain-steps/1.md, 2026-11-06). merge_guard.py record carries a Release, sync or learning PR whose approving question names number and head; recount 74 pass / 10 stop of 84 merges, #672 still stops (ideation report). D1-D4."
+    }
+  ]
+}

@@ -42,6 +42,11 @@ gates:
                 at: "2026-11-06T00:33:33.992929Z"
                 decision: revise
                 reason: 'The Captain 「補」 (chat, 2026-11-06), answering 「要照我的建議退回補這兩件事嗎？」 after the bound question 「決定：「合併前擋下沒人問過的合併」這份設計進入實作嗎？核准即接受 D1（Codex 上沒有紀錄的合併一律拒絕，由你親手合併）與 D2（套件出 merge_guard.py 腳本，由你在每台機器的使用者設定裡註冊，不出 plugin hook）兩個建議。」. Revise, accepts direction: keep D1 and D2; ideation adds (1) a Paseo-hosted Claude run showing whether the guard''s ask reaches the Captain on his phone and can be answered there, and (2) a record route so a Release, workflow-sync or learning PR the Captain approved in chat carries a merge record before FO merges it and is not stopped. Recommendation: followed.'
+            - id: gate-attempt:merge-guard-stops-unasked-merges-ideation-2
+              briefing:
+                id: briefing:merge-guard-stops-unasked-merges:ideation:attempt-2:revision-1
+                digest: sha256:dd33c00484f02534a905cf0103e72b0c610f9052ef1edb1f5829750a18282c43
+                room-ref: ./merge-guard-stops-unasked-merges/review/ideation/briefing-2
 ---
 
 ## Scope
