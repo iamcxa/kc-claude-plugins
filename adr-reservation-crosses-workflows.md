@@ -15,6 +15,17 @@ gates:
                 id: briefing:adr-reservation-crosses-workflows:backlog:attempt-1:revision-1
                 digest: sha256:a0e8f7cd5d68fc975264a67629540905c78807ec5580084c5fdc875405e2d4d2
                 room-ref: ./adr-reservation-crosses-workflows/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-reservation-crosses-workflows:backlog:1
+                briefing: briefing:adr-reservation-crosses-workflows:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-06T14:28:56.876723Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-06), answering 「決定：第 16 批這五張（跳過的 CI 不擋、Codex 只貼安全摘要時提醒、交付檢查的相對路徑、ADR 編號跨流程預留、婉拒只在出過事時開任務）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？核准即接受「婉拒只在出過事時開任務」任務裡寫的標準（指出真的錯並說得出誰受害、再次出現、或你要求）。要改哪張直接說。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 `number_guards.py` refuses a new ADR number that another workflow's live task has already reserved in the same repository, so two FOs sharing a repository cannot both land the same number.
