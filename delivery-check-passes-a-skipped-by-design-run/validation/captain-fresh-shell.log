@@ -1,0 +1,6 @@
+PASS 1: exported candidate 1ca2625de0706e5494f73e010a394f8e5194b2a1 and base ba055b8a7a55a787ac989c4cef52d07dd75661ad
+PASS 2: intended skip 1 -> 0; five failing cases remain held; word counts match
+PASS 3: required-check and settled-check tests
+PASS 4: ten behavioral mutants caught; only two approved product files differ; FO text unchanged
+PASS 5: ADR lint exit 0
+Evidence: /tmp/skipped-run-acceptance-A2PraR/evidence

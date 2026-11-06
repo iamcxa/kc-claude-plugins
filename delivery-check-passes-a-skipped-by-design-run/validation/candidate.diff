@@ -1,0 +1,198 @@
+diff --git a/kc-dev-flow-2/scripts/delivery_gate.py b/kc-dev-flow-2/scripts/delivery_gate.py
+index aaee4d7e9..6919d6cd4 100644
+--- a/kc-dev-flow-2/scripts/delivery_gate.py
++++ b/kc-dev-flow-2/scripts/delivery_gate.py
+@@ -30,8 +30,9 @@ a confirmation clause is missing, a second reviewer has no stated outcome, a dec
+ the directory is read, not the PR's file list; a `--sibling-pr` whose head is a dispatched Candidate and not closed supplies the file instead, and
+ is recorded as `siblings`), a prod task's security review fails, a check on the head is not finished or finished
+ other than SUCCESS, SKIPPED or NEUTRAL, no check on the head finished SUCCESS
+-(an empty rollup, or only skipped and neutral checks), a workflow run on the head is not completed and successful (a skipped run
+-included), the PR is a draft or not mergeable, its base is not the README's
++(an empty rollup, or only skipped and neutral checks), a workflow run on the head is not completed and successful
++(a completed skipped run settles when the required-check list is non-empty), a required check name has no pass entry,
++the PR is a draft or not mergeable, its base is not the README's
+ `trunk:`, or the file list is shorter than `changedFiles`. Exit 2 when the record has no Candidate line, a head, the PR or the
+ README cannot be read, or an input is unusable. Every problem is printed.
+ A task whose committed state owes a chief-engineer or engineering-reviewer call also holds: `role_triggers.py` runs on the task folder and stem
+@@ -457,7 +458,7 @@ def ci_problem(rollup):
+     return None if succeeded else "no check on this head finished successfully: only skipped or neutral"
+ 
+ 
+-def runs_problem(runs):
++def runs_problem(runs, settle_skipped=False):
+     newest = {}
+     for run in runs:
+         key = run.get("workflow_id")
+@@ -465,11 +466,29 @@ def runs_problem(runs):
+     bad = []
+     for run in runs:
+         superseded = run.get("run_number", 0) < newest[run.get("workflow_id")] and run.get("conclusion") in ("cancelled", "skipped")
+-        if not superseded and not (run.get("status") == "completed" and run.get("conclusion") == "success"):
++        if not superseded and not (run.get("status") == "completed" and run.get("conclusion") in (("success", "skipped") if settle_skipped else ("success",))):
+             bad.append(tok(run.get("name") or "?", words=4, chars=40))
+     return f"{len(bad)} of {len(runs)} workflow runs on this head are not finished and successful: {' '.join(bad[:5])}" if bad else None
+ 
+ 
++def required_checks(repo, number):
++    done = subprocess.run(["gh", "pr", "checks", number, "--repo", repo, "--required", "--json", "name,bucket"], capture_output=True, text=True, timeout=60)
++    if done.stdout.strip():
++        checks = json.loads(done.stdout)
++        if not isinstance(checks, list) or any(not isinstance(c, dict) or not isinstance(c.get("name"), str) or not c["name"] or not isinstance(c.get("bucket"), str) for c in checks):
++            raise ValueError("gh pr checks returned an invalid required-check list")
++        return checks
++    if "no required checks reported" in done.stderr:
++        return []
++    raise RuntimeError(f"gh pr checks exited {done.returncode}: {done.stderr.strip()}")
++
++
++def required_problem(checks):
++    passed = {c["name"] for c in checks if c.get("bucket") == "pass"}
++    bad = sorted({c["name"] for c in checks} - passed)
++    return f"required check without a pass on this head: {' '.join(tok(n, words=3, chars=40) for n in bad[:5])}" if bad else None
++
++
+ def write_record(task, rec):
+     folder = task_folder(task) / "merge"
+     folder.mkdir(parents=True, exist_ok=True)
+@@ -548,10 +567,11 @@ def check(args):
+             problems.append(f"PR head {head} differs from dispatched candidate {' '.join(candidates)} (latest validation record {record.name})")
+             nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
+ 
+-    facts = files = runs = None
++    facts = files = runs = required = None
+     try:
+         facts, files = pr_facts(repo, number), pr_files(repo, number)
+         runs = pr_runs(repo, str(facts["headRefOid"]).lower())
++        required = required_checks(repo, number)
+     except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
+         holds.append(f"cannot read the pull request {args.pr}: {error}")
+     if facts is not None:
+@@ -562,9 +582,12 @@ def check(args):
+         if (why := ci_problem(facts.get("statusCheckRollup"))):
+             problems.append(why)
+             nexts.append("next: hold the ask until the required CI has finished green on this head.")
+-        if runs is not None and (why := runs_problem(runs)):
++        if runs is not None and (why := runs_problem(runs, settle_skipped=bool(required))):
+             problems.append(why)
+             nexts.append("next: hold the ask until every workflow run on this head has finished green.")
++        if required is not None and (why := required_problem(required)):
++            problems.append(why)
++            nexts.append("next: hold the ask until each required check has passed on this head.")
+         if facts.get("isDraft"):
+             problems.append("the PR is a draft")
+             nexts.append("next: hold the ask; mark the PR ready under the Captain's authority and let its CI finish.")
+diff --git a/kc-dev-flow-2/scripts/test_delivery_gate.py b/kc-dev-flow-2/scripts/test_delivery_gate.py
+index 1e55efc57..0284ab181 100644
+--- a/kc-dev-flow-2/scripts/test_delivery_gate.py
++++ b/kc-dev-flow-2/scripts/test_delivery_gate.py
+@@ -48,6 +48,14 @@ if a[:2] == ["pr", "view"]:
+     own = os.path.join(d, "pr-" + a[2] + ".json")
+     data = json.load(open(own if os.path.exists(own) else os.path.join(d, "pr.json")))
+     print(json.dumps({{k: data[k] for k in a[a.index("--json") + 1].split(",") if k in data}}))
++elif a[:2] == ["pr", "checks"]:
++    req = os.path.join(d, "required.json")
++    if not os.path.exists(req):
++        sys.stderr.write("no required checks reported on the 'feat' branch")
++        sys.exit(1)
++    sys.stdout.write(open(req).read())
++    sys.stderr.write(os.environ.get("STUB_REQUIRED_STDERR", ""))
++    sys.exit(int(os.environ.get("STUB_REQUIRED_EXIT", "0")))
+ elif a[0] == "api" and "actions/runs" in " ".join(a):
+     runs = os.path.join(d, "runs.json")
+     print(open(runs).read() if os.path.exists(runs) else '{{"total_count": 0, "workflow_runs": []}}')
+@@ -646,17 +654,94 @@ class SettledChecksTests(unittest.TestCase):
+             with self.subTest(conclusion):
+                 self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci", conclusion=conclusion)]).code, 1)
+ 
+-    def test_settling_a_check_adds_no_gh_call(self):
++    def test_required_check_read_adds_one_gh_call(self):
+         base_calls = [
+             "pr view 9 --repo o/r --json headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles",
+             "api --paginate repos/o/r/pulls/9/files",
+             f"api repos/o/r/actions/runs?head_sha={HEAD40}&per_page=100",
++            "pr checks 9 --repo o/r --required --json name,bucket",
+         ]
+         for label, facts in {"plain": None, "skipped and neutral": self.rollup(check_run(), self.SKIPPED, self.NEUTRAL)}.items():
+             with self.subTest(label):
+                 self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
+ 
+ 
++class RequiredChecksTests(unittest.TestCase):
++    PASS = [{"name": "ci-gate", "bucket": "pass"}]
++
++    def check(self, required, **kwargs):
++        def setup(d):
++            folder = Path(d, "stub")
++            folder.mkdir(exist_ok=True)
++            (folder / "required.json").write_text(required if isinstance(required, str) else json.dumps(required))
++        return run_check(setup=setup, **kwargs)
++
++    def test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass(self):
++        for required in (self.PASS, self.PASS + [{"name": "ci-gate", "bucket": "skipping"}],
++                         self.PASS + [{"name": "tests", "bucket": "pass"}]):
++            with self.subTest(required=required):
++                result = self.check(required, runs=[workflow_run("release", conclusion="skipped")])
++                self.assertEqual((result.code, nexts(result)), (0, [CLAIM_SOURCE, gate.ASK]), result.out)
++                self.assertEqual(len(result.written), 1)
++
++    def test_other_workflow_conclusions_hold_even_when_required_checks_pass(self):
++        for status, conclusion in (("completed", "failure"), ("completed", "cancelled"), ("completed", "neutral"),
++                                   ("in_progress", None), ("in_progress", "skipped")):
++            with self.subTest(status=status, conclusion=conclusion):
++                result = self.check(self.PASS, runs=[workflow_run("ci", status=status, conclusion=conclusion)])
++                self.assertEqual(result.code, 1, result.out)
++                self.assertIn("1 of 1 workflow runs", result.out)
++                self.assertEqual(result.written, {})
++
++    def test_each_required_name_needs_a_pass_despite_a_green_rollup(self):
++        for bucket in ("fail", "pending", "skipping", "cancel", "unknown"):
++            with self.subTest(bucket=bucket):
++                required = self.PASS + [{"name": "tests", "bucket": bucket}] * 2
++                result = self.check(required, runs=[workflow_run("ci")])
++                self.assertEqual(result.code, 1, result.out)
++                self.assertIn("required check without a pass on this head: 'tests'", result.lines)
++                self.assertIn("next: hold the ask until each required check has passed on this head.", result.lines)
++                self.assertEqual(result.written, {})
++
++    def test_a_required_name_with_only_skipping_entries_holds_a_skipped_run(self):
++        result = self.check([{"name": "ci-gate", "bucket": "skipping"}] * 2,
++                            runs=[workflow_run("release", conclusion="skipped")])
++        self.assertEqual(result.code, 1, result.out)
++        self.assertIn("required check without a pass on this head: 'ci-gate'", result.lines)
++        self.assertEqual(result.written, {})
++
++    def test_an_explicit_empty_required_list_keeps_the_skipped_run_hold(self):
++        result = self.check([], runs=[workflow_run("release", conclusion="skipped")])
++        self.assertEqual(result.code, 1, result.out)
++        self.assertIn("1 of 1 workflow runs", result.out)
++
++    def test_json_stdout_is_read_even_when_gh_exits_nonzero(self):
++        for code, bucket, expected in ((1, "fail", 1), (8, "pending", 1), (1, "pass", 0)):
++            with self.subTest(code=code, bucket=bucket), mock.patch.dict(os.environ, {"STUB_REQUIRED_EXIT": str(code)}):
++                result = self.check([{"name": "ci-gate", "bucket": bucket}])
++                self.assertEqual(result.code, expected, result.out)
++                self.assertNotIn("cannot read the pull request", result.out)
++
++    def test_a_required_read_error_or_unparseable_stdout_holds_without_a_record(self):
++        cases = (("", "authentication failed", "1"), ("", "", "8"), ("not JSON", "", "0"),
++                 ("not JSON", "no required checks reported", "1"), (" ", "", "0"))
++        for stdout, stderr, code in cases:
++            with self.subTest(stdout=stdout, stderr=stderr, code=code), mock.patch.dict(os.environ, {"STUB_REQUIRED_STDERR": stderr, "STUB_REQUIRED_EXIT": code}):
++                result = self.check(stdout)
++                self.assertEqual(result.code, 2, result.out)
++                self.assertIn("cannot read the pull request", result.out)
++                self.assertEqual(result.written, {})
++
++    def test_an_invalid_required_list_shape_holds_without_a_record(self):
++        for checks in (None, {}, [None], [{"name": "ci-gate"}], [{"name": "", "bucket": "pass"}],
++                       [{"name": 3, "bucket": "pass"}], [{"name": "ci-gate", "bucket": None}]):
++            with self.subTest(checks=checks):
++                result = self.check(json.dumps(checks))
++                self.assertEqual(result.code, 2, result.out)
++                self.assertIn("cannot read the pull request", result.out)
++                self.assertEqual(result.written, {})
++
++
+ class PointTests(unittest.TestCase):
+     VALIDATED = "{}\n\n## Stage Report: validation\n\n{}\n"
+     CASES = {

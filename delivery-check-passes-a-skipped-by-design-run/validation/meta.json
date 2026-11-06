@@ -1,0 +1,7 @@
+{
+  "root": "/tmp/validate-skipped-run-p6q6nlbe",
+  "wt": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-passes-a-skipped-by-design-run",
+  "candidate": "1ca2625de0706e5494f73e010a394f8e5194b2a1",
+  "base": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+  "git_dir": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/spacedock-ensign-delivery-check-passes-a-skipped-by-design-run"
+}

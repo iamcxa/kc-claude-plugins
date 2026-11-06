@@ -1,0 +1,80 @@
+FFF
+======================================================================
+FAIL: test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass (test_delivery_gate.RequiredChecksTests.test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass) (required=[{'name': 'ci-gate', 'bucket': 'pass'}])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/skipped-run-mutation-ws95sad6/kc-dev-flow-2/scripts/test_delivery_gate.py", line 684, in test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass
+    self.assertEqual((result.code, nexts(result)), (0, [CLAIM_SOURCE, gate.ASK]), result.out)
+AssertionError: Tuples differ: (1, ['next: each number or factual claim i[185 chars]n.']) != (0, ['next: each number or factual claim i[310 chars]e.'])
+
+First differing element 0:
+1
+0
+
+- (1,
++ (0,
+   ['next: each number or factual claim in this text and the PR body names the '
+    'command and date that produced it, or says `<whose> report, not run`.',
+-   'next: hold the ask until every workflow run on this head has finished '
+-   'green.'])
++   'next: merge this head if the approved question named the merge and he did '
++   'not say he merges or holds, else ask for merge with this text. Every other '
++   'PR, the Release PR included, is asked one at a time.']) : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+1 of 1 workflow runs on this head are not finished and successful: 'release'
+next: hold the ask until every workflow run on this head has finished green.
+
+
+======================================================================
+FAIL: test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass (test_delivery_gate.RequiredChecksTests.test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass) (required=[{'name': 'ci-gate', 'bucket': 'pass'}, {'name': 'ci-gate', 'bucket': 'skipping'}])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/skipped-run-mutation-ws95sad6/kc-dev-flow-2/scripts/test_delivery_gate.py", line 684, in test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass
+    self.assertEqual((result.code, nexts(result)), (0, [CLAIM_SOURCE, gate.ASK]), result.out)
+AssertionError: Tuples differ: (1, ['next: each number or factual claim i[185 chars]n.']) != (0, ['next: each number or factual claim i[310 chars]e.'])
+
+First differing element 0:
+1
+0
+
+- (1,
++ (0,
+   ['next: each number or factual claim in this text and the PR body names the '
+    'command and date that produced it, or says `<whose> report, not run`.',
+-   'next: hold the ask until every workflow run on this head has finished '
+-   'green.'])
++   'next: merge this head if the approved question named the merge and he did '
++   'not say he merges or holds, else ask for merge with this text. Every other '
++   'PR, the Release PR included, is asked one at a time.']) : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+1 of 1 workflow runs on this head are not finished and successful: 'release'
+next: hold the ask until every workflow run on this head has finished green.
+
+
+======================================================================
+FAIL: test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass (test_delivery_gate.RequiredChecksTests.test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass) (required=[{'name': 'ci-gate', 'bucket': 'pass'}, {'name': 'tests', 'bucket': 'pass'}])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/skipped-run-mutation-ws95sad6/kc-dev-flow-2/scripts/test_delivery_gate.py", line 684, in test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass
+    self.assertEqual((result.code, nexts(result)), (0, [CLAIM_SOURCE, gate.ASK]), result.out)
+AssertionError: Tuples differ: (1, ['next: each number or factual claim i[185 chars]n.']) != (0, ['next: each number or factual claim i[310 chars]e.'])
+
+First differing element 0:
+1
+0
+
+- (1,
++ (0,
+   ['next: each number or factual claim in this text and the PR body names the '
+    'command and date that produced it, or says `<whose> report, not run`.',
+-   'next: hold the ask until every workflow run on this head has finished '
+-   'green.'])
++   'next: merge this head if the approved question named the merge and he did '
++   'not say he merges or holds, else ask for merge with this text. Every other '
++   'PR, the Release PR included, is asked one at a time.']) : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+1 of 1 workflow runs on this head are not finished and successful: 'release'
+next: hold the ask until every workflow run on this head has finished green.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.609s
+
+FAILED (failures=3)

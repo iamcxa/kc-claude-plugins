@@ -1,0 +1,274 @@
+[
+  {
+    "name": "base-replay",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-passes-a-skipped-by-design-run/ideation/replay.py",
+      "/tmp/validate-skipped-run-p6q6nlbe/base/kc-dev-flow-2/scripts",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-passes-a-skipped-by-design-run/ideation/pr1338.json"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": " runs on this head are not finished and successful: 'Release Gate' 'PR Checking'\n    next: hold the ask until the required CI has finished green on this head.\n    next: hold the ask until every workflow run on this head has finished green.\n== PR Checking skipped whole (unexpected), required ci-gate only skipped: exit 1, printed words 58\n    2 of 2 workflow runs on this head are not finished and successful: 'Release Gate' 'PR Checking'\n    next: hold the ask until every workflow run on this head has finished green.\n== same, repo reports no required checks (relay/web): exit 1, printed words 58\n    2 of 2 workflow runs on this head are not finished and successful: 'Release Gate' 'PR Checking'\n    next: hold the ask until every workflow run on this head has finished green.\n== Release Gate run failed: exit 1, printed words 56\n    1 of 2 workflow runs on this head are not finished and successful: 'Release Gate'\n    next: hold the ask until every workflow run on this head has finished green.\n"
+  },
+  {
+    "name": "candidate-replay",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-passes-a-skipped-by-design-run/ideation/replay.py",
+      "/tmp/validate-skipped-run-p6q6nlbe/candidate/kc-dev-flow-2/scripts",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-passes-a-skipped-by-design-run/ideation/pr1338.json"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": "inished and successful: 'pr-test / pg-tests'\n    1 of 2 workflow runs on this head are not finished and successful: 'PR Checking'\n    next: hold the ask until the required CI has finished green on this head.\n    next: hold the ask until every workflow run on this head has finished green.\n== PR Checking skipped whole (unexpected), required ci-gate only skipped: exit 1, printed words 49\n    required check without a pass on this head: 'ci-gate'\n    next: hold the ask until each required check has passed on this head.\n== same, repo reports no required checks (relay/web): exit 1, printed words 58\n    2 of 2 workflow runs on this head are not finished and successful: 'Release Gate' 'PR Checking'\n    next: hold the ask until every workflow run on this head has finished green.\n== Release Gate run failed: exit 1, printed words 56\n    1 of 2 workflow runs on this head are not finished and successful: 'Release Gate'\n    next: hold the ask until every workflow run on this head has finished green.\n"
+  },
+  {
+    "name": "delivery_gate",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_delivery_gate.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": 170,
+    "message": "..................................................................................s.......................................................................................\n----------------------------------------------------------------------\nRan 170 tests in 111.594s\n\nOK (skipped=1)\n"
+  },
+  {
+    "name": "pr_watch",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_pr_watch.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": 134,
+    "message": "................................usage: python3 -m unittest [-h] [--state STATE] [--codex] [--copilot]\n                           {add,check,wait,tasks} [args ...]\npython3 -m unittest: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')\n......................................................................................................\n----------------------------------------------------------------------\nRan 134 tests in 76.462s\n\nOK\n"
+  },
+  {
+    "name": "dispatch_records",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_dispatch_records.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": 115,
+    "message": "00gp/T/tmp2502o2xq/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n............................................../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp_yksi8xz/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n.........../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjxkpli02/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp0a4auqml/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.\n..\n----------------------------------------------------------------------\nRan 115 tests in 129.840s\n\nOK (skipped=1)\n"
+  },
+  {
+    "name": "validation_security",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_validation_security.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": 5,
+    "message": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.631s\n\nOK\n"
+  },
+  {
+    "name": "design_surfaces",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_design_surfaces.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": 213,
+    "message": "nt recorded\ntask.md: seed fields and FO alignment recorded\ntask.md: surface 'ui' needs a 'UI proposal:' line with text\ntask.md: surface 'ui' needs a 'Preview:' line\nscope check not run: no frontmatter\ntask.md: missing '## FO alignment' section\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: '## FO alignment' needs a 'Visible change:' line\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Surfaces:' has unknown value(s) api\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'\n.........ssss........................................................................................................................................................................................................\n----------------------------------------------------------------------\nRan 213 tests in 13.611s\n\nOK (skipped=4)\n"
+  },
+  {
+    "name": "mutations",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-passes-a-skipped-by-design-run/implementation/mutations.py",
+      "/tmp/validate-skipped-run-p6q6nlbe/candidate",
+      "/tmp/validate-skipped-run-p6q6nlbe/checks"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": "AC-1-reject-intended-skip caught\nAC-2-settle-failure caught\nAC-2-accept-every-bucket caught\nAC-3-drop-required-hold caught\nAC-3-count-skipping-as-pass caught\nAC-4-settle-unconditionally caught\nAC-5-suppress-read-error caught\nAC-5-suppress-json-error caught\nAC-6-remove-call caught\nAC-6-add-call caught\n"
+  },
+  {
+    "name": "lint-skills",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": "61 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/tmp/validate-skipped-run-p6q6nlbe/candidate",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-passes-a-skipped-by-design-run.md",
+      "--base",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase ba055b8a7a55 head 1ca2625de070 merge-base ba055b8a7a55\n"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "1ca2625de0706e5494f73e010a394f8e5194b2a1",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": "code lines 100, comment lines 0, 0.0%\nmaximum 5% (package default) met\n"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "1ca2625de0706e5494f73e010a394f8e5194b2a1",
+      "--json"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": "[\n {\n  \"doc\": \"docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/delivery_gate.py\"\n  ]\n },\n {\n  \"doc\": \"docs/adr/0051-the-merge-ask-check-requires-the-round-count.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/delivery_gate.py\"\n  ]\n },\n {\n  \"doc\": \"docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-dev-flow-2/scripts/delivery_gate.py\"\n  ]\n }\n]\n"
+  },
+  {
+    "name": "scope-proof",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-passes-a-skipped-by-design-run/implementation/scope-proof.py",
+      "/tmp/validate-skipped-run-p6q6nlbe/candidate",
+      "/tmp/validate-skipped-run-p6q6nlbe/checks"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": "{\n  \"base\": \"ba055b8a7a55a787ac989c4cef52d07dd75661ad\",\n  \"candidate\": \"1ca2625de0706e5494f73e010a394f8e5194b2a1\",\n  \"branch\": \"spacedock-ensign/delivery-check-passes-a-skipped-by-design-run\",\n  \"product_files\": [\n    \"kc-dev-flow-2/scripts/delivery_gate.py\",\n    \"kc-dev-flow-2/scripts/test_delivery_gate.py\"\n  ],\n  \"fo_text_diff\": [],\n  \"fo_text_mutation_caught\": true\n}\n"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-passes-a-skipped-by-design-run.md"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": "delivery-check-passes-a-skipped-by-design-run.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-passes-a-skipped-by-design-run"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": "3 dispatch record(s) complete\n"
+  },
+  {
+    "name": "fo-text-diff",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-passes-a-skipped-by-design-run",
+      "diff",
+      "--stat",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad...1ca2625de0706e5494f73e010a394f8e5194b2a1",
+      "--",
+      "kc-dev-flow-2/references",
+      "kc-dev-flow-2/skills",
+      "kc-dev-flow-2/extensions",
+      "docs/dev2"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "cases": null,
+    "message": ""
+  }
+]

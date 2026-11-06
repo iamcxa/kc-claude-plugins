@@ -1,0 +1,52 @@
+[
+  {
+    "name": "AC-1-reject-intended-skip",
+    "status": "passed",
+    "message": "Mutant rejected by assertions; exit 1"
+  },
+  {
+    "name": "AC-2-settle-failure",
+    "status": "passed",
+    "message": "Mutant rejected by assertions; exit 1"
+  },
+  {
+    "name": "AC-2-accept-every-bucket",
+    "status": "passed",
+    "message": "Mutant rejected by assertions; exit 1"
+  },
+  {
+    "name": "AC-3-drop-required-hold",
+    "status": "passed",
+    "message": "Mutant rejected by assertions; exit 1"
+  },
+  {
+    "name": "AC-3-count-skipping-as-pass",
+    "status": "passed",
+    "message": "Mutant rejected by assertions; exit 1"
+  },
+  {
+    "name": "AC-4-settle-unconditionally",
+    "status": "passed",
+    "message": "Mutant rejected by assertions; exit 1"
+  },
+  {
+    "name": "AC-5-suppress-read-error",
+    "status": "passed",
+    "message": "Mutant rejected by assertions; exit 1"
+  },
+  {
+    "name": "AC-5-suppress-json-error",
+    "status": "passed",
+    "message": "Mutant rejected by assertions; exit 1"
+  },
+  {
+    "name": "AC-6-remove-call",
+    "status": "passed",
+    "message": "Mutant rejected by assertions; exit 1"
+  },
+  {
+    "name": "AC-6-add-call",
+    "status": "passed",
+    "message": "Mutant rejected by assertions; exit 1"
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "name": "AC-1 Intended skipped run passes",
+    "status": "passed",
+    "cells": {
+      "Validation": {
+        "status": "passed",
+        "note": "historical replay exit 1 -> 0; dropping skipped settlement fails"
+      }
+    }
+  },
+  {
+    "name": "AC-2 Failed or pending checks hold",
+    "status": "passed",
+    "cells": {
+      "Validation": {
+        "status": "passed",
+        "note": "failure/pending replay exit 1; unsafe conclusion/bucket mutants fail"
+      }
+    }
+  },
+  {
+    "name": "AC-3 Only-skipped required check holds",
+    "status": "passed",
+    "cells": {
+      "Validation": {
+        "status": "passed",
+        "note": "ci-gate diagnostic exit 1; removing hold/counting skip as pass fails"
+      }
+    }
+  },
+  {
+    "name": "AC-4 No-required repository retains hold",
+    "status": "passed",
+    "cells": {
+      "Validation": {
+        "status": "passed",
+        "note": "exit 1; unchanged skipped-run test catches unconditional settlement"
+      }
+    }
+  },
+  {
+    "name": "AC-5 Required-read errors fail closed",
+    "status": "passed",
+    "cells": {
+      "Validation": {
+        "status": "passed",
+        "note": "empty/malformed/wrong-shape replies exit 2 without a record; both error-swallowing mutants fail"
+      }
+    }
+  },
+  {
+    "name": "AC-6 Exactly one added gh call",
+    "status": "passed",
+    "cells": {
+      "Validation": {
+        "status": "passed",
+        "note": "four calls pinned; removing/duplicating added call fails"
+      }
+    }
+  },
+  {
+    "name": "AC-7 Live gh contract",
+    "status": "passed",
+    "cells": {
+      "Validation": {
+        "status": "passed",
+        "note": "gh 2.103.0; Relay #477 exit 1; QNow #1338/#1316 exit 0 with JSON; empty stdout exit-8 falsifier holds"
+      }
+    }
+  },
+  {
+    "name": "AC-8 FO text and printed words",
+    "status": "passed",
+    "cells": {
+      "Validation": {
+        "status": "passed",
+        "note": "two-file diff only; replay word counts exact; altered workflow rejected by actual scope-proof"
+      }
+    }
+  }
+]

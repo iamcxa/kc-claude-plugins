@@ -1,0 +1,9 @@
+{
+  "candidate": "1ca2625de0706e5494f73e010a394f8e5194b2a1",
+  "base": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+  "worktree_status": "",
+  "source_files": {
+    "kc-dev-flow-2/scripts/delivery_gate.py": "0b5b607648eeb872ce54f70eb23595b707bd1b232751b8e6e43d25423a07f7ec",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "4fb9e7ece2e954a42be6e69a134044a631e80aa9afdfb7587fbd9d8d848caebe"
+  }
+}

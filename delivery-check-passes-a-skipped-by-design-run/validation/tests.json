@@ -1,0 +1,27 @@
+[
+  {
+    "name": "delivery_gate: 170 cases",
+    "status": "passed",
+    "message": "exit 0; skipped 1; output: checks/delivery_gate.log"
+  },
+  {
+    "name": "pr_watch: 134 cases",
+    "status": "passed",
+    "message": "exit 0; skipped 0; output: checks/pr_watch.log"
+  },
+  {
+    "name": "dispatch_records: 115 cases",
+    "status": "passed",
+    "message": "exit 0; skipped 1; output: checks/dispatch_records.log"
+  },
+  {
+    "name": "validation_security: 5 cases",
+    "status": "passed",
+    "message": "exit 0; skipped 0; output: checks/validation_security.log"
+  },
+  {
+    "name": "design_surfaces: 213 cases",
+    "status": "passed",
+    "message": "exit 0; skipped 4; output: checks/design_surfaces.log"
+  }
+]

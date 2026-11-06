@@ -254,3 +254,43 @@ The design repairs `runs_problem`. A whole workflow run skipped by its own condi
 ### Summary
 
 The approved Pilot repair settles completed skipped workflow runs where the required list is non-empty and each required name has a pass, while preserving failed/pending/unexpected-skip holds. The exact local candidate, reproducible evidence and prepared PR text are ready for FO; no product push, PR, ready, merge, review request or version bump was performed. Validation must refresh live evidence; publication, RoboRev and hosted CI remain FO-owned.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #797 head 1ca2625d against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at `1ca2625de0706e5494f73e010a394f8e5194b2a1`, base `ba055b8a7a55a787ac989c4cef52d07dd75661ad`; archive-only evidence and limit judgments: `validation/README.md`, `checks/results.json`, `identity.json`.
+- DONE: Refresh AC-7's live gh contract read-only yourself (gh --version and the three named PRs) and state the date; concurrent edits to the same delivery gate script from the task delivery-check-resolves-links-from-the-task are not your candidate
+  `validation/live-contract.json`, 2026-11-06 UTC / 2026-11-07 Asia/Taipei, gh 2.103.0: Relay #477 exit 1/no-required stderr; QNow #1338 exit 0/pass JSON; QNow #1316 exit 0/fail JSON. PR #797 still has the pinned head; sibling work excluded.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `validation/README.md` gives the exact five-step `acceptance.sh` command; run from its durable path with `bash --noprofile --norc`, exit 0 (`captain-fresh-shell.log`); declared-package ADR lint `--since ba055b8a7a55a787ac989c4cef52d07dd75661ad`: 61 records, exit 0.
+- DONE: AC-1, intended skipped workflow passes.
+  Base/candidate #1338 replay exits 1/0; sole-skipped-run unit test passes; removing skipped settlement fails its assertions (`checks/AC-1-reject-intended-skip.log`).
+- DONE: AC-2, failed or pending checks and unsuccessful workflow runs hold.
+  Both replay rows exit 1; failure/cancelled/neutral/in_progress and non-pass required buckets hold; admitting failure or every bucket is caught by assertion-failing mutants.
+- DONE: AC-3, unexpectedly skipped required name holds.
+  Replay exits 1 with `required check without a pass on this head: 'ci-gate'`; deleting required_problem or treating skipping as pass fails the focused test.
+- DONE: AC-4, no-required repositories retain today's hold.
+  Empty/no-required replay exits 1 and the unchanged legacy test passes; unconditional skipped settlement fails it.
+- DONE: AC-5, the required-check read fails closed.
+  Empty/malformed/invalid-shape reads exit 2 without an ask record; swallowing errors or JSON parsing fails assertions. Empty stdout with exit 8 also exercises AC-7's falsifier.
+- DONE: AC-6, exactly one read-only gh call is added.
+  The renamed test pins four calls ending `pr checks 9 --repo o/r --required --json name,bucket`; removal and duplication mutants both fail.
+- DONE: AC-8, no FO-read text change and exact printed-word measurement.
+  Two-file allowlist and empty FO-text diff pass; base words 56/87/87/58/58/56, candidate 84/85/85/49/58/56; an altered workflow export fails the actual scope-proof byte assertion.
+- DONE: Consumer suites, proof sensitivity and retained-document checks.
+  Five suites: delivery 170, pr_watch 134, dispatch_records 115, validation_security 5, design_surfaces 213; zero failures, six existing skips. Ten behavioral mutants caught; 14 acceptance-boundary tests pass. ADRs 0044/0051/0062 read and unchanged claims confirmed in `checks/doc-verdicts.json`.
+- DONE: Workflow guards, comments and scope.
+  lint-skills, number_guards, comment_ratio, design_surfaces and dispatch_records all exit 0; 0/100 comment/code lines (0.0%, maximum 5%); workflow 5939/5939 words; no reserved ADR/migration. Migration/ideation-only/full-host omissions are explicitly judged in the README.
+- DONE: Goal sufficiency, minimal necessity and unchanged candidate.
+  The replay reaches the accepted outcome and the mutants justify conditional settlement, required-name grouping, read failure handling and one call; SHA-256 identities match the archive and commit; assigned worktree remains clean.
+- SKIPPED: Full local package suite, live merge ask and validator-run RoboRev.
+  The five implementation suites were rerun; hosted #797 checks were only read (five SUCCESS, one SKIPPED deploy). RoboRev remains FO-owned; no native merge/adoption or local-review claim. CI cost per PR is unmeasured; triggers unchanged.
+- DONE: Local state handoff and delivery limits.
+  Only this task's validation evidence/report is committed with `spacedock state commit`; no push, PR comment, review request, ready action, merge, branch change or worktree creation/removal. FO retains the pending gate and delivery decision.
+
+### Summary
+
+PASSED at `1ca2625de0706e5494f73e010a394f8e5194b2a1` for the accepted Pilot scope. There are no Material, Needs decision or Polish findings; the full evidence, exact fresh-shell acceptance command and judged implementation limits are in `validation/README.md`. This validates the pinned candidate, not sibling integration or delivery authorization.
+
+- F1 Deferred risk: GitHub may omit a required check it never created; no such live omission or observable harm was demonstrated. Released workflow: FO checking a path-filtered PR; affected boundary: the Design FAQ explicitly leaves this existing blind spot unverified. A supported live omitted obligation and otherwise passing gate would require reassessment against the protected requirement; no repair is requested here.

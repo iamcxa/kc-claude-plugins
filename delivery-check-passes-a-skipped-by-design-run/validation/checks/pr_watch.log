@@ -1,0 +1,8 @@
+................................usage: python3 -m unittest [-h] [--state STATE] [--codex] [--copilot]
+                           {add,check,wait,tasks} [args ...]
+python3 -m unittest: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+......................................................................................................
+----------------------------------------------------------------------
+Ran 134 tests in 76.462s
+
+OK

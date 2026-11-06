@@ -1,0 +1,59 @@
+{
+  "version": "gh version 2.103.0 (2026-10-21)\nhttps://github.com/cli/cli/releases/tag/v2.103.0\n",
+  "reads": [
+    {
+      "name": "relay-477",
+      "command": [
+        "gh",
+        "pr",
+        "checks",
+        "477",
+        "--repo",
+        "spacedock-dev/subspace-relay",
+        "--required",
+        "--json",
+        "name,bucket"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "no required checks reported on the 'spacedock-ensign/llms-teaches-versions' branch\n",
+      "read_at_utc": "2026-11-06T16:34:21.554577+00:00"
+    },
+    {
+      "name": "qnow-1338",
+      "command": [
+        "gh",
+        "pr",
+        "checks",
+        "1338",
+        "--repo",
+        "iamcxa/qnow",
+        "--required",
+        "--json",
+        "name,bucket"
+      ],
+      "exit": 0,
+      "stdout": "[{\"bucket\":\"pass\",\"name\":\"ci-gate\"},{\"bucket\":\"skipping\",\"name\":\"ci-gate\"},{\"bucket\":\"pass\",\"name\":\"ci-gate\"}]\n",
+      "stderr": "",
+      "read_at_utc": "2026-11-06T16:34:15.811929+00:00"
+    },
+    {
+      "name": "qnow-1316",
+      "command": [
+        "gh",
+        "pr",
+        "checks",
+        "1316",
+        "--repo",
+        "iamcxa/qnow",
+        "--required",
+        "--json",
+        "name,bucket"
+      ],
+      "exit": 0,
+      "stdout": "[{\"bucket\":\"fail\",\"name\":\"ci-gate\"},{\"bucket\":\"skipping\",\"name\":\"ci-gate\"},{\"bucket\":\"fail\",\"name\":\"ci-gate\"}]\n",
+      "stderr": "",
+      "read_at_utc": "2026-11-06T16:34:23.965065+00:00"
+    }
+  ]
+}
