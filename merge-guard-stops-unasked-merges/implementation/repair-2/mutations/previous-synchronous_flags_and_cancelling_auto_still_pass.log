@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_synchronous_flags_and_cancelling_auto_still_pass (__main__.MergeGuardTests.test_synchronous_flags_and_cancelling_auto_still_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-2h948yp2/test_merge_guard.py", line 197, in test_synchronous_flags_and_cancelling_auto_still_pass
+    self.assertEqual(self.verdict(self.command + " " + flags), "pass", flags)
+AssertionError: 'stop' != 'pass'
+- stop
++ pass
+ : -b 'merge body'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (failures=1)

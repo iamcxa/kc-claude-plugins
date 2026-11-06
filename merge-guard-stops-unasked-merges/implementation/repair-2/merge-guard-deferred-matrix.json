@@ -1,0 +1,182 @@
+[
+  {
+    "name": "--auto",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --auto",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; a saved head does not authorize a deferred merge",
+    "status": "passed"
+  },
+  {
+    "name": "--auto=true",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --auto=true",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; a saved head does not authorize a deferred merge",
+    "status": "passed"
+  },
+  {
+    "name": "--auto=1",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --auto=1",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; a saved head does not authorize a deferred merge",
+    "status": "passed"
+  },
+  {
+    "name": "--auto=t",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --auto=t",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; a saved head does not authorize a deferred merge",
+    "status": "passed"
+  },
+  {
+    "name": "--auto=false",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --auto=false",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; a saved head does not authorize a deferred merge",
+    "status": "passed"
+  },
+  {
+    "name": "--auto=0",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --auto=0",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; a saved head does not authorize a deferred merge",
+    "status": "passed"
+  },
+  {
+    "name": "--auto=",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --auto=",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; a saved head does not authorize a deferred merge",
+    "status": "passed"
+  },
+  {
+    "name": "--auto=unknown",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --auto=unknown",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; a saved head does not authorize a deferred merge",
+    "status": "passed"
+  },
+  {
+    "name": "wrapped auto",
+    "command": "command -p -- /opt/bin/gh -R owner/repo pr merge --auto 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; a saved head does not authorize a deferred merge",
+    "status": "passed"
+  },
+  {
+    "name": "REST async default",
+    "command": "gh api -X PUT repos/owner/repo/pulls/672/merge-async -f sha=1234567890abcdef1234567890abcdef12345678 -f merge_action=default",
+    "matching_record": true,
+    "previous": "stop",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; asynchronous merges and merge queues are not carried by a saved head",
+    "status": "passed"
+  },
+  {
+    "name": "REST async direct_merge",
+    "command": "gh api -X PUT repos/owner/repo/pulls/672/merge-async -f sha=1234567890abcdef1234567890abcdef12345678 -f merge_action=direct_merge",
+    "matching_record": true,
+    "previous": "stop",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; asynchronous merges and merge queues are not carried by a saved head",
+    "status": "passed"
+  },
+  {
+    "name": "REST async merge_queue",
+    "command": "gh api -X PUT repos/owner/repo/pulls/672/merge-async -f sha=1234567890abcdef1234567890abcdef12345678 -f merge_action=merge_queue",
+    "matching_record": true,
+    "previous": "stop",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; asynchronous merges and merge queues are not carried by a saved head",
+    "status": "passed"
+  },
+  {
+    "name": "encoded REST async",
+    "command": "gh api -X PUT repos/owner/repo/pulls/672/%6derge%2dasync -f sha=1234567890abcdef1234567890abcdef12345678 -f merge_action=merge_queue",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; asynchronous merges and merge queues are not carried by a saved head",
+    "status": "passed"
+  },
+  {
+    "name": "enablePullRequestAutoMerge",
+    "command": "gh api graphql -f 'query=mutation {enablePullRequestAutoMerge(input:{pullRequestId:\"x\"}){clientMutationId}}'",
+    "matching_record": true,
+    "previous": "stop",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; API merges or opaque GraphQL need synchronous gh pr merge with --match-head-commit",
+    "status": "passed"
+  },
+  {
+    "name": "enqueuePullRequest",
+    "command": "gh api graphql -f 'query=mutation {enqueuePullRequest(input:{pullRequestId:\"x\"}){clientMutationId}}'",
+    "matching_record": true,
+    "previous": "stop",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; API merges or opaque GraphQL need synchronous gh pr merge with --match-head-commit",
+    "status": "passed"
+  },
+  {
+    "name": "opaque GraphQL",
+    "command": "gh api graphql --input request.json",
+    "matching_record": true,
+    "previous": "stop",
+    "current": "stop",
+    "reason": "cannot check merge: FO never enables auto-merge; API merges or opaque GraphQL need synchronous gh pr merge with --match-head-commit",
+    "status": "passed"
+  },
+  {
+    "name": "unknown future flag",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --merge-when-ready",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "stop",
+    "reason": "cannot check merge: the merge flag cannot be parsed",
+    "status": "passed"
+  },
+  {
+    "name": "ordinary carried merge",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "pass",
+    "reason": null,
+    "status": "passed"
+  },
+  {
+    "name": "cancel auto-merge",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --disable-auto",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "pass",
+    "reason": null,
+    "status": "passed"
+  },
+  {
+    "name": "subject text",
+    "command": "gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --subject '--auto'",
+    "matching_record": true,
+    "previous": "pass",
+    "current": "pass",
+    "reason": null,
+    "status": "passed"
+  }
+]

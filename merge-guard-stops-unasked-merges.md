@@ -465,3 +465,37 @@ PASSED for PR #794 at 871c6b2f4ebccfc2c67df91d7d39ad038aa0710f within the approv
 ### Summary
 
 This complete report supersedes the earlier implementation report. The requested static gh bypass class is repaired at `ebac86a561655d990d2fcd7ff3cd8dbb20e8eb65` within the approved Pilot boundary, with fresh affected suites, replay, mutations and native evidence; the broader script/network boundary remains explicit. FO owns the next publication and independent-review steps; no product push or settings installation was performed.
+
+
+## Stage Report: implementation
+
+- DONE: Repair RoboRev job 1548's High finding on ebac86a56.
+  A matching record allowed --auto; the red suite demonstrates it. Candidate b82f20de6c8e5b868695d03aa4bbcb97e77dd877 stops it because FO never enables auto-merge (`implementation/repair-2/merge-guard-deferred-red.log`).
+- DONE: Stop explicit deferred and merge-queue forms; explain retained forms and limits.
+  Bare/equals/wrapped --auto, REST merge-async (default/direct_merge/merge_queue, encoded paths) and GraphQL auto-merge/enqueue/opaque bodies stop; unknown merge flags stop. Matching synchronous merges, subject text and --disable-auto cancellation pass (`merge-guard-deferred-matrix.json`, 20 forms; no merge executed).
+- DONE: Every new closed form has a test and executed falsifier using python3 -B.
+  Final guard suite 45/45; 17 new assertion-based falsifiers rejected, including auto, encoded REST, GraphQL enable/enqueue, unknown flags, host output, false-positive and no-live-query controls. Prior 22 and original 6 falsifiers also rejected in fresh temporary modules (`merge-guard-deferred-mutations.json`, mutation logs).
+- DONE: Rerun the affected suites and preserve AC-1/2/9 record/discovery behavior.
+  Guard 45 passed; delivery 156 passed/1 existing skip; newest/full/prefix/archive/_merges/uncommitted linked-state/other-branch/record-refusal cases still pass. Removing newest/disk/glob/question-head/boundary checks fails their named tests (`merge-guard-deferred-unit.log`, `merge-guard-deferred-delivery.log`).
+- DONE: AC-6 historical replay and head falsifier.
+  Replay 54 pass/30 stop, synthetic ancillary recount 74/10, no differences from ideation; #672 lacks question head 6c972e7 and stops. Removing that question-head check produces 75/9 and #672 passes (`merge-guard-deferred-replay.log`, `merge-guard-deferred-head-mutant.log`).
+- SKIPPED: New AC-3/4/5 native host runs for this unit-level repair.
+  FO explicitly said none needed; prior 21 native cases belong to ebac86a56 in repair-1, not this head. New unit test exercises both host decisions/reasons; missing-script/exception/unreadable/rules/interactive proof remains earlier scoped evidence, with no new native claim.
+- DONE: Retain AC-10 Captain phone observation and native isolation record.
+  Existing captain-steps/1.md is unchanged. Earlier Claude runs used normal HOME/login, throwaway cwd and temporary project hook settings; Codex used existing auth with ignore-user-config/ephemeral, operator rules read-only where requested. This repair starts no native hosts or settings writes.
+- DONE: AC-7/8 adoption, approved D1–D4 and ADR 0063 ruling.
+  Added deferred policy and no-queue assumption to adoption.md and ADR draft; original Captain quotations retained. D3 closing sentences in delivery_gate.py remain the only changes there; ASK/ASK_UNQUOTED stay 57/56 words, adoption 2672→2760, workflow 5939 unchanged.
+- DONE: Record FO's offline-hook ruling and GraphQL observation.
+  FO message 77ad909e reports repository.mergeQueue(branch:) found no main queue in iamcxa/kc-claude-plugins, spacedock-dev/subspace-relay, spacedock-dev/subspace-web or iamcxa/qnow on 2026-11-06; not independently repeated by worker. No live query or automatic --admin; revisit before relying on the guard after enabling any queue (`fo-ruling-and-forms.md`).
+- DONE: Repository skill/ADR/number/design/comment/document checks.
+  All exit 0; 62 ADRs/0 legacy, no number findings, comments 3/581 = 0.5% (max 5%), diff --check clean. ADRs 0044/0051/0062 unaffected (summary/round/quoted-question unchanged), ADR 0063 updated, package README unaffected (registration/CI route unchanged); `document-dispositions.json` and raw logs.
+- DONE: Local commit, branch/base/candidate and prepared Conventional Commit PR text; only design-listed files.
+  Branch spacedock-ensign/merge-guard-stops-unasked-merges; base b804d81d3abc94c9c321326dc75e7cac927c5252; local repair b82f20de6c8e5b868695d03aa4bbcb97e77dd877; clean code worktree. PR text at /tmp/impl-merge-guard-stops-unasked-merges-pr.md and repair-2/prepared-pr.md; manifest binds exact committed bytes.
+- SKIPPED: Product push, updating the Draft PR, independent validation, RoboRev and hosted CI.
+  FO owns these; PR #794 is OPEN/draft at ebac86a56 on readback, so the candidate is local only. No product push, review request, PR comment, ready or merge by worker. CI cost per PR is not measured; CI triggers unchanged.
+- DONE: State the remaining inspection boundary.
+  Implicit queueing is the FO-accepted no-queue assumption; script bodies/generated executable names, direct curl/SDK calls and non-PR branch writes remain outside this gh command-text guard. GraphQL reads and unknown flags/aliases stop conservatively; records do not authenticate approval.
+
+### Summary
+
+This report supersedes the earlier implementation reports for local candidate b82f20de6c8e5b868695d03aa4bbcb97e77dd877. Explicit deferred routes now stop with the FO policy reason, and the no-queue assumption is visible in adoption and ADR 0063; the hook stays offline under FO's ruling. Publication and fresh independent validation/review remain FO work; prior native and phone evidence is retained at its original scope.

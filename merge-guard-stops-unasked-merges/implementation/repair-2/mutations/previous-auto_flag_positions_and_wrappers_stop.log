@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_auto_flag_positions_and_wrappers_stop (__main__.MergeGuardTests.test_auto_flag_positions_and_wrappers_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-dy551irs/test_merge_guard.py", line 150, in test_auto_flag_positions_and_wrappers_stop
+    self.assert_deferred_stops(f"{prefix} pr merge {args}")
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-dy551irs/test_merge_guard.py", line 135, in assert_deferred_stops
+    self.assertEqual(result, "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh --repo owner/repo pr merge --auto 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "newest",
+    "status": "passed",
+    "message": "Mutation rejected"
+  },
+  {
+    "name": "codex-ask",
+    "status": "passed",
+    "message": "Mutation rejected"
+  },
+  {
+    "name": "merges-glob",
+    "status": "passed",
+    "message": "Mutation rejected"
+  },
+  {
+    "name": "disk-read",
+    "status": "passed",
+    "message": "Mutation rejected"
+  },
+  {
+    "name": "record-head",
+    "status": "passed",
+    "message": "Mutation rejected"
+  },
+  {
+    "name": "number-boundary",
+    "status": "passed",
+    "message": "Mutation rejected"
+  }
+]

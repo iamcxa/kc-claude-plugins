@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_rest_merge_endpoint_stops_even_with_record (__main__.MergeGuardTests.test_rest_merge_endpoint_stops_even_with_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-repair-mutant-q6z1c049/test_merge_guard.py", line 122, in test_rest_merge_endpoint_stops_even_with_record
+    self.assertEqual(self.verdict(command), "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh api -X PUT repos/owner/repo/pulls/1/../672/merge -f sha=1234567890abcdef1234567890abcdef12345678
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

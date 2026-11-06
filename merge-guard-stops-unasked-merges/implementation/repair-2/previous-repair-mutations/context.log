@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_implicit_repo_after_shell_context_change_stops (__main__.MergeGuardTests.test_implicit_repo_after_shell_context_change_stops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-repair-mutant-hnvbhp4p/test_merge_guard.py", line 232, in test_implicit_repo_after_shell_context_change_stops
+    self.assertEqual(self.verdict(f"cd /another/repo && gh pr merge 672 --match-head-commit {HEAD}"), "stop")
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)

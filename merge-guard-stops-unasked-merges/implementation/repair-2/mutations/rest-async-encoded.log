@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_rest_async_encoded_endpoint_stops (__main__.MergeGuardTests.test_rest_async_encoded_endpoint_stops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-88avowuh/test_merge_guard.py", line 170, in test_rest_async_encoded_endpoint_stops
+    self.assert_deferred_stops("gh api -X PUT repos/owner/repo/pulls/672/%6derge%2dasync -f merge_action=merge_queue")
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-88avowuh/test_merge_guard.py", line 135, in assert_deferred_stops
+    self.assertEqual(result, "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh api -X PUT repos/owner/repo/pulls/672/%6derge%2dasync -f merge_action=merge_queue
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_deferred_reason_reaches_both_hosts (__main__.MergeGuardTests.test_deferred_reason_reaches_both_hosts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-eq8mwj3y/test_merge_guard.py", line 205, in test_deferred_reason_reaches_both_hosts
+    self.assertTrue(out.getvalue(), "a deferred command must emit a host decision")
+AssertionError: '' is not true : a deferred command must emit a host decision
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

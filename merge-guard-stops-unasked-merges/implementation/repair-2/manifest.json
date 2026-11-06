@@ -1,0 +1,61 @@
+{
+  "base": "b804d81d3abc94c9c321326dc75e7cac927c5252",
+  "previous_candidate": "ebac86a561655d990d2fcd7ff3cd8dbb20e8eb65",
+  "candidate": "b82f20de6c8e5b868695d03aa4bbcb97e77dd877",
+  "branch": "spacedock-ensign/merge-guard-stops-unasked-merges",
+  "source_sha256": {
+    "kc-dev-flow-2/scripts/merge_guard.py": "8d3ba94ac4fb389568c170198b41a2aef7d66d5584cf2fcc1bacbe5fbc6347c2",
+    "kc-dev-flow-2/scripts/test_merge_guard.py": "ad82c88d7b7115fd0ad485a35a89e0492aa5483aeb620242a974c9129916bb23",
+    "kc-dev-flow-2/scripts/delivery_gate.py": "e7cf1764b706ca887744a4ef78d22f28afe34451c53bfb0df780ae9b70eacce6",
+    "kc-dev-flow-2/references/sd/adoption.md": "0ff958c61ec0321be692f064d52f8f2e7b722544bd5fbb514e6518d0a8300f5f",
+    "docs/adr/0063-a-merge-no-record-carries-is-stopped-by-a-user-registered-hook.md": "64922b715e9794e6516528178ae1f29a484716e961e53bc4e9c1567304b85948"
+  },
+  "unit": {
+    "ran": 45,
+    "passed": 45
+  },
+  "delivery": {
+    "ran": 157,
+    "passed": 156,
+    "skipped": 1
+  },
+  "new_falsifiers_rejected": 17,
+  "previous_repair_falsifiers_rejected": 22,
+  "original_falsifiers_rejected": 6,
+  "matrix_command_forms": 20,
+  "replay": {
+    "pass": 54,
+    "stop": 30
+  },
+  "synthetic_recount": {
+    "pass": 74,
+    "stop": 10
+  },
+  "record_question_head_mutant_recount": {
+    "pass": 75,
+    "stop": 9,
+    "pr672": "pass"
+  },
+  "native": {
+    "new_runs": 0,
+    "reason": "FO explicitly exempted this unit-level repair",
+    "prior_candidate": "ebac86a561655d990d2fcd7ff3cd8dbb20e8eb65",
+    "prior_evidence": "../repair-1/native/ and merge-guard-repair-final-native-results.json; no new-head native claim"
+  },
+  "fo_ruling": "fo-ruling-and-forms.md; queue observations are FO-reported, not independently repeated",
+  "words": {
+    "ASK": 57,
+    "ASK_UNQUOTED": 56,
+    "adoption_previous": 2672,
+    "adoption_current": 2760,
+    "workflow_lint": 5939
+  },
+  "ci_cost_per_pr": "not measured; CI triggers unchanged by repair",
+  "code_publication": "local product commit only; no product push by worker",
+  "published_pr": {
+    "headRefOid": "ebac86a561655d990d2fcd7ff3cd8dbb20e8eb65",
+    "isDraft": false,
+    "state": "OPEN",
+    "url": "https://github.com/iamcxa/kc-claude-plugins/pull/794"
+  }
+}

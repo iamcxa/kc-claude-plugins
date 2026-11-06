@@ -1,0 +1,103 @@
+....FF........FFF.............FF..F..F....
+======================================================================
+FAIL: test_auto_flag_positions_and_wrappers_stop (__main__.MergeGuardTests.test_auto_flag_positions_and_wrappers_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 150, in test_auto_flag_positions_and_wrappers_stop
+    self.assert_deferred_stops(f"{prefix} pr merge {args}")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 135, in assert_deferred_stops
+    self.assertEqual(result, "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh --repo owner/repo pr merge --auto 672 --match-head-commit 1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_auto_flag_stops_with_matching_record (__main__.MergeGuardTests.test_auto_flag_stops_with_matching_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 142, in test_auto_flag_stops_with_matching_record
+    self.assert_deferred_stops(self.command + " " + flag)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 135, in assert_deferred_stops
+    self.assertEqual(result, "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh pr merge 672 --repo owner/repo --squash --match-head-commit 1234567890abcdef1234567890abcdef12345678 --auto
+
+======================================================================
+FAIL: test_graphql_auto_merge_stops_with_matching_record (__main__.MergeGuardTests.test_graphql_auto_merge_stops_with_matching_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 170, in test_graphql_auto_merge_stops_with_matching_record
+    self.assert_deferred_stops("gh api graphql -f 'query=mutation {enablePullRequestAutoMerge(input:{pullRequestId:\"x\"}){clientMutationId}}'")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 136, in assert_deferred_stops
+    self.assertIn("FO never enables auto-merge", reason, command)
+AssertionError: 'FO never enables auto-merge' not found in 'cannot check merge: API merges or opaque GraphQL need gh pr merge with --match-head-commit' : gh api graphql -f 'query=mutation {enablePullRequestAutoMerge(input:{pullRequestId:"x"}){clientMutationId}}'
+
+======================================================================
+FAIL: test_graphql_deferred_opaque_and_encoded_forms_stop (__main__.MergeGuardTests.test_graphql_deferred_opaque_and_encoded_forms_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 181, in test_graphql_deferred_opaque_and_encoded_forms_stop
+    self.assert_deferred_stops(command)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 136, in assert_deferred_stops
+    self.assertIn("FO never enables auto-merge", reason, command)
+AssertionError: 'FO never enables auto-merge' not found in 'cannot check merge: API merges or opaque GraphQL need gh pr merge with --match-head-commit' : gh api graphql --input request.json
+
+======================================================================
+FAIL: test_graphql_enqueue_stops_with_matching_record (__main__.MergeGuardTests.test_graphql_enqueue_stops_with_matching_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 174, in test_graphql_enqueue_stops_with_matching_record
+    self.assert_deferred_stops("gh api graphql -f 'query=mutation {enqueuePullRequest(input:{pullRequestId:\"x\"}){clientMutationId}}'")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 136, in assert_deferred_stops
+    self.assertIn("FO never enables auto-merge", reason, command)
+AssertionError: 'FO never enables auto-merge' not found in 'cannot check merge: API merges or opaque GraphQL need gh pr merge with --match-head-commit' : gh api graphql -f 'query=mutation {enqueuePullRequest(input:{pullRequestId:"x"}){clientMutationId}}'
+
+======================================================================
+FAIL: test_rest_async_encoded_and_path_forms_stop (__main__.MergeGuardTests.test_rest_async_encoded_and_path_forms_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 166, in test_rest_async_encoded_and_path_forms_stop
+    self.assert_deferred_stops(f"command gh api --method=PUT {endpoint} --input request.json")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 136, in assert_deferred_stops
+    self.assertIn("FO never enables auto-merge", reason, command)
+AssertionError: 'FO never enables auto-merge' not found in 'cannot check merge: the merge command cannot be parsed' : command gh api --method=PUT /repos/owner/repo/pulls/672/merge-async --input request.json
+
+======================================================================
+FAIL: test_rest_async_merge_stops_with_matching_record (__main__.MergeGuardTests.test_rest_async_merge_stops_with_matching_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 156, in test_rest_async_merge_stops_with_matching_record
+    self.assert_deferred_stops(f"gh api -X PUT repos/owner/repo/pulls/672/merge-async -f sha={HEAD}" + action)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 136, in assert_deferred_stops
+    self.assertIn("FO never enables auto-merge", reason, command)
+AssertionError: 'FO never enables auto-merge' not found in 'cannot check merge: the merge command cannot be parsed' : gh api -X PUT repos/owner/repo/pulls/672/merge-async -f sha=1234567890abcdef1234567890abcdef12345678
+
+======================================================================
+FAIL: test_synchronous_flags_and_cancelling_auto_still_pass (__main__.MergeGuardTests.test_synchronous_flags_and_cancelling_auto_still_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 193, in test_synchronous_flags_and_cancelling_auto_still_pass
+    self.assertEqual(self.verdict(self.command + " " + flags), "pass", flags)
+AssertionError: 'stop' != 'pass'
+- stop
++ pass
+ : -b 'merge body'
+
+======================================================================
+FAIL: test_unknown_merge_flags_stop (__main__.MergeGuardTests.test_unknown_merge_flags_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/test_merge_guard.py", line 186, in test_unknown_merge_flags_stop
+    self.assertEqual(self.verdict(self.command + " " + flag), "stop", flag)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : --queue
+
+----------------------------------------------------------------------
+Ran 42 tests in 0.407s
+
+FAILED (failures=9)

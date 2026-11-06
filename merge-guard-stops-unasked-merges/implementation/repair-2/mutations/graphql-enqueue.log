@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_graphql_enqueue_stops_with_matching_record (__main__.MergeGuardTests.test_graphql_enqueue_stops_with_matching_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-5o9omlqh/test_merge_guard.py", line 178, in test_graphql_enqueue_stops_with_matching_record
+    self.assert_deferred_stops("gh api graphql -f 'query=mutation {enqueuePullRequest(input:{pullRequestId:\"x\"}){clientMutationId}}'")
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-deferred-mutant-5o9omlqh/test_merge_guard.py", line 135, in assert_deferred_stops
+    self.assertEqual(result, "stop", command)
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+ : gh api graphql -f 'query=mutation {enqueuePullRequest(input:{pullRequestId:"x"}){clientMutationId}}'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)
