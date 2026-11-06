@@ -3,7 +3,7 @@ title: When Codex posts only a security summary, the codex reader names the code
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-06), answering 「決定：「Codex 只貼安全摘要時提醒」這份設計進入實作嗎？核准即接受 D1（閒置檢查不另外印出提醒，由 pr_watch.py wait 第一次查看時提醒）。」. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 When Codex has posted only its security-review summary on a PR head, codex_review.py (or pr_watch.py) prints a next line that asks FO to request `@codex review`, so a merge ask is not prepared on a head with no code review.
