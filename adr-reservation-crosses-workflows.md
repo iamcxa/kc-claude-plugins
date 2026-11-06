@@ -34,6 +34,17 @@ gates:
                 id: briefing:adr-reservation-crosses-workflows:ideation:attempt-1:revision-1
                 digest: sha256:7b86bd7b309a98268d656531eba2b36964e6bb78bd240c3b3090223fc313467d
                 room-ref: ./adr-reservation-crosses-workflows/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-reservation-crosses-workflows:ideation:1
+                briefing: briefing:adr-reservation-crosses-workflows:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-06T16:09:51.501146Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-07), answering 「決定：「ADR 編號跨流程預留」這份設計進入實作嗎？核准即接受 D1（預留記在各流程已推送的 state 分支，編號檢查讀所有 spacedock-state/* 分支；寫進 ADR 0002 修正，不用新編號）。」. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 `number_guards.py` refuses a new ADR number that another workflow's live task has already reserved in the same repository, so two FOs sharing a repository cannot both land the same number.
