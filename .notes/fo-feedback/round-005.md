@@ -59,3 +59,25 @@ Condensed in its own words; operator data, not verified yet.
 - (a) gates: delivery_gate.py question failed on web paths in the validator's report read as local files, and check failed on a by-design skipped "Release Gate" run; the Captain waived both (「豁免網址路徑誤判」, 「豁免release gate跳過，合併1338」); design_surfaces.py's "Built screen review:" placement and preview-path rules took three runs. Captain-steps record let it answer the Captain with a fresh read.
 - (b) dispatch: Codex capacity errors twice then a Claude fallback (office-action-audit-log ideation); about 6 validator permission requests on #1338; a follow-up addendum sent with no dispatch record (observer); pre-push hooks failed twice under Mac load; asks for a documented load gate.
 - First links: the web-path false positive is the same class as backlog delivery-check-resolves-links-from-the-task (relative-path resolution in delivery_gate.py); the skipped-run false positive and the per-rule counter have no matching task yet.
+
+### kc-paseo-plugins dev2 FO, 8b2c2fc2 — answered 2026-11-06 (Paseo agent message 78e1319b, sender stamped)
+
+Condensed; operator data, not verified yet.
+- codex: #66 one P2 fixed (fec5b13); r1b-polish-1 (#71 #72 #73 #75) one clean round each; on ready Codex posted only a security summary, codex_review.py exit 4 until `@codex review` (Bridge gap 7 again); asks pr_watch.py wait to print that next: line (~10 min per PR).
+- journey-map: release review found pick-field half covered (Captain 「移出」); review not in the checked record format, journey-review.mjs check and interrogation not run; journey fields set after ideation, not at backlog (observer); journey-lint accepts evidence only in executable files, so a docs story could cite only a build script; asks non-executable evidence.
+- learn: observer reports committed for all four tasks before merge guard; learn evaluations not run in window.
+- roborev: #66 roborev:1483 clean; skipped for r1b-polish-1 and its instruction line left out of dispatch (observer).
+- (a) gates: batch gates, one 「准」 per stage; an amendment written as prose Supersedes needed a rework round; Asked: line elided (observer); gate questions omitted later-review-rounds and worktree removal (observer, all four); delivery_gate check caught an owed engineering-reviewer call; stacked PRs conflicted after a squash merge, FO appended a Candidate line with a tree-equality note but no revalidation (observer violation); asks a recognised "rebased, identical tree" path.
+- (b) dispatch: FO saved no dispatch records for the whole batch after a context compaction (reconstructed 2026-11-06, all four observers); asks `dispatch build --stamp` to write <task>/dispatch/<stage>-<cycle>.md itself; workers' `agent-browser close --all` closed unrelated sessions twice; a worker cut off by handback with a job running; `git reset --hard` refused twice, workers used merge --ff-only.
+- First links: the worktree-removal omission is the class delivery-question-requires-worktree-clause (#793, merged 2026-11-06) now holds; codex security-only summary is Bridge gap 7 (autopilot-l3-dogfood-spacedock-bridge); the agent-browser collisions support worker-browser-checks-use-paseo-browser.
+
+### kc-journey-map FO, d41e1313 — answered 2026-11-06 (Paseo agent message d503f791, sender stamped)
+
+Condensed; operator data, not verified yet.
+- paseo: ~30 Codex workers via plain create_agent with hand-written prompts, not `dispatch build --stamp`, and stage/gate state not advanced per dispatch (private-human-entry … private-host-parity, PRs #778 #779 #785 #789 #795); workspaces archived mid-session broke create_agent; FO-created terminals invisible to the Captain twice.
+- peers: the dev2 FO's ADR 0063 notice prevented a second collision.
+- roborev / codex / copilot: none run on #778 #779 #785 #789 #795; independent Astra validators used instead.
+- learn: none; four tasks archived by merge guard.
+- (a) gates: approvals for #778/#779 recorded in fo-notes/overnight-plan-20261104.md, not by gate prepare/record; private-native-account went backlog to merged PR #785 without ideation, implementation or validation stages (noted as owed); step-back fired on pairing round 2 and round 3 went to an independent reviewer.
+- (b) dispatch: archive tags before every restack preserved approved SHAs; a sealed run package refused because origin/main moved (one re-seal worker).
+- First links: gates recorded outside Spacedock and a task merged without its stages is an authority finding (theme 1); no matching task yet. Terminal visibility contradicts the paseo extension's human-terminal assumption; no matching task yet.
