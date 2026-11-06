@@ -34,6 +34,17 @@ gates:
                 id: briefing:decline-becomes-task-only-with-a-bite:ideation:attempt-1:revision-1
                 digest: sha256:d3b565a23ccfd04c33fa7b83ef23605c1e09a53f371d2bce2879e95262e47115
                 room-ref: ./decline-becomes-task-only-with-a-bite/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:decline-becomes-task-only-with-a-bite:ideation:1
+                briefing: briefing:decline-becomes-task-only-with-a-bite:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-06T16:10:46.491729Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-07), answering 「決定：「婉拒只在出過事時開任務」這份設計進入實作嗎？核准即接受 D1（另開新 ADR 取代 ADR 0010）與 D2（擱置中的 gate-summary-names-each-decline 恢復時拿掉它的第 3 條）。」. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 The README's review-finding rule that files every round-3 decline as a new backlog task is replaced: a declined finding keeps its bracketed reason in the gate summary, and becomes a task only when it meets the same bite-and-consumer bar as any other backlog task, or when a later round or task hits it again.
