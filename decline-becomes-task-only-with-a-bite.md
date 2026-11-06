@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:decline-becomes-task-only-with-a-bite:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:decline-becomes-task-only-with-a-bite-backlog-1
+              briefing:
+                id: briefing:decline-becomes-task-only-with-a-bite:backlog:attempt-1:revision-1
+                digest: sha256:310bad8e688ad065c098e7762a9285b784159492db852aa00ef21ba8d5c340f8
+                room-ref: ./decline-becomes-task-only-with-a-bite/review/backlog/briefing-1
 ---
 
 The README's review-finding rule that files every round-3 decline as a new backlog task is replaced: a declined finding keeps its bracketed reason in the gate summary, and becomes a task only when it meets the same bite-and-consumer bar as any other backlog task, or when a later round or task hits it again.
