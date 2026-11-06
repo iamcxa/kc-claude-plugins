@@ -158,7 +158,7 @@ Replays read state checkout `79af09021bcf` (`<state>`); `<cand>` is a `git archi
 
 **AC-3**: `delivery_gate.py` is unchanged and its decline rules pass the three batch 12 and 13 texts. Evidence: `git diff origin/main -- kc-dev-flow-2/scripts/delivery_gate.py` is empty; `python3 -B replay_gate.py <state> <cand>/kc-dev-flow-2/scripts` prints `decline problems none` for fo-tries-what-it-asks-the-captain (3 declined items), model-roster-question-needs-both-families (2) and rewritten-criteria-checked-against-captain-words (3). Falsifier: removing the bracket from one of those items prints `declined item has no reason`.
 
-**AC-4**: A fresh reader of the new step 5 reads the three replays as compliant and still asks for a task on a bite. Evidence: `observer-replay-candidate.prompt.md` given to a fresh Sonnet agent with no tools, at least twice: A, B, C `ok` and D `violation` quoting the bite clause in every run; `observer-replay-base.prompt.md` once: A, B, C `violation`. Falsifier: a candidate wording without the bite clause reads D `ok`.
+**AC-7**: Amended by Captain, amendment 1, replacing AC-4. Retain the primary A–D evidence: two fresh no-tools Sonnet candidate readings give A/B/C `ok` and D `violation` quoting the bite clause; the base reading gives A/B/C `violation`. Add synthetic record E, a below-P1, non-Material decline with no observed harm and no Captain ask, repeated in a later external round. Evidence: append E to candidate, base and bite-clause-deleted mutation prompts and retain all A–D readings beside it; run the candidate prompt twice and the mutation prompt twice with fresh no-tools Sonnet agents. Both candidate runs must read E `violation` quoting the repeat condition; both mutation runs must read E `ok`. Falsifier: deleting the bite clause removes the only rule requiring a task for E; D remains recorded but is not the falsifier.
 
 **AC-5**: The observer itself no longer reports the decline. Evidence: dispatch `kc-dev-flow-2:observer` on `_archive/rewritten-criteria-checked-against-captain-words` with `RULES` set to the candidate README; its report has no `violation` line quoting step 5 for the Codex round 3 P2 decline, where the archived `observer.md` line 9 has one. Falsifier: the same run with the base README reports that violation again.
 
@@ -180,6 +180,9 @@ ADR: 0064
 Captain: 「補一筆案例再跑（建議）」 (host question dialog, 2026-11-07)
 Asked: 「「婉拒只在出過事才開任務」這張（PR #800）的反證失敗，Spacedock 不讓它進驗證。原因：第四筆案例的傷害本身就讓它成為『重大問題』，所以刪掉新句子後模型仍判違規，證明不了新句子必要。要怎麼處理？」 Option chosen: 「補一筆案例再跑（建議）」 — 「在反證裡加一筆『只有重複出現、沒有傷害』的案例，讓新句子成為唯一判準，再跑兩次 Sonnet。這會修改已核准的驗收條件，多一輪實作。」
 Supersedes: AC-4
+
+Superseded text:
+**AC-4**: A fresh reader of the new step 5 reads the three replays as compliant and still asks for a task on a bite. Evidence: `observer-replay-candidate.prompt.md` given to a fresh Sonnet agent with no tools, at least twice: A, B, C `ok` and D `violation` quoting the bite clause in every run; `observer-replay-base.prompt.md` once: A, B, C `violation`. Falsifier: a candidate wording without the bite clause reads D `ok`.
 
 ## Stage Report: ideation
 
@@ -238,3 +241,43 @@ Step 5 is rewritten in the same 53 words: a round-3 decline keeps its finding an
 ADRs: 0010, 0064
 
 Candidate ae7750375bc19e482f829edc9a041d95fb280693 implements the approved decline rule and decision supersession in four files; deterministic acceptance and the bounded observer contrast pass. AC-4's specified falsifier remains FAILED: falsifier confounded under both independent Sonnet runs, per FO message-4; the Captain must dispose of that evidence at the gate, and FO still owns publication, RoboRev and CI.
+
+## Stage Report: implementation
+
+Dated addendum: 2026-11-07 — Captain amendment 1, dispatch implementation-1-message-5.
+
+- DONE: Implement the approved four-file design from origin/main, with D1 and D2 as recommended in the ideation gate
+  Branch spacedock-ensign/decline-becomes-task-only-with-a-bite; base ba055b8a7a55a787ac989c4cef52d07dd75661ad; candidate ae7750375bc19e482f829edc9a041d95fb280693. Exactly workflow.md, test_sd_dispatch.py, ADR 0010 and new ADR 0064 changed; no version bump. D2 is recorded in 0064; FO removes the held task's rule 3 and AC-3 when it resumes.
+- DONE: One Draft PR (Conventional Commit title scoped to the plugin) in iamcxa/kc-claude-plugins
+  FO opened Draft PR #800 on ae7750375bc19e482f829edc9a041d95fb280693; amendment-1/pr-800.json verifies its open Draft state and unchanged head. The worker made no product push or PR edit in this addendum.
+- DONE: ADR 0064 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  0064 quotes the source, backlog question/approval and ideation D1/D2 question/approval verbatim; ADR 0010 Status is Superseded by 0064. acceptance.py verifies both bound Asked lines against the task source; restoring 0010 Accepted leaves opposite accepted rulings (old-adr-accepted.log).
+- DONE: AC-1 — new step 5 without a workflow word-budget rise
+  implementation/lint.log: repository lint exit 0, 5939 of 5939 words; sentence 53 -> 53, lint-skills.py byte-unchanged. restore-old.log: restoring old step 5 trips the actual ROUND_RULE assertion, "round rule missing from workflow.md".
+- DONE: AC-2 — updated wording pins and native dispatch checks
+  pins-candidate.log: no gaps, proposed swap matches 1; pins-base.log: three proposed pins absent, swap 0. dispatch.log: native test_sd_dispatch.py exits 0 with SD plugin root 0.27.3; remove-clause.log: deleting the observed-failure phrase trips the same real assertion.
+- DONE: AC-3 — delivery_gate.py unchanged and the three archived declines pass, with bracket falsifier
+  At state 79af09021bcfdb30267aabbc4f2dc150ac05a6dd, gate-replays.json/replay-gate.log record 3/2/3 items and decline problems none; candidate script bytes equal base. remove-bracket.log: removing one archived reason's delimiters reports "declined item has no reason".
+- DONE: AC-7 retained primary replay (replacing AC-4 under Captain amendment 1) — two fresh Sonnet candidate runs and one base run, with no tools
+  candidate-1 (4d4fd590), candidate-2 (f268bf99): A/B/C ok and D violation, quoting the bite clause; base (a8a297d3): A/B/C violation. sonnet-runs.json lists full ids, explicit claude/sonnet requests and each exact *.prompt.md/*.activity.json; each no-tools run has two activities only.
+- DONE: AC-7 repeat-only falsifier — dated addendum 2026-11-07, Captain amendment 1
+  Candidate a7762a1d-9cb1-4aab-bbef-7d9535268c33 and 118745d5-af27-4c44-aa2a-fccb16f1297f read E violation, quoting "a repeat in a later round or task"; mutation 9a6cdc05-a760-4808-9572-ce2e9f4d05be and 84cfab06-1464-4541-bdee-af8c2f629af0 read E ok. Exact prompts, full A-E readings, explicit Sonnet requests and archived-agent ids: implementation/amendment-1/sonnet-runs.json and results.json.
+  E is explicitly synthetic, below P1 and non-Material, with no observed harm or Captain ask; only a later-round repeat requires its task. A/B/C stay ok and D stays violation in all four runs. The D-based confounded falsifier remains historical evidence and is superseded by this E-based result.
+- DONE: AC-5 — actual observer replay with candidate/base README and the archived target task
+  Full candidate 152377c2 and bounded candidate 97fc6186 have no step-5 violation for comment 4455001433; bounded base e7a1c1d7 reports that exact violation. FROM ea9904b30b9dcf2418a335e9ef91b715320d4557, TO 79af09021bcf. Initial base 089d77cc omitted the target check; its unedited report is retained and not counted as proof. sonnet-results.json verifies the contrast; all nine agents archived after recording.
+- DONE: AC-6 and required lint/guard checks at the candidate
+  adr-lint.log: --since ba055b8a7a55a787ac989c4cef52d07dd75661ad --require 0064 exits 0 (62 ADR files checked, 0 legacy); number-guards.log and design-surfaces.log exit 0. comment-ratio.log exits 0: 1 comment / 6 code lines, 16.7%; 5% maximum is not enforced below 20 added code lines.
+- DONE: FO follow-ups message-1, message-3 and message-5 applied; message-2 withdrawn, message-4 superseded for the falsifier by amendment 1
+  The original AC-4 block is moved verbatim under amendment 1 Superseded text and replaced by AC-7, retaining its primary A-D evidence. E is appended to candidate/base/mutation prompts; candidate and mutation each run twice with fresh no-tools claude/sonnet, and all four agents are archived. The base A-E prompt is prepared; its prior A-D base reading is retained, with no additional base model run requested.
+- DONE: Affected retained documents assessed and temporary/product additions mapped to the accepted goal
+  doc-impact-disposition.json: ADR 0064 updated; kc-dev-flow-2/README.md unaffected (same test commands), references/sd/adoption.md unaffected (same graph/mod/split-root coverage), learning.md unaffected (historical pinning practice remains accurate). The four product files map to the rule, its pins and accepted supersession; no new runtime abstraction.
+- DONE: Reproducible acceptance evidence and current addendum verification
+  Retained implementation/acceptance.py, acceptance.sh, tests.json and fresh-shell.log record 11 deterministic groups passing at unchanged product bytes. amendment-1/verify.py, verification.log and tests.json verify the verbatim criterion move, exact prompt extension, both candidate/mutation pairs and clean product/PR head. design-surfaces.log, comment-ratio.log and number-guards.log rerun exit 0; native product tests are not repeated for this state-only amendment.
+- SKIPPED: Additional product changes/push, PR editing, RoboRev and CI execution by this worker
+  Captain amendment 1 changes evidence only: product head/tree remain ae7750375bc19e482f829edc9a041d95fb280693 and clean. FO owns the existing PR, exact-head RoboRev and CI. roborev not run: worker sandbox cannot reach its daemon. CI cost per PR was not measured; CI files/triggers unchanged.
+
+### Summary
+
+ADRs: 0010, 0064
+
+This complete report supersedes the earlier implementation report. The Captain-amended repeat-only falsifier passes twice in each direction, replacing the historical FAILED item with DONE; A-D readings and the old confounded evidence are retained. Product candidate ae7750375bc19e482f829edc9a041d95fb280693 and Draft PR #800 are unchanged; FO retains validation, review and delivery ownership.

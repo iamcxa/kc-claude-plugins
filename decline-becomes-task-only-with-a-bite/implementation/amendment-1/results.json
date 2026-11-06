@@ -1,0 +1,74 @@
+[
+  {
+    "name": "candidate-1",
+    "agentId": "a7762a1d-9cb1-4aab-bbef-7d9535268c33",
+    "provider": "claude",
+    "model": "sonnet",
+    "prompt_file": "candidate.prompt.md",
+    "activity_file": "candidate-1.activity.json",
+    "archived": true,
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "ok",
+      "D": "violation",
+      "E": "violation"
+    },
+    "E_reading": "\"Only an observed failure naming who it hurts, a repeat in a later round or task, or a Captain ask makes it a backlog task\" | The record says the suggestion was \"reported in external round 3 and repeated unchanged in external round 4\", which is a repeat in a later round, so a backlog task was required, but none is named or exists.",
+    "status": "passed"
+  },
+  {
+    "name": "mutation-1",
+    "agentId": "9a6cdc05-a760-4808-9572-ce2e9f4d05be",
+    "provider": "claude",
+    "model": "sonnet",
+    "prompt_file": "mutation.prompt.md",
+    "activity_file": "mutation-1.activity.json",
+    "archived": true,
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "ok",
+      "D": "violation",
+      "E": "ok"
+    },
+    "E_reading": "\"From round 3 a finding that is neither does not start a repair cycle: FO declines it\" | This is round 4 and the finding is a P2 below P1. The record states it is non-Material, with no observed harm and no Captain request, so declining it by name with a reason is what the rule asks.",
+    "status": "passed"
+  },
+  {
+    "name": "candidate-2",
+    "agentId": "118745d5-af27-4c44-aa2a-fccb16f1297f",
+    "provider": "claude",
+    "model": "sonnet",
+    "prompt_file": "candidate.prompt.md",
+    "activity_file": "candidate-2.activity.json",
+    "archived": true,
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "ok",
+      "D": "violation",
+      "E": "violation"
+    },
+    "E_reading": "\"a repeat in a later round or task ... makes it a backlog task\" | The same suggestion was reported in round 3 and repeated unchanged in round 4. That is a repeat in a later round, so it needed a backlog task, but none is named or exists.",
+    "status": "passed"
+  },
+  {
+    "name": "mutation-2",
+    "agentId": "84cfab06-1464-4541-bdee-af8c2f629af0",
+    "provider": "claude",
+    "model": "sonnet",
+    "prompt_file": "mutation.prompt.md",
+    "activity_file": "mutation-2.activity.json",
+    "archived": true,
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "ok",
+      "D": "violation",
+      "E": "ok"
+    },
+    "E_reading": "\"From round 3 a finding that is neither does not start a repair cycle: FO declines it in the committed gate summary, naming the finding and its reason\" | At round 4 the record names the finding (the \"Review\" to \"Review notes\" caption) and gives a reason: it is a P2, assessed non-Material, with no observed harm and no Captain request.",
+    "status": "passed"
+  }
+]

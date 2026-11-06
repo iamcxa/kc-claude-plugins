@@ -1,0 +1,22 @@
+[
+  {
+    "name": "AC-4 moved verbatim into amendment 1; AC-7 replaces it",
+    "status": "passed"
+  },
+  {
+    "name": "Candidate/base/mutation prompts retain A-D and append identical synthetic E",
+    "status": "passed"
+  },
+  {
+    "name": "Two fresh no-tools Sonnet candidate runs require E task, quoting repeat clause",
+    "status": "passed"
+  },
+  {
+    "name": "Two fresh no-tools Sonnet mutation runs read E ok; A-D retained beside E",
+    "status": "passed"
+  },
+  {
+    "name": "Product tree clean and PR 800 still at unchanged candidate",
+    "status": "passed"
+  }
+]

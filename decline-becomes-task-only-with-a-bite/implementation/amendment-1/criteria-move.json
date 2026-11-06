@@ -1,0 +1,7 @@
+{
+  "amendment": 1,
+  "superseded": "AC-4",
+  "replacement": "AC-7",
+  "original_block": "**AC-4**: A fresh reader of the new step 5 reads the three replays as compliant and still asks for a task on a bite. Evidence: `observer-replay-candidate.prompt.md` given to a fresh Sonnet agent with no tools, at least twice: A, B, C `ok` and D `violation` quoting the bite clause in every run; `observer-replay-base.prompt.md` once: A, B, C `violation`. Falsifier: a candidate wording without the bite clause reads D `ok`.",
+  "replacement_block": "**AC-7**: Amended by Captain, amendment 1, replacing AC-4. Retain the primary A\u2013D evidence: two fresh no-tools Sonnet candidate readings give A/B/C `ok` and D `violation` quoting the bite clause; the base reading gives A/B/C `violation`. Add synthetic record E, a below-P1, non-Material decline with no observed harm and no Captain ask, repeated in a later external round. Evidence: append E to candidate, base and bite-clause-deleted mutation prompts and retain all A\u2013D readings beside it; run the candidate prompt twice and the mutation prompt twice with fresh no-tools Sonnet agents. Both candidate runs must read E `violation` quoting the repeat condition; both mutation runs must read E `ok`. Falsifier: deleting the bite clause removes the only rule requiring a task for E; D remains recorded but is not the falsifier."
+}

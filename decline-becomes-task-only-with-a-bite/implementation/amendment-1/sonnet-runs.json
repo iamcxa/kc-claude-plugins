@@ -1,0 +1,38 @@
+[
+  {
+    "name": "candidate-1",
+    "agentId": "a7762a1d-9cb1-4aab-bbef-7d9535268c33",
+    "provider": "claude",
+    "model": "sonnet",
+    "prompt_file": "candidate.prompt.md",
+    "activity_file": "candidate-1.activity.json",
+    "archived": true
+  },
+  {
+    "name": "mutation-1",
+    "agentId": "9a6cdc05-a760-4808-9572-ce2e9f4d05be",
+    "provider": "claude",
+    "model": "sonnet",
+    "prompt_file": "mutation.prompt.md",
+    "activity_file": "mutation-1.activity.json",
+    "archived": true
+  },
+  {
+    "name": "candidate-2",
+    "agentId": "118745d5-af27-4c44-aa2a-fccb16f1297f",
+    "provider": "claude",
+    "model": "sonnet",
+    "prompt_file": "candidate.prompt.md",
+    "activity_file": "candidate-2.activity.json",
+    "archived": true
+  },
+  {
+    "name": "mutation-2",
+    "agentId": "84cfab06-1464-4541-bdee-af8c2f629af0",
+    "provider": "claude",
+    "model": "sonnet",
+    "prompt_file": "mutation.prompt.md",
+    "activity_file": "mutation-2.activity.json",
+    "archived": true
+  }
+]
