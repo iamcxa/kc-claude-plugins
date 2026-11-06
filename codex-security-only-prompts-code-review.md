@@ -232,3 +232,37 @@ Recommended order: any; if seed-check-requires-alignment-result lands first, reb
 ### Summary
 
 The reader keeps exit 4 for a head Codex reviewed for security only, and now says so with a `security-only=` token and a `next:` line asking FO to comment `@codex review` once; `pr_watch.py wait` stops once per head with the same request. A disposable prototype in /tmp/csopc replayed #727 and 80 recent PRs: only security-only heads change. The Scope's "earlier commit d7eeeef26" is the squash-merge commit, reviewed after merge (corrected in the design); one decision for the Captain (D1, whether `tasks` prints the request too, recommended no). `design_surfaces.py check`: "design surfaces presentable", exit 0.
+
+## Stage Report: implementation
+
+- DONE: Prepare one Draft PR from the assigned branch off origin/main implementing the approved design and acceptance criteria; only the five files under Changes.
+  Candidate: 37b1c0b7a9561ee48165cefbc9424a4390fe9d0a; base/fetched origin/main: ba055b8a7a55a787ac989c4cef52d07dd75661ad; branch: spacedock-ensign/codex-security-only-prompts-code-review; clean worktree, five approved files, no version/CI edits.
+- DONE: D1 as recommended in the task's ideation gate; keep the change in the codex reader, pr_watch.py and their named documentation/tests.
+  Gate accepted 「核准（建議）」 answering 「決定：「Codex 只貼安全摘要時提醒」這份設計進入實作嗎？核准即接受 D1（閒置檢查不另外印出提醒，由 pr_watch.py wait 第一次查看時提醒）。」; tasks still forwards wait, which asks once per head and persists codex-asked.
+- DONE: AC-1 — #727 names the code-review request.
+  Live python3 -B -I base/candidate CLI replay: both exit 4; base bare no-evidence line; candidate security-only=summary:6434584622 plus the request, no evidence=; /tmp/codex-security-proof/727-{base,candidate}.log.
+- DONE: AC-2 — Every other head prints what it prints today.
+  Latest-40 lists per specified repository, same captured GitHub inputs: 80 PRs, 53 identical output/exit, 27 different, all 27 security completed on head/code row off head and exit 4 in both; paseo #71/#73 clean and byte-identical; corpus.json plus raw API snapshots in /tmp/codex-security-proof/.
+- DONE: AC-3 — Reader conditions and each falsifier exercised with python3 -B and caches cleared.
+  36 tests pass; candidate test against base fails 3 subtests; dropping code-row/completed/security-head conditions fails 2/1/1, removing request fails 3, evidence= mutation fails 3; baseline /tmp/codex-security-base-reader-tests.log, per-mutation logs and mutations.json in the proof directory.
+- DONE: AC-4 — wait asks once per head and tasks reaches it.
+  135 tests pass; new test against base fails 1; no wait wiring errors, no codex-asked mark fails 1, no reader mapping fails 1; TasksTests replay yields fact/run-wait lines then a first-look request at 0 sleeps, second tasks adds no request; /tmp/codex-security-proof/idle.log and idle.json.
+- DONE: AC-5 — Words stay within the accepted bounds.
+  wc -w: workflow.md 5939 -> 5939 (identical bytes); EXTENSION.md 310 -> 325 (+15 accepted with the design, no budget edit); wait two lines/21 words, #727 reader two lines/26 words; tests enforce two lines/26 maximum; words.json and lint log.
+- DONE: AC-6 — Scope and repository-local required checks.
+  git diff --name-only origin/main...HEAD lists the five approved files; 23 CI-listed unit scripts exit 0, 1158 tests with 11 existing optional skips; repository lint-skills.py, version parity and skill-frontmatter lint exit 0; /tmp/codex-security-proof/unit-tests.json and /tmp/codex-security-{lint,version-parity,frontmatter}.log.
+- DONE: adr_lint.py docs/adr --since <base>, number_guards.py check, comment_ratio.py within its maximum.
+  Loaded package root /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0: ADR lint checks 61 records/0 legacy, number guard PASS (no migrations-path declared), comments 0/80 lines = 0.0% <= 5%; all exit 0; /tmp/codex-security-{adr-lint,numbers,comments}.log.
+- DONE: Additional stage obligations: design surfaces, affected documents, goal check and real local integration.
+  design_surfaces check exits 0; doc_impact lists ADR 0039 only, unaffected: the existing finding-before-clean/head movement rules remain; EXTENSION.md updated; no new ruling/ADR; native Spacedock 0.27.3 dispatch and observer-recovery scripts exit 0; /tmp/codex-security-{docs.json,design.log,sd-dispatch.log,observer-recovery.log}.
+- DONE: Commit locally, no product push; prepare PR title/body and reproducible acceptance entry for FO.
+  /tmp/impl-codex-security-only-prompts-code-review-pr.md starts with fix(kc-dev-flow-2): prompt code review after a security-only summary; bash /tmp/codex-security-proof/acceptance.sh runs scoped proofs (live CLI replays require authenticated gh); exact file hashes in provenance.json.
+- SKIPPED: Push the product branch, open the Draft PR, run RoboRev and read hosted CI.
+  no PR opened: no push grant; FO owns publication and RoboRev; neither review nor hosted CI is claimed clean. Local SD uses 0.27.3, CI pins 0.27.2. The 11 optional skips are four historical amendment replays, four journey-dependent release-acceptance cases, and one each requiring SD_PLUGIN_ROOT, GATE_PRESENTATION_STATE or DEV2_OBLIGATION_SOURCES; SD dispatch/recovery exercised separately.
+- DONE: CI cost measured or stated as not measured; split-root state reporting.
+  CI cost per PR not measured; CI files/triggers unchanged. This appended report leaves frontmatter and other tasks untouched; commit/sync only this entity on spacedock-state/dev2 per dispatch.
+
+### Summary
+
+Implemented the accepted Pilot slice: completed security-only summaries keep exit 4 without round evidence and now ask FO to request code review; wait asks once per head and idle tasks forwards wait. Exact candidate 37b1c0b7a9561ee48165cefbc9424a4390fe9d0a passes the scoped acceptance proofs, eight mutations and local checks above; the original behavior lacks the request and fails the new tests. Product publication, RoboRev, independent validation and hosted CI remain FO-owned; this is an implementation report, not a delivery approval.
+
