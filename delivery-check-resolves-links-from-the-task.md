@@ -34,6 +34,17 @@ gates:
                 id: briefing:delivery-check-resolves-links-from-the-task:ideation:attempt-1:revision-1
                 digest: sha256:ac750324b224edef0512bde25045053e66921f07efb416fe33a98da49558d5fa
                 room-ref: ./delivery-check-resolves-links-from-the-task/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-check-resolves-links-from-the-task:ideation:1
+                briefing: briefing:delivery-check-resolves-links-from-the-task:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-06T16:07:55.408029Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-07), answering 「決定：「交付檢查從任務資料夾解析路徑」這份設計進入實作嗎？核准即接受 D1（只被驗證報告點名的證據檔，只有程式碼區塊裡的指令算步驟，一般文字連結不算）與設計裡記在 D1 旁的兩項附帶改動。」. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 `delivery_gate.py question` and `check` read a relative `.md` path named in the gate text or the validation report from the task's own folder, so the result does not depend on where FO runs the command.
