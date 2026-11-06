@@ -1,0 +1,21 @@
+# kc-dev-flow-2 journey, map mode (2026-11-05): one step drawn to hold a deferred story; nothing here is derived from code.
+journey: kc-dev-flow-2
+title: dev2：學到的東西跟著下一件工作走
+persona: 使用者：用 dev2 交付多個同類專案的人；可能在自己的電腦開發，也可能和團隊共用雲端 VM。
+one_journey: 使用者關閉一件工作後，學到的東西依種類落到對的地方，下一件同類工作不必重學。
+steps:
+  - id: A1
+    activity: 讓學到的東西帶到下一件工作
+    stories:
+      - id: S01
+        status: gap
+        card: "成立新專案的時候，先去讀 Principle 的 Principle"
+        questions:
+          - id: q1
+            ask: 「領域經驗應該存在哪裡？因為有兩種流派，例如［某個團隊］走的是個人環境，獨立開發，有些團隊顯然開始走雲端環境，大家都用同一套 vm 開發，記憶會在雲上的 cc session 中，那我們該怎麼走？」 — Kent, chat, 2026-11-05
+            status: answered
+            answer: 「Ａ應該要改成統一使用 agents.md，claude.md 統一使用 @ 來載入前者。」「我現在覺得不縮小的版本確實比較好，特別是多 repo 的狀況，monorepo 也很實用」 — Kent, chat, 2026-11-05/06
+          - id: q2
+            ask: 「要用什麼機制確保這些領域知識一定是同步的，最新的？」 — Kent, chat, 2026-11-06
+            status: answered
+            answer: 「落後就停下來等我」 — Kent, chat, 2026-11-06, to 「派工前發現落後時，要照 ADR 0014 停下來等你，還是只警告、照樣派工？」
