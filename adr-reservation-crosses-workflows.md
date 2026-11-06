@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:adr-reservation-crosses-workflows:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:adr-reservation-crosses-workflows-backlog-1
+              briefing:
+                id: briefing:adr-reservation-crosses-workflows:backlog:attempt-1:revision-1
+                digest: sha256:a0e8f7cd5d68fc975264a67629540905c78807ec5580084c5fdc875405e2d4d2
+                room-ref: ./adr-reservation-crosses-workflows/review/backlog/briefing-1
 ---
 
 `number_guards.py` refuses a new ADR number that another workflow's live task has already reserved in the same repository, so two FOs sharing a repository cannot both land the same number.
