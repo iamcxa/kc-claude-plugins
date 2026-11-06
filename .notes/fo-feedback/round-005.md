@@ -102,3 +102,26 @@ Condensed; operator data, not verified yet.
 - (a) gates: FO passed `gate prepare --artifact` the Chinese presentation file instead of the task file, so design_surfaces.py compared Scope against an empty baseline and held "Scope changed"; asks the checker to print "not run: bound artifact has no Scope" and gate prepare to warn when the artifact is not the task file; the Captain once could not find a gate in chat.
 - (b) dispatch: Codex worker raised four permission requests, approved after reading the scripts; `dispatch build` printed "declared model 'sonnet' ignored on host codex"; create_agent refused to inherit mode 'auto' from a Claude caller; worker write scripts that refuse on a changed file made approval cheap; a worker read one deny as cancelling all runs; asks the deny reason to reach the worker with the deny.
 - First links: the shared ADR counter is backlog adr-reservation-crosses-workflows; the create_agent mode refusal matches the kc-plugin FO's own batch 14 experience.
+
+### ops-inbox FO, 46c2ebdf — answered 2026-11-06 (Paseo agent messages a25f3ddd and correction 1496be6d, sender stamped)
+
+Condensed; operator data, not verified yet.
+- roborev: r1 cycle 2 High fixed (roborev:1249 → 1250 clean); cycle 3 two Highs, one refuted with GitHub REST docs, one fixed (1256), two left for FO (1258); a High handed to FO has no forcing step: the `Bash(git:*)` token-exposure High (1258) sat until the 2026-10-31 engineering review proved a hook printed the secret.
+- codex: PR #727 merged 2026-10-27 while codex_review.py exited 4 (only the security review had run, never the code review); FO calls it its own violation; the post-merge `@codex review` never produced a review.
+- copilot: never requested on #727 although second-reviewer is copilot.
+- learn: ops-metric-event-protocol archived with no learn job; FO did not run the idle hook.
+- peers: relay and web exchanges saved a research worker and caught an error; no `Peer:` lines, exchanges sit in task notes; two sends went into running turns; list_agents showed only its own workspace, full ids needed a grep of ~/.paseo/agents.
+- (a) gates: a 10-31 boundary decision (A to D) was unanswered on 11-03 and its approval later reached the FO through the relay FO; a decision parked under the one-decision rule has no reminder.
+- (b) dispatch: the classifier denied the second of two `netlify env:set` writes on 11-03, leaving an orphaned secret on relay staging; correction 1496be6d: the Captain was handed a combined block that day and has not confirmed running it, so the orphaned secret may still be in place.
+- First links: Codex security-only summary is Bridge gap 7 again; the unforced High handoff and the parked-decision reminder have no matching task yet; the orphaned secret is a live item for the Captain, not a package task.
+
+## Coverage (all six answered 2026-11-06)
+
+| FO | listed extensions | core (a) | core (b) |
+| --- | --- | --- | --- |
+| relay | answered | answered | answered |
+| web | answered | answered | answered |
+| qnow | answered | answered | answered |
+| kc-paseo-plugins | answered | answered | answered |
+| ops-inbox | answered | answered | answered |
+| journey-map | answered | answered | answered |
