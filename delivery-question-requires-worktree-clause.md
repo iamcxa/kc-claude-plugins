@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:delivery-question-requires-worktree-clause:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:delivery-question-requires-worktree-clause-ideation-1
+              briefing:
+                id: briefing:delivery-question-requires-worktree-clause:ideation:attempt-1:revision-1
+                digest: sha256:d25f81a5fea988a8a555aae30e074917e2ff706d0b2e7e40c043ec5758a676cf
+                room-ref: ./delivery-question-requires-worktree-clause/review/ideation/briefing-1
 ---
 
 `delivery_gate.py question` holds a validation gate question that omits "removing its clean, pushed worktree", so an approval cannot be read as covering a cleanup it never named.
