@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:codex-security-only-prompts-code-review:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:codex-security-only-prompts-code-review-ideation-1
+              briefing:
+                id: briefing:codex-security-only-prompts-code-review:ideation:attempt-1:revision-1
+                digest: sha256:56f4b05e4772cc4abe880cb5dd08a5f72b0d561897585d3054e61adc225139cd
+                room-ref: ./codex-security-only-prompts-code-review/review/ideation/briefing-1
 ---
 
 When Codex has posted only its security-review summary on a PR head, codex_review.py (or pr_watch.py) prints a next line that asks FO to request `@codex review`, so a merge ask is not prepared on a head with no code review.

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-security-only-prompts-code-review:ideation:attempt-1:revision-1",
+  "question": "決定：「Codex 只貼安全摘要時提醒」這份設計進入實作嗎？核准即接受 D1（閒置檢查不另外印出提醒，由 pr_watch.py wait 第一次查看時提醒）。",
+  "artifacts": [
+    {
+      "id": "artifact:codex-security-only-prompts-code-review:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/24d1cea922cfb556f65a486c5166fd75f7c72f7c/codex-security-only-prompts-code-review.md",
+      "rev": "sha256:d3e711f70dc5a99e6da9c011ba4f653a01eab5a477f5eebfd122573fb70fe638",
+      "mediaType": "text/markdown",
+      "summary": "Reader keeps exit 4 and adds security-only=summary:\u003cid\u003e plus a next: line for @codex review; pr_watch.py wait stops once per head; replay over 80 PRs changes only 28 security-only heads (ideation report, Opus, 2026-11-06). D1."
+    }
+  ]
+}
