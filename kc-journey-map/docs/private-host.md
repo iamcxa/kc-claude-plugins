@@ -185,6 +185,23 @@ see the operations runbook for deployment inputs and its private operator bridge
 A live run requires exact isolated resources, credential handling, measurement
 bounds and cleanup established before mutation.
 
+The packaged `scripts/private-cloudflare.example.json` enables Workers Logs at
+full sampling, with automatic invocation logs disabled to avoid collecting request
+URLs. Human-operation errors emit an operation name, a standard exception name
+(or `UnknownError`) and fixed storage/runtime diagnostic phrases; other exception
+text is redacted. The logger does not read request headers, bodies or identity
+fields. A failed denial receipt still returns the original authentication denial;
+it does not establish a successful sign-in or a persisted audit receipt.
+
+The sealed implementation-37 runner builds multipart Worker metadata directly in
+its `cloud.mjs` `metadata()` helper, rather than loading this template. A future
+reviewed runner would need `observability: { enabled: true, head_sampling_rate: 1,
+logs: { enabled: true, invocation_logs: false } }` in the main Worker upload and
+its subsequent bound upload. It must be resealed and separately authorized;
+changing this package template does not change that runner or authorize a run.
+See [Workers Logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/)
+for the configuration and sampling behavior.
+
 The registry owns grants, sessions, room inventory and asset associations.
 Each room owns tldraw SQLite and its sockets. A successful creation waits for
 registry acknowledgement; registry failure returns 503, and a retry can register

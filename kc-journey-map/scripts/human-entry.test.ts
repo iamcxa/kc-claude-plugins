@@ -146,3 +146,65 @@ test('entry preserves explicit empty/denied target and empty inventory without c
  assert.deepEqual(value.rooms, []); assert.equal(value.room, null); assert.equal(value.status, 'no_rooms')
  assert.equal(store.list('room:', 100).length, 0)
 })
+
+test('Node entry preserves 401 and category when the denial write fails', async () => {
+ const { store } = fixture(), put = store.put
+ store.put = (key, value) => {
+  if (key.startsWith('human-receipt:')) throw new Error('SQLITE_FULL: database or disk is full; token=secret-token email=private@example.invalid subject=secret-subject Cookie: secret-cookie body=secret-body')
+  put(key, value)
+ }
+ const meta = { get: async <T>(key: string) => store.get<T>(key), human: async (operation: string, input: any) => humanOperation(store, operation, input) }
+ const lines: string[] = [], original = console.error
+ console.error = (...args: unknown[]) => { lines.push(args.join(' ')) }
+ try {
+  const response = await handle({ private: true, origin, humanConfig: config, meta } as unknown as Host, new Request(origin + '/auth/entry'))
+  assert.equal(response.status, 401)
+  assert.deepEqual(await response.json(), { error: 'human_sign_in_required', category: 'human_sign_in_required' })
+  assert.equal(response.headers.get('Cache-Control'), 'private, no-store')
+  assert.ok(lines.length > 0)
+  const logged = lines.join(' ')
+  assert.match(logged, /record-denial/)
+  assert.match(logged, /Error/)
+  assert.match(logged, /SQLITE_FULL/)
+  for (const secret of ['secret-token', 'private@example.invalid', 'secret-subject', 'secret-cookie', 'secret-body']) assert.ok(!logged.includes(secret), secret)
+  const forbidden = await handle({ private: true, origin, humanConfig: config, meta } as unknown as Host, new Request(origin + '/auth/entry', { headers: { Authorization: 'Bearer secret-bearer' } }))
+  assert.equal(forbidden.status, 403)
+  assert.deepEqual(await forbidden.json(), { error: 'verified_human_required', category: 'verified_human_required' })
+  assert.ok(!lines.join(' ').includes('secret-bearer'))
+  assert.equal(store.list('browser-session:', 100).length, 0)
+ } finally { console.error = original }
+})
+
+test('provider start logs unexpected failures without exposing exception payloads', async () => {
+ const lines: string[] = [], original = console.error
+ console.error = (...args: unknown[]) => { lines.push(args.join(' ')) }
+ try {
+  const meta = { human: async () => { throw Object.assign(new Error('arbitrary-sensitive-value'), { name: 'sensitive-name' }) } }
+  const response = await handle({ private: true, origin, humanConfig: providerConfig, meta } as unknown as Host, new Request(origin + '/auth/provider/start', { method: 'POST', headers: { Origin: origin, 'X-Journey-Entry': '1', 'Content-Type': 'application/json' }, body: '{}' }))
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), { error: 'host operation failed' })
+  assert.match(lines.join(' '), /provider-start/)
+  assert.ok(!lines.join(' ').includes('arbitrary-sensitive-value'))
+  assert.ok(!lines.join(' ').includes('sensitive-name'))
+ } finally { console.error = original }
+})
+
+import { logHumanError } from '../server/host/human-diagnostics'
+test('diagnostics reject arbitrary names, operations and non-Error payloads', () => {
+ const lines: string[] = [], original = console.error
+ console.error = (...args: unknown[]) => { lines.push(args.join(' ')) }
+ try {
+  logHumanError('registry', 'secret-operation', Object.assign(new Error('Bearer secret-token\nCookie: secret-cookie secret-subject private@example.invalid {"body":"secret-body"}'), { name: 'secret-name' }))
+  logHumanError('registry', { secret: 'secret-operation' }, { message: 'secret-body' })
+  const records = lines.map(line => JSON.parse(line))
+  assert.equal(records.length, 2)
+  for (const record of records) {
+   assert.equal(record.operation, 'unknown')
+   assert.equal(record.name, 'UnknownError')
+   assert.equal(record.message, '[redacted]')
+  }
+  assert.ok(!lines.join(' ').includes('secret-'))
+  console.error = () => { throw new Error('sink failed') }
+  assert.doesNotThrow(() => logHumanError('denial-receipt', 'record-denial', new Error('SQLITE_FULL')))
+ } finally { console.error = original }
+})

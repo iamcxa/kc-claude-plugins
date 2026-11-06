@@ -5,6 +5,7 @@ import { currentGrant, validateGrants, type Admission, type Grant, type Metadata
 import { pruneExpiredSessions } from './session-retention'
 import { bootstrapHuman, humanOperation, validateHumanConfig, type HumanConfig, type SyncMetadata } from './human-store'
 import { audited } from './audit'
+import { logHumanError } from './human-diagnostics'
 import { securityOperation, matchesTarget } from './security-store'
 import { canSend, renewLease, type StreamLease } from './stream-lease'
 import { bootstrapAgent, agentOperation, captureAgent, agentResult, type AgentScope } from './agent-store'
@@ -68,7 +69,7 @@ export class JourneyRegistry {
   }
   if (op === '/human') {
    try { const result=this.ctx.storage.transactionSync(() => humanOperation(this.sync(), body.operation, body.input));if(result?.operationId)result.denialCommitObservedAt=Date.now();return Response.json(await this.notifyResult(result)) }
-   catch (error) { return Response.json({ error: error instanceof HostError ? error.message : 'metadata unavailable', ...(error instanceof HostError ? error.details : {}) }, { status: error instanceof HostError ? error.status : 503 }) }
+   catch (error) { logHumanError('registry', body.operation, error); return Response.json({ error: error instanceof HostError ? error.message : 'metadata unavailable', ...(error instanceof HostError ? error.details : {}) }, { status: error instanceof HostError ? error.status : 503 }) }
   }
   if (op === '/security') {
    try { return Response.json(body.operation==='progress'?await this.notifyResult({operationId:body.input.operationId}):this.ctx.storage.transactionSync(() => securityOperation(this.sync(), body.operation, body.input))) }
