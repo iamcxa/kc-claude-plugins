@@ -1,0 +1,21 @@
+{
+  "base": "b804d81d3abc94c9c321326dc75e7cac927c5252",
+  "candidate": "871c6b2f4ebccfc2c67df91d7d39ad038aa0710f",
+  "date": "2026-11-06",
+  "source_sha256": "70e8cc5aea3f06a2d561355572881b9e2ef65c6837d8b266081a397b92b703ef",
+  "unit": "16 passed",
+  "delivery": "156 passed, 1 existing skip",
+  "mutations": "6 rejected plus native wrapper falsifier and historical #672 head-check falsifier",
+  "native_cases": 14,
+  "replay": {
+    "pass": 54,
+    "stop": 30
+  },
+  "recount": {
+    "pass": 74,
+    "stop": 10
+  },
+  "ci_cost_per_pr": "not measured; existing package-path triggers unchanged; one added unit-test command",
+  "native_isolation": "normal HOME/auth as FO authorized; Claude --setting-sources project --settings temporary JSON; headless --no-session-persistence; Codex --ignore-user-config --ephemeral with --ignore-rules except rules cases; no operator settings edited; interactive CLI recorded trust/session metadata",
+  "interactive_process": "PID 74131 terminated after evidence capture; ps -p returned no process"
+}

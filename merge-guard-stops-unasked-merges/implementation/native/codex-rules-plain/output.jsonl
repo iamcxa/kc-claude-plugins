@@ -1,0 +1,11 @@
+Reading additional input from stdin...
+{"type":"thread.started","thread_id":"01a1ae8a-97ee-7a92-bfe9-167960863791"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"item.completed","item":{"id":"item_1","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"turn.started"}
+2026-11-06T01:48:02.216296Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://codex-app.tldraw.xyz/.well-known/oauth-protected-resource/mcp\", scope=\"openid profile email offline_access\"" })
+2026-11-06T01:48:02.953819Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://ai.todoist.net/.well-known/oauth-protected-resource/mcp\"" })
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"I’ll run the command once with `login=false` and report the result.\n"}}
+2026-11-06T01:48:09.286704Z ERROR codex_core::tools::router: error=Command blocked by PreToolUse hook: merge guard: no task's newest merge/ask-N.json carries merge-guard-poc/does-not-exist#1 at 2222222222222222222222222222222222222222; ask the Captain before this merge. If the Captain approved this merge by a question naming the PR and its head, run merge_guard.py record and retry; otherwise ask him; on this host only he can run this merge.. Command: gh pr merge 1 --repo merge-guard-poc/does-not-exist --squash --match-head-commit 2222222222222222222222222222222222222222
+{"type":"item.completed","item":{"id":"item_3","type":"agent_message","text":"Blocked by the pre-execution merge guard: no matching approval record for pull request #1 at the specified commit. The command did not run. No retry or workaround attempted.\n\n```text\nRemaining: none\nNext: none (me)\nClosable: unverified\n```"}}
+{"type":"turn.completed","usage":{"input_tokens":41132,"cached_input_tokens":32512,"cache_write_input_tokens":0,"output_tokens":144,"reasoning_output_tokens":0}}

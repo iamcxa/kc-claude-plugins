@@ -360,3 +360,38 @@ The Captain 「看得到，也答了」 (host question dialog, 2026-11-06): the 
 - After his answer: FO archives the agent and the workspace and removes `/tmp/merge-guard-poc-paseo`. Two side effects remain to clean up: Claude saved the session transcript under `~/.claude/projects/-private-tmp-merge-guard-poc-paseo-work`, and attempt 1's archived agent is still in Paseo.
 
 **Record route.** `merge_guard.py record` carries a Release, workflow-sync or learning PR whose approving question names its number and head. The recount stops 10 of 84 merges instead of 30, and #672 is still among them. The remaining 9 belong to no task here. D3 also adds one sentence to the `delivery_gate.py` merge-ask line, so FO records before merging; on Claude, FO never sees the stop reason.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria in the assigned worktree, D1 to D4 as recommended in the second ideation gate; only the files the design names.
+  Branch `spacedock-ensign/merge-guard-stops-unasked-merges`; base `b804d81d3abc94c9c321326dc75e7cac927c5252`; candidate `871c6b2f4ebccfc2c67df91d7d39ad038aa0710f`. Seven named files; clean code worktree. Without this candidate the base has no package merge guard or record command.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main.
+  Publication is FO-owned by this dispatch: no product push or PR opened. Title/body prepared at `/tmp/impl-merge-guard-stops-unasked-merges-pr.md` and `implementation/prepared-pr.md`; FO creates the Draft PR.
+- DONE: ADR 0063 records the ruling the design names, quoting the Captain's words from the task file and its gate records.
+  `docs/adr/0063-a-merge-no-record-carries-is-stopped-by-a-user-registered-hook.md` quotes both ideation rulings and the full D1–D4 approval question; ADR lint exit 0 (`implementation/merge-guard-adr.log`). Existing ADRs read at exact base/current SHA and not edited.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared).
+  AC-1/2/9: `python3 -B kc-dev-flow-2/scripts/test_merge_guard.py`, 16 passed, covers newest/full/prefix/archive/_merges/repo/flag/record refusals and uncommitted linked-state discovery; a non-state branch stops. `_merges` leaves real `spacedock status` output identical (`implementation/merge-guard-unit.log`, `merge-guard-status.json`).
+- DONE: AC-3, fail closed on both hosts with the documented registration wrapper.
+  Native missing scripts and injected Python exceptions return hook exit 2; unreadable newest records ask on Claude and deny on Codex; fake merges 0. Removing `|| exit 2` returns 1 on Claude and the fake merge runs once (`implementation/native/`, `merge-guard-native-results.json`).
+- DONE: AC-4/5, exercise the package guard in both native hosts.
+  Claude headless uncarried has `permission_denials` and 0 fake merges; carried runs once. Interactive auto mode shows “Do you want to proceed?” and the guard reason; canceled unanswered. Codex uncarried stops with ignored rules and with operator rules loaded, including plain `gh pr merge`; carried runs once. Hook JSON and fake logs saved for all cases.
+- DONE: AC-6, replay and recount against the package script and dev2 state checkout.
+  `python3 -B /tmp/merge-guard-replay.py`: 54 pass/30 stop, then 74 pass/10 stop; no differences from ideation. #672 refused for missing head `6c972e7`. Mutating away the record head check produces 75 pass/9 stop and #672 passes (`implementation/merge-guard-replay.log`, `merge-guard-head-mutant-replay.log`).
+- DONE: AC-1/2/9 falsifiers reject weakened implementations.
+  Fresh temporary modules and `python3 -B` avoid bytecode caches: oldest instead of newest, Codex ask, removed _merges glob, committed instead of disk reads, absent question-head check, and absent PR digit boundary each fail its named test (`implementation/merge-guard-mutations.py`, `merge-guard-mutations.json`, six mutant logs).
+- DONE: AC-7/8, adoption instructions, bounded delivery wording and repository lint.
+  `python3 -B kc-dev-flow-2/scripts/lint-skills.py` exit 0; WORKFLOW_WORD_BUDGET remains 5939. `delivery_gate.py` changes just ASK/ASK_UNQUOTED closing sentences; `python3 -B kc-dev-flow-2/scripts/test_delivery_gate.py`: 156 passed, 1 existing skip. No workflow.md, _mods, versions or user settings edits.
+- DONE: AC-10 phone observation is recorded in the task (captain-steps/1.md).
+  Existing FO/Captain evidence: 「看得到，也答了」; pending request resolved and fake gh ran once. This implementation did not rerun or claim a new phone observation.
+- DONE: Required package checks: adr_lint.py docs/adr --since <base> --require 0063, number_guards.py check, and comment_ratio.py within its maximum; commit locally, no push; PR text written for FO.
+  Exact candidate checks exit 0: 62 ADRs/0 legacy; no number findings, base `b804d81d3abc94c9c321326dc75e7cac927c5252`; 349 added code lines/3 comment lines = 0.9%, maximum 5% (`implementation/merge-guard-adr.log`, `merge-guard-numbers.log`, `merge-guard-comments.log`).
+- DONE: Affected documents each have a disposition from doc_impact.py <base> <candidate>.
+  ADR 0044 unaffected: summary/legacy checks unchanged; ADR 0051 unaffected: round-count check unchanged; ADR 0062 unaffected: quoted-question grant unchanged; ADR 0063 updated: this guard's ruling; kc-dev-flow-2/README.md unaffected: package still installs no hook automatically and already directs maintainers to CI-listed tests (`implementation/merge-guard-docs.json`).
+- DONE: Report reading cost, native isolation and cleanup evidence.
+  ASK 40→57, ASK_UNQUOTED 39→56 words; adoption 2347→2598; workflow 5939→5939. All successful native runs kept normal HOME/auth by FO instruction; Claude loaded project plus temporary hook settings, headless with no session persistence; Codex ignored user config and used ephemeral sessions, rules read-only. Initial throwaway-HOME and sandbox login attempts failed before inference; successful native runs were outside the sandbox. Interactive trust/session metadata is CLI-owned, accepted by FO; script PID 74131 terminated, `ps -p` confirmed absent. Evidence manifest binds source SHA256.
+- SKIPPED: FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured.
+  RoboRev, hosted CI, external review and publication not run. CI cost per PR not measured; existing package-path triggers preserved, one added unit-test step. Installation on the Captain's machines remains his post-release action.
+
+### Summary
+
+The Pilot implementation is committed locally at `871c6b2f4ebccfc2c67df91d7d39ad038aa0710f`, with all ten criteria supported at their stated evidence boundaries and the named mutations exercised. The package supplies the guard and record route; a record is not proof of who approved it, Paseo agents can answer another agent's ask, and operator registration is still required. FO owns publication, independent validation, RoboRev and hosted CI; the code worktree is clean.

@@ -1,0 +1,1 @@
+{"permissions": {"defaultMode": "auto"}, "hooks": {"PreToolUse": [{"matcher": "Bash", "hooks": [{"type": "command", "command": "python3 /tmp/merge-guard-native/claude-no-wrapper/proxy.py"}]}]}}

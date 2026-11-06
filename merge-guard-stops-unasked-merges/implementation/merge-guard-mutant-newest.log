@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_newest_record_supersedes_older (__main__.MergeGuardTests.test_newest_record_supersedes_older)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-mutant-m7c6fzpj/test_merge_guard.py", line 49, in test_newest_record_supersedes_older
+    self.assertEqual(self.verdict(), "stop")
+AssertionError: 'pass' != 'stop'
+- pass
++ stop
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

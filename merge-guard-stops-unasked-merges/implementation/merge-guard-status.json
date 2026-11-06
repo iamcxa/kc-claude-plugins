@@ -1,0 +1,13 @@
+{
+  "before": "ID     SLUG                           STATUS               TITLE                          SCORE\n--     ----                           ------               -----                          -----\ntask   task                           backlog              status fixture                 \n",
+  "after": "ID     SLUG                           STATUS               TITLE                          SCORE\n--     ----                           ------               -----                          -----\ntask   task                           backlog              status fixture                 \n",
+  "stderr": [
+    "",
+    ""
+  ],
+  "exit": [
+    0,
+    0
+  ],
+  "same": true
+}

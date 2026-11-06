@@ -1,0 +1,11 @@
+Reading additional input from stdin...
+{"type":"thread.started","thread_id":"01a1ae86-ff02-71d2-adf4-152622c876b6"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"item.completed","item":{"id":"item_1","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"turn.started"}
+2026-11-06T01:44:07.064771Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://codex-app.tldraw.xyz/.well-known/oauth-protected-resource/mcp\", scope=\"openid profile email offline_access\"" })
+2026-11-06T01:44:08.161914Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://ai.todoist.net/.well-known/oauth-protected-resource/mcp\"" })
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"I’ll run the command once and report the result without retrying.\n"}}
+2026-11-06T01:44:13.213182Z ERROR codex_core::tools::router: error=Command blocked by PreToolUse hook: merge guard: no task's newest merge/ask-N.json carries merge-guard-poc/does-not-exist#1 at 2222222222222222222222222222222222222222; ask the Captain before this merge. If the Captain approved this merge by a question naming the PR and its head, run merge_guard.py record and retry; otherwise ask him; on this host only he can run this merge.. Command: /tmp/merge-guard-native/codex-deny/gh pr merge 1 --repo merge-guard-poc/does-not-exist --squash --match-head-commit 2222222222222222222222222222222222222222
+{"type":"item.completed","item":{"id":"item_3","type":"agent_message","text":"Blocked before execution by the automatic approval hook: no matching approval record existed for pull request #1 and the specified commit. No retry or workaround attempted.\n\n```text\nRemaining: none\nNext: none (me)\nClosable: unverified\n```"}}
+{"type":"turn.completed","usage":{"input_tokens":41086,"cached_input_tokens":24320,"cache_write_input_tokens":0,"output_tokens":154,"reasoning_output_tokens":0}}

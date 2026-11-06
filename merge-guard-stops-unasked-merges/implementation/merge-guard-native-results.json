@@ -1,0 +1,72 @@
+[
+  {
+    "name": "claude-exception",
+    "status": "passed",
+    "message": "hook exit 2; fake merges 0"
+  },
+  {
+    "name": "claude-match",
+    "status": "passed",
+    "message": "hook exit 0; fake merges 1"
+  },
+  {
+    "name": "claude-missing",
+    "status": "passed",
+    "message": "hook exit 2; fake merges 0"
+  },
+  {
+    "name": "claude-no-wrapper",
+    "status": "passed",
+    "message": "hook exit 1; fake merges 1"
+  },
+  {
+    "name": "claude-unreadable",
+    "status": "passed",
+    "message": "hook exit 0; fake merges 0"
+  },
+  {
+    "name": "codex-deny",
+    "status": "passed",
+    "message": "hook exit 0; fake merges 0"
+  },
+  {
+    "name": "codex-exception",
+    "status": "passed",
+    "message": "hook exit 2; fake merges 0"
+  },
+  {
+    "name": "codex-match",
+    "status": "passed",
+    "message": "hook exit 0; fake merges 1"
+  },
+  {
+    "name": "codex-missing",
+    "status": "passed",
+    "message": "hook exit 2; fake merges 0"
+  },
+  {
+    "name": "codex-rules",
+    "status": "passed",
+    "message": "hook exit 0; fake merges 0"
+  },
+  {
+    "name": "codex-rules-plain",
+    "status": "passed",
+    "message": "hook exit 0; fake merges 0"
+  },
+  {
+    "name": "codex-unreadable",
+    "status": "passed",
+    "message": "hook exit 0; fake merges 0"
+  },
+  {
+    "name": "claude-nomatch",
+    "status": "passed",
+    "message": "permission_denials contains attempted merge; fake merges 0"
+  },
+  {
+    "name": "claude-interactive",
+    "status": "passed",
+    "message": "auto-mode ask and reason shown; canceled without answering; process 74131 terminated"
+  }
+]

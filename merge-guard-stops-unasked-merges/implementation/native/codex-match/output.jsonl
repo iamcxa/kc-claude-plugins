@@ -1,0 +1,12 @@
+Reading additional input from stdin...
+{"type":"thread.started","thread_id":"01a1ae86-ff01-7941-9e95-37db0324a536"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"item.completed","item":{"id":"item_1","type":"error","message":"`--dangerously-bypass-hook-trust` is enabled. Enabled hooks may run without review for this invocation."}}
+{"type":"turn.started"}
+2026-11-06T01:44:07.062038Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://codex-app.tldraw.xyz/.well-known/oauth-protected-resource/mcp\", scope=\"openid profile email offline_access\"" })
+2026-11-06T01:44:08.919630Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://ai.todoist.net/.well-known/oauth-protected-resource/mcp\"" })
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"I’ll run the command once and report the result."}}
+{"type":"item.started","item":{"id":"item_3","type":"command_execution","command":"/bin/zsh -lc '/tmp/merge-guard-native/codex-match/gh pr merge 1 --repo merge-guard-poc/does-not-exist --squash --match-head-commit 1111111111111111111111111111111111111111'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_3","type":"command_execution","command":"/bin/zsh -lc '/tmp/merge-guard-native/codex-match/gh pr merge 1 --repo merge-guard-poc/does-not-exist --squash --match-head-commit 1111111111111111111111111111111111111111'","aggregated_output":"","exit_code":0,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_4","type":"agent_message","text":"The command ran once and exited with code 0. No output was returned.\n\n```text\nRemaining: none\nNext: none (me)\nClosable: unverified\n```"}}
+{"type":"turn.completed","usage":{"input_tokens":40930,"cached_input_tokens":32512,"cache_write_input_tokens":0,"output_tokens":136,"reasoning_output_tokens":0}}

@@ -1,0 +1,4 @@
+replay {'stop': 30, 'pass': 54} refused []
+differences from ideation: {'now_pass': [], 'now_stop': []}
+recount {'stop': 10, 'pass': 74} refused [{'pr': 672, 'reason': 'the question does not name head 6c972e7'}]
+differences from ideation: {'now_pass': [], 'now_stop': []}

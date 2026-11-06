@@ -1,0 +1,1 @@
+{"permissions": {"defaultMode": "auto"}, "hooks": {"PreToolUse": [{"matcher": "Bash", "hooks": [{"type": "command", "command": "python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-guard-stops-unasked-merges/kc-dev-flow-2/scripts/merge_guard.py claude || exit 2"}]}]}}
