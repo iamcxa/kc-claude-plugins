@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:delivery-question-requires-worktree-clause:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:delivery-question-requires-worktree-clause-validation-1
+              briefing:
+                id: briefing:delivery-question-requires-worktree-clause:validation:attempt-1:revision-1
+                digest: sha256:c45b46b749be54808ac1eca4b7442fb09d9e87fc71f5ce125473b3402c2bfbcf
+                room-ref: ./delivery-question-requires-worktree-clause/review/validation/briefing-1
 started: 2026-11-06T01:30:12Z
 worktree: .worktrees/spacedock-ensign-delivery-question-requires-worktree-clause
 pr: iamcxa/kc-claude-plugins#793
