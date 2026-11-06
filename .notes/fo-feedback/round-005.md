@@ -46,3 +46,16 @@ Sends (Paseo agent message, steer, 2026-11-06; returned message ids):
 ## Findings and close
 
 (pending)
+
+### qnow dev2 FO, 519ab4c8 — answered 2026-11-06 (Paseo agent message b087cc6b, sender stamped)
+
+Condensed in its own words; operator data, not verified yet.
+- roborev: #1338 job 1524 clean; FO's dispatch record omitted the roborev_gate.py line (validator F3, declined as Polish); FO counted roborev as an external round and the observer flagged it; proposes delivery_gate.py question refuse round counts that cite roborev evidence.
+- codex: #1338 clean on 9ad9bb170 (summary:6663772500); keep the one-call, one-line evidence.
+- copilot: #1338 triggered as second reviewer ("touches authority" read broadly for a security change); quota refusal exit 5 handled as written; quota failure is silent until requested.
+- learn: preview-sign-in-wildcard observer 27 findings (12 violations), evaluator no-change; FO first acked with `digest` not `notice_digest`; asks for a per-rule counter so repeated slips leave a trace.
+- peers: landing FO 6f191513 asked a merge hold until #1337; held and released; prevented a strict-up-to-date race.
+- journey-map, release-acceptance: unknown / none recorded.
+- (a) gates: delivery_gate.py question failed on web paths in the validator's report read as local files, and check failed on a by-design skipped "Release Gate" run; the Captain waived both (「豁免網址路徑誤判」, 「豁免release gate跳過，合併1338」); design_surfaces.py's "Built screen review:" placement and preview-path rules took three runs. Captain-steps record let it answer the Captain with a fresh read.
+- (b) dispatch: Codex capacity errors twice then a Claude fallback (office-action-audit-log ideation); about 6 validator permission requests on #1338; a follow-up addendum sent with no dispatch record (observer); pre-push hooks failed twice under Mac load; asks for a documented load gate.
+- First links: the web-path false positive is the same class as backlog delivery-check-resolves-links-from-the-task (relative-path resolution in delivery_gate.py); the skipped-run false positive and the per-rule counter have no matching task yet.
