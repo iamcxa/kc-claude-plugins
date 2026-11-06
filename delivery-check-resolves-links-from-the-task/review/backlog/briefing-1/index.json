@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-check-resolves-links-from-the-task:backlog:attempt-1:revision-1",
+  "question": "決定：第 16 批這五張（跳過的 CI 不擋、Codex 只貼安全摘要時提醒、交付檢查的相對路徑、ADR 編號跨流程預留、婉拒只在出過事時開任務）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？核准即接受「婉拒只在出過事時開任務」任務裡寫的標準（指出真的錯並說得出誰受害、再次出現、或你要求）。要改哪張直接說。",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-check-resolves-links-from-the-task:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/97688f73fb83b82877cf977b6f64a5a0eb5c3720/delivery-check-resolves-links-from-the-task.md",
+      "rev": "sha256:d77f51d98be066e963d1aade157788f3238183e5a09894326686d2c32896adb5",
+      "mediaType": "text/markdown",
+      "summary": "Pilot. delivery_gate.py resolves relative and URL links from the task folder; bite: kc-plugin #793 false hold (2026-11-06) and qnow #1338 web paths (waived)."
+    }
+  ]
+}

@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:delivery-check-resolves-links-from-the-task:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:delivery-check-resolves-links-from-the-task-backlog-1
+              briefing:
+                id: briefing:delivery-check-resolves-links-from-the-task:backlog:attempt-1:revision-1
+                digest: sha256:23187241979e330ede36c7eb8884b7719c28cd95d4ee02553b92d0765f72712f
+                room-ref: ./delivery-check-resolves-links-from-the-task/review/backlog/briefing-1
 ---
 
 `delivery_gate.py question` and `check` read a relative `.md` path named in the gate text or the validation report from the task's own folder, so the result does not depend on where FO runs the command.
