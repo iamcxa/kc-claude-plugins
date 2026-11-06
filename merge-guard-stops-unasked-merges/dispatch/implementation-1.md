@@ -27,3 +27,5 @@ Never run `git remote set-url` or any `git config` write in a worktree of this r
 
 Your final reply is your completion message: Paseo delivers it to FO when your turn ends. End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.
 Done line: Done: merge-guard-stops-unasked-merges completed implementation
+
+roborev not run: by this worker; FO ran RoboRev on the pushed head after the report (clean on 871c6b2f4, evidence=roborev:1545), because the Codex sandbox cannot reach the local roborev daemon. Line appended by FO on 2026-11-06 after dispatch; the record as sent omitted it.
