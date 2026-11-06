@@ -16,6 +16,8 @@ The README's review-finding rule that files every round-3 decline as a new backl
 - Upstream first: README FO steps: review findings, step 5; delivery_gate.py decline parsing (bracket rule, count join); the observer's check of step 5.
 - Non-goals: the three holds designed in gate-summary-names-each-decline; retiring the 11 open follow-up tasks (a separate question for the Captain).
 
+- Batch 16: the Captain 「可以，就這樣」 (chat, 2026-11-06), answering 「這批做 2、3、4、5、9 這 5 張，可以嗎？」, which named this task.
+
 ## Budget
 - One package PR; the workflow word budget does not rise.
 
