@@ -151,7 +151,7 @@ def reservation_holders(args, cfg):
             if sibling.is_file() and sibling.resolve() != task:
                 add(sibling.read_text(errors="replace"), str(sibling))
     fetched = subprocess.run(
-        ["git", "-C", args.repo, "fetch", "--quiet", "origin",
+        ["git", "-C", args.repo, "fetch", "--quiet", "--prune", "origin",
          "+refs/heads/spacedock-state/*:refs/remotes/origin/spacedock-state/*"],
         capture_output=True)
     if fetched.returncode:

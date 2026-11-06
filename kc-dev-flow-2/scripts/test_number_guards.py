@@ -423,6 +423,20 @@ class CrossWorkflowTests(unittest.TestCase):
         self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
         self.assertIn("origin/spacedock-state/dev2", self.fx.git("branch", "-r"))
 
+    def test_deleted_origin_state_branch_releases_its_adr_number(self):
+        done = self.reserve()
+        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+        self.assertIn("origin/spacedock-state/dev2", self.fx.git("branch", "-r"))
+        self.origin.git("branch", "-D", "spacedock-state/dev2")
+        done = self.reserve()
+        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0060\n"), done.stderr)
+        self.assertNotIn("origin/spacedock-state/dev2", self.fx.git("branch", "-r"))
+        self.assertIn("origin/main", self.fx.git("branch", "-r"))
+        self.candidate()
+        done = self.run_guard("check")
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        self.assertIn("PASS: no findings", done.stdout)
+
     def test_merge_ask_refuses_held_number_and_accepts_free_number(self):
         self.candidate()
         done = self.run_guard("check")
