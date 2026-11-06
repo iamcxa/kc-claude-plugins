@@ -34,6 +34,17 @@ gates:
                 id: briefing:codex-security-only-prompts-code-review:ideation:attempt-1:revision-1
                 digest: sha256:56f4b05e4772cc4abe880cb5dd08a5f72b0d561897585d3054e61adc225139cd
                 room-ref: ./codex-security-only-prompts-code-review/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-security-only-prompts-code-review:ideation:1
+                briefing: briefing:codex-security-only-prompts-code-review:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-06T16:03:19.886626Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-06), answering 「決定：「Codex 只貼安全摘要時提醒」這份設計進入實作嗎？核准即接受 D1（閒置檢查不另外印出提醒，由 pr_watch.py wait 第一次查看時提醒）。」. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 When Codex has posted only its security-review summary on a PR head, codex_review.py (or pr_watch.py) prints a next line that asks FO to request `@codex review`, so a merge ask is not prepared on a head with no code review.
