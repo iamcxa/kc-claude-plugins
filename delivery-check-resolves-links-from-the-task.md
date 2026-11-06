@@ -203,3 +203,42 @@ Recommended order: merge-guard-stops-unasked-merges first (it is in validation);
 ### Summary
 
 There are two defects, not one. Relative `.md` names were opened from the shell's current directory; they now resolve from the task folder, or from its parent for `<slug>/…`. S4 missing-path checks read the validator's report as well as FO's text; they now read only FO's text and `Asked:` lines. With both repairs, #1338 still held on prose links in the validator's evidence README, now from every directory. Changing that touches the backlog non-goal ("which links count as steps"), so it is decision D1 for the Captain, recommended yes. Harness, prototypes and logs are in `delivery-check-resolves-links-from-the-task/ideation/`.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved Pilot design and D1 with the two attached changes, in the assigned worktree and named files.
+  Branch `spacedock-ensign/delivery-check-resolves-links-from-the-task`; base `ba055b8a7a55a787ac989c4cef52d07dd75661ad`; candidate `97dceebedd68108ef8e67fa5455f1e578c910ad6`. Only delivery_gate.py and test_delivery_gate.py changed; no version bump, ADR or workflow edit.
+- DONE: AC-1, AC-2 and AC-3: task-relative, slug-prefixed and steps-record paths resolve independently of cwd.
+  `TaskFolderCaptainTests` and the moved real-CLI card test exercise the repository/state/task directories, recorded and unrecorded fences, relative task arguments and record names; reverting named_file, its slug branch or the steps base each fails an assertion (`mutation-1.log` to `mutation-3.log`).
+- DONE: AC-4: report-only routes do not cause S4; missing paths in FO text and Asked lines still hold.
+  `test_report_routes_do_not_hide_missing_message_or_asked_paths` passes; restoring the report to the S4 loop fails its pass control (`mutation-4.log`).
+- DONE: AC-5: replay both historical bites from the repository, state and task folders.
+  `replay-candidate.log` has six gate-text-complete verdicts; the base reversion reproduces the root README /plugin fence and three /api/office/me S4 holds (`replay-base.log`). These are bounded local archived-state replays; the removed qnow worktree is a temporary stand-in.
+- DONE: AC-6 local evidence: full package tests pass, workflow words and emitted text stay unchanged.
+  `suite.json`: all 26 CI-listed local commands exit 0, 1162 unittest cases with one existing environment-gated replay skipped, plus model-free dispatch/recovery probes; local CLI 0.27.2/plugin root 0.27.3. `scope.json` confirms unchanged emit calls and out-of-scope functions; altered emitted text fails (`mutation-6.log`).
+- DONE: AC-7: report-only cards contribute fences; FO-named cards also contribute prose links.
+  `test_report_only_cards_require_fences_and_fo_named_cards_also_require_links` covers recorded/unrecorded commands, prose links, fenced URLs and absolute/relative aliases; restoring report-card prose links fails (`mutation-5.log`).
+- DONE: Each falsifier was exercised without caches, and fresh-shell acceptance passes at the committed candidate.
+  `bash --noprofile --norc /tmp/opencode/delivery-links/acceptance.sh <assigned worktree>` runs seven entrance tests plus six assertion-killed mutants in fresh copies with python3 -B and PYTHONDONTWRITEBYTECODE; `acceptance.log` and `mutations.json`. Base replay is AC-5's reversion falsifier.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs) and design_surfaces.py check exit 0.
+  `lint.log`: 5939/5939 workflow words, unchanged; module help goes 1068 to 1096 words for the two approved sentences (`words.json`). `design.log`: design surfaces presentable; no budget raise.
+- DONE: Package adr_lint.py docs/adr --since <base> and number_guards.py check exit 0.
+  `adr.log`: 61 records, 0 legacy; `numbers.log`: PASS, migration guard skipped because no migrations-path is declared. No numbered record is added or changed.
+- DONE: Package comment_ratio.py is within its maximum.
+  `comments.log`: base ba055b8a7a55, head 97dceebedd68, 125 code lines, 0 comment lines, 0.0%, maximum 5% met.
+- DONE: doc_impact.py <base> HEAD, with a disposition for every listed document.
+  `doc-impact.json` and `doc-verdicts.json`: docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md unaffected: separate-summary reviewer checks and legacy combined text remain.
+  docs/adr/0051-the-merge-ask-check-requires-the-round-count.md unaffected: check and round-count refusal are unchanged; docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md unaffected: ASK_FORM, ASK_UNQUOTED, check and ledger are unchanged.
+- DONE: Commit locally and prepare the Conventional Commit PR title/body for FO.
+  Product commit above is clean; `/tmp/impl-delivery-check-resolves-links-from-the-task-pr.md` contains the title on its first line. Logs and executable evidence are under `/tmp/opencode/delivery-links/`; repository tests are committed.
+- SKIPPED: One Draft PR; product-branch push and opening its PR.
+  No PR opened: no push grant. Read-only branch/PR queries found no published task branch and no open task PR (`prs.json`); FO owns publication.
+- SKIPPED: RoboRev and hosted CI at the candidate head, including AC-6's CI-specific evidence.
+  Not run, delegated to FO after publication. Local tests do not establish hosted CI, native worker execution, human approval or delivery.
+- SKIPPED: CI cost measurement.
+  Not measured; no CI workflow or trigger changes.
+
+### Summary
+
+The committed Pilot repair anchors Markdown and record names to the task folder, keeps report-only paths out of S4, and applies the approved D1 prose-link boundary while retaining fenced-step coverage. All required local checks pass; FO retains product publication, Draft PR creation, RoboRev, hosted CI and subsequent workflow decisions.
+
