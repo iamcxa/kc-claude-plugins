@@ -1,0 +1,85 @@
+Candidate: 5b3e290a7eaceb0fe70f489d25d622314598b9f0
+Exports: /tmp/delivery-clause-acceptance.ZUl7lj
+test_a_question_that_names_the_merge_without_the_hold_out_clause_is_refused (test_delivery_gate.QuestionTests.test_a_question_that_names_the_merge_without_the_hold_out_clause_is_refused) ... ok
+test_both_wordings_in_use_and_a_question_that_names_no_merge_pass (test_delivery_gate.QuestionTests.test_both_wordings_in_use_and_a_question_that_names_no_merge_pass) ... ok
+test_claim_source_reminder_on_pass_hold_and_unreadable_input (test_delivery_gate.QuestionTests.test_claim_source_reminder_on_pass_hold_and_unreadable_input) ... ok
+test_hold_out_and_removal_problems_are_both_reported (test_delivery_gate.QuestionTests.test_hold_out_and_removal_problems_are_both_reported) ... ok
+test_legacy_combined_text_still_accepts_no_round_count (test_delivery_gate.QuestionTests.test_legacy_combined_text_still_accepts_no_round_count) ... ok
+test_mutation_accepting_any_merge_word_lets_the_clause_less_question_pass (test_delivery_gate.QuestionTests.test_mutation_accepting_any_merge_word_lets_the_clause_less_question_pass) ... ok
+test_mutation_accepting_any_worktree_word_grants_keeping_it (test_delivery_gate.QuestionTests.test_mutation_accepting_any_worktree_word_grants_keeping_it) ... ok
+test_recorded_merge_questions_require_the_worktree_removal_clause (test_delivery_gate.QuestionTests.test_recorded_merge_questions_require_the_worktree_removal_clause) ... ok
+test_removal_in_the_summary_does_not_grant_it_in_the_question (test_delivery_gate.QuestionTests.test_removal_in_the_summary_does_not_grant_it_in_the_question) ... ok
+test_removal_wording_names_clean_pushed_worktrees_in_one_sentence (test_delivery_gate.QuestionTests.test_removal_wording_names_clean_pushed_worktrees_in_one_sentence) ... ok
+test_the_merge_time_check_does_not_judge_the_hold_out_clause (test_delivery_gate.QuestionTests.test_the_merge_time_check_does_not_judge_the_hold_out_clause) ... ok
+test_the_other_text_checks_run_and_an_unreadable_input_exits_2 (test_delivery_gate.QuestionTests.test_the_other_text_checks_run_and_an_unreadable_input_exits_2) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.555s
+
+OK
+#786 override-recorded-when-captain-departs: exit 1; the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree | next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.
+#787 extension-instruction-check-sees-every-listed-extension: exit 1; the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree | next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.
+#788 gate-presentation-asks-one-thing-plainly: exit 0; gate text complete
+#786 override-recorded-when-captain-departs: exit 0; gate text complete
+#787 extension-instruction-check-sees-every-listed-extension: exit 0; gate text complete
+#788 gate-presentation-asks-one-thing-plainly: exit 0; gate text complete
+check output identical, exit 0 (synthetic task and gh facts)
+workflow bytes identical
+61 ADR file(s) checked, 0 legacy
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+PACKAGE            CONFIGURED PATH                                      RESULT    EFFECTIVE PATH
+e2e-pipeline       .claude-plugin/plugin.json                           ok        e2e-pipeline/.claude-plugin/plugin.json
+e2e-pipeline       .codex-plugin/plugin.json                            ok        e2e-pipeline/.codex-plugin/plugin.json
+e2e-pipeline       /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-plugin-forge    .claude-plugin/plugin.json                           ok        kc-plugin-forge/.claude-plugin/plugin.json
+kc-plugin-forge    .codex-plugin/plugin.json                            ok        kc-plugin-forge/.codex-plugin/plugin.json
+kc-plugin-forge    /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-nightwatch      .claude-plugin/plugin.json                           ok        kc-nightwatch/.claude-plugin/plugin.json
+kc-nightwatch      /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-hyperfocus      .claude-plugin/plugin.json                           ok        kc-hyperfocus/.claude-plugin/plugin.json
+kc-hyperfocus      /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-team-ops        .claude-plugin/plugin.json                           ok        kc-team-ops/.claude-plugin/plugin.json
+kc-team-ops        .codex-plugin/plugin.json                            ok        kc-team-ops/.codex-plugin/plugin.json
+kc-team-ops        /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-journey-map     .claude-plugin/plugin.json                           ok        kc-journey-map/.claude-plugin/plugin.json
+kc-journey-map     .codex-plugin/plugin.json                            ok        kc-journey-map/.codex-plugin/plugin.json
+kc-journey-map     /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-pr-flow         .claude-plugin/plugin.json                           ok        kc-pr-flow/.claude-plugin/plugin.json
+kc-pr-flow         .codex-plugin/plugin.json                            ok        kc-pr-flow/.codex-plugin/plugin.json
+kc-pr-flow         /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-dev-flow        .claude-plugin/plugin.json                           ok        kc-dev-flow/.claude-plugin/plugin.json
+kc-dev-flow        .codex-plugin/plugin.json                            ok        kc-dev-flow/.codex-plugin/plugin.json
+kc-dev-flow        plugin.json                                          ok        kc-dev-flow/plugin.json
+kc-dev-flow        /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-ship-flow       .claude-plugin/plugin.json                           ok        kc-ship-flow/.claude-plugin/plugin.json
+kc-ship-flow       .codex-plugin/plugin.json                            ok        kc-ship-flow/.codex-plugin/plugin.json
+kc-ship-flow       /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-dev-flow-2      .claude-plugin/plugin.json                           ok        kc-dev-flow-2/.claude-plugin/plugin.json
+kc-dev-flow-2      .codex-plugin/plugin.json                            ok        kc-dev-flow-2/.codex-plugin/plugin.json
+kc-dev-flow-2      /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+kc-dev-flow-2      references/sd/workflow.md                            ok        kc-dev-flow-2/references/sd/workflow.md
+kc-adr             .claude-plugin/plugin.json                           ok        kc-adr/.claude-plugin/plugin.json
+kc-adr             .codex-plugin/plugin.json                            ok        kc-adr/.codex-plugin/plugin.json
+kc-adr             /.claude-plugin/marketplace.json                     ok        .claude-plugin/marketplace.json
+
+Release-please config: all extra-file paths and JSONPath selectors are valid
+First-release contract: e2e-pipeline-v0.1.0, kc-plugin-forge-v0.1.0, kc-nightwatch-v0.1.0, kc-hyperfocus-v0.1.0, kc-team-ops-v0.1.0, kc-journey-map-v0.1.0, kc-pr-flow-v0.1.0, kc-dev-flow-v0.1.0, kc-ship-flow-v0.1.0, kc-dev-flow-2-v0.1.0, kc-adr-v0.1.0
+Plugin directory enumeration: on-disk plugin directories and marketplace.json entries match 1:1
+
+PLUGIN             release   plugin.json market    codex     hermes    RESULT
+e2e-pipeline       3.3.5     3.3.5     3.3.5     3.3.5     -         ok
+kc-plugin-forge    1.10.0    1.10.0    1.10.0    1.10.0    -         ok
+kc-nightwatch      0.5.1     0.5.1     0.5.1     -         -         ok
+kc-hyperfocus      1.6.4     1.6.4     1.6.4     -         -         ok
+kc-team-ops        1.8.0     1.8.0     1.8.0     1.8.0     -         ok
+kc-journey-map     1.9.0     1.9.0     1.9.0     1.9.0     -         ok
+kc-pr-flow         1.12.0    1.12.0    1.12.0    1.12.0    -         ok
+kc-dev-flow        4.6.0     4.6.0     4.6.0     4.6.0     4.6.0     ok
+kc-ship-flow       0.3.0     0.3.0     0.3.0     0.3.0     -         ok
+kc-dev-flow-2      0.35.0    0.35.0    0.35.0    0.35.0    -         ok
+kc-adr             0.2.1     0.2.1     0.2.1     0.2.1     -         ok
+
+Version parity: all plugins consistent
+acceptance PASS
