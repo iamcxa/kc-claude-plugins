@@ -354,10 +354,10 @@ consequential FO quick work and rejected gates.
    waived by the Captain with the reason recorded (step 4). For an external reviewer
    that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev). Rounds
    1 and 2 follow steps 1 to 4. From round 3 a finding that is neither does not start a
-   repair cycle: FO declines it in the committed gate summary, naming the finding, and
-   files it as a new backlog task with `spacedock new` whose body carries the finding
-   and the decline reason, or names the backlog task that already holds it when a later
-   round repeats it; it never enters an open task's Scope. The terminal gate lists each
+   repair cycle: FO declines it in the committed gate summary, naming the finding and
+   its reason. Only an observed failure naming who it hurts, a repeat in a later round
+   or task, or a Captain ask makes it a backlog task (`spacedock new`, or the one
+   holding it); it never enters an open task's Scope. The terminal gate lists each
    such task.
 
 Rejection routing carries evidence, classifications, authorized dispositions and assignment

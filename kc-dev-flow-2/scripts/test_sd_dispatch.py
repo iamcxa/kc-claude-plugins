@@ -22,11 +22,12 @@ TEMPLATE = ROOT / "references/sd/workflow.md"
 MODS = ROOT / "references/sd/mods"
 MOD_SCRIPT = re.compile(r"<package>/scripts/([A-Za-z0-9_.-]+)")
 STAGES = ("ideation", "implementation", "validation")
+# see docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md
 ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
               "or labelled P1 by the reviewer, blocks in every round",
               "For an external reviewer that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev)",
               "From round 3 a finding that is neither does not start a repair cycle",
-              "files it as a new backlog task with `spacedock new`")
+              "Only an observed failure naming who it hurts, a repeat in a later round or task, or a Captain ask makes it a backlog task")
 WORKER_RULE = ("Before repair authorization, product bytes and the recorded candidate revision stay unchanged",
                "The four evidence fields are", "- **Needs decision:**")
 MAIN_LINE = "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here)."
@@ -169,13 +170,13 @@ FIXES = {
         swaps=((r"When FO dispatches validation and nothing was pushed for the task.*?has a skipped record\. ", ""),
                (r" `Applied: none as of <sha>` records that nothing was pushed.*?instead of re-checking deploys\.", ""))),
     "follow-up-reason": dict(
-        need=("names the backlog task that already holds it when a later round repeats it",
-              "whose body carries the finding and the decline reason",
+        need=("naming the finding and its reason",
+              "or the one holding it",
               "it never enters an open task's Scope",
               "assesses it against its stated reason and earlier rulings",
               "returns the line to FO as a Needs decision"),
         old=(),
-        swaps=((r", naming the finding, and files it as a new backlog task.*?The terminal gate lists each such task\.",
+        swaps=((r", naming the finding and its reason\. Only an observed failure.*?The terminal gate lists each such task\.",
                 ", naming the finding and its home, and adds a `Follow-up:` line to that task's Scope, the open task whose Scope edits the finding's file, else a new backlog task from `spacedock new`. The terminal gate lists each follow-up and its home."),
                (r"A `Follow-up:` line in Scope is not accepted scope by itself.*?It records which, and why\. ", ""))),
     "decline-settled": dict(
@@ -569,7 +570,7 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
         assert phrase in quoted, phrase
     adr = ROOT.parent / "docs/adr/0050-stage-roster-question-needs-codex-and-claude-and-offers-opus.md"
     assert adr.is_file()
-    assert "## Status\n\nSuperseded by 0050" in (ROOT.parent / "docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md").read_text()
+    assert "## Status\n\nSuperseded by 0050" in (ROOT.parent / "docs/adr" / "0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md").read_text()
     data = copy.deepcopy(recommendation)
     data["decision"] = "fixture-explicit-answer"
 
