@@ -6,7 +6,7 @@
   "workers_dev": false,
   "preview_urls": false,
   "routes": [],
-  "observability": { "enabled": false },
+  "observability": { "enabled": true, "head_sampling_rate": 1, "logs": { "enabled": true, "invocation_logs": false } },
   "vars": { "JOURNEY_ORIGIN": "https://canvas.example.invalid" },
   "durable_objects": {
     "bindings": [

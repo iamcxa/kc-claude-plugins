@@ -1,5 +1,6 @@
 import { canonicalAsset, HostError, prepareDoc } from './core'
 import { audited } from './audit'
+import { logHumanError } from './human-diagnostics'
 import { agentRoute } from './agent'
 import { humanRoute, registeredHumanRoom, requireHumanContext } from './human'
 import type { HumanConfig } from './human-store'
@@ -126,9 +127,10 @@ async function route(host: Host, req: Request): Promise<Response> {
    ? await host.repoDoc(room, url) : { state: 'unavailable', reason: 'checkout capability is unavailable' })
   throw new HostError(404, 'not found')
  } catch (e) {
+  if (new URL(req.url).pathname === '/auth/provider/start') logHumanError('provider-start', 'provider-start', e)
   if (e instanceof HostError && new URL(req.url).pathname.startsWith('/auth/') && host.humanConfig && host.meta.human) {
    try { await host.meta.human('record-denial', { category:  /^[a-z_]{1,64}$/.test(e.message) ? e.message : 'entry_unavailable' }) }
-   catch { return json({ error: 'entry receipt unavailable', category: 'host_unavailable' }, 503) }
+   catch (error) { logHumanError('denial-receipt', 'record-denial', error) }
   }
   if (e instanceof HostError && new URL(req.url).pathname === '/auth/login') {
    const message = e.status === 503 ? '身分服務暫時無法使用。請回到原分頁，稍後重試。' : e.message === 'human_revalidation_due' ? '需要重新驗證身分。請回到原分頁重新開始登入。' : '這次登入未獲授權或已失效。請回到原分頁重新確認。'
