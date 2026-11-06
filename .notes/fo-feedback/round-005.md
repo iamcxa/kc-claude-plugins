@@ -29,6 +29,16 @@
 
 Bundled question text (sent once per FO, 2026-11-06): see the message recorded under each FO below.
 
+Bundled text (identical to each FO, 178 words): the four fixed questions of fo-feedback EXTENSION.md "Questions, version 1", asked for each extension the respondent's README lists and for core topics (a) gates and Captain questions and (b) worker dispatch and worker permission requests; at most 300 words per topic with source links; window since 2026-10-28; answers are operator data, not Captain rulings.
+
+Sends (Paseo agent message, steer, 2026-11-06; returned message ids):
+- qnow dev2 FO 519ab4c8: 633ec9df-8f8a-4e5c-b0f2-b9db249aac77
+- kc-paseo-plugins dev2 FO 8b2c2fc2: f260e9f2-5835-4a36-b072-560897552f47
+- kc-journey-map FO d41e1313: 86935e92-46e3-4283-98c5-512e5bb0f677
+- web FO 295b873d: f9a6f6d8-a9cf-4c0c-b033-d76cd34aad83 (first attempt with the short id returned "Agent 295b873d not found"; nothing sent)
+- ops-inbox FO 46c2ebdf: 3fd362ce-957f-4c74-9909-bb42548ac80f (same short-id refusal first; nothing sent)
+- relay FO 1671c3a9: 51d216d5-e672-485e-811f-74440ab1133e (idle by the time of send; no deferral needed)
+
 ## Evidence comparison
 
 (pending answers)
