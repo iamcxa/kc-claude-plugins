@@ -156,7 +156,7 @@ test('explicit capabilities also require private backend authorization and confi
 
 test('unknown routes, methods, endpoint suffixes and normalized traversal stay closed', () => {
  const proxy = clientApiProxy('http://127.0.0.1:5858', 'share', { ...envFor('local'), JOURNEY_AGENT_PAIRING: 'true' })
- for (const path of ['/grants', '/session', '/capabilities', '/mcp', '/doc/other', '/health-extra', '/auth/unknown', '/auth/config/extra', '/agents/start', '/agents/redeem', '/agents/rotate', '/agents/repair']) for (const method of ['GET', 'POST']) assert.equal(allows(proxy, method + ' ' + path), false, path)
+ for (const path of ['/grants', '/session', '/capabilities', '/mcp', '/llms.txt', '/doc/other', '/health-extra', '/auth/unknown', '/auth/config/extra', '/agents/start', '/agents/redeem', '/agents/rotate', '/agents/repair']) for (const method of ['GET', 'POST']) assert.equal(allows(proxy, method + ' ' + path), false, path)
  for (const [route, options] of Object.entries(proxy)) for (const url of ['/uploads/../save', '/uploads/%2e%2e/doc', '/connect/%2e%2e/doc', '/uploads/%2f..%2fsave', '/uploads/%ZZ']) {
   if (new RegExp(route).test(url)) assert.equal(options.bypass({ method: 'GET', url }), false, url)
  }

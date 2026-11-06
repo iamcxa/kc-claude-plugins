@@ -94,6 +94,28 @@ Vite refuses a request whose Host header isn't the machine's own hostname or a n
 `JOURNEY_ALLOWED_HOSTS` (comma-separated). Set that env var to admit a cloud or Tailscale DNS name
 without editing tracked files.
 
+### Teammate agents on an exe.dev VM
+
+The VM operator grants each teammate SSH access with `share add <vm> <email> --root`
+in exe.dev. Each teammate uses their own SSH identity and opens
+`ssh -N -L 5858:127.0.0.1:5858 <ssh host>`; keep the tunnel running while using
+`JOURNEY_API=http://127.0.0.1:5858`. Root sharing grants VM access, so grant it only
+to trusted teammates. exe.dev web login happens in the browser, without a CLI token.
+
+Both operator and share front ends serve `GET /llms.txt`, generated locally on each
+request. Set `JOURNEY_AGENT_SSH_HOST` to the VM's SSH hostname (a hostname only, no
+user, email, credentials or shell options) to include the tunnel command; unset it
+to omit that section. `JOURNEY_API_PORT` supplies the remote API port when customized;
+the advertised tunnel keeps local port 5858. The guide contains generic room-discovery,
+MCP and plugin commands, never room contents or a configured room list. List rooms
+through the tunnel with `GET /health`. The share entrance does not forward `/mcp`
+or `/llms.txt` to the API; agent writes use the tunnel directly.
+
+With `JOURNEY_PRIVATE_DIR` set, `/llms.txt` returns 404 by default on both front ends.
+Only `JOURNEY_AGENT_GUIDE=true` explicitly publishes it; other values keep it closed.
+Publishing the guide does not bypass existing private API authorization. Use the
+private host's existing `JOURNEY_API_TOKEN` separately; the guide never includes it.
+
 Browser tabs show `<journey title> | tldraw canvas`. Rendering copies the YAML
 `title` into tldraw's native document name; changing that name updates connected
 tabs without a reload. An empty name falls back to the room identifier. Room
