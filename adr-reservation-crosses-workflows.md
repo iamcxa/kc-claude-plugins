@@ -3,7 +3,7 @@ title: An ADR number reserved by one workflow's task is seen by every workflow t
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-07), answering 「決定：「ADR 編號跨流程預留」這份設計進入實作嗎？核准即接受 D1（預留記在各流程已推送的 state 分支，編號檢查讀所有 spacedock-state/* 分支；寫進 ADR 0002 修正，不用新編號）。」. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 `number_guards.py` refuses a new ADR number that another workflow's live task has already reserved in the same repository, so two FOs sharing a repository cannot both land the same number.
