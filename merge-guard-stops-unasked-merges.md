@@ -58,6 +58,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-06T01:30:26Z
+worktree: .worktrees/spacedock-ensign-merge-guard-stops-unasked-merges
 ---
 
 ## Scope
