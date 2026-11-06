@@ -1628,11 +1628,13 @@ class CaptainStepsTests(CaptainStepFixture):
             self.assertEqual(self.run_steps(self.step(asked), asked)[0], 0)
 
     def test_relative_markdown_card_is_read_by_the_real_cli(self):
+        self.saved = self.root / "captain-steps/1.md"
+        self.saved.parent.mkdir()
         card = self.root / "card.md"
         card.write_text("```sh\nprintf checked\n```\n")
         self.run_steps(self.step("Read card.md:13"), "Read card.md:13")
         run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", str(self.saved), "--text-file", str(self.message)],
-                             cwd=self.root, capture_output=True, text=True)
+                             cwd=self.root.parent, capture_output=True, text=True)
         self.assertEqual(run.returncode, 1, run.stdout)
         self.assertIn("S5: unrecorded command", run.stdout)
 
@@ -1708,6 +1710,111 @@ class CaptainGateTests(CaptainStepFixture):
         self.saved.unlink()
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(gate.main(["question", str(self.task), "--text-file", str(self.message)]), 2)
+
+
+class TaskFolderCaptainTests(CaptainStepFixture):
+    def setUp(self):
+        super().setUp()
+        self.state = self.root / "state"
+        self.state.mkdir()
+        readme(self.state)
+        self.task = self.state / "task.md"
+        self.task.write_text(TASK)
+        captain_record(self.task)
+        self.folder = gate.task_folder(self.task)
+        self.saved = self.folder / "captain-steps/1.md"
+        self.repo = self.root / "repository"
+        self.repo.mkdir()
+        (self.repo / "README.md").write_text("```sh\nprintf wrong-directory\n```\n")
+        (self.repo / "validation").mkdir()
+        (self.repo / "validation/README.md").write_text((self.repo / "README.md").read_text())
+
+    def run_question(self, report="", message="Review this candidate.", body=None,
+                     cwd=None, declaration="captain-steps/1.md", task_arg=None):
+        self.task.write_text(TASK + "\n## Stage Report: validation\n" + report)
+        self.saved.write_text(f"Candidate: {HEAD40}\n\n" + (body or self.step("Review this candidate.")))
+        self.message.write_text(CLAUSES + message + "\nCaptain steps: " + declaration + "\n")
+        return subprocess.run([sys.executable, "-B", gate.__file__, "question",
+                               str(task_arg or self.task), "--text-file", str(self.message),
+                               "--workflow-dir", str(self.state)], cwd=cwd or self.repo,
+                              capture_output=True, text=True)
+
+    def test_question_reads_task_card_from_repository_state_and_task_directories(self):
+        card = self.folder / "validation/README.md"
+        card.parent.mkdir()
+        card.write_text("```sh\nprintf task-card\n```\n")
+        for recorded in (True, False):
+            body = self.step("Review this candidate.")
+            if recorded:
+                body += self.step("printf task-card", number=2)
+            for cwd in (self.repo, self.state, self.folder):
+                with self.subTest(recorded=recorded, cwd=cwd):
+                    run = self.run_question("Read validation/README.md:13:2", body=body, cwd=cwd)
+                    self.assertEqual(run.returncode, 0 if recorded else 1, run.stdout + run.stderr)
+                    self.assertNotIn("wrong-directory", run.stdout)
+                    self.assertIn("gate text complete" if recorded else "S5", run.stdout)
+
+    def test_question_reads_slug_prefixed_markdown_from_task_folder(self):
+        card = self.folder / "validation-1/evidence.md"
+        card.parent.mkdir()
+        card.write_text("```sh\nprintf slug-card\n```\n")
+        run = self.run_question("Read task/validation-1/evidence.md")
+        self.assertEqual(run.returncode, 1, run.stdout)
+        self.assertIn("S5", run.stdout)
+        self.assertIn("printf slug-card", run.stdout)
+
+    def test_record_names_and_relative_task_arguments_follow_the_task_folder(self):
+        for declaration in ("captain-steps/1.md", "task/captain-steps/1.md", str(self.saved)):
+            with self.subTest(declaration=declaration):
+                run = self.run_question(cwd=self.state, declaration=declaration, task_arg="task.md")
+                self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        index = self.folder / "index.md"
+        index.write_text(TASK)
+        self.task = index
+        run = self.run_question(cwd=self.state, task_arg="task")
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+
+    def test_report_routes_do_not_hide_missing_message_or_asked_paths(self):
+        report = "Observed web route /api/office/me"
+        run = self.run_question(report)
+        self.assertEqual(run.returncode, 0, run.stdout)
+        self.assertNotIn("S4", run.stdout)
+        missing_message = self.root / "missing.txt"
+        missing_asked = self.root / "missing-asked.txt"
+        message = f"Review this candidate. Read {missing_message}. Read {missing_asked}"
+        body = self.step(f"Read {missing_asked}")
+        run = self.run_question(report, message, body)
+        self.assertEqual(run.returncode, 1, run.stdout)
+        self.assertIn(f"step 1 S4: missing path {missing_asked}", run.stdout)
+        run = self.run_question(report, message)
+        self.assertEqual(run.returncode, 1, run.stdout)
+        self.assertIn(f"message S4: missing path {missing_message}", run.stdout)
+
+    def test_report_only_cards_require_fences_and_fo_named_cards_also_require_links(self):
+        card = self.folder / "card.md"
+        link, command = "https://example.test/a", "printf unrecorded"
+        card.write_text(f"Open {link}\n\n```sh\n{command}\n```\n")
+        run = self.run_question("Read card.md")
+        self.assertEqual(run.returncode, 1, run.stdout)
+        self.assertIn(command, run.stdout)
+        self.assertNotIn(link, run.stdout)
+        body = self.step("Review this candidate.") + self.step(command, number=2)
+        run = self.run_question("Read card.md", body=body)
+        self.assertEqual(run.returncode, 0, run.stdout)
+        for message in ("Review this candidate. Read card.md", f"Review this candidate. Read {card}:13"):
+            with self.subTest(message=message):
+                run = self.run_question("Read task/card.md", message, body)
+                self.assertEqual(run.returncode, 1, run.stdout)
+                self.assertIn(link, run.stdout)
+        card.write_text(f"```sh\ncurl {link}\n```\n")
+        run = self.run_question("Read card.md")
+        self.assertEqual(run.returncode, 1, run.stdout)
+        self.assertIn(f"curl {link}", run.stdout)
+
+    def test_repository_documents_are_not_read_as_task_cards(self):
+        run = self.run_question("Evidence: README.md and CLAUDE.md")
+        self.assertEqual(run.returncode, 0, run.stdout)
+        self.assertNotIn("wrong-directory", run.stdout)
 
 
 class BoundApprovalTests(unittest.TestCase):
