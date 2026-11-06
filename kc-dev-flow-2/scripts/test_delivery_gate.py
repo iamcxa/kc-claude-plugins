@@ -1337,7 +1337,7 @@ class FoWriteRuleTests(unittest.TestCase):
         self.assertEqual(len(joined.declined_items("- Declined: F1 a (two words).\n- Declined: F2 b (two words).")), 1)
 
 
-MERGE_ASK = "Deliver #9 head 40c714a6. Approving merges it with gh pr merge --match-head-commit 40c714a6{tail}"
+MERGE_ASK = "Deliver #9 head 40c714a6. Approving merges it with gh pr merge --match-head-commit 40c714a6 and removing its clean, pushed worktree{tail}"
 HOLD_OUT_TAIL = {"unless he says he merges or holds": ", unless he says he merges or holds.",
                  "if the Captain says he merges or holds": ". If the Captain says he merges or holds, ask again.",
                  "unless you say you merge or hold": ", unless you say you merge or hold."}
@@ -1855,6 +1855,12 @@ class HistoricalBoundQuestionTests(unittest.TestCase):
 
 
 class QuestionTests(unittest.TestCase):
+    recorded_questions = {
+        786: "決定：合併 #786（漏寫 Override 的記錄前檢查）嗎？ Regular merge with --match-head-commit 69d62c772c5f4fd28d9105c6f5d49516d559c947, first of the batch 14 validation sitting. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+        787: "決定：合併 #787（派工紀錄檢查看得到每個擴充的交代句）嗎？ Regular merge with --match-head-commit 272721000cce947c8f2dcdd3a40c22cdf11dee09, second of the batch 14 validation sitting. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+        788: "決定：合併 #788（閘門核准綁定引用的原問句，ADR 0062）嗎？ Regular merge with --match-head-commit 2493d57a17dcbe08489918b208c9bd5019450772, last of the batch 14 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+    }
+
     def test_claim_source_reminder_on_pass_hold_and_unreadable_input(self):
         for text, expected in (("Admit it?", 0), (MERGE_ASK.format(tail="."), 1)):
             with self.subTest(expected=expected):
@@ -1866,7 +1872,7 @@ class QuestionTests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertIn(CLAIM_SOURCE, out.getvalue().splitlines())
 
-    def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False):
+    def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False, summary=None):
         with tempfile.TemporaryDirectory() as d:
             readme(d)
             if as_folder:
@@ -1877,10 +1883,60 @@ class QuestionTests(unittest.TestCase):
                 entry = Path(d, "task.md")
                 entry.write_text(task)
             Path(d, "gate.txt").write_text((CLAUSES if clauses else "") + text + captain_record(entry))
+            argv = ["question", str(entry), "--text-file", str(Path(d, "gate.txt"))]
+            if summary is not None:
+                Path(d, "summary.txt").write_text(CLAUSES + ROUNDS + summary + captain_record(entry))
+                argv += ["--summary-file", str(Path(d, "summary.txt"))]
             out = io.StringIO()
             with contextlib.redirect_stdout(out):
-                code = (module or gate).main(["question", str(entry), "--text-file", str(Path(d, "gate.txt"))])
+                code = (module or gate).main(argv)
             return code, out.getvalue()
+
+    def test_recorded_merge_questions_require_the_worktree_removal_clause(self):
+        for number, text in self.recorded_questions.items():
+            with self.subTest(number=number):
+                code, out = self.ask(text)
+                self.assertEqual(code, 0 if number == 788 else 1, out)
+                if number == 788:
+                    self.assertIn("gate text complete", out)
+                else:
+                    self.assertIn("its question does not name removing its clean, pushed worktree", out)
+                    self.assertIn("next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.", out)
+                    self.assertNotIn("gate text complete", out)
+
+    def test_removal_in_the_summary_does_not_grant_it_in_the_question(self):
+        text = self.recorded_questions[786]
+        removal = "and removing its clean, pushed worktree"
+        self.assertEqual(self.ask(text, summary=removal)[0], 1)
+        self.assertEqual(self.ask(text + " " + removal)[0], 0)
+        self.assertEqual(self.ask("Approve delivery?", summary=text + " " + removal)[0], 1)
+        self.assertEqual(self.ask("Approve delivery?", summary="No merge is requested.")[0], 0)
+
+    def test_removal_wording_names_clean_pushed_worktrees_in_one_sentence(self):
+        text = self.recorded_questions[786]
+        for removal in ("and removing its clean, pushed worktree", "and remove the clean, pushed worktree",
+                        "AND REMOVING ITS CLEAN, PUSHED WORKTREE", "and removes its clean, pushed worktrees"):
+            with self.subTest(removal=removal):
+                self.assertEqual(self.ask(text + " " + removal)[0], 0)
+        for removal in ("and keeping its clean, pushed worktree", "remove the candidate worktree",
+                        "remove the clean worktree", "remove the pushed worktree",
+                        "remove the pushed, clean worktree", "remove the clean. Pushed worktree",
+                        "remove the clean; pushed worktree", "remove the clean, pushed\nworktree"):
+            with self.subTest(removal=removal):
+                self.assertEqual(self.ask(text + " " + removal)[0], 1)
+
+    def test_hold_out_and_removal_problems_are_both_reported(self):
+        text = MERGE_ASK.format(tail=".").replace(" and removing its clean, pushed worktree", "")
+        code, out = self.ask(text)
+        self.assertEqual(code, 1)
+        self.assertIn("not 'unless he says he merges or holds'", out)
+        self.assertIn("its question does not name removing its clean, pushed worktree", out)
+
+    def test_mutation_accepting_any_worktree_word_grants_keeping_it(self):
+        keeping = self.recorded_questions[786] + " and keeping its clean, pushed worktree"
+        wide = variant_of(gate.WORKTREE_REMOVAL.pattern, r"worktree")
+        self.assertEqual(self.ask(keeping)[0], 1)
+        self.assertEqual(self.ask(keeping, module=wide)[0], 0)
 
     def test_legacy_combined_text_still_accepts_no_round_count(self):
         self.assertNotIn("External rounds:", CLAUSES)
@@ -1919,8 +1975,10 @@ class QuestionTests(unittest.TestCase):
                 self.assertEqual(self.ask(unrelated, module=wide)[0], 0)
 
     def test_the_merge_time_check_does_not_judge_the_hold_out_clause(self):
-        text = MERGE_ASK.format(tail=".")
-        self.assertNotIn("keep the merge", run_check(text=text).out)
+        text = MERGE_ASK.format(tail=".").replace(" and removing its clean, pushed worktree", "")
+        out = run_check(text=text).out
+        self.assertNotIn("keep the merge", out)
+        self.assertNotIn("worktree", out)
         gated = variant_of("found, wanted = text_problems(task_text, gate_text)", "found, wanted = text_problems(task_text, gate_text, at_gate=True)")
         self.assertIn("keep the merge", run_variant(gated, text=text).out)
 

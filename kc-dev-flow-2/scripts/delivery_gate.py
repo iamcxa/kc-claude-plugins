@@ -48,7 +48,8 @@ an approval nor a resolution; an unanswered, non-withdrawn attempt keeps the pre
 Usage: delivery_gate.py question <task file or task folder> --text-file <file> [--summary-file <file>] [--workflow-dir <dir>]
 Runs the text checks of `check` on the validation gate question before `gate prepare`, and also refuses text that names the merge with
 `--match-head-commit` and has no sentence of the form "unless he says he merges or holds" (`unless` or `if`, then `he`, `you`, `the Captain` or `Captain`, then `say`, then `merge` or `hold`). Exit 0
-prints `gate text complete` then `ASK_FORM`; exit 1 prints each problem; exit 2 when an input cannot be read. `check` does not judge that clause.
+prints `gate text complete` then `ASK_FORM`; exit 1 prints each problem; exit 2 when an input cannot be read. `check` does not judge either clause.
+Merge-naming text also needs the question file to name removing its clean, pushed worktree, in one sentence.
 With --summary-file, ordinary text checks use question plus summary; reviewer checks use only
 the summary outside fences. It requires one top-level External rounds: N (nonnegative integer),
 optionally followed by a full stop or a semicolon/full stop and detail. Without it, legacy checks apply.
@@ -262,6 +263,7 @@ def brackets(item):
 
 GRANT = re.compile(r"--match-head-commit")
 HOLD_OUT = re.compile(r"\b(?:unless|if)\b\s+(?:he|you|the\s+captain|captain)\s+says?\b[^.;\n]{0,30}\b(?:merges?|holds?)\b", re.I)
+WORKTREE_REMOVAL = re.compile(r"\bremov(?:e|es|ing)\b[^.;\n]{0,20}\bclean\b[^.;\n]{0,10}\bpushed\b[^.;\n]{0,10}\bworktrees?\b", re.I)
 
 
 def grant_without_hold_out(text):
@@ -835,6 +837,7 @@ def question(args):
         task = task / "index.md"
     try:
         task_text, gate_text = task.read_text(), Path(args.text_file).read_text()
+        question_text = gate_text
         workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
         if not workflow_dir:
             raise ValueError("cannot find the workflow README with a trunk: next to the task or in --workflow-dir")
@@ -860,6 +863,9 @@ def question(args):
         emit(f"cannot read input: {error}")
         return 2
     problems, nexts = text_problems(task_text, gate_text, at_gate=True, reviewer_text=reviewer_text)
+    if GRANT.search(gate_text) and not WORKTREE_REMOVAL.search(question_text):
+        problems.append("the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree")
+        nexts.append("next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.")
     problems += found
     nexts += wanted
     emit(*problems, *dict.fromkeys(nexts))
