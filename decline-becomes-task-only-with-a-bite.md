@@ -3,7 +3,7 @@ title: A declined review finding becomes a backlog task only when it has a bite 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-07), answering 「決定：「婉拒只在出過事時開任務」這份設計進入實作嗎？核准即接受 D1（另開新 ADR 取代 ADR 0010）與 D2（擱置中的 gate-summary-names-each-decline 恢復時拿掉它的第 3 條）。」. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 The README's review-finding rule that files every round-3 decline as a new backlog task is replaced: a declined finding keeps its bracketed reason in the gate summary, and becomes a task only when it meets the same bite-and-consumer bar as any other backlog task, or when a later round or task hits it again.
