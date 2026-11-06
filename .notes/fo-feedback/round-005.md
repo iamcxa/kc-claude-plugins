@@ -1,6 +1,6 @@
 # Feedback round 005
 
-- Identity: round 005, status `open`, opened 2026-11-06, interviewer the kc-plugin dev2 FO (Paseo 2e87a82e), workflow docs/dev2 of iamcxa/kc-claude-plugins.
+- Identity: round 005, status `closed-full`, opened and closed 2026-11-06, interviewer the kc-plugin dev2 FO (Paseo 2e87a82e), workflow docs/dev2 of iamcxa/kc-claude-plugins.
 - Trigger and grant: the Captain 「開始」 (chat, 2026-11-06), answering 「要現在開始第 5 輪訪談嗎？」, after FO proposed anchoring at the close of batch 15 and using the four fixed questions of fo-feedback EXTENSION.md "Questions, version 1". Cadence: every three completed batches (index.md, Captain amendment 1 of fo-interviews-extension, 2026-10-28); batches 10 to 15 completed since round 004 (2026-10-28), so this round is overdue; anchor after this round: close of batch 15.
 - Package: kc-dev-flow-2 0.35.0 installed; origin/main c44fc64f3 (2026-11-06). Topics: each extension the respondent's workflow lists, plus two core topics: (a) gates and Captain questions, (b) worker dispatch and worker permission requests.
 - Frozen roster (source: `paseo ls -a`, 2026-11-06; transport: Paseo agent message, per the paseo extension):
@@ -41,11 +41,30 @@ Sends (Paseo agent message, steer, 2026-11-06; returned message ids):
 
 ## Evidence comparison
 
-(pending answers)
+Checked by FO on 2026-11-06 for the claims that could change a package decision; the rest stay operator statements.
+
+| Claim (FO) | Source checked | Result |
+| --- | --- | --- |
+| private-native-account went backlog to merged #785 without its stages (journey-map) | its state file: `status: backlog`, `pr: pr-merge:785`, no gate decisions; `gh pr view 785`: MERGED 2026-11-05T15:03:18Z | confirmed |
+| #778/#779 approvals recorded in notes, not by gate record (journey-map) | _archive/private-human-entry.md and private-room-catalog.md each hold 3 gate decisions and backlog/ideation/validation rooms | contradicted for the stage gates; the re-approval after the walkthrough may sit only in notes (not checked) |
+| learn listed but no observer report (journey-map) | no observer.md in the four archived private-* task folders | confirmed |
+| #727 merged without a Codex code review of its head (ops-inbox) | Codex review-state comment: code_review on d7eeeef26 with unresolved findings, security_review on merged head 5dee91fb7; merged 2026-10-27T05:37:49Z | confirmed, and worse: the only code review had unresolved findings; a receipt for d7eeeef26 was posted 15:01 after the merge, so "never produced a review" is contradicted |
+| batch dispatch records written after the fact (kc-paseo-plugins) | _archive/project-env-rate-limit-cause/dispatch/ideation-1.md: "Reconstructed by FO on 2026-11-06, after the dispatch" | confirmed |
 
 ## Findings and close
 
-(pending)
+Existing tasks this round adds evidence to: delivery-check-resolves-links-from-the-task (qnow web-path false positive, same resolver); adr-reservation-crosses-workflows (relay, journey-map); worker-browser-checks-use-paseo-browser (kc-paseo agent-browser collisions); merge-guard-stops-unasked-merges, held (ops-inbox #727 and journey-map #785 are merges a guard would have stopped); autopilot-l3-dogfood-spacedock-bridge (Codex security-only summary, Bridge gap 7).
+
+Proposals for the Captain (none filed here):
+1. `dispatch build --stamp` writes <task>/dispatch/<stage>-<cycle>.md itself (kc-paseo-plugins reconstructed a whole batch; the kc-plugin FO wrote one record late and omitted lines in batches 14-15; qnow sent an addendum with no record).
+2. When Codex posts only a security summary, the codex reader or pr_watch.py prints the `@codex review` next line (kc-paseo-plugins ~10 min per PR; ops-inbox #727 merged on a security-only head; Bridge gap 7).
+3. delivery_gate.py check does not hold on a by-design skipped workflow run (qnow: holds every feature PR; the Captain waived it on #1338).
+4. design_surfaces.py prints "not run: bound artifact has no Scope" instead of holding against an empty baseline (relay).
+5. Smaller, single-FO items kept as operator data: roborev cannot carry a ruled disposition (relay); roborev yield unmeasured (web: ~80 runs, nothing material); merge guard silent when learn did not run (web); "Do not push" scope wording vs the state push (web); 2-hour watcher limit (web); parked decisions get no reminder (ops-inbox); deny reason should reach the worker (relay); machine load cap for parallel browser workers (web, qnow).
+
+Live item outside the package: the possibly orphaned secret on relay staging (ops-inbox), handed back to the ops-inbox FO for a Captain-run step on 2026-11-06.
+
+Close: status `closed-full` 2026-11-06, all six FOs answered every topic; next anchor: close of batch 15 (next round due after three more completed batches).
 
 ### qnow dev2 FO, 519ab4c8 — answered 2026-11-06 (Paseo agent message b087cc6b, sender stamped)
 
