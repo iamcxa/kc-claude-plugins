@@ -274,7 +274,7 @@ class DeliveryGateTests(unittest.TestCase):
 
     def test_each_exit_ends_with_the_next_line_for_the_ask(self):
         cases = (
-            (0, dict(), ["next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."]),
+            (0, dict(), ["next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it."]),
             (1, dict(head="7679ab7a"), ["next: hold the ask; revalidate this head or tell the Captain the difference."]),
             (1, dict(text=COPILOT_UNSTATED), ["next: hold the ask until each second reviewer has an outcome."]),
             (1, dict(head="7679ab7a", text=COPILOT_UNSTATED),
@@ -309,7 +309,7 @@ SECURITY = (f"Security review (validation): security/validation-1.yaml at {HEAD4
             "Security finding (validation 1) 2: Needs decision: add the sentence\n"
             "Security finding (validation 1) 3: declined: stated unverified\n")
 EQUALS = CLAIM_SOURCE + "\n" + f"PR head {HEAD40[:8]} equals dispatched candidate {HEAD40[:8]}; no second reviewer outcome is missing\n"
-PILOT_OUT = EQUALS + "class: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n"
+PILOT_OUT = EQUALS + "class: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it.\n"
 
 
 class ProdSecurityReviewTests(unittest.TestCase):
@@ -333,13 +333,13 @@ class ProdSecurityReviewTests(unittest.TestCase):
 
     def test_a_pilot_task_prints_the_two_old_lines_with_a_class_and_a_record_line_between(self):
         self.assertEqual(self.run_gate(profile="pilot", review="", report=None), (0, PILOT_OUT))
-        self.assertLessEqual(len(PILOT_OUT.split()), 68 + 27)
+        self.assertLessEqual(len(PILOT_OUT.split()), 68 + 27 + 17)
 
     def test_a_prod_task_with_a_disposed_review_gets_one_more_line_of_ten_words(self):
         code, out = self.run_gate()
         self.assertEqual(code, 0, out)
         note = "validation security review security/validation-1.yaml: 3 findings, 1 declined, 2 decisions\n"
-        self.assertEqual(out, EQUALS + note + "point: deferred: 'Security finding (validation 1) 3: declined:'\npoint: profile: 'prod'\nclass: never (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n")
+        self.assertEqual(out, EQUALS + note + "point: deferred: 'Security finding (validation 1) 3: declined:'\npoint: profile: 'prod'\nclass: never (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it.\n")
         self.assertEqual(len(note.split()), 10)
 
     def test_a_prod_task_with_a_hole_in_its_review_exits_1_and_holds_the_ask(self):
@@ -875,7 +875,7 @@ class CodexP1Tests(unittest.TestCase):
                 self.assertEqual(result.code, 0, result.out)
                 self.assertIn("point: profile: 'prod'", result.lines, result.out)
                 self.assertIn("class: never (verdict ask)", result.lines, result.out)
-                self.assertEqual(nexts(result), [CLAIM_SOURCE, "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."], result.out)
+                self.assertEqual(nexts(result), [CLAIM_SOURCE, "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it."], result.out)
 
     def test_an_instruction_directory_at_any_depth_is_never(self):
         for path in ("packages/foo/agents/x.md", "a/b/c/references/r.md", "x/y/skills/z/SKILL.md", "p/q/extensions/e.py"):
@@ -1179,7 +1179,7 @@ LATE_DECLINES = {
         'Declined, with reasons: P2, an amendment range such as 1 to 3 names only its ends [a false hold, never a missed one; on 2026-10-19 --names over the 8 committed records that write a range printed no amendment line]; Deferred risk, a prose line beginning with the reserved text passes [no record does this; material only if one hides an unrecorded number]; Deferred risk, a two-word bracket proves a bracket, not a reason [recorded as a known limit in ADR 0025]; Deferred risk, any amendment phrase in any checklist of the folder passes [the observer still reads the checklist]; Polish, AC-4 says 12 declined items where the count is 13 [a count in the task text, read by no gate].'),
 }
 
-SENTENCE = "Every other PR, the Release PR included, is asked one at a time."
+SENTENCE = "Every other PR, the Release PR included, is asked one at a time; after his yes to a question naming its number and head, run `merge_guard.py record` before merging it."
 PASS_NEXT = ("next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. "
              + SENTENCE)
 SRC_BULLETS = [
@@ -1210,7 +1210,7 @@ class FoWriteRuleTests(unittest.TestCase):
     def test_the_pass_line_is_the_ask_plus_one_named_carry_sentence_and_a_hold_prints_no_ask(self):
         result = run_check()
         self.assertEqual((result.code, nexts(result)), (0, [CLAIM_SOURCE, PASS_NEXT]))
-        self.assertEqual(len(nexts(result)[1].split()), 40)
+        self.assertEqual(len(nexts(result)[1].split()), 57)
         self.assertEqual(result.written["ask-1.json"]["next"], nexts(result)[1])
         held = run_check(facts=dict(isDraft=True))
         self.assertEqual(held.code, 1)

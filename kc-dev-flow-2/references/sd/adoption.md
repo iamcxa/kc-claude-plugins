@@ -143,7 +143,48 @@ the user's settings, with this contract:
   keychain password read), and its message names `<wrapper>`;
 - the patterns are the adopter's, since they follow its stack;
 - a refused command that only mentions a reader is rephrased, never split or encoded;
-- Codex has no equivalent hook, so there the `Secrets:` line is the only control.
+- Codex's pre-tool hook can only deny.
+
+## Merge guard
+
+Each machine registers `<package>/scripts/merge_guard.py` at a stable absolute
+path in user settings; this package ships no hook registration (ADR 0063).
+Merge these entries into existing settings, preserving other hooks.
+Claude `~/.claude/settings.json` (Paseo-hosted Claude sessions load it too):
+
+```json
+{"hooks":{"PreToolUse":[{"matcher":"Bash","hooks":[{"type":"command","command":"python3 <package>/scripts/merge_guard.py claude || exit 2"}]}]}}
+```
+
+Codex `~/.codex/hooks.json`:
+
+```json
+{"hooks":{"PreToolUse":[{"matcher":"","hooks":[{"type":"command","command":"python3 <package>/scripts/merge_guard.py codex || exit 2","timeout":10}]}]}}
+```
+
+Launch Codex in a trusted repository and approve the reviewed hook's trust
+prompt; a hook change needs trust again. Codex is deny-only: `ask` is ignored.
+Keep `|| exit 2`: a script failure must block the command. Claude asks on an
+uncarried merge; Paseo shows the command without the reason, and another Paseo
+agent can answer. Codex refuses and FO asks the Captain in chat.
+
+For a Release, workflow-sync or learning PR approved in chat, first run:
+
+```sh
+python3 <package>/scripts/merge_guard.py record <state-dir> --pr owner/repo#123 --head <40-hex-head> --question-file <approved-question-file> --answer '<his words>'
+```
+
+The question must name the PR number and the head's first seven hex characters.
+State-commit and push the printed `_merges/…/merge/ask-N.json`, then merge with
+`--match-head-commit` at that head. A changed head needs another approval.
+The guard reads disk in this repository's linked `spacedock-state/*` worktrees,
+including archived tasks and `_merges`; it uses the highest-numbered ask per
+folder. The record checks names, not approval intent or who said the words.
+
+The 2026-11-06 ideation replay stopped 30 of 84 historical merges; synthetic
+questions for approved-record candidates reduced that to 10, including the
+original unasked Release PR. Expect about nine further stops per fourteen days
+under that assumption. Registration is the operator's action after release.
 
 ## Resetting a branch database
 
