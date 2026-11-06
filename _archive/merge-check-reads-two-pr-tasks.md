@@ -3,7 +3,10 @@ title: delivery_gate.py check reads a task that delivers through two PRs, so a r
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-11-06T00:30:20Z
+archived: 2026-11-06T00:30:20Z
 ---
 
 ## Scope
