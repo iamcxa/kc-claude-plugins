@@ -21,3 +21,5 @@ Alignment: needed at ideation; whether a task may deliver through two PRs at all
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+Closed by the Captain 2026-11-06 (「照建議（建議）」, host question dialog) on FO's theme-1 triage against origin/main b804d81d3: delivery_gate.py check gained a repeatable --sibling-pr in #720 (be137f20c, 2026-10-26), so a reserved ADR may land on a named sibling PR.
