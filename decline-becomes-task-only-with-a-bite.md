@@ -167,6 +167,10 @@ Replays read state checkout `79af09021bcf` (`<state>`); `<cand>` is a `git archi
 
 **D2. The held task gate-summary-names-each-decline proposes a check (its rule 3, AC-3) that holds a round-3 decline naming no receiving task; under this bar that check would hold the three compliant replays.** Recommendation: when that task resumes, FO strikes rule 3 and AC-3 rather than turning it into a bite check, following ADR 0027 D4 ("matching words cannot stop that class of error"): whether a reason shows an observed failure is a judgment. What gets worse: a decline with a bite and no task is caught only by the observer at archive, after the merge.
 
+## Number guards
+
+ADR: 0064
+
 ## Stage Report: ideation
 
 - DONE: Design the README review-finding step 5 change and the observer and /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/delivery_gate.py reading of declines under the approved bar, with replays of the three batch 12 and 13 violations reading as compliant and a decline with a bite still asking for a task
