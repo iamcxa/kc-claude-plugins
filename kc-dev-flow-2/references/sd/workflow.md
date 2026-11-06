@@ -470,7 +470,7 @@ the package's `references/retained-documents.md`.
 ## Number guards
 
 Applies when the task's `Surfaces:` includes `db`, or the task lands an ADR, including one first required by a ruling in a worker report or mid-stage feedback, whose number FO reserves before the next dispatch; the POC bullet below applies to every `poc` task.
-`python3 <package>/scripts/number_guards.py --help` lists the flags and rules R1 to R6;
+`python3 <package>/scripts/number_guards.py --help` lists the flags and rules;
 `trunk:`, `migrations-path:` and `adr-path:` (default `docs/adr`) come from this README's frontmatter.
 
 - **Applied.** `check` freezes a migration in a commit recorded `Applied at:` (R2).
@@ -511,8 +511,8 @@ Applies when the task's `Surfaces:` includes `db`, or the task lands an ADR, inc
 - **POC marker.** FO presents the `boundary-crossed: persistent-state` marker at the
   validation gate. Without `migrations-path:` a db task exits 2 and a POC is not guarded;
   `none` declares no migration files.
-- **Collision.** When two tasks hold one migration number (`check` reports R3 or R5 on
-  the later candidate; nothing compares task files), the task whose migration is applied
+- **Collision.** When two tasks hold one migration number (`check` reports R3, R5 or R8 on
+  the later candidate), the task whose migration is applied
   keeps it and the other, unapplied task renumbers, so no reset is needed. A migration
   counts as applied when its task has an `Applied at:` line or it is on the base branch;
   when both tasks are applied and neither is on the base branch, the one that merges

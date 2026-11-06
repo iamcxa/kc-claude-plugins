@@ -33,7 +33,7 @@ class Fixture:
         return self.git("rev-parse", "HEAD")
 
     def run(self, *args):
-        done = subprocess.run(["python3", SCRIPT, *args], capture_output=True, text=True)
+        done = subprocess.run(["python3", "-B", SCRIPT, *args], capture_output=True, text=True)
         return done.returncode, done.stdout + done.stderr
 
     def check(self, *args, head="feature", task=None):
@@ -157,12 +157,13 @@ class ReserveTests(unittest.TestCase):
                 return fx.run("reserve", "--kind", kind, "--repo", tmp, "--migrations-path", MIGRATIONS,
                               "--base", "main", "--state-dir", state, "--task", str(task))
 
-            self.assertEqual(reserve(a), (0, "Migration: 0013\n"))
+            self.assertEqual(reserve(a)[0], 0)
+            self.assertIn("Migration: 0013\n", reserve(a)[1])
             a.write_text("## Number guards\nMigration: 0013\n")
-            self.assertEqual(reserve(b), (0, "Migration: 0014\n"))
-            self.assertEqual(reserve(a), (0, "Migration: 0013\n"))
+            self.assertIn("Migration: 0014\n", reserve(b)[1])
+            self.assertIn("Migration: 0013\n", reserve(a)[1])
             fx.commit("adrs", **{"docs__adr__0001-a.md": "x", "docs__adr__0003-c.md": "x"})
-            self.assertEqual(reserve(b, "adr"), (0, "ADR: 0004\n"))
+            self.assertIn("ADR: 0004\n", reserve(b, "adr")[1])
 
     def test_a_task_that_loses_a_collision_reserves_again_above_the_one_that_keeps_its_number(self):
         with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as state:
@@ -176,10 +177,10 @@ class ReserveTests(unittest.TestCase):
                 return fx.run("reserve", "--kind", "migration", "--repo", tmp, "--migrations-path", MIGRATIONS,
                               "--base", "main", "--state-dir", state, "--task", str(task))
 
-            self.assertEqual(reserve(loses), (0, "Migration: 0013\n"))
+            self.assertIn("Migration: 0013\n", reserve(loses)[1])
             loses.write_text("## Number guards\n")
-            self.assertEqual(reserve(loses), (0, "Migration: 0014\n"))
-            self.assertEqual(reserve(keeps), (0, "Migration: 0013\n"))
+            self.assertIn("Migration: 0014\n", reserve(loses)[1])
+            self.assertIn("Migration: 0013\n", reserve(keeps)[1])
 
 
 class RecheckTests(unittest.TestCase):
@@ -358,16 +359,161 @@ class NoMigrationsDeclaredTests(unittest.TestCase):
             code, out = reserve("migration")
             self.assertEqual((code, "no migration number to reserve" in out, "no migration file matching" in out),
                              (2, True, False), out)
-            self.assertEqual(reserve("adr"), (0, "ADR: 0002\n"))
+            self.assertIn("ADR: 0002\n", reserve("adr")[1])
 
 
 class HelpTests(unittest.TestCase):
-    def test_help_names_every_rule_from_r1_to_r7(self):
+    def test_help_names_every_rule_from_r1_to_r8_and_holder_sources(self):
         done = subprocess.run(["python3", "-B", SCRIPT, "--help"], capture_output=True, text=True)
         self.assertEqual(done.returncode, 0, done.stderr)
         rules = done.stdout.split("Limits:")[0]
-        for n in range(1, 8):
+        for n in range(1, 9):
             self.assertRegex(rules, rf"\bR{n} ")
+        for source in ("*.md", "*/index.md", "origin/spacedock-state/*"):
+            self.assertIn(source, done.stdout)
+
+
+class CrossWorkflowTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        root = Path(self.tmp.name)
+        origin = root / "origin"
+        origin.mkdir()
+        self.origin = Fixture(str(origin))
+        self.origin.commit("base", **{"docs__adr__0058-old.md": "x", "docs__adr__0059-old.md": "x"})
+        self.origin.git("checkout", "-q", "--orphan", "spacedock-state/dev2")
+        self.origin.git("rm", "-rf", ".")
+        self.origin.commit("holders", **{
+            "gate-presentation.md": "## Number guards\nADR: 0060\n",
+            "rel__index.md": "## Number guards\nADR: 0057\nMigration: 0070\n",
+            "_archive__old.md": "## Number guards\nADR: 0099\n",
+            "rel__review__notes.md": "## Number guards\nADR: 0098\n",
+        })
+        self.origin.git("checkout", "-q", "main")
+        self.repo = str(root / "second")
+        subprocess.run(["git", "clone", "-q", "--single-branch", "-b", "main", str(origin), self.repo],
+                       check=True, capture_output=True)
+        self.fx = Fixture(self.repo)
+        self.workflow = root / "workflow" / "dev2"
+        self.state = self.workflow / "st"
+        self.state.mkdir(parents=True)
+        self.state_fx = Fixture(str(self.state))
+        (self.workflow / "README.md").write_text("---\nstate: st\ntrunk: main\n---\n")
+        self.task = self.state / "slice3.md"
+        self.task.write_text("## Number guards\n")
+
+    def run_guard(self, command, *extra):
+        return subprocess.run(
+            ["python3", "-B", SCRIPT, command, "--repo", self.repo,
+             "--workflow-dir", str(self.workflow), "--task", str(self.task), *extra],
+            capture_output=True, text=True)
+
+    def reserve(self, *extra):
+        return self.run_guard("reserve", "--kind", "adr", *extra)
+
+    def candidate(self, number=60):
+        self.task.write_text(f"## Number guards\nADR: {number:04d}\n")
+        self.fx.git("checkout", "-qb", "feature")
+        self.fx.commit("candidate", **{f"docs__adr__{number:04d}-distinct.md": "x"})
+
+    def test_single_branch_clone_fetches_foreign_holder_at_reserve(self):
+        self.assertNotIn("origin/spacedock-state/", self.fx.git("branch", "-r"))
+        done = self.reserve()
+        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+        self.assertIn("origin/spacedock-state/dev2", self.fx.git("branch", "-r"))
+
+    def test_merge_ask_refuses_held_number_and_accepts_free_number(self):
+        self.candidate()
+        done = self.run_guard("check")
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn("FAIL R8: docs/adr/0060-distinct.md: 0060 is held by "
+                      "origin/spacedock-state/dev2:gate-presentation.md; "
+                      "delete this task's ADR: line, run reserve again and renumber", done.stdout)
+        self.fx.git("checkout", "-qb", "free", "main")
+        self.fx.commit("free", **{"docs__adr__0061-free.md": "x"})
+        self.task.write_text("## Number guards\nADR: 0061\n")
+        done = self.run_guard("check")
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        self.assertIn("PASS: no findings", done.stdout)
+
+    def test_own_folder_holder_counts_at_reserve_and_check(self):
+        self.origin.git("branch", "-D", "spacedock-state/dev2")
+        folder = self.state / "rel"
+        folder.mkdir()
+        (folder / "index.md").write_text("## Number guards\nADR: 0060\n")
+        done = self.reserve()
+        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+        self.candidate()
+        done = self.run_guard("check")
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn(f"0060 is held by {(folder / 'index.md').resolve()}", done.stdout)
+
+    def test_remote_folder_holder_counts_and_archive_and_review_do_not(self):
+        self.origin.git("checkout", "-q", "spacedock-state/dev2")
+        self.origin.commit("folder holder", **{"rel__index.md": "## Number guards\nADR: 0062\nMigration: 0070\n"})
+        self.origin.git("checkout", "-q", "main")
+        done = self.reserve()
+        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0063\n"), done.stderr)
+        self.fx.commit("migration base", **{"migrations__0001_first.sql": "x"})
+        done = self.reserve("--kind", "migration", "--migrations-path", "migrations", "--base", "HEAD")
+        self.assertEqual((done.returncode, done.stdout), (0, "Migration: 0071\n"), done.stderr)
+
+    def test_own_task_pushed_copy_is_excluded_but_sibling_on_own_branch_counts(self):
+        self.state_fx.git("remote", "add", "origin", self.origin.repo)
+        self.task.rename(self.state / "gate-presentation.md")
+        self.task = self.state / "gate-presentation.md"
+        self.candidate()
+        done = self.run_guard("check")
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        self.origin.git("checkout", "-q", "spacedock-state/dev2")
+        self.origin.commit("sibling", **{"other.md": "## Number guards\nADR: 0060\n"})
+        self.origin.git("checkout", "-q", "main")
+        done = self.run_guard("check")
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn("origin/spacedock-state/dev2:other.md", done.stdout)
+
+    def test_no_origin_same_basename_and_slug_is_foreign(self):
+        self.task.rename(self.state / "gate-presentation.md")
+        self.task = self.state / "gate-presentation.md"
+        self.candidate()
+        done = self.run_guard("check")
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn("origin/spacedock-state/dev2:gate-presentation.md", done.stdout)
+
+    def test_explicit_state_branch_excludes_only_own_task(self):
+        self.origin.git("branch", "-m", "spacedock-state/dev2", "spacedock-state/unique")
+        (self.workflow / "README.md").write_text(
+            "---\nstate: st\ntrunk: main\nstate-branch: spacedock-state/unique\n---\n")
+        self.state_fx.git("remote", "add", "origin", self.origin.repo)
+        self.task.rename(self.state / "gate-presentation.md")
+        self.task = self.state / "gate-presentation.md"
+        self.candidate()
+        done = self.run_guard("check")
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+
+    def test_number_already_on_base_gets_r5_without_r8(self):
+        self.candidate()
+        self.fx.git("checkout", "-q", "main")
+        self.fx.commit("landed", **{"docs__adr__0060-landed.md": "x"})
+        done = self.run_guard("check", "--head", "feature", "--base", "main")
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn("FAIL R5", done.stdout)
+        self.assertNotIn("FAIL R8", done.stdout)
+
+    def test_blind_read_warnings_go_to_stderr_and_cached_holders_still_count(self):
+        done = self.reserve()
+        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+        self.assertIn("state checkout has no origin; no other workflow sees these reservations", done.stderr)
+        self.fx.git("remote", "set-url", "origin", str(Path(self.tmp.name) / "missing"))
+        done = self.reserve()
+        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+        self.assertIn("state fetch failed; reading local origin/spacedock-state/* refs only", done.stderr)
+        self.candidate()
+        done = self.run_guard("check")
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn("FAIL R8", done.stdout)
+        self.assertIn("state fetch failed; reading local origin/spacedock-state/* refs only", done.stderr)
 
 
 class MisconfigurationTests(unittest.TestCase):
