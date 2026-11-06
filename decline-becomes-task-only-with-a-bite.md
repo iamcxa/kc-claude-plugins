@@ -53,3 +53,118 @@ Result: aligned at backlog: Batch 16 backlog gate, the Captain 「核准（建�
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+## Design
+
+**Press release.** From the next kc-dev-flow-2 release, when First Officer (FO) declines a finding from the third external-review round on, the decline line in the gate summary, naming the finding and a bracketed reason, is the whole record. FO files a backlog task only when the finding shows an observed failure and who it hurts, when a later round or another task hits it again (naming the task that already holds it, if one does), or when the Captain asks. The observer reads the same rule at archive, so a reasoned decline without a task is no longer reported as a violation, and a decline with a bite and no task still is.
+
+**FAQ.**
+- *What changes for FO?* One sentence of README step 5 (FO steps: review findings). No script output changes.
+- *What does it not prove?* That a reason is a good one, or that FO judged a bite correctly. No check reads the bite before the merge ask; the observer reads it at archive.
+- *What is lost?* The rule that a filed task's body carries the finding and decline reason (dropped to keep the word budget; `spacedock new` takes a body anyway, and the two built follow-ups each carried their finding).
+
+```mermaid
+flowchart TD
+    R[External review round N >= 3 returns a finding] --> M{Material or reviewer P1?}
+    M -->|yes| B[Blocks: fix and revalidate, or Captain waiver - steps 1 to 4]
+    M -->|no| D[FO declines it in the committed gate summary: finding + bracketed reason]
+    D --> Q{Observed failure naming who it hurts, a repeat in a later round or task, or a Captain ask?}
+    Q -->|no| S[Stop: the decline line is the whole record]
+    Q -->|yes| H{A backlog task already holds it?}
+    H -->|yes| N[Name that task in the decline]
+    H -->|no| F[spacedock new backlog task]
+    N --> T[Terminal gate lists each such task]
+    F --> T
+    D -.never.-> O[An open task's Scope]
+```
+
+### Chain check
+
+- Spacedock 0.27.3 (plugin cache source): `declin` appears in `internal/gates` only in `round_test.go` and its fixture, and elsewhere in release-tag prompts and a comment; no gate or `new` code reads declines (grep 2026-11-06). Nothing to reuse or change.
+- kc-dev-flow-2 at origin/main 0.35.0: the round-3 rule lives only in `references/sd/workflow.md` step 5, pinned by `scripts/test_sd_dispatch.py` (`ROUND_RULE`, `FIXES["follow-up-reason"]`). `delivery_gate.py` never required a receiving task: its decline rules are the bracketed reason and the count join (ADR 0025); its only round-3 text is the `DEFERRED` pattern `round-3 backlog`, which lists a line as a merge-ask `point:` and holds nothing. The observer (`skills/observer/SKILL.md`) checks "declines follow step 5 of review findings" against the README it is given and has no rule of its own; `observer_check.py` reads no declines.
+- Siblings (read-only, `git grep origin/HEAD`, 2026-11-06): subspace-relay and qnow carry the same step 5 text in `docs/dev2/README.md` and `docs/dev2-poc/README.md`; no adopter has a different bar.
+- Rulings: ADR 0010 (「E」, 2026-10-11) made every round-3 decline its own backlog task to keep declined behaviour out of open tasks' Scope; its Consequences say "Reopen if these tasks pile up unscheduled", which the Scope bite shows (11 untouched, 18 closed as done elsewhere). This design keeps 0010's no-Scope half and replaces its every-decline half; option F there ("close round-three declines without carrying them anywhere") differs, because the decline and its reason stay in the committed gate summary and a bite still makes a task. ADR 0025 (bracketed reason, held by `delivery_gate.py`) is the record this design relies on and is unchanged. Override lines: `_archive/codex-reader-reads-receipt-marker.md` records the Captain choosing a backlog task over FO's no-task recommendation; under this bar that is case (c), a Captain ask.
+
+### Existing-code check
+
+Use what exists: `delivery_gate.py` already enforces the whole record the new bar keeps (finding plus bracketed reason), and the observer already reads step 5 from the README. Observation that a change is needed: the three batch 12 and 13 observer reports (`_archive/fo-tries-what-it-asks-the-captain/observer.md` line 1, `_archive/model-roster-question-needs-both-families/observer.md` line 3, `_archive/rewritten-criteria-checked-against-captain-words/observer.md` line 9) each report a reasoned decline as a violation of "files it as a new backlog task". So the change is wording only: README step 5, its test pins, and the ADR.
+
+### Change
+
+1. `kc-dev-flow-2/references/sd/workflow.md` step 5, after "repair cycle:" (built by `decline-becomes-task-only-with-a-bite/ideation/candidate.py`):
+   - Before (53 words): "FO declines it in the committed gate summary, naming the finding, and files it as a new backlog task with `spacedock new` whose body carries the finding and the decline reason, or names the backlog task that already holds it when a later round repeats it; it never enters an open task's Scope."
+   - After (53 words): "FO declines it in the committed gate summary, naming the finding and its reason. Only an observed failure naming who it hurts, a repeat in a later round or task, or a Captain ask makes it a backlog task (`spacedock new`, or the one holding it); it never enters an open task's Scope."
+   - "The terminal gate lists each such task." stays. README 5939 of 5939 words, no `WORKFLOW_BUDGET_STEPS` entry (lint-skills.py on a package copy, 2026-11-06).
+2. `kc-dev-flow-2/scripts/test_sd_dispatch.py`: `ROUND_RULE`'s last phrase becomes "Only an observed failure naming who it hurts, a repeat in a later round or task, or a Captain ask makes it a backlog task"; `FIXES["follow-up-reason"]["need"]` replaces "names the backlog task that already holds it when a later round repeats it" and "whose body carries the finding and the decline reason" with "naming the finding and its reason" and "or the one holding it"; its first swap pattern becomes `, naming the finding and its reason\. Only an observed failure.*?The terminal gate lists each such task\.` with the same 0.10.1 replacement (`pins.py`: matches once on the candidate, 0 on base).
+3. One new ADR, short title "A round-three declined finding becomes a backlog task only with a bite", no number until FO reserves one: Words 「核准（建議）」 with the batch 16 backlog gate question quoted in `## FO alignment`, plus the source 「可以，但是該怎樣紀錄合理的followup」 (2026-11-05); Options: this bar (chosen), keep ADR 0010's E, F (no carry); Consequences: a bite-less decline is found only by grepping gate summaries; reopen if a declined finding without a task is later hit and was not caught as a repeat. ADR 0010's Status becomes `Superseded by <new number>` (the `adr_lint.py` form; 0047 → 0050 is the precedent); no package file cites `docs/adr/0010`, so no pointer moves.
+4. Unchanged: `delivery_gate.py` (including `DEFERRED`, which still lists any line saying "declined" as a merge-ask point), `skills/observer/SKILL.md`, `observer_check.py`. The adopted copy `docs/dev2/README.md` follows through FO's usual post-release workflow sync, not this PR.
+
+### Words FO reads at each moment
+
+Counted with `len(text.split())`, base origin/main 0.35.0, candidate from `candidate.py`:
+
+| Moment | What FO reads | Base | Candidate |
+| --- | --- | --- | --- |
+| Startup and resume | workflow README | 5939 | 5939 |
+| Declining a round-3+ finding | step 5 sentence | 53 | 53 |
+| Same moment, what FO writes | decline line + one `spacedock new` task per decline | decline line + task | decline line; a task only on a bite |
+| Validation gate prep and merge ask | `delivery_gate.py question` / `check` output | unchanged | unchanged (no code change) |
+| After archive | observer report | 3 step-5 violation lines on the three replays (35 + 37 + 34 = 106 words) | 0 for those declines (rule-reading replay) |
+
+### Batch overlap
+
+| Task | Shared file, check or record | Effect |
+| --- | --- | --- |
+| gate-summary-names-each-decline (held) | its rule 3 / AC-3 in `delivery_gate.py` holds a round-3 decline that names no receiving task; cites README step 5 | contradicts this bar; see D2 |
+| adr-required-statement (validation) | `references/sd/workflow.md` (§ Decision records), `test_sd_dispatch.py`, lint budget | different section and pins; textual rebase only; this change adds no budget step |
+| merge-guard-stops-unasked-merges (held) | `references/sd/workflow.md` delivery text, budget | different lines; budget delta 0 here |
+| archive-waits-for-observer-report (implementation) | `test_sd_dispatch.py` fixtures | different entries |
+| captain-ruling-sources-checked (held), seed-check-requires-alignment-result | `test_sd_dispatch.py` | different pins |
+| adr-reservation-crosses-workflows (batch 16), dispatch-carries-reserved-adr-number | the shared ADR number index (`docs/adr/`) | this task lands one ADR, so it takes a reserved number |
+| fo-write-checks-parse-top-level | owns `declined_items` in `delivery_gate.py` | none; no `delivery_gate.py` edit here |
+| delivery-check-passes-a-skipped-by-design-run, delivery-check-resolves-links-from-the-task, codex-security-only-prompts-code-review, comment-check-reaches-delivery-gate, step-back-answer-has-a-record-line (held), adoption-asks-which-extensions, picky-reviewers-may-run-on-gemini, adr-silent-undo-probe, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot | none of the files above at the changed lines | none |
+
+Recommended order: adr-required-statement first (it is in validation and edits the same README and test file), then this task, which must land before gate-summary-names-each-decline resumes.
+
+## Acceptance criteria
+
+Replays read state checkout `79af09021bcf` (`<state>`); `<cand>` is a `git archive` copy of origin/main `kc-dev-flow-2/` and `scripts/` with the candidate changes; tools are in `decline-becomes-task-only-with-a-bite/ideation/`.
+
+**AC-1**: README step 5 carries the new sentence and the README stays within budget. Evidence: at the PR head, `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0 and prints `references/sd/workflow.md: 5939 of 5939 words` (or the current budget unchanged by this PR), and `git diff origin/main -- kc-dev-flow-2/scripts/lint-skills.py` adds no budget step. Falsifier: restoring the old sentence fails AC-2's pin "round rule missing from workflow.md".
+
+**AC-2**: The wording pins follow the new rule. Evidence: `python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root <spacedock plugin root>` exits 0; `python3 -B pins.py <cand>/kc-dev-flow-2` prints no missing pin and `proposed swap matches: 1`, and on a base copy prints the three new pins missing. Falsifier: deleting "Only an observed failure naming who it hurts" from the README makes the `ROUND_RULE` assertion fail.
+
+**AC-3**: `delivery_gate.py` is unchanged and its decline rules pass the three batch 12 and 13 texts. Evidence: `git diff origin/main -- kc-dev-flow-2/scripts/delivery_gate.py` is empty; `python3 -B replay_gate.py <state> <cand>/kc-dev-flow-2/scripts` prints `decline problems none` for fo-tries-what-it-asks-the-captain (3 declined items), model-roster-question-needs-both-families (2) and rewritten-criteria-checked-against-captain-words (3). Falsifier: removing the bracket from one of those items prints `declined item has no reason`.
+
+**AC-4**: A fresh reader of the new step 5 reads the three replays as compliant and still asks for a task on a bite. Evidence: `observer-replay-candidate.prompt.md` given to a fresh Sonnet agent with no tools, at least twice: A, B, C `ok` and D `violation` quoting the bite clause in every run; `observer-replay-base.prompt.md` once: A, B, C `violation`. Falsifier: a candidate wording without the bite clause reads D `ok`.
+
+**AC-5**: The observer itself no longer reports the decline. Evidence: dispatch `kc-dev-flow-2:observer` on `_archive/rewritten-criteria-checked-against-captain-words` with `RULES` set to the candidate README; its report has no `violation` line quoting step 5 for the Codex round 3 P2 decline, where the archived `observer.md` line 9 has one. Falsifier: the same run with the base README reports that violation again.
+
+**AC-6**: The ruling is recorded and ADR 0010 is superseded. Evidence: one new ADR with the short title above, its Words line quoting 「核准（建議）」 and the bound question; ADR 0010's Status reads `Superseded by <that number>`; `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --since <base>` exits 0. Falsifier: leaving 0010 `Accepted` leaves two accepted ADRs with opposite step 5 rules.
+
+## Decisions for the Captain
+
+**D1. Approving this design supersedes ADR 0010 (your 「E」, 2026-10-11: every round-three declined finding becomes its own backlog task).** Recommendation: supersede it with the new ADR; 0010's own reopen condition ("these tasks pile up unscheduled") is met, and its no-Scope half is kept. What gets worse: a declined finding with no bite lives only in an archived gate summary, so it is found by grep, not on the backlog board.
+
+**D2. The held task gate-summary-names-each-decline proposes a check (its rule 3, AC-3) that holds a round-3 decline naming no receiving task; under this bar that check would hold the three compliant replays.** Recommendation: when that task resumes, FO strikes rule 3 and AC-3 rather than turning it into a bite check, following ADR 0027 D4 ("matching words cannot stop that class of error"): whether a reason shows an observed failure is a judgment. What gets worse: a decline with a bite and no task is caught only by the observer at archive, after the merge.
+
+## Stage Report: ideation
+
+- DONE: Design the README review-finding step 5 change and the observer and /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/delivery_gate.py reading of declines under the approved bar, with replays of the three batch 12 and 13 violations reading as compliant and a decline with a bite still asking for a task
+  `### Change`: one 53-for-53-word step 5 sentence, test pins, one ADR superseding 0010; delivery_gate.py and observer unchanged. Rule-reading replay (`ideation/replay-results.md`): base 3 of 3 violation; candidate 2 runs, A-C ok and bite case D violation in both. `replay_gate.py`: 0 decline problems on all three.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (delivery-check-passes-a-skipped-by-design-run, codex-security-only-prompts-code-review, delivery-check-resolves-links-from-the-task, adr-reservation-crosses-workflows) and live task of other sessions (adoption-asks-which-extensions, adr-silent-undo-probe, captain-ruling-sources-checked (held), comment-check-reaches-delivery-gate, dispatch-carries-reserved-adr-number, fo-write-checks-parse-top-level, gate-summary-names-each-decline (held), step-back-answer-has-a-record-line (held), merge-guard-stops-unasked-merges (held), journey-canvas-hosted-poc, picky-reviewers-may-run-on-gemini, seed-check-requires-alignment-result, archive-waits-for-observer-report, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot, adr-required-statement, journey-server-host-pilot (stalled, held or driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  Table of every named task; one conflict (gate-summary-names-each-decline rule 3, D2); order: adr-required-statement, this, then gate-summary resumes.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  `### Words FO reads at each moment`: README 5939 → 5939, step 5 53 → 53, gate script output unchanged, observer report −106 words on the three replays; `lint-skills.py` on a candidate copy exit 0.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  `## Acceptance criteria` AC-1 to AC-6, each with a command and a falsifier; D1 (supersede ADR 0010), D2 (strike the held task's rule 3). `design_surfaces.py check`: `design surfaces presentable`, exit 0.
+- DONE: AC-1 evidence mapped — lint-skills.py on the candidate copy: exit 0, `5939 of 5939 words`; not yet verified at a PR head.
+- DONE: AC-2 evidence mapped — `pins.py`: candidate no missing pins, swap matches 1; base three missing. `test_sd_dispatch.py` itself not yet run (needs the SD plugin root).
+- DONE: AC-3 evidence mapped — `replay_gate.py` on candidate scripts: decline problems none for all three texts; falsifier not yet run.
+- DONE: AC-4 evidence mapped — passed in ideation (`ideation/replay-results.md`, 1 base + 2 candidate Sonnet runs); falsifier not yet run.
+- DONE: AC-5 evidence mapped — not yet verified; needs one observer dispatch at implementation or validation.
+- DONE: AC-6 evidence mapped — not yet verified; the ADR is written at implementation with the number FO reserves.
+
+### Summary
+
+Step 5 is rewritten in the same 53 words: a round-3 decline keeps its finding and bracketed reason in the gate summary, and becomes a backlog task only on an observed failure naming who it hurts, a repeat, or a Captain ask. delivery_gate.py and the observer need no code change, because the gate already holds the reason and the observer reads step 5 from the README. A fresh-reader replay read the three batch 12/13 violations as compliant and still asked for a task on a bite case. The change reverses ADR 0010, so it lands a superseding ADR (D1), and it contradicts the held gate-summary-names-each-decline rule 3 (D2).
