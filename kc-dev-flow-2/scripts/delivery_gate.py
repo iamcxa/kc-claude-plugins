@@ -30,8 +30,9 @@ a confirmation clause is missing, a second reviewer has no stated outcome, a dec
 the directory is read, not the PR's file list; a `--sibling-pr` whose head is a dispatched Candidate and not closed supplies the file instead, and
 is recorded as `siblings`), a prod task's security review fails, a check on the head is not finished or finished
 other than SUCCESS, SKIPPED or NEUTRAL, no check on the head finished SUCCESS
-(an empty rollup, or only skipped and neutral checks), a workflow run on the head is not completed and successful (a skipped run
-included), the PR is a draft or not mergeable, its base is not the README's
+(an empty rollup, or only skipped and neutral checks), a workflow run on the head is not completed and successful
+(a completed skipped run settles when the required-check list is non-empty), a required check name has no pass entry,
+the PR is a draft or not mergeable, its base is not the README's
 `trunk:`, or the file list is shorter than `changedFiles`. Exit 2 when the record has no Candidate line, a head, the PR or the
 README cannot be read, or an input is unusable. Every problem is printed.
 A task whose committed state owes a chief-engineer or engineering-reviewer call also holds: `role_triggers.py` runs on the task folder and stem
@@ -457,7 +458,7 @@ def ci_problem(rollup):
     return None if succeeded else "no check on this head finished successfully: only skipped or neutral"
 
 
-def runs_problem(runs):
+def runs_problem(runs, settle_skipped=False):
     newest = {}
     for run in runs:
         key = run.get("workflow_id")
@@ -465,9 +466,27 @@ def runs_problem(runs):
     bad = []
     for run in runs:
         superseded = run.get("run_number", 0) < newest[run.get("workflow_id")] and run.get("conclusion") in ("cancelled", "skipped")
-        if not superseded and not (run.get("status") == "completed" and run.get("conclusion") == "success"):
+        if not superseded and not (run.get("status") == "completed" and run.get("conclusion") in (("success", "skipped") if settle_skipped else ("success",))):
             bad.append(tok(run.get("name") or "?", words=4, chars=40))
     return f"{len(bad)} of {len(runs)} workflow runs on this head are not finished and successful: {' '.join(bad[:5])}" if bad else None
+
+
+def required_checks(repo, number):
+    done = subprocess.run(["gh", "pr", "checks", number, "--repo", repo, "--required", "--json", "name,bucket"], capture_output=True, text=True, timeout=60)
+    if done.stdout.strip():
+        checks = json.loads(done.stdout)
+        if not isinstance(checks, list) or any(not isinstance(c, dict) or not isinstance(c.get("name"), str) or not c["name"] or not isinstance(c.get("bucket"), str) for c in checks):
+            raise ValueError("gh pr checks returned an invalid required-check list")
+        return checks
+    if "no required checks reported" in done.stderr:
+        return []
+    raise RuntimeError(f"gh pr checks exited {done.returncode}: {done.stderr.strip()}")
+
+
+def required_problem(checks):
+    passed = {c["name"] for c in checks if c.get("bucket") == "pass"}
+    bad = sorted({c["name"] for c in checks} - passed)
+    return f"required check without a pass on this head: {' '.join(tok(n, words=3, chars=40) for n in bad[:5])}" if bad else None
 
 
 def write_record(task, rec):
@@ -548,10 +567,11 @@ def check(args):
             problems.append(f"PR head {head} differs from dispatched candidate {' '.join(candidates)} (latest validation record {record.name})")
             nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
 
-    facts = files = runs = None
+    facts = files = runs = required = None
     try:
         facts, files = pr_facts(repo, number), pr_files(repo, number)
         runs = pr_runs(repo, str(facts["headRefOid"]).lower())
+        required = required_checks(repo, number)
     except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
         holds.append(f"cannot read the pull request {args.pr}: {error}")
     if facts is not None:
@@ -562,9 +582,12 @@ def check(args):
         if (why := ci_problem(facts.get("statusCheckRollup"))):
             problems.append(why)
             nexts.append("next: hold the ask until the required CI has finished green on this head.")
-        if runs is not None and (why := runs_problem(runs)):
+        if runs is not None and (why := runs_problem(runs, settle_skipped=bool(required))):
             problems.append(why)
             nexts.append("next: hold the ask until every workflow run on this head has finished green.")
+        if required is not None and (why := required_problem(required)):
+            problems.append(why)
+            nexts.append("next: hold the ask until each required check has passed on this head.")
         if facts.get("isDraft"):
             problems.append("the PR is a draft")
             nexts.append("next: hold the ask; mark the PR ready under the Captain's authority and let its CI finish.")
