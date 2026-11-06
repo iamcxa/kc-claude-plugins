@@ -2,6 +2,7 @@ import { hostname } from 'node:os'
 import { readFileSync } from 'node:fs'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import { clientApiProxy } from './server/client-api-proxy.ts'
 
 // The machine's own hostname is always admitted; JOURNEY_ALLOWED_HOSTS adds a
 // comma-separated list (e.g. a cloud or Tailscale DNS name) without editing this file.
@@ -31,19 +32,7 @@ export default defineConfig(() => ({
 	server: {
 		port: Number(process.env.JOURNEY_CANVAS_PORT ?? 3737),
 		allowedHosts: [hostname(), ...extraHosts],
-		proxy: {
-			'/connect': { target: API, ws: true },
-			'/uploads/': { target: API },
-			'/repo-doc': { target: API },
-			'/save': { target: API },
-   '/auth/': { target: API },
-   '/agents/': { target: API },
-   '/session': { target: API },
-   '^/doc($|[?])': { target: API },
-   '/health': { target: API },
-   '/capabilities': { target: API },
-   '/mcp': { target: API },
-		},
+		proxy: clientApiProxy(API, 'operator'),
 	},
 	optimizeDeps: { exclude: ['@tldraw/assets'] },
 }))

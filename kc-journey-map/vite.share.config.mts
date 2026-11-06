@@ -1,10 +1,11 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import { clientApiProxy, shareClientMode } from './server/client-api-proxy.ts'
 
-// The front-end a shared viewer reaches: the board and its images, and nothing else.
 const API = `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
 
 export default defineConfig(() => ({
+ define: { 'import.meta.env.VITE_JOURNEY_HUMAN_ENTRY': JSON.stringify(shareClientMode().human ? 'true' : 'false') },
 	plugins: [react()],
 	root: import.meta.dirname + '/server/client',
 	server: {
@@ -12,10 +13,7 @@ export default defineConfig(() => ({
 		strictPort: true,
 		host: '127.0.0.1',
 		allowedHosts: true,
-		proxy: {
-			'/connect/': { target: API, ws: true, changeOrigin: true },
-			'/uploads/': { target: API, changeOrigin: true },
-		},
+		proxy: clientApiProxy(API, 'share'),
 	},
 	optimizeDeps: { exclude: ['@tldraw/assets'] },
 }))

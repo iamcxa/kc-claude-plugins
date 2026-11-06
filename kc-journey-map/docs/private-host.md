@@ -42,6 +42,32 @@ candidate SHA and dirty status. Its baseline source is the admitted commit
 `6d0f8da951b5ea9ea50fca6bd3685fc360bf502f`, archived inside its own scratch folder.
 Full history containing that commit is needed for the rollback control.
 
+## Local share entrance
+
+`vite dev --config vite.share.config.mts` reads the same `JOURNEY_PRIVATE_DIR`,
+`JOURNEY_HUMAN_CONFIG` (including its validated `mode`), `JOURNEY_ORIGIN`,
+`JOURNEY_NATIVE_ACCOUNT` and `JOURNEY_AGENT_PAIRING` configuration as the Node
+backend. Start both processes with the same environment and restart both when
+changing that configuration. `VITE_JOURNEY_HUMAN_ENTRY` does not grant share routes.
+
+With human entry off, the share forwards WebSocket `/connect/:room`, GET/PUT
+`/uploads/:id`, GET `/health` and GET `/doc`. Human entry replaces health inventory
+with GET `/auth/config`, `/auth/entry`, `/auth/rooms` and POST `/auth/renew`,
+`/auth/logout`. Local sign-in adds POST `/auth/local/start`, `/auth/local/consume`;
+provider sign-in adds POST `/auth/provider/start` and GET `/auth/login` navigation.
+Native account adds GET `/auth/account`. Enabled human pairing adds POST
+`/agents/inspect`, `/agents/approve`, `/agents/deny`, `/agents/list`, `/agents/revoke`.
+Backend session, human context, origin and CSRF checks still apply.
+
+Save and checkout probes keep the viewer's unavailable fallback by default.
+An operator can explicitly grant GET/POST `/save` with `JOURNEY_SHARE_SAVE=true`,
+but it also requires private backend storage and `JOURNEY_SAVE_DIR`.
+GET `/repo-doc` requires `JOURNEY_SHARE_REPO_DOC=true`, private backend storage,
+`JOURNEY_DOC_REPOS` and a nonempty `JOURNEY_ROOM_REPOS` scope. Backend room policy
+still checks each request. These flags do not enable either capability in legacy
+shared mode. Operator session provisioning and native agent installation routes
+remain on their separate operator entrance.
+
 ## One agent interface
 
 Keep `JOURNEY_API` (default `http://127.0.0.1:5858`). Private agents also receive
