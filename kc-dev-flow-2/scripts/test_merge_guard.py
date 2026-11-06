@@ -149,6 +149,17 @@ class MergeGuardTests(unittest.TestCase):
         with patch.object(guard, "git", return_value="https://github.com/owner/repo.git"):
             self.assertEqual(self.verdict(f"cd /another/repo && gh pr merge 672 --match-head-commit {HEAD}"), "stop")
 
+    def test_inherited_repo_override_needs_explicit_repo(self):
+        self.saved()
+        with patch.dict(guard.os.environ, {"GH_REPO": "other/repo"}), patch.object(guard, "git", return_value="https://github.com/owner/repo.git"):
+            self.assertEqual(self.verdict(self.command.replace(" --repo owner/repo", "")), "stop")
+            self.assertEqual(self.verdict(), "pass")
+
+    def test_inherited_host_override_stops(self):
+        self.saved()
+        with patch.dict(guard.os.environ, {"GH_HOST": "other.example"}):
+            self.assertEqual(self.verdict(), "stop")
+
     def test_readonly_gh_commands_pass(self):
         for command in ("gh -R owner/repo pr view 672", "gh api repos/owner/repo/pulls/672",
                         "gh api -X GET repos/owner/repo/pulls/672", "gh issue list", "gh --version"):

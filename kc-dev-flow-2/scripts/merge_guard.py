@@ -173,11 +173,13 @@ def parse(command, cwd):
             raise ValueError("the PR URL and --repo disagree")
         repo = url_repo
     if repo is None:
-        if context_changed:
-            raise ValueError("the shell context needs an explicit repository")
+        if context_changed or os.environ.get("GH_REPO"):
+            raise ValueError("the shell context or GH_REPO needs an explicit repository")
         remote = git(cwd, "remote", "get-url", "origin")
         m = re.fullmatch(r"(?:https://github\.com/|git@github\.com:|ssh://git@github\.com/)([^/]+/[^/]+?)(?:\.git)?/?", remote)
         repo = m.group(1) if m else None
+    if os.environ.get("GH_HOST", "github.com").lower() not in ("", "github.com"):
+        raise ValueError("GH_HOST must be github.com for this merge guard")
     if not (number and re.fullmatch(r"[1-9]\d*", number) and repo and REPO.fullmatch(repo)
             and head and re.fullmatch(r"[0-9a-fA-F]{7,40}", head)):
         raise ValueError("the merge needs a PR number, repository and 7-to-40-hex --match-head-commit")

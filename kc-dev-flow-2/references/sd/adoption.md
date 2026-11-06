@@ -185,8 +185,9 @@ The guard parses global `-R`/`--repo` flags and literal `env`, `command` and
 executable-path forms. REST `pulls/N/merge` endpoints, GraphQL calls (reads
 included), unknown gh aliases, `extension exec` and unparseable wrappers stop;
 use `gh pr merge --match-head-commit` for a recorded merge. Shell text inspection
-does not resolve generated commands, other executable names or direct curl/SDK
-calls; those stay outside this gh guard.
+requires an explicit repository under inherited `GH_REPO` and stops a `GH_HOST`
+other than `github.com`. It does not resolve generated commands, other executable
+names or direct curl/SDK calls; those stay outside this gh guard.
 
 The 2026-11-06 ideation replay stopped 30 of 84 historical merges; synthetic
 questions for approved-record candidates reduced that to 10, including the
