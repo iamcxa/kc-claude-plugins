@@ -81,3 +81,24 @@ Condensed; operator data, not verified yet.
 - (a) gates: approvals for #778/#779 recorded in fo-notes/overnight-plan-20261104.md, not by gate prepare/record; private-native-account went backlog to merged PR #785 without ideation, implementation or validation stages (noted as owed); step-back fired on pairing round 2 and round 3 went to an independent reviewer.
 - (b) dispatch: archive tags before every restack preserved approved SHAs; a sealed run package refused because origin/main moved (one re-seal worker).
 - First links: gates recorded outside Spacedock and a task merged without its stages is an authority finding (theme 1); no matching task yet. Terminal visibility contradicts the paseo extension's human-terminal assumption; no matching task yet.
+
+### web FO, 295b873d — answered 2026-11-06 (Paseo agent message 748bfc02, sender stamped)
+
+Condensed; operator data, not verified yet. Workflow extensions: learn, peers, roborev.
+- learn: no learn run at archive for #204 #206 #208 #209 #211 #212 #213 #214; merge guard printed "finalized … archived" with no learn line; asks merge guard to say "learn not run: <reason>".
+- peers: relay FO exchanges changed a gate (pair-once does not keep drafts; Captain chose A, waits on relay's card-sign-in-keeps-unsent-comments) and stopped two needless changes (AC-22 card, AC-23 CSS); peer messages are not recorded in task files unless the FO copies them.
+- roborev: every implementation ran roborev_gate.py (roborev:1474 to 1556), all clean first run except one rerun after a squash; caught nothing material in the window; asks to measure its yield.
+- (a) gates: `gate record --round` impossible on validation revises (room holds only index.json, no review log); gate watchers die at the 2-hour background limit; delivery_gate 0.35.0's `External rounds: N` held twice; the Captain asked 「中文說明」 three times in one day (jargon in gate texts).
+- (b) dispatch: about 35 dispatches; scope "Do not push" conflicts with the split-root "push the state branch" line, so workers left state commits unpushed; `status --set` refused a report whose checklist lines were paragraphs; dispatches named the 0.34.0 package root while workers used 0.35.0; six parallel browser workers pushed load to 23–350; asks a per-machine cap.
+- First links: learn silence at archive matches backlog observer-check-learn-only-when-listed (inverse case); the "Do not push" conflict is in FO scope-note wording (the kc-plugin FO's validate.py carries the same sentence); the load cap matches fo-asks-to-raise-concurrency (inverse direction).
+
+### relay FO, 1671c3a9 — answered 2026-11-06 (Paseo agent message d7c88af6, sender stamped)
+
+Condensed; operator data, not verified yet.
+- learn: pair-once (#442) and the continuity tasks each ran to a recorded end; two package-issue candidates still with the Captain (an unenforced rule lets a test pass falsely; the ADR counter is shared across repos).
+- roborev: continuity-earlier-comments-beside-latest job 1511 High challenged by a fault-injection probe and ruled wrong by the engineering reviewer; job 1519 raised it again on unchanged code; the gate cannot carry a ruled disposition into the next job (one extra round).
+- journey-map: backlog gates name their story; checking the map first stopped a duplicate story; owed "what this release can't do yet" note.
+- release-acceptance: continuity walk passed with Codex as third reviewer; unknown whether it followed the extension's procedure.
+- (a) gates: FO passed `gate prepare --artifact` the Chinese presentation file instead of the task file, so design_surfaces.py compared Scope against an empty baseline and held "Scope changed"; asks the checker to print "not run: bound artifact has no Scope" and gate prepare to warn when the artifact is not the task file; the Captain once could not find a gate in chat.
+- (b) dispatch: Codex worker raised four permission requests, approved after reading the scripts; `dispatch build` printed "declared model 'sonnet' ignored on host codex"; create_agent refused to inherit mode 'auto' from a Claude caller; worker write scripts that refuse on a changed file made approval cheap; a worker read one deny as cancelling all runs; asks the deny reason to reach the worker with the deny.
+- First links: the shared ADR counter is backlog adr-reservation-crosses-workflows; the create_agent mode refusal matches the kc-plugin FO's own batch 14 experience.
