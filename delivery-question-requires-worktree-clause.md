@@ -34,6 +34,17 @@ gates:
                 id: briefing:delivery-question-requires-worktree-clause:ideation:attempt-1:revision-1
                 digest: sha256:d25f81a5fea988a8a555aae30e074917e2ff706d0b2e7e40c043ec5758a676cf
                 room-ref: ./delivery-question-requires-worktree-clause/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-question-requires-worktree-clause:ideation:1
+                briefing: briefing:delivery-question-requires-worktree-clause:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-06T01:29:43.594842Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-06), answering 「決定：「合併問句要有移除 worktree 那一句」這份設計進入實作嗎？核准即接受 D1（合併當下的 check 不再另外檢查這一句）與 D2（這一句要照 README 原文寫「clean, pushed」）兩個建議。」; accepts D1 and D2 as recommended. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 `delivery_gate.py question` holds a validation gate question that omits "removing its clean, pushed worktree", so an approval cannot be read as covering a cleanup it never named.
