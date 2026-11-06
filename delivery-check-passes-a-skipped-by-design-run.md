@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:delivery-check-passes-a-skipped-by-design-run:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:delivery-check-passes-a-skipped-by-design-run-backlog-1
+              briefing:
+                id: briefing:delivery-check-passes-a-skipped-by-design-run:backlog:attempt-1:revision-1
+                digest: sha256:7c0597c313a651f965eef34859be7ed0867804870b15a4e8c24191cf201f2f25
+                room-ref: ./delivery-check-passes-a-skipped-by-design-run/review/backlog/briefing-1
 ---
 
 `delivery_gate.py check` treats a workflow run that its own conditions skip on purpose as no hold, while still holding a failed, pending or unexpectedly skipped required check.

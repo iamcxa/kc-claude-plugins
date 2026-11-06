@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-check-passes-a-skipped-by-design-run:backlog:attempt-1:revision-1",
+  "question": "決定：第 16 批這五張（跳過的 CI 不擋、Codex 只貼安全摘要時提醒、交付檢查的相對路徑、ADR 編號跨流程預留、婉拒只在出過事時開任務）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？核准即接受「婉拒只在出過事時開任務」任務裡寫的標準（指出真的錯並說得出誰受害、再次出現、或你要求）。要改哪張直接說。",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-check-passes-a-skipped-by-design-run:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/48822eb1cf995bf55bdb91fab5b2fc8a7ccd7ecb/delivery-check-passes-a-skipped-by-design-run.md",
+      "rev": "sha256:3216739dc88ae2af7a248e80cbc54955f0d1b717e206533a4df8f94488f82822",
+      "mediaType": "text/markdown",
+      "summary": "Pilot. delivery_gate.py check stops holding on a run its workflow skips by design; bite: qnow #1338, Captain waived (「豁免release gate跳過，合併1338」)."
+    }
+  ]
+}
