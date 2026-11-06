@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:decline-becomes-task-only-with-a-bite:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:decline-becomes-task-only-with-a-bite-ideation-1
+              briefing:
+                id: briefing:decline-becomes-task-only-with-a-bite:ideation:attempt-1:revision-1
+                digest: sha256:d3b565a23ccfd04c33fa7b83ef23605c1e09a53f371d2bce2879e95262e47115
+                room-ref: ./decline-becomes-task-only-with-a-bite/review/ideation/briefing-1
 ---
 
 The README's review-finding rule that files every round-3 decline as a new backlog task is replaced: a declined finding keeps its bracketed reason in the gate summary, and becomes a task only when it meets the same bite-and-consumer bar as any other backlog task, or when a later round or task hits it again.

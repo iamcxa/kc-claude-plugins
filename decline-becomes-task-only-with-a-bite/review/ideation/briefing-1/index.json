@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:decline-becomes-task-only-with-a-bite:ideation:attempt-1:revision-1",
+  "question": "決定：「婉拒只在出過事時開任務」這份設計進入實作嗎？核准即接受 D1（另開新 ADR 取代 ADR 0010）與 D2（擱置中的 gate-summary-names-each-decline 恢復時拿掉它的第 3 條）。",
+  "artifacts": [
+    {
+      "id": "artifact:decline-becomes-task-only-with-a-bite:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ff5932e96c71fc13a9d1d3366b572981230cdf1d/decline-becomes-task-only-with-a-bite.md",
+      "rev": "sha256:26e5b87f0a3fe4c7b2aac569d19298ca53ced058b873dd701dd42328c9559e9c",
+      "mediaType": "text/markdown",
+      "summary": "README step 5 reworded at the same 53 words; delivery_gate.py and observer need no code change; fresh-reader replay turns the three batch 12-13 violations compliant and keeps a bite decline a violation (ideation report, Opus, 2026-11-06). D1, D2."
+    }
+  ]
+}
