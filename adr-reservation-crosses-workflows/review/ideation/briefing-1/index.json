@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-reservation-crosses-workflows:ideation:attempt-1:revision-1",
+  "question": "決定：「ADR 編號跨流程預留」這份設計進入實作嗎？核准即接受 D1（預留記在各流程已推送的 state 分支，編號檢查讀所有 spacedock-state/* 分支；寫進 ADR 0002 修正，不用新編號）。",
+  "artifacts": [
+    {
+      "id": "artifact:adr-reservation-crosses-workflows:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d24fff6a7b1c8a219c2f63daa865ecf52fbf9b13/adr-reservation-crosses-workflows.md",
+      "rev": "sha256:51ad18788e112d1edaf857b489b9be18ccc7a3929e343c0c5939b9675e3f7f84",
+      "mediaType": "text/markdown",
+      "summary": "number_guards.py reads every spacedock-state/* branch's ADR: lines (folder tasks too) and a new R8 refuses a number another workflow's live task holds; replays reproduce 0060 and an in-workflow 0031 miss (ideation report, Opus, 2026-11-06). D1."
+    }
+  ]
+}

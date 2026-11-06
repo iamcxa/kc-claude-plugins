@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:adr-reservation-crosses-workflows:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:adr-reservation-crosses-workflows-ideation-1
+              briefing:
+                id: briefing:adr-reservation-crosses-workflows:ideation:attempt-1:revision-1
+                digest: sha256:7b86bd7b309a98268d656531eba2b36964e6bb78bd240c3b3090223fc313467d
+                room-ref: ./adr-reservation-crosses-workflows/review/ideation/briefing-1
 ---
 
 `number_guards.py` refuses a new ADR number that another workflow's live task has already reserved in the same repository, so two FOs sharing a repository cannot both land the same number.
