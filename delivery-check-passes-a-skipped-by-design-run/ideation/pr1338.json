@@ -1,0 +1,194 @@
+{
+ "source": "iamcxa/qnow#1338, read 2026-11-06 with: gh pr view 1338 --repo iamcxa/qnow --json headRefOid,statusCheckRollup; gh api repos/iamcxa/qnow/actions/runs?head_sha=<head>&per_page=100; gh pr checks 1338 --repo iamcxa/qnow --required --json name,state,bucket,workflow",
+ "head": "9ad9bb170ead3119ce96a547b5a5fce64e6e3bb8",
+ "statusCheckRollup": [
+  {
+   "__typename": "CheckRun",
+   "name": "Release Gate Setup",
+   "workflowName": "Release Gate",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "classify",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SUCCESS"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "manual-test-config",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "Enable Auto-Merge",
+   "workflowName": "Release Gate",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "pr-test / changes",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "Verify Staging (staging-verified)",
+   "workflowName": "Release Gate",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "pr-test / check-conflict",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "Auto-Approve",
+   "workflowName": "Release Gate",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "ci-gate",
+   "workflowName": "Release Gate",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "pr-test / node-tests",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SUCCESS"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "CI Gate Status Sentinel",
+   "workflowName": "Release Gate",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "pr-test / office-tests",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SUCCESS"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "pr-test / pg-tests",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SUCCESS"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "pr-test / test-summary",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SUCCESS"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "lint-workflows",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "lint-agent-docs",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "office-browser-bundle",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SUCCESS"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "manual-test",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "ci-gate",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SUCCESS"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "manual-test-summary",
+   "workflowName": "PR Checking",
+   "status": "COMPLETED",
+   "conclusion": "SKIPPED"
+  },
+  {
+   "__typename": "CheckRun",
+   "name": "GitGuardian Security Checks",
+   "workflowName": "",
+   "status": "COMPLETED",
+   "conclusion": "SUCCESS"
+  },
+  {
+   "__typename": "StatusContext",
+   "context": "ci-gate",
+   "state": "SUCCESS"
+  }
+ ],
+ "workflow_runs": [
+  {
+   "name": "Release Gate",
+   "workflow_id": 246168760,
+   "run_number": 3287,
+   "status": "completed",
+   "conclusion": "skipped"
+  },
+  {
+   "name": "PR Checking",
+   "workflow_id": 194184001,
+   "run_number": 5860,
+   "status": "completed",
+   "conclusion": "success"
+  }
+ ],
+ "required": [
+  {
+   "bucket": "pass",
+   "name": "ci-gate",
+   "state": "SUCCESS",
+   "workflow": "PR Checking"
+  },
+  {
+   "bucket": "skipping",
+   "name": "ci-gate",
+   "state": "SKIPPED",
+   "workflow": "Release Gate"
+  },
+  {
+   "bucket": "pass",
+   "name": "ci-gate",
+   "state": "SUCCESS",
+   "workflow": ""
+  }
+ ]
+}
