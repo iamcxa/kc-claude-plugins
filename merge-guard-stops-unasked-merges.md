@@ -305,6 +305,10 @@ Falsifier: drop `record`'s head check and #672 passes (run on the POC script, 20
 
 Evidence: `paseo inspect` shows no pending permission, and `/tmp/merge-guard-poc-paseo/ran.log` shows one `FAKE-GH-RAN pr merge` line after Yes, or none after No.
 
+## Number guards
+
+ADR: 0063
+
 ## Stage Report: ideation
 
 - DONE: Prove on each host, in isolated Claude and Codex state under the mode the Captain runs, whether a pre-tool hook or rule stops a gh pr merge that no task's newest merge/ask-N.json carries and lets a matching one through; then design the guard and where it lives (package or adopter-owned under ADR 0003), naming any host that can only deny
