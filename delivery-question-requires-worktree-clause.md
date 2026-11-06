@@ -211,3 +211,41 @@ Recommended order: this task first among the three `delivery_gate.py` editors. I
 ### Summary
 
 The design adds one pattern beside the existing hold-out check, so `delivery_gate.py question` holds a merge-naming question whose question file does not say "removing its clean, pushed worktree". Replayed on a /tmp prototype, #786 and #787 are held and #788 passes. Across 68 recorded merge questions, 24 would have been held. The Captain has two decisions: leave `check` unchanged (recommended), and require the README's "clean, pushed" wording (recommended; 2 past questions would have been held). No ADR is needed: this enforces ADR 0023's existing rule.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria, D1 and D2 as recommended, changing only the two named files.
+  Branch `spacedock-ensign/delivery-question-requires-worktree-clause`; fetched base `b804d81d3abc94c9c321326dc75e7cac927c5252`; candidate `5b3e290a7eaceb0fe70f489d25d622314598b9f0`. `question()` alone gains the condition; `check()` is unchanged. No versions, workflow text or new ADR changed.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation run with python3 -B and no bytecode caches.
+  `python3 -B /tmp/opencode/delivery-worktree-clause/prove.py <assigned worktree> <state checkout>` exited 0; `proof-summary.json`, `mutations.json` and `mutation-1.log` through `mutation-5.log` in that directory capture five caught assertion failures, zero mutation errors and zero caches.
+- DONE: AC-1 historical questions held/passed as specified.
+  Durable literals match state `846c4202b2a7e70bd08eee1d31406502f350aa0d`; `ideation/replay_question.py <candidate> <state>` gives #786/#787/#788 exits 1/1/0 vs base 0/0/0 (`replay-candidate.log`, `replay-base.log`). Removing the new condition fails the new test's #786/#787 assertions (`mutation-1.log`, `new-test-on-base.log`).
+- DONE: AC-2 question-file grant and conditional requirement.
+  `QuestionTests.test_removal_in_the_summary_does_not_grant_it_in_the_question` holds summary-only removal, passes appended question removal and nonmerge text, and holds a merge named only in the summary; reading combined text fails it (`mutation-2.log`).
+- DONE: AC-3 accepted wording and near misses.
+  `test_removal_wording_names_clean_pushed_worktrees_in_one_sentence` covers remove/removes/removing, uppercase/plural, missing/reordered qualifiers and full-stop/semicolon/newline breaks; reducing the pattern to `worktree` fails the keeping case (`mutation-3.log`). The durable mutation test also exercises that weakening.
+- DONE: AC-4 merge-time check unchanged.
+  `check-parity.json` records identical exit 0 and output for the #786 question on base/candidate, using the same synthetic task and stubbed gh facts; the extended no-judge test fails when an unguarded condition is injected into `text_problems` (`mutation-4.log`). No live merge or provider authorization is claimed.
+- DONE: AC-5 passing output and workflow budget.
+  Both named exact-output tests pass; printing an extra passing line fails (`mutation-5.log`). `git diff <base> HEAD -- kc-dev-flow-2/references/sd/workflow.md` is empty. Passing output and lifecycle text are unchanged; a new hold adds 19+19 words, the grant adds 6 words, and question help adds 17 words.
+- DONE: Compare newly refusing verdicts on committed validation questions.
+  `corpus.json`: all 131 bound validation questions at the pinned state replayed through base/candidate fixtures; 68 name a merge, 24 changed, each intentionally missing the clause; all others unchanged. Fixtures supply valid task/summary/steps to isolate the question, rather than rerunning obsolete archived step paths.
+- DONE: Repository kc-dev-flow-2/scripts/lint-skills.py, package test suite and scripts/version-parity-check.sh.
+  All exited 0 on 2026-11-06; `suite.json`/`suite.xml`: 25 commands, 1,156 unittest cases including 11 skips, plus native dispatch/recovery checks. `test_delivery_gate.py`: 162 cases, one skip; all added tests ran. Baseline: 157 cases, one skip. Logs are `/tmp/opencode/delivery-worktree-clause/`.
+- SKIPPED: Eleven existing optional tests.
+  Four design-surfaces historical/native tests lack DEV2_AMENDMENT_CORPORA/BASE, DEV2_AMENDMENT_STATE or DEV2_AMENDMENT_SPACEDOCK; four release-acceptance tests lack journey-map/node/yaml prerequisites; one dispatch-record builder lacks SD_PLUGIN_ROOT; one delivery replay lacks GATE_PRESENTATION_STATE; one laws replay lacks DEV2_OBLIGATION_SOURCES. These are not clean results; the five task acceptance criteria ran independently.
+- DONE: Package adr_lint.py docs/adr --since <base>, number_guards.py check and comment_ratio.py within its maximum.
+  Loaded package `/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0`; `adr.log`: 61 records checked, zero legacy, exit 0 (also --require 0044 0051 0062); `number-guards.log`: PASS, no findings at base/candidate; `comment-ratio.log`: 64 added code lines, zero comment lines, 0.0% <= 5%. Native CLI 0.27.2, supplied Spacedock plugin root 0.27.3.
+- DONE: design_surfaces.py check and doc_impact.py <base> <candidate>.
+  `design.log` passes; `doc-impact.json` lists exactly the following three documents, each assessed below; no diagram or retained workflow edit is required by the approved design.
+- DONE: docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md — unaffected: summary reviewer/count checks and the optional combined-text input remain; the new grant condition reads the question separately.
+- DONE: docs/adr/0051-the-merge-ask-check-requires-the-round-count.md — unaffected: check's round-count condition is unchanged.
+- DONE: docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md — unaffected: quoted-question comparison and merge-time authority are unchanged.
+- DONE: Commit locally, stage named files only, no push; PR text written for FO; CI cost measured or stated as not measured.
+  Candidate has the two named files only and a clean code worktree; prepared title/body is `/tmp/impl-delivery-question-requires-worktree-clause-pr.md`. No PR opened: no push grant. CI cost per PR was not measured; CI configuration is unchanged.
+- SKIPPED: FO pushes, opens the Draft PR, runs RoboRev and reads CI.
+  Delegated to FO by this dispatch; product branch not pushed, PR not opened, RoboRev not run, hosted CI not run. The initial read-only GitHub branch lookup returned no PR.
+
+### Summary
+
+The local candidate requires a merge-naming gate question to include removal of its clean, pushed worktree; a clause only in the summary is held. All five acceptance criteria and their mutations passed, with the existing optional suite skips and replay boundaries stated above. Implementation and prepared PR text are ready for FO publication, independent validation and review; this report grants no merge or worktree-removal authority.
