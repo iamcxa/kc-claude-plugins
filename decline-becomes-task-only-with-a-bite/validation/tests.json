@@ -42,7 +42,7 @@
   {
     "name": "Required number guards",
     "status": "passed",
-    "message": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase ba055b8a7a55 head ae7750375bc1 merge-base ba055b8a7a55\n"
+    "message": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase ee6ca16fa6c2 head ae7750375bc1 merge-base ba055b8a7a55\n"
   },
   {
     "name": "Required design-surface check",

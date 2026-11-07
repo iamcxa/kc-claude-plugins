@@ -1,1 +1,13 @@
 STEP 1 PASS: exported ae7750375bc19e482f829edc9a041d95fb280693
+11 deterministic acceptance groups passed; fresh Sonnet evidence is recorded separately.
+STEP 2 PASS: deterministic behavior and negative controls
+PASS: both paths read the same ADR; split assertion still rejects Accepted; literal path reproduces the lint false positive.
+62 ADR file(s) checked, 0 legacy
+STEP 3 PASS: ADR record and unchanged supersession assertion
+PASS: AC-7 primary readings; E requires task in 2/2 candidate and 0/2 mutation readings; A-D retained.
+LIMIT: mutation-1 reads C violation; mutation-2 reads C ok. The accepted falsifier is E; this variability is retained.
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/decline-becomes-task-only-with-a-bite/validation/verify-recordings.py", line 51, in <module>
+    assert any(x.startswith("violation |") for x in lines),lines
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ['can\'t tell | rule: "FO declines … under `### FO declines`" (FO steps: review findings, step 5) | evidence: absent. `review/copilot-not-run.txt` exists and the validation report lists F1 Deferred risk and F2/F3 Polish. The `### FO declines` heading is absent in the task file, and the committed gate summary is not in this task\'s window. The FO disposition outside state is not visible here. (79af09021)']

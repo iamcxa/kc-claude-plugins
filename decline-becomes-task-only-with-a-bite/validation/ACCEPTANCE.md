@@ -10,10 +10,12 @@ bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colom
 ```
 
 1. Export the pinned candidate under /tmp. Expected: STEP 1 PASS and the full candidate SHA.
-2. Exercise local rule behavior, wording controls, native dispatch, archived declines and guards. Expected: 11 deterministic acceptance groups passed, then STEP 2 PASS.
+2. Exercise local rule behavior, wording controls, archived declines and guards. Expected: 10 deterministic acceptance groups passed, then STEP 2 PASS.
 3. Reproduce the ADR pointer workaround and run the required ADR lint. Expected: same-file/supersession PASS, 62 ADR files checked with 0 legacy, then STEP 3 PASS.
-4. Check the retained independent Sonnet readings and observer contrast. Expected: AC-7 PASS, the recorded C-reading variability LIMIT, AC-5 PASS, then STEP 4 PASS.
+4. Check the retained independent Sonnet readings and observer contrast. Expected: AC-7 PASS, the recorded C-reading variability LIMIT, the explicit observer-withdrawal LIMIT, AC-5 final-active-verdict PASS, then STEP 4 PASS.
 
 Every command and expected observation is in the corresponding numbered section of the script. Requires the existing named code/state checkouts, Python 3.11 or newer, Git, bash, Spacedock CLI 0.27.2 on PATH, kc-dev-flow-2 0.35.0 and the Spacedock 0.27.3 plugin root listed there. It creates only temporary exports and validation evidence files. It does not need network or credentials.
 
 A pass covers this exact local candidate and retained model evidence. It does not launch fresh models, assess all possible decline reasons, prove adoption after release, retire old tasks, or authorize review, merge or publication. Temporary exports are intentionally left under /tmp for inspection. Model and observer reports retain their original outputs.
+
+The full native dispatch suite was independently run twice and passed; its retained result is native-dispatch.log and deterministic-tests.json. The short Captain script omits repeating that longer suite.

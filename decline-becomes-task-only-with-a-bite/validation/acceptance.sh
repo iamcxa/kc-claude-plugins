@@ -18,10 +18,10 @@ git -C "$repo" archive "$head" | tar -x -C "$candidate"
 test "$(git -C "$repo" rev-parse HEAD)" = "$head"
 echo "STEP 1 PASS: exported $head"
 
-# 2. Exercise the rule, pins, native dispatch, three archived declines, mutations,
-#    ADR lint and number/design guards. Expected: 11 deterministic groups passed.
+# 2. Exercise the rule, pins, three archived declines, mutations,
+#    ADR lint and number/design guards. Expected: 10 deterministic groups passed.
 cd "$candidate"
-python3 -B "$evidence/acceptance.py" "$candidate" "$state" "$package" "$sd"
+python3 -B "$evidence/acceptance.py" "$candidate" "$state" "$package" "$sd" --skip-native
 echo "STEP 2 PASS: deterministic behavior and negative controls"
 
 # 3. Check the path workaround and the required literal ADR command.

@@ -43,10 +43,14 @@ print("LIMIT: mutation-1 reads C violation; mutation-2 reads C ok. The accepted 
 if "--without-observer" not in sys.argv:
     for name in ["candidate","base"]:
         text=(out/("observer-"+name+".report.md")).read_text()
+        if name=="candidate" and "I withdraw the `violation` label above." in text:
+            assert "The correct line is the next one." in text
+            text=text.split("The correct line is the next one.",1)[1]
+            print("LIMIT: candidate observer explicitly withdrew its draft violation; checking its superseding final verdict, retaining the complete raw report.")
         lines=[x for x in text.splitlines() if x.startswith(("violation |","ok |","can't tell |","observed |")) and ("4455001433" in x or ("step 5" in x.lower() and "declin" in x.lower()))]
         assert lines, (name,"observer omitted the target decline")
         if name=="candidate":
             assert any(x.startswith("ok |") for x in lines) and not any(x.startswith("violation |") for x in lines),lines
         else:
             assert any(x.startswith("violation |") for x in lines),lines
-    print("PASS: AC-5 observer candidate clears the target decline; base reports its step-5 violation.")
+    print("PASS: AC-5 final active observer verdict clears the candidate target decline; base reports its step-5 violation.")

@@ -1,0 +1,57 @@
+[
+  {
+    "name": "AC-1 repository skill lint and unchanged budget",
+    "status": "passed",
+    "message": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n"
+  },
+  {
+    "name": "AC-1 reading count",
+    "status": "passed",
+    "message": "workflow 5939 -> 5939; step 5 sentence 53 -> 53; no budget-script change"
+  },
+  {
+    "name": "AC-2 candidate and base wording pins",
+    "status": "passed",
+    "message": "candidate no gaps, swap 1; base three new pins absent, swap 0"
+  },
+  {
+    "name": "AC-1 falsifier restore old step 5",
+    "status": "passed",
+    "message": "round rule missing from workflow.md"
+  },
+  {
+    "name": "AC-2 falsifier remove observed-failure clause",
+    "status": "passed",
+    "message": "round rule missing from workflow.md"
+  },
+  {
+    "name": "AC-3 archived declines and bracket falsifier",
+    "status": "passed",
+    "message": "3/2/3 declined items pass; removed reason delimiters are rejected"
+  },
+  {
+    "name": "AC-6 ruling, quotes and supersession falsifier",
+    "status": "passed",
+    "message": "0064 accepted; 0010 superseded; bound questions verbatim; mutation leaves both accepted"
+  },
+  {
+    "name": "Required ADR lint",
+    "status": "passed",
+    "message": "62 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "Required number guards",
+    "status": "passed",
+    "message": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase ba055b8a7a55 head ae7750375bc1 merge-base ba055b8a7a55\n"
+  },
+  {
+    "name": "Required design-surface check",
+    "status": "passed",
+    "message": "decline-becomes-task-only-with-a-bite.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  },
+  {
+    "name": "AC-2 native dispatch suite after lint workaround",
+    "status": "passed",
+    "message": "PASS: shared extension-list callers handle inline/block forms, quotes, comments, exact names, empty/no-key controls and unchanged manifests\nPASS: roster subprocess replay, absolute/split-root/linked roots, read-only repeatability, full schema/error controls, committed changes/deletion and candidate-author family evidence; legacy record checks do not establish roster use\nPASS (spacedock 0.27.2): 10 route/stage/host fresh and reused dispatch handoffs; 10 Team loss controls; wrong-stage and missing-stage refusals\nPASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection\nPASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control\nPASS: Dispatch facts (complete Team, Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root and the `main` completion line carried into the dispatch file ahead of the checklist beside the builder's `team-lead` block; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone; a correction without a Summary refused and named alone by the checklist read, a complete report under the exact heading accepted\nPASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the 48 wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo, approval-accepts-stated-recommendation, adr-not-recorded, consent-rules, dispatch-record, resumed-dispatch, dispatch-coverage, adr-since, applied-none, follow-up-reason, decline-settled, late-decline, repair-push-grant, asked-line, send-back, adr-lint-output, ideation-follow-up, dispatch-records-check, pr-watch, readme-keeps-delivery-rules, delivery-question-carries-merge, worker-opens-draft-pr, one-number-per-kind, status-executable, late-ruling-adr, extensions-core, codex-round, roborev-gate, override-record, package-version, second-reviewer, precedent, reviewer-record, adr-recommended, state-commits-through-sd, rework-state-commit, scope-notes-main-line, scope-notes-main-line-skill, correction-request, roster-question-prerequisites, roster-adoption-prerequisites, roster-provider-host) are each asserted present, and each reverted alone to its previous text reports only its own gaps\nPASS: native flat/folder slug creation with omitted/matching id passes the seed check; missing Budget and all template placeholders refuse; mismatching native id refuses\nPASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not\nPASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist\nPASS: Batch gates survives POC derivation but changes no pilot/POC worker stage definition; inlining mutations reach both implementation definitions\nPASS: four separately prepared/committed batch gates retain mapped approve/revise/hold/unanswered authority; stale-binding mutation refuses; resumed approval advances its own task without duplicate resolution\nNot run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge\n"
+  }
+]

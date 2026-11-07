@@ -1,2 +1,4 @@
 PASS: AC-7 primary readings; E requires task in 2/2 candidate and 0/2 mutation readings; A-D retained.
 LIMIT: mutation-1 reads C violation; mutation-2 reads C ok. The accepted falsifier is E; this variability is retained.
+LIMIT: candidate observer explicitly withdrew its draft violation; checking its superseding final verdict, retaining the complete raw report.
+PASS: AC-5 final active observer verdict clears the candidate target decline; base reports its step-5 violation.

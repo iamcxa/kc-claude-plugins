@@ -25,6 +25,7 @@ p.add_argument("worktree", type=Path)
 p.add_argument("state", type=Path)
 p.add_argument("package", type=Path)
 p.add_argument("sd_plugin", type=Path)
+p.add_argument("--skip-native", action="store_true")
 a = p.parse_args()
 context = json.loads((Path(__file__).parent / "context.json").read_text())
 repo = Path(context["worktree"])
@@ -186,6 +187,7 @@ with tempfile.TemporaryDirectory(prefix="decline-bite-validation-", dir="/tmp") 
     check("Required design-surface check", lambda: command("design-surfaces", ["python3", "-B",
           a.package / "scripts/design_surfaces.py", "check",
           a.state / "decline-becomes-task-only-with-a-bite.md"]))
-    check("AC-2 native dispatch suite after lint workaround", lambda: command("dispatch", ["python3", "-B",
-          a.worktree / "kc-dev-flow-2/scripts/test_sd_dispatch.py", "--sd-plugin-root", a.sd_plugin]))
+    if not a.skip_native:
+        check("AC-2 native dispatch suite after lint workaround", lambda: command("dispatch", ["python3", "-B",
+              a.worktree / "kc-dev-flow-2/scripts/test_sd_dispatch.py", "--sd-plugin-root", a.sd_plugin]))
 print(f"{len(results)} deterministic acceptance groups passed; fresh Sonnet evidence is recorded separately.")

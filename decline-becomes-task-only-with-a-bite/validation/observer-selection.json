@@ -1,7 +1,9 @@
 {
-  "candidate": "observer-bounded-candidate.report.md",
-  "base": "observer-bounded-base.report.md",
-  "status": "incomplete: base omitted the target; full retry also omitted target",
-  "from": "ea9904b30b9dcf2418a335e9ef91b715320d4557",
+  "candidate": "observer-final-candidate.report.md",
+  "base": "observer-final-base.report.md",
+  "status": "final active candidate ok / base violation",
+  "authority": "dispatch/validation-1-message-1.md",
+  "candidate_output_caveat": "Raw candidate report contains a draft violation, explicitly withdrawn with the words I withdraw the violation label above and superseded by the corrected ok line. No raw lines were removed. AC-5 is assessed on the final active verdict, not a claim of zero literal violation lines.",
+  "from": "913a6f3240dc5b8ca22bf2fdb85881998fae0af8",
   "to": "79af09021bcfdb30267aabbc4f2dc150ac05a6dd"
 }

@@ -1,0 +1,11 @@
+STEP 1 PASS: exported ae7750375bc19e482f829edc9a041d95fb280693
+10 deterministic acceptance groups passed; fresh Sonnet evidence is recorded separately.
+STEP 2 PASS: deterministic behavior and negative controls
+PASS: both paths read the same ADR; split assertion still rejects Accepted; literal path reproduces the lint false positive.
+62 ADR file(s) checked, 0 legacy
+STEP 3 PASS: ADR record and unchanged supersession assertion
+PASS: AC-7 primary readings; E requires task in 2/2 candidate and 0/2 mutation readings; A-D retained.
+LIMIT: mutation-1 reads C violation; mutation-2 reads C ok. The accepted falsifier is E; this variability is retained.
+LIMIT: candidate observer explicitly withdrew its draft violation; checking its superseding final verdict, retaining the complete raw report.
+PASS: AC-5 final active observer verdict clears the candidate target decline; base reports its step-5 violation.
+STEP 4 PASS: recorded model evidence; no new model run

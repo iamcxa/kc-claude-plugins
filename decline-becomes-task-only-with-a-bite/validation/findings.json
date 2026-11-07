@@ -11,5 +11,18 @@
     "observable_harm": "Obsolete evidence status may confuse review; no demonstrated loss in product behavior.",
     "boundary": "none: not a candidate acceptance defect; accepted amendment is correctly retained in task state.",
     "trigger": "validation/pr-800.json body contains Open evidence limit and FAILED for superseded AC-4."
+  },
+  {
+    "severity": "low",
+    "classification": "Polish",
+    "title": "Polish：觀察者在同份報告內撤回誤標",
+    "file": "validation/observer-final-candidate.report.md",
+    "detail": "原始報告先寫 violation，隨即明確撤回並給出正確的 ok 行；完整原文保留。AC-5 以最終有效判定評估，並非宣稱原文完全沒有 violation 字樣。",
+    "fix": "FO 呈現時保留撤回與更正的上下文；不再重跑觀察者。",
+    "status": "open",
+    "normal_workflow": "FO reads the bounded observer report.",
+    "observable_harm": "Draft label may confuse a skim; the same response explicitly withdraws it.",
+    "boundary": "none: final active interpretation matches the changed rule; literal raw-output cleanliness is not claimed.",
+    "trigger": "Explicit withdrawal and superseding ok line in the retained final candidate report."
   }
 ]
