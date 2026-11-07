@@ -15,6 +15,17 @@ gates:
                 id: briefing:worker-browser-checks-use-paseo-browser:backlog:attempt-1:revision-1
                 digest: sha256:795a868b345083afe6adce54d8fd23185373d0d6ecd882cde50b2b0049005736
                 room-ref: ./worker-browser-checks-use-paseo-browser/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-browser-checks-use-paseo-browser:backlog:1
+                briefing: briefing:worker-browser-checks-use-paseo-browser:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-07T08:09:13.59979Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-07), answering 「決定：第 17 批這五張（Paseo 瀏覽器當工人驗收的預設、決策紀錄檢查分清驗證取代與指向依據、派工時自動寫派工紀錄、沒給範圍時設計檢查說沒跑、觀察者列出沒有合併提問紀錄的合併）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？建議核准。要改哪張直接說。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Where the workflow README lists the paseo extension, a worker's local browser verification uses Paseo's browser tools (mcp__paseo__browser_*) by default instead of Chrome for Testing (agent-browser), and the paseo extension states the known limits and their workarounds.
