@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:codex-security-only-prompts-code-review:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:codex-security-only-prompts-code-review-validation-1
+              briefing:
+                id: briefing:codex-security-only-prompts-code-review:validation:attempt-1:revision-1
+                digest: sha256:ad41d8f3ef0dd784840bbdc5070c3bd717c25f6ee87a434028cda395175afd15
+                room-ref: ./codex-security-only-prompts-code-review/review/validation/briefing-1
 started: 2026-11-06T16:11:34Z
 worktree: .worktrees/spacedock-ensign-codex-security-only-prompts-code-review
 pr: iamcxa/kc-claude-plugins#802
