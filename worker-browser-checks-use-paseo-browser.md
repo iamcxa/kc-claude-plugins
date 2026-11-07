@@ -60,7 +60,7 @@ Release review: not needed: workflow maintenance, on no journey map.
 
 **FAQ.**
 - *Why not just keep agent-browser?* The qnow dev2 FO reported (2026-11-06, first-hand, not re-run here) that headed agent-browser stayed stuck on Clerk's Cloudflare Turnstile twice on qnow staging and production, while Paseo's browser passed it in a walk the Captain watched.
-- *Who reads what?* FO copies one more sentence (17 words) as part of the scope-note quote it already copies into every Paseo worker dispatch. The worker reads the new file `extensions/paseo/browser.md` (222 words in the draft) only when it is about to drive a browser. FO reads that file at no moment.
+- *Who reads what?* FO copies one more sentence (15 words) as part of the scope-note quote it already copies into every Paseo worker dispatch. The worker reads the new file `extensions/paseo/browser.md` (222 words in the draft) only when it is about to drive a browser. FO reads that file at no moment.
 - *Does this override an adopter's AGENTS.md?* No. Repository instructions that name another tool for a check win; each adopter's FO edits its own AGENTS.md (non-goal here). qnow already did on 2026-11-07 (qnow #1342, "Paseo browser tools by default"), without listing paseo.
 - *CI?* Unchanged: CI has no Paseo and stays headless.
 - *Codex workers?* Not verified. A Claude worker spawned by Paseo reached the tools (probe below); `~/.codex/config.toml` on this host has no paseo MCP entry, and whether Paseo injects its MCP server into a Codex child is unknown. The missing-tools fallback covers it; AC-5 measures it.
@@ -118,12 +118,12 @@ Counted with `wc -w` over every passage that instructs a step due at that moment
 | --- | --- | --- |
 | Startup / resume (workflow README) | unchanged file | unchanged (0) |
 | Idle on an open PR, idle on a merged PR, after the archive, the merge ask | no paseo text instructs a step here | unchanged (0) |
-| Before a listed Paseo worker dispatch (`extensions/paseo/EXTENSION.md`) | 1101 | 1118 (+17) |
+| Before a listed Paseo worker dispatch (`extensions/paseo/EXTENSION.md`) | 1101 | 1116 (+15) |
 | `dispatch_records.py` output | unchanged | unchanged: script not changed |
-| Worker at spawn (scope notes) | base quote | +17 |
+| Worker at spawn (scope notes) | base quote | +15 |
 | Worker about to drive a browser (`browser.md`) | 0 | 222 (cap 240); FO never reads it |
 
-The one rise is +17 words at the Paseo dispatch moment; the alternative of putting the limits in EXTENSION.md would add about 222 there instead.
+The one rise is +15 words at the Paseo dispatch moment; the alternative of putting the limits in EXTENSION.md would add about 222 there instead.
 
 ### Batch overlap
 
@@ -160,7 +160,7 @@ Evidence: its report and activity log in the task folder. If absent, browser.md 
 
 ## Decisions for the Captain
 
-- **D1. How the default is stated — recommend: one sentence appended to the end of the existing paseo scope-note quote, pointing workers to a worker-read `browser.md`; repository instructions that name another tool win; not mechanically enforced.** Why: FO reads +17 words at one moment; no script change; `dispatch_records.py` checks only the quote's first sentence, so every existing record stays valid. Enforcing it (a second `Add to scope notes:` line, which `declared_instructions` would require in every Paseo spawn record) would make FO's whole-folder check before each dispatch, and validation's check refuse every earlier Paseo record that lacks the sentence, in-flight tasks included (the L2 law runner too, if it judges history with the current package; not checked). What gets worse under the recommendation: nothing stops FO from dropping the sentence; a worker without it falls back to habit, visible only in its per-step tool list.
+- **D1. How the default is stated — recommend: one sentence appended to the end of the existing paseo scope-note quote, pointing workers to a worker-read `browser.md`; repository instructions that name another tool win; not mechanically enforced.** Why: FO reads +15 words at one moment; no ADR lands, and paseo ADRs 0042, 0048 and 0052 do not quote the scope-note paragraph (checked 2026-11-07); no script change; `dispatch_records.py` checks only the quote's first sentence, so every existing record stays valid. Enforcing it (a second `Add to scope notes:` line, which `declared_instructions` would require in every Paseo spawn record) would make FO's whole-folder check before each dispatch, and validation's check refuse every earlier Paseo record that lacks the sentence, in-flight tasks included (the L2 law runner too, if it judges history with the current package; not checked). What gets worse under the recommendation: nothing stops FO from dropping the sentence; a worker without it falls back to habit, visible only in its per-step tool list.
 - **D2. Which adopter and check prove it — recommend: kc-claude-plugins dev2 with the kc-journey-map canvas walk in AC-4, plus the Codex probe in AC-5.** Why: it is the only adopter that lists paseo; the canvas is this repository's only real browser UI. What gets worse: the proof is a local page, not the Clerk Turnstile case that motivated the task; that pass stays the qnow dev2 FO's first-hand report, and qnow gets this package rule only if its FO later lists paseo.
 
 ## Stage Report: ideation
@@ -170,7 +170,7 @@ Evidence: its report and activity log in the task folder. If absent, browser.md 
 - DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (adr-lint-tells-supersession-assertion-from-pointer, dispatch-build-writes-the-dispatch-record, design-check-says-not-run-without-a-scope, observer-lists-unasked-merges) and live task of other sessions (merge-guard-stops-unasked-merges and gate-summary-names-each-decline (held by the Captain; read only), and journey-map tasks driven by the journey-map FO (read only)) that changes the same file or check, so FO can order implementation
   Only overlap: dispatch-build-writes-the-dispatch-record reads the same paseo scope-note quote; Recommended order: this task first.
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
-  `### Words FO reads at each moment`: Paseo dispatch moment 1101 → 1118 (`wc -w`, origin/main 139feeaee7ce); every other moment unchanged; browser.md (222) is worker-read only.
+  `### Words FO reads at each moment`: Paseo dispatch moment 1101 → 1116 (`wc -w`, origin/main 139feeaee7ce); every other moment unchanged; browser.md (222) is worker-read only.
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
   AC-1..AC-5 each carry evidence and a falsifier; D1 (how stated, not enforced) and D2 (adopter and check) each with recommendation and cost.
 - DONE: AC-1 scope-note quote ends with the browser sentence, first sentence unchanged
@@ -178,7 +178,7 @@ Evidence: its report and activity log in the task folder. If absent, browser.md 
 - DONE: AC-2 browser.md content and ≤240 words
   Not yet verified in the repository; draft counted 222 words with `wc -w`.
 - DONE: AC-3 FO reading rises ≤20 words at one moment, README and budget untouched
-  Not yet verified; planned +17 from the draft sentence.
+  Not yet verified; planned +15 from the draft sentence (`wc -w`).
 - DONE: AC-4 end-to-end Claude worker walk on the journey-map canvas through Paseo
   Not yet verified. Precursor only: this Paseo-spawned Claude worker ran new_tab, snapshot, ref click, native-setter fill, a 15 s browser_timeout and park-and-poll on 2026-11-07 (page was an unrelated server's 404 with injected DOM).
 - DONE: AC-5 Codex reachability measured
@@ -188,4 +188,4 @@ Evidence: its report and activity log in the task folder. If absent, browser.md 
 
 ### Summary
 
-Designed the smallest route: FO copies one more sentence (+17 words at the Paseo dispatch moment) inside the scope-note quote it already copies, and workers read a new 222-word `browser.md` only before driving a browser. Recommended not enforcing it through `dispatch_records.py`, because a required second instruction would fail every existing Paseo dispatch record. Only kc-claude-plugins dev2 lists paseo, so the end-to-end proof runs there; qnow adopted Paseo-by-default in its own AGENTS.md on 2026-11-07 without listing paseo.
+Designed the smallest route: FO copies one more sentence (+15 words at the Paseo dispatch moment) inside the scope-note quote it already copies, and workers read a new 222-word `browser.md` only before driving a browser. Recommended not enforcing it through `dispatch_records.py`, because a required second instruction would fail every existing Paseo dispatch record. Only kc-claude-plugins dev2 lists paseo, so the end-to-end proof runs there; qnow adopted Paseo-by-default in its own AGENTS.md on 2026-11-07 without listing paseo.
