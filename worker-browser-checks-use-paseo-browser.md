@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:worker-browser-checks-use-paseo-browser:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:worker-browser-checks-use-paseo-browser-backlog-1
+              briefing:
+                id: briefing:worker-browser-checks-use-paseo-browser:backlog:attempt-1:revision-1
+                digest: sha256:795a868b345083afe6adce54d8fd23185373d0d6ecd882cde50b2b0049005736
+                room-ref: ./worker-browser-checks-use-paseo-browser/review/backlog/briefing-1
 ---
 
 Where the workflow README lists the paseo extension, a worker's local browser verification uses Paseo's browser tools (mcp__paseo__browser_*) by default instead of Chrome for Testing (agent-browser), and the paseo extension states the known limits and their workarounds.
