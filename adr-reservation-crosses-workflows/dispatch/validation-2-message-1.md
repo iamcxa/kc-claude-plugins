@@ -19,3 +19,5 @@ Everything in validation-2 stands. Never run `git remote set-url` or any `git co
 
 Your final reply is your completion message: Paseo delivers it to FO when your turn ends. End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.
 Done line: Done: adr-reservation-crosses-workflows completed validation
+
+FO correction 2026-11-06: the Model line above was written by a template meant for implementation follow-ups; this follow-up went to the validation-2 worker, which runs gpt-6-astra (Codex via Paseo, thinking xhigh), per validation-2.md.
