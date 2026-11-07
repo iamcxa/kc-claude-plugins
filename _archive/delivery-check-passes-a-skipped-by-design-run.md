@@ -3,7 +3,7 @@ title: delivery_gate.py check does not hold on a workflow run skipped by design
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-07), answering 「決定：合併 #797（交付檢查不再擋「刻意跳過」的檢查）嗎？ Regular merge with --match-head-commit 1ca2625de0706e5494f73e010a394f8e5194b2a1, the batch 16 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-06T16:11:45Z
 worktree: .worktrees/spacedock-ensign-delivery-check-passes-a-skipped-by-design-run
 pr: pr-merge:797
+verdict: PASSED
+completed: 2026-11-07T02:10:28Z
+archived: 2026-11-07T02:10:28Z
 ---
 
 `delivery_gate.py check` treats a workflow run that its own conditions skip on purpose as no hold, while still holding a failed, pending or unexpectedly skipped required check.
