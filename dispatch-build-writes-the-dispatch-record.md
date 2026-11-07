@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:dispatch-build-writes-the-dispatch-record:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:dispatch-build-writes-the-dispatch-record-ideation-1
+              briefing:
+                id: briefing:dispatch-build-writes-the-dispatch-record:ideation:attempt-1:revision-1
+                digest: sha256:56dfa6842cbef1df088480aca483615fdc993a66922be97d3ef87a78199490ea
+                room-ref: ./dispatch-build-writes-the-dispatch-record/review/ideation/briefing-1
 ---
 
 A dispatch built with `dispatch build --stamp` leaves <task>/dispatch/<stage>-<cycle>.md written from the same checklist, scope notes, model and SHA it sends, so the record no longer depends on FO remembering it.
