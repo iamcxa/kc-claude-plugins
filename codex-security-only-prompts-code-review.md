@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-11-06T16:11:34Z
 worktree: .worktrees/spacedock-ensign-codex-security-only-prompts-code-review
-pr: iamcxa/kc-claude-plugins#802
+pr: pr-merge:802
 ---
 
 When Codex has posted only its security-review summary on a PR head, codex_review.py (or pr_watch.py) prints a next line that asks FO to request `@codex review`, so a merge ask is not prepared on a head with no code review.
