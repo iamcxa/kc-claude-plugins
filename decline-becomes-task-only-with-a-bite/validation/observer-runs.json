@@ -1,0 +1,56 @@
+[
+  {
+    "name": "bounded-candidate",
+    "agentId": "45b2889d-e928-4357-9c74-2897d14e0255",
+    "provider": "claude/sonnet",
+    "prompt": "observer-candidate.prompt.md",
+    "report": "observer-bounded-candidate.report.md",
+    "archived": true,
+    "archiveEvidence": "Each archive_agent returned success; FO confirmed all archived in dispatch/validation-1-message-2.md."
+  },
+  {
+    "name": "bounded-base",
+    "agentId": "179d9d7b-5cc0-44d8-a467-5244b2a41ce3",
+    "provider": "claude/sonnet",
+    "prompt": "observer-base.prompt.md",
+    "report": "observer-bounded-base.report.md",
+    "archived": true,
+    "archiveEvidence": "Each archive_agent returned success; FO confirmed all archived in dispatch/validation-1-message-2.md."
+  },
+  {
+    "name": "full-candidate",
+    "agentId": "7a09e0a7-c2b5-47dd-ad2c-0a3aa2af38c6",
+    "provider": "claude/sonnet",
+    "prompt": "observer-full-candidate.prompt.md",
+    "report": "observer-full-candidate.report.md",
+    "archived": true,
+    "archiveEvidence": "Each archive_agent returned success; FO confirmed all archived in dispatch/validation-1-message-2.md."
+  },
+  {
+    "name": "full-base",
+    "agentId": "0b037be5-aed8-48af-9977-584379eab413",
+    "provider": "claude/sonnet",
+    "prompt": "observer-full-base.prompt.md",
+    "report": "observer-full-base.report.md",
+    "archived": true,
+    "archiveEvidence": "Each archive_agent returned success; FO confirmed all archived in dispatch/validation-1-message-2.md."
+  },
+  {
+    "name": "final-candidate",
+    "agentId": "518ba9e4-fb09-4063-9951-3cd61a3016eb",
+    "provider": "claude/sonnet",
+    "prompt": "observer-final-candidate.prompt.md",
+    "report": "observer-final-candidate.report.md",
+    "archived": true,
+    "archiveEvidence": "Each archive_agent returned success; FO confirmed all archived in dispatch/validation-1-message-2.md."
+  },
+  {
+    "name": "final-base",
+    "agentId": "8caad85f-ca2b-4cf5-ab1b-e2f4f590abf0",
+    "provider": "claude/sonnet",
+    "prompt": "observer-final-base.prompt.md",
+    "report": "observer-final-base.report.md",
+    "archived": true,
+    "archiveEvidence": "Each archive_agent returned success; FO confirmed all archived in dispatch/validation-1-message-2.md."
+  }
+]

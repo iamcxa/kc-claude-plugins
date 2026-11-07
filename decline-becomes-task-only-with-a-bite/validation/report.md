@@ -1,0 +1,36 @@
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #800 head ae775037 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Recommend PASSED at ae7750375bc19e482f829edc9a041d95fb280693, base ba055b8a7a55a787ac989c4cef52d07dd75661ad (also current remote main in validation/remote-main.json); exact archive exports, candidate.diff, deterministic-tests.json, model-results.json and limitations.md carry the independent evidence.
+- DONE: Judge AC-4 under Captain amendment 1 (repeat-only record E) and the test path-split workaround for the ADR lint false positive (implementation-1-message-3); for AC-4/AC-5 model runs you may start fresh Claude agents via Paseo create_agent with model sonnet set explicitly, tool-free or read-only prompts, archived after recording, and never another model in their place; RoboRev's finding on the stale adopted workflow copy is disposed in the PR body (separate sync PR after release)
+  AC-4 was moved verbatim and replaced by AC-7; all fresh readers used explicit claude/sonnet. The E mutation passes below; workaround.py proves the same ADR file and intact assertion, and restoring the literal path reproduces exactly one stale-pointer lint error. Existing RoboRev disposition confirmed in validation/pr-800.json, not reopened.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation/ACCEPTANCE.md and acceptance.sh give four steps; bash --noprofile --norc acceptance.sh completed in 4.421 seconds, exit 0 (fresh-shell.log/result.json), ten local groups plus retained model checks. The literal ADR command and the additional --require 0010 0064 run both exit 0: 62 records, 0 legacy.
+- DONE: AC-1 — unchanged reading budget and an effective old-rule control
+  Repository lint exits 0, workflow 5939/5939 and changed sentence 53/53 words; budget script unchanged. Restoring the old sentence fails the actual native ROUND_RULE assertion: "round rule missing from workflow.md" (lint.log, restore-old.log).
+- DONE: AC-2 — candidate/base pins and native dispatch behavior
+  Candidate has no gaps and one proposed swap; base lacks the three proposed pins. Removing the observed-failure phrase fails the actual ROUND_RULE assertion. Full native suite passed twice with Spacedock CLI 0.27.2 and plugin root 0.27.3 (native-dispatch.log); the short Captain script omits repeating that longer suite.
+- DONE: AC-3 — archived decline records and reason-delimiter falsifier
+  delivery_gate.py is byte-identical to base; the three bound archived texts yield 3/2/3 declined items and no decline problems. Removing the reason delimiters from a real item produces "declined item has no reason" (gate-replays.json, replay-gate.log, remove-bracket.log); this checks decline rules, not every current delivery requirement.
+- DONE: AC-7 — independent primary readings and Captain-amended repeat-only falsifier
+  Candidate 4a9e4db8/589c87ed both read A/B/C ok, D violation quoting observed harm, E violation quoting repeat; base 71886b03 reads A/B/C violation. Mutations a798eff6/8996e1c3 both read E ok. Exact prompts, full IDs, original readings and archive evidence are in sonnet-runs.json; mutation-1 reads C violation while mutation-2 reads C ok, retained as a reliability limit.
+- DONE: AC-5 — final active observer judgments contrast on the real archived artifact
+  Under validation-1-message-1, final pair 518ba9e4/8caad85f reads the exact briefing: candidate explicitly withdraws a draft violation then rules the target 4455001433 ok; base reports it as a step-5 violation. The raw candidate report still contains the withdrawn line: this pass judges its explicit superseding verdict, not literal absence of every violation line; see F2 and observer-selection.json.
+- DONE: AC-5 coverage failures and final-attempt boundary retained
+  Initial bounded base and full-history pair omitted the target check and are not counted as successful falsifiers. All six original reports and exact prompts remain under validation/observer-{bounded,full,final}-{candidate,base}.*, with the prompt names mapped in observer-runs.json; no observer variant ran after the authorized final pair.
+- DONE: AC-6 — quoted ruling, supersession and negative control
+  ADR 0064 quotes the task's bound questions and Captain words; ADR 0010 is Superseded by 0064. Restoring its Accepted status leaves the opposing rules simultaneously accepted (old-adr-accepted.log). ADR lint checks format/pointers, not semantic contradiction; no stronger enforcement claim is made.
+- DONE: Required guards, document impact, sufficiency and minimal necessity
+  Number guards and design-surface check exit 0; dispatch-record checks pass. comment_ratio.py reports 1 comment/6 code lines, 16.7%, with its fewer-than-20-lines exemption; the comment is the required ADR pointer. All four doc_impact entries are dispositioned in doc-impact-disposition.json. Each changed file supports the rule, its checks or accepted ruling supersession; no unrelated runtime layer was added.
+- DONE: validation-1-message-2 — stop agent-status polling, finish from existing evidence and commit the report
+  All five no-tools readers and six observer agents were archived after recording; successful archive responses and FO's confirmation in validation-1-message-2.md are the closure evidence. No further status read was requested after that instruction; code worktree remains clean at the candidate.
+- SKIPPED: Product changes, product push, PR editing, new review requests, merge, adoption synchronization and unrelated backlog retirement
+  These are FO/Captain-owned or excluded. RoboRev was not run by this validator; the PR records FO's review. GitHub check results were read, not rerun here; CI cost per PR was not measured and CI configuration is unchanged.
+- F1 Polish: PR #800 body still describes superseded AC-4 as an open failed falsifier; FO owns updating that explanation (validation/pr-800.json, findings.json).
+- F2 Polish: The final candidate observer contains an explicitly withdrawn draft violation before its corrected ok lines; retain the withdrawal context at the gate. No product defect follows from the withdrawn label; raw-output cleanliness is not claimed (observer-final-candidate.report.md, findings.json).
+
+### Summary
+
+ADRs: 0010, 0064
+
+PASSED is recommended for the final behavior at ae7750375bc19e482f829edc9a041d95fb280693, with F1/F2 as non-blocking presentation findings. The independent mutation evidence supports the new task threshold, while model coverage misses, one mutation-reading disagreement and the candidate observer's explicit self-correction limit general reliability; the full unedited evidence remains available. Captain gate acceptance, PR explanation updates, delivery and post-release adoption remain FO/Captain-owned.
