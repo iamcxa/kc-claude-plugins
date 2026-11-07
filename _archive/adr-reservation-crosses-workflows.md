@@ -3,7 +3,7 @@ title: An ADR number reserved by one workflow's task is seen by every workflow t
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-07), answering 「決定：合併 #801（決策紀錄編號的保留跨工作流程可見，別的流程已保留的號碼不會再被拿走）嗎？建議合併。 Regular merge with --match-head-commit ef3ed3e05534e2a997acbdfb055a880fde1f484a, the batch 16 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-06T16:12:02Z
 worktree: .worktrees/spacedock-ensign-adr-reservation-crosses-workflows
 pr: pr-merge:801
+verdict: PASSED
+completed: 2026-11-07T02:12:44Z
+archived: 2026-11-07T02:12:45Z
 ---
 
 `number_guards.py` refuses a new ADR number that another workflow's live task has already reserved in the same repository, so two FOs sharing a repository cannot both land the same number.
