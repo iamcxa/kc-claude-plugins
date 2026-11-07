@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:design-check-says-not-run-without-a-scope:backlog:attempt-1:revision-1",
+  "question": "決定：第 17 批這五張（Paseo 瀏覽器當工人驗收的預設、決策紀錄檢查分清驗證取代與指向依據、派工時自動寫派工紀錄、沒給範圍時設計檢查說沒跑、觀察者列出沒有合併提問紀錄的合併）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？建議核准。要改哪張直接說。",
+  "artifacts": [
+    {
+      "id": "artifact:design-check-says-not-run-without-a-scope:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d2aabb00213eab93a63eeae789b78aa6ce72fadd/design-check-says-not-run-without-a-scope.md",
+      "rev": "sha256:15318555a01e997894e2fe819f9350f7981fd8557b953d2e9bd3690b54bbb383",
+      "mediaType": "text/markdown",
+      "summary": "Batch 17 backlog sitting: design-check-says-not-run-without-a-scope, profile pilot. Seed check: design_surfaces.py check --seed exit 0 'seed fields and FO alignment recorded' (FO 2026-11-07). Composition: the Captain chose 「這五張（建議）」 (host question dialog, 2026-11-07)."
+    }
+  ]
+}

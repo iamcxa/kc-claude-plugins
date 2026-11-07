@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:design-check-says-not-run-without-a-scope:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:design-check-says-not-run-without-a-scope-backlog-1
+              briefing:
+                id: briefing:design-check-says-not-run-without-a-scope:backlog:attempt-1:revision-1
+                digest: sha256:eecbe2296eb4a6340ec7f93ddc0a8b35976aef0ad6529afc57fb7a78c7cbb4f1
+                room-ref: ./design-check-says-not-run-without-a-scope/review/backlog/briefing-1
 ---
 
 When the artifact bound at a gate has no Scope section, `design_surfaces.py check` prints a not-run line naming the artifact instead of reporting "Scope changed" against an empty baseline, and `gate prepare` warns when the artifact is not the task file.
