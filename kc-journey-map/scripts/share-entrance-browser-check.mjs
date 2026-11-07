@@ -55,11 +55,21 @@ try {
   assert.deepEqual((await json(origin + '/health')).rooms.sort(), ['A', 'B'])
   assert.ok(forwarded.some(request => request.method === 'GET' && request.url === '/health'), 'receipt observes successful forwarding')
  })
+ await check('share guide is local plain text and never forwarded to the API', async () => {
+  const count = forwarded.length
+  const response = await fetch(origin + '/llms.txt')
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get('content-type'), 'text/plain; charset=utf-8')
+  const guide = await response.text()
+  assert.match(guide, /The repository journey YAML is the source of truth/)
+  assert.doesNotMatch(guide, /## SSH tunnel/)
+  assert.equal(forwarded.length, count)
+ })
  await check('legacy share withholds save, checkout, auth and browser agent routes like the old entrance', async () => {
   const marker = join(scratch, 'docs/journey/protected.tldr')
   await mkdir(join(scratch, 'docs/journey'), { recursive: true })
   await writeFile(marker, 'host file must survive')
-  const paths = ['/save?room=A', '/repo-doc?room=A&owner=synthetic&repo=fixture&refPath=main/note.md', '/auth/config', '/auth/entry', '/auth/rooms', '/auth/account', '/auth/local/start', '/auth/local/consume', '/auth/provider/start', '/auth/login', '/auth/renew', '/auth/logout', ...['inspect', 'approve', 'deny', 'list', 'revoke', 'start', 'repair'].map(operation => '/agents/' + operation)]
+  const paths = ['/mcp', '/save?room=A', '/repo-doc?room=A&owner=synthetic&repo=fixture&refPath=main/note.md', '/auth/config', '/auth/entry', '/auth/rooms', '/auth/account', '/auth/local/start', '/auth/local/consume', '/auth/provider/start', '/auth/login', '/auth/renew', '/auth/logout', ...['inspect', 'approve', 'deny', 'list', 'revoke', 'start', 'repair'].map(operation => '/agents/' + operation)]
   report.denied = []
   for (const path of paths) for (const method of ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']) {
    const init = { method, ...(method === 'GET' || method === 'HEAD' ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'protected.tldr', file: JSON.stringify({ schema: {}, records: [{ id: 'attack' }] }) }) }) }

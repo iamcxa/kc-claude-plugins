@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { clientApiProxy } from './server/client-api-proxy.ts'
+import { agentGuidePlugin } from './server/agent-guide.ts'
 
 // The machine's own hostname is always admitted; JOURNEY_ALLOWED_HOSTS adds a
 // comma-separated list (e.g. a cloud or Tailscale DNS name) without editing this file.
@@ -15,7 +16,7 @@ const API = `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
 
 export default defineConfig(() => ({
  define: { 'import.meta.env.VITE_JOURNEY_HUMAN_ENTRY': JSON.stringify(process.env.JOURNEY_HUMAN_CONFIG ? 'true' : process.env.VITE_JOURNEY_HUMAN_ENTRY || 'false') },
-	plugins: [react(), {
+	plugins: [react(), agentGuidePlugin(), {
    name: 'private-local-entry-loopback',
    configureServer(server) {
     const file = process.env.JOURNEY_HUMAN_CONFIG
