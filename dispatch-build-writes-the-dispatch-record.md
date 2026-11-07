@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:dispatch-build-writes-the-dispatch-record:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:dispatch-build-writes-the-dispatch-record-backlog-1
+              briefing:
+                id: briefing:dispatch-build-writes-the-dispatch-record:backlog:attempt-1:revision-1
+                digest: sha256:98146d1a1c26e89ee031d45b1a6b1fc6b907c8f287a194c73f8743ac402975ce
+                room-ref: ./dispatch-build-writes-the-dispatch-record/review/backlog/briefing-1
 ---
 
 A dispatch built with `dispatch build --stamp` leaves <task>/dispatch/<stage>-<cycle>.md written from the same checklist, scope notes, model and SHA it sends, so the record no longer depends on FO remembering it.
