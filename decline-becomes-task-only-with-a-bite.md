@@ -53,6 +53,17 @@ gates:
                 id: briefing:decline-becomes-task-only-with-a-bite:validation:attempt-1:revision-1
                 digest: sha256:05d8eb7a1dd798adbb900e9adb7491f1370f6b658682a2d07c1a9acd6c9d88cb
                 room-ref: ./decline-becomes-task-only-with-a-bite/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:decline-becomes-task-only-with-a-bite:validation:1
+                briefing: briefing:decline-becomes-task-only-with-a-bite:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-07T02:04:28.929151Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-07), answering 「決定：合併 #800（第三輪以後被婉拒的審查意見，只有真的出過事、重複出現或你要求時才開待辦）嗎？建議合併。 Regular merge with --match-head-commit ae7750375bc19e482f829edc9a041d95fb280693, the batch 16 validation sitting, and removing its clean, pushed worktree. Approving accepts that ADR 0064 supersedes ADR 0010. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-06T16:12:12Z
 worktree: .worktrees/spacedock-ensign-decline-becomes-task-only-with-a-bite
 pr: iamcxa/kc-claude-plugins#800
