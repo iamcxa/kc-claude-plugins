@@ -1,0 +1,87 @@
+[
+  {
+    "name": "repair-no-prune",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC1-no-explicit-fetch",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC1-no-origin-scan",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC2-no-r8",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC3-flat-only",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC4-skip-whole-own-branch",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC4-no-origin-probe",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC4-no-own-path-exclusion",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC5-double-report",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC6-no-origin-warning",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC6-no-fetch-warning",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "AC8-help-omits-r8",
+    "status": "passed",
+    "message": "1 assertion failures, 0 runtime errors; caches absent, python3 -B"
+  },
+  {
+    "name": "Goal without candidate change",
+    "status": "passed",
+    "message": "base: 10 tests, 8 assertion failures, 0 runtime errors"
+  },
+  {
+    "name": "AC7 budget step removed",
+    "status": "passed",
+    "message": "budget_errors refused missing -6 step; context-checks.log"
+  },
+  {
+    "name": "AC9 wrong Captain quote",
+    "status": "passed",
+    "message": "reader check refused wrong quote; context-checks.log"
+  },
+  {
+    "name": "AC9 invalid ADR Status",
+    "status": "passed",
+    "message": "installed ADR linter exited 1; context-checks.log"
+  },
+  {
+    "name": "AC10 empty stderr assertion restored",
+    "status": "passed",
+    "message": "1 assertion failure, 0 runtime errors; ac10-falsifier.log"
+  }
+]

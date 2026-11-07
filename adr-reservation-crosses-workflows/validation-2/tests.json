@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Full package suite at ef3ed3e05534e2a997acbdfb055a880fde1f484a",
+    "status": "passed",
+    "message": "966 tests, 7 optional skips; exit 0",
+    "file": "package-tests.log"
+  },
+  {
+    "name": "number-tests",
+    "status": "passed",
+    "message": "38 tests; 0 skips; exit 0",
+    "file": "number-tests.log"
+  },
+  {
+    "name": "dispatch-tests",
+    "status": "passed",
+    "message": "115 tests; 1 skips; exit 0",
+    "file": "dispatch-tests.log"
+  },
+  {
+    "name": "codex",
+    "status": "passed",
+    "message": "35 tests; 0 skips; exit 0",
+    "file": "codex.log"
+  },
+  {
+    "name": "roborev",
+    "status": "passed",
+    "message": "5 tests; 0 skips; exit 0",
+    "file": "roborev.log"
+  },
+  {
+    "name": "copilot",
+    "status": "passed",
+    "message": "15 tests; 0 skips; exit 0",
+    "file": "copilot.log"
+  },
+  {
+    "name": "journey-map",
+    "status": "passed",
+    "message": "23 tests; 0 skips; exit 0",
+    "file": "journey-map.log"
+  },
+  {
+    "name": "release-acceptance",
+    "status": "passed",
+    "message": "122 tests; 4 skips; exit 0",
+    "file": "release-acceptance.log"
+  }
+]

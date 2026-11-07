@@ -1,0 +1,29 @@
+1/5 candidate ef3ed3e05534e2a997acbdfb055a880fde1f484a exported
+A1 reserve:
+ADR: 0061
+A2 check, held 0060:
+migration guard skipped: no migrations-path declared
+FAIL R8: docs/adr/0060-distinct.md: 0060 is held by origin/spacedock-state/dev2:gate-presentation.md; delete this task's ADR: line, run reserve again and renumber
+base 2d722c0ddff5 head bf3970b0641a merge-base 2d722c0ddff5
+exit 1
+A3 check, free 0061:
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base 2d722c0ddff5 head b7b61322e539 merge-base 2d722c0ddff5
+B1 reserve, folder-form sibling holds 0060:
+warning: state checkout has no origin; no other workflow sees these reservations; set a unique state-branch: before adding origin and push state to the repository
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+ADR: 0061
+2/5 replay expectations PASS
+......................................
+----------------------------------------------------------------------
+Ran 38 tests in 75.477s
+
+OK
+3/5 number guard tests PASS
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5933 of 5933 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+4/5 workflow lint PASS
+61 ADR file(s) checked, 0 legacy
+5/5 ADR lint PASS; acceptance PASS

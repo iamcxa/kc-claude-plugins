@@ -1,0 +1,9 @@
+{
+  "head": "ef3ed3e05534e2a997acbdfb055a880fde1f484a",
+  "base": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+  "product_branch": "spacedock-ensign/adr-reservation-crosses-workflows",
+  "product_status": "",
+  "state_branch": "spacedock-state/dev2",
+  "state_status_before_report": "?? adr-reservation-crosses-workflows/validation-2/",
+  "checked_at": "2026-11-07T01:53:58.528773+00:00"
+}

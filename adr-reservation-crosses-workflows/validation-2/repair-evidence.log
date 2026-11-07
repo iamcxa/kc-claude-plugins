@@ -1,0 +1,2 @@
+Repair scope: one fetch argument and one test; eight unchanged documents independently hash-verified.
+AC10 restored empty-stderr assertion: one expected failure, zero runtime errors.

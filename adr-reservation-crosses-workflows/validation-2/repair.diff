@@ -1,0 +1,38 @@
+diff --git a/kc-dev-flow-2/scripts/number_guards.py b/kc-dev-flow-2/scripts/number_guards.py
+index 26ba26ae5..b19245d51 100644
+--- a/kc-dev-flow-2/scripts/number_guards.py
++++ b/kc-dev-flow-2/scripts/number_guards.py
+@@ -151,7 +151,7 @@ def reservation_holders(args, cfg):
+             if sibling.is_file() and sibling.resolve() != task:
+                 add(sibling.read_text(errors="replace"), str(sibling))
+     fetched = subprocess.run(
+-        ["git", "-C", args.repo, "fetch", "--quiet", "origin",
++        ["git", "-C", args.repo, "fetch", "--quiet", "--prune", "origin",
+          "+refs/heads/spacedock-state/*:refs/remotes/origin/spacedock-state/*"],
+         capture_output=True)
+     if fetched.returncode:
+diff --git a/kc-dev-flow-2/scripts/test_number_guards.py b/kc-dev-flow-2/scripts/test_number_guards.py
+index 044dac32e..deb5efbac 100644
+--- a/kc-dev-flow-2/scripts/test_number_guards.py
++++ b/kc-dev-flow-2/scripts/test_number_guards.py
+@@ -423,6 +423,20 @@ class CrossWorkflowTests(unittest.TestCase):
+         self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+         self.assertIn("origin/spacedock-state/dev2", self.fx.git("branch", "-r"))
+ 
++    def test_deleted_origin_state_branch_releases_its_adr_number(self):
++        done = self.reserve()
++        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
++        self.assertIn("origin/spacedock-state/dev2", self.fx.git("branch", "-r"))
++        self.origin.git("branch", "-D", "spacedock-state/dev2")
++        done = self.reserve()
++        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0060\n"), done.stderr)
++        self.assertNotIn("origin/spacedock-state/dev2", self.fx.git("branch", "-r"))
++        self.assertIn("origin/main", self.fx.git("branch", "-r"))
++        self.candidate()
++        done = self.run_guard("check")
++        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
++        self.assertIn("PASS: no findings", done.stdout)
++
+     def test_merge_ask_refuses_held_number_and_accepts_free_number(self):
+         self.candidate()
+         done = self.run_guard("check")

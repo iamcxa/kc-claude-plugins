@@ -1,0 +1,13 @@
+repair-no-prune caught
+AC1-no-explicit-fetch caught
+AC1-no-origin-scan caught
+AC2-no-r8 caught
+AC3-flat-only caught
+AC4-skip-whole-own-branch caught
+AC4-no-origin-probe caught
+AC4-no-own-path-exclusion caught
+AC5-double-report caught
+AC6-no-origin-warning caught
+AC6-no-fetch-warning caught
+AC8-help-omits-r8 caught
+word recount [{'name': 'FO startup', 'before': 5993, 'after': 5987, 'better': 'lower'}, {'name': 'Worker Number guards', 'before': 222, 'after': 219, 'better': 'lower'}, {'name': 'Reserve bullet', 'before': 84, 'after': 84, 'better': 'lower'}, {'name': 'Check bullet', 'before': 44, 'after': 44, 'better': 'lower'}, {'name': 'Collision bullet', 'before': 204, 'after': 201, 'better': 'lower'}]

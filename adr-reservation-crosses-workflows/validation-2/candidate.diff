@@ -1,0 +1,432 @@
+diff --git a/docs/adr/0002-applied-migrations-are-frozen-and-numbers-are-reserved.md b/docs/adr/0002-applied-migrations-are-frozen-and-numbers-are-reserved.md
+index 453db73c1..45c65dd9f 100644
+--- a/docs/adr/0002-applied-migrations-are-frozen-and-numbers-are-reserved.md
++++ b/docs/adr/0002-applied-migrations-are-frozen-and-numbers-are-reserved.md
+@@ -35,3 +35,5 @@ Amended 2026-10-01 (Captain: 「准」 at the backlog gate, 「可以」 at the
+ Amended 2026-10-01 (Captain: 「ok」 at the backlog gate, 「可以」 at the ideation gate): a `poc` task adds, edits and deletes no migration file (「ok」); `check` fails (R6) any file under `migrations-path:` that differs from the merge-base for a task whose frontmatter says `profile: poc`, and the failure is a `boundary-crossed: persistent-state` crossing, not repaired in place (「可以」) (`workflow.md` Number guards).
+ 
+ Amended 2026-10-20 (Captain: 「可以」 and 「要」 at the ideation gate of the task `db-surface-without-migrations`, answering D1 and D2 as recommended): a repository whose database holds no migration files declares `migrations-path: none` in its workflow README (「可以」); `check` then skips R1 to R3 and R6, still runs the ADR rules R4 and R5 for a db task, prints `migration guard skipped: README declares migrations-path: none`, and fails R7 for a candidate that adds a file named `NNNN_name.sql` (「要」). With no `migrations-path:` a db task still exits 2, and the message names both declarations. Order for an adopter: update the package pin first, then declare `none`; the 0.26.0 script reads `none` as a directory and exits 2 for every task (`workflow.md` Number guards).
++
++Amended 2026-11-07 (Captain: 「核准（建議）」 at the ideation gate of `adr-reservation-crosses-workflows`, answering 「決定：「ADR 編號跨流程預留」這份設計進入實作嗎？核准即接受 D1（預留記在各流程已推送的 state 分支，編號檢查讀所有 spacedock-state/* 分支；寫進 ADR 0002 修正，不用新編號）。」): a workflow writing ADRs to a shared repository pushes its state checkout to that repository's `origin` under a unique `state-branch:` in the `spacedock-state/*` namespace. `reserve` and `check` fetch and read live task reservations on every `origin/spacedock-state/*` branch, as well as their own state checkout's flat and folder-form tasks. R8 refuses an added ADR number another task holds when the number is absent from the base tip; the refused task renumbers. This is a shared read, not an atomic lock: concurrent reservations before either state push can still collide, and a failed fetch reads local refs with a warning. A state checkout without `origin` is invisible to other workflows and `reserve` warns it to set a unique branch before adding `origin`.
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index e2cf77c36..d21a60740 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -470,7 +470,7 @@ the package's `references/retained-documents.md`.
+ ## Number guards
+ 
+ Applies when the task's `Surfaces:` includes `db`, or the task lands an ADR, including one first required by a ruling in a worker report or mid-stage feedback, whose number FO reserves before the next dispatch; the POC bullet below applies to every `poc` task.
+-`python3 <package>/scripts/number_guards.py --help` lists the flags and rules R1 to R6;
++`python3 <package>/scripts/number_guards.py --help` lists the flags and rules;
+ `trunk:`, `migrations-path:` and `adr-path:` (default `docs/adr`) come from this README's frontmatter.
+ 
+ - **Applied.** `check` freezes a migration in a commit recorded `Applied at:` (R2).
+@@ -511,8 +511,8 @@ Applies when the task's `Surfaces:` includes `db`, or the task lands an ADR, inc
+ - **POC marker.** FO presents the `boundary-crossed: persistent-state` marker at the
+   validation gate. Without `migrations-path:` a db task exits 2 and a POC is not guarded;
+   `none` declares no migration files.
+-- **Collision.** When two tasks hold one migration number (`check` reports R3 or R5 on
+-  the later candidate; nothing compares task files), the task whose migration is applied
++- **Collision.** When two tasks hold one migration number (`check` reports R3, R5 or R8 on
++  the later candidate), the task whose migration is applied
+   keeps it and the other, unapplied task renumbers, so no reset is needed. A migration
+   counts as applied when its task has an `Applied at:` line or it is on the base branch;
+   when both tasks are applied and neither is on the base branch, the one that merges
+diff --git a/kc-dev-flow-2/scripts/lint-skills.py b/kc-dev-flow-2/scripts/lint-skills.py
+index 8c2d5ab71..6f027bc1e 100644
+--- a/kc-dev-flow-2/scripts/lint-skills.py
++++ b/kc-dev-flow-2/scripts/lint-skills.py
+@@ -25,6 +25,7 @@ CAPTAIN_QUOTE = re.compile(r"「[^」]*\S[^」]*」")
+ # A raise (delta > 0) needs the Captain's quoted words and the one moment FO reads the added text.
+ WORKFLOW_BUDGET_START = 5511
+ WORKFLOW_BUDGET_STEPS = [
++    dict(delta=-6, why="number_guards.py help lists the rules and R8 prints the cross-workflow collision step"),
+     dict(delta=-64, why="dispatch_records.py and design_surfaces.py print the parts and defects; the README points to them"),
+     dict(delta=-18, why="delivery_gate.py prints the hold and ask lines; the README points to it"),
+     dict(delta=-55, why="number_guards.py prints the R2 and R6 next steps and --help lists the flags and rules; the README points to them"),
+diff --git a/kc-dev-flow-2/scripts/number_guards.py b/kc-dev-flow-2/scripts/number_guards.py
+index d69d06492..b19245d51 100644
+--- a/kc-dev-flow-2/scripts/number_guards.py
++++ b/kc-dev-flow-2/scripts/number_guards.py
+@@ -6,11 +6,14 @@ check   exit 0 clean, 1 findings, 2 misconfiguration. Rules: R1 a migration pres
+         number is not above the base tip's highest; R4 an added migration or ADR number is not in the task's
+         'Migration:' / 'ADR:' lines; R5 an added ADR number exists on the base tip; R6 a task whose frontmatter says
+         'profile: poc' differs from the merge-base anywhere under the migrations directory; R7 (only under
+-        'migrations-path: none') the candidate adds a file named NNNN_name.sql anywhere.
++        'migrations-path: none') the candidate adds a file named NNNN_name.sql anywhere; R8 an added ADR
++        number absent from the base tip is held by another live task.
+         'migrations-path: none' declares that the repository has no migration files: R1 to R3 and R6 are skipped,
+-        the ADR rules R4 and R5 still run, and a db task is no longer exit 2.
+-reserve prints 'Migration: NNNN' or 'ADR: NNNN' (one above the base tip and every other task file, never
++        the ADR rules R4, R5 and R8 still run, and a db task is no longer exit 2.
++reserve prints 'Migration: NNNN' or 'ADR: NNNN' (one above the base tip and every other live task, never
+         filling a gap); a task that already holds a line gets it back. One number per kind per task.
++Holders: own state *.md and */index.md, plus every origin/spacedock-state/* branch fetched explicitly.
++        The checked task's path is excluded on its own branch only when its state checkout has origin.
+ Limits: only files named NNNN_name.sql count as migrations, so meta/_journal.json and snapshots are not checked (R6 does check them);
+ a deploy nobody recorded as 'Applied at:' is not detected; run 'git -C <repo> fetch' first, the base tip is what is local.
+ Task lines are read from the task's '## Number guards' section.
+@@ -50,7 +53,11 @@ def resolve(repo, ref, what="ref"):
+ def frontmatter(readme):
+     if not readme.is_file():
+         raise Misconfigured(f"no workflow README at {readme}")
+-    lines = readme.read_text().split("\n")
++    return frontmatter_text(readme.read_text())
++
++
++def frontmatter_text(text):
++    lines = text.split("\n")
+     found = {}
+     for line in lines[1:] if lines[0] == "---" else []:
+         if line == "---":
+@@ -65,7 +72,10 @@ def task_facts(path):
+     task = Path(path)
+     if not task.is_file():
+         raise Misconfigured(f"task file {task} does not exist")
+-    text = task.read_text(errors="replace")
++    return task_facts_text(task.read_text(errors="replace"))
++
++
++def task_facts_text(text):
+     section = re.search(r"^## Number guards[ \t]*\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+     body = section.group(1) if section else ""
+     surfaces = re.search(r"^Surfaces:(.*)$", text, re.M)
+@@ -73,7 +83,7 @@ def task_facts(path):
+         "migration": {int(n) for n in re.findall(r"^Migration:[ \t]*(\d+)[ \t]*$", body, re.M)},
+         "adr": {int(n) for n in re.findall(r"^ADR:[ \t]*(\d+)[ \t]*$", body, re.M)},
+         "applied": re.findall(r"^Applied at:[ \t]*(\S+)[ \t]+([0-9a-f]{7,40})[ \t]*$", body, re.M),
+-        "poc": frontmatter(task).get("profile") == "poc",
++        "poc": frontmatter_text(text).get("profile") == "poc",
+         "surfaces": set(re.split(r"[\s,]+", surfaces.group(1).strip())) if surfaces else set(),
+     }
+ 
+@@ -113,9 +123,52 @@ def settings(args):
+         "adr": args.adr_path or cfg.get("adr-path") or "docs/adr",
+         "base": base,
+         "state": getattr(args, "state_dir", None) or (cfg.get("state") and str(Path(args.workflow_dir) / cfg["state"])),
++        "state_branch": cfg.get("state-branch") or (
++            f"spacedock-state/{Path(args.workflow_dir).resolve().name}" if args.workflow_dir else None),
+     }
+ 
+ 
++def reservation_holders(args, cfg):
++    # see docs/adr/0002-applied-migrations-are-frozen-and-numbers-are-reserved.md
++    holders = {kind: {} for kind in KINDS}
++
++    def add(text, source):
++        facts = task_facts_text(text)
++        for kind in holders:
++            for number in facts[kind]:
++                holders[kind].setdefault(number, source)
++
++    state = Path(cfg["state"]).resolve() if cfg["state"] else None
++    task = Path(args.task).resolve() if args.task else None
++    own_origin = state and subprocess.run(
++        ["git", "-C", str(state), "remote", "get-url", "origin"], capture_output=True).returncode == 0
++    own_path = task.relative_to(state).as_posix() if task and state and task.is_relative_to(state) else None
++    if args.command == "reserve" and not own_origin:
++        print("warning: state checkout has no origin; no other workflow sees these reservations; "
++              "set a unique state-branch: before adding origin and push state to the repository", file=sys.stderr)
++    if state:
++        for sibling in sorted([*state.glob("*.md"), *state.glob("*/index.md")]):
++            if sibling.is_file() and sibling.resolve() != task:
++                add(sibling.read_text(errors="replace"), str(sibling))
++    fetched = subprocess.run(
++        ["git", "-C", args.repo, "fetch", "--quiet", "--prune", "origin",
++         "+refs/heads/spacedock-state/*:refs/remotes/origin/spacedock-state/*"],
++        capture_output=True)
++    if fetched.returncode:
++        print("warning: state fetch failed; reading local origin/spacedock-state/* refs only; "
++              "reservations may be stale or invisible", file=sys.stderr)
++    for ref in git(args.repo, "for-each-ref", "--format=%(refname:short)",
++                   "refs/remotes/origin/spacedock-state/").splitlines():
++        for path in git(args.repo, "ls-tree", "-r", "--name-only", ref).splitlines():
++            if not (path.endswith(".md") and "/" not in path or
++                    path.endswith("/index.md") and path.count("/") == 1):
++                continue
++            if own_origin and ref == f"origin/{cfg['state_branch']}" and path == own_path:
++                continue
++            add(git(args.repo, "show", f"{ref}:{path}"), f"{ref}:{path}")
++    return holders
++
++
+ def require_migrations(repo, base, directory):
+     files = numbered(repo, base, directory, MIGRATION)
+     if not files:
+@@ -176,10 +229,14 @@ def check(args):
+                 if status == "A" and MIGRATION.match(posixpath.basename(path)):
+                     fail("R7", path, "added, but the README declares migrations-path: none")
+     adr_base = numbered(repo, base, cfg["adr"], ADR)
++    holders = reservation_holders(args, cfg)["adr"]
+     for _, path in added_changed(repo, merge_base, head, cfg["adr"], ADR)[0]:
+         number = int(ADR.match(posixpath.basename(path)).group(1))
+         if number in adr_base:
+             fail("R5", path, f"base already has {number:04d} ({adr_base[number][0]})")
++        elif number in holders:
++            fail("R8", path, f"{number:04d} is held by {holders[number]}; "
++                 "delete this task's ADR: line, run reserve again and renumber")
+         if facts is not None and number not in facts["adr"]:
+             fail("R4", path, f"number {number:04d} is not in the task's ADR: lines")
+     if facts is None:
+@@ -194,6 +251,7 @@ def reserve(args):
+     repo, cfg = args.repo, settings(args)
+     label, pattern = KINDS[args.kind]
+     facts = task_facts(args.task)
++    holders = reservation_holders(args, cfg)
+     if facts[args.kind]:
+         for number in sorted(facts[args.kind]):
+             print(f"{label}: {number:04d}")
+@@ -209,10 +267,7 @@ def reserve(args):
+     else:
+         files = numbered(repo, resolve(repo, cfg["base"], "base"), cfg["adr"], pattern)
+         width = 4
+-    taken = set(files)
+-    for sibling in sorted(Path(cfg["state"]).glob("*.md")):
+-        if sibling.resolve() != Path(args.task).resolve():
+-            taken |= task_facts(sibling)[args.kind]
++    taken = set(files) | set(holders[args.kind])
+     print(f"{label}: {max(taken, default=0) + 1:0{width}d}")
+     return 0
+ 
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_records.py b/kc-dev-flow-2/scripts/test_dispatch_records.py
+index b3ff98e9c..5c296911e 100644
+--- a/kc-dev-flow-2/scripts/test_dispatch_records.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_records.py
+@@ -2742,7 +2742,12 @@ class DesignAdrTests(unittest.TestCase):
+         result = subprocess.run([sys.executable, "-B", str(Path(records.__file__).with_name("number_guards.py")),
+                                  "reserve", "--kind", "adr", "--repo", str(self.root), "--base", "HEAD",
+                                  "--state-dir", str(self.root), "--task", str(self.task)], capture_output=True, text=True)
+-        self.assertEqual((result.returncode, result.stdout, result.stderr), (0, "ADR: 0001\n", ""))
++        self.assertEqual((result.returncode, result.stdout, result.stderr), (
++            0, "ADR: 0001\n",
++            "warning: state checkout has no origin; no other workflow sees these reservations; "
++            "set a unique state-branch: before adding origin and push state to the repository\n"
++            "warning: state fetch failed; reading local origin/spacedock-state/* refs only; "
++            "reservations may be stale or invisible\n"))
+         repaired = RAW_ADR_TASK + "\n## Number guards\n" + result.stdout
+         self.task.write_text(repaired)
+         self.record.write_text(RAW_ADR_RECORD + result.stdout)
+diff --git a/kc-dev-flow-2/scripts/test_number_guards.py b/kc-dev-flow-2/scripts/test_number_guards.py
+index e3e63df7d..deb5efbac 100644
+--- a/kc-dev-flow-2/scripts/test_number_guards.py
++++ b/kc-dev-flow-2/scripts/test_number_guards.py
+@@ -33,7 +33,7 @@ class Fixture:
+         return self.git("rev-parse", "HEAD")
+ 
+     def run(self, *args):
+-        done = subprocess.run(["python3", SCRIPT, *args], capture_output=True, text=True)
++        done = subprocess.run(["python3", "-B", SCRIPT, *args], capture_output=True, text=True)
+         return done.returncode, done.stdout + done.stderr
+ 
+     def check(self, *args, head="feature", task=None):
+@@ -157,12 +157,13 @@ class ReserveTests(unittest.TestCase):
+                 return fx.run("reserve", "--kind", kind, "--repo", tmp, "--migrations-path", MIGRATIONS,
+                               "--base", "main", "--state-dir", state, "--task", str(task))
+ 
+-            self.assertEqual(reserve(a), (0, "Migration: 0013\n"))
++            self.assertEqual(reserve(a)[0], 0)
++            self.assertIn("Migration: 0013\n", reserve(a)[1])
+             a.write_text("## Number guards\nMigration: 0013\n")
+-            self.assertEqual(reserve(b), (0, "Migration: 0014\n"))
+-            self.assertEqual(reserve(a), (0, "Migration: 0013\n"))
++            self.assertIn("Migration: 0014\n", reserve(b)[1])
++            self.assertIn("Migration: 0013\n", reserve(a)[1])
+             fx.commit("adrs", **{"docs__adr__0001-a.md": "x", "docs__adr__0003-c.md": "x"})
+-            self.assertEqual(reserve(b, "adr"), (0, "ADR: 0004\n"))
++            self.assertIn("ADR: 0004\n", reserve(b, "adr")[1])
+ 
+     def test_a_task_that_loses_a_collision_reserves_again_above_the_one_that_keeps_its_number(self):
+         with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as state:
+@@ -176,10 +177,10 @@ class ReserveTests(unittest.TestCase):
+                 return fx.run("reserve", "--kind", "migration", "--repo", tmp, "--migrations-path", MIGRATIONS,
+                               "--base", "main", "--state-dir", state, "--task", str(task))
+ 
+-            self.assertEqual(reserve(loses), (0, "Migration: 0013\n"))
++            self.assertIn("Migration: 0013\n", reserve(loses)[1])
+             loses.write_text("## Number guards\n")
+-            self.assertEqual(reserve(loses), (0, "Migration: 0014\n"))
+-            self.assertEqual(reserve(keeps), (0, "Migration: 0013\n"))
++            self.assertIn("Migration: 0014\n", reserve(loses)[1])
++            self.assertIn("Migration: 0013\n", reserve(keeps)[1])
+ 
+ 
+ class RecheckTests(unittest.TestCase):
+@@ -358,16 +359,175 @@ class NoMigrationsDeclaredTests(unittest.TestCase):
+             code, out = reserve("migration")
+             self.assertEqual((code, "no migration number to reserve" in out, "no migration file matching" in out),
+                              (2, True, False), out)
+-            self.assertEqual(reserve("adr"), (0, "ADR: 0002\n"))
++            self.assertIn("ADR: 0002\n", reserve("adr")[1])
+ 
+ 
+ class HelpTests(unittest.TestCase):
+-    def test_help_names_every_rule_from_r1_to_r7(self):
++    def test_help_names_every_rule_from_r1_to_r8_and_holder_sources(self):
+         done = subprocess.run(["python3", "-B", SCRIPT, "--help"], capture_output=True, text=True)
+         self.assertEqual(done.returncode, 0, done.stderr)
+         rules = done.stdout.split("Limits:")[0]
+-        for n in range(1, 8):
++        for n in range(1, 9):
+             self.assertRegex(rules, rf"\bR{n} ")
++        for source in ("*.md", "*/index.md", "origin/spacedock-state/*"):
++            self.assertIn(source, done.stdout)
++
++
++class CrossWorkflowTests(unittest.TestCase):
++    def setUp(self):
++        self.tmp = tempfile.TemporaryDirectory()
++        self.addCleanup(self.tmp.cleanup)
++        root = Path(self.tmp.name)
++        origin = root / "origin"
++        origin.mkdir()
++        self.origin = Fixture(str(origin))
++        self.origin.commit("base", **{"docs__adr__0058-old.md": "x", "docs__adr__0059-old.md": "x"})
++        self.origin.git("checkout", "-q", "--orphan", "spacedock-state/dev2")
++        self.origin.git("rm", "-rf", ".")
++        self.origin.commit("holders", **{
++            "gate-presentation.md": "## Number guards\nADR: 0060\n",
++            "rel__index.md": "## Number guards\nADR: 0057\nMigration: 0070\n",
++            "_archive__old.md": "## Number guards\nADR: 0099\n",
++            "rel__review__notes.md": "## Number guards\nADR: 0098\n",
++        })
++        self.origin.git("checkout", "-q", "main")
++        self.repo = str(root / "second")
++        subprocess.run(["git", "clone", "-q", "--single-branch", "-b", "main", str(origin), self.repo],
++                       check=True, capture_output=True)
++        self.fx = Fixture(self.repo)
++        self.workflow = root / "workflow" / "dev2"
++        self.state = self.workflow / "st"
++        self.state.mkdir(parents=True)
++        self.state_fx = Fixture(str(self.state))
++        (self.workflow / "README.md").write_text("---\nstate: st\ntrunk: main\n---\n")
++        self.task = self.state / "slice3.md"
++        self.task.write_text("## Number guards\n")
++
++    def run_guard(self, command, *extra):
++        return subprocess.run(
++            ["python3", "-B", SCRIPT, command, "--repo", self.repo,
++             "--workflow-dir", str(self.workflow), "--task", str(self.task), *extra],
++            capture_output=True, text=True)
++
++    def reserve(self, *extra):
++        return self.run_guard("reserve", "--kind", "adr", *extra)
++
++    def candidate(self, number=60):
++        self.task.write_text(f"## Number guards\nADR: {number:04d}\n")
++        self.fx.git("checkout", "-qb", "feature")
++        self.fx.commit("candidate", **{f"docs__adr__{number:04d}-distinct.md": "x"})
++
++    def test_single_branch_clone_fetches_foreign_holder_at_reserve(self):
++        self.assertNotIn("origin/spacedock-state/", self.fx.git("branch", "-r"))
++        done = self.reserve()
++        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
++        self.assertIn("origin/spacedock-state/dev2", self.fx.git("branch", "-r"))
++
++    def test_deleted_origin_state_branch_releases_its_adr_number(self):
++        done = self.reserve()
++        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
++        self.assertIn("origin/spacedock-state/dev2", self.fx.git("branch", "-r"))
++        self.origin.git("branch", "-D", "spacedock-state/dev2")
++        done = self.reserve()
++        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0060\n"), done.stderr)
++        self.assertNotIn("origin/spacedock-state/dev2", self.fx.git("branch", "-r"))
++        self.assertIn("origin/main", self.fx.git("branch", "-r"))
++        self.candidate()
++        done = self.run_guard("check")
++        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
++        self.assertIn("PASS: no findings", done.stdout)
++
++    def test_merge_ask_refuses_held_number_and_accepts_free_number(self):
++        self.candidate()
++        done = self.run_guard("check")
++        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
++        self.assertIn("FAIL R8: docs/adr/0060-distinct.md: 0060 is held by "
++                      "origin/spacedock-state/dev2:gate-presentation.md; "
++                      "delete this task's ADR: line, run reserve again and renumber", done.stdout)
++        self.fx.git("checkout", "-qb", "free", "main")
++        self.fx.commit("free", **{"docs__adr__0061-free.md": "x"})
++        self.task.write_text("## Number guards\nADR: 0061\n")
++        done = self.run_guard("check")
++        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
++        self.assertIn("PASS: no findings", done.stdout)
++
++    def test_own_folder_holder_counts_at_reserve_and_check(self):
++        self.origin.git("branch", "-D", "spacedock-state/dev2")
++        folder = self.state / "rel"
++        folder.mkdir()
++        (folder / "index.md").write_text("## Number guards\nADR: 0060\n")
++        done = self.reserve()
++        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
++        self.candidate()
++        done = self.run_guard("check")
++        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
++        self.assertIn(f"0060 is held by {(folder / 'index.md').resolve()}", done.stdout)
++
++    def test_remote_folder_holder_counts_and_archive_and_review_do_not(self):
++        self.origin.git("checkout", "-q", "spacedock-state/dev2")
++        self.origin.commit("folder holder", **{"rel__index.md": "## Number guards\nADR: 0062\nMigration: 0070\n"})
++        self.origin.git("checkout", "-q", "main")
++        done = self.reserve()
++        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0063\n"), done.stderr)
++        self.fx.commit("migration base", **{"migrations__0001_first.sql": "x"})
++        done = self.reserve("--kind", "migration", "--migrations-path", "migrations", "--base", "HEAD")
++        self.assertEqual((done.returncode, done.stdout), (0, "Migration: 0071\n"), done.stderr)
++
++    def test_own_task_pushed_copy_is_excluded_but_sibling_on_own_branch_counts(self):
++        self.state_fx.git("remote", "add", "origin", self.origin.repo)
++        self.task.rename(self.state / "gate-presentation.md")
++        self.task = self.state / "gate-presentation.md"
++        self.candidate()
++        done = self.run_guard("check")
++        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
++        self.origin.git("checkout", "-q", "spacedock-state/dev2")
++        self.origin.commit("sibling", **{"other.md": "## Number guards\nADR: 0060\n"})
++        self.origin.git("checkout", "-q", "main")
++        done = self.run_guard("check")
++        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
++        self.assertIn("origin/spacedock-state/dev2:other.md", done.stdout)
++
++    def test_no_origin_same_basename_and_slug_is_foreign(self):
++        self.task.rename(self.state / "gate-presentation.md")
++        self.task = self.state / "gate-presentation.md"
++        self.candidate()
++        done = self.run_guard("check")
++        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
++        self.assertIn("origin/spacedock-state/dev2:gate-presentation.md", done.stdout)
++
++    def test_explicit_state_branch_excludes_only_own_task(self):
++        self.origin.git("branch", "-m", "spacedock-state/dev2", "spacedock-state/unique")
++        (self.workflow / "README.md").write_text(
++            "---\nstate: st\ntrunk: main\nstate-branch: spacedock-state/unique\n---\n")
++        self.state_fx.git("remote", "add", "origin", self.origin.repo)
++        self.task.rename(self.state / "gate-presentation.md")
++        self.task = self.state / "gate-presentation.md"
++        self.candidate()
++        done = self.run_guard("check")
++        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
++
++    def test_number_already_on_base_gets_r5_without_r8(self):
++        self.candidate()
++        self.fx.git("checkout", "-q", "main")
++        self.fx.commit("landed", **{"docs__adr__0060-landed.md": "x"})
++        done = self.run_guard("check", "--head", "feature", "--base", "main")
++        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
++        self.assertIn("FAIL R5", done.stdout)
++        self.assertNotIn("FAIL R8", done.stdout)
++
++    def test_blind_read_warnings_go_to_stderr_and_cached_holders_still_count(self):
++        done = self.reserve()
++        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
++        self.assertIn("state checkout has no origin; no other workflow sees these reservations", done.stderr)
++        self.fx.git("remote", "set-url", "origin", str(Path(self.tmp.name) / "missing"))
++        done = self.reserve()
++        self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
++        self.assertIn("state fetch failed; reading local origin/spacedock-state/* refs only", done.stderr)
++        self.candidate()
++        done = self.run_guard("check")
++        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
++        self.assertIn("FAIL R8", done.stdout)
++        self.assertIn("state fetch failed; reading local origin/spacedock-state/* refs only", done.stderr)
+ 
+ 
+ class MisconfigurationTests(unittest.TestCase):

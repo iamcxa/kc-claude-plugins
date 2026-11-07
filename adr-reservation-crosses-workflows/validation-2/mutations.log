@@ -1,0 +1,374 @@
+repair-no-prune
+F
+======================================================================
+FAIL: test_deleted_origin_state_branch_releases_its_adr_number (guard_tests.CrossWorkflowTests.test_deleted_origin_state_branch_releases_its_adr_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 432, in test_deleted_origin_state_branch_releases_its_adr_number
+    self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0060\n"), done.stderr)
+AssertionError: Tuples differ: (0, 'ADR: 0061\n') != (0, 'ADR: 0060\n')
+
+First differing element 1:
+'ADR: 0061\n'
+'ADR: 0060\n'
+
+- (0, 'ADR: 0061\n')
+?              ^
+
++ (0, 'ADR: 0060\n')
+?              ^
+ : warning: state checkout has no origin; no other workflow sees these reservations; set a unique state-branch: before adding origin and push state to the repository
+
+
+----------------------------------------------------------------------
+Ran 1 test in 2.191s
+
+FAILED (failures=1)
+
+AC1-no-explicit-fetch
+F
+======================================================================
+FAIL: test_single_branch_clone_fetches_foreign_holder_at_reserve (guard_tests.CrossWorkflowTests.test_single_branch_clone_fetches_foreign_holder_at_reserve)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 423, in test_single_branch_clone_fetches_foreign_holder_at_reserve
+    self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+AssertionError: Tuples differ: (0, 'ADR: 0060\n') != (0, 'ADR: 0061\n')
+
+First differing element 1:
+'ADR: 0060\n'
+'ADR: 0061\n'
+
+- (0, 'ADR: 0060\n')
+?              ^
+
++ (0, 'ADR: 0061\n')
+?              ^
+ : warning: state checkout has no origin; no other workflow sees these reservations; set a unique state-branch: before adding origin and push state to the repository
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.733s
+
+FAILED (failures=1)
+
+AC1-no-origin-scan
+F
+======================================================================
+FAIL: test_single_branch_clone_fetches_foreign_holder_at_reserve (guard_tests.CrossWorkflowTests.test_single_branch_clone_fetches_foreign_holder_at_reserve)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 423, in test_single_branch_clone_fetches_foreign_holder_at_reserve
+    self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+AssertionError: Tuples differ: (0, 'ADR: 0060\n') != (0, 'ADR: 0061\n')
+
+First differing element 1:
+'ADR: 0060\n'
+'ADR: 0061\n'
+
+- (0, 'ADR: 0060\n')
+?              ^
+
++ (0, 'ADR: 0061\n')
+?              ^
+ : warning: state checkout has no origin; no other workflow sees these reservations; set a unique state-branch: before adding origin and push state to the repository
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.613s
+
+FAILED (failures=1)
+
+AC2-no-r8
+F
+======================================================================
+FAIL: test_merge_ask_refuses_held_number_and_accepts_free_number (guard_tests.CrossWorkflowTests.test_merge_ask_refuses_held_number_and_accepts_free_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 443, in test_merge_ask_refuses_held_number_and_accepts_free_number
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+AssertionError: 0 != 1 : migration guard skipped: no migrations-path declared
+PASS: no findings
+base 82a5892b50eb head 06b60eaaf4d9 merge-base 82a5892b50eb
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.572s
+
+FAILED (failures=1)
+
+AC3-flat-only
+F
+======================================================================
+FAIL: test_own_folder_holder_counts_at_reserve_and_check (guard_tests.CrossWorkflowTests.test_own_folder_holder_counts_at_reserve_and_check)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 460, in test_own_folder_holder_counts_at_reserve_and_check
+    self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+AssertionError: Tuples differ: (0, 'ADR: 0060\n') != (0, 'ADR: 0061\n')
+
+First differing element 1:
+'ADR: 0060\n'
+'ADR: 0061\n'
+
+- (0, 'ADR: 0060\n')
+?              ^
+
++ (0, 'ADR: 0061\n')
+?              ^
+ : warning: state checkout has no origin; no other workflow sees these reservations; set a unique state-branch: before adding origin and push state to the repository
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.213s
+
+FAILED (failures=1)
+
+AC4-skip-whole-own-branch
+F
+======================================================================
+FAIL: test_own_task_pushed_copy_is_excluded_but_sibling_on_own_branch_counts (guard_tests.CrossWorkflowTests.test_own_task_pushed_copy_is_excluded_but_sibling_on_own_branch_counts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 487, in test_own_task_pushed_copy_is_excluded_but_sibling_on_own_branch_counts
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+AssertionError: 0 != 1 : migration guard skipped: no migrations-path declared
+PASS: no findings
+base 133dddd79b44 head ccf475fbfb67 merge-base 133dddd79b44
+
+
+----------------------------------------------------------------------
+Ran 1 test in 2.823s
+
+FAILED (failures=1)
+
+AC4-no-origin-probe
+F
+======================================================================
+FAIL: test_no_origin_same_basename_and_slug_is_foreign (guard_tests.CrossWorkflowTests.test_no_origin_same_basename_and_slug_is_foreign)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 495, in test_no_origin_same_basename_and_slug_is_foreign
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+AssertionError: 0 != 1 : migration guard skipped: no migrations-path declared
+PASS: no findings
+base 0551a76f3aa9 head 95674ca6bf76 merge-base 0551a76f3aa9
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.933s
+
+FAILED (failures=1)
+
+AC4-no-own-path-exclusion
+F
+======================================================================
+FAIL: test_own_task_pushed_copy_is_excluded_but_sibling_on_own_branch_counts (guard_tests.CrossWorkflowTests.test_own_task_pushed_copy_is_excluded_but_sibling_on_own_branch_counts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 482, in test_own_task_pushed_copy_is_excluded_but_sibling_on_own_branch_counts
+    self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+AssertionError: 1 != 0 : migration guard skipped: no migrations-path declared
+FAIL R8: docs/adr/0060-distinct.md: 0060 is held by origin/spacedock-state/dev2:gate-presentation.md; delete this task's ADR: line, run reserve again and renumber
+base e4b28c33d8b4 head 6921a99c165a merge-base e4b28c33d8b4
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.613s
+
+FAILED (failures=1)
+
+AC5-double-report
+F
+======================================================================
+FAIL: test_number_already_on_base_gets_r5_without_r8 (guard_tests.CrossWorkflowTests.test_number_already_on_base_gets_r5_without_r8)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 516, in test_number_already_on_base_gets_r5_without_r8
+    self.assertNotIn("FAIL R8", done.stdout)
+AssertionError: 'FAIL R8' unexpectedly found in "migration guard skipped: no migrations-path declared\nFAIL R5: docs/adr/0060-distinct.md: base already has 0060 (0060-landed.md)\nFAIL R8: docs/adr/0060-distinct.md: 0060 is held by origin/spacedock-state/dev2:gate-presentation.md; delete this task's ADR: line, run reserve again and renumber\nbase dc0dda00c423 head a004a58f006c merge-base f4e96d8cf851\n"
+
+----------------------------------------------------------------------
+Ran 1 test in 1.579s
+
+FAILED (failures=1)
+
+AC6-no-origin-warning
+F
+======================================================================
+FAIL: test_blind_read_warnings_go_to_stderr_and_cached_holders_still_count (guard_tests.CrossWorkflowTests.test_blind_read_warnings_go_to_stderr_and_cached_holders_still_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 521, in test_blind_read_warnings_go_to_stderr_and_cached_holders_still_count
+    self.assertIn("state checkout has no origin; no other workflow sees these reservations", done.stderr)
+AssertionError: 'state checkout has no origin; no other workflow sees these reservations' not found in 'warning: state visibility unknown; set a unique state-branch: before adding origin and push state to the repository\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 2.239s
+
+FAILED (failures=1)
+
+AC6-no-fetch-warning
+F
+======================================================================
+FAIL: test_blind_read_warnings_go_to_stderr_and_cached_holders_still_count (guard_tests.CrossWorkflowTests.test_blind_read_warnings_go_to_stderr_and_cached_holders_still_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 525, in test_blind_read_warnings_go_to_stderr_and_cached_holders_still_count
+    self.assertIn("state fetch failed; reading local origin/spacedock-state/* refs only", done.stderr)
+AssertionError: 'state fetch failed; reading local origin/spacedock-state/* refs only' not found in 'warning: state checkout has no origin; no other workflow sees these reservations; set a unique state-branch: before adding origin and push state to the repository\nwarning: cached refs; reservations may be stale or invisible\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 2.046s
+
+FAILED (failures=1)
+
+AC8-help-omits-r8
+F
+======================================================================
+FAIL: test_help_names_every_rule_from_r1_to_r8_and_holder_sources (guard_tests.HelpTests.test_help_names_every_rule_from_r1_to_r8_and_holder_sources)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 371, in test_help_names_every_rule_from_r1_to_r8_and_holder_sources
+    self.assertRegex(rules, rf"\bR{n} ")
+AssertionError: Regex didn't match: '\\bR8 ' not found in "usage: AC8-help-omits-r8.py [-h] {check,reserve} ...\n\nRefuse candidates that change an applied migration or take a number another task holds, and reserve numbers per task.\n\ncheck   exit 0 clean, 1 findings, 2 misconfiguration. Rules: R1 a migration present at the merge-base is\n        modified or deleted; R2 the same against every 'Applied at: <env> <sha>' commit; R3 an added migration\n        number is not above the base tip's highest; R4 an added migration or ADR number is not in the task's\n        'Migration:' / 'ADR:' lines; R5 an added ADR number exists on the base tip; R6 a task whose frontmatter says\n        'profile: poc' differs from the merge-base anywhere under the migrations directory; R7 (only under\n        'migrations-path: none') the candidate adds a file named NNNN_name.sql anywhere; rule eight an added ADR\n        number absent from the base tip is held by another live task.\n        'migrations-path: none' declares that the repository has no migration files: R1 to R3 and R6 are skipped,\n        the ADR rules R4, R5 and rule eight still run, and a db task is no longer exit 2.\nreserve prints 'Migration: NNNN' or 'ADR: NNNN' (one above the base tip and every other live task, never\n        filling a gap); a task that already holds a line gets it back. One number per kind per task.\nHolders: own state *.md and */index.md, plus every origin/spacedock-state/* branch fetched explicitly.\n        The checked task's path is excluded on its own branch only when its state checkout has origin.\n"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.051s
+
+FAILED (failures=1)
+
+BASELINE
+FF.FF.FFFF
+======================================================================
+FAIL: test_blind_read_warnings_go_to_stderr_and_cached_holders_still_count (guard_tests.CrossWorkflowTests.test_blind_read_warnings_go_to_stderr_and_cached_holders_still_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 520, in test_blind_read_warnings_go_to_stderr_and_cached_holders_still_count
+    self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+AssertionError: Tuples differ: (0, 'ADR: 0060\n') != (0, 'ADR: 0061\n')
+
+First differing element 1:
+'ADR: 0060\n'
+'ADR: 0061\n'
+
+- (0, 'ADR: 0060\n')
+?              ^
+
++ (0, 'ADR: 0061\n')
+?              ^
+ : 
+
+======================================================================
+FAIL: test_deleted_origin_state_branch_releases_its_adr_number (guard_tests.CrossWorkflowTests.test_deleted_origin_state_branch_releases_its_adr_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 428, in test_deleted_origin_state_branch_releases_its_adr_number
+    self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+AssertionError: Tuples differ: (0, 'ADR: 0060\n') != (0, 'ADR: 0061\n')
+
+First differing element 1:
+'ADR: 0060\n'
+'ADR: 0061\n'
+
+- (0, 'ADR: 0060\n')
+?              ^
+
++ (0, 'ADR: 0061\n')
+?              ^
+ : 
+
+======================================================================
+FAIL: test_merge_ask_refuses_held_number_and_accepts_free_number (guard_tests.CrossWorkflowTests.test_merge_ask_refuses_held_number_and_accepts_free_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 443, in test_merge_ask_refuses_held_number_and_accepts_free_number
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+AssertionError: 0 != 1 : migration guard skipped: no migrations-path declared
+PASS: no findings
+base af375e96e9a5 head 7785bae6a838 merge-base af375e96e9a5
+
+
+======================================================================
+FAIL: test_no_origin_same_basename_and_slug_is_foreign (guard_tests.CrossWorkflowTests.test_no_origin_same_basename_and_slug_is_foreign)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 495, in test_no_origin_same_basename_and_slug_is_foreign
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+AssertionError: 0 != 1 : migration guard skipped: no migrations-path declared
+PASS: no findings
+base 9c31361bf72a head 2c5af1be05d8 merge-base 9c31361bf72a
+
+
+======================================================================
+FAIL: test_own_folder_holder_counts_at_reserve_and_check (guard_tests.CrossWorkflowTests.test_own_folder_holder_counts_at_reserve_and_check)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 460, in test_own_folder_holder_counts_at_reserve_and_check
+    self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+AssertionError: Tuples differ: (0, 'ADR: 0060\n') != (0, 'ADR: 0061\n')
+
+First differing element 1:
+'ADR: 0060\n'
+'ADR: 0061\n'
+
+- (0, 'ADR: 0060\n')
+?              ^
+
++ (0, 'ADR: 0061\n')
+?              ^
+ : 
+
+======================================================================
+FAIL: test_own_task_pushed_copy_is_excluded_but_sibling_on_own_branch_counts (guard_tests.CrossWorkflowTests.test_own_task_pushed_copy_is_excluded_but_sibling_on_own_branch_counts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 487, in test_own_task_pushed_copy_is_excluded_but_sibling_on_own_branch_counts
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+AssertionError: 0 != 1 : migration guard skipped: no migrations-path declared
+PASS: no findings
+base 0fb07522bacf head b352ba602f26 merge-base 0fb07522bacf
+
+
+======================================================================
+FAIL: test_remote_folder_holder_counts_and_archive_and_review_do_not (guard_tests.CrossWorkflowTests.test_remote_folder_holder_counts_and_archive_and_review_do_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 471, in test_remote_folder_holder_counts_and_archive_and_review_do_not
+    self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0063\n"), done.stderr)
+AssertionError: Tuples differ: (0, 'ADR: 0060\n') != (0, 'ADR: 0063\n')
+
+First differing element 1:
+'ADR: 0060\n'
+'ADR: 0063\n'
+
+- (0, 'ADR: 0060\n')
+?              ^
+
++ (0, 'ADR: 0063\n')
+?              ^
+ : 
+
+======================================================================
+FAIL: test_single_branch_clone_fetches_foreign_holder_at_reserve (guard_tests.CrossWorkflowTests.test_single_branch_clone_fetches_foreign_holder_at_reserve)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/adr-reservation-validation-801-r2/candidate/kc-dev-flow-2/scripts/test_number_guards.py", line 423, in test_single_branch_clone_fetches_foreign_holder_at_reserve
+    self.assertEqual((done.returncode, done.stdout), (0, "ADR: 0061\n"), done.stderr)
+AssertionError: Tuples differ: (0, 'ADR: 0060\n') != (0, 'ADR: 0061\n')
+
+First differing element 1:
+'ADR: 0060\n'
+'ADR: 0061\n'
+
+- (0, 'ADR: 0060\n')
+?              ^
+
++ (0, 'ADR: 0061\n')
+?              ^
+ : 
+
+----------------------------------------------------------------------
+Ran 10 tests in 20.609s
+
+FAILED (failures=8)

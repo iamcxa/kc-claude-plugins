@@ -1,0 +1,19 @@
+{
+  "head": "ef3ed3e05534e2a997acbdfb055a880fde1f484a",
+  "parent": "6a0a4aec60bb5900a0d363bae912acc5714f5974",
+  "repair_files": [
+    "kc-dev-flow-2/scripts/number_guards.py",
+    "kc-dev-flow-2/scripts/test_number_guards.py"
+  ],
+  "single_fetch_argument_only": true,
+  "single_test_only": true,
+  "unchanged_prior_evidence": [
+    "ADR quote and bound question",
+    "two workflow passages and word budget",
+    "parser APIs",
+    "sixth-file exact warning assertion",
+    "eight doc-impact dispositions",
+    "CI configuration"
+  ],
+  "carried_document_hashes": 8
+}

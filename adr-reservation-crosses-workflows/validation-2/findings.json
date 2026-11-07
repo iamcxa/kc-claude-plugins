@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "medium",
+    "title": "Resolved Material: deleted remote state branch retained its number",
+    "file": "kc-dev-flow-2/scripts/number_guards.py",
+    "line": 154,
+    "status": "fixed",
+    "detail": "Codex comment 4495187504 at parent 6a0a4aec6 reproduced; removing only --prune fails the repaired test with 0061 instead of 0060.",
+    "fix": "Explicit namespace fetch now prunes deleted remote refs; unrelated origin/main stays."
+  }
+]

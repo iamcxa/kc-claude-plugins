@@ -1,0 +1,12 @@
+A1 reserve:
+ADR: 0060
+A2 check, held 0060:
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base e96b9961a884 head b3819073af1e merge-base e96b9961a884
+A3 check, free 0061:
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base e96b9961a884 head ef9c620a9668 merge-base e96b9961a884
+B1 reserve, folder-form sibling holds 0060:
+ADR: 0060
