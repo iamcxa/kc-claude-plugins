@@ -1672,6 +1672,63 @@ class ScopeCheckTests(unittest.TestCase):
     def amend(self):
         self.task.write_text(self.task.read_text().rstrip("\n") + "\n" + AMENDED)
 
+    def bind_artifact(self, rel, text):
+        artifact = self.work / rel
+        artifact.parent.mkdir(parents=True, exist_ok=True)
+        artifact.write_text(text)
+        sha = self.commit(rel, "bound artifact")
+        index = self.work / "t" / "review" / "backlog" / "briefing-1" / "index.json"
+        index.write_text(json.dumps({"artifacts": [{"uri": f"git-root://state/{sha}/{rel}"}]}))
+        self.commit("t/review/backlog/briefing-1/index.json", "bind artifact")
+        return sha
+
+    def test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit(self):
+        rel = "t/review/backlog-gate.md"
+        self.bind_artifact(rel, "# Backlog presentation\n")
+        expected = ("not run", f"backlog briefing binds {rel}, not this task file")
+        for changed in (False, True):
+            with self.subTest(changed=changed):
+                if changed:
+                    self.add_line()
+                self.assertEqual(ds.scope_hold(self.task), expected)
+                code, out = self.run_main()
+                self.assertEqual(code, 0)
+                self.assertIn("t.md: design surfaces presentable\nscope check not run: " + expected[1] + "\n", out)
+                self.assertNotIn("Scope changed", out)
+
+    def test_a_foreign_binding_with_its_own_scope_is_not_run(self):
+        rel = "review/t/backlog/review.md"
+        self.bind_artifact(rel, self.task.read_text())
+        self.assertEqual(ds.scope_hold(self.task), ("not run", f"backlog briefing binds {rel}, not this task file"))
+
+    def test_a_folder_task_bound_to_itself_is_checked_even_when_untracked_or_archived(self):
+        self.task = self.work / "f" / "index.md"
+        text = GATED.replace("room-ref: ./t/", "room-ref: ../t/")
+        sha = self.bind_artifact("f/index.md", text)
+        self.assertEqual(ds.scope_hold(self.task), ("clean", sha))
+        self.git(self.work, "rm", "--cached", "f/index.md")
+        self.assertEqual(ds.scope_hold(self.task), ("clean", sha))
+        archived = self.work / "_archive" / "f" / "index.md"
+        archived.parent.mkdir(parents=True)
+        self.task.rename(archived)
+        self.task = archived
+        self.edit("room-ref: ../t/", "room-ref: ../../t/")
+        self.assertEqual(ds.scope_hold(self.task), ("clean", sha))
+        self.add_line()
+        self.assertEqual(ds.scope_hold(self.task)[0], "hold")
+
+    def test_a_dated_amendment_supplies_the_baseline_despite_a_foreign_binding(self):
+        self.bind_artifact("t/review/backlog-gate.md", "# Backlog presentation\n")
+        self.add_line()
+        self.amend()
+        self.assertEqual(ds.scope_hold(self.task), ("clean", "working copy"))
+        sha = self.commit("t.md", "scope line with its amendment")
+        self.assertEqual(ds.scope_hold(self.task), ("clean", sha))
+        self.add_line("- A second ask, after the amendment.")
+        verdict, line = ds.scope_hold(self.task)
+        self.assertEqual(verdict, "hold")
+        self.assertIn(f"Scope changed after the newest amendment ({sha[:8]})", line)
+
     def test_an_unchanged_scope_is_clean_and_prints_the_presentable_line(self):
         self.assertEqual(ds.scope_hold(self.task), ("clean", self.sha))
         self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\n" + __import__("delivery_gate").ASK_FORM + "\n"))
