@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_asserting_a_different_successor_still_fails (__main__.ProtectedPathTests.test_asserting_a_different_successor_still_fails) (successor='0004')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/adr-pointer-proof-gyduf2g9/kc-adr/scripts/test_adr_lint.py", line 236, in test_asserting_a_different_successor_still_fails
+    self.assertEqual(code, 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.006s
+
+FAILED (failures=1)

@@ -1,0 +1,1 @@
+kc-dev-flow-2/scripts/adr_lint.py differs from kc-adr/scripts/adr_lint.py. Edit kc-adr/scripts/adr_lint.py (kc-adr is the source), run scripts/kc-adr-copy-sync.sh sync, and commit both plugins' files.

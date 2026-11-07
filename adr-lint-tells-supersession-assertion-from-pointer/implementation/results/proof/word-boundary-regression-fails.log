@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_asserting_the_recorded_supersession_is_not_a_stale_pointer (__main__.ProtectedPathTests.test_asserting_the_recorded_supersession_is_not_a_stale_pointer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/adr-pointer-proof-gyduf2g9/kc-adr/scripts/test_adr_lint.py", line 217, in test_asserting_the_recorded_supersession_is_not_a_stale_pointer
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : tests/status.py: points at ADR 0002, Superseded by 0003; point it at 0003 or the record in force
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

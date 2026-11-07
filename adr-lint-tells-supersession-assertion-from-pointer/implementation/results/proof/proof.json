@@ -1,0 +1,161 @@
+[
+  {
+    "name": "candidate-25-tests",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-adr/scripts/test_adr_lint.py"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "log": "/private/tmp/opencode/adr-pointer-evidence/final/proof/candidate-25-tests.log",
+    "required_text": null
+  },
+  {
+    "name": "base-fails-assertion",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-adr/scripts/test_adr_lint.py",
+      "ProtectedPathTests.test_asserting_the_recorded_supersession_is_not_a_stale_pointer"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "log": "/private/tmp/opencode/adr-pointer-evidence/final/proof/base-fails-assertion.log",
+    "required_text": "points at ADR 0002, Superseded by 0003"
+  },
+  {
+    "name": "removed-exception-fails",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-adr/scripts/test_adr_lint.py",
+      "ProtectedPathTests.test_asserting_the_recorded_supersession_is_not_a_stale_pointer"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "log": "/private/tmp/opencode/adr-pointer-evidence/final/proof/removed-exception-fails.log",
+    "required_text": "points at ADR 0002, Superseded by 0003"
+  },
+  {
+    "name": "file-wide-successor-fails",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-adr/scripts/test_adr_lint.py",
+      "ProtectedPathTests.test_a_file_pointing_at_a_superseded_adr_fails_naming_file_and_newer_adr"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "log": "/private/tmp/opencode/adr-pointer-evidence/final/proof/file-wide-successor-fails.log",
+    "required_text": "AssertionError: 0 != 1"
+  },
+  {
+    "name": "wrong-successor-fails",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-adr/scripts/test_adr_lint.py",
+      "ProtectedPathTests.test_asserting_a_different_successor_still_fails"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "log": "/private/tmp/opencode/adr-pointer-evidence/final/proof/wrong-successor-fails.log",
+    "required_text": "AssertionError: 0 != 1"
+  },
+  {
+    "name": "invented-successor-pointer-fails",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-adr/scripts/test_adr_lint.py",
+      "ProtectedPathTests.test_the_assertion_does_not_supply_the_successors_own_pointer"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "log": "/private/tmp/opencode/adr-pointer-evidence/final/proof/invented-successor-pointer-fails.log",
+    "required_text": "AssertionError: 0 != 1"
+  },
+  {
+    "name": "word-boundary-regression-fails",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-adr/scripts/test_adr_lint.py",
+      "ProtectedPathTests.test_asserting_the_recorded_supersession_is_not_a_stale_pointer"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "log": "/private/tmp/opencode/adr-pointer-evidence/final/proof/word-boundary-regression-fails.log",
+    "required_text": "points at ADR 0002, Superseded by 0003"
+  },
+  {
+    "name": "copy-drift-fails",
+    "status": "passed",
+    "command": [
+      "bash",
+      "scripts/kc-adr-copy-sync.sh",
+      "check"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "log": "/private/tmp/opencode/adr-pointer-evidence/final/proof/copy-drift-fails.log",
+    "required_text": "differs from kc-adr/scripts/adr_lint.py"
+  },
+  {
+    "name": "copy-restored-passes",
+    "status": "passed",
+    "command": [
+      "bash",
+      "scripts/kc-adr-copy-sync.sh",
+      "check"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "log": "/private/tmp/opencode/adr-pointer-evidence/final/proof/copy-restored-passes.log",
+    "required_text": null
+  },
+  {
+    "name": "historical-unsplit-fails",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "ba055b8a7",
+      "--require",
+      "0064"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "log": "/private/tmp/opencode/adr-pointer-evidence/final/proof/historical-unsplit-fails.log",
+    "required_text": "points at ADR 0047, Superseded by 0050"
+  },
+  {
+    "name": "historical-candidate-passes",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "ba055b8a7",
+      "--require",
+      "0064"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "log": "/private/tmp/opencode/adr-pointer-evidence/final/proof/historical-candidate-passes.log",
+    "required_text": null
+  }
+]

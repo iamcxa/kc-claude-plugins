@@ -1,0 +1,203 @@
+[
+  {
+    "name": "adr-tests",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-adr/scripts/test_adr_lint.py"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/adr-tests.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/adr-tests.log"
+  },
+  {
+    "name": "doc-tests",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/doc-tests.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/doc-tests.log"
+  },
+  {
+    "name": "native-dispatch",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/native-dispatch.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/native-dispatch.log"
+  },
+  {
+    "name": "copy-sync",
+    "status": "passed",
+    "command": [
+      "bash",
+      "scripts/kc-adr-copy-sync.sh",
+      "check"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/copy-sync.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/copy-sync.log"
+  },
+  {
+    "name": "repository-lint-skills",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/repository-lint-skills.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/repository-lint-skills.log"
+  },
+  {
+    "name": "candidate-adr-full",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/adr_lint.py",
+      "docs/adr"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/candidate-adr-full.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/candidate-adr-full.log"
+  },
+  {
+    "name": "candidate-adr-since-required",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "--require",
+      "0064"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/candidate-adr-since-required.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/candidate-adr-since-required.log"
+  },
+  {
+    "name": "design-surfaces",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/adr-lint-tells-supersession-assertion-from-pointer.md"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/design-surfaces.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/design-surfaces.log"
+  },
+  {
+    "name": "number-guards",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/adr-lint-tells-supersession-assertion-from-pointer.md",
+      "--base",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/number-guards.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/number-guards.log"
+  },
+  {
+    "name": "comment-ratio",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "f429f0fac40511c6480fd92e2cccd4c0e94b2454",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/comment-ratio.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/comment-ratio.log"
+  },
+  {
+    "name": "doc-impact",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "f429f0fac40511c6480fd92e2cccd4c0e94b2454",
+      "--json"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/doc-impact.json",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/doc-impact.json"
+  },
+  {
+    "name": "mutations-and-history",
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/opencode/adr-pointer-evidence/prove.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-adr-lint-tells-supersession-assertion-from-pointer",
+      "/tmp/opencode/adr-pointer-evidence/final/proof"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/mutations-and-history.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/mutations-and-history.log"
+  },
+  {
+    "name": "diff-whitespace",
+    "status": "passed",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-adr-lint-tells-supersession-assertion-from-pointer",
+      "diff",
+      "--check",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "f429f0fac40511c6480fd92e2cccd4c0e94b2454"
+    ],
+    "exit": 0,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/diff-whitespace.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/diff-whitespace.log"
+  },
+  {
+    "name": "installed-adr-lint-required-check",
+    "status": "failed",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae"
+    ],
+    "exit": 1,
+    "file": "/tmp/opencode/adr-pointer-evidence/final/installed-adr-lint-required-check.log",
+    "message": "/tmp/opencode/adr-pointer-evidence/final/installed-adr-lint-required-check.log"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "base": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+  "candidate": "f429f0fac40511c6480fd92e2cccd4c0e94b2454",
+  "branch": "spacedock-ensign/adr-lint-tells-supersession-assertion-from-pointer",
+  "package": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0",
+  "installed_linter_matches_base": true,
+  "installed_sha256": "203f097c37799e051718ca339035aad64f240b8134c20afb3dfd66cc381b25f4",
+  "candidate_sha256": "7313e02238830471138d23508c1106bf4ff15ab8b166c060ec1d6e5a160e719f",
+  "candidate_checks_passed": true,
+  "required_installed_check_passed": false,
+  "limits": [
+    "Product branch not pushed; no PR opened.",
+    "RoboRev and CI delegated to FO; not run.",
+    "CI cost per PR not measured."
+  ]
+}

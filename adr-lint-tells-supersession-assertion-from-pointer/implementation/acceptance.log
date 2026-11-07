@@ -1,0 +1,14 @@
+adr-tests: exit 0
+doc-tests: exit 0
+native-dispatch: exit 0
+copy-sync: exit 0
+repository-lint-skills: exit 0
+candidate-adr-full: exit 0
+candidate-adr-since-required: exit 0
+design-surfaces: exit 0
+number-guards: exit 0
+comment-ratio: exit 0
+doc-impact: exit 0
+mutations-and-history: exit 0
+diff-whitespace: exit 0
+installed-adr-lint-required-check: exit 1

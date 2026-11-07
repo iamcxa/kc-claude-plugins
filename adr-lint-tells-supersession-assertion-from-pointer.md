@@ -188,3 +188,44 @@ None material. Routine choices are in the design with their recommendation: reve
 ### Summary
 
 The false positive is reproduced exactly (one-line un-split at ae7750375, exit 1) and a same-line rule fixes it without touching the Accepted-pointer check: a citation counts as an assertion only when its line names the successor N's own Status records. Upstream check found the linter's source is kc-adr, with the dev2 copy synced by script and CI, so the PR spans both plugin folders; Spacedock has no ADR linter and no adopter vendors one. The prototype and its scratch worktrees were deleted; no repository file, branch or commit was written.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved Pilot design using only its four named files, with no Captain decisions or version bumps.
+  Branch spacedock-ensign/adr-lint-tells-supersession-assertion-from-pointer; base 139feeaee7ce037a0c6535568cd6bd103155cbae; local candidate f429f0fac40511c6480fd92e2cccd4c0e94b2454; product worktree clean.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins.
+  no PR opened: no push grant; FO owns product push and Draft PR creation; Conventional Commit title/body prepared in /tmp/impl-adr-lint-tells-supersession-assertion-from-pointer-pr.md and implementation/pr.md.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation run with python3 -B and caches cleared.
+  implementation/results/proof/proof.json records 11 expected outcomes: candidate suite, seven negative mutations, restored copy parity and historical fail/pass replay; acceptance.sh reproduces the evidence.
+- DONE: AC-1 assertion fixture passes.
+  test_asserting_the_recorded_supersession_is_not_a_stale_pointer includes literal escaped newlines; base and removed-exception mutations each fail with the original 0002/0003 pointer message.
+- DONE: AC-2 authority pointer still fails.
+  A new fixture retains a separate authority citation beside a valid assertion; the two named existing tests are unchanged and pass; file-wide successor forgiveness makes the existing both-pointers test fail.
+- DONE: AC-3 exception is exact.
+  Wrong successors 0004/00030 and missing successor pointer both produce exit 1; generic-successor and fabricated-pointer mutations make their corresponding fixtures fail.
+- DONE: AC-4 the original false positive replays clean on the real repository with the unsplit path.
+  Candidate full lint and --since 139feeaee --require 0064 each check 62 records and exit 0; ae7750375 plus unsplit fails, then passes with the candidate checker (results/proof/historical-*.log).
+- DONE: AC-5 source/copy parity and package suites pass.
+  Existing sync script wrote the dev2 copy; parity check, 25 kc-adr tests, 9 ADR/document checks and native dispatch integration exit 0; one-copy drift makes parity exit 1 (results/).
+- DONE: Repository kc-dev-flow-2/scripts/lint-skills.py, design_surfaces.py check and number_guards.py check exit 0.
+  results/repository-lint-skills.log, design-surfaces.log and number-guards.log; no ADR/schema added, migrations guard skipped because the workflow declares no migrations-path.
+- FAILED: The required installed-package adr_lint.py docs/adr --since <base> exits 0.
+  It actually exits 1 with the original ADR 0047/0050 error; results/receipt.json proves installed 0.35.0 checker bytes match the base, while the candidate checker passes; installed files were not changed and FO disposition is required.
+- DONE: comment_ratio.py is within its maximum; CI cost is measured or stated as not measured.
+  results/comment-ratio.log: 53 code lines, 0 comment lines, 0.0%, maximum 5% met; no CI configuration changes, CI cost per PR not measured.
+- DONE: Affected-document verdicts are recorded for every doc_impact.py result.
+  results/doc-impact.json lists the six documents below; no retained documentation update is needed for this bounded false-positive repair.
+- DONE: docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md — unaffected.
+  Protects still names the same dispatch-test file and its ROUND_RULE/follow-up wording pins; the one-line path restoration changes neither protected rule.
+- DONE: docs/journey/kc-decision-log/p1-technical-contract.md and docs/journey/kc-decision-log/slice-map.md — unaffected.
+  The former describes unchanged record-format/exit checks; the latter links to the same checker path without specifying supersession-pointer behavior.
+- DONE: kc-dev-flow-2/README.md and kc-dev-flow-2/references/sd/adoption.md — unaffected.
+  Both retain valid native-dispatch commands and scope; the integration suite exercised those commands with the existing required --sd-plugin-root argument.
+- DONE: learning.md — unaffected; lifecycle instruction words unchanged.
+  Its dispatch-test mention is historical evidence for an unchanged wording pin; no workflow/reference/skill text or lint diagnostic string changed (0 added instruction words at the five design moments).
+- SKIPPED: RoboRev, product publication and remote CI.
+  roborev not run: FO runs RoboRev because the Codex sandbox cannot reach its local daemon; FO also pushes, opens the Draft PR and reads CI; none is reported clean.
+
+### Summary
+
+The four-file candidate fixes the same-line supersession assertion false positive, synchronizes the kc-adr source into dev2 and restores the natural ADR 0047 path. All five accepted criteria, native integration and negative controls pass at f429f0fac; the fresh-shell acceptance wrapper exits 1 because the explicitly required installed old checker still reproduces the base defect, so that required-check discrepancy remains for FO disposition. Product publication, RoboRev and CI remain FO-owned.
