@@ -1,0 +1,46 @@
+{
+  "verdict": "PASSED",
+  "head": "37b1c0b7a9561ee48165cefbc9424a4390fe9d0a",
+  "base": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+  "date": "2026-11-07",
+  "local_suites": 23,
+  "tests": 1158,
+  "skipped": 11,
+  "skip_rows": [
+    {
+      "suite": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "skipped": 4
+    },
+    {
+      "suite": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "skipped": 4
+    },
+    {
+      "suite": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "skipped": 1
+    },
+    {
+      "suite": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+      "skipped": 1
+    },
+    {
+      "suite": "kc-dev-flow-2/scripts/test_laws_check.py",
+      "skipped": 1
+    }
+  ],
+  "corpus": {
+    "total": 80,
+    "identical": 52,
+    "different": 28,
+    "all_differences_security_only": true
+  },
+  "acceptance": {
+    "command": "bash --noprofile --norc /tmp/csopc-validation-37b1c0b7/acceptance.sh",
+    "exit": 0,
+    "log_write_interval_seconds": 181.59246563911438,
+    "script_sha256": "708b46dc88b13a6464556dabd5f46e25ff340ac0e80a4dcd258390b5fc555d9f"
+  },
+  "new_material_findings": 0,
+  "retained_deferred_risk": "Undocumented provider summary marker may change.",
+  "delivery": "FO-owned; candidate remains Draft/open; no push or merge performed."
+}

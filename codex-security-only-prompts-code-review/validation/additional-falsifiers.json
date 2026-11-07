@@ -1,0 +1,17 @@
+[
+  {
+    "name": "AC-5 word budget +1",
+    "status": "passed",
+    "message": "Rejected unapproved workflow word; exit 1"
+  },
+  {
+    "name": "AC-6 version parity drift",
+    "status": "passed",
+    "message": "Rejected changed plugin version; exit 1"
+  },
+  {
+    "name": "AC-6 exact scope",
+    "status": "passed",
+    "message": "Five paths match; a sixth README path is rejected by same allowlist"
+  }
+]

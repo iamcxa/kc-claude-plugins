@@ -1,0 +1,50 @@
+[
+ {
+  "name": "drop-code-row-check",
+  "status": "passed",
+  "message": "mutation rejected; failures=2",
+  "exit": 1
+ },
+ {
+  "name": "drop-security-completed",
+  "status": "passed",
+  "message": "mutation rejected; failures=1",
+  "exit": 1
+ },
+ {
+  "name": "drop-security-head",
+  "status": "passed",
+  "message": "mutation rejected; failures=1",
+  "exit": 1
+ },
+ {
+  "name": "never-print-request",
+  "status": "passed",
+  "message": "mutation rejected; failures=3",
+  "exit": 1
+ },
+ {
+  "name": "print-evidence-token",
+  "status": "passed",
+  "message": "mutation rejected; failures=3",
+  "exit": 1
+ },
+ {
+  "name": "wait-not-wired",
+  "status": "passed",
+  "message": "mutation rejected; errors=1",
+  "exit": 1
+ },
+ {
+  "name": "no-codex-asked-mark",
+  "status": "passed",
+  "message": "mutation rejected; failures=1",
+  "exit": 1
+ },
+ {
+  "name": "no-security-only-mapping",
+  "status": "passed",
+  "message": "mutation rejected; failures=1",
+  "exit": 1
+ }
+]

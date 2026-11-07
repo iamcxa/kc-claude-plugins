@@ -1,0 +1,32 @@
+[
+  {
+    "name": "AC-1：歷史安全審查案例印出正確提醒",
+    "status": "passed",
+    "evidence": "727-candidate.log; 727-base.log"
+  },
+  {
+    "name": "AC-2：80 筆比較只有安全審查版本改變",
+    "status": "passed",
+    "evidence": "corpus.json: 52 identical / 28 security-only differences"
+  },
+  {
+    "name": "AC-3：讀取器條件與反例",
+    "status": "passed",
+    "evidence": "36 tests; base rejected with 3 failures; five mutations rejected"
+  },
+  {
+    "name": "AC-4：每個版本提醒一次，閒置入口可到達",
+    "status": "passed",
+    "evidence": "idle.json; live-watch.json; three mutations rejected"
+  },
+  {
+    "name": "AC-5：字數預算",
+    "status": "passed",
+    "evidence": "workflow 5939 unchanged; extension +15; reader 26 / wait 21 words"
+  },
+  {
+    "name": "AC-6：五檔範圍及必要 CI",
+    "status": "passed",
+    "evidence": "scope.log; ci-unit.json; ci-parity.json; version-falsifier.log"
+  }
+]

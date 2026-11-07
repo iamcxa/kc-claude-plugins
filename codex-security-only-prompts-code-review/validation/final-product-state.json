@@ -1,0 +1,25 @@
+{
+  "read_utc": "2026-11-07T01:47:17.882864+00:00",
+  "candidate": "37b1c0b7a9561ee48165cefbc9424a4390fe9d0a",
+  "candidate_status": "",
+  "pinned_base": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+  "origin_main_now": "ee6ca16fa6c2259fc8d040aaec23a0caba5ab080",
+  "merge_base": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+  "candidate_paths": [
+    "kc-dev-flow-2/extensions/codex/EXTENSION.md",
+    "kc-dev-flow-2/extensions/codex/codex_review.py",
+    "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "kc-dev-flow-2/scripts/pr_watch.py",
+    "kc-dev-flow-2/scripts/test_pr_watch.py"
+  ],
+  "upstream_paths_since_pin": [
+    "kc-journey-map/lib/agent-guide.test.mjs",
+    "kc-journey-map/lib/client-api-proxy.test.mjs",
+    "kc-journey-map/scripts/share-entrance-browser-check.mjs",
+    "kc-journey-map/server/agent-guide.ts",
+    "kc-journey-map/skills/kc-journey-map/references/canvas.md",
+    "kc-journey-map/vite.config.mts",
+    "kc-journey-map/vite.share.config.mts"
+  ],
+  "overlap": []
+}

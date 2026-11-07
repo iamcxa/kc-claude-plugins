@@ -1,0 +1,117 @@
+[
+ {
+  "name": "kc-dev-flow-2/scripts/test_lint_skills.py",
+  "status": "passed",
+  "message": "47 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_lint_skills.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+  "status": "passed",
+  "message": "213 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_design_surfaces.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+  "status": "passed",
+  "message": "9 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_adr_doc_checks.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_poc_readme.py",
+  "status": "passed",
+  "message": "9 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_poc_readme.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+  "status": "passed",
+  "message": "14 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_comment_ratio.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_number_guards.py",
+  "status": "passed",
+  "message": "28 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_number_guards.log"
+ },
+ {
+  "name": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+  "status": "passed",
+  "message": "36 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_codex_review.log"
+ },
+ {
+  "name": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+  "status": "passed",
+  "message": "5 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_roborev_gate.log"
+ },
+ {
+  "name": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+  "status": "passed",
+  "message": "15 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_copilot_review.log"
+ },
+ {
+  "name": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+  "status": "passed",
+  "message": "23 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_map_footprint.log"
+ },
+ {
+  "name": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+  "status": "passed",
+  "message": "122 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_release_acceptance.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+  "status": "passed",
+  "message": "115 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_dispatch_records.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+  "status": "passed",
+  "message": "162 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_delivery_gate.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_validation_security.py",
+  "status": "passed",
+  "message": "5 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_validation_security.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_pr_watch.py",
+  "status": "passed",
+  "message": "135 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_pr_watch.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+  "status": "passed",
+  "message": "8 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_replay_dispatch.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+  "status": "passed",
+  "message": "19 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_decision_ledger.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_package_version.py",
+  "status": "passed",
+  "message": "6 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_package_version.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+  "status": "passed",
+  "message": "13 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_workflow_checkout.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_observer_check.py",
+  "status": "passed",
+  "message": "19 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_observer_check.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_role_triggers.py",
+  "status": "passed",
+  "message": "43 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_role_triggers.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_laws_check.py",
+  "status": "passed",
+  "message": "65 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_laws_check.log"
+ },
+ {
+  "name": "kc-dev-flow-2/scripts/test_learning.py",
+  "status": "passed",
+  "message": "47 tests; exit 0; /tmp/csopc-validation-37b1c0b7/proof/test_learning.log"
+ }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "severity": "info",
+    "title": "保留的相容性風險：Codex 摘要格式未公開",
+    "detail": "Deferred risk; current captured provider inputs pass. Material only if a supported provider format change causes a missed/false request or round miscount. This is an accepted design limit, not a new blocker.",
+    "status": "confirmed"
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "command": "bash --noprofile --norc /tmp/csopc-validation-37b1c0b7/acceptance.sh",
+  "exit": 0,
+  "log_write_interval_seconds": 181.59246563911438,
+  "script_sha256": "708b46dc88b13a6464556dabd5f46e25ff340ac0e80a4dcd258390b5fc555d9f"
+}

@@ -1,0 +1,32 @@
+37b1c0b7a9561ee48165cefbc9424a4390fe9d0a
+kc-dev-flow-2/extensions/codex/EXTENSION.md
+kc-dev-flow-2/extensions/codex/codex_review.py
+kc-dev-flow-2/extensions/codex/test_codex_review.py
+kc-dev-flow-2/scripts/pr_watch.py
+kc-dev-flow-2/scripts/test_pr_watch.py
+....................................
+----------------------------------------------------------------------
+Ran 36 tests in 0.006s
+
+OK
+................................usage: python3 -m unittest [-h] [--state STATE] [--codex] [--copilot]
+                           {add,check,wait,tasks} [args ...]
+python3 -m unittest: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+.......................................................................................................
+----------------------------------------------------------------------
+Ran 135 tests in 158.278s
+
+OK
+base exit 4
+not reviewed: no Codex evidence covers 5dee91fb7
+candidate exit 4
+not reviewed: Codex reviewed 5dee91fb7 for security only; security-only=summary:6434584622
+next: comment `@codex review` on the PR once; a security review is no round and never clean.
+Historical security-only replay: PASS
+kc-dev-flow-2/references/sd/workflow.md: 5939 -> 5939
+kc-dev-flow-2/extensions/codex/EXTENSION.md: 310 -> 325
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+61 ADR file(s) checked, 0 legacy
+ACCEPTANCE PASS; export and logs: /tmp/codex-security-acceptance.fxY1Cf

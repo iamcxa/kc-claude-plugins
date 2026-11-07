@@ -1,0 +1,179 @@
+[
+  {
+    "name": "lint",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/lint.log"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/adr-lint.log"
+  },
+  {
+    "name": "numbers",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/tmp/csopc-validation-37b1c0b7/candidate",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/codex-security-only-prompts-code-review.md",
+      "--base",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "--head",
+      "37b1c0b7a9561ee48165cefbc9424a4390fe9d0a"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/numbers.log"
+  },
+  {
+    "name": "comments",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "37b1c0b7a9561ee48165cefbc9424a4390fe9d0a",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/comments.log"
+  },
+  {
+    "name": "design",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/codex-security-only-prompts-code-review.md"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/design.log"
+  },
+  {
+    "name": "docs",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "37b1c0b7a9561ee48165cefbc9424a4390fe9d0a",
+      "--json"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/docs.log"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/codex-security-only-prompts-code-review"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/dispatch-records.log"
+  },
+  {
+    "name": "version-parity",
+    "command": [
+      "bash",
+      "scripts/version-parity-check.sh"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/version-parity-readonly-git.log",
+    "initial_exit": 128,
+    "initial_log": "/tmp/csopc-validation-37b1c0b7/proof/version-parity.log",
+    "environment_note": "Archive has no .git; rerun with read-only GIT_DIR and GIT_WORK_TREE."
+  },
+  {
+    "name": "frontmatter",
+    "command": [
+      "bash",
+      "scripts/skill-frontmatter-lint.sh"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/frontmatter.log"
+  },
+  {
+    "name": "sd-dispatch",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/sd-dispatch.log"
+  },
+  {
+    "name": "observer-recovery",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/observer-recovery.log"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-codex-security-only-prompts-code-review",
+      "diff",
+      "--check",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+      "37b1c0b7a9561ee48165cefbc9424a4390fe9d0a"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/diff-check.log"
+  },
+  {
+    "name": "scope",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-codex-security-only-prompts-code-review",
+      "diff",
+      "--name-only",
+      "ba055b8a7a55a787ac989c4cef52d07dd75661ad...37b1c0b7a9561ee48165cefbc9424a4390fe9d0a"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/csopc-validation-37b1c0b7/proof/scope.log"
+  }
+]

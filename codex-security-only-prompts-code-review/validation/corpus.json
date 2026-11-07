@@ -1,0 +1,1225 @@
+{
+ "summary": {
+  "total": 80,
+  "identical": 52,
+  "different": 28,
+  "all_differences_security_only": true
+ },
+ "rows": [
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 802,
+   "head": "37b1c0b7a9561ee48165cefbc9424a4390fe9d0a",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 37b1c0b7a: summary marks the code review of the head completed; evidence=summary:6700400326@37b1c0b7a at 2026-11-07T01:35:27Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 37b1c0b7a: summary marks the code review of the head completed; evidence=summary:6700400326@37b1c0b7a at 2026-11-07T01:35:27Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 801,
+   "head": "ef3ed3e05534e2a997acbdfb055a880fde1f484a",
+   "base": {
+    "exit": 3,
+    "stdout": "running: a Codex review is in progress; head ef3ed3e05\n"
+   },
+   "candidate": {
+    "exit": 3,
+    "stdout": "running: a Codex review is in progress; head ef3ed3e05\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 800,
+   "head": "ae7750375bc19e482f829edc9a041d95fb280693",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on ae7750375: summary marks the code review of the head completed; evidence=summary:6690129609@ae7750375 at 2026-11-06T16:43:10Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on ae7750375: summary marks the code review of the head completed; evidence=summary:6690129609@ae7750375 at 2026-11-06T16:43:10Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 799,
+   "head": "97dceebedd68108ef8e67fa5455f1e578c910ad6",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 97dceebed: summary marks the code review of the head completed; evidence=summary:6690022982@97dceebed at 2026-11-06T17:01:39Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 97dceebed: summary marks the code review of the head completed; evidence=summary:6690022982@97dceebed at 2026-11-06T17:01:39Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 798,
+   "head": "74cde7e09fb6f4e49f822252eeb857d1b2b5ae14",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 74cde7e09\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 74cde7e09 for security only; security-only=summary:6690060388\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 797,
+   "head": "1ca2625de0706e5494f73e010a394f8e5194b2a1",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 1ca2625de: summary marks the code review of the head completed; evidence=summary:6689877453@1ca2625de at 2026-11-06T17:00:12Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 1ca2625de: summary marks the code review of the head completed; evidence=summary:6689877453@1ca2625de at 2026-11-06T17:00:12Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 796,
+   "head": "e7bdee42bf5677cf5ba7e63d2dbd2956e32e20bb",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers e7bdee42b\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed e7bdee42b for security only; security-only=summary:6687130267\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 795,
+   "head": "80515bcdd1054a946f70a22dc53e3f09a257845f",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 80515bcdd\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 80515bcdd for security only; security-only=summary:6678757493\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 794,
+   "head": "b82f20de6c8e5b868695d03aa4bbcb97e77dd877",
+   "base": {
+    "exit": 1,
+    "stdout": "findings on b82f20de6: 1 line finding(s), 1 badge(s), 0 at P0/P1; evidence=review:5795454805 at 2026-11-06T03:41:49Z\n"
+   },
+   "candidate": {
+    "exit": 1,
+    "stdout": "findings on b82f20de6: 1 line finding(s), 1 badge(s), 0 at P0/P1; evidence=review:5795454805 at 2026-11-06T03:41:49Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 793,
+   "head": "5b3e290a7eaceb0fe70f489d25d622314598b9f0",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 5b3e290a7: summary marks the code review of the head completed; evidence=summary:6674618391@5b3e290a7 at 2026-11-06T02:33:48Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 5b3e290a7: summary marks the code review of the head completed; evidence=summary:6674618391@5b3e290a7 at 2026-11-06T02:33:48Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 792,
+   "head": "87b60b466acc7706df150f0e2e5484870b633941",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 87b60b466\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 87b60b466 for security only; security-only=summary:6664622863\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 791,
+   "head": "79944bdd2cb7fadd0b0048b5434d6378f022520c",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 79944bdd2\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 79944bdd2\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 789,
+   "head": "c37417313a1271dc4171336228c142a8173acd12",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers c37417313\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed c37417313 for security only; security-only=summary:6662005995\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 788,
+   "head": "2493d57a17dcbe08489918b208c9bd5019450772",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 2493d57a1: summary marks the code review of the head completed; evidence=summary:6656886599@2493d57a1 at 2026-11-05T16:01:25Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 2493d57a1: summary marks the code review of the head completed; evidence=summary:6656886599@2493d57a1 at 2026-11-05T16:01:25Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 787,
+   "head": "272721000cce947c8f2dcdd3a40c22cdf11dee09",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 272721000: summary marks the code review of the head completed; evidence=summary:6656573741@272721000 at 2026-11-05T15:17:54Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 272721000: summary marks the code review of the head completed; evidence=summary:6656573741@272721000 at 2026-11-05T15:17:54Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 786,
+   "head": "69d62c772c5f4fd28d9105c6f5d49516d559c947",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 69d62c772: summary marks the code review of the head completed; evidence=summary:6656445520@69d62c772 at 2026-11-05T15:13:01Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 69d62c772: summary marks the code review of the head completed; evidence=summary:6656445520@69d62c772 at 2026-11-05T15:13:01Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 785,
+   "head": "0c38dd60b562f7393037b3c069b65b7e91f9149b",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 0c38dd60b\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 0c38dd60b for security only; security-only=summary:6661301049\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 784,
+   "head": "b2d0abd778d00f087db5ee3436acdfee569db2f1",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers b2d0abd77\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed b2d0abd77 for security only; security-only=summary:6653880552\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 783,
+   "head": "531fc3723ddd7df79261d459bbb0a3292f74b0e4",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 531fc3723\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 531fc3723\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 782,
+   "head": "771e294c758fdbf339e77cd56baa2203dd886756",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 771e294c7\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 771e294c7 for security only; security-only=summary:6651683323\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 781,
+   "head": "04809c3c6146c9f4a8f2f0b916fe84c94bfaa1a3",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 04809c3c6\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 04809c3c6 for security only; security-only=summary:6630152380\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 779,
+   "head": "b51741bee63b0a0aabde26efe0df5354591917fd",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers b51741bee\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed b51741bee for security only; security-only=summary:6653202214\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 778,
+   "head": "005afcaeb68c691a5e7bc21d7c0befcfa278072f",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 005afcaeb\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 005afcaeb for security only; security-only=summary:6653200016\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 777,
+   "head": "69f4988612d17c5524887f99c872a0ef384d05c9",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 69f498861: summary marks the code review of the head completed; evidence=summary:6608071631@69f498861 at 2026-11-04T02:18:31Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 69f498861: summary marks the code review of the head completed; evidence=summary:6608071631@69f498861 at 2026-11-04T02:18:31Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 776,
+   "head": "d071565932c91a75343af0435e0501f43c7e65d8",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers d07156593\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed d07156593 for security only; security-only=summary:6607725921\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 775,
+   "head": "bbf65bb3a621ad1c664698e0d50af8b4f4e0f1ec",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on bbf65bb3a: summary marks the code review of the head completed; evidence=summary:6605513317@bbf65bb3a at 2026-11-04T00:47:43Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on bbf65bb3a: summary marks the code review of the head completed; evidence=summary:6605513317@bbf65bb3a at 2026-11-04T00:47:43Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 774,
+   "head": "b026e0d7e497f7dc0ae0bae03fb1558810a36db3",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on b026e0d7e: summary marks the code review of the head completed; evidence=summary:6605513398@b026e0d7e at 2026-11-03T17:59:30Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on b026e0d7e: summary marks the code review of the head completed; evidence=summary:6605513398@b026e0d7e at 2026-11-03T17:59:30Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 773,
+   "head": "128fe3e3fed70fa64ded8657f5a1b36933af3ced",
+   "base": {
+    "exit": 1,
+    "stdout": "findings on 128fe3e3f: 1 line finding(s), 1 badge(s), 0 at P0/P1; evidence=review:5755251019 at 2026-11-03T15:50:31Z\n"
+   },
+   "candidate": {
+    "exit": 1,
+    "stdout": "findings on 128fe3e3f: 1 line finding(s), 1 badge(s), 0 at P0/P1; evidence=review:5755251019 at 2026-11-03T15:50:31Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 772,
+   "head": "606781cbec3f684af5e7f9a74c90026e49c3e0a1",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 606781cbe: summary marks the code review of the head completed; evidence=summary:6602560193@606781cbe at 2026-11-03T18:02:48Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 606781cbe: summary marks the code review of the head completed; evidence=summary:6602560193@606781cbe at 2026-11-03T18:02:48Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 771,
+   "head": "7aad891353a973c7fbda2ad4214a3aadea71d2a6",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 7aad89135: summary marks the code review of the head completed; evidence=summary:6602479518@7aad89135 at 2026-11-03T18:00:51Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 7aad89135: summary marks the code review of the head completed; evidence=summary:6602479518@7aad89135 at 2026-11-03T18:00:51Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 770,
+   "head": "b81c628facd2cd38568018beec47b6c4566c0aae",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on b81c628fa: Codex Review comment says no issues on the head; evidence=comment:6619733835 at 2026-11-04T01:08:47Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on b81c628fa: Codex Review comment says no issues on the head; evidence=comment:6619733835 at 2026-11-04T01:08:47Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 769,
+   "head": "1f8d30aed016f1eb8197e4e7522134205ae50e6c",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 1f8d30aed: summary marks the code review of the head completed; evidence=summary:6602505400@1f8d30aed at 2026-11-04T01:49:40Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 1f8d30aed: summary marks the code review of the head completed; evidence=summary:6602505400@1f8d30aed at 2026-11-04T01:49:40Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 768,
+   "head": "8fa4d07e07ad13fafba204d1c12fbb96c4fe4fca",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 8fa4d07e0\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 8fa4d07e0\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 767,
+   "head": "6b680cf89125d75f062ecf198e37b13239cd16ea",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 6b680cf89: summary marks the code review of the head completed; evidence=summary:6571857195@6b680cf89 at 2026-11-03T02:45:06Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 6b680cf89: summary marks the code review of the head completed; evidence=summary:6571857195@6b680cf89 at 2026-11-03T02:45:06Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 766,
+   "head": "0d8cb2b13be65d6cd8917d343797e8fa515e155f",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 0d8cb2b13: summary marks the code review of the head completed; evidence=summary:6571856806@0d8cb2b13 at 2026-11-02T10:18:15Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 0d8cb2b13: summary marks the code review of the head completed; evidence=summary:6571856806@0d8cb2b13 at 2026-11-02T10:18:15Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 765,
+   "head": "c2643dae831f9685166b7cd564d8d885e88a3f21",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on c2643dae8: summary marks the code review of the head completed; evidence=summary:6571854564@c2643dae8 at 2026-11-02T09:45:57Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on c2643dae8: summary marks the code review of the head completed; evidence=summary:6571854564@c2643dae8 at 2026-11-02T09:45:57Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 764,
+   "head": "8eed70b260346811a1f2aa035ca1354a2d735576",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 8eed70b26: summary marks the code review of the head completed; evidence=summary:6571853059@8eed70b26 at 2026-11-02T08:16:01Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 8eed70b26: summary marks the code review of the head completed; evidence=summary:6571853059@8eed70b26 at 2026-11-02T08:16:01Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 763,
+   "head": "fef0ae5fa79a77315ce6fce069c0a3ddf06e2daf",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on fef0ae5fa: summary marks the code review of the head completed; evidence=summary:6570448966@fef0ae5fa at 2026-11-02T07:11:46Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on fef0ae5fa: summary marks the code review of the head completed; evidence=summary:6570448966@fef0ae5fa at 2026-11-02T07:11:46Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 762,
+   "head": "9530369cb452da911d18e9f72a7386af8582d8b2",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 9530369cb\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 9530369cb for security only; security-only=summary:6559036749\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 761,
+   "head": "8467522c07b7e0cf5a966171d9693fc82668d496",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 8467522c0\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 8467522c0 for security only; security-only=summary:6558204755\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 77,
+   "head": "df49d36f0f3aaa62e36a5ead28e5849229a99138",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers df49d36f0\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers df49d36f0\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 76,
+   "head": "d2eb746b5383476ad6f0fb3d87f7ab0d8bb244f4",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers d2eb746b5\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers d2eb746b5\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 75,
+   "head": "2e07bb25939d852e0b5bac3024d9745009c75d6c",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 2e07bb259: summary marks the code review of the head completed; evidence=summary:6664388798@2e07bb259 at 2026-11-06T00:51:41Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 2e07bb259: summary marks the code review of the head completed; evidence=summary:6664388798@2e07bb259 at 2026-11-06T00:51:41Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 74,
+   "head": "7a4dbc057803d791dc5626182636c8e0fc2c2d32",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 7a4dbc057\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 7a4dbc057\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 73,
+   "head": "6e9e801f73900fadb4c164256479a99c11c4bb5b",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 6e9e801f7: summary marks the code review of the head completed; evidence=summary:6664390522@6e9e801f7 at 2026-11-06T00:51:11Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 6e9e801f7: summary marks the code review of the head completed; evidence=summary:6664390522@6e9e801f7 at 2026-11-06T00:51:11Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 72,
+   "head": "b684b68de779ba2174a5efc6437f2a7d6805e26d",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on b684b68de: summary marks the code review of the head completed; evidence=summary:6664389049@b684b68de at 2026-11-05T17:22:31Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on b684b68de: summary marks the code review of the head completed; evidence=summary:6664389049@b684b68de at 2026-11-05T17:22:31Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 71,
+   "head": "f09ebae0fcb8c4d249492042d4ebc4b2f7be1391",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on f09ebae0f: summary marks the code review of the head completed; evidence=summary:6664388415@f09ebae0f at 2026-11-05T17:22:43Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on f09ebae0f: summary marks the code review of the head completed; evidence=summary:6664388415@f09ebae0f at 2026-11-05T17:22:43Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 70,
+   "head": "7fc38932f1d4af7244bdca1e9c6f80bcaf3dead0",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 7fc38932f\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 7fc38932f for security only; security-only=summary:6654832663\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 69,
+   "head": "33952f9b3d02fceab104ba09272d65e432a3d095",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 33952f9b3: summary marks the code review of the head completed; evidence=summary:6627209280@33952f9b3 at 2026-11-05T04:14:32Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 33952f9b3: summary marks the code review of the head completed; evidence=summary:6627209280@33952f9b3 at 2026-11-05T04:14:32Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 68,
+   "head": "224b03f2da6eefc89d7a055ac95be2d858eaa5c5",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 224b03f2d: summary marks the code review of the head completed; evidence=summary:6609858143@224b03f2d at 2026-11-03T16:46:58Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 224b03f2d: summary marks the code review of the head completed; evidence=summary:6609858143@224b03f2d at 2026-11-03T16:46:58Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 67,
+   "head": "70899f809fab58b5efc0c6127b15333cf2938200",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 70899f809\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 70899f809 for security only; security-only=summary:6558205000\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 66,
+   "head": "df6180ce252d2ae007614dab15aadd7daed12b28",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on df6180ce2: summary marks the code review of the head completed; evidence=summary:6552511969@df6180ce2 at 2026-11-05T06:51:40Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on df6180ce2: summary marks the code review of the head completed; evidence=summary:6552511969@df6180ce2 at 2026-11-05T06:51:40Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 65,
+   "head": "c7247b09993f9a8c64823eef12a82e91aca34c58",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers c7247b099\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed c7247b099 for security only; security-only=summary:6516063088\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 64,
+   "head": "22c8229dd29040294e0154a51508274af3be84da",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 22c8229dd\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 22c8229dd\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 63,
+   "head": "225c34208659409b4656ee75f6cbefd173abad56",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 225c34208\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 225c34208 for security only; security-only=summary:6474929761\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 62,
+   "head": "ad347406fba976ba59417461ed4d0786145d0c52",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on ad347406f: summary marks the code review of the head completed; evidence=summary:6469032886@ad347406f at 2026-10-28T13:06:04Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on ad347406f: summary marks the code review of the head completed; evidence=summary:6469032886@ad347406f at 2026-10-28T13:06:04Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 61,
+   "head": "7d74145fc65b1b21251bf3cf07b41bbd400b98e2",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 7d74145fc: summary marks the code review of the head completed; evidence=summary:6470690096@7d74145fc at 2026-10-28T13:47:55Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 7d74145fc: summary marks the code review of the head completed; evidence=summary:6470690096@7d74145fc at 2026-10-28T13:47:55Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 60,
+   "head": "ed3a533fd26cdb5f8a9d204df2e886940d84a2ae",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers ed3a533fd\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed ed3a533fd for security only; security-only=summary:6451653735\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 59,
+   "head": "41359025bec74c8b9b84918d09dfeb2c2f0a7e48",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 41359025b: summary marks the code review of the head completed; evidence=summary:6450874233@41359025b at 2026-10-27T18:56:57Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 41359025b: summary marks the code review of the head completed; evidence=summary:6450874233@41359025b at 2026-10-27T18:56:57Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 58,
+   "head": "fd87b7281313b875580eb91ae32985b46594418a",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on fd87b7281: summary marks the code review of the head completed; evidence=summary:6451942616@fd87b7281 at 2026-10-27T19:49:33Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on fd87b7281: summary marks the code review of the head completed; evidence=summary:6451942616@fd87b7281 at 2026-10-27T19:49:33Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 57,
+   "head": "316c9eff7bd6ce2f5e15db7382dea1aba1197a26",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 316c9eff7: summary marks the code review of the head completed; evidence=summary:6448780552@316c9eff7 at 2026-10-27T17:28:23Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 316c9eff7: summary marks the code review of the head completed; evidence=summary:6448780552@316c9eff7 at 2026-10-27T17:28:23Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 56,
+   "head": "0d81eebdd16051a02fda06229d2ab8e85745cd1f",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 0d81eebdd\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 0d81eebdd for security only; security-only=summary:6435186944\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 55,
+   "head": "924d213e844c1e123bba6d56a8bc784f74c9ad54",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 924d213e8: summary marks the code review of the head completed; evidence=summary:6434092109@924d213e8 at 2026-10-27T04:57:06Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 924d213e8: summary marks the code review of the head completed; evidence=summary:6434092109@924d213e8 at 2026-10-27T04:57:06Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 54,
+   "head": "f10a3f29a43fb09adff4beda268799f514f7b43b",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on f10a3f29a: summary marks the code review of the head completed; evidence=summary:6434221726@f10a3f29a at 2026-10-27T05:07:26Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on f10a3f29a: summary marks the code review of the head completed; evidence=summary:6434221726@f10a3f29a at 2026-10-27T05:07:26Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 53,
+   "head": "231c30abcf52405a87dfd9a0e528ae3e94d8f148",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 231c30abc: summary marks the code review of the head completed; evidence=summary:6431850766@231c30abc at 2026-10-27T02:27:55Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 231c30abc: summary marks the code review of the head completed; evidence=summary:6431850766@231c30abc at 2026-10-27T02:27:55Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 52,
+   "head": "fd45de039ea6f913be5c4abef6d48c37b4e1a40b",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers fd45de039\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers fd45de039\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 51,
+   "head": "b54748420978f5218dd5383e08279cf88341bc88",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers b54748420\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed b54748420 for security only; security-only=summary:6398807720\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 50,
+   "head": "1450008e9bf687c7f75c054007dcb4b32844a314",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 1450008e9: summary marks the code review of the head completed; evidence=summary:6393585591@1450008e9 at 2026-10-25T04:49:02Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 1450008e9: summary marks the code review of the head completed; evidence=summary:6393585591@1450008e9 at 2026-10-25T04:49:02Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 49,
+   "head": "6f16429c24d4853c15698091f0fb42830185c951",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 6f16429c2: summary marks the code review of the head completed; evidence=summary:6394009330@6f16429c2 at 2026-10-25T05:42:56Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 6f16429c2: summary marks the code review of the head completed; evidence=summary:6394009330@6f16429c2 at 2026-10-25T05:42:56Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 48,
+   "head": "137bd4db45e11f8ee076043b99b590c9439e2377",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 137bd4db4\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 137bd4db4 for security only; security-only=summary:6387108713\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 47,
+   "head": "78052172fb6e2b56f80cce0b49283cca89f88cd0",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 78052172f: summary marks the code review of the head completed; evidence=summary:6392616619@78052172f at 2026-10-25T02:49:23Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 78052172f: summary marks the code review of the head completed; evidence=summary:6392616619@78052172f at 2026-10-25T02:49:23Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 46,
+   "head": "3d1f176c0ca1fa8d266c5793c91a93c6c1a82c9e",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 3d1f176c0: summary marks the code review of the head completed; evidence=summary:6387053902@3d1f176c0 at 2026-10-24T17:28:44Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 3d1f176c0: summary marks the code review of the head completed; evidence=summary:6387053902@3d1f176c0 at 2026-10-24T17:28:44Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 45,
+   "head": "4acb882c0bd42ec75f803e2debaa84d963d56331",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 4acb882c0\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 4acb882c0 for security only; security-only=summary:6386283004\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 44,
+   "head": "88c49d4ccccc02845d868fc8761e3e5156ecde2e",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 88c49d4cc: summary marks the code review of the head completed; evidence=summary:6379504890@88c49d4cc at 2026-10-24T04:05:47Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 88c49d4cc: summary marks the code review of the head completed; evidence=summary:6379504890@88c49d4cc at 2026-10-24T04:05:47Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 42,
+   "head": "8d9a68b92389aab55c96595245dc85e887251dd5",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 8d9a68b92\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 8d9a68b92 for security only; security-only=summary:6378729830\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 41,
+   "head": "099e7b790d89ca8b63b28afb65f98f3d71c6f30e",
+   "base": {
+    "exit": 0,
+    "stdout": "clean on 099e7b790: summary marks the code review of the head completed; evidence=summary:6368203928@099e7b790 at 2026-10-23T15:33:24Z\n"
+   },
+   "candidate": {
+    "exit": 0,
+    "stdout": "clean on 099e7b790: summary marks the code review of the head completed; evidence=summary:6368203928@099e7b790 at 2026-10-23T15:33:24Z\n"
+   },
+   "different": false,
+   "security_only_condition": false
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 40,
+   "head": "e91b9755a0c3444ebf4390f5396499ddf2070457",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers e91b9755a\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed e91b9755a for security only; security-only=summary:6377992572\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 39,
+   "head": "18130d2e6690b2bdb4b646a34f5744de86e6c90f",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 18130d2e6\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 18130d2e6 for security only; security-only=summary:6365630869\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 38,
+   "head": "81096c60d65655610ae5c83ca2899fb708d12e0b",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 81096c60d\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 81096c60d for security only; security-only=summary:6367624084\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-paseo-plugins",
+   "pr": 37,
+   "head": "dd7c9e043a24085f15086ba0f3508a7fd9977938",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers dd7c9e043\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed dd7c9e043 for security only; security-only=summary:6364851586\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  },
+  {
+   "repo": "iamcxa/kc-claude-plugins",
+   "pr": 727,
+   "head": "5dee91fb7fbfaa5cbd627bd2965c3bd4bae204f2",
+   "base": {
+    "exit": 4,
+    "stdout": "not reviewed: no Codex evidence covers 5dee91fb7\n"
+   },
+   "candidate": {
+    "exit": 4,
+    "stdout": "not reviewed: Codex reviewed 5dee91fb7 for security only; security-only=summary:6434584622\nnext: comment `@codex review` on the PR once; a security review is no round and never clean.\n"
+   },
+   "different": true,
+   "security_only_condition": true
+  }
+ ]
+}
