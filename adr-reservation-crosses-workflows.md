@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:adr-reservation-crosses-workflows:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:adr-reservation-crosses-workflows-validation-1
+              briefing:
+                id: briefing:adr-reservation-crosses-workflows:validation:attempt-1:revision-1
+                digest: sha256:3dd4ccd17d6173270fcb7d31c6edc3e12d3c76b0dd775b9071db3635dbbc4081
+                room-ref: ./adr-reservation-crosses-workflows/review/validation/briefing-1
 started: 2026-11-06T16:12:02Z
 worktree: .worktrees/spacedock-ensign-adr-reservation-crosses-workflows
 pr: iamcxa/kc-claude-plugins#801
