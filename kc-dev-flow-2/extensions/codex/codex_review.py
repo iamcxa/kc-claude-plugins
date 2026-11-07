@@ -14,7 +14,8 @@ Exit 2 configuration error: bad arguments or a gh call that failed.
 Exit 3 running: Codex's summary shows the code review of the head running and updated less than STALL_SECONDS
   ago, or, with no summary marker, Codex's eyes reaction is on the pull request. Once a summary marker exists the
   summary decides and an eyes reaction does not.
-Exit 4 not reviewed: no Codex evidence covers the head commit yet, or the head moved while reading.
+Exit 4 not reviewed: no Codex evidence covers the head commit yet, or the head moved while reading;
+  security-only= names a completed security review of the head with no code review on it.
 Exit 5 not recognized: no evidence covers the head, or the deciding evidence is clean and a newer Codex comment
   names the head in a shape this reader does not read (unrecognized=comment:<id>, its first 120 characters
   quoted); no evidence= token, so no round.
@@ -64,10 +65,10 @@ def epoch(stamp):
     return datetime.fromisoformat(stamp.replace("Z", "+00:00")).timestamp()
 
 
-def code_row(comments):
+def summary_state(comments):
     summaries = sorted((c for c in comments if c["body"].startswith(SUMMARY)), key=lambda c: c["created_at"])
     marks = MARKER.findall(summaries[-1]["body"].split("\n## ", 1)[0]) if summaries else []
-    return (summaries[-1], json.loads(marks[-1]).get("code_review") or {}) if marks else (None, {})
+    return (summaries[-1], json.loads(marks[-1])) if marks else (None, {})
 
 
 def state(repo, pr, call=gh, pages=pages, now=None):
@@ -116,7 +117,8 @@ def state(repo, pr, call=gh, pages=pages, now=None):
                     evidence.append((c["updated_at"], f"summary:{c['id']}@{head[:9]}", 0, "summary marks the code review of the head completed"))
     if call("pr", "view", pr, "--repo", repo, "--json", "headRefOid")["headRefOid"] != head:
         return 4, f"not reviewed: the head moved from {head[:9]} while its review was being read"
-    summary, row = code_row(issue)
+    summary, mark = summary_state(issue)
+    row = mark.get("code_review") or {}
     running = row.get("status") == "running" and row.get("commit_sha") == head
     since = max([summary["updated_at"], *[t["created_at"] for t in triggers if t["user"]["login"] != BOT]],
                 key=epoch) if running else None
@@ -135,6 +137,10 @@ def state(repo, pr, call=gh, pages=pages, now=None):
     if not evidence and stalled:
         return 6, f"stalled: the Codex code review of {head[:9]} shows running with no update; stalled={since}"
     if not evidence:
+        security = mark.get("security_review") or {}
+        if security.get("status") == "completed" and security.get("commit_sha") == head and row.get("commit_sha") != head:
+            return 4, (f"not reviewed: Codex reviewed {head[:9]} for security only; security-only=summary:{summary['id']}\n"
+                       "next: comment `@codex review` on the PR once; a security review is no round and never clean.")
         return 4, f"not reviewed: no Codex evidence covers {head[:9]}"
     when, ident, code, detail = top
     word = "findings" if code else "clean"
