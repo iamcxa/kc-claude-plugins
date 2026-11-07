@@ -48,6 +48,14 @@ if a[:2] == ["pr", "view"]:
     own = os.path.join(d, "pr-" + a[2] + ".json")
     data = json.load(open(own if os.path.exists(own) else os.path.join(d, "pr.json")))
     print(json.dumps({{k: data[k] for k in a[a.index("--json") + 1].split(",") if k in data}}))
+elif a[:2] == ["pr", "checks"]:
+    req = os.path.join(d, "required.json")
+    if not os.path.exists(req):
+        sys.stderr.write("no required checks reported on the 'feat' branch")
+        sys.exit(1)
+    sys.stdout.write(open(req).read())
+    sys.stderr.write(os.environ.get("STUB_REQUIRED_STDERR", ""))
+    sys.exit(int(os.environ.get("STUB_REQUIRED_EXIT", "0")))
 elif a[0] == "api" and "actions/runs" in " ".join(a):
     runs = os.path.join(d, "runs.json")
     print(open(runs).read() if os.path.exists(runs) else '{{"total_count": 0, "workflow_runs": []}}')
@@ -646,15 +654,92 @@ class SettledChecksTests(unittest.TestCase):
             with self.subTest(conclusion):
                 self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci", conclusion=conclusion)]).code, 1)
 
-    def test_settling_a_check_adds_no_gh_call(self):
+    def test_required_check_read_adds_one_gh_call(self):
         base_calls = [
             "pr view 9 --repo o/r --json headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles",
             "api --paginate repos/o/r/pulls/9/files",
             f"api repos/o/r/actions/runs?head_sha={HEAD40}&per_page=100",
+            "pr checks 9 --repo o/r --required --json name,bucket",
         ]
         for label, facts in {"plain": None, "skipped and neutral": self.rollup(check_run(), self.SKIPPED, self.NEUTRAL)}.items():
             with self.subTest(label):
                 self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
+
+
+class RequiredChecksTests(unittest.TestCase):
+    PASS = [{"name": "ci-gate", "bucket": "pass"}]
+
+    def check(self, required, **kwargs):
+        def setup(d):
+            folder = Path(d, "stub")
+            folder.mkdir(exist_ok=True)
+            (folder / "required.json").write_text(required if isinstance(required, str) else json.dumps(required))
+        return run_check(setup=setup, **kwargs)
+
+    def test_a_sole_completed_skipped_run_settles_when_required_names_have_a_pass(self):
+        for required in (self.PASS, self.PASS + [{"name": "ci-gate", "bucket": "skipping"}],
+                         self.PASS + [{"name": "tests", "bucket": "pass"}]):
+            with self.subTest(required=required):
+                result = self.check(required, runs=[workflow_run("release", conclusion="skipped")])
+                self.assertEqual((result.code, nexts(result)), (0, [CLAIM_SOURCE, gate.ASK]), result.out)
+                self.assertEqual(len(result.written), 1)
+
+    def test_other_workflow_conclusions_hold_even_when_required_checks_pass(self):
+        for status, conclusion in (("completed", "failure"), ("completed", "cancelled"), ("completed", "neutral"),
+                                   ("in_progress", None), ("in_progress", "skipped")):
+            with self.subTest(status=status, conclusion=conclusion):
+                result = self.check(self.PASS, runs=[workflow_run("ci", status=status, conclusion=conclusion)])
+                self.assertEqual(result.code, 1, result.out)
+                self.assertIn("1 of 1 workflow runs", result.out)
+                self.assertEqual(result.written, {})
+
+    def test_each_required_name_needs_a_pass_despite_a_green_rollup(self):
+        for bucket in ("fail", "pending", "skipping", "cancel", "unknown"):
+            with self.subTest(bucket=bucket):
+                required = self.PASS + [{"name": "tests", "bucket": bucket}] * 2
+                result = self.check(required, runs=[workflow_run("ci")])
+                self.assertEqual(result.code, 1, result.out)
+                self.assertIn("required check without a pass on this head: 'tests'", result.lines)
+                self.assertIn("next: hold the ask until each required check has passed on this head.", result.lines)
+                self.assertEqual(result.written, {})
+
+    def test_a_required_name_with_only_skipping_entries_holds_a_skipped_run(self):
+        result = self.check([{"name": "ci-gate", "bucket": "skipping"}] * 2,
+                            runs=[workflow_run("release", conclusion="skipped")])
+        self.assertEqual(result.code, 1, result.out)
+        self.assertIn("required check without a pass on this head: 'ci-gate'", result.lines)
+        self.assertEqual(result.written, {})
+
+    def test_an_explicit_empty_required_list_keeps_the_skipped_run_hold(self):
+        result = self.check([], runs=[workflow_run("release", conclusion="skipped")])
+        self.assertEqual(result.code, 1, result.out)
+        self.assertIn("1 of 1 workflow runs", result.out)
+
+    def test_json_stdout_is_read_even_when_gh_exits_nonzero(self):
+        for code, bucket, expected in ((1, "fail", 1), (8, "pending", 1), (1, "pass", 0)):
+            with self.subTest(code=code, bucket=bucket), mock.patch.dict(os.environ, {"STUB_REQUIRED_EXIT": str(code)}):
+                result = self.check([{"name": "ci-gate", "bucket": bucket}])
+                self.assertEqual(result.code, expected, result.out)
+                self.assertNotIn("cannot read the pull request", result.out)
+
+    def test_a_required_read_error_or_unparseable_stdout_holds_without_a_record(self):
+        cases = (("", "authentication failed", "1"), ("", "", "8"), ("not JSON", "", "0"),
+                 ("not JSON", "no required checks reported", "1"), (" ", "", "0"))
+        for stdout, stderr, code in cases:
+            with self.subTest(stdout=stdout, stderr=stderr, code=code), mock.patch.dict(os.environ, {"STUB_REQUIRED_STDERR": stderr, "STUB_REQUIRED_EXIT": code}):
+                result = self.check(stdout)
+                self.assertEqual(result.code, 2, result.out)
+                self.assertIn("cannot read the pull request", result.out)
+                self.assertEqual(result.written, {})
+
+    def test_an_invalid_required_list_shape_holds_without_a_record(self):
+        for checks in (None, {}, [None], [{"name": "ci-gate"}], [{"name": "", "bucket": "pass"}],
+                       [{"name": 3, "bucket": "pass"}], [{"name": "ci-gate", "bucket": None}]):
+            with self.subTest(checks=checks):
+                result = self.check(json.dumps(checks))
+                self.assertEqual(result.code, 2, result.out)
+                self.assertIn("cannot read the pull request", result.out)
+                self.assertEqual(result.written, {})
 
 
 class PointTests(unittest.TestCase):
