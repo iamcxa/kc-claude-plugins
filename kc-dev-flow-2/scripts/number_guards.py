@@ -6,11 +6,14 @@ check   exit 0 clean, 1 findings, 2 misconfiguration. Rules: R1 a migration pres
         number is not above the base tip's highest; R4 an added migration or ADR number is not in the task's
         'Migration:' / 'ADR:' lines; R5 an added ADR number exists on the base tip; R6 a task whose frontmatter says
         'profile: poc' differs from the merge-base anywhere under the migrations directory; R7 (only under
-        'migrations-path: none') the candidate adds a file named NNNN_name.sql anywhere.
+        'migrations-path: none') the candidate adds a file named NNNN_name.sql anywhere; R8 an added ADR
+        number absent from the base tip is held by another live task.
         'migrations-path: none' declares that the repository has no migration files: R1 to R3 and R6 are skipped,
-        the ADR rules R4 and R5 still run, and a db task is no longer exit 2.
-reserve prints 'Migration: NNNN' or 'ADR: NNNN' (one above the base tip and every other task file, never
+        the ADR rules R4, R5 and R8 still run, and a db task is no longer exit 2.
+reserve prints 'Migration: NNNN' or 'ADR: NNNN' (one above the base tip and every other live task, never
         filling a gap); a task that already holds a line gets it back. One number per kind per task.
+Holders: own state *.md and */index.md, plus every origin/spacedock-state/* branch fetched explicitly.
+        The checked task's path is excluded on its own branch only when its state checkout has origin.
 Limits: only files named NNNN_name.sql count as migrations, so meta/_journal.json and snapshots are not checked (R6 does check them);
 a deploy nobody recorded as 'Applied at:' is not detected; run 'git -C <repo> fetch' first, the base tip is what is local.
 Task lines are read from the task's '## Number guards' section.
@@ -50,7 +53,11 @@ def resolve(repo, ref, what="ref"):
 def frontmatter(readme):
     if not readme.is_file():
         raise Misconfigured(f"no workflow README at {readme}")
-    lines = readme.read_text().split("\n")
+    return frontmatter_text(readme.read_text())
+
+
+def frontmatter_text(text):
+    lines = text.split("\n")
     found = {}
     for line in lines[1:] if lines[0] == "---" else []:
         if line == "---":
@@ -65,7 +72,10 @@ def task_facts(path):
     task = Path(path)
     if not task.is_file():
         raise Misconfigured(f"task file {task} does not exist")
-    text = task.read_text(errors="replace")
+    return task_facts_text(task.read_text(errors="replace"))
+
+
+def task_facts_text(text):
     section = re.search(r"^## Number guards[ \t]*\n(.*?)(?=^## |\Z)", text, re.M | re.S)
     body = section.group(1) if section else ""
     surfaces = re.search(r"^Surfaces:(.*)$", text, re.M)
@@ -73,7 +83,7 @@ def task_facts(path):
         "migration": {int(n) for n in re.findall(r"^Migration:[ \t]*(\d+)[ \t]*$", body, re.M)},
         "adr": {int(n) for n in re.findall(r"^ADR:[ \t]*(\d+)[ \t]*$", body, re.M)},
         "applied": re.findall(r"^Applied at:[ \t]*(\S+)[ \t]+([0-9a-f]{7,40})[ \t]*$", body, re.M),
-        "poc": frontmatter(task).get("profile") == "poc",
+        "poc": frontmatter_text(text).get("profile") == "poc",
         "surfaces": set(re.split(r"[\s,]+", surfaces.group(1).strip())) if surfaces else set(),
     }
 
@@ -113,7 +123,50 @@ def settings(args):
         "adr": args.adr_path or cfg.get("adr-path") or "docs/adr",
         "base": base,
         "state": getattr(args, "state_dir", None) or (cfg.get("state") and str(Path(args.workflow_dir) / cfg["state"])),
+        "state_branch": cfg.get("state-branch") or (
+            f"spacedock-state/{Path(args.workflow_dir).resolve().name}" if args.workflow_dir else None),
     }
+
+
+def reservation_holders(args, cfg):
+    # see docs/adr/0002-applied-migrations-are-frozen-and-numbers-are-reserved.md
+    holders = {kind: {} for kind in KINDS}
+
+    def add(text, source):
+        facts = task_facts_text(text)
+        for kind in holders:
+            for number in facts[kind]:
+                holders[kind].setdefault(number, source)
+
+    state = Path(cfg["state"]).resolve() if cfg["state"] else None
+    task = Path(args.task).resolve() if args.task else None
+    own_origin = state and subprocess.run(
+        ["git", "-C", str(state), "remote", "get-url", "origin"], capture_output=True).returncode == 0
+    own_path = task.relative_to(state).as_posix() if task and state and task.is_relative_to(state) else None
+    if args.command == "reserve" and not own_origin:
+        print("warning: state checkout has no origin; no other workflow sees these reservations; "
+              "set a unique state-branch: before adding origin and push state to the repository", file=sys.stderr)
+    if state:
+        for sibling in sorted([*state.glob("*.md"), *state.glob("*/index.md")]):
+            if sibling.is_file() and sibling.resolve() != task:
+                add(sibling.read_text(errors="replace"), str(sibling))
+    fetched = subprocess.run(
+        ["git", "-C", args.repo, "fetch", "--quiet", "--prune", "origin",
+         "+refs/heads/spacedock-state/*:refs/remotes/origin/spacedock-state/*"],
+        capture_output=True)
+    if fetched.returncode:
+        print("warning: state fetch failed; reading local origin/spacedock-state/* refs only; "
+              "reservations may be stale or invisible", file=sys.stderr)
+    for ref in git(args.repo, "for-each-ref", "--format=%(refname:short)",
+                   "refs/remotes/origin/spacedock-state/").splitlines():
+        for path in git(args.repo, "ls-tree", "-r", "--name-only", ref).splitlines():
+            if not (path.endswith(".md") and "/" not in path or
+                    path.endswith("/index.md") and path.count("/") == 1):
+                continue
+            if own_origin and ref == f"origin/{cfg['state_branch']}" and path == own_path:
+                continue
+            add(git(args.repo, "show", f"{ref}:{path}"), f"{ref}:{path}")
+    return holders
 
 
 def require_migrations(repo, base, directory):
@@ -176,10 +229,14 @@ def check(args):
                 if status == "A" and MIGRATION.match(posixpath.basename(path)):
                     fail("R7", path, "added, but the README declares migrations-path: none")
     adr_base = numbered(repo, base, cfg["adr"], ADR)
+    holders = reservation_holders(args, cfg)["adr"]
     for _, path in added_changed(repo, merge_base, head, cfg["adr"], ADR)[0]:
         number = int(ADR.match(posixpath.basename(path)).group(1))
         if number in adr_base:
             fail("R5", path, f"base already has {number:04d} ({adr_base[number][0]})")
+        elif number in holders:
+            fail("R8", path, f"{number:04d} is held by {holders[number]}; "
+                 "delete this task's ADR: line, run reserve again and renumber")
         if facts is not None and number not in facts["adr"]:
             fail("R4", path, f"number {number:04d} is not in the task's ADR: lines")
     if facts is None:
@@ -194,6 +251,7 @@ def reserve(args):
     repo, cfg = args.repo, settings(args)
     label, pattern = KINDS[args.kind]
     facts = task_facts(args.task)
+    holders = reservation_holders(args, cfg)
     if facts[args.kind]:
         for number in sorted(facts[args.kind]):
             print(f"{label}: {number:04d}")
@@ -209,10 +267,7 @@ def reserve(args):
     else:
         files = numbered(repo, resolve(repo, cfg["base"], "base"), cfg["adr"], pattern)
         width = 4
-    taken = set(files)
-    for sibling in sorted(Path(cfg["state"]).glob("*.md")):
-        if sibling.resolve() != Path(args.task).resolve():
-            taken |= task_facts(sibling)[args.kind]
+    taken = set(files) | set(holders[args.kind])
     print(f"{label}: {max(taken, default=0) + 1:0{width}d}")
     return 0
 

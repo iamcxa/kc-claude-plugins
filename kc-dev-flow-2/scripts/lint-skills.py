@@ -25,6 +25,7 @@ CAPTAIN_QUOTE = re.compile(r"「[^」]*\S[^」]*」")
 # A raise (delta > 0) needs the Captain's quoted words and the one moment FO reads the added text.
 WORKFLOW_BUDGET_START = 5511
 WORKFLOW_BUDGET_STEPS = [
+    dict(delta=-6, why="number_guards.py help lists the rules and R8 prints the cross-workflow collision step"),
     dict(delta=-64, why="dispatch_records.py and design_surfaces.py print the parts and defects; the README points to them"),
     dict(delta=-18, why="delivery_gate.py prints the hold and ask lines; the README points to it"),
     dict(delta=-55, why="number_guards.py prints the R2 and R6 next steps and --help lists the flags and rules; the README points to them"),
