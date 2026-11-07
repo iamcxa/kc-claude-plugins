@@ -34,6 +34,17 @@ gates:
                 id: briefing:worker-browser-checks-use-paseo-browser:ideation:attempt-1:revision-1
                 digest: sha256:59f86fb8b5c5c14538ee94eb46de4541332c2e65a8e083e9fdf4fdc7146a83c5
                 room-ref: ./worker-browser-checks-use-paseo-browser/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-browser-checks-use-paseo-browser:ideation:1
+                briefing: briefing:worker-browser-checks-use-paseo-browser:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-07T15:37:11.77611Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-07), answering 「決定：第 17 批五張設計都照各自寫下的建議進實作嗎？要你決定的有：Paseo 瀏覽器 D1 那句指示不強制成派工紀錄必填、D2 在 kc-claude-plugins 用 journey-map 畫面驗證；設計檢查 D1 綁的不是任務檔就印「沒跑」、D2 不做開關卡時的提醒；未經提問的合併 D1 讀本 repo 所有狀態分支、D2 用分支前綴和同步 PR 標題認發版／同步／學習類；派工紀錄 D1 用套件裡的派工腳本並新增一份決策紀錄（ADR）、D2 模型與名冊仍由我手填、D3 版本與工作流程檢查這次不併進腳本；決策紀錄檢查沒有要你決定的事。核准即接受每張設計對其決定寫下的建議。要改哪件直接說。」. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Where the workflow README lists the paseo extension, a worker's local browser verification uses Paseo's browser tools (mcp__paseo__browser_*) by default instead of Chrome for Testing (agent-browser), and the paseo extension states the known limits and their workarounds.
