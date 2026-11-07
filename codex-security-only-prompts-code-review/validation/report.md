@@ -6,11 +6,13 @@ Profile: Pilot. Read date: 2026-11-07, Asia/Taipei; fresh GitHub capture started
 
 ## Method and authority
 
-The assigned product worktree was clean on `spacedock-ensign/codex-security-only-prompts-code-review`, at the candidate above. Both revisions were read with `git archive` into `/tmp/csopc-validation-37b1c0b7/{base,candidate}`. All candidate execution used those exports; mutations used a separate disposable export. All 1,574 candidate tracked blobs were subsequently compared to their Git object hashes, with no differences. No product edit, new Git worktree, Git config write, PR write, review request, push, ready action or merge was performed.
+The assigned product worktree was clean on `spacedock-ensign/codex-security-only-prompts-code-review`, at the candidate above. Both revisions were read with `git archive` into `/tmp/csopc-validation-37b1c0b7/{base,candidate}`. All candidate execution used those exports; mutations used a separate disposable export. All 1,574 candidate tracked blobs were subsequently compared to their Git object hashes, with no differences. No product edit, new Git worktree, Git config write, PR write, review request, product-branch push, ready action or merge was performed.
 
 The loaded validation skill selects `/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0` as the helper package. The dispatch's `.claude` ADR lint path was also run, with `--require 0039`; both checked 61 records and exited 0. For helpers needing Git metadata, `GIT_DIR` pointed read-only to the assigned repository metadata and `GIT_WORK_TREE` to the candidate export. This fixed the initial version-parity invocation's exit 128 (`not a git repository`); the corrected invocation exited 0. No candidate repair was needed.
 
 The existing implementation proof scripts were read, checked, and adapted only to new export/output paths; all GitHub inputs were freshly collected into an initially empty directory. Base and candidate consume identical recorded API responses and the same clock. An additional independent raw-comment parser checked each changed output against the bot identity, summary marker, completed security SHA and off-head code-review SHA. Corpus entries cover 80 recent PRs; the separate #727 replay adds one further changed case, so that raw-marker check covers 29 changes in total.
+
+The prescribed `spacedock state commit` helper automatically committed and pushed the state report to `spacedock-state/dev2`; see `state-publication.json`. This corrects the earlier report's assumption of a local-only state commit. Product-branch publication remains FO-owned. The primary evidence bundle is the immutable pre-publication capture.
 
 ## Acceptance evidence
 

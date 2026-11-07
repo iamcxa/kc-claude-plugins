@@ -297,3 +297,33 @@ Implemented the accepted Pilot slice: completed security-only summaries keep exi
 ### Summary
 
 PASSED for PR #802 head 37b1c0b7a9561ee48165cefbc9424a4390fe9d0a against all six accepted criteria. Fresh GitHub replays, real CLI monitoring, falsifiers, full local checks and exact-head hosted CI support the bounded Pilot outcome; primary evidence and the four-step Captain script are in `codex-security-only-prompts-code-review/validation/`. FO retains gate, review, integration and delivery authority; candidate code is unchanged.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #802 head 37b1c0b7 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 37b1c0b7a9561ee48165cefbc9424a4390fe9d0a, pinned base ba055b8a7a55a787ac989c4cef52d07dd75661ad; all six criteria and limits assessed in `codex-security-only-prompts-code-review/validation/report.md`, with dated primary evidence and source hashes.
+- DONE: Re-run the #727 replay and the 80-PR corpus comparison yourself with read-only GitHub reads, stating the read date
+  Fresh read 2026-11-07 (Asia/Taipei), capture 01:36:11 UTC: 80 PRs, 52 byte/exit-identical, 28 differences all completed-security/current-head with no code row on it; #727 CLI exits 4 with summary:6434584622 request and no evidence=; #71/#73 stay clean and identical; corpus.json and primary-evidence.tar.gz.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four-step validation/acceptance.sh ran unchanged via bash --noprofile --norc, exit 0, observed output in acceptance.log; log interval 181.6s. Both loaded .codex and dispatch .claude ADR-lint paths with --since ba055b8a7a55a787ac989c4cef52d07dd75661ad --require 0039 checked 61 records/0 legacy, exit 0.
+- DONE: AC-1 and AC-2 — historical replay and unchanged other heads.
+  Independent fresh GitHub inputs feed base/candidate with one clock; raw bot markers independently confirm every difference. Removing the request/evidence guard fails three subtests; dropping code-row/security-head predicates fails two/one. Corpus and replay logs retained.
+- DONE: AC-3 — reader condition tests and negative controls.
+  36 reader tests pass; candidate tests against base fail three subtests; five reader mutations fail 2/1/1/3/3. mutations.json and baseline-test logs show each defect is detected.
+- DONE: AC-4 — watcher once-per-head and idle integration.
+  135 watcher tests pass; base fails one; three mutations fail/error. TasksTests -> wait asks at zero sleeps; live add/wait on paseo #42 prints the request and persists its head with evidence '-' (no PR write); same-head/new-head behavior is pinned by the test.
+- DONE: AC-5 — accepted word bounds and budget falsifier.
+  workflow.md 5939 -> 5939 identical bytes; EXTENSION.md 310 -> 325; reader 26 words/two lines, wait 21/two lines; routing lint exit 0. One extra workflow word causes lint exit 1; no budget edit.
+- DONE: AC-6 — exact scope, required checks and scope/version falsifiers.
+  Five approved paths only, including current origin/main...HEAD; all 1158 local tests in 23 scripts exit 0 (11 optional skips). Exact-head hosted unit tests and parity including skill frontmatter pass; a sixth path is refused by the scope allowlist and a version-drift mutation exits 1.
+- DONE: Additional stage obligations, affected documents and necessity.
+  Number guards, comments (0/80=0.0%), design, three dispatch records, diff-check, native SD dispatch/recovery all exit 0; doc_impact names ADR 0039, unaffected because finding-before-clean/head rules remain. EXTENSION updated; base failures and mutations justify the five retained paths.
+- DONE: Review dispositions and every implementation limit assessed.
+  No new Material, Needs decision or Polish finding; F1 below carries accepted marker drift. Failed-on-head code, running security, no second escalation and merged-corpus limits remain accepted and tested where executable. Hosted CI is now verified; optional historical/host scenarios remain skipped, RoboRev and delivery remain FO-owned; CI cost unmeasured, triggers unchanged.
+- DONE: Candidate integrity, split-root report and current-base boundary.
+  All 1,574 exported blobs match candidate; assigned product tree remains clean at the exact head. origin/main advanced to ee6ca16fa6c2259fc8d040aaec23a0caba5ab080 on seven non-overlapping paths, merge-base unchanged; GitHub Draft/open, mergeable UNKNOWN. This is candidate validation, not later-integration or merge proof; the prescribed state commit helper automatically committed and pushed spacedock-state/dev2; no product-branch push occurred. See validation/state-publication.json.
+- F1 Deferred risk: Codex's undocumented summary marker may change; current captured inputs cause no observed harm. Boundary value-ac[AC-1]/value-ac[AC-2]; a supported live format change causing a wrong request or round count would make it Material (validation/report.md).
+
+### Summary
+
+This complete report supersedes the preceding validation report solely to correct state-publication accounting: the prescribed state helper automatically pushed the report branch. PASSED for PR #802 head 37b1c0b7a9561ee48165cefbc9424a4390fe9d0a against all six accepted criteria. Fresh GitHub replays, real CLI monitoring, falsifiers, full local checks and exact-head hosted CI support the bounded Pilot outcome; primary evidence and the four-step Captain script are in `codex-security-only-prompts-code-review/validation/`. FO retains gate, review, integration and delivery authority; candidate code is unchanged.

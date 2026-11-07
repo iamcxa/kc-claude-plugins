@@ -1,0 +1,9 @@
+{
+  "read_utc": "2026-11-07T01:54:36.490780+00:00",
+  "first_report_commit": "8662abbe616dd60a59a1ea4ab7a14f8a4b2e9f23",
+  "helper": "/Users/kent/.local/bin/spacedock state commit codex-security-only-prompts-code-review --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+  "observed_effect": "The prescribed state helper committed and automatically pushed spacedock-state/dev2. No product branch push was performed.",
+  "remote_tracking_head": "7c5bf7d32955237ad813d14853d2534b8a9d45d6",
+  "first_report_is_ancestor_of_remote_tracking_head": true,
+  "remote_reflog": "7c5bf7d32955237ad813d14853d2534b8a9d45d6 update by push\n98b6d5e1c08f30b9eced768d56bc61bf557b50d7 update by push\n2eea9bdae82664d21d33bc19411d9aadd2e4c084 update by push"
+}

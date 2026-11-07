@@ -42,5 +42,5 @@
   },
   "new_material_findings": 0,
   "retained_deferred_risk": "Undocumented provider summary marker may change.",
-  "delivery": "FO-owned; candidate remains Draft/open; no push or merge performed."
+  "delivery": "FO-owned; candidate remains Draft/open; no product push or merge performed. Prescribed state helper automatically committed and pushed the report branch."
 }
