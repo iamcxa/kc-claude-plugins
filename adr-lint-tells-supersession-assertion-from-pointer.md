@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:adr-lint-tells-supersession-assertion-from-pointer:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:adr-lint-tells-supersession-assertion-from-pointer-ideation-1
+              briefing:
+                id: briefing:adr-lint-tells-supersession-assertion-from-pointer:ideation:attempt-1:revision-1
+                digest: sha256:405ccdf563180b2351e8b85022e21105473a31c73136f5a73139d124233fcc12
+                room-ref: ./adr-lint-tells-supersession-assertion-from-pointer/review/ideation/briefing-1
 ---
 
 `adr_lint.py` no longer reports a file an ADR protects as "points at ADR N, Superseded by M" when the only citation is a test asserting that N's Status reads "Superseded by M".
