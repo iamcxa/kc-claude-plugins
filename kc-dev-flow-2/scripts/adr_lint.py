@@ -73,8 +73,15 @@ def check_pointers(files, root, adr_dir):
     errors = []
     cites = re.compile(re.escape(where) + r"/(\d{4})(?!\d)")
 
-    def cited_by(site):
-        return {int(c) for c in cites.findall(site.read_text(errors="replace"))}
+    def cited_by(site, skip_assertions=False):
+        cited = set()
+        for line in site.read_text(errors="replace").splitlines():
+            for number in map(int, cites.findall(line)):
+                if (skip_assertions and number in superseded
+                        and re.search(rf"Superseded by {superseded[number]:04d}(?!\d)", line)):
+                    continue
+                cited.add(number)
+        return cited
 
     for path, listed_path, accepted in records:
         if accepted:
@@ -86,7 +93,7 @@ def check_pointers(files, root, adr_dir):
     for listed_path in sorted(listed):
         site = root / listed_path
         if site.is_file():
-            for cited in sorted(cited_by(site) & set(superseded)):
+            for cited in sorted(cited_by(site, skip_assertions=True) & set(superseded)):
                 errors.append(f"{listed_path}: points at ADR {cited:04d}, Superseded by {superseded[cited]:04d}; "
                               f"point it at {superseded[cited]:04d} or the record in force")
     return errors

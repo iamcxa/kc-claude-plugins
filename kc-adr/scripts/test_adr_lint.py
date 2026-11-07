@@ -209,6 +209,42 @@ class ProtectedPathTests(unittest.TestCase):
                 "0003-b.md": protecting(3, "src/mailer.js")}
         self.assertEqual(self.lint(adrs, {"src/mailer.js": "// see docs/adr/0003-b.md\n"})[0], 0)
 
+    def test_asserting_the_recorded_supersession_is_not_a_stale_pointer(self):
+        adrs = {"0002-a.md": protecting(2, "tests/status.py", status="Superseded by 0003"),
+                "0003-b.md": protecting(3, "tests/status.py")}
+        site = '# see docs/adr/0003-b.md\nassert "## Status\\n\\nSuperseded by 0003" in Path("docs/adr/0002-a.md").read_text()\n'
+        code, out = self.lint(adrs, {"tests/status.py": site})
+        self.assertEqual(code, 0, out)
+
+    def test_an_authority_pointer_still_fails_beside_a_supersession_assertion(self):
+        adrs = {"0002-a.md": protecting(2, "tests/status.py", status="Superseded by 0003"),
+                "0003-b.md": protecting(3, "tests/status.py")}
+        site = ('# see docs/adr/0003-b.md\n# see docs/adr/0002-a.md\n'
+                'assert "Superseded by 0003" in Path("docs/adr/0002-a.md").read_text()\n')
+        code, out = self.lint(adrs, {"tests/status.py": site})
+        self.assertEqual(code, 1)
+        self.assertIn("tests/status.py: points at ADR 0002, Superseded by 0003", out)
+
+    def test_asserting_a_different_successor_still_fails(self):
+        adrs = {"0002-a.md": protecting(2, "tests/status.py", status="Superseded by 0003"),
+                "0003-b.md": protecting(3, "tests/status.py")}
+        for successor in ("0004", "00030"):
+            with self.subTest(successor=successor):
+                site = ('# see docs/adr/0003-b.md\n'
+                        f'assert "Superseded by {successor}" in Path("docs/adr/0002-a.md").read_text()\n')
+                code, out = self.lint(adrs, {"tests/status.py": site})
+                self.assertEqual(code, 1)
+                self.assertIn("tests/status.py: points at ADR 0002, Superseded by 0003", out)
+
+    def test_the_assertion_does_not_supply_the_successors_own_pointer(self):
+        adrs = {"0002-a.md": protecting(2, "tests/status.py", status="Superseded by 0003"),
+                "0003-b.md": protecting(3, "tests/status.py")}
+        site = 'assert "Superseded by 0003" in Path("docs/adr/0002-a.md").read_text()\n'
+        code, out = self.lint(adrs, {"tests/status.py": site})
+        self.assertEqual(code, 1)
+        self.assertIn("0003-b.md: tests/status.py has no pointer", out)
+        self.assertNotIn("points at ADR 0002", out)
+
     def test_only_accepted_adrs_must_have_their_file(self):
         for status in ("Proposed", "Deprecated"):
             with self.subTest(status):
