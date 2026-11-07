@@ -53,6 +53,17 @@ gates:
                 id: briefing:delivery-check-passes-a-skipped-by-design-run:validation:attempt-1:revision-1
                 digest: sha256:b6446181be55f11d700ed75b9e6bb2d1aedfb48150581d6b803c6f895bd023b0
                 room-ref: ./delivery-check-passes-a-skipped-by-design-run/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-check-passes-a-skipped-by-design-run:validation:1
+                briefing: briefing:delivery-check-passes-a-skipped-by-design-run:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-07T02:04:21.252729Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-07), answering 「決定：合併 #797（交付檢查不再擋「刻意跳過」的檢查）嗎？ Regular merge with --match-head-commit 1ca2625de0706e5494f73e010a394f8e5194b2a1, the batch 16 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-06T16:11:45Z
 worktree: .worktrees/spacedock-ensign-delivery-check-passes-a-skipped-by-design-run
 pr: iamcxa/kc-claude-plugins#797
