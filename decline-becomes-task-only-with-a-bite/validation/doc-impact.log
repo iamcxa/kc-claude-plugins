@@ -1,0 +1,5 @@
+docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md	updated	kc-dev-flow-2/scripts/test_sd_dispatch.py
+kc-dev-flow-2/README.md	review	kc-dev-flow-2/scripts/test_sd_dispatch.py
+kc-dev-flow-2/references/sd/adoption.md	review	kc-dev-flow-2/scripts/test_sd_dispatch.py
+learning.md	review	kc-dev-flow-2/scripts/test_sd_dispatch.py
+4 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

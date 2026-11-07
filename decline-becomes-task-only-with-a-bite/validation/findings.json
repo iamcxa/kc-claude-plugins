@@ -1,0 +1,15 @@
+[
+  {
+    "severity": "low",
+    "title": "Polish：拉取請求仍把舊反例列為未解決",
+    "file": "PR #800 body",
+    "detail": "公開說明仍寫 AC-4 FAILED: falsifier confounded；任務中的 Captain amendment 1 已改用 AC-7，新的獨立重跑也通過。這是審查說明落後，未改變候選產品行為。",
+    "fix": "由 FO 在呈現驗收前更新說明，保留舊反例為歷史限制。",
+    "status": "open",
+    "classification": "Polish",
+    "normal_workflow": "Reviewer opens PR #800 before validation gate.",
+    "observable_harm": "Obsolete evidence status may confuse review; no demonstrated loss in product behavior.",
+    "boundary": "none: not a candidate acceptance defect; accepted amendment is correctly retained in task state.",
+    "trigger": "validation/pr-800.json body contains Open evidence limit and FAILED for superseded AC-4."
+  }
+]

@@ -1,0 +1,142 @@
+diff --git a/docs/adr/0010-a-round-three-declined-finding-becomes-its-own-backlog-task.md b/docs/adr/0010-a-round-three-declined-finding-becomes-its-own-backlog-task.md
+index aba40e238..c4dd49cd1 100644
+--- a/docs/adr/0010-a-round-three-declined-finding-becomes-its-own-backlog-task.md
++++ b/docs/adr/0010-a-round-three-declined-finding-becomes-its-own-backlog-task.md
+@@ -4,7 +4,7 @@ Date: 2026-10-11
+ 
+ ## Status
+ 
+-Accepted
++Superseded by 0064
+ 
+ ## Context
+ 
+diff --git a/docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md b/docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md
+new file mode 100644
+index 000000000..7162b7105
+--- /dev/null
++++ b/docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md
+@@ -0,0 +1,60 @@
++# 0064. A round-three declined finding becomes a backlog task only with a bite
++
++Date: 2026-11-07
++
++## Status
++
++Accepted
++
++## Context
++
++ADR 0010 made every finding declined from external-review round three its own
++backlog task. The task decline-becomes-task-only-with-a-bite records 20 archived
++follow-ups: two built after observed failures and 18 closed together, mostly as
++already done elsewhere; 11 more remained untouched. This meets 0010's reopen
++condition, "these tasks pile up unscheduled". Three batch 12 and 13 observer
++reports treated reasoned declines without tasks as violations of that rule.
++ADR 0025's bracketed reason remains the committed decline record.
++
++## Decision
++
++**Words:** 「可以，但是該怎樣紀錄合理的followup」 — Captain, chat, 2026-11-05,
++answering 「這張擱置，改開「刪掉第三輪婉拒要開待辦」的小任務，好嗎？」.
++
++「核准（建議）」 — Captain, backlog gate, 2026-11-06.
++
++**Asked:** 「決定：第 16 批這五張（跳過的 CI 不擋、Codex 只貼安全摘要時提醒、交付檢查的相對路徑、ADR 編號跨流程預留、婉拒只在出過事時開任務）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？核准即接受「婉拒只在出過事時開任務」任務裡寫的標準（指出真的錯並說得出誰受害、再次出現、或你要求）。要改哪張直接說。」
++
++「核准（建議）」 — Captain, ideation gate, 2026-11-07.
++
++**Asked:** 「決定：「婉拒只在出過事時開任務」這份設計進入實作嗎？核准即接受 D1（另開新 ADR 取代 ADR 0010）與 D2（擱置中的 gate-summary-names-each-decline 恢復時拿掉它的第 3 條）。」
++
++**Options considered:**
++- Keep the finding and reason in the gate summary; create or reuse a backlog
++  task on an observed failure naming who it hurts, a repeat in a later round
++  or task, or a Captain ask (chosen).
++- Keep ADR 0010's option E: every round-three decline gets a backlog task.
++- ADR 0010's option F: close round-three declines without carrying them anywhere.
++
++**Recommended:** The first option, superseding ADR 0010 (D1), and removing
++rule 3 and AC-3 from the held gate-summary-names-each-decline design when it
++resumes (D2), as the approved design recommends.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/test_sd_dispatch.py` — `ROUND_RULE` and the `follow-up-reason` wording pins.
++
++From round three, a finding that is neither Material nor reviewer P1 starts
++no repair cycle. FO records the finding and its bracketed reason in the
++committed gate summary. It becomes a backlog task when it meets the chosen
++bar; reuse an existing task when one holds it. It never enters an open task's
++Scope, and the terminal gate lists each such task. This supersedes ADR 0010
++while keeping its no-Scope boundary. The observer judges whether a decline
++meets the bar; no prose-quality check is added to delivery_gate.py.
++
++## Consequences
++
++A decline without a bite is found by grepping gate summaries rather than the
++backlog board. An observed failure without a task is caught by the observer
++at archive, after merge. The workflow reading budget does not rise. Reopen
++if a declined finding without a task is later hit and was not caught as a
++repeat. Retiring existing follow-up tasks remains outside this decision.
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index e2cf77c36..87bfa3ea8 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -354,10 +354,10 @@ consequential FO quick work and rejected gates.
+    waived by the Captain with the reason recorded (step 4). For an external reviewer
+    that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev). Rounds
+    1 and 2 follow steps 1 to 4. From round 3 a finding that is neither does not start a
+-   repair cycle: FO declines it in the committed gate summary, naming the finding, and
+-   files it as a new backlog task with `spacedock new` whose body carries the finding
+-   and the decline reason, or names the backlog task that already holds it when a later
+-   round repeats it; it never enters an open task's Scope. The terminal gate lists each
++   repair cycle: FO declines it in the committed gate summary, naming the finding and
++   its reason. Only an observed failure naming who it hurts, a repeat in a later round
++   or task, or a Captain ask makes it a backlog task (`spacedock new`, or the one
++   holding it); it never enters an open task's Scope. The terminal gate lists each
+    such task.
+ 
+ Rejection routing carries evidence, classifications, authorized dispositions and assignment
+diff --git a/kc-dev-flow-2/scripts/test_sd_dispatch.py b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+index 810b064b3..54d26a27b 100644
+--- a/kc-dev-flow-2/scripts/test_sd_dispatch.py
++++ b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+@@ -22,11 +22,12 @@ TEMPLATE = ROOT / "references/sd/workflow.md"
+ MODS = ROOT / "references/sd/mods"
+ MOD_SCRIPT = re.compile(r"<package>/scripts/([A-Za-z0-9_.-]+)")
+ STAGES = ("ideation", "implementation", "validation")
++# see docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md
+ ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
+               "or labelled P1 by the reviewer, blocks in every round",
+               "For an external reviewer that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev)",
+               "From round 3 a finding that is neither does not start a repair cycle",
+-              "files it as a new backlog task with `spacedock new`")
++              "Only an observed failure naming who it hurts, a repeat in a later round or task, or a Captain ask makes it a backlog task")
+ WORKER_RULE = ("Before repair authorization, product bytes and the recorded candidate revision stay unchanged",
+                "The four evidence fields are", "- **Needs decision:**")
+ MAIN_LINE = "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here)."
+@@ -169,13 +170,13 @@ FIXES = {
+         swaps=((r"When FO dispatches validation and nothing was pushed for the task.*?has a skipped record\. ", ""),
+                (r" `Applied: none as of <sha>` records that nothing was pushed.*?instead of re-checking deploys\.", ""))),
+     "follow-up-reason": dict(
+-        need=("names the backlog task that already holds it when a later round repeats it",
+-              "whose body carries the finding and the decline reason",
++        need=("naming the finding and its reason",
++              "or the one holding it",
+               "it never enters an open task's Scope",
+               "assesses it against its stated reason and earlier rulings",
+               "returns the line to FO as a Needs decision"),
+         old=(),
+-        swaps=((r", naming the finding, and files it as a new backlog task.*?The terminal gate lists each such task\.",
++        swaps=((r", naming the finding and its reason\. Only an observed failure.*?The terminal gate lists each such task\.",
+                 ", naming the finding and its home, and adds a `Follow-up:` line to that task's Scope, the open task whose Scope edits the finding's file, else a new backlog task from `spacedock new`. The terminal gate lists each follow-up and its home."),
+                (r"A `Follow-up:` line in Scope is not accepted scope by itself.*?It records which, and why\. ", ""))),
+     "decline-settled": dict(
+@@ -569,7 +570,7 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
+         assert phrase in quoted, phrase
+     adr = ROOT.parent / "docs/adr/0050-stage-roster-question-needs-codex-and-claude-and-offers-opus.md"
+     assert adr.is_file()
+-    assert "## Status\n\nSuperseded by 0050" in (ROOT.parent / "docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md").read_text()
++    assert "## Status\n\nSuperseded by 0050" in (ROOT.parent / "docs/adr" / "0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md").read_text()
+     data = copy.deepcopy(recommendation)
+     data["decision"] = "fixture-explicit-answer"
+ 

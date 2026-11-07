@@ -1,0 +1,67 @@
+[
+  {
+    "name": "candidate-1",
+    "agentId": "4a9e4db8-b224-448f-a27a-ed8044d8371b",
+    "provider": "claude/sonnet",
+    "settings": {
+      "modeId": "default"
+    },
+    "prompt": "candidate.prompt.md",
+    "activity": "candidate-1.activity.json",
+    "model": "sonnet",
+    "status": "closed",
+    "archivedAt": "2026-11-06T17:00:48.459Z"
+  },
+  {
+    "name": "candidate-2",
+    "agentId": "589c87ed-3568-4723-8d6a-d70149d08bfc",
+    "provider": "claude/sonnet",
+    "settings": {
+      "modeId": "default"
+    },
+    "prompt": "candidate.prompt.md",
+    "activity": "candidate-2.activity.json",
+    "model": "sonnet",
+    "status": "closed",
+    "archivedAt": "2026-11-06T17:00:59.925Z"
+  },
+  {
+    "name": "mutation-1",
+    "agentId": "a798eff6-9a80-4cd1-8ab3-f8c4bc20f4a4",
+    "provider": "claude/sonnet",
+    "settings": {
+      "modeId": "default"
+    },
+    "prompt": "mutation.prompt.md",
+    "activity": "mutation-1.activity.json",
+    "model": "sonnet",
+    "status": "closed",
+    "archivedAt": "2026-11-06T17:01:10.774Z"
+  },
+  {
+    "name": "mutation-2",
+    "agentId": "8996e1c3-f8be-4d39-8c42-7548b9eb1fe0",
+    "provider": "claude/sonnet",
+    "settings": {
+      "modeId": "default"
+    },
+    "prompt": "mutation.prompt.md",
+    "activity": "mutation-2.activity.json",
+    "model": "sonnet",
+    "status": "closed",
+    "archivedAt": "2026-11-06T17:01:21.332Z"
+  },
+  {
+    "name": "base",
+    "agentId": "71886b03-ce50-4b04-b93d-aca816403110",
+    "provider": "claude/sonnet",
+    "settings": {
+      "modeId": "default"
+    },
+    "prompt": "base.prompt.md",
+    "activity": "base.activity.json",
+    "model": "sonnet",
+    "status": "closed",
+    "archivedAt": "2026-11-06T17:01:33.084Z"
+  }
+]

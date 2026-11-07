@@ -1,0 +1,1 @@
+PASS: both paths read the same ADR; split assertion still rejects Accepted; literal path reproduces the lint false positive.

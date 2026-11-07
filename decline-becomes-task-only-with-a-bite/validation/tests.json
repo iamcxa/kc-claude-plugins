@@ -1,0 +1,52 @@
+[
+  {
+    "name": "AC-1 repository skill lint and unchanged budget",
+    "status": "passed",
+    "message": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n"
+  },
+  {
+    "name": "AC-1 reading count",
+    "status": "passed",
+    "message": "workflow 5939 -> 5939; step 5 sentence 53 -> 53; no budget-script change"
+  },
+  {
+    "name": "AC-2 candidate and base wording pins",
+    "status": "passed",
+    "message": "candidate no gaps, swap 1; base three new pins absent, swap 0"
+  },
+  {
+    "name": "AC-1 falsifier restore old step 5",
+    "status": "passed",
+    "message": "round rule missing from workflow.md"
+  },
+  {
+    "name": "AC-2 falsifier remove observed-failure clause",
+    "status": "passed",
+    "message": "round rule missing from workflow.md"
+  },
+  {
+    "name": "AC-3 archived declines and bracket falsifier",
+    "status": "passed",
+    "message": "3/2/3 declined items pass; removed reason delimiters are rejected"
+  },
+  {
+    "name": "AC-6 ruling, quotes and supersession falsifier",
+    "status": "passed",
+    "message": "0064 accepted; 0010 superseded; bound questions verbatim; mutation leaves both accepted"
+  },
+  {
+    "name": "Required ADR lint",
+    "status": "passed",
+    "message": "62 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "Required number guards",
+    "status": "passed",
+    "message": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase ba055b8a7a55 head ae7750375bc1 merge-base ba055b8a7a55\n"
+  },
+  {
+    "name": "Required design-surface check",
+    "status": "passed",
+    "message": "decline-becomes-task-only-with-a-bite.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "candidate": "observer-bounded-candidate.report.md",
+  "base": "observer-bounded-base.report.md",
+  "status": "incomplete: base omitted the target; full retry also omitted target",
+  "from": "ea9904b30b9dcf2418a335e9ef91b715320d4557",
+  "to": "79af09021bcfdb30267aabbc4f2dc150ac05a6dd"
+}

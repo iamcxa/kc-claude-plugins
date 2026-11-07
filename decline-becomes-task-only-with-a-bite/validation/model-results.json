@@ -1,0 +1,92 @@
+[
+  {
+    "name": "candidate-1",
+    "status": "passed",
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "ok",
+      "D": "violation",
+      "E": "violation"
+    },
+    "readings": {
+      "A": "\"FO declines it in the committed gate summary, naming the finding and its reason\" | Round 6, a P2 below P1, is declined with the finding and reason named. No observed failure, repeat or Captain ask is shown, so no backlog task is required.",
+      "B": "\"FO declines it in the committed gate summary, naming the finding and its reason\" | The finding is declined with a reason. The record says validation-3 shows no harm, and the malformed-list case is hypothetical, so it is not an observed failure.",
+      "C": "\"a repeat in a later round or task\" | The finding is named and declined. Validation F1 is not an external round, and the record names no repeat in a later round. The record also shows no observed failure, because no committed acceptance section has that shape.",
+      "D": "\"Only an observed failure naming who it hurts \u2026 makes it a backlog task (`spacedock new`, or the one holding it)\" | The record says three workers got no package root and each had to search for the scripts. That is an observed failure hurting workers, yet no backlog task was created.",
+      "E": "\"a repeat in a later round or task \u2026 makes it a backlog task\" | The same suggestion was reported in round 3 and repeated unchanged in round 4. That is a repeat in a later round, so a backlog task was required, and the absence of harm does not waive it."
+    }
+  },
+  {
+    "name": "candidate-2",
+    "status": "passed",
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "ok",
+      "D": "violation",
+      "E": "violation"
+    },
+    "readings": {
+      "A": "\"From round 3 a finding that is neither does not start a repair cycle: FO declines it in the committed gate summary, naming the finding and its reason\" | The record names the finding and gives a reason. It shows no observed failure, no repeat and no Captain ask, so no backlog task is required.",
+      "B": "\"FO declines it in the committed gate summary, naming the finding and its reason\" | It names the finding and the reason (unreachable, no harm in validation-3). It shows no observed failure and no repeat, so no backlog task is required.",
+      "C": "\"a repeat in a later round or task\" | The finding appears only in validation F1 and Codex round 3. Validation is not an external round, and the record shows no later external round or task repeating it, so no backlog task is required.",
+      "D": "\"Only an observed failure naming who it hurts \u2026 makes it a backlog task (`spacedock new`, or the one holding it)\" | Three workers got no package root and each had to search for the scripts. That is an observed failure naming who it hurts, but the record names no backlog task and none exists.",
+      "E": "\"a repeat in a later round or task \u2026 makes it a backlog task\" | The same suggestion was reported in round 3 and repeated in round 4. That is a repeat in a later round, but the record names no backlog task and none exists."
+    }
+  },
+  {
+    "name": "mutation-1",
+    "status": "passed",
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "violation",
+      "D": "violation",
+      "E": "ok"
+    },
+    "readings": {
+      "A": "\"From round 3 a finding that is neither does not start a repair cycle: FO declines it in the committed gate summary, naming the finding and its reason\" | Round 6 P2 labelled Polish is below P1, and the record names the finding, the comment id and the reason.",
+      "B": "\"FO declines it in the committed gate summary, naming the finding and its reason\" | Round 3, so declining is allowed. The record names the finding and gives a reason: it is unreachable for template-generated lists, and validation-3 shows no harm. No P1 or Material label appears.",
+      "C": "\"A finding assessed Material, or labelled P1 by the reviewer, blocks in every round\" | The record calls it a \"Deferred risk\" and says the finding \"can overwrite the live criterion\", yet it never records an assessment of non-Material. The cited counts show only that the shape is rare, not that the harm is minor. The rule requires a Material finding to be fixed or waived by the Captain, not deferred.",
+      "D": "\"A finding assessed Material... blocks in every round\" | It is labelled Polish, but the record itself shows observed harm: three workers received no package root and each had to search for the scripts. That is an observed failure, so a \"neither Material nor P1\" decline is not supported.",
+      "E": "\"FO declines it in the committed gate summary, naming the finding and its reason\" | Round 4 P2, assessed non-Material, with no harm observed and no Captain request for a task. The record names the finding and the reason, and the repeat across rounds does not change the severity."
+    }
+  },
+  {
+    "name": "mutation-2",
+    "status": "passed",
+    "verdicts": {
+      "A": "ok",
+      "B": "ok",
+      "C": "ok",
+      "D": "violation",
+      "E": "ok"
+    },
+    "readings": {
+      "A": "\"From round 3 a finding that is neither does not start a repair cycle: FO declines it in the committed gate summary, naming the finding and its reason.\" | A round-6 P2 is below P1, and the record names the finding and its reason.",
+      "B": "\"FO declines it in the committed gate summary, naming the finding and its reason.\" | The record names the finding and gives a reason (FO judges it unreachable, with no harm shown in validation-3), which satisfies the decline requirement.",
+      "C": "\"FO declines it in the committed gate summary, naming the finding and its reason.\" | The round-3 P2 is below P1, and the record names it and gives evidence (none of 191 committed acceptance sections has that shape).",
+      "D": "\"A finding assessed Material, or labelled P1 by the reviewer, blocks in every round\" | The record itself shows observed harm: three workers received no package root and each had to search. That is Material, so it blocks and cannot be declined as Polish.",
+      "E": "\"From round 3 a finding that is neither does not start a repair cycle: FO declines it in the committed gate summary, naming the finding and its reason.\" | The finding is P2 and non-Material, and the record names it and gives a reason (no failure or harm, no user affected, no task requested)."
+    }
+  },
+  {
+    "name": "base",
+    "status": "passed",
+    "verdicts": {
+      "A": "violation",
+      "B": "violation",
+      "C": "violation",
+      "D": "violation",
+      "E": "violation"
+    },
+    "readings": {
+      "A": "\"FO declines it in the committed gate summary, naming the finding, and files it as a new backlog task with `spacedock new`\" | Round 6 is past round 3 and the finding is a P2 that no one assessed as Material, so it needed a backlog task, and none exists.",
+      "B": "\"From round 3 a finding that is neither does not start a repair cycle: FO declines it ... and files it as a new backlog task\" | Round 3 qualifies, FO judged the finding unreachable and harmless (so not Material), and no backlog task was filed.",
+      "C": "\"files it as a new backlog task with `spacedock new` whose body carries the finding and the decline reason\" | The finding is a P2 deferred in round 4 and was parked as a \"Deferred risk\" with no backlog task, which the rule does not allow.",
+      "D": "\"A finding assessed Material, or labelled P1 by the reviewer, blocks in every round ... fixed and revalidated, or waived by the Captain\" | Three workers were sent no package root and each had to search, which is observed harm. If it is Material, FO had to fix it or get a Captain waiver. If it is not, it still needed a backlog task.",
+      "E": "\"or names the backlog task that already holds it when a later round repeats it\" | A non-P1, non-Material finding repeated in rounds 3 and 4 needed a backlog task from the first decline, and none exists to name."
+    }
+  }
+]

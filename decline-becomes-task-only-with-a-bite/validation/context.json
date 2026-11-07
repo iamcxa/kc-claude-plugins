@@ -1,0 +1,11 @@
+{
+  "root": "/tmp/validate-pr800-kztw1f8t",
+  "candidate": "/tmp/validate-pr800-kztw1f8t/candidate",
+  "base": "/tmp/validate-pr800-kztw1f8t/base",
+  "out": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/decline-becomes-task-only-with-a-bite/validation",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-decline-becomes-task-only-with-a-bite",
+  "state": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+  "head": "ae7750375bc19e482f829edc9a041d95fb280693",
+  "base_sha": "ba055b8a7a55a787ac989c4cef52d07dd75661ad",
+  "git_dir": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/spacedock-ensign-decline-becomes-task-only-with-a-bite"
+}
