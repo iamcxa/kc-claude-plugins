@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-11-06T16:11:45Z
 worktree: .worktrees/spacedock-ensign-delivery-check-passes-a-skipped-by-design-run
-pr: iamcxa/kc-claude-plugins#797
+pr: pr-merge:797
 ---
 
 `delivery_gate.py check` treats a workflow run that its own conditions skip on purpose as no hold, while still holding a failed, pending or unexpectedly skipped required check.
