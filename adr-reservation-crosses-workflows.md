@@ -53,6 +53,17 @@ gates:
                 id: briefing:adr-reservation-crosses-workflows:validation:attempt-1:revision-1
                 digest: sha256:3dd4ccd17d6173270fcb7d31c6edc3e12d3c76b0dd775b9071db3635dbbc4081
                 room-ref: ./adr-reservation-crosses-workflows/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-reservation-crosses-workflows:validation:1
+                briefing: briefing:adr-reservation-crosses-workflows:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-07T02:04:32.345059Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-07), answering 「決定：合併 #801（決策紀錄編號的保留跨工作流程可見，別的流程已保留的號碼不會再被拿走）嗎？建議合併。 Regular merge with --match-head-commit ef3ed3e05534e2a997acbdfb055a880fde1f484a, the batch 16 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-06T16:12:02Z
 worktree: .worktrees/spacedock-ensign-adr-reservation-crosses-workflows
 pr: iamcxa/kc-claude-plugins#801
