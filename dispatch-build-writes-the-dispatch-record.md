@@ -70,7 +70,7 @@ So Spacedock cannot write the record without an upstream change in a repository 
 
 - *What does FO still write?* The checklist and the scope notes, as today, and the model, roster, candidate and symptom values as flags. The script writes the header, the sections and the cycle number.
 - *What if a part is missing?* The script removes the file it wrote, prints the checker's lines, and builds nothing. Its message starts `dispatch_stage: dispatch not built;`, so FO does not mistake it for a `dispatch build` failure that allows break-glass dispatch.
-- *What if the build fails?* Spacedock's stderr and exit code pass through unchanged. If the record was not committed, the script removes it; an identical rerun reuses the committed number instead of minting a new one.
+- *What if the build fails?* Spacedock's stderr and exit code pass through unchanged. If the record was not committed, the script removes it; an identical immediate rerun reuses the committed number instead of minting a new one.
 - *Follow-up messages to a live worker?* Not covered: FO still saves those by hand.
 - *Acceptance evidence:* a test against the CI-pinned Spacedock 0.27.2 binary (AC-1 to AC-6), and the README and pinned tests (AC-7).
 
@@ -81,7 +81,7 @@ flowchart TD
   G[FO: task status equals the stage] --> W["dispatch_stage.py: build flags, --model, optional --roster / --candidate / --symptom"]
   W --> U{flag values valid?}
   U -- no --> U2[usage error, exit 2, no file written]
-  U -- yes --> N{newest committed record of this stage identical?}
+  U -- yes --> N{"newest record of this stage identical and added by the state HEAD commit?"}
   N -- yes --> K[reuse its number, write nothing]
   N -- no --> R["write task/dispatch/stage-N.md, N = newest + 1"]
   K --> C
@@ -109,7 +109,8 @@ One package PR:
 
 - `kc-dev-flow-2/scripts/dispatch_stage.py` (new). Arguments: `--workflow-dir`, `--entity-path`, `--stage`, `--checklist-file`, `--scope-notes-file`, optional `--feedback-context-file`/`--feedback-reflow`/`--advance` passed through, `--model TEXT` (required), `--roster TEXT`, `--candidate SHA` (repeatable, 40 hex or exit 2), `--symptom TEXT`, `--spacedock BIN` (default `$SPACEDOCK_BIN`, then `spacedock`).
   - Writes `# <stage>-<N>`, `Dispatched: <git -C workflow-dir rev-parse HEAD> (workflow checkout)`, `Model:`, then the given `Roster:`, `Candidate:` and `Symptom:` lines, `## Checklist` with the checklist file, `## Scope notes` with the scope-notes file. It never edits either file's text: an omitted `Package root:` or completion line is held by the checker, before any build.
-  - N: let M be the highest `<stage>-<M>.md` committed at the state checkout's HEAD (message records excluded). If that file's bytes equal what would be written, N = M and nothing is written; otherwise N = M + 1, 1 when none, overwriting an uncommitted file at N.
+  - N: let M be the highest `<stage>-<M>.md` committed at the state checkout's HEAD (message records excluded). N = M, writing nothing, only when that file's bytes equal what would be written and the state checkout's HEAD commit is the one that added it (an immediate retry after a sync or assembly failure); otherwise N = M + 1, 1 when none, overwriting an uncommitted file at N. Any state commit in between makes an identical dispatch a new record, so `role_triggers.py` still counts a repeated round.
+  - `--note TEXT` appends `, TEXT` inside the `Dispatched:` parentheses, for the README version and batch annotations FO writes today.
   - Runs `dispatch_records.py <task folder>` and `--names --strict <record>` as subprocesses with the same Python; on success it prints nothing of theirs.
   - Without `--advance`, runs `<spacedock> dispatch build --stamp` with the build flags; with it, `dispatch build --advance` and then `<spacedock> state commit <slug> --workflow-dir <dir>`. Stdout is the build's envelope.
 - `kc-dev-flow-2/scripts/test_dispatch_stage.py` (new): split-root git fixtures with the README from `references/sd/workflow.md`, run against `$SPACEDOCK_BIN`; exits nonzero naming `SPACEDOCK_BIN` when it is unset, so CI cannot pass it by skipping.
@@ -148,7 +149,7 @@ Spacedock's own dispatch text (`claude-fo-dispatch.md`) is read in both and unch
 
 - Follow-up messages (Scope non-goal); deriving `Model:` from the roster (D2); moving `package_version.py` and `workflow_checkout.py` into the script (D3); an upstream Spacedock issue; filling omitted scope-note lines.
 - An FO that runs `spacedock dispatch build` directly, as Spacedock's skill text says, writes no record; `--coverage` catches it after the report, as today. This PR does not show FO uses the script: the first batch after release shows it (each fresh record's adding commit subject is `dispatch: <slug> entering <stage>`).
-- An identical rerun (same inputs, same workflow SHA) reuses the record number, so a dead-worker re-dispatch with unchanged inputs adds no record and no round for `role_triggers.py`.
+- An identical rerun with no state commit since the record was added reuses its number; a re-dispatch after any later state commit, such as a worker report, is a new record.
 - The `Model:` and `Roster:` text stays FO-typed; a wrong value is not caught, as today.
 - No new profile obligation: no production data, credentials or unattended operation.
 
@@ -176,7 +177,7 @@ Recommended order: merge-guard-stops-unasked-merges, then this task; the batch-1
 
 ## Acceptance criteria
 
-**AC-1** A stamped dispatch leaves a record `dispatch_records.py` accepts, committed by the stamp. Evidence: `test_dispatch_stage.py` against `$SPACEDOCK_BIN` 0.27.2, on a split-root fixture whose README is `references/sd/workflow.md` and whose task is at `status: ideation`: exit 0; `<task>/dispatch/ideation-1.md` exists; `dispatch_records.py <task folder>` and `--names --strict <record>` exit 0; `git log -1 --format=%s -- <record>` is `dispatch: <slug> entering ideation`; stdout parses as JSON with `dispatch_file_path`. Falsifiers: building without `--stamp` leaves the record uncommitted and fails the subject assertion; dropping the `Model:` line fails the checker assertion.
+**AC-1** A stamped dispatch leaves a record `dispatch_records.py` accepts, committed by the stamp. Evidence: `test_dispatch_stage.py` against `$SPACEDOCK_BIN` 0.27.2, on a split-root fixture whose README is the raw `references/sd/workflow.md` (its frontmatter carries `state: .spacedock-state` and the stage list), as `test_sd_dispatch.py` uses it, and whose task is at `status: ideation`: exit 0; `<task>/dispatch/ideation-1.md` exists; `dispatch_records.py <task folder>` and `--names --strict <record>` exit 0; `git log -1 --format=%s -- <record>` is `dispatch: <slug> entering ideation`; stdout parses as JSON with `dispatch_file_path`. Falsifiers: building without `--stamp` leaves the record uncommitted and fails the subject assertion; dropping the `Model:` line fails the checker assertion.
 
 **AC-2** The record holds what the worker receives. Evidence: the same test asserts every nonblank line of the checklist and scope-notes files appears in the record's matching section and in the file at `dispatch_file_path`. Falsifier: writing the record from a copy with one scope-notes line dropped fails it.
 
@@ -184,7 +185,7 @@ Recommended order: merge-guard-stops-unasked-merges, then this task; the batch-1
 
 **AC-4** A validation dispatch without a candidate is held before the build. Evidence: `--stage validation` without `--candidate` exits 1 with `dispatch_records.py`'s "no 'Candidate: <40-hex head>' line" text and leaves no file; `--candidate abc` exits 2 before writing. Falsifier: ignoring the checker's exit code lets the fake build run.
 
-**AC-5** A failed or repeated build leaves no phantom record. Evidence: (a) a task at `status: backlog` dispatched with `--stage ideation`: Spacedock's stderr line starting `dispatch build --stamp:` and its exit code 1 pass through, and no `ideation-1.md` remains; (b) after a successful `ideation-1`, an identical rerun at the same workflow SHA exits 0 and adds no `ideation-2.md`; (c) a rerun with one changed checklist line adds `ideation-2.md`, committed by the stamp. Falsifiers: without the removal (a) leaves a file; without the identical-reuse rule (b) adds `ideation-2.md`.
+**AC-5** A failed or repeated build leaves no phantom record. Evidence: (a) a task at `status: backlog` dispatched with `--stage ideation`: Spacedock's stderr line starting `dispatch build --stamp:` and its exit code 1 pass through, and no `ideation-1.md` remains; (b) right after a successful `ideation-1`, an identical rerun exits 0 and adds no `ideation-2.md`, while the same rerun after one unrelated state commit adds `ideation-2.md`; (c) a rerun with one changed checklist line adds `ideation-2.md`, committed by the stamp. Falsifiers: without the removal (a) leaves a file; without the identical-reuse rule the first rerun of (b) adds `ideation-2.md`; reusing on bytes alone makes the second rerun of (b) add none.
 
 **AC-6** A reuse-advance dispatch is recorded and committed. Evidence: a task at `status: implementation` with `--advance` adds `implementation-1.md`, committed with subject `state: update <slug>`, and prints the advance envelope; when `state commit` fails (fake binary), exit 1 and no envelope on stdout. Falsifier: skipping `state commit` leaves the record uncommitted.
 
@@ -213,4 +214,4 @@ Recommended order: merge-guard-stops-unasked-merges, then this task; the batch-1
 
 ### Summary
 
-Spacedock 0.27.2 cannot write the record (no dispatch hook; it does not know the roster model), so the design adds `kc-dev-flow-2/scripts/dispatch_stage.py`: it writes the record from the build's own input files, runs both existing checks, then runs `dispatch build --stamp`, whose path-scoped commit already sweeps the task folder (observed on 0.27.2). The README passages shrink by 2 words; three Captain decisions are open (D1–D3). `design_surfaces.py check`: "design surfaces presentable", exit 0. Probe fixture kept at `/tmp/stamp-probe.3Byi`.
+Spacedock 0.27.2 cannot write the record (no dispatch hook; it does not know the roster model), so the design adds `kc-dev-flow-2/scripts/dispatch_stage.py`: it writes the record from the build's own input files, runs both existing checks, then runs `dispatch build --stamp`, whose path-scoped commit already sweeps the task folder (observed on 0.27.2). The README passages shrink by 2 words; three Captain decisions are open (D1–D3). `design_surfaces.py check`: "design surfaces presentable", exit 0. The probe's procedure is in `### Chain check`; its `/tmp` fixture is not retained evidence.
