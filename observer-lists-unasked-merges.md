@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-07T15:40:18Z
+worktree: .worktrees/spacedock-ensign-observer-lists-unasked-merges
 ---
 
 At archive, the observer reports every PR merged in its window whose number and merged head match no saved `merge/ask-N.json` in any state checkout it can read, so an unasked merge is found after the fact without a pre-tool hook.
