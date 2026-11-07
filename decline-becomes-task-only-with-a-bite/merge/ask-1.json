@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "ae7750375bc19e482f829edc9a041d95fb280693",
+  "model": "not run",
+  "necessity": "the four files are ADR 0010, the new ADR 0064, workflow.md and test_sd_dispatch.py (gh pr view 800 --json files, FO 2026-11-07).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'delivery_gate.py is byte-identical to base; the'",
+    "point: deferred: 'Sufficiency: with the new step 5'",
+    "point: deferred: 'Declined: Polish, validation-1 F1 the PR'",
+    "point: deferred: 'Declined: Polish, validation-1 F2 the candidate'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 1 dated 2026-11-07'",
+    "point: path: 'docs/adr/0010-a-round-three-declined-finding-becomes-its-own-backlog-task.md'",
+    "point: path: 'docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/test_sd_dispatch.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#800",
+  "sufficiency": "with the new step 5 a repeat-only declined finding requires a backlog task in 2/2 Sonnet readings and in 0/2 with the bite clause deleted, and the observer judges the archived round-3 decline a violat",
+  "time": "2026-11-07T01:52:57Z",
+  "verdict": "ask"
+}
