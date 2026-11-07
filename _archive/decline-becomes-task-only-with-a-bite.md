@@ -3,7 +3,7 @@ title: A declined review finding becomes a backlog task only when it has a bite 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-07), answering 「決定：合併 #800（第三輪以後被婉拒的審查意見，只有真的出過事、重複出現或你要求時才開待辦）嗎？建議合併。 Regular merge with --match-head-commit ae7750375bc19e482f829edc9a041d95fb280693, the batch 16 validation sitting, and removing its clean, pushed worktree. Approving accepts that ADR 0064 supersedes ADR 0010. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-06T16:12:12Z
 worktree: .worktrees/spacedock-ensign-decline-becomes-task-only-with-a-bite
 pr: pr-merge:800
+verdict: PASSED
+completed: 2026-11-07T07:01:50Z
+archived: 2026-11-07T07:01:50Z
 ---
 
 The README's review-finding rule that files every round-3 decline as a new backlog task is replaced: a declined finding keeps its bracketed reason in the gate summary, and becomes a task only when it meets the same bite-and-consumer bar as any other backlog task, or when a later round or task hits it again.
