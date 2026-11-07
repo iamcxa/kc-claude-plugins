@@ -1,0 +1,13 @@
+# 54 archives; added words per observer report, collapse on: median 60.0, max 320 (override-recorded-when-captain-departs); collapse off: median 61.0, max 422
+# lines for override-recorded-when-captain-departs:
+ok | rule: "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it" (Delivery authority) | evidence: "carried: 50 of 77 merged PRs" (gh pr list, state refs)
+observed | release PRs carry no task ask | evidence: "release: #707 #717 #723 #731 #739 #746 #752 #760 #768" (gh pr list)
+observed | sync PRs carry no task ask | evidence: "sync: #715 #718 #725 #733 #741 #747 #753 #761 #781" (gh pr list)
+observed | learning PRs carry no task ask | evidence: "learning: #726 #782" (gh pr list)
+can't tell | rule: "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it" (Delivery authority) | evidence: "no ask record: #762 head 9530369cb452 merged 2026-11-05T02:41:10Z (no task in readable state)" (gh pr list, state refs)
+can't tell | rule: "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it" (Delivery authority) | evidence: "no ask record: #778 head 005afcaeb68c merged 2026-11-05T08:45:11Z (no task in readable state)" (gh pr list, state refs)
+can't tell | rule: "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it" (Delivery authority) | evidence: "no ask record: #784 head b2d0abd778d0 merged 2026-11-05T09:00:02Z (no task in readable state)" (gh pr list, state refs)
+can't tell | rule: "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it" (Delivery authority) | evidence: "no ask record: #785 head 0c38dd60b562 merged 2026-11-05T15:03:18Z (no task in readable state)" (gh pr list, state refs)
+can't tell | rule: "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it" (Delivery authority) | evidence: "no ask record: #789 head c37417313a12 merged 2026-11-05T15:31:50Z (no task in readable state)" (gh pr list, state refs)
+observed | already in an earlier observer report | evidence: "#774 #776"
+Coverage: a merge with no ask record may have been approved in chat or recorded in a state checkout this run cannot read; neither shows here.

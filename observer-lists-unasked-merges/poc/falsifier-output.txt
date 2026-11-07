@@ -1,0 +1,95 @@
+# python3 -B replay.py <code repo> iamcxa/kc-claude-plugins <merged-window.json with #727 head set to 40 zeros and #707 branch renamed chore/release-main>, 2026-11-07
+# read: refs/heads/spacedock-state/dev 2026-09-17T07:55:19+08:00; refs/heads/spacedock-state/dev2 2026-11-07T16:11:17+08:00; refs/heads/spacedock-state/dev2-poc 2026-10-26T22:09:59+08:00; refs/heads/spacedock-state/ship 2026-09-16T07:23:43+08:00; refs/heads/spacedock-state/ship-flow 2026-07-24T17:38:58+08:00; refs/remotes/origin/spacedock-state/dev 2026-09-17T07:55:19+08:00; refs/remotes/origin/spacedock-state/dev-recovery-4b20a918 2026-09-10T16:49:44+08:00; refs/remotes/origin/spacedock-state/dev-recovery-9826ffcf 2026-09-10T16:49:44+08:00; refs/remotes/origin/spacedock-state/dev2 2026-11-07T16:11:17+08:00; refs/remotes/origin/spacedock-state/dev2-poc 2026-10-26T22:09:59+08:00; refs/remotes/origin/spacedock-state/ship 2026-09-16T07:23:43+08:00; refs/remotes/origin/spacedock-state/ship-flow 2026-07-24T17:38:58+08:00
+carried | #702 | merged 2026-10-23T02:36:33Z head 28807397841e | spacedock-state/dev2:_archive/codex-reader-counts-code-review-only/merge/ask-1.json
+no ask record | #704 | merged 2026-10-23T02:34:26Z head f0d3f442d5e6 | no task in readable state
+carried | #705 | merged 2026-10-23T03:27:06Z head 32ad029f059b | spacedock-state/dev2:_archive/new-work-starts-from-a-story-map/merge/ask-1.json
+no ask record | #707 | merged 2026-10-24T08:30:03Z head ba8e0f58dda7 | no task in readable state
+carried | #708 | merged 2026-10-23T06:13:08Z head e033956e9555 | spacedock-state/dev2:_archive/design-director-runs-ui-design-review/merge/ask-1.json
+carried | #709 | merged 2026-10-23T13:22:29Z head d84ebde04c87 | spacedock-state/dev2:_archive/release-acceptance/merge/ask-1.json
+carried | #710 | merged 2026-10-23T04:31:48Z head 0b5a9ddf7eec | spacedock-state/dev2:_archive/kc-adr-format-source/merge/ask-1.json
+carried | #711 | merged 2026-10-23T12:40:01Z head 62ba1e714894 | spacedock-state/dev2:_archive/release-review-staleness-held-at-dispatch/merge/ask-1.json
+carried | #712 | merged 2026-10-23T10:01:59Z head 286ba13ac488 | spacedock-state/dev2:_archive/adr-protected-path-guard/merge/ask-1.json
+carried | #713 | merged 2026-10-24T01:10:25Z head 037d2cf60d93 | spacedock-state/dev2:_archive/kc-adr-tools-with-dev2-copy/merge/ask-1.json
+carried | #714 | merged 2026-10-24T03:59:47Z head 0535aa2c17ba | spacedock-state/dev2:_archive/release-walk-picky-reviewers-and-director/merge/ask-1.json
+sync | #715 | merged 2026-10-24T15:53:32Z head 453e04d86488 | chore(dev2): sync workflow to kc-dev-flow-2 v0.29.0
+carried | #716 | merged 2026-10-25T07:08:12Z head 8340c3baa333 | spacedock-state/dev2:_archive/extension-defaults-and-install-choice/merge/ask-1.json
+release | #717 | merged 2026-10-25T14:18:12Z head b0bf75b1d642 | release-please--branches--main
+sync | #718 | merged 2026-10-25T14:23:18Z head ff3137c1306f | chore(dev2): sync workflow to kc-dev-flow-2 v0.30.0
+carried | #719 | merged 2026-10-25T17:49:10Z head c3eef23fc970 | spacedock-state/dev2:_archive/role-triggers-owe-ce-on-review-drift/merge/ask-1.json
+carried | #720 | merged 2026-10-25T17:48:40Z head 1c480fecf7d8 | spacedock-state/dev2:_archive/delivery-gate-reads-folder-tasks/merge/ask-1.json
+carried | #721 | merged 2026-10-25T18:14:48Z head f559d3d6c6c8 | spacedock-state/dev2:_archive/stage-report-correction-path/merge/ask-2.json
+carried | #722 | merged 2026-10-25T17:49:46Z head c61275186d61 | spacedock-state/dev2:_archive/codex-review-hang-detected/merge/ask-1.json
+release | #723 | merged 2026-10-26T01:26:05Z head 5a29d03ea71a | release-please--branches--main
+carried | #724 | merged 2026-10-26T01:13:41Z head b0b2cbf3f4b6 | spacedock-state/dev2:_archive/fo-written-lines-checked-before-dispatch/merge/ask-1.json
+sync | #725 | merged 2026-10-26T02:02:59Z head 4bc2c24dd655 | chore(dev2): sync workflow to kc-dev-flow-2 v0.31.0
+learning | #726 | merged 2026-10-26T14:03:54Z head 42ea1f26d265 | learning/12af920036eed
+head differs | #727 | merged 2026-10-27T05:37:49Z head 000000000000 | 5dee91fb7fbf in spacedock-state/dev2:_archive/ops-metric-event-protocol/merge/ask-1.json; 5dee91fb7fbf in origin/spacedock-state/dev2:_archive/ops-metric-event-protocol/merge/ask-1.json
+carried | #728 | merged 2026-10-27T00:37:55Z head c2f3e313f4c0 | spacedock-state/dev2:_archive/codex-reader-same-head-unresolved/merge/ask-1.json
+carried | #729 | merged 2026-10-27T04:12:35Z head 981a4309c4ac | spacedock-state/dev2:_archive/worker-knows-the-team-and-asks-early/merge/ask-1.json
+carried | #730 | merged 2026-10-27T05:01:49Z head f7516476989b | spacedock-state/dev2:_archive/peers-rules-name-each-host-binding/merge/ask-1.json
+release | #731 | merged 2026-10-27T06:10:49Z head c68b1fb95f10 | release-please--branches--main
+carried | #732 | merged 2026-10-27T04:45:42Z head 24663871a886 | spacedock-state/dev2:_archive/codex-reader-resolved-mark-adr/merge/ask-1.json
+sync | #733 | merged 2026-10-27T06:37:49Z head e67672b94dc0 | chore(dev2): sync workflow to kc-dev-flow-2 v0.32.0
+carried | #734 | merged 2026-10-27T17:49:39Z head 159b21232dea | spacedock-state/dev2:_archive/journey-probe-finds-nested-maps/merge/ask-1.json
+carried | #735 | merged 2026-10-27T17:49:48Z head 813e0b09cb64 | spacedock-state/dev2:_archive/read-adr-honors-adr-folder/merge/ask-1.json
+carried | #736 | merged 2026-10-27T17:49:43Z head 784e038979be | spacedock-state/dev2:_archive/copilot-not-run-line-carries-quote/merge/ask-1.json
+carried | #737 | merged 2026-10-27T19:07:29Z head aa0f280f8e94 | spacedock-state/dev2:_archive/idle-hook-names-merged-tasks-without-learn/merge/ask-1.json
+release | #739 | merged 2026-10-27T19:26:56Z head fafd1683a192 | release-please--branches--main
+carried | #740 | merged 2026-10-27T19:08:01Z head bd8a2c93bf15 | spacedock-state/dev2:_archive/seed-check-requires-schema-fields/merge/ask-1.json
+sync | #741 | merged 2026-10-27T20:17:32Z head 541d79f66a3d | chore(dev2): sync workflow to kc-dev-flow-2 v0.32.1
+carried | #742 | merged 2026-10-28T16:05:57Z head 9a70a3350436 | spacedock-state/dev2:_archive/paseo-codex-dispatch-practice/merge/ask-1.json
+carried | #743 | merged 2026-10-28T14:29:37Z head ea84b08d4c72 | spacedock-state/dev2:_archive/reused-worker-dispatch-leaves-a-record/merge/ask-1.json
+carried | #744 | merged 2026-10-28T16:05:26Z head b61a708dadf9 | spacedock-state/dev2:_archive/batch-reaches-each-gate-together/merge/ask-1.json
+carried | #745 | merged 2026-10-28T16:30:21Z head c42adb4f2b8c | spacedock-state/dev2:_archive/fo-interviews-extension/merge/ask-1.json
+release | #746 | merged 2026-10-28T16:35:06Z head e4c69a33f1f3 | release-please--branches--main
+sync | #747 | merged 2026-10-28T17:15:36Z head 0cf80ef09aa4 | chore(dev2): sync workflow to kc-dev-flow-2 v0.33.0
+carried | #748 | merged 2026-10-29T10:46:36Z head a2317cfc55e8 | spacedock-state/dev2:_archive/gate-requires-recorded-reviews/merge/ask-1.json
+carried | #749 | merged 2026-10-29T10:47:13Z head da5053febb54 | spacedock-state/dev2:_archive/captain-amendment-form-checked/merge/ask-1.json
+carried | #750 | merged 2026-10-29T10:55:50Z head b8a66e826c75 | spacedock-state/dev2:_archive/validation-rerun-waits-for-captain-ruling/merge/ask-1.json
+carried | #751 | merged 2026-10-29T10:56:26Z head 58c9d0f26c78 | spacedock-state/dev2:_archive/adr-reserved-when-design-names-one/merge/ask-1.json
+release | #752 | merged 2026-10-30T05:49:45Z head 016e61746506 | release-please--branches--main
+sync | #753 | merged 2026-10-30T05:56:10Z head aa2a13e3b3fe | chore(dev2): sync workflow to kc-dev-flow-2 v0.33.1
+carried | #754 | merged 2026-11-01T07:38:50Z head 422caef5a9b1 | spacedock-state/dev2:_archive/peers-paseo-rule-matches-practice/merge/ask-1.json
+carried | #755 | merged 2026-11-01T07:38:42Z head 0c55b9a574b8 | spacedock-state/dev2:_archive/batch10-after-release-obligations/merge/ask-1.json
+carried | #756 | merged 2026-11-01T07:40:26Z head 39fdbb28b411 | spacedock-state/dev2:_archive/peer-status-reaches-fresh/merge/ask-1.json
+carried | #757 | merged 2026-11-01T09:48:44Z head 8aa76f15f3ce | spacedock-state/dev2:_archive/paseo-human-surfaces-visible-and-reachable/merge/ask-1.json
+carried | #758 | merged 2026-11-01T07:40:19Z head 9f065b01f1c6 | spacedock-state/dev2:_archive/names-check-says-what-it-skipped/merge/ask-1.json
+carried | #759 | merged 2026-11-01T10:07:44Z head cf8e5848654f | spacedock-state/dev2:_archive/model-roster-per-repo/merge/ask-1.json
+release | #760 | merged 2026-11-01T10:24:46Z head feb9d9697cd8 | release-please--branches--main
+sync | #761 | merged 2026-11-01T12:53:25Z head 8467522c07b7 | chore(dev2): sync workflow to kc-dev-flow-2 v0.34.0
+no ask record | #762 | merged 2026-11-05T02:41:10Z head 9530369cb452 | no task in readable state
+carried | #763 | merged 2026-11-02T08:14:26Z head fef0ae5fa79a | spacedock-state/dev2:_archive/worker-completion-reaches-fo-on-paseo/merge/ask-1.json
+carried | #764 | merged 2026-11-02T08:20:47Z head 8eed70b26034 | spacedock-state/dev2:_archive/special-roles-follow-the-model-table/merge/ask-1.json
+carried | #765 | merged 2026-11-02T10:10:43Z head c2643dae831f | spacedock-state/dev2:_archive/model-roster-question-needs-both-families/merge/ask-1.json
+carried | #766 | merged 2026-11-03T02:40:52Z head 0d8cb2b13be6 | spacedock-state/dev2:_archive/second-round-prompts-a-step-back/merge/ask-1.json
+carried | #767 | merged 2026-11-03T04:43:26Z head 6b680cf89125 | spacedock-state/dev2:_archive/validation-gate-requires-the-question-check/merge/ask-1.json
+release | #768 | merged 2026-11-04T11:59:46Z head 8fa4d07e07ad | release-please--branches--main
+carried | #769 | merged 2026-11-04T08:57:50Z head 1f8d30aed016 | spacedock-state/dev2:_archive/fo-answers-own-worker-permissions-by-listed-id/merge/ask-1.json
+carried | #770 | merged 2026-11-04T08:58:17Z head b81c628facd2 | spacedock-state/dev2:_archive/rewritten-criteria-checked-against-captain-words/merge/ask-1.json
+carried | #771 | merged 2026-11-04T00:41:51Z head 7aad891353a9 | spacedock-state/dev2:_archive/diagnosis-rounds-count-toward-step-back/merge/ask-1.json
+carried | #772 | merged 2026-11-04T00:42:17Z head 606781cbec3f | spacedock-state/dev2:_archive/release-walk-off-production-before-release/merge/ask-1.json
+carried | #773 | merged 2026-11-04T00:42:44Z head 128fe3e3fed7 | spacedock-state/dev2:_archive/fo-tries-what-it-asks-the-captain/merge/ask-1.json
+no ask record | #774 | merged 2026-11-04T08:58:44Z head b026e0d7e497 | no task in readable state
+carried | #775 | merged 2026-11-04T08:59:10Z head bbf65bb3a621 | spacedock-state/dev2:_archive/release-walk-due-trigger/merge/ask-1.json
+no ask record | #776 | merged 2026-11-03T15:23:40Z head d071565932c9 | no task in readable state
+carried | #777 | merged 2026-11-04T08:59:36Z head 69f4988612d1 | spacedock-state/dev2:_archive/claims-name-their-source/merge/ask-1.json
+no ask record | #778 | merged 2026-11-05T08:45:11Z head 005afcaeb68c | no task in readable state
+sync | #781 | merged 2026-11-05T02:19:23Z head 04809c3c6146 | chore(dev2): sync workflow to kc-dev-flow-2 v0.35.0
+learning | #782 | merged 2026-11-05T06:57:24Z head 771e294c758f | learning/13df332879bb0
+no ask record | #784 | merged 2026-11-05T09:00:02Z head b2d0abd778d0 | no task in readable state
+no ask record | #785 | merged 2026-11-05T15:03:18Z head 0c38dd60b562 | no task in readable state
+carried | #786 | merged 2026-11-05T15:16:32Z head 69d62c772c5f | spacedock-state/dev2:_archive/override-recorded-when-captain-departs/merge/ask-1.json
+carried | #787 | merged 2026-11-05T15:29:07Z head 272721000cce | spacedock-state/dev2:_archive/extension-instruction-check-sees-every-listed-extension/merge/ask-1.json
+carried | #788 | merged 2026-11-05T16:18:16Z head 2493d57a17dc | spacedock-state/dev2:_archive/gate-presentation-asks-one-thing-plainly/merge/ask-2.json
+no ask record | #789 | merged 2026-11-05T15:31:50Z head c37417313a12 | no task in readable state
+no ask record | #792 | merged 2026-11-06T03:41:19Z head 87b60b466acc | no task in readable state
+carried | #793 | merged 2026-11-06T04:06:30Z head 5b3e290a7eac | spacedock-state/dev2:_archive/delivery-question-requires-worktree-clause/merge/ask-1.json
+no ask record | #795 | merged 2026-11-06T06:30:55Z head 80515bcdd105 | no task in readable state
+no ask record | #796 | merged 2026-11-06T14:27:19Z head e7bdee42bf56 | no task in readable state
+carried | #797 | merged 2026-11-07T02:04:52Z head 1ca2625de070 | spacedock-state/dev2:_archive/delivery-check-passes-a-skipped-by-design-run/merge/ask-1.json
+no ask record | #798 | merged 2026-11-07T01:39:57Z head 74cde7e09fb6 | no task in readable state
+carried | #799 | merged 2026-11-07T02:04:59Z head 97dceebedd68 | spacedock-state/dev2:_archive/delivery-check-resolves-links-from-the-task/merge/ask-1.json
+carried | #800 | merged 2026-11-07T02:05:06Z head ae7750375bc1 | spacedock-state/dev2:_archive/decline-becomes-task-only-with-a-bite/merge/ask-1.json
+carried | #801 | merged 2026-11-07T02:05:13Z head ef3ed3e05534 | spacedock-state/dev2:_archive/adr-reservation-crosses-workflows/merge/ask-1.json
+carried | #802 | merged 2026-11-07T02:05:20Z head 37b1c0b7a956 | spacedock-state/dev2:_archive/codex-security-only-prompts-code-review/merge/ask-1.json
+# counts: {'carried': 59, 'no ask record': 13, 'sync': 9, 'release': 8, 'learning': 2, 'head differs': 1} total 92
