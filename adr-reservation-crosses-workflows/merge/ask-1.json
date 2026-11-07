@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "ef3ed3e05534e2a997acbdfb055a880fde1f484a",
+  "model": "not run",
+  "necessity": "the six files are ADR 0002, workflow.md, lint-skills.py, number_guards.py and its test, and one assertion in test_dispatch_records.py approved in implementation-1-message-1 (gh pr view 801 --json file",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F1 Deferred risk: reservation/push race'",
+    "point: deferred: '- F2 Deferred risk: unpublished/no-origin or'",
+    "point: deferred: '- F3 Deferred risk: failed fetch'",
+    "point: deferred: '- F1 Deferred risk: reservation/push race'",
+    "point: deferred: '- F2 Deferred risk: unpublished/no-origin or'",
+    "point: deferred: '- F3 Deferred risk: failed fetch'",
+    "point: deferred: '- F1 Deferred risk: concurrent reserves'",
+    "point: deferred: '- F2 Deferred risk: unpublished/no-origin/out-of-namespace state'",
+    "point: deferred: '- F3 Deferred risk: a failed'",
+    "point: deferred: '- F4 Deferred risk: multiple reservation'",
+    "point: deferred: 'Declined: Deferred risk, Codex round 2'",
+    "point: deferred: 'Declined: Deferred risk, validation-2 F1 two'",
+    "point: more: 11 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#801",
+  "sufficiency": "reserve and check now read published reservations on every spacedock-state branch, so a number another workflow has reserved is refused, and a state branch deleted from origin no longer holds its numb",
+  "time": "2026-11-07T02:01:26Z",
+  "verdict": "ask"
+}
