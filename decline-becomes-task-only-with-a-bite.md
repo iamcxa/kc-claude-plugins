@@ -83,6 +83,7 @@ Result: aligned at backlog: Batch 16 backlog gate, the Captain 「核准（建�
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-07: Amendment 1 replaces only AC-4's falsifier record (test evidence), the product head ae7750375 predates it and is unchanged, and validation-1 rechecked the replacement record E at that head (2/2 candidate, 0/2 mutation)
 
 ## Design
 
