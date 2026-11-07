@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.36.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.35.0...kc-dev-flow-2-v0.36.0) (2026-11-07)
+
+
+### Features
+
+* **kc-dev-flow-2:** check Captain reason declarations before recording ([#786](https://github.com/iamcxa/kc-claude-plugins/issues/786)) ([546c6da](https://github.com/iamcxa/kc-claude-plugins/commit/546c6daf13c417a72a958c74681bc64420dd20cb))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** check listed extension instructions on fresh dispatches ([#787](https://github.com/iamcxa/kc-claude-plugins/issues/787)) ([65d35da](https://github.com/iamcxa/kc-claude-plugins/commit/65d35dac02ae2aa4bb94642c41665a4e06ed8490))
+* **kc-dev-flow-2:** keep gate approvals bound to the quoted question ([#788](https://github.com/iamcxa/kc-claude-plugins/issues/788)) ([b804d81](https://github.com/iamcxa/kc-claude-plugins/commit/b804d81d3abc94c9c321326dc75e7cac927c5252))
+* **kc-dev-flow-2:** prompt code review after a security-only summary ([#802](https://github.com/iamcxa/kc-claude-plugins/issues/802)) ([139feea](https://github.com/iamcxa/kc-claude-plugins/commit/139feeaee7ce037a0c6535568cd6bd103155cbae))
+* **kc-dev-flow-2:** read ADR reservations across workflows ([#801](https://github.com/iamcxa/kc-claude-plugins/issues/801)) ([655e474](https://github.com/iamcxa/kc-claude-plugins/commit/655e474cfe63abca8634769ab89898bd7aa7f8c1))
+* **kc-dev-flow-2:** require a bite before filing declined findings ([#800](https://github.com/iamcxa/kc-claude-plugins/issues/800)) ([3123cf7](https://github.com/iamcxa/kc-claude-plugins/commit/3123cf7ac9c432d51be3c959a7cc84c638f71224))
+* **kc-dev-flow-2:** require worktree cleanup in merge questions ([#793](https://github.com/iamcxa/kc-claude-plugins/issues/793)) ([c44fc64](https://github.com/iamcxa/kc-claude-plugins/commit/c44fc64f33a4d5063c52cbf16dc730a6285cb8ce))
+* **kc-dev-flow-2:** resolve delivery step files from the task folder ([#799](https://github.com/iamcxa/kc-claude-plugins/issues/799)) ([629cf73](https://github.com/iamcxa/kc-claude-plugins/commit/629cf732613494eb86ac96e0bf70a0d4f85b3bd4))
+* **kc-dev-flow-2:** settle skipped runs when required checks pass ([#797](https://github.com/iamcxa/kc-claude-plugins/issues/797)) ([4112dee](https://github.com/iamcxa/kc-claude-plugins/commit/4112dee72125dde3721fd258e9bfa5e764d00b1c))
+
 ## [0.35.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.34.0...kc-dev-flow-2-v0.35.0) (2026-11-04)
 
 

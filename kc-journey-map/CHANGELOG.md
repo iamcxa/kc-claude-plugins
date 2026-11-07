@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.10.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.9.0...kc-journey-map-v1.10.0) (2026-11-07)
+
+
+### Features
+
+* **kc-journey-map:** pair and revoke one agent from my account ([#789](https://github.com/iamcxa/kc-claude-plugins/issues/789)) ([a7c0bdb](https://github.com/iamcxa/kc-claude-plugins/commit/a7c0bdbe0ae0f111780f6d3b7254ed4ad67befcd))
+* **kc-journey-map:** publish an agent guide at /llms.txt on the canvas ([#798](https://github.com/iamcxa/kc-claude-plugins/issues/798)) ([ee6ca16](https://github.com/iamcxa/kc-claude-plugins/commit/ee6ca16fa6c2259fc8d040aaec23a0caba5ab080))
+* **kc-journey-map:** see my account and log out from the native canvas menu ([#785](https://github.com/iamcxa/kc-claude-plugins/issues/785)) ([85d28fd](https://github.com/iamcxa/kc-claude-plugins/commit/85d28fddfda1320ccda1225863c5f27990c1a875))
+* **kc-journey-map:** switch permitted rooms within one native canvas ([#779](https://github.com/iamcxa/kc-claude-plugins/issues/779)) ([8dc13b6](https://github.com/iamcxa/kc-claude-plugins/commit/8dc13b697e2c4fb861affc3c9b0bebceb15e75c2))
+* **kc-journey-map:** verified human enters the requested private canvas ([#778](https://github.com/iamcxa/kc-claude-plugins/issues/778)) ([c531507](https://github.com/iamcxa/kc-claude-plugins/commit/c531507d1af7b5347e412fc4ae410f277a185c0e))
+
+
+### Bug Fixes
+
+* **kc-journey-map:** forward only the active mode's client paths through the share entrance ([#796](https://github.com/iamcxa/kc-claude-plugins/issues/796)) ([ba055b8](https://github.com/iamcxa/kc-claude-plugins/commit/ba055b8a7a55a787ac989c4cef52d07dd75661ad))
+* **kc-journey-map:** keep sign-in denials and log hosted identity errors ([#795](https://github.com/iamcxa/kc-claude-plugins/issues/795)) ([fe4ed5b](https://github.com/iamcxa/kc-claude-plugins/commit/fe4ed5b59f0d7d71d7096473d9bb5e8a8707342c))
+
 ## [1.9.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.8.0...kc-journey-map-v1.9.0) (2026-11-04)
 
 
