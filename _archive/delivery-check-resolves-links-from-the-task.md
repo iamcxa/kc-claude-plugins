@@ -3,7 +3,7 @@ title: The delivery check resolves a report's relative Markdown links against th
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-07), answering 「決定：合併 #799（交付檢查從任務資料夾解析連結）嗎？ Regular merge with --match-head-commit 97dceebedd68108ef8e67fa5455f1e578c910ad6, the batch 16 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-06T16:11:53Z
 worktree: .worktrees/spacedock-ensign-delivery-check-resolves-links-from-the-task
 pr: pr-merge:799
+verdict: PASSED
+completed: 2026-11-07T02:10:39Z
+archived: 2026-11-07T02:10:39Z
 ---
 
 `delivery_gate.py question` and `check` read a relative `.md` path named in the gate text or the validation report from the task's own folder, so the result does not depend on where FO runs the command.
