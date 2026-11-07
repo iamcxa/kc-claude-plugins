@@ -3,7 +3,7 @@ title: When Codex posts only a security summary, the codex reader names the code
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
