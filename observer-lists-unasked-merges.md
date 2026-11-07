@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:observer-lists-unasked-merges:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:observer-lists-unasked-merges-backlog-1
+              briefing:
+                id: briefing:observer-lists-unasked-merges:backlog:attempt-1:revision-1
+                digest: sha256:b2ad9cdc9bcf9da7256f7fca7df2c3bc48c1fea883b4a455111ee7047d5de06a
+                room-ref: ./observer-lists-unasked-merges/review/backlog/briefing-1
 ---
 
 At archive, the observer reports every PR merged in its window whose number and merged head match no saved `merge/ask-N.json` in any state checkout it can read, so an unasked merge is found after the fact without a pre-tool hook.
