@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:decline-becomes-task-only-with-a-bite:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:decline-becomes-task-only-with-a-bite-validation-1
+              briefing:
+                id: briefing:decline-becomes-task-only-with-a-bite:validation:attempt-1:revision-1
+                digest: sha256:05d8eb7a1dd798adbb900e9adb7491f1370f6b658682a2d07c1a9acd6c9d88cb
+                room-ref: ./decline-becomes-task-only-with-a-bite/review/validation/briefing-1
 started: 2026-11-06T16:12:12Z
 worktree: .worktrees/spacedock-ensign-decline-becomes-task-only-with-a-bite
 pr: iamcxa/kc-claude-plugins#800

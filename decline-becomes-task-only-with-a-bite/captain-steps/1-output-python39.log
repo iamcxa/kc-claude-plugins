@@ -1,0 +1,5 @@
+STEP 1 PASS: exported ae7750375bc19e482f829edc9a041d95fb280693
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/decline-becomes-task-only-with-a-bite/validation/acceptance.py", line 76, in <module>
+    archive_file.extractall(base, filter="data")
+TypeError: extractall() got an unexpected keyword argument 'filter'
