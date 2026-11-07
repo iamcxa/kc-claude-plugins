@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-11-06T16:11:53Z
 worktree: .worktrees/spacedock-ensign-delivery-check-resolves-links-from-the-task
-pr: iamcxa/kc-claude-plugins#799
+pr: pr-merge:799
 ---
 
 `delivery_gate.py question` and `check` read a relative `.md` path named in the gate text or the validation report from the task's own folder, so the result does not depend on where FO runs the command.
