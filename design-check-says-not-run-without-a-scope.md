@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:design-check-says-not-run-without-a-scope:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:design-check-says-not-run-without-a-scope-ideation-1
+              briefing:
+                id: briefing:design-check-says-not-run-without-a-scope:ideation:attempt-1:revision-1
+                digest: sha256:acc9587aea5d4d5fd5af90e3e1830e8d83c578875dbe30a980f17009223cd9f9
+                room-ref: ./design-check-says-not-run-without-a-scope/review/ideation/briefing-1
 ---
 
 When the artifact bound at a gate has no Scope section, `design_surfaces.py check` prints a not-run line naming the artifact instead of reporting "Scope changed" against an empty baseline, and `gate prepare` warns when the artifact is not the task file.
