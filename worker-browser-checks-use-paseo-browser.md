@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:worker-browser-checks-use-paseo-browser:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:worker-browser-checks-use-paseo-browser-ideation-1
+              briefing:
+                id: briefing:worker-browser-checks-use-paseo-browser:ideation:attempt-1:revision-1
+                digest: sha256:59f86fb8b5c5c14538ee94eb46de4541332c2e65a8e083e9fdf4fdc7146a83c5
+                room-ref: ./worker-browser-checks-use-paseo-browser/review/ideation/briefing-1
 ---
 
 Where the workflow README lists the paseo extension, a worker's local browser verification uses Paseo's browser tools (mcp__paseo__browser_*) by default instead of Chrome for Testing (agent-browser), and the paseo extension states the known limits and their workarounds.
