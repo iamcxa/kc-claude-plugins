@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:observer-lists-unasked-merges:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:observer-lists-unasked-merges-ideation-1
+              briefing:
+                id: briefing:observer-lists-unasked-merges:ideation:attempt-1:revision-1
+                digest: sha256:06a6e8cfd7df4e08a4d747d0b16d5c6d71318e5eef755cb08b38f70b9805377a
+                room-ref: ./observer-lists-unasked-merges/review/ideation/briefing-1
 ---
 
 At archive, the observer reports every PR merged in its window whose number and merged head match no saved `merge/ask-N.json` in any state checkout it can read, so an unasked merge is found after the fact without a pre-tool hook.
