@@ -218,3 +218,28 @@ What gets worse under A: a task bound to a presentation file gets no Scope check
 The false hold comes from `scope_hold` using whatever file the backlog briefing bound as the Scope baseline. 15 of 388 backlog briefings across relay, this workflow, qnow and web bind a presentation file, and all 10 replayed holds were false. The design adds one not-run state, keyed on the bound path rather than on a missing Scope (two bound files here carry their own `## Scope`), placed after the amendment lookup so amendment baselines are unchanged.
 
 Spacedock's `prepare.go` defines `--artifact` as the presentation item, so the "gate prepare warns" half is D2 (recommend drop). Comparing against the task file at the same sha is D1's option B, kept for the Captain.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria; D1 option A (name the foreign binding, exit unchanged), D2 (no gate prepare warning), only the files the design names.
+  Branch `spacedock-ensign/design-check-says-not-run-without-a-scope`; fetched base `139feeaee7ce037a0c6535568cd6bd103155cbae`; candidate `2760f259379e9c3bb43bab9efa56d90c5b657ab1`; only `kc-dev-flow-2/scripts/design_surfaces.py` and `kc-dev-flow-2/scripts/test_design_surfaces.py`; no version bump.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation (python3 -B, caches cleared).
+  AC-1: real Relay state at `6008953a` prints presentable then exactly `scope check not run: backlog briefing binds llms-teaches-versions/review/backlog-gate.md, not this task file`, exit 0; base and removed-guard replay exit 1 with `Scope changed after the backlog gate (01d0e0e4)`; `/tmp/impl-design-check-says-not-run/replay.py`, `replay.json` and `relay-*.log` retain the receipts.
+  AC-2: existing Scope tests pass unchanged; the new folder case is clean when tracked, untracked and under `_archive/`, then holds an added Scope line; unconditional-guard and guessed-parent-path mutants each fail the behavior assertion.
+  AC-3: foreign bindings with and without their own Scope return not run, including after a task Scope edit; the missing-Scope-only mutant fails the copied-Scope case.
+  AC-4: foreign binding plus dated amendment is clean at the working copy and amendment commit, then holds a further edit; the early-return mutant fails this case.
+  AC-5: exact two-file diff and `git diff --check` pass; adding an unapproved path fails the boundary assertion; workflow stays 5933 words. `/tmp/impl-design-check-says-not-run/mutations.py` runs each code mutant in a fresh copy excluding bytecode caches under `python3 -B`; all six falsifier checks catch their intended failure (`mutations.json`).
+- DONE: Repository `kc-dev-flow-2/scripts/lint-skills.py`, package `adr_lint.py docs/adr --since <base>`, `number_guards.py check`, and `comment_ratio.py` checks.
+  Each exits 0 from the candidate worktree; package scripts are from the dispatched `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0`. ADR lint checks 62 records, including explicit `--require 0027 0042 0048`; number guard reports no findings (migration guard skipped: no migrations-path declared); comments 0/60 code lines, 0.0%, maximum 5%; logs in `/tmp/impl-design-check-says-not-run/`.
+- DONE: Full `unittest discover -s kc-dev-flow-2/scripts` is green.
+  `python3 -B -m unittest discover -s kc-dev-flow-2/scripts` exits 0: 985 tests, 7 existing skips (`discover.log`); the focused checker suite exits 0: 217 tests, 4 existing skips (`design-tests.log`). Tests run on the candidate bytes; no subsequent product edits.
+- DONE: Affected documents reviewed with package `doc_impact.py <base> HEAD --json`.
+  `docs/adr/0041-seed-admission-enforces-required-fields.md`: unaffected, seed admission and required fields unchanged. `docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md`: unaffected, rewritten-criterion comparison unchanged. `doc-impact.json` retains the complete two-document list; only the approved module docstring changes.
+- DONE: Commit locally and report the branch, base, candidate SHA and prepared PR text; stage named files only, no empty commits.
+  Candidate above is committed locally and its worktree is clean. Conventional Commit title and complete PR body are in `/tmp/impl-design-check-says-not-run-without-a-scope-pr.md`; branch was fast-forwarded to the fetched approved base before edits.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins; product branch push, RoboRev and hosted CI.
+  no PR opened: no push grant; FO owns publication, Draft PR creation, RoboRev and CI. Live branch PR lookup returned `[]`. roborev not run: FO runs RoboRev after this report because the Codex sandbox cannot reach the local daemon. CI not run; CI cost per PR not measured; no CI trigger changed.
+
+### Summary
+
+The accepted Pilot change uses the existing not-run result when the backlog baseline belongs to another file, while preserving amendment baselines and real Scope-change holds. The real replay and mutation falsifiers pass, all 985 script tests are green with 7 existing skips, and the workflow word budget is unchanged; publication, independent review and hosted CI remain FO-owned.
