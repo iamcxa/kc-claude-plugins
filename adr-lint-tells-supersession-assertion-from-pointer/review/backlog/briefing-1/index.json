@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-lint-tells-supersession-assertion-from-pointer:backlog:attempt-1:revision-1",
+  "question": "決定：第 17 批這五張（Paseo 瀏覽器當工人驗收的預設、決策紀錄檢查分清驗證取代與指向依據、派工時自動寫派工紀錄、沒給範圍時設計檢查說沒跑、觀察者列出沒有合併提問紀錄的合併）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？建議核准。要改哪張直接說。",
+  "artifacts": [
+    {
+      "id": "artifact:adr-lint-tells-supersession-assertion-from-pointer:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ef76e28f4430cdbe5b8e4dd231d59d3ca5a7bdef/adr-lint-tells-supersession-assertion-from-pointer.md",
+      "rev": "sha256:ffe6761454617a1a5abf611b4c62b2380952dff1ee6a2d5c65a9bac01ecd5091",
+      "mediaType": "text/markdown",
+      "summary": "Batch 17 backlog sitting: adr-lint-tells-supersession-assertion-from-pointer, profile pilot. Seed check: design_surfaces.py check --seed exit 0 'seed fields and FO alignment recorded' (FO 2026-11-07). Composition: the Captain chose 「這五張（建議）」 (host question dialog, 2026-11-07)."
+    }
+  ]
+}

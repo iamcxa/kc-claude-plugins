@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:adr-lint-tells-supersession-assertion-from-pointer:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:adr-lint-tells-supersession-assertion-from-pointer-backlog-1
+              briefing:
+                id: briefing:adr-lint-tells-supersession-assertion-from-pointer:backlog:attempt-1:revision-1
+                digest: sha256:b1bbc3cf56fcca91bbde08e296e3a7e53f6d2aa1fdb7c434cf69b2128e983ff1
+                room-ref: ./adr-lint-tells-supersession-assertion-from-pointer/review/backlog/briefing-1
 ---
 
 `adr_lint.py` no longer reports a file an ADR protects as "points at ADR N, Superseded by M" when the only citation is a test asserting that N's Status reads "Superseded by M".
