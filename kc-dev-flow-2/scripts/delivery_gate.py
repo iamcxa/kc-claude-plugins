@@ -63,6 +63,8 @@ Reads Captain step observations without executing commands. Missing observations
 unrecorded fenced commands or links (including fences in named Markdown files), missing absolute
 paths, and Captain-only steps without a reason hold the ask (exit 1). Unreadable input is exit 2.
 Candidate may be none outside a validation gate. The check trusts recorded observations.
+Relative Markdown names resolve from the task folder, including names prefixed by its slug.
+Report-only Markdown files contribute fenced commands; missing-path checks cover FO's text and Asked lines.
 Prose asks, inline code, fences inside a > quote, fences starting on a list-marker line,
 and 4-space indented code blocks stay undetected. An unclosed fence in a named Markdown
 file becomes one large required step, through the end of the file.
@@ -767,7 +769,14 @@ def execution_recorded(ran):
         return False
 
 
-def inspect_steps(record_path, message):
+def named_file(folder, value):
+    path = Path(value).expanduser()
+    if path.is_absolute():
+        return path
+    return (folder.parent if path.parts[:1] == (folder.name,) else folder) / path
+
+
+def inspect_steps(record_path, message, folder, evidence=""):
     text = record_path.read_text()
     header = re.split(r"^### Step \d+[ \t]*$", text, maxsplit=1, flags=re.M)[0]
     candidates = re.findall(r"^Candidate:[ \t]*([^\n]*)$", header, re.M)
@@ -780,15 +789,20 @@ def inspect_steps(record_path, message):
     if not steps:
         problems.append("record has no Step 1")
     observed = {normalized(fields["Observed"]) for _, fields in steps if fields.get("Observed", "").strip()}
-    path_text = FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], message)
-    texts = [message]
-    commands = fenced_steps(message)
-    markdown = [Path(re.sub(r":\d+(?::\d+)?$", "", value)).expanduser() for value in
-                re.findall(r"(?<![\w:/])(?:[~./\w-]+/)?[\w.-]+\.md(?::\d+(?::\d+)?)?", URL.sub(" ", path_text))]
-    for path in dict.fromkeys(absolute_paths(path_text) + markdown):
+    asked_paths = FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], message)
+    texts = [message + "\n" + evidence]
+    path_text = FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], texts[0])
+    commands = fenced_steps(texts[0])
+    named = lambda source: absolute_paths(source) + [named_file(folder, re.sub(r":\d+(?::\d+)?$", "", value)) for value in
+                re.findall(r"(?<![\w:/])(?:[~./\w-]+/)?[\w.-]+\.md(?::\d+(?::\d+)?)?", URL.sub(" ", source))]
+    own = {path.resolve() for path in named(asked_paths)}
+    link_texts = texts.copy()
+    for path in dict.fromkeys(named(path_text)):
         if path.suffix.lower() == ".md" and path.is_file() and path.resolve() != record_path.resolve():
             card = path.read_text()
             texts.append(card)
+            if path.resolve() in own:
+                link_texts.append(card)
             commands += fenced_steps(card)
     expanded = "\n".join(texts)
     asked = [normalized(fields.get("Asked", "")) for _, fields in steps]
@@ -812,12 +826,12 @@ def inspect_steps(record_path, message):
         for path in absolute_paths(fields.get("Asked", "")):
             if not path.exists():
                 problems.append(f"step {number} S4: missing path {path}")
-    for path in absolute_paths(path_text):
+    for path in absolute_paths(asked_paths):
         if not path.exists():
             problems.append(f"message S4: missing path {path}")
     required_commands = [body for body in commands if normalized(body) not in observed]
     coverage_text = "\n".join(FENCE.sub(lambda match: "" if normalized(match[3]) in observed else match[0], text)
-                              for text in texts)
+                              for text in link_texts)
     coverage_text += "\n" + "\n".join(required_commands)
     for item in required_commands + links(coverage_text):
         if not any(normalized(item) in request for request in asked):
@@ -827,7 +841,8 @@ def inspect_steps(record_path, message):
 
 def steps(args):
     try:
-        problems, _, count, left = inspect_steps(Path(args.record).expanduser(), Path(args.text_file).read_text())
+        record = Path(args.record).expanduser()
+        problems, _, count, left = inspect_steps(record, Path(args.text_file).read_text(), record.resolve().parent.parent)
     except (OSError, UnicodeDecodeError) as error:
         emit(f"cannot read input: {error}")
         return 2
@@ -842,9 +857,10 @@ def captain_step_problems(task, gate_text, summary):
     declarations = re.findall(r"^Captain steps:[ \t]*(.*)$", "\n".join(outside_fences(summary)), re.M)
     if len(declarations) != 1 or not declarations[0].strip():
         return ["gate text needs one Captain steps: <record path> line"]
-    path = Path(declarations[0].strip().strip("`\"")).expanduser()
+    folder = task_folder(task)
+    path = named_file(folder, declarations[0].strip().strip("`\""))
     report = (VALIDATION_SECTION.findall(task.read_text()) or [""])[-1]
-    problems, candidate, _, _ = inspect_steps(path, gate_text + "\n" + report)
+    problems, candidate, _, _ = inspect_steps(path, gate_text, folder, report)
     if problems:
         return [f"Captain steps record fails: {problems[0]}"]
     candidates, _ = dispatched_candidates(task)
