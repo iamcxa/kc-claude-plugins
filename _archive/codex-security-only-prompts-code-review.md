@@ -3,7 +3,7 @@ title: When Codex posts only a security summary, the codex reader names the code
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-07), answering 「決定：合併 #802（PR 上只有 Codex 安全審查摘要時，提醒再請一次 Codex 程式碼審查）嗎？建議合併。 Regular merge with --match-head-commit 37b1c0b7a9561ee48165cefbc9424a4390fe9d0a, the batch 16 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-06T16:11:34Z
 worktree: .worktrees/spacedock-ensign-codex-security-only-prompts-code-review
 pr: pr-merge:802
+verdict: PASSED
+completed: 2026-11-07T02:10:04Z
+archived: 2026-11-07T02:10:04Z
 ---
 
 When Codex has posted only its security-review summary on a PR head, codex_review.py (or pr_watch.py) prints a next line that asks FO to request `@codex review`, so a merge ask is not prepared on a head with no code review.
