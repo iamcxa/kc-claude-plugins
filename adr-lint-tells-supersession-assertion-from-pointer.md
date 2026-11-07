@@ -34,6 +34,17 @@ gates:
                 id: briefing:adr-lint-tells-supersession-assertion-from-pointer:ideation:attempt-1:revision-1
                 digest: sha256:405ccdf563180b2351e8b85022e21105473a31c73136f5a73139d124233fcc12
                 room-ref: ./adr-lint-tells-supersession-assertion-from-pointer/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-lint-tells-supersession-assertion-from-pointer:ideation:1
+                briefing: briefing:adr-lint-tells-supersession-assertion-from-pointer:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-07T15:37:18.06451Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-07), answering 「決定：第 17 批五張設計都照各自寫下的建議進實作嗎？要你決定的有：Paseo 瀏覽器 D1 那句指示不強制成派工紀錄必填、D2 在 kc-claude-plugins 用 journey-map 畫面驗證；設計檢查 D1 綁的不是任務檔就印「沒跑」、D2 不做開關卡時的提醒；未經提問的合併 D1 讀本 repo 所有狀態分支、D2 用分支前綴和同步 PR 標題認發版／同步／學習類；派工紀錄 D1 用套件裡的派工腳本並新增一份決策紀錄（ADR）、D2 模型與名冊仍由我手填、D3 版本與工作流程檢查這次不併進腳本；決策紀錄檢查沒有要你決定的事。核准即接受每張設計對其決定寫下的建議。要改哪件直接說。」. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 `adr_lint.py` no longer reports a file an ADR protects as "points at ADR N, Superseded by M" when the only citation is a test asserting that N's Status reads "Superseded by M".
