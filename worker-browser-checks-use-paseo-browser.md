@@ -181,17 +181,17 @@ Recommended order: this task before dispatch-build-writes-the-dispatch-record; a
 
 ## Acceptance criteria
 
-**AC-1** The paseo extension's scope-note quote ends with the browser sentence, and the quote's first sentence is unchanged.
-Evidence: at the candidate, `git show <candidate>:kc-dev-flow-2/extensions/paseo/EXTENSION.md | grep -n '^Add to scope notes:'` shows one line whose quote ends `first read extensions/paseo/browser.md under your Package root."`; `python3 kc-dev-flow-2/scripts/test_dispatch_records.py` passes unchanged (its `test_every_shipped_instruction_is_read_from_its_extension_file` asserts the paseo first sentence). Falsifier: putting the sentence first, or as a second `Add to scope notes:` line, makes that test fail.
+**AC-1** The paseo extension's scope-note quote ends with the sentence `Before using Paseo's browser tools, read extensions/paseo/browser.md under your Package root.`, and the quote's first sentence is unchanged.
+Evidence: at the candidate, `git show <candidate>:kc-dev-flow-2/extensions/paseo/EXTENSION.md | grep -n '^Add to scope notes:'` shows one line whose quote ends with that sentence; `python3 kc-dev-flow-2/scripts/test_dispatch_records.py` passes unchanged. Falsifier: putting the sentence first, or as a second `Add to scope notes:` line, makes that test fail.
 
-**AC-2** `extensions/paseo/browser.md` states the default, the precedence of repository instructions, CI unchanged, the fallback with per-step tool reporting, not-run-is-never-clean, and the four limits each with its workaround, in at most 240 words.
-Evidence: `wc -w` on the file; a reviewer maps each of the four limits in `## Scope` to one bullet with its workaround. Falsifier: a limit without a workaround, or over 240 words, fails.
+**AC-2** `extensions/paseo/browser.md` sends attended pages, including a login where the Captain performs human verification, to EXTENSION.md's Human terminals and pages; keeps repository instructions first; says unattended checks use the repository's supported adapter with no required Paseo attempt; and keeps CI unchanged, the fallback with per-step tool reporting, not-run-is-never-clean, the visible-tab limit and the four limits each with its workaround, in at most 240 words.
+Evidence: `wc -w` on the file; a reviewer maps each of the four limits in `## Scope` to one bullet with its workaround. Falsifier: a sentence requiring a Paseo attempt for an unattended check, a limit without a workaround, or over 240 words fails.
 
 **AC-3** FO's reading rises only at the Paseo dispatch moment, by at most 20 words, and the workflow README and its word budget are untouched.
 Evidence: `git diff --stat origin/main...<candidate> -- kc-dev-flow-2/references/sd/workflow.md kc-dev-flow-2/scripts/lint-skills.py kc-dev-flow-2/scripts/dispatch_records.py` is empty; `wc -w` of EXTENSION.md at base 1101, at candidate ≤ 1121; `python3 kc-dev-flow-2/scripts/lint-skills.py` passes. Falsifier: moving the limits into EXTENSION.md exceeds the bound.
 
-**AC-4** End to end on kc-claude-plugins dev2 (the only adopter listing paseo): one fresh Claude worker spawned through Paseo, given scope notes copied from the candidate EXTENSION.md and `Package root:` the candidate checkout's `kc-dev-flow-2`, is asked to verify that the kc-journey-map canvas started from the candidate checkout (on ports no repository doc reserves, as `popup-browser-check.mjs` chooses) renders a board and that one control responds to a click, with no browser tool named in the ask.
-Evidence: the worker's report lists the tool per step; its `get_agent_activity` log, saved in the task folder, shows `browser_new_tab`, `browser_snapshot`, a ref-based `browser_click` and `browser_screenshot` on Paseo, no `agent-browser` command, and `browser_close_tab` for each tab it opened. Falsifier: any step run on agent-browser without a recorded reason from browser.md, or no Paseo browser call, fails. Not yet verified.
+**AC-4** Paseo's operation on an attended page and the fallback are shown by the two existing runs, with no new browser run: `implementation/attempt-2/` (tab visible in the Captain's Paseo app; Paseo snapshot, screenshots and a ref-based click, no fallback) and `implementation/claude-report.md` (background tab; Paseo screenshot and click failed; agent-browser fallback recorded per step).
+Evidence: those saved reports, activity logs and images, cited in the implementation report as runs at 20eb8255daf0f1267a8c0dd16daf0705a7cf82ba. Falsifier: the implementation report claiming either run tested an unattended Paseo default fails.
 
 **AC-5** Codex reachability is measured, not assumed: one Codex worker spawned through Paseo calls `browser_list_tabs` once and reports whether the tool exists in its session.
 Evidence: its report and activity log in the task folder. If absent, browser.md gains one Known-limits line saying Codex workers spawned by Paseo lack the tools and use the repository adapter; if present, nothing is added. Falsifier: browser.md claiming either way without this record fails. Not yet verified.
@@ -200,6 +200,24 @@ Evidence: its report and activity log in the task folder. If absent, browser.md 
 
 - **D1. How the default is stated — recommend: one sentence appended to the end of the existing paseo scope-note quote, pointing workers to a worker-read `browser.md`; repository instructions that name another tool win; not mechanically enforced.** Why: FO reads +15 words at one moment; no ADR lands, and paseo ADRs 0042, 0048 and 0052 do not quote the scope-note paragraph (checked 2026-11-07); no script change; `dispatch_records.py` checks only the quote's first sentence, so every existing record stays valid. Enforcing it (a second `Add to scope notes:` line, which `declared_instructions` would require in every Paseo spawn record) would make FO's whole-folder check before each dispatch, and validation's check refuse every earlier Paseo record that lacks the sentence, in-flight tasks included (the L2 law runner too, if it judges history with the current package; not checked). What gets worse under the recommendation: nothing stops FO from dropping the sentence; a worker without it falls back to habit, visible only in its per-step tool list.
 - **D2. Which adopter and check prove it — recommend: kc-claude-plugins dev2 with the kc-journey-map canvas walk in AC-4, plus the Codex probe in AC-5.** Why: it is the only adopter that lists paseo; the canvas is this repository's only real browser UI. What gets worse: the proof is a local page, not the Clerk Turnstile case that motivated the task; that pass stays the qnow dev2 FO's first-hand report, and qnow gets this package rule only if its FO later lists paseo.
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-08, host question dialog
+Captain: 「照建議改（建議）」 (host question dialog, 2026-11-08)
+Asked: 「#810（工人做瀏覽器驗收預設用 Paseo 分頁）要怎麼處理？我改變建議了：你在場時用 Paseo 本來就有規則規定；#810 新增的是「沒人看著時也預設 Paseo」，但分頁開在背景時截圖、點擊都會失敗，工人會先白試一輪才退回 agent-browser。建議改成：保留四個限制的處理方法，加上「登入要人機驗證時算作有人在場、用 Paseo」，拿掉「沒人看著也預設 Paseo」；改之前先請獨立審查者確認。」 Option chosen: 「照建議改（建議）」 — 「先請獨立審查者確認，再退回實作修改；#810 這輪不合併」
+Design: 「保留四個限制的處理方法，加上「登入要人機驗證時算作有人在場、用 Paseo」，拿掉「沒人看著也預設 Paseo」」
+Supersedes: AC-1, AC-2, AC-4
+
+Superseded text:
+**AC-1** The paseo extension's scope-note quote ends with the browser sentence, and the quote's first sentence is unchanged.
+Evidence: at the candidate, `git show <candidate>:kc-dev-flow-2/extensions/paseo/EXTENSION.md | grep -n '^Add to scope notes:'` shows one line whose quote ends `first read extensions/paseo/browser.md under your Package root."`; `python3 kc-dev-flow-2/scripts/test_dispatch_records.py` passes unchanged (its `test_every_shipped_instruction_is_read_from_its_extension_file` asserts the paseo first sentence). Falsifier: putting the sentence first, or as a second `Add to scope notes:` line, makes that test fail.
+
+**AC-2** `extensions/paseo/browser.md` states the default, the precedence of repository instructions, CI unchanged, the fallback with per-step tool reporting, not-run-is-never-clean, and the four limits each with its workaround, in at most 240 words.
+Evidence: `wc -w` on the file; a reviewer maps each of the four limits in `## Scope` to one bullet with its workaround. Falsifier: a limit without a workaround, or over 240 words, fails.
+
+**AC-4** End to end on kc-claude-plugins dev2 (the only adopter listing paseo): one fresh Claude worker spawned through Paseo, given scope notes copied from the candidate EXTENSION.md and `Package root:` the candidate checkout's `kc-dev-flow-2`, is asked to verify that the kc-journey-map canvas started from the candidate checkout (on ports no repository doc reserves, as `popup-browser-check.mjs` chooses) renders a board and that one control responds to a click, with no browser tool named in the ask.
+Evidence: the worker's report lists the tool per step; its `get_agent_activity` log, saved in the task folder, shows `browser_new_tab`, `browser_snapshot`, a ref-based `browser_click` and `browser_screenshot` on Paseo, no `agent-browser` command, and `browser_close_tab` for each tab it opened. Falsifier: any step run on agent-browser without a recorded reason from browser.md, or no Paseo browser call, fails. Not yet verified.
 
 ## Stage Report: ideation
 
