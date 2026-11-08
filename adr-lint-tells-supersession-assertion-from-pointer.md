@@ -3,7 +3,7 @@ title: The ADR lint pointer scan tells a supersession assertion from a pointer
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
