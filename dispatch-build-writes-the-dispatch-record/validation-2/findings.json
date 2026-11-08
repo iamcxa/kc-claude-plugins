@@ -1,0 +1,16 @@
+[
+  {
+    "severity": "high",
+    "title": "Immediate retry silently discards a staged-only record edit",
+    "file": "kc-dev-flow-2/scripts/dispatch_stage.py",
+    "line": 44,
+    "detail": "Material (F1): with the last committed dispatch unchanged in the working tree but different bytes staged for that same path, select_record reuses it without inspecting the index. Real Spacedock 0.27.2 then runs path-scoped git add -A, replacing the staged blob; exit 0, MM becomes clean, HEAD stays unchanged. Reproduced independently twice at 0d84d5d1b96fd674dba3a442d69c2e7898cceccd.",
+    "fix": "Before identical committed-record reuse, refuse when the index entry differs from HEAD; preserve bytes and index, and add a regression for this retry path.",
+    "status": "open",
+    "classification": "Material",
+    "released_user_and_normal_workflow": "FO uses the accepted immediate retry after a successful stamped dispatch while the shared state checkout contains a partially staged edit to that same record.",
+    "observable_harm": "The staged dispatch annotation is removed from the index without a new commit or warning; staged information is lost from the ordinary Git workflow.",
+    "affected_boundary": "contract[kc-dev-flow-2/references/profiles/pilot.md#pilot-bounded-real-use]: cover data safety in the accepted persistence/retry journey; implementation-1-message-3 requires refusing nonidentical existing records without altering staging.",
+    "trigger_evidence": "retry-index-probe.json and captain-run/retry-index.json: exit 0; index_preserved false; status MM -> empty. retry-index-control.json: a throwaway index check refuses with exit 1 and leaves all state unchanged."
+  }
+]

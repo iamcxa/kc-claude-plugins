@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Startup and resume",
+    "before": 5933,
+    "after": 5931
+  },
+  {
+    "name": "Fresh dispatch incl successful checker output",
+    "before": 116,
+    "after": 101
+  },
+  {
+    "name": "Follow-up incl successful checker output",
+    "before": 147,
+    "after": 87
+  }
+]

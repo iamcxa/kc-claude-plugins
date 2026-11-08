@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_validation_candidate_is_required_before_build (__main__.DispatchStageTests.test_validation_candidate_is_required_before_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC4-ignore-checker-j9fuy6ws/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 135, in test_validation_candidate_is_required_before_build
+    held = self.build("validation", ("--spacedock", self.spy), expected=1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC4-ignore-checker-j9fuy6ws/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in build
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC4-ignore-checker-j9fuy6ws/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 74, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC4-ignore-checker-j9fuy6ws/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-nopg1e3f/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-nopg1e3f/code/docs/dev2/.spacedock-state/dispatch-fixture-ab28ed34c7c041f2884184032443191c.md'), '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-nopg1e3f/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-nopg1e3f/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--spacedock', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-nopg1e3f/spy')], '', '')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.775s
+
+FAILED (failures=1)

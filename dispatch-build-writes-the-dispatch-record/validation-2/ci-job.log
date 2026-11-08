@@ -1,0 +1,810 @@
+﻿2026-11-08T08:50:50.3999288Z Current runner version: '2.338.2'
+2026-11-08T08:50:50.4021201Z ##[group]Runner Image Provisioner
+2026-11-08T08:50:50.4021888Z Hosted Compute Agent
+2026-11-08T08:50:50.4022495Z Version: 20261028.624
+2026-11-08T08:50:50.4023009Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-08T08:50:50.4023617Z Build Date: 2026-10-28T21:51:42Z
+2026-11-08T08:50:50.4024188Z Worker ID: {006e195a-c2d6-4a58-b43c-9160c6112242}
+2026-11-08T08:50:50.4024762Z Region: westus
+2026-11-08T08:50:50.4025281Z Cloud: Azure
+2026-11-08T08:50:50.4025724Z ##[endgroup]
+2026-11-08T08:50:50.4026860Z ##[group]Operating System
+2026-11-08T08:50:50.4027381Z Ubuntu
+2026-11-08T08:50:50.4027808Z 26.04.1
+2026-11-08T08:50:50.4028297Z LTS
+2026-11-08T08:50:50.4028761Z ##[endgroup]
+2026-11-08T08:50:50.4029205Z ##[group]Runner Image
+2026-11-08T08:50:50.4029761Z Image: ubuntu-26.04
+2026-11-08T08:50:50.4030404Z Version: 20261101.186.1
+2026-11-08T08:50:50.4031504Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-08T08:50:50.4032720Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+2026-11-08T08:50:50.4033561Z ##[endgroup]
+2026-11-08T08:50:50.4034518Z ##[group]GITHUB_TOKEN Permissions
+2026-11-08T08:50:50.4036047Z Contents: read
+2026-11-08T08:50:50.4036532Z Metadata: read
+2026-11-08T08:50:50.4037051Z ##[endgroup]
+2026-11-08T08:50:50.4039082Z Secret source: Actions
+2026-11-08T08:50:50.4039904Z Cache mode: write
+2026-11-08T08:50:50.4040676Z Prepare workflow directory
+2026-11-08T08:50:50.4346816Z Prepare all required actions
+2026-11-08T08:50:50.4385632Z Getting action download info
+2026-11-08T08:50:50.7635392Z Download action repository 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-11-08T08:50:50.9831074Z Complete job name: unit tests (python3)
+2026-11-08T08:50:51.0607953Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+2026-11-08T08:50:51.0608766Z with:
+2026-11-08T08:50:51.0609148Z   persist-credentials: false
+2026-11-08T08:50:51.0609578Z   repository: iamcxa/kc-claude-plugins
+2026-11-08T08:50:51.0613025Z   token: ***
+2026-11-08T08:50:51.0613381Z   ssh-strict: true
+2026-11-08T08:50:51.0613730Z   ssh-user: git
+2026-11-08T08:50:51.0614066Z   clean: true
+2026-11-08T08:50:51.0614425Z   sparse-checkout-cone-mode: true
+2026-11-08T08:50:51.0614838Z   fetch-depth: 1
+2026-11-08T08:50:51.0615188Z   fetch-tags: false
+2026-11-08T08:50:51.0615537Z   show-progress: true
+2026-11-08T08:50:51.0615885Z   lfs: false
+2026-11-08T08:50:51.0616209Z   submodules: false
+2026-11-08T08:50:51.0616566Z   set-safe-directory: true
+2026-11-08T08:50:51.0617117Z env:
+2026-11-08T08:50:51.0617449Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:50:51.0618047Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:50:51.0618718Z ##[endgroup]
+2026-11-08T08:50:51.3111078Z Syncing repository: iamcxa/kc-claude-plugins
+2026-11-08T08:50:51.3112774Z ##[group]Getting Git version info
+2026-11-08T08:50:51.3113518Z Working directory is '/home/runner/work/kc-claude-plugins/kc-claude-plugins'
+2026-11-08T08:50:51.3114431Z [command]/usr/bin/git version
+2026-11-08T08:50:51.3114876Z git version 2.56.0
+2026-11-08T08:50:51.3116119Z ##[endgroup]
+2026-11-08T08:50:51.3119605Z Temporarily overriding HOME='/home/runner/work/_temp/a775b1ff-6c16-48f6-bc2e-72fb0342e1ce' before making global git config changes
+2026-11-08T08:50:51.3121029Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-08T08:50:51.3122035Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/kc-claude-plugins/kc-claude-plugins
+2026-11-08T08:50:51.3148647Z Deleting the contents of '/home/runner/work/kc-claude-plugins/kc-claude-plugins'
+2026-11-08T08:50:51.3151569Z ##[group]Initializing the repository
+2026-11-08T08:50:51.3155412Z [command]/usr/bin/git init /home/runner/work/kc-claude-plugins/kc-claude-plugins
+2026-11-08T08:50:51.3236057Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-08T08:50:51.3237234Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-08T08:50:51.3238201Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-08T08:50:51.3238814Z hint: call:
+2026-11-08T08:50:51.3239178Z hint:
+2026-11-08T08:50:51.3239644Z hint: 	git config --global init.defaultBranch <name>
+2026-11-08T08:50:51.3240390Z hint:
+2026-11-08T08:50:51.3240979Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-08T08:50:51.3241749Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-08T08:50:51.3242368Z hint:
+2026-11-08T08:50:51.3242745Z hint: 	git branch -m <name>
+2026-11-08T08:50:51.3243306Z hint:
+2026-11-08T08:50:51.3243853Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-08T08:50:51.3249419Z Initialized empty Git repository in /home/runner/work/kc-claude-plugins/kc-claude-plugins/.git/
+2026-11-08T08:50:51.3257929Z [command]/usr/bin/git remote add origin https://github.com/iamcxa/kc-claude-plugins
+2026-11-08T08:50:51.3335816Z ##[endgroup]
+2026-11-08T08:50:51.3336789Z ##[group]Disabling automatic garbage collection
+2026-11-08T08:50:51.3339686Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-08T08:50:51.3369220Z ##[endgroup]
+2026-11-08T08:50:51.3370320Z ##[group]Setting up auth
+2026-11-08T08:50:51.3375571Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-08T08:50:51.3405189Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-08T08:50:51.3783417Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-08T08:50:51.3815573Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-08T08:50:51.4058162Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-08T08:50:51.4089077Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-08T08:50:51.4323604Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-08T08:50:51.4357359Z ##[endgroup]
+2026-11-08T08:50:51.4358034Z ##[group]Fetching the repository
+2026-11-08T08:50:51.4366727Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +31bc8ce139b6fe2f573e5dfe4c14ef93f9fe18e0:refs/remotes/pull/812/merge
+2026-11-08T08:50:52.5532361Z From https://github.com/iamcxa/kc-claude-plugins
+2026-11-08T08:50:52.5533252Z  * [new ref]         31bc8ce139b6fe2f573e5dfe4c14ef93f9fe18e0 -> pull/812/merge
+2026-11-08T08:50:52.5535217Z ##[endgroup]
+2026-11-08T08:50:52.5535627Z ##[group]Determining the checkout info
+2026-11-08T08:50:52.5537432Z ##[endgroup]
+2026-11-08T08:50:52.5548821Z [command]/usr/bin/git sparse-checkout disable
+2026-11-08T08:50:52.5593313Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-08T08:50:52.5618291Z ##[group]Checking out the ref
+2026-11-08T08:50:52.5621652Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/812/merge
+2026-11-08T08:50:52.7086509Z Note: switching to 'refs/remotes/pull/812/merge'.
+2026-11-08T08:50:52.7086879Z 
+2026-11-08T08:50:52.7087105Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-08T08:50:52.7087553Z changes and commit them, and you can discard any commits you make in this
+2026-11-08T08:50:52.7087994Z state without impacting any branches by switching back to a branch.
+2026-11-08T08:50:52.7088322Z 
+2026-11-08T08:50:52.7088519Z If you want to create a new branch to retain commits you create, you may
+2026-11-08T08:50:52.7089148Z do so (now or later) by using -c with the switch command. Example:
+2026-11-08T08:50:52.7089368Z 
+2026-11-08T08:50:52.7089487Z   git switch -c <new-branch-name>
+2026-11-08T08:50:52.7089648Z 
+2026-11-08T08:50:52.7089762Z Or undo this operation with:
+2026-11-08T08:50:52.7089924Z 
+2026-11-08T08:50:52.7090018Z   git switch -
+2026-11-08T08:50:52.7090413Z 
+2026-11-08T08:50:52.7090665Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-08T08:50:52.7090939Z 
+2026-11-08T08:50:52.7091244Z HEAD is now at 31bc8ce Merge 0d84d5d1b96fd674dba3a442d69c2e7898cceccd into 4deaa2aa108adeaf3c934fd2309e69d90ac3a076
+2026-11-08T08:50:52.7099076Z ##[endgroup]
+2026-11-08T08:50:52.7139795Z [command]/usr/bin/git log -1 --format=%H
+2026-11-08T08:50:52.7160820Z 31bc8ce139b6fe2f573e5dfe4c14ef93f9fe18e0
+2026-11-08T08:50:52.7168246Z ##[group]Removing auth
+2026-11-08T08:50:52.7171044Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-08T08:50:52.7195942Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-08T08:50:52.7429266Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-08T08:50:52.7449333Z http.https://github.com/.extraheader
+2026-11-08T08:50:52.7454991Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-08T08:50:52.7481116Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-08T08:50:52.7722207Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-08T08:50:52.7750946Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-08T08:50:52.7982124Z ##[endgroup]
+2026-11-08T08:50:52.8182762Z ##[group]Run python3 kc-dev-flow-2/scripts/lint-skills.py
+2026-11-08T08:50:52.8183243Z [36;1mpython3 kc-dev-flow-2/scripts/lint-skills.py[0m
+2026-11-08T08:50:52.8229690Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:50:52.8229954Z env:
+2026-11-08T08:50:52.8230460Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:50:52.8230831Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:50:52.8231207Z ##[endgroup]
+2026-11-08T08:50:52.9619826Z PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+2026-11-08T08:50:52.9620875Z references/sd/workflow.md: 5931 of 5931 words; no unlisted passage repeats it
+2026-11-08T08:50:52.9621544Z Not checked: full Agent Skills conformance or host/workflow behavior
+2026-11-08T08:50:52.9731192Z ##[group]Run python3 kc-dev-flow-2/scripts/test_lint_skills.py
+2026-11-08T08:50:52.9731625Z [36;1mpython3 kc-dev-flow-2/scripts/test_lint_skills.py[0m
+2026-11-08T08:50:52.9775291Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:50:52.9775549Z env:
+2026-11-08T08:50:52.9775761Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:50:52.9776126Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:50:52.9776506Z ##[endgroup]
+2026-11-08T08:50:53.1996519Z test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines (__main__.RouteMutationTests.test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines) ... ok
+2026-11-08T08:50:53.3011436Z test_a_chat_only_rule_the_workflow_no_longer_says_is_named (__main__.RouteMutationTests.test_a_chat_only_rule_the_workflow_no_longer_says_is_named) ... ok
+2026-11-08T08:50:53.5033946Z test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused (__main__.RouteMutationTests.test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused) ... ok
+2026-11-08T08:50:53.7035556Z test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way (__main__.RouteMutationTests.test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way) ... ok
+2026-11-08T08:50:53.8041634Z test_a_listed_extension_that_is_not_required_is_named (__main__.RouteMutationTests.test_a_listed_extension_that_is_not_required_is_named) ... ok
+2026-11-08T08:50:53.9131586Z test_a_passage_copied_from_the_workflow_into_another_file (__main__.RouteMutationTests.test_a_passage_copied_from_the_workflow_into_another_file) ... ok
+2026-11-08T08:50:54.3708011Z test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment (__main__.RouteMutationTests.test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment) ... ok
+2026-11-08T08:50:54.4719363Z test_a_required_extension_missing_from_the_template_line_is_named (__main__.RouteMutationTests.test_a_required_extension_missing_from_the_template_line_is_named) ... ok
+2026-11-08T08:50:54.5735584Z test_a_row_marked_required_that_the_template_omits_is_named (__main__.RouteMutationTests.test_a_row_marked_required_that_the_template_omits_is_named) ... ok
+2026-11-08T08:50:54.9552546Z test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not (__main__.RouteMutationTests.test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not) ... ok
+2026-11-08T08:50:55.0592124Z test_a_synced_skill_is_checked_only_when_listed (__main__.RouteMutationTests.test_a_synced_skill_is_checked_only_when_listed) ... ok
+2026-11-08T08:50:55.1608311Z test_a_synced_skill_still_refuses_an_unbound_package_path (__main__.RouteMutationTests.test_a_synced_skill_still_refuses_an_unbound_package_path) ... ok
+2026-11-08T08:50:55.2617235Z test_agent_effort_cannot_drift_from_policy (__main__.RouteMutationTests.test_agent_effort_cannot_drift_from_policy) ... ok
+2026-11-08T08:50:55.3627160Z test_bare_script_name (__main__.RouteMutationTests.test_bare_script_name) ... ok
+2026-11-08T08:50:55.4634198Z test_brace_placeholder (__main__.RouteMutationTests.test_brace_placeholder) ... ok
+2026-11-08T08:50:55.6102073Z test_cli_exits_one_naming_the_file (__main__.RouteMutationTests.test_cli_exits_one_naming_the_file) ... ok
+2026-11-08T08:50:55.7119940Z test_cross_profile_route (__main__.RouteMutationTests.test_cross_profile_route) ... ok
+2026-11-08T08:50:55.8119746Z test_cross_stage_route (__main__.RouteMutationTests.test_cross_stage_route) ... ok
+2026-11-08T08:50:55.9123616Z test_design_director_keeps_its_declared_model (__main__.RouteMutationTests.test_design_director_keeps_its_declared_model) ... ok
+2026-11-08T08:50:56.0102566Z test_design_director_needs_its_skill (__main__.RouteMutationTests.test_design_director_needs_its_skill) ... ok
+2026-11-08T08:50:56.0358347Z test_documented_journey_probe_finds_regular_yaml_at_each_depth (__main__.RouteMutationTests.test_documented_journey_probe_finds_regular_yaml_at_each_depth) ... ok
+2026-11-08T08:50:56.1352697Z test_duplicate_profile (__main__.RouteMutationTests.test_duplicate_profile) ... ok
+2026-11-08T08:50:56.2388965Z test_existing_frontmatter_validator_is_used (__main__.RouteMutationTests.test_existing_frontmatter_validator_is_used) ... ok
+2026-11-08T08:50:56.3397120Z test_extension_script_named_without_its_extension_path (__main__.RouteMutationTests.test_extension_script_named_without_its_extension_path) ... ok
+2026-11-08T08:50:56.4406222Z test_external_reference_symlink (__main__.RouteMutationTests.test_external_reference_symlink) ... ok
+2026-11-08T08:50:56.5410337Z test_machine_path_placeholder (__main__.RouteMutationTests.test_machine_path_placeholder) ... ok
+2026-11-08T08:50:56.6404109Z test_missing_markdown_table_separator (__main__.RouteMutationTests.test_missing_markdown_table_separator) ... ok
+2026-11-08T08:50:56.7389317Z test_missing_optional_extension_document_is_named (__main__.RouteMutationTests.test_missing_optional_extension_document_is_named) ... ok
+2026-11-08T08:50:56.8382418Z test_missing_principles (__main__.RouteMutationTests.test_missing_principles) ... ok
+2026-11-08T08:50:56.9383045Z test_missing_profile_reference (__main__.RouteMutationTests.test_missing_profile_reference) ... ok
+2026-11-08T08:50:57.0450319Z test_model_table_cannot_drift_from_agent_policy (__main__.RouteMutationTests.test_model_table_cannot_drift_from_agent_policy) ... ok
+2026-11-08T08:50:57.1510850Z test_observer_keeps_its_declared_model (__main__.RouteMutationTests.test_observer_keeps_its_declared_model) ... ok
+2026-11-08T08:50:57.2595136Z test_old_variant_invocation (__main__.RouteMutationTests.test_old_variant_invocation) ... ok
+2026-11-08T08:50:57.3604527Z test_package_placeholder_without_root_line (__main__.RouteMutationTests.test_package_placeholder_without_root_line) ... ok
+2026-11-08T08:50:57.4615150Z test_poc_cannot_declare_ideation_active (__main__.RouteMutationTests.test_poc_cannot_declare_ideation_active) ... ok
+2026-11-08T08:50:57.5633018Z test_reversed_routing_markers (__main__.RouteMutationTests.test_reversed_routing_markers) ... ok
+2026-11-08T08:50:57.7532242Z test_role_binding_and_model_policy (__main__.RouteMutationTests.test_role_binding_and_model_policy) ... ok
+2026-11-08T08:50:57.8536713Z test_script_named_by_link_label_only (__main__.RouteMutationTests.test_script_named_by_link_label_only) ... ok
+2026-11-08T08:50:57.9535204Z test_the_chat_only_list_must_exist (__main__.RouteMutationTests.test_the_chat_only_list_must_exist) ... ok
+2026-11-08T08:50:58.0528871Z test_the_chat_only_list_must_hold_a_rule (__main__.RouteMutationTests.test_the_chat_only_list_must_hold_a_rule) ... ok
+2026-11-08T08:50:58.2421363Z test_the_known_overlap_is_listed_and_a_new_one_is_not (__main__.RouteMutationTests.test_the_known_overlap_is_listed_and_a_new_one_is_not) ... ok
+2026-11-08T08:50:58.3430525Z test_unknown_profile (__main__.RouteMutationTests.test_unknown_profile) ... ok
+2026-11-08T08:50:58.4439381Z test_valid_scaffold (__main__.RouteMutationTests.test_valid_scaffold) ... ok
+2026-11-08T08:50:58.5928373Z test_workflow_equal_to_its_word_budget_passes_and_prints_the_count (__main__.RouteMutationTests.test_workflow_equal_to_its_word_budget_passes_and_prints_the_count) ... ok
+2026-11-08T08:50:58.7840752Z test_workflow_over_its_word_budget (__main__.RouteMutationTests.test_workflow_over_its_word_budget) ... ok
+2026-11-08T08:50:58.9751492Z test_workflow_under_its_word_budget_names_the_cut_step (__main__.RouteMutationTests.test_workflow_under_its_word_budget_names_the_cut_step) ... ok
+2026-11-08T08:50:59.0751672Z test_wrong_shared_principle (__main__.RouteMutationTests.test_wrong_shared_principle) ... ok
+2026-11-08T08:50:59.0752503Z 
+2026-11-08T08:50:59.0752677Z ----------------------------------------------------------------------
+2026-11-08T08:50:59.0753164Z Ran 47 tests in 5.980s
+2026-11-08T08:50:59.0753328Z 
+2026-11-08T08:50:59.0753416Z OK
+2026-11-08T08:50:59.0908069Z ##[group]Run python3 kc-dev-flow-2/scripts/test_design_surfaces.py
+2026-11-08T08:50:59.0908473Z [36;1mpython3 kc-dev-flow-2/scripts/test_design_surfaces.py[0m
+2026-11-08T08:50:59.0953399Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:50:59.0953619Z env:
+2026-11-08T08:50:59.0953791Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:50:59.0954127Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:50:59.0954477Z ##[endgroup]
+2026-11-08T08:51:02.9960586Z .........ssss............................................................................................................................................................................................................
+2026-11-08T08:51:02.9961167Z ----------------------------------------------------------------------
+2026-11-08T08:51:02.9961447Z Ran 217 tests in 3.817s
+2026-11-08T08:51:02.9961566Z 
+2026-11-08T08:51:02.9961663Z OK (skipped=4)
+2026-11-08T08:51:02.9964023Z task.md: missing required body field: Non-goals
+2026-11-08T08:51:02.9964436Z task.md: missing required body field: Budget
+2026-11-08T08:51:02.9964778Z task.md: missing required body field: Stop condition
+2026-11-08T08:51:02.9965209Z task.md: '## FO alignment' has 2 'Surfaces:' lines, expected exactly 1
+2026-11-08T08:51:02.9965636Z task.md: design surfaces presentable
+2026-11-08T08:51:02.9965968Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9966329Z task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+2026-11-08T08:51:02.9967073Z task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+2026-11-08T08:51:02.9967465Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9967779Z task.md: 'Surfaces:' has unknown value(s) api
+2026-11-08T08:51:02.9968107Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9968442Z task.md: 'Surfaces:' combines 'none' with other values
+2026-11-08T08:51:02.9968792Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9969137Z task.md: '## FO alignment' needs a 'Visible change:' line
+2026-11-08T08:51:02.9969494Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9969854Z task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+2026-11-08T08:51:02.9970401Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9970780Z task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+2026-11-08T08:51:02.9971184Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9971543Z task.md: surface 'ui' needs a 'UI proposal:' line with text
+2026-11-08T08:51:02.9971924Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9972266Z task.md: surface 'ui' Preview 'missing.html' does not exist
+2026-11-08T08:51:02.9972631Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9972990Z task.md: surface 'db' needs a 'Migration source:' line with a value
+2026-11-08T08:51:02.9973379Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9973799Z task.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table
+2026-11-08T08:51:02.9974274Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9974565Z task.md: design surfaces presentable
+2026-11-08T08:51:02.9974854Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9975161Z task.md: seed fields and FO alignment recorded
+2026-11-08T08:51:02.9975506Z task.md: seed fields and FO alignment recorded
+2026-11-08T08:51:02.9975839Z task.md: seed fields and FO alignment recorded
+2026-11-08T08:51:02.9976205Z task.md: surface 'ui' needs a 'UI proposal:' line with text
+2026-11-08T08:51:02.9976581Z task.md: surface 'ui' needs a 'Preview:' line
+2026-11-08T08:51:02.9976903Z scope check not run: no frontmatter
+2026-11-08T08:51:02.9977228Z task.md: missing '## FO alignment' section
+2026-11-08T08:51:02.9977622Z task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+2026-11-08T08:51:02.9978045Z task.md: '## FO alignment' needs a 'Visible change:' line
+2026-11-08T08:51:02.9978466Z task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+2026-11-08T08:51:02.9979270Z task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+2026-11-08T08:51:02.9979694Z task.md: 'Surfaces:' has unknown value(s) api
+2026-11-08T08:51:02.9980228Z task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+2026-11-08T08:51:02.9980683Z task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+2026-11-08T08:51:03.0179200Z ##[group]Run python3 kc-dev-flow-2/scripts/test_adr_doc_checks.py
+2026-11-08T08:51:03.0179588Z [36;1mpython3 kc-dev-flow-2/scripts/test_adr_doc_checks.py[0m
+2026-11-08T08:51:03.0223791Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:51:03.0224013Z env:
+2026-11-08T08:51:03.0224184Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:51:03.0224514Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:51:03.0224855Z ##[endgroup]
+2026-11-08T08:51:03.1719868Z .........
+2026-11-08T08:51:03.1720347Z ----------------------------------------------------------------------
+2026-11-08T08:51:03.1720664Z Ran 9 tests in 0.099s
+2026-11-08T08:51:03.1720789Z 
+2026-11-08T08:51:03.1720857Z OK
+2026-11-08T08:51:03.1730965Z 1 ADR file(s) checked, 0 legacy; changed records not checked (no --since or --require)
+2026-11-08T08:51:03.1732086Z required ADR 2: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+2026-11-08T08:51:03.1732962Z 2 ADR file(s) checked, 0 legacy
+2026-11-08T08:51:03.1733262Z 1 ADR file(s) checked, 0 legacy
+2026-11-08T08:51:03.1733884Z 0002-first.md: Decision needs a '**Words:**' line
+2026-11-08T08:51:03.1734197Z 0002-first.md: Decision needs a '**Options considered:**' line
+2026-11-08T08:51:03.1734595Z 0002-first.md: sections must be exactly Status, Context, Decision, Consequences in that order
+2026-11-08T08:51:03.1734985Z 0002-first.md: section 'Context' is empty
+2026-11-08T08:51:03.1735456Z 0002-first.md: status 'Done' is not Proposed, Accepted, Deprecated or 'Superseded by NNNN'
+2026-11-08T08:51:03.1735808Z 0002-first.md: superseded by 0009, which does not exist
+2026-11-08T08:51:03.1736069Z 0002-first.md: first line must be '# 2. <title>'
+2026-11-08T08:51:03.1736423Z 0002-first.md: needs a 'Date: YYYY-MM-DD' line before the first section
+2026-11-08T08:51:03.1736731Z 2-first.md: file name must be NNNN-short-title.md
+2026-11-08T08:51:03.1737004Z 0002-second.md: number 2 is also used by 0002-first.md
+2026-11-08T08:51:03.1737247Z 2 ADR file(s) checked, 1 legacy
+2026-11-08T08:51:03.1737505Z required ADR 1 is a legacy record; a new ruling needs its own file
+2026-11-08T08:51:03.1737794Z required ADR 3 does not exist
+2026-11-08T08:51:03.1738007Z 1 ADR file(s) checked, 0 legacy
+2026-11-08T08:51:03.1862201Z ##[group]Run python3 kc-dev-flow-2/scripts/test_poc_readme.py
+2026-11-08T08:51:03.1862572Z [36;1mpython3 kc-dev-flow-2/scripts/test_poc_readme.py[0m
+2026-11-08T08:51:03.1906624Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:51:03.1906828Z env:
+2026-11-08T08:51:03.1907009Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:51:03.1907344Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:51:03.1907681Z ##[endgroup]
+2026-11-08T08:51:04.5943948Z .........
+2026-11-08T08:51:04.5944250Z ----------------------------------------------------------------------
+2026-11-08T08:51:04.5944568Z Ran 9 tests in 1.340s
+2026-11-08T08:51:04.5944695Z 
+2026-11-08T08:51:04.5944763Z OK
+2026-11-08T08:51:04.5944992Z POC README matches the five-stage README without ideation
+2026-11-08T08:51:04.5970630Z --- derived
+2026-11-08T08:51:04.5970930Z +++ /tmp/tmpuyfa_nwu/poc.md
+2026-11-08T08:51:04.5971267Z @@ -7,7 +7,7 @@
+2026-11-08T08:51:04.5971490Z  extensions: [learn, peers]
+2026-11-08T08:51:04.5971847Z  second-reviewer: ""
+2026-11-08T08:51:04.5972089Z  state: .spacedock-state
+2026-11-08T08:51:04.5972321Z -trunk: next
+2026-11-08T08:51:04.5972515Z +trunk: main
+2026-11-08T08:51:04.5972707Z  stages:
+2026-11-08T08:51:04.5972891Z    defaults:
+2026-11-08T08:51:04.5973097Z      worktree: false
+2026-11-08T08:51:04.6071845Z ##[group]Run python3 kc-dev-flow-2/scripts/test_comment_ratio.py
+2026-11-08T08:51:04.6072229Z [36;1mpython3 kc-dev-flow-2/scripts/test_comment_ratio.py[0m
+2026-11-08T08:51:04.6115091Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:51:04.6115320Z env:
+2026-11-08T08:51:04.6115496Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:51:04.6115824Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:51:04.6116165Z ##[endgroup]
+2026-11-08T08:51:06.7794895Z ..............
+2026-11-08T08:51:06.7795356Z ----------------------------------------------------------------------
+2026-11-08T08:51:06.7795789Z Ran 14 tests in 2.120s
+2026-11-08T08:51:06.7795970Z 
+2026-11-08T08:51:06.7796057Z OK
+2026-11-08T08:51:06.7908923Z ##[group]Run python3 kc-dev-flow-2/scripts/test_number_guards.py
+2026-11-08T08:51:06.7909305Z [36;1mpython3 kc-dev-flow-2/scripts/test_number_guards.py[0m
+2026-11-08T08:51:06.7951750Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:51:06.7951952Z env:
+2026-11-08T08:51:06.7952120Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:51:06.7952441Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:51:06.7952772Z ##[endgroup]
+2026-11-08T08:51:12.8644171Z ......................................
+2026-11-08T08:51:12.8644663Z ----------------------------------------------------------------------
+2026-11-08T08:51:12.8645092Z Ran 38 tests in 6.020s
+2026-11-08T08:51:12.8645282Z 
+2026-11-08T08:51:12.8645370Z OK
+2026-11-08T08:51:12.8756823Z ##[group]Run python3 kc-dev-flow-2/extensions/codex/test_codex_review.py
+2026-11-08T08:51:12.8757382Z [36;1mpython3 kc-dev-flow-2/extensions/codex/test_codex_review.py[0m
+2026-11-08T08:51:12.8800676Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:51:12.8800892Z env:
+2026-11-08T08:51:12.8801062Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:51:12.8801387Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:51:12.8802318Z ##[endgroup]
+2026-11-08T08:51:12.9542250Z ....................................
+2026-11-08T08:51:12.9542731Z ----------------------------------------------------------------------
+2026-11-08T08:51:12.9543155Z Ran 36 tests in 0.004s
+2026-11-08T08:51:12.9543322Z 
+2026-11-08T08:51:12.9543409Z OK
+2026-11-08T08:51:12.9685417Z ##[group]Run python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py
+2026-11-08T08:51:12.9685838Z [36;1mpython3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py[0m
+2026-11-08T08:51:12.9728727Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:51:12.9728950Z env:
+2026-11-08T08:51:12.9729165Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:51:12.9729493Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:51:12.9729846Z ##[endgroup]
+2026-11-08T08:51:13.5469534Z .....
+2026-11-08T08:51:13.5470176Z ----------------------------------------------------------------------
+2026-11-08T08:51:13.5470590Z Ran 5 tests in 0.528s
+2026-11-08T08:51:13.5470829Z 
+2026-11-08T08:51:13.5471225Z OK
+2026-11-08T08:51:13.5609959Z ##[group]Run python3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py
+2026-11-08T08:51:13.5610615Z [36;1mpython3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py[0m
+2026-11-08T08:51:13.5653694Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:51:13.5653899Z env:
+2026-11-08T08:51:13.5654077Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:51:13.5654404Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:51:13.5654738Z ##[endgroup]
+2026-11-08T08:51:13.6149473Z ...............
+2026-11-08T08:51:13.6149900Z ----------------------------------------------------------------------
+2026-11-08T08:51:13.6150480Z Ran 15 tests in 0.000s
+2026-11-08T08:51:13.6150642Z 
+2026-11-08T08:51:13.6150743Z OK
+2026-11-08T08:51:13.6252450Z ##[group]Run python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py
+2026-11-08T08:51:13.6252903Z [36;1mpython3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py[0m
+2026-11-08T08:51:13.6295477Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:51:13.6295682Z env:
+2026-11-08T08:51:13.6295852Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:51:13.6296174Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:51:13.6296503Z ##[endgroup]
+2026-11-08T08:51:13.9040618Z .......................
+2026-11-08T08:51:13.9041081Z ----------------------------------------------------------------------
+2026-11-08T08:51:13.9041494Z Ran 23 tests in 0.223s
+2026-11-08T08:51:13.9041652Z 
+2026-11-08T08:51:13.9041739Z OK
+2026-11-08T08:51:13.9169488Z ##[group]Run python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py
+2026-11-08T08:51:13.9170236Z [36;1mpython3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py[0m
+2026-11-08T08:51:13.9213558Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:51:13.9213761Z env:
+2026-11-08T08:51:13.9213932Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:51:13.9214271Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:51:13.9214612Z ##[endgroup]
+2026-11-08T08:51:16.0295209Z ...................................................sss.......................................s............................
+2026-11-08T08:51:16.0295867Z ----------------------------------------------------------------------
+2026-11-08T08:51:16.0296284Z Ran 122 tests in 2.010s
+2026-11-08T08:51:16.0296472Z 
+2026-11-08T08:51:16.0296581Z OK (skipped=4)
+2026-11-08T08:51:16.0297752Z not run: node, kc-journey-map dependencies or spacedock missing
+2026-11-08T08:51:16.0298548Z not run: node, kc-journey-map dependencies or spacedock missing
+2026-11-08T08:51:16.0298952Z not run: node, kc-journey-map dependencies or spacedock missing
+2026-11-08T08:51:16.0299431Z not run: node or journey-accept.mjs missing, or its yaml dependency is not installed
+2026-11-08T08:51:16.0531252Z ##[group]Run python3 kc-dev-flow-2/scripts/test_dispatch_records.py
+2026-11-08T08:51:16.0531653Z [36;1mpython3 kc-dev-flow-2/scripts/test_dispatch_records.py[0m
+2026-11-08T08:51:16.0574254Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:51:16.0574470Z env:
+2026-11-08T08:51:16.0574642Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:51:16.0574966Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:51:16.0575298Z ##[endgroup]
+2026-11-08T08:51:51.4395875Z .......s............./tmp/tmpmghx5cmt/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4404750Z /tmp/tmpxp9mz7ov/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4413655Z /tmp/tmpi5607xk7/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4435006Z ../tmp/tmp7lk0ri9e/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4443295Z /tmp/tmp5t3_md6y/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4451328Z /tmp/tmpod2cmj1g/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4459331Z ./tmp/tmpeosahxsa/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+2026-11-08T08:51:51.4472175Z ./tmp/tmpnqc021xc/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4481831Z /tmp/tmppyko1p07/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4491009Z /tmp/tmph56u37tz/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4499305Z /tmp/tmpimo65wmo/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4507436Z /tmp/tmps9b8bzfy/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4516036Z ./tmp/tmpb3oo94r4/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4524694Z ./tmp/tmpup222yzv/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4533017Z /tmp/tmpcks3z0sz/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4541050Z /tmp/tmpupw65kj7/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4549042Z /tmp/tmpjwyunw15/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4557642Z /tmp/tmp0ha3c7fc/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4565748Z /tmp/tmpyu120o0j/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4574550Z ./tmp/tmpp3984qog/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4582775Z /tmp/tmpzc48i61z/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4590661Z /tmp/tmpn2uyzxnw/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4598936Z ./tmp/tmpvtm4b9a5/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4610537Z ../tmp/tmp9srt4g8r/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4618466Z /tmp/tmpeeedusqp/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4626587Z /tmp/tmpt4s44kgw/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4634769Z ./tmp/tmpkvo4r66o/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+2026-11-08T08:51:51.4645137Z ./tmp/tmpm7zpf1ji/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4654167Z /tmp/tmpxm4ow8gu/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4663062Z /tmp/tmp1nfdj05l/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4671753Z /tmp/tmptp4ecjzo/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4680238Z /tmp/tmpm2vd07nf/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.4691494Z ./tmp/tmpi53wfyxi/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:51:51.4701332Z /tmp/tmpruf7bjgo/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:51:51.4710586Z /tmp/tmp7vi2ht3i/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:51:51.4719182Z /tmp/tmp70orqp69/task/dispatch/ideation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:51:51.4727056Z /tmp/tmpw32n809j/task/elsewhere/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+2026-11-08T08:51:51.4735080Z /tmp/tmpp38gs3pi/task/dispatch/validation-x.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:51:51.4743980Z /tmp/tmp9gsszed_/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:51:51.4753621Z /tmp/tmpxwgbuz94/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:51:51.4763353Z /tmp/tmpeqfsvih9/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:51:51.4773162Z /tmp/tmpy39u0z5y/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:51:51.4782866Z /tmp/tmpf9fggd4l/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:51:51.4792445Z /tmp/tmpj26dikz4/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:51:51.4801064Z ./tmp/tmpzgo7hbir/r.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+2026-11-08T08:51:51.4807470Z ./tmp/tmp1pyziusc/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+2026-11-08T08:51:51.4815034Z /tmp/tmpmuyebvgg/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+2026-11-08T08:51:51.4822239Z /tmp/tmp43rpushg/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+2026-11-08T08:51:51.5000214Z ....../tmp/tmptbb34f4i/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.5008186Z /tmp/tmpz5fzcx3p/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.5016985Z /tmp/tmpjorl00j1/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.5039951Z .../tmp/tmpuuhi21ii/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.5553882Z ......../tmp/tmp_uz1mylx/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:51:51.5743911Z .../tmp/tmpwgcsmkig/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:52:04.3203306Z ............................................../tmp/tmpnxlu6wkp/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:52:04.3563217Z .........../tmp/tmpzzlu0wv8/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+2026-11-08T08:52:04.3579770Z /tmp/tmp69692ik0/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+2026-11-08T08:52:04.3636247Z ..
+2026-11-08T08:52:04.3636532Z ----------------------------------------------------------------------
+2026-11-08T08:52:04.3636899Z Ran 115 tests in 48.226s
+2026-11-08T08:52:04.3637065Z 
+2026-11-08T08:52:04.3637471Z OK (skipped=1)
+2026-11-08T08:52:04.3799887Z ##[group]Run python3 kc-dev-flow-2/scripts/test_delivery_gate.py
+2026-11-08T08:52:04.3800479Z [36;1mpython3 kc-dev-flow-2/scripts/test_delivery_gate.py[0m
+2026-11-08T08:52:04.3843713Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:52:04.3843919Z env:
+2026-11-08T08:52:04.3844087Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:52:04.3844413Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:52:04.3844747Z ##[endgroup]
+2026-11-08T08:52:54.3474781Z ..................................................................................s.............................................................................................
+2026-11-08T08:52:54.3475327Z ----------------------------------------------------------------------
+2026-11-08T08:52:54.3475645Z Ran 176 tests in 49.867s
+2026-11-08T08:52:54.3475781Z 
+2026-11-08T08:52:54.3475854Z OK (skipped=1)
+2026-11-08T08:52:54.3709431Z ##[group]Run python3 kc-dev-flow-2/scripts/test_validation_security.py
+2026-11-08T08:52:54.3709842Z [36;1mpython3 kc-dev-flow-2/scripts/test_validation_security.py[0m
+2026-11-08T08:52:54.3752854Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:52:54.3753068Z env:
+2026-11-08T08:52:54.3753239Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:52:54.3753569Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:52:54.3753907Z ##[endgroup]
+2026-11-08T08:52:54.6673277Z .....
+2026-11-08T08:52:54.6673703Z ----------------------------------------------------------------------
+2026-11-08T08:52:54.6674118Z Ran 5 tests in 0.238s
+2026-11-08T08:52:54.6674270Z 
+2026-11-08T08:52:54.6674360Z OK
+2026-11-08T08:52:54.6790450Z ##[group]Run python3 kc-dev-flow-2/scripts/test_pr_watch.py
+2026-11-08T08:52:54.6790856Z [36;1mpython3 kc-dev-flow-2/scripts/test_pr_watch.py[0m
+2026-11-08T08:52:54.6833351Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:52:54.6833559Z env:
+2026-11-08T08:52:54.6833722Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:52:54.6834045Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:52:54.6834378Z ##[endgroup]
+2026-11-08T08:52:54.9734276Z ................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+2026-11-08T08:52:54.9734930Z                         {add,check,wait,tasks} [args ...]
+2026-11-08T08:52:54.9735645Z test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from add, check, wait, tasks)
+2026-11-08T08:53:14.1529159Z .......................................................................................................
+2026-11-08T08:53:14.1529879Z ----------------------------------------------------------------------
+2026-11-08T08:53:14.1530469Z Ran 135 tests in 19.361s
+2026-11-08T08:53:14.1530659Z 
+2026-11-08T08:53:14.1530754Z OK
+2026-11-08T08:53:14.1711018Z ##[group]Run python3 kc-dev-flow-2/scripts/test_replay_dispatch.py
+2026-11-08T08:53:14.1711440Z [36;1mpython3 kc-dev-flow-2/scripts/test_replay_dispatch.py[0m
+2026-11-08T08:53:14.1753905Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:53:14.1754111Z env:
+2026-11-08T08:53:14.1754275Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:53:14.1754601Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:53:14.1754938Z ##[endgroup]
+2026-11-08T08:53:14.9256264Z ........
+2026-11-08T08:53:14.9256609Z ----------------------------------------------------------------------
+2026-11-08T08:53:14.9256923Z Ran 8 tests in 0.692s
+2026-11-08T08:53:14.9257051Z 
+2026-11-08T08:53:14.9257120Z OK
+2026-11-08T08:53:14.9260766Z removed /tmp/tmpf3f9kjkq/runs/r1
+2026-11-08T08:53:14.9399893Z ##[group]Run python3 kc-dev-flow-2/scripts/test_decision_ledger.py
+2026-11-08T08:53:14.9400589Z [36;1mpython3 kc-dev-flow-2/scripts/test_decision_ledger.py[0m
+2026-11-08T08:53:14.9443036Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:53:14.9443245Z env:
+2026-11-08T08:53:14.9443417Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:53:14.9443740Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:53:14.9444074Z ##[endgroup]
+2026-11-08T08:53:14.9962002Z .......not a directory: /tmp/tmp32bzi_ey/nope
+2026-11-08T08:53:15.0091901Z ............
+2026-11-08T08:53:15.0092255Z ----------------------------------------------------------------------
+2026-11-08T08:53:15.0092666Z Ran 19 tests in 0.020s
+2026-11-08T08:53:15.0092787Z 
+2026-11-08T08:53:15.0092874Z OK
+2026-11-08T08:53:15.0195577Z ##[group]Run python3 kc-dev-flow-2/scripts/test_package_version.py
+2026-11-08T08:53:15.0195967Z [36;1mpython3 kc-dev-flow-2/scripts/test_package_version.py[0m
+2026-11-08T08:53:15.0238366Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:53:15.0238575Z env:
+2026-11-08T08:53:15.0238740Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:53:15.0239091Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:53:15.0239430Z ##[endgroup]
+2026-11-08T08:53:15.0699595Z ......
+2026-11-08T08:53:15.0699859Z ----------------------------------------------------------------------
+2026-11-08T08:53:15.0700336Z Ran 6 tests in 0.002s
+2026-11-08T08:53:15.0700452Z 
+2026-11-08T08:53:15.0700551Z OK
+2026-11-08T08:53:15.0791791Z ##[group]Run python3 kc-dev-flow-2/scripts/test_workflow_checkout.py
+2026-11-08T08:53:15.0792181Z [36;1mpython3 kc-dev-flow-2/scripts/test_workflow_checkout.py[0m
+2026-11-08T08:53:15.0834426Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:53:15.0834627Z env:
+2026-11-08T08:53:15.0834798Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:53:15.0835120Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:53:15.0835455Z ##[endgroup]
+2026-11-08T08:53:16.5669291Z .............
+2026-11-08T08:53:16.5669708Z ----------------------------------------------------------------------
+2026-11-08T08:53:16.5670162Z Ran 13 tests in 1.438s
+2026-11-08T08:53:16.5670319Z 
+2026-11-08T08:53:16.5670409Z OK
+2026-11-08T08:53:16.5778966Z ##[group]Run python3 kc-dev-flow-2/scripts/test_observer_check.py
+2026-11-08T08:53:16.5779337Z [36;1mpython3 kc-dev-flow-2/scripts/test_observer_check.py[0m
+2026-11-08T08:53:16.5821438Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:53:16.5821645Z env:
+2026-11-08T08:53:16.5821814Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:53:16.5822141Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:53:16.5822479Z ##[endgroup]
+2026-11-08T08:53:17.9671753Z ...................
+2026-11-08T08:53:17.9672190Z ----------------------------------------------------------------------
+2026-11-08T08:53:17.9672628Z Ran 19 tests in 1.339s
+2026-11-08T08:53:17.9672807Z 
+2026-11-08T08:53:17.9672896Z OK
+2026-11-08T08:53:17.9792590Z ##[group]Run python3 kc-dev-flow-2/scripts/test_merge_audit.py
+2026-11-08T08:53:17.9792970Z [36;1mpython3 kc-dev-flow-2/scripts/test_merge_audit.py[0m
+2026-11-08T08:53:17.9835754Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:53:17.9835965Z env:
+2026-11-08T08:53:17.9836139Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:53:17.9836469Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:53:17.9836805Z ##[endgroup]
+2026-11-08T08:53:21.1180398Z .................
+2026-11-08T08:53:21.1180854Z ----------------------------------------------------------------------
+2026-11-08T08:53:21.1181293Z Ran 17 tests in 3.085s
+2026-11-08T08:53:21.1181464Z 
+2026-11-08T08:53:21.1181562Z OK
+2026-11-08T08:53:21.1291341Z ##[group]Run python3 kc-dev-flow-2/scripts/test_role_triggers.py
+2026-11-08T08:53:21.1291715Z [36;1mpython3 kc-dev-flow-2/scripts/test_role_triggers.py[0m
+2026-11-08T08:53:21.1334084Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:53:21.1334299Z env:
+2026-11-08T08:53:21.1334478Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:53:21.1334808Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:53:21.1335308Z ##[endgroup]
+2026-11-08T08:53:31.0996194Z ...........................................
+2026-11-08T08:53:31.0996862Z ----------------------------------------------------------------------
+2026-11-08T08:53:31.0997364Z Ran 43 tests in 9.913s
+2026-11-08T08:53:31.0997588Z 
+2026-11-08T08:53:31.0997896Z OK
+2026-11-08T08:53:31.1113072Z ##[group]Run python3 kc-dev-flow-2/scripts/test_laws_check.py
+2026-11-08T08:53:31.1113433Z [36;1mpython3 kc-dev-flow-2/scripts/test_laws_check.py[0m
+2026-11-08T08:53:31.1155717Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:53:31.1155929Z env:
+2026-11-08T08:53:31.1156106Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:53:31.1156429Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:53:31.1156766Z ##[endgroup]
+2026-11-08T08:53:56.5344623Z ..............................................................s..
+2026-11-08T08:53:56.5345283Z ----------------------------------------------------------------------
+2026-11-08T08:53:56.5346227Z Ran 65 tests in 25.365s
+2026-11-08T08:53:56.5346399Z 
+2026-11-08T08:53:56.5346472Z OK (skipped=1)
+2026-11-08T08:53:56.5524758Z ##[group]Run python3 kc-dev-flow-2/scripts/test_learning.py
+2026-11-08T08:53:56.5525102Z [36;1mpython3 kc-dev-flow-2/scripts/test_learning.py[0m
+2026-11-08T08:53:56.5567300Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:53:56.5567511Z env:
+2026-11-08T08:53:56.5567681Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:53:56.5568003Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:53:56.5568338Z ##[endgroup]
+2026-11-08T08:53:57.0887548Z test_a_second_add_of_a_listed_pr_erases_the_flip_it_missed (__main__.LearningTests.test_a_second_add_of_a_listed_pr_erases_the_flip_it_missed) ... ok
+2026-11-08T08:53:57.8217016Z test_acknowledged_open_delivery_is_found_by_notices_all_and_presented_once_settled (__main__.LearningTests.test_acknowledged_open_delivery_is_found_by_notices_all_and_presented_once_settled) ... ok
+2026-11-08T08:53:58.3376793Z test_closed_pr_settles_and_release_of_open_delivery_is_refused (__main__.LearningTests.test_closed_pr_settles_and_release_of_open_delivery_is_refused) ... ok
+2026-11-08T08:53:58.6001673Z test_concurrent_completion_publishes_one_whole_result (__main__.LearningTests.test_concurrent_completion_publishes_one_whole_result) ... ok
+2026-11-08T08:53:59.3701985Z test_delivery_claim_race_and_interrupted_remote_response (__main__.LearningTests.test_delivery_claim_race_and_interrupted_remote_response) ... ok
+2026-11-08T08:53:59.8569522Z test_delivery_recover_absent_refused_on_released_job (__main__.LearningTests.test_delivery_recover_absent_refused_on_released_job) ... ok
+2026-11-08T08:54:00.1912058Z test_delivery_recover_advance_refuses_different_pr (__main__.LearningTests.test_delivery_recover_advance_refuses_different_pr) ... ok
+2026-11-08T08:54:00.5283691Z test_delivery_recover_advance_refuses_regression_from_merged (__main__.LearningTests.test_delivery_recover_advance_refuses_regression_from_merged) ... ok
+2026-11-08T08:54:00.8615760Z test_delivery_recover_advances_own_open_observation_to_closed (__main__.LearningTests.test_delivery_recover_advances_own_open_observation_to_closed) ... ok
+2026-11-08T08:54:01.1956857Z test_delivery_recover_advances_own_open_observation_to_merged (__main__.LearningTests.test_delivery_recover_advances_own_open_observation_to_merged) ... ok
+2026-11-08T08:54:01.4727177Z test_delivery_recover_already_sent_refuses_closed_observation (__main__.LearningTests.test_delivery_recover_already_sent_refuses_closed_observation) ... ok
+2026-11-08T08:54:01.7574197Z test_delivery_recover_already_sent_refuses_different_owner (__main__.LearningTests.test_delivery_recover_already_sent_refuses_different_owner) ... ok
+2026-11-08T08:54:02.0946771Z test_delivery_recover_already_sent_refuses_existing_observation (__main__.LearningTests.test_delivery_recover_already_sent_refuses_existing_observation) ... ok
+2026-11-08T08:54:02.7646117Z test_delivery_recover_reconciles_already_sent_pr (__main__.LearningTests.test_delivery_recover_reconciles_already_sent_pr) ... ok
+2026-11-08T08:54:03.8902018Z test_delivery_recovery_and_observation_boundaries (__main__.LearningTests.test_delivery_recovery_and_observation_boundaries) ... ok
+2026-11-08T08:54:04.2883987Z test_delivery_reissue_refused_after_merged_stays_non_regressing (__main__.LearningTests.test_delivery_reissue_refused_after_merged_stays_non_regressing) ... ok
+2026-11-08T08:54:04.6303036Z test_delivery_reissue_refused_once_anything_is_observed (__main__.LearningTests.test_delivery_reissue_refused_once_anything_is_observed) ... ok
+2026-11-08T08:54:04.9178926Z test_delivery_reissue_requires_confirmed_absent_observation (__main__.LearningTests.test_delivery_reissue_requires_confirmed_absent_observation) ... ok
+2026-11-08T08:54:05.4276161Z test_delivery_reissue_to_same_owner_without_stopped_attestation (__main__.LearningTests.test_delivery_reissue_to_same_owner_without_stopped_attestation) ... ok
+2026-11-08T08:54:06.0869026Z test_distinct_jobs_cannot_both_claim (__main__.LearningTests.test_distinct_jobs_cannot_both_claim) ... ok
+2026-11-08T08:54:06.0951586Z test_every_wait_ends_on_a_state_a_restart_can_read (__main__.LearningTests.test_every_wait_ends_on_a_state_a_restart_can_read) ... ok
+2026-11-08T08:54:06.1028681Z test_follow_section_leaves_merge_to_the_captain (__main__.LearningTests.test_follow_section_leaves_merge_to_the_captain) ... ok
+2026-11-08T08:54:06.1108011Z test_follow_section_orders_ready_before_merge_ask (__main__.LearningTests.test_follow_section_orders_ready_before_merge_ask) ... ok
+2026-11-08T08:54:06.5017533Z test_foreign_token_evidence_change_and_path_traversal_refused (__main__.LearningTests.test_foreign_token_evidence_change_and_path_traversal_refused) ... ok
+2026-11-08T08:54:06.5102385Z test_head_check_guards_every_record_and_recovery (__main__.LearningTests.test_head_check_guards_every_record_and_recovery) ... ok
+2026-11-08T08:54:07.0518598Z test_ineligible_and_invalid_input_create_no_claim (__main__.LearningTests.test_ineligible_and_invalid_input_create_no_claim) ... ok
+2026-11-08T08:54:07.7019140Z test_interruption_requires_stopped_attestation_and_revokes_token (__main__.LearningTests.test_interruption_requires_stopped_attestation_and_revokes_token) ... ok
+2026-11-08T08:54:08.1950555Z test_invalid_completion_keeps_token_repairable_and_success_immutable (__main__.LearningTests.test_invalid_completion_keeps_token_repairable_and_success_immutable) ... ok
+2026-11-08T08:54:08.8767688Z test_linked_worktree_multiprocess_claim_race (__main__.LearningTests.test_linked_worktree_multiprocess_claim_race) ... ok
+2026-11-08T08:54:10.3782801Z test_new_claim_held_by_in_flight_sibling (__main__.LearningTests.test_new_claim_held_by_in_flight_sibling) ... ok
+2026-11-08T08:54:11.1893717Z test_no_applicable_checks_ends_in_a_disclosed_ask_not_a_wait (__main__.LearningTests.test_no_applicable_checks_ends_in_a_disclosed_ask_not_a_wait) ... ok
+2026-11-08T08:54:11.6803192Z test_no_change_and_mismatched_plan_cannot_claim_delivery (__main__.LearningTests.test_no_change_and_mismatched_plan_cannot_claim_delivery) ... ok
+2026-11-08T08:54:12.3344017Z test_notices_no_directory_creation_and_digest_ack (__main__.LearningTests.test_notices_no_directory_creation_and_digest_ack) ... ok
+2026-11-08T08:54:12.9330566Z test_open_delivery_with_lost_token_settles_from_github (__main__.LearningTests.test_open_delivery_with_lost_token_settles_from_github) ... ok
+2026-11-08T08:54:13.3477028Z test_process_crash_during_publication_preserves_uncertainty_or_prior_record (__main__.LearningTests.test_process_crash_during_publication_preserves_uncertainty_or_prior_record) ... ok
+2026-11-08T08:54:17.9461717Z test_ready_pr_with_no_watch_entry_never_shows_the_flip_but_its_row_is_the_exit (__main__.LearningTests.test_ready_pr_with_no_watch_entry_never_shows_the_flip_but_its_row_is_the_exit) ... ok
+2026-11-08T08:54:18.2176573Z test_reclaim_settled_job_bypasses_hold_despite_pending_sibling (__main__.LearningTests.test_reclaim_settled_job_bypasses_hold_despite_pending_sibling) ... ok
+2026-11-08T08:54:18.5868291Z test_recorder_cannot_see_a_different_head_so_the_check_is_the_readers (__main__.LearningTests.test_recorder_cannot_see_a_different_head_so_the_check_is_the_readers) ... ok
+2026-11-08T08:54:20.9352971Z test_release_refusals_and_irreversibility (__main__.LearningTests.test_release_refusals_and_irreversibility) ... ok
+2026-11-08T08:54:22.1115163Z test_replay_of_the_stalled_learning_pr_ends_recorded_without_a_captain_message (__main__.LearningTests.test_replay_of_the_stalled_learning_pr_ends_recorded_without_a_captain_message) ... ok
+2026-11-08T08:54:22.3763293Z test_same_job_reclaim_ignores_hold (__main__.LearningTests.test_same_job_reclaim_ignores_hold) ... ok
+2026-11-08T08:54:23.2099811Z test_settle_is_split_by_actor_and_a_token_holder_needs_no_recovery (__main__.LearningTests.test_settle_is_split_by_actor_and_a_token_holder_needs_no_recovery) ... ok
+2026-11-08T08:54:24.6973917Z test_settled_sibling_releases_hold (__main__.LearningTests.test_settled_sibling_releases_hold) ... ok
+2026-11-08T08:54:26.1834144Z test_still_open_delivery_is_resumed_by_actor_not_left_blocking (__main__.LearningTests.test_still_open_delivery_is_resumed_by_actor_not_left_blocking) ... ok
+2026-11-08T08:54:26.9919066Z test_three_outcomes_and_mixed_preserve_project_files (__main__.LearningTests.test_three_outcomes_and_mixed_preserve_project_files) ... ok
+2026-11-08T08:54:27.7233996Z test_torn_and_missing_record_are_uncertain_not_automatic_retries (__main__.LearningTests.test_torn_and_missing_record_are_uncertain_not_automatic_retries) ... ok
+2026-11-08T08:54:28.1510447Z test_torn_delivery_is_visible_and_requires_explicit_reconciliation (__main__.LearningTests.test_torn_delivery_is_visible_and_requires_explicit_reconciliation) ... ok
+2026-11-08T08:54:28.1511331Z 
+2026-11-08T08:54:28.1511509Z ----------------------------------------------------------------------
+2026-11-08T08:54:28.1511950Z Ran 47 tests in 31.538s
+2026-11-08T08:54:28.1512112Z 
+2026-11-08T08:54:28.1512203Z OK
+2026-11-08T08:54:28.1675946Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+2026-11-08T08:54:28.1676285Z with:
+2026-11-08T08:54:28.1676465Z   repository: spacedock-dev/spacedock
+2026-11-08T08:54:28.1676700Z   ref: 4d158a484ec73e184861067f8ed1e20087fdc26a
+2026-11-08T08:54:28.1676937Z   persist-credentials: false
+2026-11-08T08:54:28.1677139Z   path: .sd-plugin-root
+2026-11-08T08:54:28.1679471Z   token: ***
+2026-11-08T08:54:28.1679643Z   ssh-strict: true
+2026-11-08T08:54:28.1679811Z   ssh-user: git
+2026-11-08T08:54:28.1679970Z   clean: true
+2026-11-08T08:54:28.1680365Z   sparse-checkout-cone-mode: true
+2026-11-08T08:54:28.1680588Z   fetch-depth: 1
+2026-11-08T08:54:28.1680756Z   fetch-tags: false
+2026-11-08T08:54:28.1680934Z   show-progress: true
+2026-11-08T08:54:28.1681106Z   lfs: false
+2026-11-08T08:54:28.1681264Z   submodules: false
+2026-11-08T08:54:28.1681439Z   set-safe-directory: true
+2026-11-08T08:54:28.1681626Z env:
+2026-11-08T08:54:28.1681788Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:54:28.1682147Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:54:28.1682488Z ##[endgroup]
+2026-11-08T08:54:28.2376940Z Syncing repository: spacedock-dev/spacedock
+2026-11-08T08:54:28.2381522Z ##[group]Getting Git version info
+2026-11-08T08:54:28.2382149Z Working directory is '/home/runner/work/kc-claude-plugins/kc-claude-plugins/.sd-plugin-root'
+2026-11-08T08:54:28.2406684Z [command]/usr/bin/git version
+2026-11-08T08:54:28.2439713Z git version 2.56.0
+2026-11-08T08:54:28.2455961Z ##[endgroup]
+2026-11-08T08:54:28.2465632Z Temporarily overriding HOME='/home/runner/work/_temp/c39aa05c-c91d-4ca3-9970-0993fe0a7d34' before making global git config changes
+2026-11-08T08:54:28.2466369Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-08T08:54:28.2469335Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/kc-claude-plugins/kc-claude-plugins/.sd-plugin-root
+2026-11-08T08:54:28.2498061Z ##[group]Initializing the repository
+2026-11-08T08:54:28.2502177Z [command]/usr/bin/git init /home/runner/work/kc-claude-plugins/kc-claude-plugins/.sd-plugin-root
+2026-11-08T08:54:28.2538536Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-08T08:54:28.2539278Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-08T08:54:28.2539917Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-08T08:54:28.2540555Z hint: call:
+2026-11-08T08:54:28.2540758Z hint:
+2026-11-08T08:54:28.2540962Z hint: 	git config --global init.defaultBranch <name>
+2026-11-08T08:54:28.2541211Z hint:
+2026-11-08T08:54:28.2541460Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-08T08:54:28.2541839Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-08T08:54:28.2542147Z hint:
+2026-11-08T08:54:28.2542307Z hint: 	git branch -m <name>
+2026-11-08T08:54:28.2542485Z hint:
+2026-11-08T08:54:28.2542863Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-08T08:54:28.2543691Z Initialized empty Git repository in /home/runner/work/kc-claude-plugins/kc-claude-plugins/.sd-plugin-root/.git/
+2026-11-08T08:54:28.2547860Z [command]/usr/bin/git remote add origin https://github.com/spacedock-dev/spacedock
+2026-11-08T08:54:28.2608335Z ##[endgroup]
+2026-11-08T08:54:28.2608724Z ##[group]Disabling automatic garbage collection
+2026-11-08T08:54:28.2611549Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-08T08:54:28.2637508Z ##[endgroup]
+2026-11-08T08:54:28.2637845Z ##[group]Setting up auth
+2026-11-08T08:54:28.2643038Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-08T08:54:28.2669202Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-08T08:54:28.2906623Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-08T08:54:28.2933948Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-08T08:54:28.3173286Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-08T08:54:28.3203812Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-08T08:54:28.3439925Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-08T08:54:28.3474849Z ##[endgroup]
+2026-11-08T08:54:28.3475287Z ##[group]Fetching the repository
+2026-11-08T08:54:28.3481718Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 4d158a484ec73e184861067f8ed1e20087fdc26a
+2026-11-08T08:54:29.0765686Z From https://github.com/spacedock-dev/spacedock
+2026-11-08T08:54:29.0766261Z  * branch            4d158a484ec73e184861067f8ed1e20087fdc26a -> FETCH_HEAD
+2026-11-08T08:54:29.0770234Z ##[endgroup]
+2026-11-08T08:54:29.0770606Z ##[group]Determining the checkout info
+2026-11-08T08:54:29.0772037Z ##[endgroup]
+2026-11-08T08:54:29.0776675Z [command]/usr/bin/git sparse-checkout disable
+2026-11-08T08:54:29.0813408Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-08T08:54:29.0837103Z ##[group]Checking out the ref
+2026-11-08T08:54:29.0839837Z [command]/usr/bin/git checkout --progress --force 4d158a484ec73e184861067f8ed1e20087fdc26a
+2026-11-08T08:54:29.1467017Z Note: switching to '4d158a484ec73e184861067f8ed1e20087fdc26a'.
+2026-11-08T08:54:29.1467464Z 
+2026-11-08T08:54:29.1467887Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-08T08:54:29.1469836Z changes and commit them, and you can discard any commits you make in this
+2026-11-08T08:54:29.1470919Z state without impacting any branches by switching back to a branch.
+2026-11-08T08:54:29.1471554Z 
+2026-11-08T08:54:29.1471782Z If you want to create a new branch to retain commits you create, you may
+2026-11-08T08:54:29.1472320Z do so (now or later) by using -c with the switch command. Example:
+2026-11-08T08:54:29.1472602Z 
+2026-11-08T08:54:29.1472740Z   git switch -c <new-branch-name>
+2026-11-08T08:54:29.1472947Z 
+2026-11-08T08:54:29.1473073Z Or undo this operation with:
+2026-11-08T08:54:29.1473259Z 
+2026-11-08T08:54:29.1473362Z   git switch -
+2026-11-08T08:54:29.1473506Z 
+2026-11-08T08:54:29.1473734Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-08T08:54:29.1474129Z 
+2026-11-08T08:54:29.1474320Z HEAD is now at 4d158a4 release: bump version to spacedock@0.27.2
+2026-11-08T08:54:29.1475385Z ##[endgroup]
+2026-11-08T08:54:29.1510792Z [command]/usr/bin/git log -1 --format=%H
+2026-11-08T08:54:29.1531310Z 4d158a484ec73e184861067f8ed1e20087fdc26a
+2026-11-08T08:54:29.1538728Z ##[group]Removing auth
+2026-11-08T08:54:29.1541685Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-08T08:54:29.1565830Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-08T08:54:29.1799593Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-08T08:54:29.1819066Z http.https://github.com/.extraheader
+2026-11-08T08:54:29.1824534Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-08T08:54:29.1851041Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-08T08:54:29.2074216Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-08T08:54:29.2099686Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-08T08:54:29.2323235Z ##[endgroup]
+2026-11-08T08:54:29.2440661Z ##[group]Run set -euo pipefail
+2026-11-08T08:54:29.2441051Z [36;1mset -euo pipefail[0m
+2026-11-08T08:54:29.2441485Z [36;1masset="spacedock_${SPACEDOCK_VERSION#v}_linux_amd64.tar.gz"[0m
+2026-11-08T08:54:29.2441999Z [36;1mcurl -fsSL -o /tmp/spacedock.tar.gz \[0m
+2026-11-08T08:54:29.2442672Z [36;1m  "https://github.com/spacedock-dev/spacedock/releases/download/${SPACEDOCK_VERSION}/${asset}"[0m
+2026-11-08T08:54:29.2443428Z [36;1mecho "${SPACEDOCK_SHA256}  /tmp/spacedock.tar.gz" | sha256sum -c -[0m
+2026-11-08T08:54:29.2443952Z [36;1mtar -xzf /tmp/spacedock.tar.gz -C /tmp[0m
+2026-11-08T08:54:29.2444350Z [36;1mmkdir -p "$HOME/.local/bin"[0m
+2026-11-08T08:54:29.2444791Z [36;1minstall -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"[0m
+2026-11-08T08:54:29.2445292Z [36;1mecho "$HOME/.local/bin" >> "$GITHUB_PATH"[0m
+2026-11-08T08:54:29.2493785Z shell: /usr/bin/bash -e {0}
+2026-11-08T08:54:29.2494000Z env:
+2026-11-08T08:54:29.2494170Z   SPACEDOCK_VERSION: v0.27.2
+2026-11-08T08:54:29.2494533Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+2026-11-08T08:54:29.2494871Z ##[endgroup]
+2026-11-08T08:54:40.4037325Z curl: (22) The requested URL returned error: 504
+2026-11-08T08:54:40.4073015Z ##[error]Process completed with exit code 22.
+2026-11-08T08:54:40.4196659Z Post job cleanup.
+2026-11-08T08:54:40.4854937Z [command]/usr/bin/git version
+2026-11-08T08:54:40.4887790Z git version 2.56.0
+2026-11-08T08:54:40.4913990Z Temporarily overriding HOME='/home/runner/work/_temp/3309d478-9434-4517-a313-9f5e92a20cac' before making global git config changes
+2026-11-08T08:54:40.4914900Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-08T08:54:40.4918093Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/kc-claude-plugins/kc-claude-plugins/.sd-plugin-root
+2026-11-08T08:54:40.4947834Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-08T08:54:40.4975579Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-08T08:54:40.5205628Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-08T08:54:40.5233064Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-08T08:54:40.5458398Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-08T08:54:40.5484703Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-08T08:54:40.5854966Z Post job cleanup.
+2026-11-08T08:54:40.6544686Z [command]/usr/bin/git version
+2026-11-08T08:54:40.6610698Z git version 2.56.0
+2026-11-08T08:54:40.6639050Z Temporarily overriding HOME='/home/runner/work/_temp/ceda08af-e3b0-42fd-b2e3-1bdde97194bc' before making global git config changes
+2026-11-08T08:54:40.6640385Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-08T08:54:40.6642774Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/kc-claude-plugins/kc-claude-plugins
+2026-11-08T08:54:40.6674854Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-08T08:54:40.6703650Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-08T08:54:40.6946618Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-08T08:54:40.6976466Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-08T08:54:40.7218781Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-08T08:54:40.7250613Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-08T08:54:40.7604806Z Cleaning up orphan processes
+2026-11-08T08:54:40.7891669Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

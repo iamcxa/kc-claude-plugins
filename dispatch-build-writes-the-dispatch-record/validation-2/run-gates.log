@@ -1,0 +1,129 @@
+[
+  {
+    "name": "candidate-adr",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/pr812-validation2.gfsHcD/candidate/kc-dev-flow-2/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "--require",
+      "0070"
+    ]
+  },
+  {
+    "name": "installed-adr",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "--require",
+      "0070"
+    ]
+  },
+  {
+    "name": "doc-impact",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "0d84d5d1b96fd674dba3a442d69c2e7898cceccd",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record",
+      "--json"
+    ]
+  },
+  {
+    "name": "number-guards",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record",
+      "--base",
+      "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "--head",
+      "0d84d5d1b96fd674dba3a442d69c2e7898cceccd",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-build-writes-the-dispatch-record.md"
+    ]
+  },
+  {
+    "name": "comment-ratio",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "0d84d5d1b96fd674dba3a442d69c2e7898cceccd",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ]
+  },
+  {
+    "name": "design-surfaces",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-build-writes-the-dispatch-record.md"
+    ]
+  },
+  {
+    "name": "dispatch-records",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-build-writes-the-dispatch-record"
+    ]
+  },
+  {
+    "name": "diff-check",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record",
+      "diff",
+      "--check",
+      "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "0d84d5d1b96fd674dba3a442d69c2e7898cceccd"
+    ]
+  }
+]

@@ -1,0 +1,11 @@
+--- candidate/dispatch_stage.py
++++ throwaway-control/dispatch_stage.py
+@@ -45,6 +45,8 @@
+         added = git(state, "log", "-1", "--diff-filter=A", "--format=%H", "--", rel)
+         if (added == git(state, "rev-parse", "HEAD") and path.is_file()
+                 and path.read_bytes() == expected.encode("utf-8")):
++            if git(state, "diff", "--cached", "--name-only", "HEAD", "--", rel):
++                raise FileExistsError(f"record differs in index: {path}")
+             return path, False
+     path = directory / f"{args.stage}-{newest + 1}.md"
+     if git(state, "ls-files", "--", path.relative_to(state).as_posix()):

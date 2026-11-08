@@ -1,0 +1,11 @@
+{
+  "exit": 1,
+  "stderr": "dispatch_stage: dispatch not built; refusing existing record: record differs in index: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ottsefgy/code/docs/dev2/.spacedock-state/dispatch-fixture-d06577bd2c9645429f202278ceeb63dd/dispatch/ideation-1.md\n",
+  "before_index": "100644 c0f4a27e1881576c5b6425d265186fd00be3908a 0\tdispatch-fixture-d06577bd2c9645429f202278ceeb63dd/dispatch/ideation-1.md",
+  "after_index": "100644 c0f4a27e1881576c5b6425d265186fd00be3908a 0\tdispatch-fixture-d06577bd2c9645429f202278ceeb63dd/dispatch/ideation-1.md",
+  "before_status": "MM dispatch-fixture-d06577bd2c9645429f202278ceeb63dd/dispatch/ideation-1.md",
+  "after_status": "MM dispatch-fixture-d06577bd2c9645429f202278ceeb63dd/dispatch/ideation-1.md",
+  "index_preserved": true,
+  "worktree_preserved": true,
+  "head_preserved": true
+}

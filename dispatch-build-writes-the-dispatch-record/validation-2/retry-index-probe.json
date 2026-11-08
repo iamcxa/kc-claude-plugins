@@ -1,0 +1,11 @@
+{
+  "exit": 0,
+  "stderr": "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n",
+  "before_index": "100644 6e1d73ebeb8daad7459bfe3df95de063c0e8418f 0\tdispatch-fixture-003b5c3c05fe4d989533a3a9800feeac/dispatch/ideation-1.md",
+  "after_index": "100644 bdc9c0d485a5c6740966b758b46e0120d37e3673 0\tdispatch-fixture-003b5c3c05fe4d989533a3a9800feeac/dispatch/ideation-1.md",
+  "before_status": "MM dispatch-fixture-003b5c3c05fe4d989533a3a9800feeac/dispatch/ideation-1.md",
+  "after_status": "",
+  "index_preserved": false,
+  "worktree_preserved": true,
+  "head_preserved": true
+}

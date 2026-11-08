@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_incomplete_record_does_not_build_or_change_state (__main__.DispatchStageTests.test_incomplete_record_does_not_build_or_change_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC3-no-removal-bip0xj0_/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 128, in test_incomplete_record_does_not_build_or_change_state
+    self.assertFalse(list((self.folder / "dispatch").glob("*.md")))
+AssertionError: [PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-4qnaclwc/code/docs/dev2/.spacedock-state/dispatch-fixture-c8de2caa0f6140bc8df31103e9ca07af/dispatch/ideation-1.md')] is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.488s
+
+FAILED (failures=1)

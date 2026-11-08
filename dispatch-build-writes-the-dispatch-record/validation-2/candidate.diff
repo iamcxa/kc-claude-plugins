@@ -1,0 +1,605 @@
+diff --git a/.github/workflows/kc-dev-flow-2-tests.yml b/.github/workflows/kc-dev-flow-2-tests.yml
+index f100e332d..a2952a1d1 100644
+--- a/.github/workflows/kc-dev-flow-2-tests.yml
++++ b/.github/workflows/kc-dev-flow-2-tests.yml
+@@ -126,6 +126,9 @@ jobs:
+           install -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"
+           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+ 
++      - name: test_dispatch_stage.py
++        run: SPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py
++
+       - name: test_sd_dispatch.py
+         run: python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$GITHUB_WORKSPACE/.sd-plugin-root"
+ 
+diff --git a/docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md b/docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md
+new file mode 100644
+index 000000000..a1f8e6964
+--- /dev/null
++++ b/docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md
+@@ -0,0 +1,60 @@
++# 0070. Stage worker dispatches are built by a package script that writes their record
++
++Date: 2026-11-07
++
++## Status
++
++Accepted
++
++## Context
++
++Three sessions left dispatch records late, reconstructed or incomplete: the
++kc-paseo-plugins batch r1b-polish-1 reconstructed its records after dispatch;
++the qnow observer found an unrecorded addendum; the kc-plugin observers found
++late and incomplete records in batches 14 and 15. The task
++`dispatch-build-writes-the-dispatch-record` records those sources.
++
++Spacedock 0.27.2 writes the dispatch artifact but not the task's dispatch record.
++It has no dispatch hook and does not read the model roster. Its stamp commit
++already includes the task folder, providing a seam for a package-owned writer.
++ADR 0014 keeps the package and workflow preflight checks separate, and ADR 0027
++places structured write checks at the write.
++
++## Decision
++
++**Words:** 「核准（建議）」 — Captain, host question dialog, 2026-11-07,
++batch 17 ideation approval. The question's dispatch-record excerpt was
++「派工紀錄 D1 用套件裡的派工腳本並新增一份決策紀錄（ADR）、D2 模型與名冊仍由我手填、D3 版本與工作流程檢查這次不併進腳本」;
++it specified 「核准即接受每張設計對其決定寫下的建議。要改哪件直接說。」.
++Source: the task's ideation gate resolution, attempt 1, recorded at
++2026-11-07T15:37:23.875685Z on `spacedock-state/dev2`.
++
++**Options considered:**
++- Build through a package script that writes and checks the dispatch record,
++  leaving Spacedock unchanged (chosen).
++- Change upstream Spacedock: outside this package; no dispatch hook exists at
++  the pinned version.
++- Resolve model and roster inside the script: not chosen; retain FO-supplied flags.
++- Include package-version and workflow-checkout checks: not chosen; retain their
++  existing separate commands and Captain-facing holds.
++
++**Recommended:** the package script, FO-supplied model and roster, and separate
++package-version and workflow-checkout checks, as accepted by the Captain.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/dispatch_stage.py` — `main`, the write/check/build order
++
++FO builds stage-worker dispatches with `dispatch_stage.py`. It writes the record
++from the build's checklist and scope-notes inputs, adds the supplied model and
++workflow-checkout SHA, checks it, then builds. The stamp commit carries the record;
++reuse-advance dispatches use `spacedock state commit` before returning the envelope.
++Model and roster remain FO-supplied. The two pre-dispatch checks remain separate.
++
++## Consequences
++
++Record writing no longer depends on a separate manual step when FO uses the
++script. This remains prose-enforced: Spacedock's skill still names its own
++builder, and a direct call bypasses the writer. `dispatch_records.py --coverage`
++still holds missing records after a worker report. Follow-up messages remain
++manually recorded. A real-binary split-root test checks the stamp's commit seam.
++Reopen on ADR 0014's condition: a dispatch-time hook in Spacedock.
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index e72efa1c8..11f0e9a0c 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -108,18 +108,12 @@ holds the dispatch and shows the Captain what the script printed. Every worker d
+ land in the dispatch file the worker reads first. Those scope notes, and every follow-up
+ message to a live worker, also carry ``Send your completion message to `main` (the README's Dispatch
+ facts: `team-lead` is not registered here).``: the builder's completion block names `team-lead`, and a
+-worker that skips the stage-definition fetch does not see the Signal fact. FO saves those scope notes, the
+-checklist, the model it dispatches on and the SHA it dispatches from as
+-`<task>/dispatch/<stage>-<cycle>.md` in the state checkout (for validation a
+-`Candidate: <full head SHA>` line per head validated),
+-committed with that dispatch's `spacedock state commit <slug> --workflow-dir <dir>`, so
+-the instruction a worker followed outlives the session that wrote it; FO runs
+-`python3 <package>/scripts/dispatch_records.py <task folder>` before committing and fixes each part it lists. A follow-up
+-message to a worker FO resumes is a dispatch too, with the same check and a checklist of the items that message asks, never a pointer to another record.
++worker that skips the stage-definition fetch does not see the Signal fact. FO builds each worker dispatch with `python3 <package>/scripts/dispatch_stage.py`: `dispatch build`'s flags, `--model`, and `--roster`, `--candidate` or `--symptom` where owed. It saves the checklist, scope notes, model and the SHA it dispatches from as `<task>/dispatch/<stage>-<cycle>.md`, so the instruction a worker followed outlives the session that wrote it, checks it as below, then builds; the build's commit carries the record.
++A follow-up message to a worker FO resumes is a dispatch too, saved by hand as `<stage>-<cycle>-message-<n>.md` with a checklist of the items it asks, never a pointer to another record, and committed with `spacedock state commit <slug> --workflow-dir <dir>`.
+ After each worker report, before advancing or preparing its gate, FO runs
+ `python3 <package>/scripts/dispatch_records.py --coverage <task> --stage <stage>`; nonzero holds that task.
+ This check does not observe unrecorded messages.
+-Before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names --strict <record>` on the saved record; nonzero holds dispatch. Relative script paths are allowed; bare package script names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped context checks on stderr. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
++Each record passes `python3 <package>/scripts/dispatch_records.py <task folder>` and `--names --strict <record>` before a worker reads it; nonzero holds dispatch. Relative script paths are allowed; bare package script names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped context checks on stderr. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
+ <dir> --read <task> --stage <stage> --checklist`, return any line it reports as neither
+ DONE nor SKIPPED to the worker with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one, and do not edit the worker's report. The refusal itself
+ does not say why; other causes are a missing evidence line or Summary and an uncommitted
+diff --git a/kc-dev-flow-2/scripts/dispatch_stage.py b/kc-dev-flow-2/scripts/dispatch_stage.py
+new file mode 100644
+index 000000000..4ae53255b
+--- /dev/null
++++ b/kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -0,0 +1,149 @@
++#!/usr/bin/env python3
++"""Save and check a stage dispatch record before building its Spacedock envelope."""
++
++import argparse
++import os
++from pathlib import Path
++import re
++import subprocess
++import sys
++
++from design_surfaces import task_folder
++
++SCRIPTS = Path(__file__).resolve().parent
++
++
++def git(root, *args):
++    return subprocess.run(["git", "-C", str(root), *args], check=True,
++                          capture_output=True, text=True).stdout.strip()
++
++
++def record_text(args, number, dispatched, checklist, notes):
++    annotation = "workflow checkout" + (f", {args.note}" if args.note else "")
++    header = [f"# {args.stage}-{number}", f"Dispatched: {dispatched} ({annotation})", f"Model: {args.model}"]
++    if args.roster:
++        header.append(f"Roster: {args.roster}")
++    header += [f"Candidate: {sha}" for sha in args.candidate]
++    if args.symptom:
++        header.append(f"Symptom: {args.symptom}")
++    return "\n".join(header) + "\n\n## Checklist\n" + checklist + "\n## Scope notes\n" + notes
++
++
++def select_record(args, folder, dispatched, checklist, notes):
++    state = Path(git(args.entity_path.parent, "rev-parse", "--show-toplevel"))
++    directory = folder / "dispatch"
++    relative = directory.relative_to(state).as_posix()
++    pattern = re.compile(rf"{re.escape(args.stage)}-([1-9][0-9]*)\.md")
++    committed = git(state, "ls-tree", "-r", "--name-only", "HEAD", "--", relative).splitlines()
++    numbers = [int(match[1]) for path in committed
++               if (match := pattern.fullmatch(Path(path).name)) and Path(path).parent.as_posix() == relative]
++    newest = max(numbers, default=0)
++    if newest:
++        path = directory / f"{args.stage}-{newest}.md"
++        rel = path.relative_to(state).as_posix()
++        expected = record_text(args, newest, dispatched, checklist, notes)
++        added = git(state, "log", "-1", "--diff-filter=A", "--format=%H", "--", rel)
++        if (added == git(state, "rev-parse", "HEAD") and path.is_file()
++                and path.read_bytes() == expected.encode("utf-8")):
++            return path, False
++    path = directory / f"{args.stage}-{newest + 1}.md"
++    if git(state, "ls-files", "--", path.relative_to(state).as_posix()):
++        raise FileExistsError(f"record already exists in index: {path}")
++    directory.mkdir(parents=True, exist_ok=True)
++    with path.open("xb") as output:
++        output.write(record_text(args, newest + 1, dispatched, checklist, notes).encode("utf-8"))
++    return path, True
++
++
++def remove_uncommitted(path, wrote):
++    if wrote:
++        state = Path(git(path.parent, "rev-parse", "--show-toplevel"))
++        relative = path.relative_to(state).as_posix()
++        committed = subprocess.run(["git", "-C", str(state), "cat-file", "-e", f"HEAD:{relative}"], capture_output=True)
++        if committed.returncode:
++            subprocess.run(["git", "-C", str(state), "update-index", "--force-remove", "--", relative], check=True)
++            path.unlink(missing_ok=True)
++
++
++def parse_args(argv):
++    parser = argparse.ArgumentParser(description=__doc__)
++    for name in ("workflow-dir", "entity-path", "checklist-file", "scope-notes-file"):
++        parser.add_argument(f"--{name}", type=Path, required=True)
++    parser.add_argument("--stage", required=True)
++    parser.add_argument("--model", required=True)
++    for name in ("roster", "symptom", "note"):
++        parser.add_argument(f"--{name}")
++    parser.add_argument("--candidate", action="append", default=[])
++    parser.add_argument("--spacedock", default=os.environ.get("SPACEDOCK_BIN") or "spacedock")
++    parser.add_argument("--host", choices=("claude", "codex", "pi"))
++    parser.add_argument("--feedback-context-file", type=Path)
++    parser.add_argument("--feedback-reflow", action="store_true")
++    mode = parser.add_mutually_exclusive_group()
++    mode.add_argument("--advance", action="store_true")
++    mode.add_argument("--bare-mode", action="store_true")
++    args = parser.parse_args(argv)
++    if not re.fullmatch(r"[a-z][a-z0-9_-]*", args.stage):
++        parser.error("--stage must be a stage name")
++    if any(not re.fullmatch(r"[0-9a-fA-F]{40}", sha) for sha in args.candidate):
++        parser.error("--candidate must be a full 40-hex SHA")
++    try:
++        for name in ("workflow_dir", "entity_path", "checklist_file", "scope_notes_file", "feedback_context_file"):
++            value = getattr(args, name)
++            if value is not None:
++                setattr(args, name, value.resolve(strict=True))
++        checklist = args.checklist_file.read_text()
++        notes = args.scope_notes_file.read_text()
++        dispatched = git(args.workflow_dir, "rev-parse", "HEAD")
++    except (OSError, UnicodeError, subprocess.CalledProcessError) as error:
++        parser.error(str(error))
++    return args, dispatched, checklist, notes
++
++
++def main(argv=None):
++    args, dispatched, checklist, notes = parse_args(argv)
++    try:
++        path, wrote = select_record(args, task_folder(args.entity_path), dispatched, checklist, notes)
++    except FileExistsError as error:
++        print(f"dispatch_stage: dispatch not built; refusing existing record: {error}", file=sys.stderr)
++        return 1
++    checks = [subprocess.run([sys.executable, "-B", str(SCRIPTS / "dispatch_records.py"), *map(str, flags)],
++                             capture_output=True, text=True)
++              for flags in ((task_folder(args.entity_path),), ("--names", "--strict", path))]
++    if any(check.returncode for check in checks):
++        remove_uncommitted(path, wrote)
++        print("dispatch_stage: dispatch not built; repair the dispatch record:", file=sys.stderr)
++        for check in checks:
++            if check.returncode:
++                sys.stderr.write(check.stdout + check.stderr)
++        return 1
++    # see docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md
++    command = [args.spacedock, "dispatch", "build", "--advance" if args.advance else "--stamp"]
++    for name in ("workflow_dir", "entity_path", "stage", "checklist_file", "scope_notes_file", "host", "feedback_context_file"):
++        value = getattr(args, name)
++        if value is not None:
++            command += ["--" + name.replace("_", "-"), str(value)]
++    command += ["--" + name.replace("_", "-") for name in ("feedback_reflow", "bare_mode") if getattr(args, name)]
++    try:
++        build = subprocess.run(command, capture_output=True, text=True)
++    except OSError as error:
++        remove_uncommitted(path, wrote)
++        print(f"dispatch_stage: {error}", file=sys.stderr)
++        return 1
++    sys.stderr.write(build.stderr)
++    if build.returncode:
++        remove_uncommitted(path, wrote)
++        return build.returncode
++    if args.advance:
++        slug = args.entity_path.parent.name if args.entity_path.name == "index.md" else args.entity_path.stem
++        commit = subprocess.run([args.spacedock, "state", "commit", slug, "--workflow-dir", str(args.workflow_dir)],
++                                capture_output=True, text=True)
++        sys.stderr.write(commit.stderr)
++        if commit.returncode:
++            sys.stderr.write(commit.stdout)
++            return 1
++    sys.stdout.write(build.stdout)
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/kc-dev-flow-2/scripts/lint-skills.py b/kc-dev-flow-2/scripts/lint-skills.py
+index 6f027bc1e..31119fe2d 100644
+--- a/kc-dev-flow-2/scripts/lint-skills.py
++++ b/kc-dev-flow-2/scripts/lint-skills.py
+@@ -65,6 +65,7 @@ WORKFLOW_BUDGET_STEPS = [
+     dict(delta=48, why="Captain resolutions declare an Override or followed recommendation before gate record",
+          captain="「准」 (Captain, chat, 2026-11-05), answering 「決定：漏寫 Override 這份設計進入實作嗎？核准即接受 D1-A（記錄裁示前先檢查理由文字）、D2-A（README 加 48 字，字數上限 5891 調到 5939）、D3-A（不加反向防護）、D4-A（不做裁示紀錄評分器）四個建議。」",
+          loaded="startup and resume of the First Officer, and before each Captain gate record"),
++    dict(delta=-2, why="dispatch_stage.py saves and checks the record; the README names the script and its flags"),
+ ]
+ DUPLICATE_RUN = 12
+ # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_records.py b/kc-dev-flow-2/scripts/test_dispatch_records.py
+index 5c296911e..a9a968dd7 100644
+--- a/kc-dev-flow-2/scripts/test_dispatch_records.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_records.py
+@@ -53,8 +53,8 @@ BARE = COMPLETE.replace("1. Independent verdict", "1. Run adr_lint.py. Independe
+ 
+ 
+ class ContextNoticeTests(unittest.TestCase):
+-    PARAGRAPH = ("Before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names --strict <record>` "
+-                 "on the saved record; nonzero holds dispatch. Relative script paths are allowed; bare package script "
++    PARAGRAPH = ("Each record passes `python3 <package>/scripts/dispatch_records.py <task folder>` and "
++                 "`--names --strict <record>` before a worker reads it; nonzero holds dispatch. Relative script paths are allowed; bare package script "
+                  "names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped "
+                  "context checks on stderr.")
+ 
+@@ -157,7 +157,7 @@ class ContextNoticeTests(unittest.TestCase):
+         workflow = Path(records.__file__).parents[1] / "references/sd/workflow.md"
+         self.assertIn(self.PARAGRAPH, " ".join(workflow.read_text().split()))
+         self.assertNotIn("Repository files:", workflow.read_text())
+-        command = re.search(r"`python3 ([^`]+)`", self.PARAGRAPH)[1].split()
++        command = re.search(r"`python3 ([^`]+)`", self.PARAGRAPH)[1].split()[:1] + ["--names", "--strict", "<record>"]
+         command = [part.replace("<package>", str(workflow.parents[2])).replace("<record>", str(self.record))
+                    for part in command]
+         self.task.unlink()
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_stage.py b/kc-dev-flow-2/scripts/test_dispatch_stage.py
+new file mode 100644
+index 000000000..80c70d81f
+--- /dev/null
++++ b/kc-dev-flow-2/scripts/test_dispatch_stage.py
+@@ -0,0 +1,260 @@
++#!/usr/bin/env python3
++"""Exercise dispatch records through the real Spacedock binary in split-root repos."""
++
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tempfile
++import unittest
++import uuid
++
++ROOT = Path(__file__).resolve().parents[1]
++WRAPPER = ROOT / "scripts/dispatch_stage.py"
++CHECKER = ROOT / "scripts/dispatch_records.py"
++BINARY = os.environ.get("SPACEDOCK_BIN")
++
++
++class DispatchStageTests(unittest.TestCase):
++    def setUp(self):
++        temporary = tempfile.TemporaryDirectory(prefix="dispatch-stage-")
++        self.addCleanup(temporary.cleanup)
++        self.base = Path(temporary.name).resolve()
++        self.repo = self.base / "code"
++        self.workflow = self.repo / "docs/dev2"
++        self.workflow.mkdir(parents=True)
++        self.slug = "dispatch-fixture-" + uuid.uuid4().hex
++        self.addCleanup(self.remove_artifacts)
++        self.env = {key: value for key, value in os.environ.items()
++                    if key not in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_COMMON_DIR")}
++        self.env.update(GIT_AUTHOR_NAME="Dispatch Fixture", GIT_COMMITTER_NAME="Dispatch Fixture",
++                        GIT_AUTHOR_EMAIL="fixture@example.invalid", GIT_COMMITTER_EMAIL="fixture@example.invalid",
++                        GIT_CONFIG_COUNT="2", GIT_CONFIG_KEY_0="commit.gpgsign", GIT_CONFIG_VALUE_0="false",
++                        GIT_CONFIG_KEY_1="core.hooksPath", GIT_CONFIG_VALUE_1="/dev/null", PYTHONDONTWRITEBYTECODE="1")
++        (self.workflow / "README.md").write_bytes((ROOT / "references/sd/workflow.md").read_bytes())
++        (self.repo / ".gitignore").write_text(".worktrees/\n**/.spacedock-state/\n")
++        self.call(["git", "init", "--initial-branch=main", self.repo])
++        self.git(self.repo, "add", "--", ".gitignore", "docs/dev2/README.md")
++        self.git(self.repo, "commit", "-m", "test: workflow")
++        self.state = self.workflow / ".spacedock-state"
++        self.git(self.repo, "worktree", "add", "--detach", self.state)
++        self.git(self.state, "checkout", "--orphan", "spacedock-state/dev2")
++        self.git(self.state, "rm", "-rf", ".")
++        self.entity = self.state / f"{self.slug}.md"
++        self.entity.write_text("---\ntitle: Synthetic dispatch\nvariant: kc-dev-flow-2\nprofile: pilot\n"
++                               "status: ideation\n---\n\n## FO alignment\n\nSurfaces: none\nVisible change: none\n")
++        self.commit_task()
++        self.folder = self.state / self.slug
++        self.checklist = self.base / "checklist.txt"
++        self.checklist.write_text("Inspect the real dispatch seam\nKeep the received second checklist line\n")
++        self.notes = self.base / "notes.txt"
++        self.notes.write_text(f"Package root: {ROOT}\nSend your completion message to `main`.\n"
++                              "Keep this second scope-notes line verbatim.\n")
++        self.spy = self.base / "spy"
++        self.marker = self.base / "called"
++        self.spy.write_text(f"#!{sys.executable}\nfrom pathlib import Path\nimport sys\n"
++                            f"Path({str(self.marker)!r}).write_text('called')\nsys.exit(0)\n")
++        self.spy.chmod(0o755)
++
++    def remove_artifacts(self):
++        for path in Path("/tmp/spacedock-dispatch").glob(f"*{self.slug}*"):
++            if path.is_file():
++                path.unlink()
++
++    def call(self, args, expected=0):
++        result = subprocess.run(list(map(str, args)), cwd=self.base, env=self.env,
++                                capture_output=True, text=True, timeout=30)
++        if os.environ.get("DISPATCH_STAGE_LOG"):
++            with Path(os.environ["DISPATCH_STAGE_LOG"]).open("a") as log:
++                log.write(json.dumps(dict(argv=list(map(str, args)), exit=result.returncode,
++                                          stdout=result.stdout, stderr=result.stderr)) + "\n")
++        if expected is not None:
++            self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
++        return result
++
++    def git(self, root, *args):
++        return self.call(["git", "-C", root, *args]).stdout.strip()
++
++    def commit_task(self):
++        self.git(self.state, "add", "--", self.entity.name)
++        self.git(self.state, "commit", "-m", "test: task")
++
++    def set_stage(self, stage):
++        self.entity.write_text(self.entity.read_text().replace("status: ideation", f"status: {stage}"))
++        self.commit_task()
++
++    def build(self, stage="ideation", extra=(), expected=0):
++        return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
++                          "--entity-path", self.entity, "--stage", stage, "--model", "fixture-model",
++                          "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
++                          "--spacedock", BINARY, "--host", "codex", *extra], expected)
++
++    def record(self, stage="ideation", number=1):
++        return self.folder / "dispatch" / f"{stage}-{number}.md"
++
++    def assert_committed(self, path, subject):
++        self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
++        self.assertEqual(self.git(self.state, "show", f"HEAD:{path.relative_to(self.state)}"), path.read_text().strip())
++        self.assertEqual(self.git(self.state, "status", "--porcelain", "--", path), "")
++
++    def test_stamp_commits_complete_record_and_exact_inputs(self):
++        dispatched = self.git(self.workflow, "rev-parse", "HEAD")
++        result = self.build(extra=("--roster", "fixture roster", "--note", "README fixture"))
++        envelope = json.loads(result.stdout)
++        record = self.record()
++        self.assert_committed(record, f"dispatch: {self.slug} entering ideation")
++        self.call([sys.executable, "-B", CHECKER, self.folder])
++        self.call([sys.executable, "-B", CHECKER, "--names", "--strict", record])
++        text = record.read_text()
++        self.assertIn(f"Dispatched: {dispatched} (workflow checkout, README fixture)", text)
++        self.assertIn("Model: fixture-model\nRoster: fixture roster", text)
++        received = Path(envelope["dispatch_file_path"]).read_text()
++        for heading, source in (("Checklist", self.checklist), ("Scope notes", self.notes)):
++            section = text.split(f"## {heading}\n", 1)[1].split("\n## ", 1)[0]
++            for line in source.read_text().splitlines():
++                if line.strip():
++                    self.assertIn(line, section)
++                    self.assertIn(line, received)
++
++    def test_incomplete_record_does_not_build_or_change_state(self):
++        self.notes.write_text("Send your completion message to `main`.\n")
++        head, task = self.git(self.state, "rev-parse", "HEAD"), self.entity.read_bytes()
++        held = self.build(extra=("--spacedock", self.spy), expected=1)
++        self.assertTrue(held.stderr.splitlines()[0].startswith("dispatch_stage: dispatch not built;"))
++        self.assertIn("needs a 'Package root:' line", held.stderr)
++        self.assertEqual(held.stdout, "")
++        self.assertFalse(list((self.folder / "dispatch").glob("*.md")))
++        self.assertEqual(self.git(self.state, "rev-parse", "HEAD"), head)
++        self.assertEqual(self.entity.read_bytes(), task)
++        self.assertFalse(self.marker.exists())
++
++    def test_validation_candidate_is_required_before_build(self):
++        self.set_stage("validation")
++        held = self.build("validation", ("--spacedock", self.spy), expected=1)
++        self.assertIn("no 'Candidate: <40-hex head>' line", held.stderr)
++        self.assertFalse(self.record("validation").exists())
++        invalid = self.build("validation", ("--candidate", "abc", "--spacedock", self.spy), expected=2)
++        self.assertIn("--candidate must be a full 40-hex SHA", invalid.stderr)
++        self.assertFalse(self.record("validation").exists())
++        self.assertFalse(self.marker.exists())
++
++    def test_candidates_and_feedback_flags_reach_real_build(self):
++        self.set_stage("validation")
++        sha = self.git(self.repo, "rev-parse", "HEAD")
++        self.build("validation", ("--candidate", sha, "--candidate", "a" * 40))
++        self.assertIn(f"Candidate: {sha}\nCandidate: {'a' * 40}", self.record("validation").read_text())
++        feedback = self.base / "feedback.txt"
++        feedback.write_text("Repair the selected fixture seam.\n")
++        self.entity.write_text(self.entity.read_text().replace("status: validation", "status: implementation"))
++        self.commit_task()
++        result = self.build("implementation", ("--feedback-context-file", feedback, "--feedback-reflow"))
++        self.assertIn("Repair the selected fixture seam.", Path(json.loads(result.stdout)["dispatch_file_path"]).read_text())
++
++    def test_failed_stamp_removes_uncommitted_record_and_passes_error(self):
++        self.set_stage("backlog")
++        held = self.build(expected=1)
++        self.assertTrue(held.stderr.startswith("dispatch build --stamp:"), held.stderr)
++        self.assertFalse(self.record().exists())
++        self.assertEqual(held.stdout, "")
++
++    def test_identical_retry_reuses_only_at_adding_commit(self):
++        self.build()
++        self.build()
++        self.assertFalse(self.record(number=2).exists())
++        unrelated = self.state / "unrelated.md"
++        unrelated.write_text("An unrelated state change.\n")
++        self.git(self.state, "add", "--", unrelated.name)
++        self.git(self.state, "commit", "-m", "test: unrelated state")
++        self.build()
++        self.assert_committed(self.record(number=2), f"dispatch: {self.slug} entering ideation")
++        self.assertFalse(self.record(number=3).exists())
++
++    def test_failed_build_removes_its_staged_record(self):
++        failing = self.base / "stage-and-fail"
++        failing.write_text(f"#!{sys.executable}\nimport subprocess, sys\n"
++                           f"subprocess.run(['git', '-C', {str(self.state)!r}, 'add', '--', {str(self.record())!r}], check=True)\n"
++                           "print('fixture staged then failed', file=sys.stderr)\nsys.exit(7)\n")
++        failing.chmod(0o755)
++        held = self.build(extra=("--spacedock", failing), expected=7)
++        self.assertEqual(held.stderr, "fixture staged then failed\n")
++        self.assertFalse(self.record().exists())
++        self.assertEqual(self.git(self.state, "status", "--porcelain"), "")
++
++    def assert_existing_record_is_preserved(self, staged=False, missing=False):
++        record = self.record()
++        record.parent.mkdir(parents=True)
++        original = b"Prepared dispatch record\r\nKeep these original bytes.\r\n"
++        record.write_bytes(original)
++        if staged:
++            self.git(self.state, "add", "--", record)
++            original = b"Working copy differs from its staged content.\r\n"
++            record.write_bytes(original)
++        if missing:
++            record.unlink()
++        index = self.git(self.state, "ls-files", "--stage", "--", record)
++        status = self.git(self.state, "status", "--porcelain", "--", record)
++        head, task = self.git(self.state, "rev-parse", "HEAD"), self.entity.read_bytes()
++        self.notes.write_text("Send your completion message to `main`.\n")
++        held = self.build(extra=("--spacedock", self.spy), expected=1)
++        self.assertEqual(record.exists(), not missing, "pre-existing record was removed or recreated")
++        if not missing:
++            self.assertEqual(record.read_bytes(), original)
++        self.assertEqual(self.git(self.state, "ls-files", "--stage", "--", record), index)
++        self.assertEqual(self.git(self.state, "status", "--porcelain", "--", record), status)
++        self.assertEqual(self.git(self.state, "rev-parse", "HEAD"), head)
++        self.assertEqual(self.entity.read_bytes(), task)
++        self.assertEqual(held.stdout, "")
++        self.assertIn(str(record), held.stderr)
++        self.assertNotIn("needs a 'Package root:' line", held.stderr)
++        self.assertFalse(self.marker.exists())
++
++    def test_preexisting_untracked_record_survives_refused_build(self):
++        self.assert_existing_record_is_preserved()
++
++    def test_preexisting_staged_record_survives_refused_build(self):
++        self.assert_existing_record_is_preserved(staged=True)
++
++    def test_preexisting_index_entry_without_worktree_file_is_preserved(self):
++        self.assert_existing_record_is_preserved(staged=True, missing=True)
++
++    def test_changed_checklist_creates_next_committed_record(self):
++        self.build()
++        self.checklist.write_text("A different checklist line\n")
++        self.build()
++        self.assert_committed(self.record(number=2), f"dispatch: {self.slug} entering ideation")
++        self.assertIn("A different checklist line", self.record(number=2).read_text())
++
++    def test_advance_commits_record_and_withholds_envelope_on_commit_failure(self):
++        self.set_stage("implementation")
++        self.call([BINARY, "dispatch", "build", "--stamp", "--workflow-dir", self.workflow,
++                   "--entity-path", self.entity, "--stage", "implementation", "--host", "codex",
++                   "--checklist-file", self.checklist, "--scope-notes-file", self.notes])
++        result = self.build("implementation", ("--advance",))
++        self.assertTrue(json.loads(result.stdout)["prompt"].startswith("Advancing to next stage: implementation."))
++        self.assert_committed(self.record("implementation"), f"state: update {self.slug}")
++        failing = self.base / "fail-commit"
++        failing.write_text(f"#!{sys.executable}\nimport subprocess, sys\n"
++                           "if sys.argv[1:3] == ['state', 'commit']:\n"
++                           "    print('fixture state commit refused', file=sys.stderr)\n    sys.exit(1)\n"
++                           f"sys.exit(subprocess.call([{BINARY!r}, *sys.argv[1:]]))\n")
++        failing.chmod(0o755)
++        held = self.build("implementation", ("--advance", "--note", "retry", "--symptom", "none", "--spacedock", failing), expected=1)
++        self.assertEqual(held.stdout, "")
++        self.assertIn("fixture state commit refused", held.stderr)
++        self.assertTrue(self.record("implementation", 2).exists())
++        pending = self.record("implementation", 2).read_bytes()
++        refused = self.build("implementation", ("--advance", "--note", "retry", "--symptom", "none"), expected=1)
++        self.assertIn(str(self.record("implementation", 2)), refused.stderr)
++        self.assertEqual(self.record("implementation", 2).read_bytes(), pending)
++        self.call([BINARY, "state", "commit", self.slug, "--workflow-dir", self.workflow])
++        self.build("implementation", ("--advance", "--note", "retry", "--symptom", "none"))
++        self.assert_committed(self.record("implementation", 2), f"state: update {self.slug}")
++        self.assertFalse(self.record("implementation", 3).exists())
++
++
++if __name__ == "__main__":
++    if not BINARY or not shutil.which(BINARY):
++        sys.exit("test_dispatch_stage.py: set SPACEDOCK_BIN to the real Spacedock binary")
++    unittest.main()
+diff --git a/kc-dev-flow-2/scripts/test_sd_dispatch.py b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+index 80775d949..63f065fed 100644
+--- a/kc-dev-flow-2/scripts/test_sd_dispatch.py
++++ b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+@@ -142,14 +142,19 @@ FIXES = {
+     "dispatch-record": dict(
+         need=("the SHA it dispatches from as `<task>/dispatch/<stage>-<cycle>.md`",
+               "outlives the session that wrote it",
+-              "FO runs `python3 <package>/scripts/dispatch_records.py <task folder>` before committing and fixes each part it lists",
+-              "for validation a `Candidate: <full head SHA>` line per head validated"),
++              "FO builds each worker dispatch with `python3 <package>/scripts/dispatch_stage.py`",
++              "`--roster`, `--candidate` or `--symptom` where owed",
++              "the build's commit carries the record",
++              "Each record passes `python3 <package>/scripts/dispatch_records.py <task folder>` and `--names --strict <record>` before a worker reads it"),
+         old=(),
+-        swaps=((r"FO saves those scope notes, the checklist, the model it dispatches on.*?fixes each part it lists\. ", ""),)),
++        swaps=((r"FO builds each worker dispatch with.*?the build's commit carries the record\. ", ""),
++               (r"Each record passes.*?before a worker reads it; nonzero holds dispatch\. ", ""))),
+     "resumed-dispatch": dict(
+-        need=("A follow-up message to a worker FO resumes is a dispatch", "never a pointer to another record"),
++        need=("A follow-up message to a worker FO resumes is a dispatch",
++              "saved by hand as `<stage>-<cycle>-message-<n>.md`",
++              "never a pointer to another record, and committed with `spacedock state commit <slug> --workflow-dir <dir>`"),
+         old=(),
+-        swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, with the same check and a checklist of the items that message asks, never a pointer to another record\. ", ""),)),
++        swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, saved by hand as.*?--workflow-dir <dir>`\. ", ""),)),
+     "dispatch-coverage": dict(
+         need=("After each worker report, before advancing or preparing its gate",
+               "dispatch_records.py --coverage <task> --stage <stage>",
+diff --git a/kc-dev-flow-2/skills/observer/SKILL.md b/kc-dev-flow-2/skills/observer/SKILL.md
+index 55527f4dc..838aae733 100644
+--- a/kc-dev-flow-2/skills/observer/SKILL.md
++++ b/kc-dev-flow-2/skills/observer/SKILL.md
+@@ -99,7 +99,7 @@ the report would only say `can't tell`:
+ - FO answers a question the Captain asks at a gate
+ - python3 <package>/scripts/package_version.py
+ - python3 <package>/scripts/workflow_checkout.py
+-- python3 <package>/scripts/dispatch_records.py --names
++- --names --strict <record>
+ - assess the four evidence fields above
+ <!-- /chat-only-rules -->
+ 

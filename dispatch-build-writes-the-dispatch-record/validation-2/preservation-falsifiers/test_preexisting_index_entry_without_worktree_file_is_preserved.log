@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_preexisting_index_entry_without_worktree_file_is_preserved (__main__.DispatchStageTests.test_preexisting_index_entry_without_worktree_file_is_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-preservation-mutant-0zfbg6j3/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 220, in test_preexisting_index_entry_without_worktree_file_is_preserved
+    self.assert_existing_record_is_preserved(staged=True, missing=True)
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-preservation-mutant-0zfbg6j3/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 204, in assert_existing_record_is_preserved
+    self.assertEqual(self.git(self.state, "ls-files", "--stage", "--", record), index)
+AssertionError: '' != '100644 cffbb783fae489240e45691acd49056b20[78 chars]1.md'
++ 100644 cffbb783fae489240e45691acd49056b207e7f08 0	dispatch-fixture-733e1cbad8544d95b90c5c37c5c3dcb6/dispatch/ideation-1.md
+
+----------------------------------------------------------------------
+Ran 1 test in 0.723s
+
+FAILED (failures=1)

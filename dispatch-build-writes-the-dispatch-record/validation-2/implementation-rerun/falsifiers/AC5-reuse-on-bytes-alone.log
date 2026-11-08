@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_identical_retry_reuses_only_at_adding_commit (__main__.DispatchStageTests.test_identical_retry_reuses_only_at_adding_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC5-reuse-on-bytes-alone-fcmtc42r/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 171, in test_identical_retry_reuses_only_at_adding_commit
+    self.assert_committed(self.record(number=2), f"dispatch: {self.slug} entering ideation")
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC5-reuse-on-bytes-alone-fcmtc42r/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 98, in assert_committed
+    self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
+AssertionError: '' != 'dispatch: dispatch-fixture-be8e6aea17374dcc86c9dff57cb69f6b entering ideation'
++ dispatch: dispatch-fixture-be8e6aea17374dcc86c9dff57cb69f6b entering ideation
+
+----------------------------------------------------------------------
+Ran 1 test in 1.504s
+
+FAILED (failures=1)
