@@ -1,0 +1,23 @@
+{
+  "class": "never",
+  "head": "f429f0fac40511c6480fd92e2cccd4c0e94b2454",
+  "model": "not run",
+  "necessity": "the four files are the kc-adr linter and its test, the identical dev2 copy, and the one-line un-split in test_sd_dispatch.py (gh pr view 806 --json files, FO 2026-11-08).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F1 Deferred risk: multiline/regex assertions'",
+    "point: deferred: '- F2 Deferred risk: a same-line'",
+    "point: deferred: 'Declined: Deferred risk, validation-1 F1 at'",
+    "point: deferred: 'Declined: Deferred risk, validation-1 F2 at'",
+    "point: deferred: 'Declined: Polish, validation-1 F3 at f429f0fac,'",
+    "point: not-run: 'roborev not run: FO owns local'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'kc-dev-flow-2/scripts/adr_lint.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_sd_dispatch.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#806",
+  "sufficiency": "a protected file that asserts a superseded ADR's Status no longer fails the lint while a file citing a superseded ADR as its authority still does, and the PR #800 false positive replays clean with the",
+  "time": "2026-11-08T02:07:35Z",
+  "verdict": "ask"
+}
