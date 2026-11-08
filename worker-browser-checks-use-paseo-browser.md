@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:worker-browser-checks-use-paseo-browser:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:worker-browser-checks-use-paseo-browser-validation-1
+              briefing:
+                id: briefing:worker-browser-checks-use-paseo-browser:validation:attempt-1:revision-1
+                digest: sha256:4c6171de57a893c654ed6fcf2e65a860c3c15902d47f670cd1abef02a9d47dd5
+                room-ref: ./worker-browser-checks-use-paseo-browser/review/validation/briefing-1
 started: 2026-11-07T15:39:54Z
 worktree: .worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser
 pr: iamcxa/kc-claude-plugins#810
