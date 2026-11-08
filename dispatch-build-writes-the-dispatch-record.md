@@ -3,7 +3,7 @@ title: spacedock dispatch build --stamp writes the task's dispatch record itself
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
