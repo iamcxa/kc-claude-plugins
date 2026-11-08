@@ -126,6 +126,9 @@ jobs:
           install -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
+      - name: test_dispatch_stage.py
+        run: SPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py
+
       - name: test_sd_dispatch.py
         run: python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$GITHUB_WORKSPACE/.sd-plugin-root"
 
