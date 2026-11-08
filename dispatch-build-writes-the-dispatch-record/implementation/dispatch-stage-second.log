@@ -1,0 +1,14 @@
+E.......
+======================================================================
+ERROR: test_advance_commits_record_and_withholds_envelope_on_commit_failure (__main__.DispatchStageTests.test_advance_commits_record_and_withholds_envelope_on_commit_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 187, in test_advance_commits_record_and_withholds_envelope_on_commit_failure
+    self.assertEqual(json.loads(result.stdout)["kind"], "advance")
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'kind'
+
+----------------------------------------------------------------------
+Ran 8 tests in 7.066s
+
+FAILED (errors=1)
