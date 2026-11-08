@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:observer-lists-unasked-merges:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:observer-lists-unasked-merges-validation-1
+              briefing:
+                id: briefing:observer-lists-unasked-merges:validation:attempt-1:revision-1
+                digest: sha256:1b55bfad6e2c2ba984df8200f00a867134993ac86b89cc60ed1a197643f690f9
+                room-ref: ./observer-lists-unasked-merges/review/validation/briefing-1
 started: 2026-11-07T15:40:18Z
 worktree: .worktrees/spacedock-ensign-observer-lists-unasked-merges
 pr: iamcxa/kc-claude-plugins#809
