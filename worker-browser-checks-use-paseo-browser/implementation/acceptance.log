@@ -1,0 +1,9 @@
+{
+  "base": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+  "candidate": "20eb8255daf0f1267a8c0dd16daf0705a7cf82ba",
+  "checks": 24,
+  "status": "failed",
+  "failed": 1,
+  "extension_words": 1116,
+  "guide_words": 222
+}

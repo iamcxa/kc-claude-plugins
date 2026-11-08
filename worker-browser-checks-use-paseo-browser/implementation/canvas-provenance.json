@@ -1,0 +1,12 @@
+{
+  "wt": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser",
+  "root": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser/kc-journey-map",
+  "run": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worker-browser-canvas-1treiF",
+  "room": "worker-browser-default-check",
+  "apiPort": 5900,
+  "vitePort": 3900,
+  "apiPid": 96411,
+  "vitePid": 96412,
+  "candidate": "20eb8255daf0f1267a8c0dd16daf0705a7cf82ba",
+  "url": "http://127.0.0.1:3900/?room=worker-browser-default-check"
+}

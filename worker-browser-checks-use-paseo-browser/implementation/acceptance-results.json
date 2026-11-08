@@ -1,0 +1,122 @@
+[
+  {
+    "name": "AC-1 appended sentence and unchanged first sentence",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-2 instructions and four complete workarounds",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-3 dispatch word bound",
+    "status": "passed",
+    "message": "{'base': 1101, 'candidate': 1116, 'guide': 222}"
+  },
+  {
+    "name": "AC-3 unchanged kc-dev-flow-2/references/sd/workflow.md",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-3 unchanged kc-dev-flow-2/scripts/lint-skills.py",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-3 unchanged kc-dev-flow-2/scripts/dispatch_records.py",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "Approved product scope",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "Base does not meet goal",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-1 existing consumer",
+    "status": "passed",
+    "message": "exit 0"
+  },
+  {
+    "name": "AC-1 mutation sentence first rejected",
+    "status": "passed",
+    "message": "exit 1"
+  },
+  {
+    "name": "AC-1 mutation second instruction rejected",
+    "status": "passed",
+    "message": "exit 1"
+  },
+  {
+    "name": "AC-2 mutation keyboard workaround removed rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-2 mutation ref workaround removed rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-2 mutation timeout workaround removed rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-2 mutation signature workaround removed rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-2 mutation word overflow rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-3 mutation limits moved to FO rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-4 actual Claude tool calls",
+    "status": "failed",
+    "message": "['all-Paseo proof incomplete; alternate adapter used']"
+  },
+  {
+    "name": "AC-4 worker report",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-4 mutation no Paseo browser call rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-4 mutation alternate adapter without reason rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-5 actual Codex tool exists and called once",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-5 mutation missing measurement rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-5 no unmeasured Codex limitation",
+    "status": "passed",
+    "message": ""
+  }
+]
