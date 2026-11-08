@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:design-check-says-not-run-without-a-scope:validation:attempt-1:revision-1",
+  "question": "決定：合併 #807（設計檢查遇到綁的不是任務檔時印「沒跑」，不再誤擋）嗎？建議合併。 Regular merge with --match-head-commit 2760f259379e9c3bb43bab9efa56d90c5b657ab1, the batch 17 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:design-check-says-not-run-without-a-scope:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/24e6ef2865055d8ee601c5859335d64142ebc29e/design-check-says-not-run-without-a-scope.md",
+      "rev": "sha256:ba218f0668186973a98036772a1494750642f82c56f9b12f3d7bb11cd4d96608",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of design-check-says-not-run-without-a-scope, PR #807, in the batch 17 validation sitting.\nSufficiency: when the backlog briefing bound a file other than the task, the design check now prints a not-run line naming it instead of a false Scope hold, the relay llms-teaches-versions case replays without the hold, and a real Scope change is still held (validation-1 report, Astra, 2026-11-08).\nNecessity: the two files are design_surfaces.py and its test (gh pr view 807 --json files, FO 2026-11-08).\nAcceptance, run by FO in a fresh shell 2026-11-08, exit 0: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-check-says-not-run-without-a-scope/validation-1/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-check-says-not-run-without-a-scope/captain-steps/1.md\nExternal rounds: 1.\nExternal round sources: Codex reviewed 2760f2593 (PR comments read by FO 2026-11-08).\nSecond reviewer: Copilot because the PR changes review rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5816063618\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: \"Didn't find any major issues\" on 2760f2593 (codex-review-receipt comment on #807, read by FO 2026-11-08).\nRoboRev: clean on 2760f2593, evidence=roborev:1586 (FO run 2026-11-07).\nLimit: a task whose backlog gate bound a presentation file gets no Scope check at ideation, about one task in eight on qnow (design D1 option A, approved 2026-11-07; ideation report).\nADR lint step, run by FO in a fresh shell 2026-11-08, exit 0: cd /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-check-says-not-run-without-a-scope (the candidate's clean worktree at 2760f2593) \u0026\u0026 python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since 139feeaee7ce037a0c6535568cd6bd103155cbae --require 0027 0042 0048"
+    }
+  ]
+}

@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:design-check-says-not-run-without-a-scope:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:design-check-says-not-run-without-a-scope-validation-1
+              briefing:
+                id: briefing:design-check-says-not-run-without-a-scope:validation:attempt-1:revision-1
+                digest: sha256:ae80f725686b47d617c9b25f777e7d943a92cabcc7b035e4120fdde33cc35cf2
+                room-ref: ./design-check-says-not-run-without-a-scope/review/validation/briefing-1
 started: 2026-11-07T15:40:10Z
 worktree: .worktrees/spacedock-ensign-design-check-says-not-run-without-a-scope
 pr: iamcxa/kc-claude-plugins#807
