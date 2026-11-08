@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/iamcxa/kc-claude-plugins/compare/kc-adr-v0.2.1...kc-adr-v0.2.2) (2026-11-08)
+
+
+### Bug Fixes
+
+* **kc-adr:** distinguish supersession assertions from stale pointers ([#806](https://github.com/iamcxa/kc-claude-plugins/issues/806)) ([a3502ac](https://github.com/iamcxa/kc-claude-plugins/commit/a3502ac1bdcbe0d3a871b2615eb860b231e65b76))
+
 ## [0.2.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-adr-v0.2.0...kc-adr-v0.2.1) (2026-10-27)
 
 
