@@ -53,6 +53,17 @@ gates:
                 id: briefing:dispatch-build-writes-the-dispatch-record:validation:attempt-1:revision-1
                 digest: sha256:730057279bbde73c0c4a24a2d251a599a56cf8c1074981351c997b6e1520cd51
                 room-ref: ./dispatch-build-writes-the-dispatch-record/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:dispatch-build-writes-the-dispatch-record:validation:1
+                briefing: briefing:dispatch-build-writes-the-dispatch-record:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-08T12:33:01.600501Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-08), answering 「批次 17 驗證關卡（快照 sha256:73005727…）：要合併 #812 嗎？它讓派工時由套件腳本先寫好派工紀錄、檢查通過才派工，紀錄跟著派工一起提交；任務裡有未提交的修改時會拒絕、不動資料。第四輪驗證通過，Codex 對最終版沒意見，CI 全部通過，我在乾淨 shell 重跑了驗收腳本和報告裡的所有指令。剩下的限制：別張任務有暫存時重試會被拒（你已接受）、不保證多方同時寫入、舊版決策紀錄檢查會誤報一次直到新版發布。建議合併。」, which presented the bound question 「決定：合併 #812（派工時由套件腳本先寫好派工紀錄、檢查通過才派工，紀錄跟著派工一起提交）嗎？建議合併。 Regular merge with --match-head-commit bd9d4abce4e0c61a69079d4e822b6ded45cfdc20, the batch 17 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-08T05:08:52Z
 worktree: .worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record
 pr: iamcxa/kc-claude-plugins#812
