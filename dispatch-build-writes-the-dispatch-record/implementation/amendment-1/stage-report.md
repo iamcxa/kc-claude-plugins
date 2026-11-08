@@ -1,0 +1,18 @@
+
+
+## Stage Report: implementation
+
+- DONE: The Captain accepted validation-3's F2 as a known limit: read Captain amendment 1 in the task file's `## Captain amendments` (Supersedes: AC-5). Per the amendment contract, move the AC-5 block verbatim from `## Acceptance criteria` into that entry under a `Superseded text:` line, and write its replacement as a new `**AC-9**` that says "Amended by Captain, amendment 1": an identical retry succeeds when no other task has staged content in the state checkout; when one has, it fails with no envelope and changes no file or index entry; the cause is the pinned Spacedock builder's check of the whole checkout's staged content. Keep AC-5's other evidence (a) and (c) and its falsifiers in AC-9 unchanged.
+  Captain amendment 1 retains the original AC-5 block verbatim under Superseded text; active AC-9 carries the exact amendment marker. amendment-1/amendment-integrity.json verifies the moved bytes, unchanged evidence (a)/(c) and falsifiers, and no inserted kept-sentence words; ac-scan.log lists AC-9 and excludes AC-5.
+- DONE: Change no product file. Update implementation acceptance labels to name AC-9 where they named AC-5, add the limit and its evidence (validation-3's outside-staged-retry probe) to the PR text you prepare, rerun /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py check on the task file to exit 0, and append a short implementation stage report naming the unchanged candidate 778367adde2e20e0b3e51966ddba2d9f77f9e614.
+  Product candidate remains 778367adde2e20e0b3e51966ddba2d9f77f9e614 with a clean code worktree; changes are task state and implementation acceptance labels only. falsifiers.py changes three AC5 labels to AC9 with mutation bodies unchanged; report generators use the live IDs, while historical reports/receipts remain intact. amendment-1/prepared-pr.md (also /tmp/impl-dispatch-build-writes-the-dispatch-record-pr.md) records the Captain-accepted limit and validation-3 probe evidence; no PR write.
+- DONE: AC-9 known retry limit exercised with the validation-3 outside-staged-retry probe.
+  amendment-1/outside-staged-retry.json: both flat/folder fixtures dispatch successfully, then identical retry exits 1 with empty stdout and complete HEAD/files/index/flags snapshot equality; after unstaging the other task, retry exits 0 without a second record. The unchanged validation-3/outside-staged-retry.py produced this evidence on the candidate; expecting success during the staged-content condition would reject both rows.
+- DONE: Required task consistency and repository guards.
+  amendment-1/design-surfaces.log exits 0 (presentable; Scope scan not run at validation); comment-ratio.log is 3/776 = 0.4%, below 5%; number-guards.log exits 0 against base 334d91e3165953b2ca7191e3308d80b6c02c4a99, ADR 0070 unchanged. label-integrity.json confirms live IDs, unchanged mutation bodies and parsable helper scripts.
+- SKIPPED: Product suite rerun, product commit/push, PR updates and independent validation.
+  No product change was authorized or made; existing repair-2 exact-candidate suite evidence remains historical rather than a new run. FO owns publication/independent validation and the Captain merge question after validation closes; no gate approval or frontmatter change is made here.
+
+### Summary
+
+Applied Captain amendment 1 as a state-only addendum: AC-9 replaces the withdrawn AC-5 with the known pinned-builder limit, retaining its other evidence and falsifiers. Candidate 778367adde2e20e0b3e51966ddba2d9f77f9e614 is unchanged; the new labels and prepared PR text follow the amendment, and the earlier product evidence/reports are preserved.

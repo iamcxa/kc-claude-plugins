@@ -207,13 +207,13 @@ Recommended order: merge-guard-stops-unasked-merges, then this task; the batch-1
 
 **AC-4** A validation dispatch without a candidate is held before the build. Evidence: `--stage validation` without `--candidate` exits 1 with `dispatch_records.py`'s "no 'Candidate: <40-hex head>' line" text and leaves no file; `--candidate abc` exits 2 before writing. Falsifier: ignoring the checker's exit code lets the fake build run.
 
-**AC-5** A failed or repeated build leaves no phantom record. Evidence: (a) a task at `status: backlog` dispatched with `--stage ideation`: Spacedock's stderr line starting `dispatch build --stamp:` and its exit code 1 pass through, and no `ideation-1.md` remains; (b) right after a successful `ideation-1`, an identical rerun exits 0 and adds no `ideation-2.md`, while the same rerun after one unrelated state commit adds `ideation-2.md`; (c) a rerun with one changed checklist line adds `ideation-2.md`, committed by the stamp. Falsifiers: without the removal (a) leaves a file; without the identical-reuse rule the first rerun of (b) adds `ideation-2.md`; reusing on bytes alone makes the second rerun of (b) add none.
-
 **AC-6** A reuse-advance dispatch is recorded and committed. Evidence: a task at `status: implementation` with `--advance` adds `implementation-1.md`, committed with subject `state: update <slug>`, and prints the advance envelope; when `state commit` fails (fake binary), exit 1 and no envelope on stdout. Falsifier: skipping `state commit` leaves the record uncommitted.
 
 **AC-7** The README names the script and costs no words. Evidence: `references/sd/workflow.md` holds the three passages under `### What changes` verbatim; `python3 -B kc-dev-flow-2/scripts/lint-skills.py` exits 0 printing `5931 of 5931 words`, with the `delta=-2` step; `test_sd_dispatch.py --sd-plugin-root <pinned root>` and `test_dispatch_records.py` pass with their updated pins. Falsifier: restoring the base passages makes `lint-skills.py` exit 1 on the count.
 
 **AC-8** CI runs the seam test with the real binary. Evidence: `kc-dev-flow-2-tests.yml` holds the new step after "Install pinned Spacedock", and the PR's run shows it passing; `test_dispatch_stage.py` with `SPACEDOCK_BIN` unset exits nonzero naming it. Falsifier: deleting the step removes the check from the run.
+
+**AC-9** Amended by Captain, amendment 1. A failed or repeated build leaves no phantom record. Evidence: (a) a task at `status: backlog` dispatched with `--stage ideation`: Spacedock's stderr line starting `dispatch build --stamp:` and its exit code 1 pass through, and no `ideation-1.md` remains; (b) after a successful `ideation-1`, an identical retry in a state checkout with no other task's staged content exits 0 and adds no `ideation-2.md`; if another task has staged content, it exits 1 with no envelope and changes no file or index entry. The cause is the pinned Spacedock builder's check of the whole checkout's staged content. After one unrelated state commit, the same rerun adds `ideation-2.md`; (c) a rerun with one changed checklist line adds `ideation-2.md`, committed by the stamp. Falsifiers: without the removal (a) leaves a file; without the identical-reuse rule the first rerun of (b) adds `ideation-2.md`; reusing on bytes alone makes the second rerun of (b) add none.
 
 ## Captain amendments
 
@@ -221,6 +221,9 @@ Recommended order: merge-guard-stops-unasked-merges, then this task; the batch-1
 Captain: 「接受為已知限制（建議）」 (host question dialog, 2026-11-08)
 Asked: 「#812（派工時自動寫派工紀錄）的重試，在「共用狀態資料夾裡剛好有別張任務的暫存內容」時會失敗且不輸出，但不會弄丟資料，稍後重試就會成功；原因在 Spacedock 會檢查整個資料夾的暫存，不是我們的 repo。驗收第五項寫「重試要成功」。要怎麼處理？建議接受為已知限制：第五項改成「別張任務沒有暫存內容時重試成功；有的話失敗但不動任何資料」，並記下是 Spacedock 的行為。」 Option chosen: 「接受為已知限制（建議）」 — 「修改第五項條件、記下原因；驗證收尾後問你合併」
 Supersedes: AC-5
+Superseded text:
+**AC-5** A failed or repeated build leaves no phantom record. Evidence: (a) a task at `status: backlog` dispatched with `--stage ideation`: Spacedock's stderr line starting `dispatch build --stamp:` and its exit code 1 pass through, and no `ideation-1.md` remains; (b) right after a successful `ideation-1`, an identical rerun exits 0 and adds no `ideation-2.md`, while the same rerun after one unrelated state commit adds `ideation-2.md`; (c) a rerun with one changed checklist line adds `ideation-2.md`, committed by the stamp. Falsifiers: without the removal (a) leaves a file; without the identical-reuse rule the first rerun of (b) adds `ideation-2.md`; reusing on bytes alone makes the second rerun of (b) add none.
+
 
 ## Number guards
 
@@ -475,3 +478,21 @@ REJECTED: PR #812 at 0d84d5d1b96fd674dba3a442d69c2e7898cceccd fixes the three re
 ### Summary
 
 This complete implementation report supersedes both earlier implementation reports: candidate 778367adde2e20e0b3e51966ddba2d9f77f9e614 closes the pre-existing task-work class before any record selection, while retaining owned cleanup and committed retry rules. All local exact-head acceptance and package commands pass; same-task exclusive ownership remains required, and FO owns product publication, new-head hosted CI, RoboRev and independent validation. Evidence is under `dispatch-build-writes-the-dispatch-record/implementation/repair-2/`; the inherited no-op retry limit is explicit above and in the prepared PR text.
+
+
+## Stage Report: implementation
+
+- DONE: The Captain accepted validation-3's F2 as a known limit: read Captain amendment 1 in the task file's `## Captain amendments` (Supersedes: AC-5). Per the amendment contract, move the AC-5 block verbatim from `## Acceptance criteria` into that entry under a `Superseded text:` line, and write its replacement as a new `**AC-9**` that says "Amended by Captain, amendment 1": an identical retry succeeds when no other task has staged content in the state checkout; when one has, it fails with no envelope and changes no file or index entry; the cause is the pinned Spacedock builder's check of the whole checkout's staged content. Keep AC-5's other evidence (a) and (c) and its falsifiers in AC-9 unchanged.
+  Captain amendment 1 retains the original AC-5 block verbatim under Superseded text; active AC-9 carries the exact amendment marker. amendment-1/amendment-integrity.json verifies the moved bytes, unchanged evidence (a)/(c) and falsifiers, and no inserted kept-sentence words; ac-scan.log lists AC-9 and excludes AC-5.
+- DONE: Change no product file. Update implementation acceptance labels to name AC-9 where they named AC-5, add the limit and its evidence (validation-3's outside-staged-retry probe) to the PR text you prepare, rerun /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py check on the task file to exit 0, and append a short implementation stage report naming the unchanged candidate 778367adde2e20e0b3e51966ddba2d9f77f9e614.
+  Product candidate remains 778367adde2e20e0b3e51966ddba2d9f77f9e614 with a clean code worktree; changes are task state and implementation acceptance labels only. falsifiers.py changes three AC5 labels to AC9 with mutation bodies unchanged; report generators use the live IDs, while historical reports/receipts remain intact. amendment-1/prepared-pr.md (also /tmp/impl-dispatch-build-writes-the-dispatch-record-pr.md) records the Captain-accepted limit and validation-3 probe evidence; no PR write.
+- DONE: AC-9 known retry limit exercised with the validation-3 outside-staged-retry probe.
+  amendment-1/outside-staged-retry.json: both flat/folder fixtures dispatch successfully, then identical retry exits 1 with empty stdout and complete HEAD/files/index/flags snapshot equality; after unstaging the other task, retry exits 0 without a second record. The unchanged validation-3/outside-staged-retry.py produced this evidence on the candidate; expecting success during the staged-content condition would reject both rows.
+- DONE: Required task consistency and repository guards.
+  amendment-1/design-surfaces.log exits 0 (presentable; Scope scan not run at validation); comment-ratio.log is 3/776 = 0.4%, below 5%; number-guards.log exits 0 against base 334d91e3165953b2ca7191e3308d80b6c02c4a99, ADR 0070 unchanged. label-integrity.json confirms live IDs, unchanged mutation bodies and parsable helper scripts.
+- SKIPPED: Product suite rerun, product commit/push, PR updates and independent validation.
+  No product change was authorized or made; existing repair-2 exact-candidate suite evidence remains historical rather than a new run. FO owns publication/independent validation and the Captain merge question after validation closes; no gate approval or frontmatter change is made here.
+
+### Summary
+
+Applied Captain amendment 1 as a state-only addendum: AC-9 replaces the withdrawn AC-5 with the known pinned-builder limit, retaining its other evidence and falsifiers. Candidate 778367adde2e20e0b3e51966ddba2d9f77f9e614 is unchanged; the new labels and prepared PR text follow the amendment, and the earlier product evidence/reports are preserved.

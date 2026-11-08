@@ -1,0 +1,15 @@
+{
+  "candidate": "778367adde2e20e0b3e51966ddba2d9f77f9e614",
+  "superseded_sha256": "e39d8d449d940e83f53f379152c67d36da19860e0210343f767beb84d07627ef",
+  "verbatim_move": true,
+  "evidence_a_c_unchanged": true,
+  "falsifiers_unchanged": true,
+  "added_words": [],
+  "implementation_labels_changed": [
+    "falsifiers.py",
+    "write-report.py",
+    "repair-1/write-report.py",
+    "repair-2/write-report.py"
+  ],
+  "validation3_probe_passed": true
+}

@@ -33,10 +33,10 @@ mutants = [
      '    subprocess.run([args.spacedock, "dispatch", "build"], capture_output=True)\n    checks = [subprocess.run', incomplete),
     ("AC4-ignore-checker", stage, 'if any(check.returncode for check in checks):', 'if False:',
      "test_validation_candidate_is_required_before_build"),
-    ("AC5-no-removal", stage, 'if wrote:\n', 'if False:\n',
+    ("AC9-no-removal", stage, 'if wrote:\n', 'if False:\n',
      "test_failed_stamp_removes_uncommitted_record_and_passes_error"),
-    ("AC5-no-identical-reuse", stage, 'if newest:\n', 'if False:\n', repeated),
-    ("AC5-reuse-on-bytes-alone", stage, 'added == git(state, "rev-parse", "HEAD") and ', '', repeated),
+    ("AC9-no-identical-reuse", stage, 'if newest:\n', 'if False:\n', repeated),
+    ("AC9-reuse-on-bytes-alone", stage, 'added == git(state, "rev-parse", "HEAD") and ', '', repeated),
     ("AC6-no-state-commit", stage, 'if args.advance:\n        slug', 'if False:\n        slug',
      "test_advance_commits_record_and_withholds_envelope_on_commit_failure"),
 ]

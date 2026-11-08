@@ -1,0 +1,11 @@
+{
+  "candidate": "778367adde2e20e0b3e51966ddba2d9f77f9e614",
+  "product_changed": false,
+  "product_tests": "not rerun; amendment-only",
+  "design_surfaces_exit": 0,
+  "live_criterion": "AC-9",
+  "historical_criterion": "AC-5 under amendment 1",
+  "outside_staged_probe": "flat and folder preserved; retry exit 1, recovery exit 0",
+  "unowned_dirty_path": "dispatch-build-writes-the-dispatch-record/validation-3/acceptance.sh",
+  "publication": "FO-owned"
+}

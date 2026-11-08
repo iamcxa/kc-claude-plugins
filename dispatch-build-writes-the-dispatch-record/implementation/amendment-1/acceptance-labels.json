@@ -1,0 +1,14 @@
+[
+  {
+    "previous": "AC5-no-removal",
+    "current": "AC9-no-removal"
+  },
+  {
+    "previous": "AC5-no-identical-reuse",
+    "current": "AC9-no-identical-reuse"
+  },
+  {
+    "previous": "AC5-reuse-on-bytes-alone",
+    "current": "AC9-reuse-on-bytes-alone"
+  }
+]
