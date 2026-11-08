@@ -1,0 +1,18 @@
+stage=validation
+status=DONE start=547 end=548 text=Independent verdict on PR #812 head 778367ad against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+status=DONE start=549 end=550 text=Judge the class repair of validation-2 F1 against review/chief-engineer-1.md (one clean-scope precondition before select_record; its matrix and falsifiers) and every criterion again; the FO rulings in dispatch/implementation-1-message-1.md and -message-2.md still stand.
+status=DONE start=551 end=552 text=A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; required ADR command with its exit code; verdict naming the head with classified findings
+status=DONE start=553 end=554 text=Apply validation-3-message-1 and judge AC-9 instead of superseded AC-5.
+status=DONE start=555 end=556 text=AC-1 and AC-2 — stamp commits an accepted record containing the worker's actual inputs.
+status=DONE start=557 end=558 text=AC-3 and AC-4 — incomplete scope or candidate holds before building.
+status=DONE start=559 end=560 text=AC-6 — advance commits before returning its envelope and preserves failed-commit recovery.
+status=DONE start=561 end=562 text=AC-7 — approved passages, reduced budget and retained consumers.
+status=DONE start=563 end=564 text=AC-9 — failed builds, immediate retry, later-commit/changed-input numbering and the accepted outside-staging limit.
+status=DONE start=565 end=566 text=AC-8 — the PR's exact-head real-binary seam test passes on hosted CI.
+status=DONE start=567 end=568 text=Local AC-8 wiring and missing-binary controls.
+status=DONE start=569 end=570 text=Full package replay, original acceptance chain and candidate preservation.
+status=DONE start=571 end=572 text=Required gates, document dispositions, necessity and implementation limits.
+status=SKIPPED start=573 end=574 text=Installed 0.35.0 ADR lint success.
+status=SKIPPED start=575 end=576 text=Concurrent-writer safety, model execution, post-release adoption and delivery proof.
+status=SKIPPED start=577 end=578 text=Local RoboRev and external review disposition.
+status=DONE start=580 end=581 text=Read run 42468880068 attempt 3 yourself, judge AC-8 from it, and finish your verdict at the same head in your report; change nothing else.

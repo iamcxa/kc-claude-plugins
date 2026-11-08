@@ -1,0 +1,56 @@
+unit tests (python3)	Install pinned Spacedock	﻿2026-11-08T11:07:49.9815104Z ##[group]Run set -euo pipefail
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9815484Z ^[[36;1mset -euo pipefail^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9815861Z ^[[36;1masset="spacedock_${SPACEDOCK_VERSION#v}_linux_amd64.tar.gz"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9816316Z ^[[36;1mcurl -fsSL -o /tmp/spacedock.tar.gz \^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9817302Z ^[[36;1m  "https://github.com/spacedock-dev/spacedock/releases/download/${SPACEDOCK_VERSION}/${asset}"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9818021Z ^[[36;1mecho "${SPACEDOCK_SHA256}  /tmp/spacedock.tar.gz" | sha256sum -c -^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9818496Z ^[[36;1mtar -xzf /tmp/spacedock.tar.gz -C /tmp^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9818822Z ^[[36;1mmkdir -p "$HOME/.local/bin"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9819194Z ^[[36;1minstall -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9819608Z ^[[36;1mecho "$HOME/.local/bin" >> "$GITHUB_PATH"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9866582Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9867091Z env:
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9867322Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9867779Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:49.9868306Z ##[endgroup]
+unit tests (python3)	Install pinned Spacedock	2026-11-08T11:07:50.1843637Z /tmp/spacedock.tar.gz: OK
+unit tests (python3)	test_dispatch_stage.py	﻿2026-11-08T11:07:50.2183098Z ##[group]Run SPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py
+unit tests (python3)	test_dispatch_stage.py	2026-11-08T11:07:50.2183935Z ^[[36;1mSPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py^[[0m
+unit tests (python3)	test_dispatch_stage.py	2026-11-08T11:07:50.2233187Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_dispatch_stage.py	2026-11-08T11:07:50.2233463Z env:
+unit tests (python3)	test_dispatch_stage.py	2026-11-08T11:07:50.2233682Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_dispatch_stage.py	2026-11-08T11:07:50.2234143Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_dispatch_stage.py	2026-11-08T11:07:50.2234635Z ##[endgroup]
+unit tests (python3)	test_dispatch_stage.py	2026-11-08T11:08:21.6835056Z ....................
+unit tests (python3)	test_dispatch_stage.py	2026-11-08T11:08:21.6836889Z ----------------------------------------------------------------------
+unit tests (python3)	test_dispatch_stage.py	2026-11-08T11:08:21.6837835Z Ran 20 tests in 31.399s
+unit tests (python3)	test_dispatch_stage.py	2026-11-08T11:08:21.6838220Z 
+unit tests (python3)	test_dispatch_stage.py	2026-11-08T11:08:21.6838399Z OK
+unit tests (python3)	test_sd_dispatch.py	﻿2026-11-08T11:08:21.6983814Z ##[group]Run python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$GITHUB_WORKSPACE/.sd-plugin-root"
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:21.6985174Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$GITHUB_WORKSPACE/.sd-plugin-root"^[[0m
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:21.7032570Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:21.7032826Z env:
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:21.7033025Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:21.7033438Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:21.7033875Z ##[endgroup]
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.5974546Z PASS: shared extension-list callers handle inline/block forms, quotes, comments, exact names, empty/no-key controls and unchanged manifests
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.5977799Z PASS: roster subprocess replay, absolute/split-root/linked roots, read-only repeatability, full schema/error controls, committed changes/deletion and candidate-author family evidence; legacy record checks do not establish roster use
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.5981216Z PASS (spacedock 0.27.2): 10 route/stage/host fresh and reused dispatch handoffs; 10 Team loss controls; wrong-stage and missing-stage refusals
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.5982695Z PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.5984058Z PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.5987537Z PASS: Dispatch facts (complete Team, Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root and the `main` completion line carried into the dispatch file ahead of the checklist beside the builder's `team-lead` block; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone; a correction without a Summary refused and named alone by the checklist read, a complete report under the exact heading accepted
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.5995940Z PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the 48 wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo, approval-accepts-stated-recommendation, adr-not-recorded, consent-rules, dispatch-record, resumed-dispatch, dispatch-coverage, adr-since, applied-none, follow-up-reason, decline-settled, late-decline, repair-push-grant, asked-line, send-back, adr-lint-output, ideation-follow-up, dispatch-records-check, pr-watch, readme-keeps-delivery-rules, delivery-question-carries-merge, worker-opens-draft-pr, one-number-per-kind, status-executable, late-ruling-adr, extensions-core, codex-round, roborev-gate, override-record, package-version, second-reviewer, precedent, reviewer-record, adr-recommended, state-commits-through-sd, rework-state-commit, scope-notes-main-line, scope-notes-main-line-skill, correction-request, roster-question-prerequisites, roster-adoption-prerequisites, roster-provider-host) are each asserted present, and each reverted alone to its previous text reports only its own gaps
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.6002259Z PASS: native flat/folder slug creation with omitted/matching id passes the seed check; missing Budget and all template placeholders refuse; mismatching native id refuses
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.6003425Z PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.6005018Z PASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.6006409Z PASS: Batch gates survives POC derivation but changes no pilot/POC worker stage definition; inlining mutations reach both implementation definitions
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.6007937Z PASS: four separately prepared/committed batch gates retain mapped approve/revise/hold/unanswered authority; stale-binding mutation refuses; resumed approval advances its own task without duplicate resolution
+unit tests (python3)	test_sd_dispatch.py	2026-11-08T11:08:41.6008982Z Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge
+unit tests (python3)	test_observer_recovery.py	﻿2026-11-08T11:08:41.6127348Z ##[group]Run SPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_observer_recovery.py
+unit tests (python3)	test_observer_recovery.py	2026-11-08T11:08:41.6128193Z ^[[36;1mSPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_observer_recovery.py^[[0m
+unit tests (python3)	test_observer_recovery.py	2026-11-08T11:08:41.6175264Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_observer_recovery.py	2026-11-08T11:08:41.6175512Z env:
+unit tests (python3)	test_observer_recovery.py	2026-11-08T11:08:41.6175710Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_observer_recovery.py	2026-11-08T11:08:41.6176117Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_observer_recovery.py	2026-11-08T11:08:41.6176549Z ##[endgroup]
+unit tests (python3)	test_observer_recovery.py	2026-11-08T11:08:42.2366408Z PASS: archive without observer.md detected; state commit refused for the late report; path-scoped commit then state commit published it; validate VALID; check exits 0

@@ -1,0 +1,51 @@
+{
+  "attempt": 3,
+  "head": "778367adde2e20e0b3e51966ddba2d9f77f9e614",
+  "conclusion": "success",
+  "steps": [
+    {
+      "job": "unit tests (python3)",
+      "completedAt": "2026-11-08T11:07:50Z",
+      "conclusion": "success",
+      "name": "Install pinned Spacedock",
+      "number": 29,
+      "startedAt": "2026-11-08T11:07:49Z",
+      "status": "completed"
+    },
+    {
+      "job": "unit tests (python3)",
+      "completedAt": "2026-11-08T11:08:21Z",
+      "conclusion": "success",
+      "name": "test_dispatch_stage.py",
+      "number": 30,
+      "startedAt": "2026-11-08T11:07:50Z",
+      "status": "completed"
+    },
+    {
+      "job": "unit tests (python3)",
+      "completedAt": "2026-11-08T11:08:41Z",
+      "conclusion": "success",
+      "name": "test_sd_dispatch.py",
+      "number": 31,
+      "startedAt": "2026-11-08T11:08:21Z",
+      "status": "completed"
+    },
+    {
+      "job": "unit tests (python3)",
+      "completedAt": "2026-11-08T11:08:42Z",
+      "conclusion": "success",
+      "name": "test_observer_recovery.py",
+      "number": 32,
+      "startedAt": "2026-11-08T11:08:41Z",
+      "status": "completed"
+    }
+  ],
+  "pr_state": "OPEN",
+  "draft": true,
+  "mergeStateStatus": "CLEAN",
+  "checks": {
+    "SUCCESS": 7,
+    "SKIPPED": 1,
+    "FAILURE": 0
+  }
+}
