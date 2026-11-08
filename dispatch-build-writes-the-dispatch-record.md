@@ -215,6 +215,13 @@ Recommended order: merge-guard-stops-unasked-merges, then this task; the batch-1
 
 **AC-8** CI runs the seam test with the real binary. Evidence: `kc-dev-flow-2-tests.yml` holds the new step after "Install pinned Spacedock", and the PR's run shows it passing; `test_dispatch_stage.py` with `SPACEDOCK_BIN` unset exits nonzero naming it. Falsifier: deleting the step removes the check from the run.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-08, host question dialog
+Captain: 「接受為已知限制（建議）」 (host question dialog, 2026-11-08)
+Asked: 「#812（派工時自動寫派工紀錄）的重試，在「共用狀態資料夾裡剛好有別張任務的暫存內容」時會失敗且不輸出，但不會弄丟資料，稍後重試就會成功；原因在 Spacedock 會檢查整個資料夾的暫存，不是我們的 repo。驗收第五項寫「重試要成功」。要怎麼處理？建議接受為已知限制：第五項改成「別張任務沒有暫存內容時重試成功；有的話失敗但不動任何資料」，並記下是 Spacedock 的行為。」 Option chosen: 「接受為已知限制（建議）」 — 「修改第五項條件、記下原因；驗證收尾後問你合併」
+Supersedes: AC-5
+
 ## Number guards
 
 ADR: 0070
