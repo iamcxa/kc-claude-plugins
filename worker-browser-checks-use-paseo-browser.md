@@ -181,8 +181,8 @@ Recommended order: this task before dispatch-build-writes-the-dispatch-record; a
 
 ## Acceptance criteria
 
-**AC-6** Amended by Captain, amendment 1. The paseo extension's scope-note quote ends with the sentence `Before using Paseo's browser tools, read extensions/paseo/browser.md under your Package root.`, and the quote's first sentence is unchanged.
-Evidence: at the candidate, `git show <candidate>:kc-dev-flow-2/extensions/paseo/EXTENSION.md | grep -n '^Add to scope notes:'` shows one line whose quote ends with that sentence; `python3 kc-dev-flow-2/scripts/test_dispatch_records.py` passes unchanged. Falsifier: putting the sentence first, or as a second `Add to scope notes:` line, makes that test fail.
+**AC-6** Amended by Captain, amendment 1. The paseo extension's scope-note quote ends with the browser sentence `Before using Paseo's browser tools, read extensions/paseo/browser.md under your Package root.`, and the quote's first sentence is unchanged.
+Evidence: at the candidate, `git show <candidate>:kc-dev-flow-2/extensions/paseo/EXTENSION.md | grep -n '^Add to scope notes:'` shows one line whose quote ends `read extensions/paseo/browser.md under your Package root."`; `python3 kc-dev-flow-2/scripts/test_dispatch_records.py` passes unchanged. Falsifier: putting the sentence first, or as a second `Add to scope notes:` line, makes that test fail.
 
 **AC-7** Amended by Captain, amendment 1. `extensions/paseo/browser.md` sends attended pages, including a login where the Captain performs human verification, to EXTENSION.md's Human terminals and pages; keeps repository instructions first; says unattended checks use the repository's supported adapter with no required Paseo attempt; and keeps CI unchanged, the fallback with per-step tool reporting, not-run-is-never-clean, the visible-tab limit and the four limits each with its workaround, in at most 240 words.
 Evidence: `wc -w` on the file; a reviewer maps each of the four limits in `## Scope` to one bullet with its workaround. Falsifier: a sentence requiring a Paseo attempt for an unattended check, a limit without a workaround, or over 240 words fails.
