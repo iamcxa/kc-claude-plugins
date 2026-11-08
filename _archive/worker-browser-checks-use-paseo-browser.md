@@ -3,7 +3,7 @@ title: Worker browser checks use Paseo's browser tools where the workflow lists 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -76,10 +76,13 @@ gates:
                 reason: 'The Captain chose 「合併，另開任務（建議）」 (host question dialog, 2026-11-08), answering 「#810 的說明沒有規定「repo 自己沒指定瀏覽器工具、又沒人看著」時要用什麼，工人會自己挑；這種情況在 #810 之前就是這樣，#810 沒有讓它變差。要怎麼處理？建議先合併 #810（head fef217353），另開一張任務補上：沒指定工具時用 Paseo 分頁，背景做不到的步驟回報「沒跑」、交回流程主持人。」, after asking 「如果repo自己沒有指定工具，那要用什麼？」 at the first presentation of the bound question 「決定：合併 #810（瀏覽器驗收說明改成：有人在場或登入要人機驗證時用 Paseo 分頁，沒人看著時用各 repo 自己的工具，保留四個已知限制的處理方法）嗎？建議合併。 Regular merge with --match-head-commit fef21735308e7e807d04a93a5506de5284dde436, the batch 17 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-07T15:39:54Z
 worktree: .worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser
 pr: pr-merge:810
+verdict: PASSED
+completed: 2026-11-08T08:19:44Z
+archived: 2026-11-08T08:19:44Z
 ---
 
 Where the workflow README lists the paseo extension, a worker's local browser verification uses Paseo's browser tools (mcp__paseo__browser_*) by default instead of Chrome for Testing (agent-browser), and the paseo extension states the known limits and their workarounds.
