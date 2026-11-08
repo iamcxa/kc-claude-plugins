@@ -1,0 +1,10 @@
+--- kc-dev-flow-2/scripts/dispatch_stage.py
++++ kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -106,6 +106,7 @@
+     except FileExistsError as error:
+         print(f"dispatch_stage: dispatch not built; refusing existing record: {error}", file=sys.stderr)
+         return 1
++    subprocess.run([args.spacedock, "dispatch", "build"], capture_output=True)
+     checks = [subprocess.run([sys.executable, "-B", str(SCRIPTS / "dispatch_records.py"), *map(str, flags)],
+                              capture_output=True, text=True)
+               for flags in ((task_folder(args.entity_path),), ("--names", "--strict", path))]

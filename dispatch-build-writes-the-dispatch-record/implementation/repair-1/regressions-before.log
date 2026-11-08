@@ -1,0 +1,36 @@
+FFF
+======================================================================
+FAIL: test_preexisting_untracked_record_survives_refused_build (__main__.DispatchStageTests.test_preexisting_untracked_record_survives_refused_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 214, in test_preexisting_untracked_record_survives_refused_build
+    self.assert_existing_record_is_preserved()
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 201, in assert_existing_record_is_preserved
+    self.assertEqual(record.exists(), not missing, "pre-existing record was removed or recreated")
+AssertionError: False != True : pre-existing record was removed or recreated
+
+======================================================================
+FAIL: test_preexisting_staged_record_survives_refused_build (__main__.DispatchStageTests.test_preexisting_staged_record_survives_refused_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 217, in test_preexisting_staged_record_survives_refused_build
+    self.assert_existing_record_is_preserved(staged=True)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 201, in assert_existing_record_is_preserved
+    self.assertEqual(record.exists(), not missing, "pre-existing record was removed or recreated")
+AssertionError: False != True : pre-existing record was removed or recreated
+
+======================================================================
+FAIL: test_preexisting_index_entry_without_worktree_file_is_preserved (__main__.DispatchStageTests.test_preexisting_index_entry_without_worktree_file_is_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 220, in test_preexisting_index_entry_without_worktree_file_is_preserved
+    self.assert_existing_record_is_preserved(staged=True, missing=True)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 204, in assert_existing_record_is_preserved
+    self.assertEqual(self.git(self.state, "ls-files", "--stage", "--", record), index)
+AssertionError: '' != '100644 cffbb783fae489240e45691acd49056b20[78 chars]1.md'
++ 100644 cffbb783fae489240e45691acd49056b207e7f08 0	dispatch-fixture-61fc6ca250224efaa23ca7987f4783c8/dispatch/ideation-1.md
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.491s
+
+FAILED (failures=3)

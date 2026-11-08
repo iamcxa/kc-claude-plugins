@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_preexisting_staged_record_survives_refused_build (__main__.DispatchStageTests.test_preexisting_staged_record_survives_refused_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-preservation-mutant-01e2vkec/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 217, in test_preexisting_staged_record_survives_refused_build
+    self.assert_existing_record_is_preserved(staged=True)
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-preservation-mutant-01e2vkec/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 201, in assert_existing_record_is_preserved
+    self.assertEqual(record.exists(), not missing, "pre-existing record was removed or recreated")
+AssertionError: False != True : pre-existing record was removed or recreated
+
+----------------------------------------------------------------------
+Ran 1 test in 0.588s
+
+FAILED (failures=1)

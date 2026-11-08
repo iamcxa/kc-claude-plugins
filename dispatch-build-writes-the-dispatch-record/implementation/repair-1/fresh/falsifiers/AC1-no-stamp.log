@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_stamp_commits_complete_record_and_exact_inputs (__main__.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC1-no-stamp-8wbsv7u0/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 107, in test_stamp_commits_complete_record_and_exact_inputs
+    self.assert_committed(record, f"dispatch: {self.slug} entering ideation")
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC1-no-stamp-8wbsv7u0/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 98, in assert_committed
+    self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
+AssertionError: '' != 'dispatch: dispatch-fixture-ea5a6a79d5bb44cb881802f74f3bac0c entering ideation'
++ dispatch: dispatch-fixture-ea5a6a79d5bb44cb881802f74f3bac0c entering ideation
+
+----------------------------------------------------------------------
+Ran 1 test in 0.529s
+
+FAILED (failures=1)

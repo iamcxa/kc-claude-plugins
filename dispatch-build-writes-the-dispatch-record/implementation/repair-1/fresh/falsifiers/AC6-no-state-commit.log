@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_advance_commits_record_and_withholds_envelope_on_commit_failure (__main__.DispatchStageTests.test_advance_commits_record_and_withholds_envelope_on_commit_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC6-no-state-commit-pmc8uuby/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 236, in test_advance_commits_record_and_withholds_envelope_on_commit_failure
+    self.assert_committed(self.record("implementation"), f"state: update {self.slug}")
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC6-no-state-commit-pmc8uuby/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 98, in assert_committed
+    self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
+AssertionError: '' != 'state: update dispatch-fixture-7007e96ad3c64aa790e4c149b4f76f5c'
++ state: update dispatch-fixture-7007e96ad3c64aa790e4c149b4f76f5c
+
+----------------------------------------------------------------------
+Ran 1 test in 0.746s
+
+FAILED (failures=1)

@@ -1,0 +1,20 @@
+[
+  {
+    "name": "test_preexisting_untracked_record_survives_refused_build",
+    "status": "passed",
+    "exit": 1,
+    "message": "Restoring the old writer is rejected by the preservation regression"
+  },
+  {
+    "name": "test_preexisting_staged_record_survives_refused_build",
+    "status": "passed",
+    "exit": 1,
+    "message": "Restoring the old writer is rejected by the preservation regression"
+  },
+  {
+    "name": "test_preexisting_index_entry_without_worktree_file_is_preserved",
+    "status": "passed",
+    "exit": 1,
+    "message": "Restoring the old writer is rejected by the preservation regression"
+  }
+]
