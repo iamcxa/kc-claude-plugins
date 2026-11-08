@@ -1,0 +1,67 @@
+[
+  {
+    "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "verdict": "unaffected",
+    "reason": "The recorded -2 step follows the existing exact-count rule; no ruling changes."
+  },
+  {
+    "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "verdict": "unaffected",
+    "reason": "The protected +144 step, its quote and loaded moments are unchanged."
+  },
+  {
+    "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "verdict": "unaffected",
+    "reason": "Agent effort and model-table comparison are unchanged."
+  },
+  {
+    "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "verdict": "unaffected",
+    "reason": "The extension's normalized_words measurement and permission ownership are unchanged."
+  },
+  {
+    "doc": "docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md",
+    "verdict": "unaffected",
+    "reason": "ROUND_RULE and follow-up-reason pins are unchanged."
+  },
+  {
+    "doc": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
+    "verdict": "updated",
+    "reason": "New accepted ruling and protected writer pointer."
+  },
+  {
+    "doc": "docs/dev/artifacts/skill-ablation-harness/sizing-simulation.py",
+    "verdict": "unaffected",
+    "reason": "parse_args is this historical artifact's argparse method, unrelated to the new wrapper."
+  },
+  {
+    "doc": "docs/dev/artifacts/skill-ablation-harness/span-match-demo.py",
+    "verdict": "unaffected",
+    "reason": "parse_args is this historical artifact's argparse method, unrelated to the new wrapper."
+  },
+  {
+    "doc": "docs/ship-flow/tools/validate-tdd-ledger.py",
+    "verdict": "unaffected",
+    "reason": "parse_args is this separate ledger tool's argparse method, unrelated to the wrapper."
+  },
+  {
+    "doc": "kc-dev-flow-2/README.md",
+    "verdict": "unaffected",
+    "reason": "Its complete test inventory points to the CI workflow, which now lists the new seam test."
+  },
+  {
+    "doc": "kc-dev-flow-2/references/sd/adoption.md",
+    "verdict": "unaffected",
+    "reason": "test_sd_dispatch still checks both adapted graphs and split-root transport; invocation unchanged."
+  },
+  {
+    "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "verdict": "unaffected",
+    "reason": "The exact-count lint command and separate review obligation remain accurate."
+  },
+  {
+    "doc": "learning.md",
+    "verdict": "unaffected",
+    "reason": "Per-moment recount and retained follow-up wording pins are exercised, with their obligations unchanged."
+  }
+]

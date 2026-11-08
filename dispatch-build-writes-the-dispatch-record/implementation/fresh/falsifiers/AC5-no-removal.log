@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_failed_stamp_removes_uncommitted_record_and_passes_error (__main__.DispatchStageTests.test_failed_stamp_removes_uncommitted_record_and_passes_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC5-no-removal-k1m9hw0z/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 159, in test_failed_stamp_removes_uncommitted_record_and_passes_error
+    self.assertFalse(self.record().exists())
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.457s
+
+FAILED (failures=1)

@@ -1,0 +1,11 @@
+--- kc-dev-flow-2/scripts/dispatch_stage.py
++++ kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -53,7 +53,7 @@
+ 
+ 
+ def remove_uncommitted(path, wrote):
+-    if wrote:
++    if False:
+         state = Path(git(path.parent, "rev-parse", "--show-toplevel"))
+         relative = path.relative_to(state).as_posix()
+         committed = subprocess.run(["git", "-C", str(state), "cat-file", "-e", f"HEAD:{relative}"], capture_output=True)

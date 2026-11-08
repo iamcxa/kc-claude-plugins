@@ -1,0 +1,18 @@
+commit afa4523468a2e86e6c6e0467591df00bf8e51d35
+Author:     Kent <iamcxa@gmail.com>
+AuthorDate: Sun Nov 8 13:20:03 2026 +0800
+Commit:     Kent <iamcxa@gmail.com>
+CommitDate: Sun Nov 8 13:20:03 2026 +0800
+
+    feat(kc-dev-flow-2): record stage dispatches before building
+
+ .github/workflows/kc-dev-flow-2-tests.yml          |   3 +
+ ...by-a-package-script-that-writes-their-record.md |  60 ++++++
+ kc-dev-flow-2/references/sd/workflow.md            |  12 +-
+ kc-dev-flow-2/scripts/dispatch_stage.py            | 142 ++++++++++++++
+ kc-dev-flow-2/scripts/lint-skills.py               |   1 +
+ kc-dev-flow-2/scripts/test_dispatch_records.py     |   6 +-
+ kc-dev-flow-2/scripts/test_dispatch_stage.py       | 217 +++++++++++++++++++++
+ kc-dev-flow-2/scripts/test_sd_dispatch.py          |  15 +-
+ kc-dev-flow-2/skills/observer/SKILL.md             |   2 +-
+ 9 files changed, 440 insertions(+), 18 deletions(-)
