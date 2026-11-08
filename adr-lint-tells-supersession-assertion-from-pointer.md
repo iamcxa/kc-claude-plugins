@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:adr-lint-tells-supersession-assertion-from-pointer:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:adr-lint-tells-supersession-assertion-from-pointer-validation-1
+              briefing:
+                id: briefing:adr-lint-tells-supersession-assertion-from-pointer:validation:attempt-1:revision-1
+                digest: sha256:98279cac2ade8e5a14ec6115606faf4a56392189cf04002ffe4cd32adde081ea
+                room-ref: ./adr-lint-tells-supersession-assertion-from-pointer/review/validation/briefing-1
 started: 2026-11-07T15:40:02Z
 worktree: .worktrees/spacedock-ensign-adr-lint-tells-supersession-assertion-from-pointer
 pr: iamcxa/kc-claude-plugins#806
