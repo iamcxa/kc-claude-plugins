@@ -79,7 +79,7 @@ gates:
                 state: pending
 started: 2026-11-07T15:39:54Z
 worktree: .worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser
-pr: iamcxa/kc-claude-plugins#810
+pr: pr-merge:810
 ---
 
 Where the workflow README lists the paseo extension, a worker's local browser verification uses Paseo's browser tools (mcp__paseo__browser_*) by default instead of Chrome for Testing (agent-browser), and the paseo extension states the known limits and their workarounds.
