@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_stamp_commits_complete_record_and_exact_inputs (__main__.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC2-drop-scope-line-d50ih4kf/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 133, in test_stamp_commits_complete_record_and_exact_inputs
+    self.assertIn(line, section)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+AssertionError: 'Keep this second scope-notes line verbatim.' not found in 'Package root: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC2-drop-scope-line-d50ih4kf/kc-dev-flow-2\nSend your completion message to `main`.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.328s
+
+FAILED (failures=1)

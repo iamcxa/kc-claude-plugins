@@ -1,0 +1,11 @@
+--- kc-dev-flow-2/scripts/dispatch_stage.py
++++ kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -99,7 +99,7 @@
+ 
+ def record_text(args, number, dispatched, checklist, notes):
+     annotation = "workflow checkout" + (f", {args.note}" if args.note else "")
+-    header = [f"# {args.stage}-{number}", f"Dispatched: {dispatched} ({annotation})", f"Model: {args.model}"]
++    header = [f"# {args.stage}-{number}", f"Dispatched: {dispatched} ({annotation})"]
+     if args.roster:
+         header.append(f"Roster: {args.roster}")
+     header += [f"Candidate: {sha}" for sha in args.candidate]

@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_successful_same_symptom_forwards_one_reminder_before_real_build (__main__.DispatchStageTests.test_successful_same_symptom_forwards_one_reminder_before_real_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-warning-mutant-wr0rc106/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 219, in test_successful_same_symptom_forwards_one_reminder_before_real_build
+    self.assertEqual(result.stderr.count(text), 1, "successful check reminder was lost or duplicated")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : successful check reminder was lost or duplicated
+
+----------------------------------------------------------------------
+Ran 1 test in 1.951s
+
+FAILED (failures=1)

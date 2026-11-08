@@ -1,0 +1,11 @@
+--- kc-dev-flow-2/scripts/dispatch_stage.py
++++ kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -117,7 +117,7 @@
+     numbers = [int(match[1]) for path in committed
+                if (match := pattern.fullmatch(Path(path).name)) and Path(path).parent.as_posix() == relative]
+     newest = max(numbers, default=0)
+-    if newest:
++    if False:
+         path = directory / f"{args.stage}-{newest}.md"
+         rel = path.relative_to(state).as_posix()
+         expected = record_text(args, newest, dispatched, checklist, notes)

@@ -1,0 +1,19 @@
+{
+  "candidate": "bd9d4abce4e0c61a69079d4e822b6ded45cfdc20",
+  "package": {
+    "commands": 28,
+    "tests": 1225,
+    "skipped": 11
+  },
+  "seam_tests": 22,
+  "original_falsifiers": 13,
+  "scope_falsifiers": 9,
+  "warning_falsifiers": 4,
+  "scope": {
+    "candidate": "bd9d4abce4e0c61a69079d4e822b6ded45cfdc20",
+    "matrix_cases": 92,
+    "refusal_snapshots": 98,
+    "all_preserved": true
+  },
+  "publication": "not run; FO-owned"
+}

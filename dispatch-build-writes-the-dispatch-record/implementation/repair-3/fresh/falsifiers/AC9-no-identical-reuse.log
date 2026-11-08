@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_identical_retry_reuses_only_at_adding_commit (__main__.DispatchStageTests.test_identical_retry_reuses_only_at_adding_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC9-no-identical-reuse-3dbku8ie/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 180, in test_identical_retry_reuses_only_at_adding_commit
+    self.assertFalse(self.record(number=2).exists())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 1.749s
+
+FAILED (failures=1)

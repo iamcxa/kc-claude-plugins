@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_successful_checks_keep_distinct_other_stage_warnings (__main__.DispatchStageTests.test_successful_checks_keep_distinct_other_stage_warnings)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-warning-mutant-o8s5f5_s/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 239, in test_successful_checks_keep_distinct_other_stage_warnings
+    self.assertEqual(result.stderr.count(marker), 1, "a distinct reminder was lost or shared reminder duplicated")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : a distinct reminder was lost or shared reminder duplicated
+
+----------------------------------------------------------------------
+Ran 1 test in 2.737s
+
+FAILED (failures=1)
