@@ -3,7 +3,7 @@ title: Worker browser checks use Paseo's browser tools where the workflow lists 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
