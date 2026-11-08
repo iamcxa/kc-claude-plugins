@@ -81,6 +81,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-08: amendment 1 only narrows AC-5 to a known limit of the pinned Spacedock builder, which the Captain accepted with its cause and harm stated; it changes no product file, and validation-3 judged its replacement AC-9 independently at 778367adde2e20e0b3e51966ddba2d9f77f9e614.
+Reviewer: kc-dev-flow-2:chief-engineer gpt-6-astra 2026-11-08 — (Codex via Paseo, xhigh) What is the next smallest integrated step that closes the staging-loss defect class in PR #812 rather than its newest instance? Report review/chief-engineer-1.md: one clean task-scope precondition before any write; repair 2 followed it, and the later Codex P2 on step-back warnings was a separate surface.
 
 ## Design
 
