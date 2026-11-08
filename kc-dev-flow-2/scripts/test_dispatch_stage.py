@@ -182,6 +182,43 @@ class DispatchStageTests(unittest.TestCase):
         self.assertFalse(self.record().exists())
         self.assertEqual(self.git(self.state, "status", "--porcelain"), "")
 
+    def assert_existing_record_is_preserved(self, staged=False, missing=False):
+        record = self.record()
+        record.parent.mkdir(parents=True)
+        original = b"Prepared dispatch record\r\nKeep these original bytes.\r\n"
+        record.write_bytes(original)
+        if staged:
+            self.git(self.state, "add", "--", record)
+            original = b"Working copy differs from its staged content.\r\n"
+            record.write_bytes(original)
+        if missing:
+            record.unlink()
+        index = self.git(self.state, "ls-files", "--stage", "--", record)
+        status = self.git(self.state, "status", "--porcelain", "--", record)
+        head, task = self.git(self.state, "rev-parse", "HEAD"), self.entity.read_bytes()
+        self.notes.write_text("Send your completion message to `main`.\n")
+        held = self.build(extra=("--spacedock", self.spy), expected=1)
+        self.assertEqual(record.exists(), not missing, "pre-existing record was removed or recreated")
+        if not missing:
+            self.assertEqual(record.read_bytes(), original)
+        self.assertEqual(self.git(self.state, "ls-files", "--stage", "--", record), index)
+        self.assertEqual(self.git(self.state, "status", "--porcelain", "--", record), status)
+        self.assertEqual(self.git(self.state, "rev-parse", "HEAD"), head)
+        self.assertEqual(self.entity.read_bytes(), task)
+        self.assertEqual(held.stdout, "")
+        self.assertIn(str(record), held.stderr)
+        self.assertNotIn("needs a 'Package root:' line", held.stderr)
+        self.assertFalse(self.marker.exists())
+
+    def test_preexisting_untracked_record_survives_refused_build(self):
+        self.assert_existing_record_is_preserved()
+
+    def test_preexisting_staged_record_survives_refused_build(self):
+        self.assert_existing_record_is_preserved(staged=True)
+
+    def test_preexisting_index_entry_without_worktree_file_is_preserved(self):
+        self.assert_existing_record_is_preserved(staged=True, missing=True)
+
     def test_changed_checklist_creates_next_committed_record(self):
         self.build()
         self.checklist.write_text("A different checklist line\n")
@@ -207,8 +244,14 @@ class DispatchStageTests(unittest.TestCase):
         self.assertEqual(held.stdout, "")
         self.assertIn("fixture state commit refused", held.stderr)
         self.assertTrue(self.record("implementation", 2).exists())
+        pending = self.record("implementation", 2).read_bytes()
+        refused = self.build("implementation", ("--advance", "--note", "retry", "--symptom", "none"), expected=1)
+        self.assertIn(str(self.record("implementation", 2)), refused.stderr)
+        self.assertEqual(self.record("implementation", 2).read_bytes(), pending)
+        self.call([BINARY, "state", "commit", self.slug, "--workflow-dir", self.workflow])
         self.build("implementation", ("--advance", "--note", "retry", "--symptom", "none"))
         self.assert_committed(self.record("implementation", 2), f"state: update {self.slug}")
+        self.assertFalse(self.record("implementation", 3).exists())
 
 
 if __name__ == "__main__":

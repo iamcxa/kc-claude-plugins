@@ -47,8 +47,11 @@ def select_record(args, folder, dispatched, checklist, notes):
                 and path.read_bytes() == expected.encode("utf-8")):
             return path, False
     path = directory / f"{args.stage}-{newest + 1}.md"
+    if git(state, "ls-files", "--", path.relative_to(state).as_posix()):
+        raise FileExistsError(f"record already exists in index: {path}")
     directory.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(record_text(args, newest + 1, dispatched, checklist, notes).encode("utf-8"))
+    with path.open("xb") as output:
+        output.write(record_text(args, newest + 1, dispatched, checklist, notes).encode("utf-8"))
     return path, True
 
 
@@ -98,7 +101,11 @@ def parse_args(argv):
 
 def main(argv=None):
     args, dispatched, checklist, notes = parse_args(argv)
-    path, wrote = select_record(args, task_folder(args.entity_path), dispatched, checklist, notes)
+    try:
+        path, wrote = select_record(args, task_folder(args.entity_path), dispatched, checklist, notes)
+    except FileExistsError as error:
+        print(f"dispatch_stage: dispatch not built; refusing existing record: {error}", file=sys.stderr)
+        return 1
     checks = [subprocess.run([sys.executable, "-B", str(SCRIPTS / "dispatch_records.py"), *map(str, flags)],
                              capture_output=True, text=True)
               for flags in ((task_folder(args.entity_path),), ("--names", "--strict", path))]
