@@ -1,0 +1,12 @@
+{
+  "candidate": "b36fbeeec3a6699c0a82a021dc4ee0142410f6c8",
+  "base": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges",
+  "stateRoot": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+  "pr": 809,
+  "archive": "/tmp/observer-validation-b36fbeee/candidate",
+  "candidateObserver": "fbe7c937-5309-473b-be32-776cba046bd0",
+  "baseObserver": "3e58869e-4f45-437a-a99a-3428ed99482d",
+  "verdict": "REJECTED",
+  "notes": "No product edits or commits. State commit/sync is explicitly allowed by validation-1-message-1.md."
+}

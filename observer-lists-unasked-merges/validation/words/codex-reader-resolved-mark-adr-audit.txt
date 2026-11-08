@@ -1,0 +1,6 @@
+window: 7a9c8746696382a974f05e0ca62133784cf8c7cb..2e243cef7ed7a01dc090a2b503e162e4c9b18f32 (2026-10-27T09:44:55+08:00, 2026-10-27T12:50:14+08:00]
+carried: 2 of 2
+release: none
+sync: none
+learning: none
+already reported: none

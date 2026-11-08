@@ -1,0 +1,4 @@
+ok | rule: "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it" (Delivery authority) | evidence: "carried: 5 of 7 merged PRs" (gh pr list, state refs)
+can't tell | rule: "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it" (Delivery authority) | evidence: "no ask record: #796 head e7bdee42bf56 merged 2026-11-06T14:27:19Z (no task in readable state)" (gh pr list, state refs)
+can't tell | rule: "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it" (Delivery authority) | evidence: "no ask record: #798 head 74cde7e09fb6 merged 2026-11-07T01:39:57Z (no task in readable state)" (gh pr list, state refs)
+Coverage: a merge with no ask record may have been approved in chat or recorded in a state checkout this run cannot read; neither shows here.

@@ -1,0 +1,12 @@
+{
+  "live_replay_exit": 1,
+  "initial_sandbox_replay_exit": 2,
+  "captain_acceptance_exit": 0,
+  "adr_lint_exit": 0,
+  "suite_exit": 0,
+  "candidate_observer_status": "idle",
+  "base_observer_status": "idle",
+  "native_observer_exit_claim": "unsupported; cut pipeline status, observer confirmed",
+  "review_verdict": "REJECTED",
+  "ci_cost_per_pr": "not measured"
+}

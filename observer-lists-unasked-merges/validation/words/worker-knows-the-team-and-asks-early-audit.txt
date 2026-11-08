@@ -1,0 +1,6 @@
+window: 49ba8c8aeeae0e4a78d2d2f98ca2f6ed270d3108..e7f7d38d0c179e23fc6825a2797f49ffcf438969 (2026-10-26T02:17:53+08:00, 2026-10-27T12:17:10+08:00]
+carried: 3 of 6
+release: #723
+sync: #725
+learning: #726
+already reported: none

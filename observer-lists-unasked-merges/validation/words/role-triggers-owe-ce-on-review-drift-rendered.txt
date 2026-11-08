@@ -1,0 +1,3 @@
+ok | rule: "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it" (Delivery authority) | evidence: "carried: 12 of 16 merged PRs" (gh pr list, state refs)
+observed | release PRs carry no task ask | evidence: "release: #707 #717" (gh pr list)
+observed | sync PRs carry no task ask | evidence: "sync: #715 #718" (gh pr list)

@@ -1,0 +1,14 @@
+window: 70b0f2f66b7a756171ba4962f2f33eb1fb2cac79..8ffd6dfa3e021c1967aeaeabd7cf0cb61db48aae (2026-10-23T10:17:22+08:00, 2026-11-06T08:30:20+08:00]
+carried: 54 of 82
+release: #707 #717 #723 #731 #739 #746 #752 #760 #768
+sync: #715 #718 #725 #733 #741 #747 #753 #761 #781
+learning: #726 #782
+no ask record: #704 head f0d3f442d5e6 merged 2026-10-23T02:34:26Z (no task in readable state)
+no ask record: #762 head 9530369cb452 merged 2026-11-05T02:41:10Z (no task in readable state)
+no ask record: #774 head b026e0d7e497 merged 2026-11-04T08:58:44Z (no task in readable state)
+no ask record: #776 head d071565932c9 merged 2026-11-03T15:23:40Z (no task in readable state)
+no ask record: #778 head 005afcaeb68c merged 2026-11-05T08:45:11Z (no task in readable state)
+no ask record: #784 head b2d0abd778d0 merged 2026-11-05T09:00:02Z (no task in readable state)
+no ask record: #785 head 0c38dd60b562 merged 2026-11-05T15:03:18Z (no task in readable state)
+no ask record: #789 head c37417313a12 merged 2026-11-05T15:31:50Z (no task in readable state)
+already reported: none

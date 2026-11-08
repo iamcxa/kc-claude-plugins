@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_recorded_release_reads_carried_before_kind (__main__.MergeAuditTest.test_recorded_release_reads_carried_before_kind)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-audit-fresh-n68bgoax/test_merge_audit.py", line 132, in test_recorded_release_reads_carried_before_kind
+    self.assertIn("carried: 1 of 1", out)
+AssertionError: 'carried: 1 of 1' not found in 'window: b43aa878012143e045d24c55ce8a17155561cbd8..005a4cc7e7b7812d3938c5bec554eddaf04e7abd (2026-01-01T00:00:00+00:00, 2026-01-01T00:00:10+00:00]\nread: refs/heads/spacedock-state/a a547619f5ea0b25e9ed3830f02fc0a2414f66c31 2026-01-01T00:00:20Z\ncarried: 0 of 1\nrelease: #7\nsync: none\nlearning: none\nalready reported: none\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.718s
+
+FAILED (failures=1)

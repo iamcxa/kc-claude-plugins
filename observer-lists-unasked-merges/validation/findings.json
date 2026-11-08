@@ -1,0 +1,20 @@
+[
+  {
+    "severity": "high",
+    "title": "F1 Material：觀察者把管線成功碼誤報成稽核成功碼",
+    "file": "kc-dev-flow-2/skills/observer/SKILL.md",
+    "line": 80,
+    "detail": "限定實際使用的觀察者執行 merge_audit.py | cut 後讀取 $?；原始報告宣稱 exit 0，但相同候選與視窗的直接重跑退出 1。觀察者已確認 0 是 cut 的狀態，未捕捉稽核狀態。這使 AC-6 原樣轉交的報告包含錯誤執行證據。",
+    "fix": "交由主責協調者依 Review-finding disposition 處置；若授權修正，保留稽核腳本本身的退出碼並以新觀察者重驗。",
+    "status": "open"
+  },
+  {
+    "severity": "low",
+    "title": "F2 Polish：新報告縮略了逐行引用格式",
+    "file": "kc-dev-flow-2/skills/observer/SKILL.md",
+    "line": 89,
+    "detail": "三種具名合併列省略指定 evidence: 與 gh pr list 出處；八個缺紀錄列保留可供去重的完整識別字，但省略逐行 rule/evidence 欄位。規則仍在上方可見，分類與去重識別字未遺失。",
+    "fix": "交主責協調者判定；若後續修正報告執行方法，可一併保持既有明定格式。",
+    "status": "open"
+  }
+]

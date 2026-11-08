@@ -256,3 +256,40 @@ The observer gets a merge listing from a new read-only `merge_audit.py`. It fetc
 ### Summary
 
 Delivered the Pilot slice as one local product commit: saved asks carry matching PR heads, differing heads are violations, and missing records stay inconclusive; release, sync, learning and repeated findings are named separately. The live replay, behavioral mutations, native observer controls, word recount, package guards and local suite passed within their recorded limits; the fresh-shell harness pins the original archive corpus so midnight does not change its 54 windows. FO retains publication, review, independent validation and delivery authority.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #809 head b36fbeee against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at b36fbeeec3a6699c0a82a021dc4ee0142410f6c8 (base 139feeaee7ce037a0c6535568cd6bd103155cbae): AC-1..5 and AC-7 pass; AC-6's fresh native report contains false execution evidence. Full matrix and limits: validation/README.md.
+- DONE: Rerun the merge audit over the window holding #785 read-only and judge the one CI test step added to .github/workflows/kc-dev-flow-2-tests.yml, stating its cost as measured or not measured
+  validation/replay-live-network.log: new actual GitHub read, exit 1, carried 54/82, exact eight gaps and all named-kind sets; only intended state-ref fetch writes. One stdlib test step, existing narrow path triggers/job/setup unchanged; hosted CI cost per PR not measured.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step validation/acceptance.sh, fresh bash exit 0, observed output in validation/acceptance.log; installed-package adr_lint.py docs/adr --since 139feeaee7ce037a0c6535568cd6bd103155cbae exits 0 (62 records). The script explicitly excludes native prose and cannot close AC-6.
+- DONE: AC-1 — Replay over the window that holds #785.
+  Live and saved replay agree on all sets and #727 carried; removing release recognition exposes #707 as no ask record (validation/mutations/release-removed-snapshot-replay.log).
+- DONE: AC-2 — Head differs is a violation line.
+  PR-7 A/B fixture and changed real #727 head exit 1; PR-number-only mutation fails the head-boundary test (validation/mutations/pr-number-only.log).
+- DONE: AC-3 — Named kinds come from their producers.
+  Producer names, renamed release, learning length and matching recorded release pass; kind-before-record mutation fails the recorded-release test (validation/mutations/kind-before-record.log).
+- DONE: AC-4 — Inputs and holds.
+  Fetch fallback, remote refs, timestamps, exact bounds, late committed asks, gh/no-origin/1000/malformed holds pass; reading records at TO fails the late-record fixture (validation/mutations/records-at-to.log).
+- DONE: AC-5 — Repeats collapse.
+  Committed sibling report hides #9, deleting it restores the line; uncommitted/self reports cannot hide it, and removing collapse fails (validation/mutations/collapse-removed.log).
+- FAILED: AC-6 — The observer reports it.
+  Fresh candidate Sonnet report emits all merge rows but falsely says audit exit 0; its follow-up confirms that was cut's pipeline status, not the audit's. Fresh base 0.35.0 emits no new merge rows. Both raw reports and the unchanged-report clarification are preserved under validation/.
+- DONE: AC-7 — Words and scope.
+  Exactly four product paths, unchanged workflow/budget, lint green; independent rendering of candidate outputs gives 54 windows, median 60/max 320 (without collapse 422). Adding one word per report violates both limits (validation/independent-words.json).
+- DONE: Local package checks and affected-document review.
+  27 commands succeeded; 1199 unittest cases, 11 skips. ADR/number/design/comment/dispatch/diff checks exit 0; comment ratio 0.5%. README is unaffected because its named-CI-command guidance remains accurate (validation/checks.json, suite-summary.json, doc-impact.json).
+- SKIPPED: Independently reproduce FO-owned RoboRev and hosted CI.
+  roborev not run: FO owns the local daemon review; no hosted CI invocation/cost measurement. Local Spacedock CLI 0.27.2 plus plugin files 0.27.3 do not establish hosted pinned-install behavior.
+- DONE: Commit the stage report and evidence with the dispatched Spacedock state helper; preserve the no-product-push boundary.
+  validation-1-message-1.md authorizes the helper's state-only push. Evidence lives only in this entity's validation/ folder; product branch and PR readiness remain unchanged.
+- F1 Material: Native observer records pipeline success as audit success.
+  Normal archive observer/unedited FO relay; observable false exit 0 versus direct exit 1; value-ac[AC-6] faithful audit evidence and contract[kc-dev-flow-2/skills/observer/SKILL.md#prove-each-finding]; trigger: validation/observer-candidate.md and observer-exit-clarification.md. No product repair made; FO disposition required.
+- F2 Polish: Native observer abbreviates the specified per-row rule/evidence/source format.
+  All eight exact finding tokens and all kind lists survive, with the shared rule above; no additional classification or repeat-collapse harm shown. Trigger and future Material threshold are in validation/README.md.
+
+### Summary
+
+Independent validation recommends REJECTED for b36fbeeec3a6699c0a82a021dc4ee0142410f6c8: deterministic behavior, historical replay, mutations and package checks passed, but the fresh native observer report did not faithfully record the audit's execution status. The word counts establish the accepted pinned simulation, not arbitrary model prose; no reported check proves authorization for missing-record merges. FO retains findings disposition, any repair/revalidation authorization, gate and delivery.

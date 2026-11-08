@@ -1,0 +1,20 @@
+F
+======================================================================
+FAIL: test_matching_head_is_carried_and_different_head_is_a_finding (__main__.MergeAuditTest.test_matching_head_is_carried_and_different_head_is_a_finding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-audit-fresh-hmttpcfb/test_merge_audit.py", line 87, in test_matching_head_is_carried_and_different_head_is_a_finding
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : window: b43aa878012143e045d24c55ce8a17155561cbd8..005a4cc7e7b7812d3938c5bec554eddaf04e7abd (2026-01-01T00:00:00+00:00, 2026-01-01T00:00:10+00:00]
+read: refs/heads/spacedock-state/a a547619f5ea0b25e9ed3830f02fc0a2414f66c31 2026-01-01T00:00:20Z
+carried: 1 of 1
+release: none
+sync: none
+learning: none
+already reported: none
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.984s
+
+FAILED (failures=1)

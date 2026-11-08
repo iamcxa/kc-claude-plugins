@@ -1,0 +1,104 @@
+[
+  {
+    "name": "lint",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "seconds": 0.20609225006774068
+  },
+  {
+    "name": "adr-lint",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae"
+    ],
+    "seconds": 0.14736254094168544
+  },
+  {
+    "name": "comment-ratio",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "b36fbeeec3a6699c0a82a021dc4ee0142410f6c8",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "seconds": 0.06273116706870496
+  },
+  {
+    "name": "number-guards",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/tmp/observer-validation-b36fbeee/candidate",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-lists-unasked-merges.md",
+      "--base",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae"
+    ],
+    "seconds": 0.15492583299055696
+  },
+  {
+    "name": "design-check",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-lists-unasked-merges.md"
+    ],
+    "seconds": 0.13387908297590911
+  },
+  {
+    "name": "doc-impact",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "b36fbeeec3a6699c0a82a021dc4ee0142410f6c8",
+      "--json"
+    ],
+    "seconds": 0.18872466613538563
+  },
+  {
+    "name": "diff-check",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges",
+      "diff",
+      "--check",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "b36fbeeec3a6699c0a82a021dc4ee0142410f6c8"
+    ],
+    "seconds": 0.02944154106080532
+  }
+]
