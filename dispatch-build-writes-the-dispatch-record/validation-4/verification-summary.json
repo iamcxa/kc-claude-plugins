@@ -1,0 +1,17 @@
+{
+  "head": "bd9d4abce4e0c61a69079d4e822b6ded45cfdc20",
+  "base": "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+  "verdict": "PASSED",
+  "package_commands": 28,
+  "reported_tests": 1225,
+  "optional_skips": 11,
+  "original_controls": 13,
+  "scope_mutations": 9,
+  "warning_mutations": 4,
+  "additional_controls": 2,
+  "scope_snapshots": 98,
+  "matrix_cases": 92,
+  "hosted_run": 42476440927,
+  "hosted_attempt": 1,
+  "product_clean": true
+}

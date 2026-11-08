@@ -1,0 +1,6 @@
+spacedock 0.27.2
+OS: darwin/arm64
+Channel: stable (spacedock@spacedock)
+Runtime: codex (CODEX_THREAD_ID)
+Sandbox: none (safehouse available)
+contract 3

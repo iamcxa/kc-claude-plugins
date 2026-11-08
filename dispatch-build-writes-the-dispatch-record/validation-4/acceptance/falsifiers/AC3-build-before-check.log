@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_incomplete_record_does_not_build_or_change_state (__main__.DispatchStageTests.test_incomplete_record_does_not_build_or_change_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC3-build-before-check-0571mrdi/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 146, in test_incomplete_record_does_not_build_or_change_state
+    self.assertFalse(self.marker.exists())
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.897s
+
+FAILED (failures=1)

@@ -1,0 +1,368 @@
+[
+  {
+    "name": "lint-skills",
+    "status": "passed",
+    "exit": 0,
+    "tests": null,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_lint_skills",
+    "status": "passed",
+    "exit": 0,
+    "tests": 47,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_design_surfaces",
+    "status": "passed",
+    "exit": 0,
+    "tests": 217,
+    "skipped": 4,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_adr_doc_checks",
+    "status": "passed",
+    "exit": 0,
+    "tests": 9,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_poc_readme",
+    "status": "passed",
+    "exit": 0,
+    "tests": 9,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_comment_ratio",
+    "status": "passed",
+    "exit": 0,
+    "tests": 14,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_number_guards",
+    "status": "passed",
+    "exit": 0,
+    "tests": 38,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_codex_review",
+    "status": "passed",
+    "exit": 0,
+    "tests": 36,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_roborev_gate",
+    "status": "passed",
+    "exit": 0,
+    "tests": 5,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_copilot_review",
+    "status": "passed",
+    "exit": 0,
+    "tests": 15,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_map_footprint",
+    "status": "passed",
+    "exit": 0,
+    "tests": 23,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_release_acceptance",
+    "status": "passed",
+    "exit": 0,
+    "tests": 122,
+    "skipped": 4,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_dispatch_records",
+    "status": "passed",
+    "exit": 0,
+    "tests": 115,
+    "skipped": 1,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_delivery_gate",
+    "status": "passed",
+    "exit": 0,
+    "tests": 176,
+    "skipped": 1,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_validation_security",
+    "status": "passed",
+    "exit": 0,
+    "tests": 5,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_pr_watch",
+    "status": "passed",
+    "exit": 0,
+    "tests": 135,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_replay_dispatch",
+    "status": "passed",
+    "exit": 0,
+    "tests": 8,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_decision_ledger",
+    "status": "passed",
+    "exit": 0,
+    "tests": 19,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_package_version",
+    "status": "passed",
+    "exit": 0,
+    "tests": 6,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_workflow_checkout",
+    "status": "passed",
+    "exit": 0,
+    "tests": 13,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_observer_check",
+    "status": "passed",
+    "exit": 0,
+    "tests": 19,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_merge_audit",
+    "status": "passed",
+    "exit": 0,
+    "tests": 17,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_merge_audit.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_role_triggers",
+    "status": "passed",
+    "exit": 0,
+    "tests": 43,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_laws_check",
+    "status": "passed",
+    "exit": 0,
+    "tests": 65,
+    "skipped": 1,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_learning",
+    "status": "passed",
+    "exit": 0,
+    "tests": 47,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_dispatch_stage",
+    "status": "passed",
+    "exit": 0,
+    "tests": 22,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_sd_dispatch",
+    "status": "passed",
+    "exit": 0,
+    "tests": null,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/tmp/pr812-validation4.Lmnx4p/spacedock-source"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  },
+  {
+    "name": "test_observer_recovery",
+    "status": "passed",
+    "exit": 0,
+    "tests": null,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "message": "CI command replay; optional SD_PLUGIN_ROOT unset as in CI"
+  }
+]

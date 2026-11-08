@@ -1,0 +1,22 @@
+[
+  {
+    "root": "/tmp/pr812-validation4.Lmnx4p/candidate",
+    "files": 1582,
+    "mismatches": []
+  },
+  {
+    "root": "/tmp/pr812-captain.q5TqeC",
+    "files": 1582,
+    "mismatches": []
+  },
+  {
+    "root": "/tmp/dispatch-stage-acceptance.d42fpd",
+    "files": 1582,
+    "mismatches": []
+  },
+  {
+    "root": "/tmp/pr812-captain.k0TaAg",
+    "files": 1582,
+    "mismatches": []
+  }
+]

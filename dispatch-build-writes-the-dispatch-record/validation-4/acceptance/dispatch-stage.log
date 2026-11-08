@@ -1,0 +1,27 @@
+test_advance_commits_record_and_withholds_envelope_on_commit_failure (test_dispatch_stage.DispatchStageTests.test_advance_commits_record_and_withholds_envelope_on_commit_failure) ... ok
+test_candidates_and_feedback_flags_reach_real_build (test_dispatch_stage.DispatchStageTests.test_candidates_and_feedback_flags_reach_real_build) ... ok
+test_changed_checklist_creates_next_committed_record (test_dispatch_stage.DispatchStageTests.test_changed_checklist_creates_next_committed_record) ... ok
+test_committed_then_assembly_failure_keeps_record_for_retry (test_dispatch_stage.DispatchStageTests.test_committed_then_assembly_failure_keeps_record_for_retry) ... ok
+test_failed_build_removes_its_staged_record (test_dispatch_stage.DispatchStageTests.test_failed_build_removes_its_staged_record) ... ok
+test_failed_stamp_removes_uncommitted_record_and_passes_error (test_dispatch_stage.DispatchStageTests.test_failed_stamp_removes_uncommitted_record_and_passes_error) ... ok
+test_identical_retry_reuses_only_at_adding_commit (test_dispatch_stage.DispatchStageTests.test_identical_retry_reuses_only_at_adding_commit) ... ok
+test_incomplete_record_does_not_build_or_change_state (test_dispatch_stage.DispatchStageTests.test_incomplete_record_does_not_build_or_change_state) ... ok
+test_inline_scope_uses_the_real_commit_unit (test_dispatch_stage.DispatchStageTests.test_inline_scope_uses_the_real_commit_unit) ... ok
+test_preexisting_index_entry_without_worktree_file_is_preserved (test_dispatch_stage.DispatchStageTests.test_preexisting_index_entry_without_worktree_file_is_preserved) ... ok
+test_preexisting_staged_record_survives_refused_build (test_dispatch_stage.DispatchStageTests.test_preexisting_staged_record_survives_refused_build) ... ok
+test_preexisting_untracked_record_survives_refused_build (test_dispatch_stage.DispatchStageTests.test_preexisting_untracked_record_survives_refused_build) ... ok
+test_real_builder_allowed_routes_preserve_other_tasks (test_dispatch_stage.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) ... ok
+test_retry_preserves_staged_record_with_worktree_at_head (test_dispatch_stage.DispatchStageTests.test_retry_preserves_staged_record_with_worktree_at_head) ... ok
+test_scope_git_failure_is_a_nonmutating_hold (test_dispatch_stage.DispatchStageTests.test_scope_git_failure_is_a_nonmutating_hold) ... ok
+test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) ... ok
+test_stamp_commits_complete_record_and_exact_inputs (test_dispatch_stage.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs) ... ok
+test_successful_checks_keep_distinct_other_stage_warnings (test_dispatch_stage.DispatchStageTests.test_successful_checks_keep_distinct_other_stage_warnings) ... ok
+test_successful_same_symptom_forwards_one_reminder_before_real_build (test_dispatch_stage.DispatchStageTests.test_successful_same_symptom_forwards_one_reminder_before_real_build) ... ok
+test_symlinked_entity_is_a_nonmutating_hold (test_dispatch_stage.DispatchStageTests.test_symlinked_entity_is_a_nonmutating_hold) ... ok
+test_unsupported_companion_and_dangling_target_are_preserved (test_dispatch_stage.DispatchStageTests.test_unsupported_companion_and_dangling_target_are_preserved) ... ok
+test_validation_candidate_is_required_before_build (test_dispatch_stage.DispatchStageTests.test_validation_candidate_is_required_before_build) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 114.458s
+
+OK

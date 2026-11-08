@@ -1,0 +1,30 @@
+[
+  {
+    "name": "drop-forward",
+    "status": "passed",
+    "mutant_exit": 1,
+    "test": "test_successful_same_symptom_forwards_one_reminder_before_real_build",
+    "message": "Mutant must fail: successful check reminder was lost or duplicated"
+  },
+  {
+    "name": "duplicate-reminders",
+    "status": "passed",
+    "mutant_exit": 1,
+    "test": "test_successful_same_symptom_forwards_one_reminder_before_real_build",
+    "message": "Mutant must fail: successful check reminder was lost or duplicated"
+  },
+  {
+    "name": "forward-after-build",
+    "status": "passed",
+    "mutant_exit": 1,
+    "test": "test_successful_same_symptom_forwards_one_reminder_before_real_build",
+    "message": "Mutant must fail: reminder was not visible before building"
+  },
+  {
+    "name": "deduplicate-whole-stream",
+    "status": "passed",
+    "mutant_exit": 1,
+    "test": "test_successful_checks_keep_distinct_other_stage_warnings",
+    "message": "Mutant must fail: a distinct reminder was lost or shared reminder duplicated"
+  }
+]

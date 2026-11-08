@@ -1,0 +1,11 @@
+{
+  "exit": 1,
+  "stderr": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ukje4hog/code/docs/dev2/.spacedock-state/dispatch-fixture-14426974abcd49598cc6cb0a48f0c9e3/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n",
+  "before_index": "100644 21f4201ef012e23d23ece1e98963d0e73abc4d13 0\tdispatch-fixture-14426974abcd49598cc6cb0a48f0c9e3/dispatch/ideation-1.md",
+  "after_index": "100644 21f4201ef012e23d23ece1e98963d0e73abc4d13 0\tdispatch-fixture-14426974abcd49598cc6cb0a48f0c9e3/dispatch/ideation-1.md",
+  "before_status": "MM dispatch-fixture-14426974abcd49598cc6cb0a48f0c9e3/dispatch/ideation-1.md",
+  "after_status": "MM dispatch-fixture-14426974abcd49598cc6cb0a48f0c9e3/dispatch/ideation-1.md",
+  "index_preserved": true,
+  "worktree_preserved": true,
+  "head_preserved": true
+}

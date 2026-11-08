@@ -1,0 +1,50 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "detail": "Stamp commits a checker-accepted record and emits the JSON artifact path.",
+    "evidence": "No-stamp and no-Model mutations fail."
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "detail": "Every nonblank checklist and scope line reaches its record section and worker artifact.",
+    "evidence": "Dropped scope line fails the exact-input assertion."
+  },
+  {
+    "name": "AC-3",
+    "status": "passed",
+    "detail": "Incomplete scope exits 1 before builder, removes owned record and preserves task/HEAD.",
+    "evidence": "Skipped removal and build-before-check fail."
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "detail": "Missing candidate exits 1; malformed candidate exits 2; neither builds.",
+    "evidence": "Ignoring checker failure admits dispatch and fails."
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "detail": "Advance commits before envelope; failed commit withholds envelope and preserves recovery.",
+    "evidence": "Removing state commit fails the commit subject assertion."
+  },
+  {
+    "name": "AC-7",
+    "status": "passed",
+    "detail": "Three approved passages match, 5931/5931 words, pinned consumers pass.",
+    "evidence": "Base passages fail 5933/5931; previous observer entry fails chat-only lint."
+  },
+  {
+    "name": "AC-8",
+    "status": "passed",
+    "detail": "Exact-head PR hosted run 42476440927 attempt 1 passed real-binary seam step.",
+    "evidence": "Unset binary exits 1; deleting step removes the seam command (local wiring control)."
+  },
+  {
+    "name": "AC-9",
+    "status": "passed",
+    "detail": "Amended retry contract, cleanup and changed-input/later-commit numbering pass in both layouts.",
+    "evidence": "No removal/reuse and bytes-only reuse fail; whole-state staging breaks outside snapshot."
+  }
+]

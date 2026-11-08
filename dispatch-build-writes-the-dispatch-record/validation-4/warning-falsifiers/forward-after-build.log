@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_successful_same_symptom_forwards_one_reminder_before_real_build (__main__.DispatchStageTests.test_successful_same_symptom_forwards_one_reminder_before_real_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-warning-mutant-fkee942x/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 220, in test_successful_same_symptom_forwards_one_reminder_before_real_build
+    self.assertEqual(before_build.count(text), 1, "reminder was not visible before building")
+AssertionError: 0 != 1 : reminder was not visible before building
+
+----------------------------------------------------------------------
+Ran 1 test in 1.870s
+
+FAILED (failures=1)

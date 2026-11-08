@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_validation_candidate_is_required_before_build (__main__.DispatchStageTests.test_validation_candidate_is_required_before_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC4-ignore-checker-_2_3v_uo/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 150, in test_validation_candidate_is_required_before_build
+    held = self.build("validation", ("--spacedock", self.spy), expected=1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC4-ignore-checker-_2_3v_uo/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC4-ignore-checker-_2_3v_uo/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC4-ignore-checker-_2_3v_uo/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-9qtofb7l/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-9qtofb7l/code/docs/dev2/.spacedock-state/dispatch-fixture-c4cee37f9f214e94803c1cded5a3e671.md'), '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-9qtofb7l/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-9qtofb7l/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--spacedock', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-9qtofb7l/spy')], '{\n  "schema_version": 2,\n  "subagent_type": "spacedock:ensign",\n  "description": "Synthetic dispatch: validation",\n  "fetch_commands": [\n    "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-9qtofb7l/code/docs/dev2 --stage validation"\n  ],\n  "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-c4cee37f9f21-validation.md",\n  "prompt": "$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-c4cee37f9f21-validation.md and treat its content as your assignment.",\n  "model": null,\n  "name": "spacedock-ensign-dispatch-fixture-c4cee37f9f21-validation"\n}\n', "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n")
+
+----------------------------------------------------------------------
+Ran 1 test in 1.087s
+
+FAILED (failures=1)

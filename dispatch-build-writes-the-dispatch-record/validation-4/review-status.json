@@ -1,0 +1,14 @@
+[
+  {
+    "id": 4505536959,
+    "disposition": "Previously Material; fixed",
+    "evidence": "98 unchanged snapshots including 92 matrix cases; nine scope mutations caught; no untracked/staged/index-only record is consumed",
+    "github_thread_resolved": false
+  },
+  {
+    "id": 4505793059,
+    "disposition": "Previously Material; fixed",
+    "evidence": "Two real-binary warning tests and four mutations prove before-build forwarding, once-only shared lines and retained distinct warnings",
+    "github_thread_resolved": false
+  }
+]

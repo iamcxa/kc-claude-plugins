@@ -1,0 +1,43 @@
+FF
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (__main__.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='flat')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr812-outside-index-mutant-z1o2a8xt/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 487, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.assertEqual(fixture.outside_snapshot(), outside)
+AssertionError: Tuples differ: (b'Ou[46 chars]side working bytes, different again.', '100644[87 chars].\n') != (b'Ou[46 chars]side staged bytes.', '100644 dcda36d677085e3e5[69 chars].\n')
+
+First differing element 1:
+'Outside working bytes, different again.'
+'Outside staged bytes.'
+
+  (b'Outside working bytes, different again.\n',
+-  'Outside working bytes, different again.',
+-  '100644 3a3f93172d8adaaf76a094c2c2d8bcbc2a1cf2ae 0\tother-task.txt',
++  'Outside staged bytes.',
++  '100644 dcda36d677085e3e5057385f0fcfa25f05adcbdd 0\tother-task.txt',
+   b'Outside untracked bytes.\n')
+
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (__main__.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='folder')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr812-outside-index-mutant-z1o2a8xt/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 487, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.assertEqual(fixture.outside_snapshot(), outside)
+AssertionError: Tuples differ: (b'Ou[46 chars]side working bytes, different again.', '100644[87 chars].\n') != (b'Ou[46 chars]side staged bytes.', '100644 dcda36d677085e3e5[69 chars].\n')
+
+First differing element 1:
+'Outside working bytes, different again.'
+'Outside staged bytes.'
+
+  (b'Outside working bytes, different again.\n',
+-  'Outside working bytes, different again.',
+-  '100644 3a3f93172d8adaaf76a094c2c2d8bcbc2a1cf2ae 0\tother-task.txt',
++  'Outside staged bytes.',
++  '100644 dcda36d677085e3e5057385f0fcfa25f05adcbdd 0\tother-task.txt',
+   b'Outside untracked bytes.\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 3.228s
+
+FAILED (failures=2)

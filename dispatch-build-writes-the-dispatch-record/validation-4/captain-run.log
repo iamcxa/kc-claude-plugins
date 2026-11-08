@@ -1,0 +1,7 @@
+PASS 1: clean exact candidate exported; Spacedock 0.27.2
+PASS 2: 9 selected real-binary dispatch tests passed, including warnings before build
+PASS 3: workflow and observer contracts passed at 5931/5931 words
+PASS 4: unset SPACEDOCK_BIN refused with exit 1
+PASS 5: candidate ADR checker passed; product tree unchanged
+PASS 6a: dirty same-task retry refused; staged content preserved
+PASS 6: AC-9 outside-staged retry refuses without data changes in both layouts; clean retry recovers

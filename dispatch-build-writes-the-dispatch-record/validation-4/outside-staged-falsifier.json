@@ -1,0 +1,7 @@
+{
+  "name": "retry-stages-outside-scope",
+  "status": "passed",
+  "exit": 1,
+  "mutation": "Stage whole state repository immediately before reusing committed record",
+  "oracle": "outside index and worktree snapshots must match"
+}

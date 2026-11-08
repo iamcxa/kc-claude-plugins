@@ -1,0 +1,11 @@
+--- kc-dev-flow-2/scripts/dispatch_stage.py
++++ kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -105,7 +105,7 @@
+     header += [f"Candidate: {sha}" for sha in args.candidate]
+     if args.symptom:
+         header.append(f"Symptom: {args.symptom}")
+-    return "\n".join(header) + "\n\n## Checklist\n" + checklist + "\n## Scope notes\n" + notes
++    return "\n".join(header) + "\n\n## Checklist\n" + checklist + "\n## Scope notes\n" + notes.replace("Keep this second scope-notes line verbatim.\n", "")
+ 
+ 
+ def select_record(args, folder, dispatched, checklist, notes):

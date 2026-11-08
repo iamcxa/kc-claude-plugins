@@ -1,0 +1,6 @@
+{
+  "name": "restore previous observer command entry",
+  "status": "passed",
+  "exit": 1,
+  "evidence": "observer-control.log"
+}
