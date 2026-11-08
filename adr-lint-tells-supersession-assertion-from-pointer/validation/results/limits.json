@@ -1,0 +1,58 @@
+[
+  {
+    "name": "same-line escaped status assertion",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "input": "# see docs/adr/0003-b.md\nassert \"## Status\\n\\nSuperseded by 0003\" in Path(\"docs/adr/0002-a.md\").read_text()\n",
+    "output": "2 ADR file(s) checked, 0 legacy; changed records not checked (no --since or --require)\n"
+  },
+  {
+    "name": "multiline assertion remains rejected",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "input": "# see docs/adr/0003-b.md\nassert \"Superseded by 0003\" in (\n    Path(\"docs/adr/0002-a.md\").read_text())\n",
+    "output": "tests/status.py: points at ADR 0002, Superseded by 0003; point it at 0003 or the record in force\n"
+  },
+  {
+    "name": "regex assertion remains rejected",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "input": "# see docs/adr/0003-b.md\nassert re.search(r\"Superseded by \\d{4}\", Path(\"docs/adr/0002-a.md\").read_text())\n",
+    "output": "tests/status.py: points at ADR 0002, Superseded by 0003; point it at 0003 or the record in force\n"
+  },
+  {
+    "name": "same-line authority comment exception is intentional",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "input": "# see docs/adr/0003-b.md\n# see docs/adr/0002-a.md; Superseded by 0003\n",
+    "output": "2 ADR file(s) checked, 0 legacy; changed records not checked (no --since or --require)\n"
+  },
+  {
+    "name": "wrong successor retains pointer diagnostic",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "input": "# see docs/adr/0003-b.md\nassert \"Superseded by 0004\" in Path(\"docs/adr/0002-a.md\").read_text()\n",
+    "output": "tests/status.py: points at ADR 0002, Superseded by 0003; point it at 0003 or the record in force\n"
+  },
+  {
+    "name": "overlong successor remains rejected",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "input": "# see docs/adr/0003-b.md\nassert \"Superseded by 00030\" in Path(\"docs/adr/0002-a.md\").read_text()\n",
+    "output": "tests/status.py: points at ADR 0002, Superseded by 0003; point it at 0003 or the record in force\n"
+  },
+  {
+    "name": "authority elsewhere remains rejected",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "input": "# see docs/adr/0003-b.md\nassert \"Superseded by 0003\" in Path(\"docs/adr/0002-a.md\").read_text()\n# see docs/adr/0002-a.md\n",
+    "output": "tests/status.py: points at ADR 0002, Superseded by 0003; point it at 0003 or the record in force\n"
+  }
+]

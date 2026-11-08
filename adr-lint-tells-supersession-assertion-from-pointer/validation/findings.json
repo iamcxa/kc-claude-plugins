@@ -1,0 +1,26 @@
+[
+  {
+    "severity": "low",
+    "title": "F1 Deferred risk: multiline and regex assertions remain rejected",
+    "file": "kc-adr/scripts/adr_lint.py",
+    "line": 79,
+    "detail": "Approved same-line boundary; no accepted criterion requires these shapes. Both reproduced exit 1. Material only if a supported criterion is expanded to cover them.",
+    "status": "confirmed"
+  },
+  {
+    "severity": "low",
+    "title": "F2 Deferred risk: same-line successor comments are forgiven",
+    "file": "kc-adr/scripts/adr_lint.py",
+    "line": 81,
+    "detail": "Approved textual rule; same-line old citation plus recorded successor exits 0, separate authority line exits 1. No supported harm demonstrated; semantic intent remains unproved.",
+    "status": "confirmed"
+  },
+  {
+    "severity": "low",
+    "title": "F3 Polish: wrong-successor diagnostics still describe a pointer",
+    "file": "kc-adr/scripts/adr_lint.py",
+    "line": 97,
+    "detail": "Wrong and overlong successors still reject correctly. Diagnostic does not explain that the assertion itself is wrong; accepted scope retains it.",
+    "status": "confirmed"
+  }
+]

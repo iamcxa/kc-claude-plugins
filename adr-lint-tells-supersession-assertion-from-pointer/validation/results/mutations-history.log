@@ -1,0 +1,12 @@
+candidate-25-tests: exit 0, expected 0, PASS
+base-fails-assertion: exit 1, expected 1, PASS
+removed-exception-fails: exit 1, expected 1, PASS
+file-wide-successor-fails: exit 1, expected 1, PASS
+wrong-successor-fails: exit 1, expected 1, PASS
+invented-successor-pointer-fails: exit 1, expected 1, PASS
+word-boundary-regression-fails: exit 1, expected 1, PASS
+copy-drift-fails: exit 1, expected 1, PASS
+copy-restored-passes: exit 0, expected 0, PASS
+historical-unsplit-fails: exit 1, expected 1, PASS
+historical-candidate-passes: exit 0, expected 0, PASS
+All candidate and mutation expectations passed.

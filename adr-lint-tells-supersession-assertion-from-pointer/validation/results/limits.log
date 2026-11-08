@@ -1,0 +1,7 @@
+same-line escaped status assertion: exit 0, expected 0
+multiline assertion remains rejected: exit 1, expected 1
+regex assertion remains rejected: exit 1, expected 1
+same-line authority comment exception is intentional: exit 0, expected 0
+wrong successor retains pointer diagnostic: exit 1, expected 1
+overlong successor remains rejected: exit 1, expected 1
+authority elsewhere remains rejected: exit 1, expected 1

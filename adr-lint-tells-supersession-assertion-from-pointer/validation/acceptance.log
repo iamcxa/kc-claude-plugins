@@ -1,0 +1,19 @@
+Step 1: exported f429f0fac40511c6480fd92e2cccd4c0e94b2454
+adr-tests: exit 0 (expected 0)
+doc-tests: exit 0 (expected 0)
+native-dispatch: exit 0 (expected 0)
+copy-sync: exit 0 (expected 0)
+candidate-full: exit 0 (expected 0)
+candidate-since: exit 0 (expected 0)
+installed-since: exit 1 (expected 1)
+kc-dev-flow-2/scripts/test_sd_dispatch.py: points at ADR 0047, Superseded by 0050; point it at 0050 or the record in force
+mutations-history: exit 0 (expected 0)
+limits: exit 0 (expected 0)
+lint-skills: exit 0 (expected 0)
+design-surfaces: exit 0 (expected 0)
+number-guards: exit 0 (expected 0)
+comment-ratio: exit 0 (expected 0)
+doc-impact: exit 0 (expected 0)
+dispatch-records: exit 0 (expected 0)
+diff-whitespace: exit 0 (expected 0)
+PASS: all expected outcomes; evidence: /tmp/adr806-acceptance.4f7iNO/results

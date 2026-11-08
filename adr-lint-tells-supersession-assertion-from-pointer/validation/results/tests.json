@@ -1,0 +1,98 @@
+[
+  {
+    "name": "adr-tests",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/adr-tests.log"
+  },
+  {
+    "name": "doc-tests",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/doc-tests.log"
+  },
+  {
+    "name": "native-dispatch",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/native-dispatch.log"
+  },
+  {
+    "name": "copy-sync",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/copy-sync.log"
+  },
+  {
+    "name": "candidate-full",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/candidate-full.log"
+  },
+  {
+    "name": "candidate-since",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/candidate-since.log"
+  },
+  {
+    "name": "installed-since",
+    "status": "passed",
+    "message": "exit 1, expected 1",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/installed-since.log"
+  },
+  {
+    "name": "mutations-history",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/mutations-history.log"
+  },
+  {
+    "name": "limits",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/limits.log"
+  },
+  {
+    "name": "lint-skills",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/lint-skills.log"
+  },
+  {
+    "name": "design-surfaces",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/design-surfaces.log"
+  },
+  {
+    "name": "number-guards",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/number-guards.log"
+  },
+  {
+    "name": "comment-ratio",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/comment-ratio.log"
+  },
+  {
+    "name": "doc-impact",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/doc-impact.log"
+  },
+  {
+    "name": "dispatch-records",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/dispatch-records.log"
+  },
+  {
+    "name": "diff-whitespace",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "file": "/tmp/adr806-acceptance.4f7iNO/results/diff-whitespace.log"
+  }
+]

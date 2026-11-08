@@ -1,0 +1,11 @@
+{
+  "candidate": "f429f0fac40511c6480fd92e2cccd4c0e94b2454",
+  "base": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+  "candidate_unchanged": true,
+  "installed_checker_matches_base": true,
+  "installed_check_acceptance": "SKIPPED per FO; independently reproduced exit 1",
+  "limits": [
+    "Same-line textual rule; no semantic assertion parsing.",
+    "Local export evidence; no hosted CI, RoboRev, merge or release claim."
+  ]
+}

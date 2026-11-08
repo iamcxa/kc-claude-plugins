@@ -1,0 +1,16 @@
+{
+  "candidate": "f429f0fac40511c6480fd92e2cccd4c0e94b2454",
+  "status": "",
+  "files": {
+    "kc-adr/scripts/adr_lint.py": "7313e02238830471138d23508c1106bf4ff15ab8b166c060ec1d6e5a160e719f",
+    "kc-adr/scripts/test_adr_lint.py": "daa95c77bcef61c3a9972076b66de1c92f02b249e9388d98a8ba703fd0395d42",
+    "kc-dev-flow-2/scripts/adr_lint.py": "7313e02238830471138d23508c1106bf4ff15ab8b166c060ec1d6e5a160e719f",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py": "daa52016c776287b80a33f0a173f5191b31d2c8afa12c7cff66d69c9fe0380de"
+  },
+  "spacedock_cli": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3\n",
+  "spacedock_plugin": "/Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.3",
+  "python": "Python 3.11.14",
+  "final_script_matches_rehearsal": true,
+  "final_command": "bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/adr-lint-tells-supersession-assertion-from-pointer/validation/acceptance.sh",
+  "final_exit": 0
+}

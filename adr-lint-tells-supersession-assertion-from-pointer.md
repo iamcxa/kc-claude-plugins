@@ -273,3 +273,43 @@ The four-file candidate fixes the same-line supersession assertion false positiv
 ### Summary
 
 This complete report supersedes the earlier implementation report; every other checklist item and its evidence remains unchanged. FO disposition classifies the installed 0.35.0 check as SKIPPED because it contains the repaired defect, while the candidate checker exits 0 and rules for the approved design. No product bytes or candidate revision changed; product publication, RoboRev and CI remain FO-owned.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #806 head f429f0fa against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at f429f0fac40511c6480fd92e2cccd4c0e94b2454, base 139feeaee7ce037a0c6535568cd6bd103155cbae; validation/README.md maps AC-1..AC-5 to independently rerun evidence and classifications; validation/pr.json binds the open Draft PR to these commits.
+- DONE: Judge the FO disposition that the installed 0.35.0 adr_lint run is SKIPPED because it is the checker this task repairs (implementation-1-message-1), and confirm the kc-adr source and the dev2 copy stay byte-identical
+  Installed checker equals base (SHA-256 203f097c3779...) and exits 1 with the original 0047/0050 error; candidate exits 0. Both candidate copies share 7313e0223883...; validation/results/checker-sha256.txt and installed-since.log justify the disposition without treating the installed run as green.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five steps in validation/acceptance.sh, run by the exact bash --noprofile --norc command in validation/README.md; exit 0, actual output validation/acceptance.log; installed command exits 1 as expected and records the intentional acceptance skip separately.
+- DONE: AC-1 assertion fixture passes and its falsifiers fail.
+  25-test suite passes; base checker and removed-exception mutations each fail the new assertion test with the original 0002/0003 error; validation/results/proof/{base-fails-assertion,removed-exception-fails}.log.
+- DONE: AC-2 authority remains rejected and the existing contracts stay intact.
+  Existing both-pointer/full-path/number-only tests are unchanged and pass; file-wide successor forgiveness breaks the both-pointer test; validation/results/proof/file-wide-successor-fails.log and limits.json independently retain separate-line rejection.
+- DONE: AC-3 wrong successors and absent successor pointers remain rejected.
+  0004/00030 and missing-own-pointer fixtures reject; accept-any-successor and invented-pointer mutations fail their tests; validation/results/proof/{wrong-successor-fails,invented-successor-pointer-fails}.log.
+- DONE: AC-4 real unsplit citation passes; historical replay exposes the original defect.
+  Full lint and --since 139feeaee7ce037a0c6535568cd6bd103155cbae --require 0064 each exit 0 with 62 records; ae7750375 plus unsplit exits 1, then only replacing its checker makes it pass; validation/results/proof/historical-*.log.
+- DONE: AC-5 source/copy parity and the three named package suites pass.
+  25 ADR tests, 9 document tests, native dispatch integration and copy-sync exit 0; changing only the dev2 copy makes parity exit 1, restoration passes; validation/results/{adr-tests,doc-tests,native-dispatch,copy-sync}.log and proof/copy-*.log.
+- DONE: Scope, necessity, workflow obligations, and every affected-document disposition checked.
+  Only four approved files differ; skill lint, design surfaces, number guards, dispatch records (5 complete), whitespace, doc-impact and comment ratio pass. Six documents' unaffected reasons are independently checked in validation/README.md; no CI edit/cost measurement, added comments 0/53 (0.0%, max 5%).
+- DONE: Assess every stated limit without widening the approved outcome.
+  Seven direct probes in validation/results/limits.json confirm same-line behavior, separate-line authority, multiline/regex refusal, intentional comment forgiveness and wrong-successor diagnostics; F1..F3 below retain approved limits, with no Material or Needs decision finding.
+- SKIPPED: Installed 0.35.0 checker exit 0 as an acceptance requirement.
+  FO disposition dispatch/implementation-1-message-1.md is supported by independently identical base bytes and the exact reproduced false positive; its execution was NOT skipped (exit 1, validation/results/installed-since.log).
+- SKIPPED: RoboRev, remote CI, human gate, merge, release and installed-package upgrade.
+  roborev not run: FO owns local review; no remote CI or delivery result is claimed. Native integration is synthetic, using CLI 0.27.2 with plugin 0.27.3; these version bounds are explicit in validation/identity.json.
+- DONE: Commit the stage report and evidence with the dispatched state helper; preserve product publication boundaries.
+  dispatch/validation-1-message-1.md explicitly authorizes state-only sync; only this task's body and validation/ evidence are changed, product remains clean at f429f0fac40511c6480fd92e2cccd4c0e94b2454.
+
+### Summary
+
+PASSED for the approved Pilot outcome at f429f0fac40511c6480fd92e2cccd4c0e94b2454: all five criteria, their falsifiers, the real unsplit replay, and the final-path fresh-shell acceptance script were rerun independently. The installed-checker skip is justified, with its actual exit 1 preserved; report details and raw evidence are under validation/. FO retains acceptance replay, gate, review and delivery authority; no product bytes changed.
+
+### Review findings
+
+- F1 Deferred risk: multiline/regex assertions still reject outside AC-1's promised shape; observed in limits.json; becomes Material only if those forms become accepted scope (four evidence fields in validation/README.md).
+- F2 Deferred risk: a same-line citation naming its recorded successor is forgiven by the approved textual rule; no supported-workflow loss demonstrated; semantic discrimination remains outside scope (README.md, limits.json).
+- F3 Polish: a wrong-successor assertion gets the retained pointer diagnostic; rejection still satisfies AC-3, so no protected value is lost (README.md, limits.json).

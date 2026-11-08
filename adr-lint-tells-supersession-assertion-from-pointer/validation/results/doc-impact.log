@@ -1,0 +1,44 @@
+[
+ {
+  "doc": "docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ]
+ },
+ {
+  "doc": "docs/journey/kc-decision-log/p1-technical-contract.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/adr_lint.py"
+  ]
+ },
+ {
+  "doc": "docs/journey/kc-decision-log/slice-map.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/adr_lint.py"
+  ]
+ },
+ {
+  "doc": "kc-dev-flow-2/README.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ]
+ },
+ {
+  "doc": "kc-dev-flow-2/references/sd/adoption.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ]
+ },
+ {
+  "doc": "learning.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ]
+ }
+]
