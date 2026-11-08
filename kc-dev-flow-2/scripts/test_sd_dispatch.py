@@ -570,7 +570,7 @@ def exercise_model_roster(base, resolver=ROOT / "scripts/model_roster.py"):
         assert phrase in quoted, phrase
     adr = ROOT.parent / "docs/adr/0050-stage-roster-question-needs-codex-and-claude-and-offers-opus.md"
     assert adr.is_file()
-    assert "## Status\n\nSuperseded by 0050" in (ROOT.parent / "docs/adr" / "0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md").read_text()
+    assert "## Status\n\nSuperseded by 0050" in (ROOT.parent / "docs/adr/0047-repository-stage-model-rosters-keep-readme-defaults-when-absent.md").read_text()
     data = copy.deepcopy(recommendation)
     data["decision"] = "fixture-explicit-answer"
 
