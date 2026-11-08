@@ -1,0 +1,33 @@
+[
+  {
+    "name": "AC-1 original accepted block restored verbatim",
+    "status": "passed",
+    "source": "aa6670bdd"
+  },
+  {
+    "name": "AC-2 original accepted block restored verbatim",
+    "status": "passed",
+    "source": "aa6670bdd"
+  },
+  {
+    "name": "AC-4 original accepted block restored verbatim",
+    "status": "passed",
+    "source": "aa6670bdd"
+  },
+  {
+    "name": "Captain amendment source fields unchanged",
+    "status": "passed"
+  },
+  {
+    "name": "active criterion IDs",
+    "status": "passed"
+  },
+  {
+    "name": "AC-3 retained block unchanged",
+    "status": "passed"
+  },
+  {
+    "name": "AC-5 retained block unchanged",
+    "status": "passed"
+  }
+]

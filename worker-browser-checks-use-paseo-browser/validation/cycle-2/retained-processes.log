@@ -1,0 +1,1 @@
+Sandbox ps attempt was denied. Authorized ps -p 96411,96412 -o pid=,lstart=,command= returned exit 1 with no rows: neither recorded PID was present at validation. No process was stopped. Browser-tab state was not queried per no-browser instruction.

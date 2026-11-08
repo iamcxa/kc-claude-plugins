@@ -1,0 +1,38 @@
+[
+  {
+    "name": "adr_lint.py",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "design_surfaces.py",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser.md"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "dispatch_records.py",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser"
+    ],
+    "exit": 1,
+    "status": "failed"
+  }
+]

@@ -1,0 +1,93 @@
+candidate fef21735308e7e807d04a93a5506de5284dde436
+Add to scope notes: "Start in the assigned worktree; verify pwd and git root before edits. Commit locally and report the branch, base, candidate SHA and prepared PR text; do not push the product branch or open its PR. FO owns those steps and, when roborev is listed, its review. Report delegated checks as not run, never clean. Split-root state commits and sync still follow the ensign contract. Before using Paseo's browser tools, read extensions/paseo/browser.md under your Package root."
+# Worker browser checks through Paseo (`mcp__paseo__browser_*`)
+
+For attended pages, including logins where the Captain performs human verification, follow EXTENSION.md's Human terminals and pages. Repository instructions take precedence. Unattended checks use the repository's supported adapter without a required Paseo attempt. CI browser runs are unchanged. Tabs open in the background in your Paseo workspace on the most recently connected browser host; close tabs you open.
+
+If tools are missing or a step fails after its workaround, use the repository's supported adapter for that step. Report which tool ran each step and why. A step no browser ran is not run, never clean.
+
+Known limits:
+- Keep the tab visible in the Paseo app for screenshots and clicks.
+- The Captain's keyboard, including his input method, can reach a field `browser_type` is filling. Fill with `browser_evaluate` instead: set the value through the element's native value setter, dispatch a bubbling `input` event, and read the value back.
+- Some React Native web buttons respond only to `browser_click` on a ref from the latest `browser_snapshot`. Refs expire when the page changes; snapshot again first.
+- `browser_evaluate` fails with `browser_timeout` after 15 seconds. Start longer work in one call, park the result on `window`, and poll with short calls.
+- Drawing on a signature canvas is untested. Try `browser_drag`; if the drawing does not register, use the repository's adapter for that step.
+    1112 /tmp/paseo-captain-810-amended.bA1jhM/kc-dev-flow-2/extensions/paseo/EXTENSION.md
+     228 /tmp/paseo-captain-810-amended.bA1jhM/kc-dev-flow-2/extensions/paseo/browser.md
+    1340 total
+{
+  "base": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+  "candidate": "fef21735308e7e807d04a93a5506de5284dde436",
+  "checks": 34,
+  "status": "passed",
+  "failed": 0,
+  "extension_words": 1112,
+  "guide_words": 228
+}
+.......s............./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp46teeure/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpr1h8549d/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpczuaeo5d/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmps2fps18u/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpaf6swmde/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp2ttcu55n/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpbsjopb2y/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7n5umlvr/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4vmu8y28/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpq0zhuri2/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp35qwb3d5/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmphutxftvw/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjvtpq1m_/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpd6e7_swg/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpem1pjw5t/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpcypau4vh/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpthgug7tl/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpmbd_45k8/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfwxjaetm/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzw231ohb/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpoo8fwl0q/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdw_94m46/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpvarvcwyv/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpg2_qg_rf/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp63ip5i6r/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp26lga27q/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpiiiycxap/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp0gecggtx/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpkk8bkr_j/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpp47a9w7x/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdngf7xhc/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp5absbj__/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmphjncl87e/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdd6iukm2/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpw47946w8/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpuxokzphq/task/dispatch/ideation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpuiyfztiy/task/elsewhere/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmphkfl_ndo/task/dispatch/validation-x.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp75xteml3/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpoud3atl1/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpagw0lxl7/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp8bzahw5p/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpkdb8dj_u/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp0uge1eyp/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdffnn0o6/r.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmphf0co6w4/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpud_diz9g/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpwzppy0hf/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+....../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpvyhvucqr/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpgtss_xux/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4hekdtp2/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+.../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpq4l16k9b/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+......../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp1k3m7rmk/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+.../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpq_otsrf_/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+............................................../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp__8kvdv4/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+.........../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpth8_hc7w/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmptp0leqj1/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+..
+----------------------------------------------------------------------
+Ran 115 tests in 97.631s
+
+OK (skipped=1)
+lint exit 0
+62 ADR file(s) checked, 0 legacy
+adr-lint exit 0
+Amended static/replay checks passed. Historical browser runs remain at 20eb8255daf0f1267a8c0dd16daf0705a7cf82ba.
+No live browser run, login success, unattended Paseo default, cross-host guarantee or delivery is covered. Scratch: /tmp/paseo-captain-810-amended.bA1jhM

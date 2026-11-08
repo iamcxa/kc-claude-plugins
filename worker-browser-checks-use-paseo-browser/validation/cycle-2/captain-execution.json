@@ -1,0 +1,12 @@
+{
+  "command": [
+    "bash",
+    "--noprofile",
+    "--norc",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser/validation/cycle-2/captain-acceptance.sh"
+  ],
+  "exit": 0,
+  "scratch": "/tmp/paseo-captain-810-amended.bA1jhM",
+  "candidate": "fef21735308e7e807d04a93a5506de5284dde436",
+  "base": "139feeaee7ce037a0c6535568cd6bd103155cbae"
+}

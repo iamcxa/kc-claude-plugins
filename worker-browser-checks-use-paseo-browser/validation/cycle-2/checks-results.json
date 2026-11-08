@@ -1,0 +1,110 @@
+[
+  {
+    "name": "adr-lint",
+    "status": "passed",
+    "exit": 0,
+    "tests": null,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae"
+    ],
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser/validation/cycle-2/adr-lint.log",
+    "group": "checks"
+  },
+  {
+    "name": "number-guards",
+    "status": "passed",
+    "exit": 0,
+    "tests": null,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser.md",
+      "--repo",
+      "/tmp/paseo-validation-810-20261108-130911/candidate",
+      "--base",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "--head",
+      "fef21735308e7e807d04a93a5506de5284dde436"
+    ],
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser/validation/cycle-2/number-guards.log",
+    "group": "checks"
+  },
+  {
+    "name": "comment-ratio",
+    "status": "passed",
+    "exit": 0,
+    "tests": null,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "fef21735308e7e807d04a93a5506de5284dde436",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser/validation/cycle-2/comment-ratio.log",
+    "group": "checks"
+  },
+  {
+    "name": "design-surfaces",
+    "status": "passed",
+    "exit": 0,
+    "tests": null,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser.md"
+    ],
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser/validation/cycle-2/design-surfaces.log",
+    "group": "checks"
+  },
+  {
+    "name": "doc-impact",
+    "status": "passed",
+    "exit": 0,
+    "tests": null,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "fef21735308e7e807d04a93a5506de5284dde436",
+      "--json"
+    ],
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser/validation/cycle-2/doc-impact.log",
+    "group": "checks"
+  },
+  {
+    "name": "dispatch-records",
+    "status": "failed",
+    "exit": 1,
+    "tests": null,
+    "skipped": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser"
+    ],
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser/validation/cycle-2/dispatch-records.log",
+    "group": "checks"
+  }
+]

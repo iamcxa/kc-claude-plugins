@@ -1,0 +1,20 @@
+[
+  {
+    "id": "07667725-e257-49f7-b859-a1f49e1187c3",
+    "status": "closed",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser",
+    "title": "Codex browser tool reachability",
+    "pendingPermissions": []
+  },
+  {
+    "id": "a0076a47-a29b-4946-b2a3-e2477d4836dc",
+    "status": "closed",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser",
+    "title": "Claude visible canvas verification",
+    "pendingPermissions": []
+  },
+  {
+    "agents": [],
+    "serverId": "srv_Vu_gVMYcYLxv"
+  }
+]

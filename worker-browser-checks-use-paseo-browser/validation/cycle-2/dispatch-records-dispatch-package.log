@@ -1,0 +1,6 @@
+engineering-reviewer-1.md: needs a 'Dispatched:' line with a full 40-character SHA
+engineering-reviewer-1.md: needs a 'Model:' line
+engineering-reviewer-1.md: needs a non-empty '## Checklist' section
+engineering-reviewer-1.md: needs a non-empty '## Scope notes' section
+engineering-reviewer-1.md: needs a 'Package root:' line with an absolute path in its scope notes
+engineering-reviewer-1.md: needs a scope-notes line naming main as the completion recipient

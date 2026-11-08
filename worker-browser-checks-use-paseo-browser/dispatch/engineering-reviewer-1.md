@@ -1,4 +1,10 @@
-Role: kc-dev-flow-2 engineering-reviewer (independent technical assurance; read-only). Model: codex/gpt-6-astra xhigh, the declared opus tier through Paseo.
+# engineering-reviewer-1
+
+Dispatched: ba055b8a7a55a787ac989c4cef52d07dd75661ad (workflow checkout, kc-dev-flow-2 0.35.0 README); batch 17, independent engineering review before routing the Captain's validation revise on PR #810 (Paseo 6899c052)
+Model: gpt-6-astra (Codex via Paseo, thinking xhigh; the engineering-reviewer agent's declared opus tier through Paseo)
+Original brief: the bytes the reviewer read are at state commit a113aa3e9a3dad8f16e4a6d8ba638acfe3b3dd96; this record reformats them into the dispatch-record form without changing the assignment.
+
+## Checklist
 
 Question to judge, with quoted evidence: PR #810 in iamcxa/kc-claude-plugins makes Paseo's browser tools the default for a worker's self-driven local browser check. Is that default supported by the evidence, for checks a worker runs with nobody watching?
 
@@ -14,3 +20,12 @@ Answer, each with quotes (file and greppable phrase, no line numbers):
 3. Which is supported by the evidence: keep the default as written; narrow it (for example to attended pages and logins behind human verification, with the four limits kept); or drop it? Say what text change, if any, the supported option needs, and what the evidence does not settle.
 
 Write your report to /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worker-browser-checks-use-paseo-browser/review/engineering-reviewer-1.md. Do not edit any other file, run git writes, push, comment on any PR, or open a browser.
+
+## Scope notes
+
+Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0
+
+Read-only: the only file written is the report path named in the checklist.
+
+Your final reply is your completion message: Paseo delivers it to FO when your turn ends. End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.
+Done line: Done: worker-browser-checks-use-paseo-browser completed engineering review
