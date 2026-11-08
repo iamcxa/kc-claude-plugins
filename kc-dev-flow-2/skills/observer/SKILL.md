@@ -99,7 +99,7 @@ the report would only say `can't tell`:
 - FO answers a question the Captain asks at a gate
 - python3 <package>/scripts/package_version.py
 - python3 <package>/scripts/workflow_checkout.py
-- python3 <package>/scripts/dispatch_records.py --names
+- --names --strict <record>
 - assess the four evidence fields above
 <!-- /chat-only-rules -->
 

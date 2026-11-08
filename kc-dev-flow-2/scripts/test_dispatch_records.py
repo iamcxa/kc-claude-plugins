@@ -53,8 +53,8 @@ BARE = COMPLETE.replace("1. Independent verdict", "1. Run adr_lint.py. Independe
 
 
 class ContextNoticeTests(unittest.TestCase):
-    PARAGRAPH = ("Before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names --strict <record>` "
-                 "on the saved record; nonzero holds dispatch. Relative script paths are allowed; bare package script "
+    PARAGRAPH = ("Each record passes `python3 <package>/scripts/dispatch_records.py <task folder>` and "
+                 "`--names --strict <record>` before a worker reads it; nonzero holds dispatch. Relative script paths are allowed; bare package script "
                  "names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped "
                  "context checks on stderr.")
 
@@ -157,7 +157,7 @@ class ContextNoticeTests(unittest.TestCase):
         workflow = Path(records.__file__).parents[1] / "references/sd/workflow.md"
         self.assertIn(self.PARAGRAPH, " ".join(workflow.read_text().split()))
         self.assertNotIn("Repository files:", workflow.read_text())
-        command = re.search(r"`python3 ([^`]+)`", self.PARAGRAPH)[1].split()
+        command = re.search(r"`python3 ([^`]+)`", self.PARAGRAPH)[1].split()[:1] + ["--names", "--strict", "<record>"]
         command = [part.replace("<package>", str(workflow.parents[2])).replace("<record>", str(self.record))
                    for part in command]
         self.task.unlink()

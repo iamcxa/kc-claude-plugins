@@ -108,18 +108,12 @@ holds the dispatch and shows the Captain what the script printed. Every worker d
 land in the dispatch file the worker reads first. Those scope notes, and every follow-up
 message to a live worker, also carry ``Send your completion message to `main` (the README's Dispatch
 facts: `team-lead` is not registered here).``: the builder's completion block names `team-lead`, and a
-worker that skips the stage-definition fetch does not see the Signal fact. FO saves those scope notes, the
-checklist, the model it dispatches on and the SHA it dispatches from as
-`<task>/dispatch/<stage>-<cycle>.md` in the state checkout (for validation a
-`Candidate: <full head SHA>` line per head validated),
-committed with that dispatch's `spacedock state commit <slug> --workflow-dir <dir>`, so
-the instruction a worker followed outlives the session that wrote it; FO runs
-`python3 <package>/scripts/dispatch_records.py <task folder>` before committing and fixes each part it lists. A follow-up
-message to a worker FO resumes is a dispatch too, with the same check and a checklist of the items that message asks, never a pointer to another record.
+worker that skips the stage-definition fetch does not see the Signal fact. FO builds each worker dispatch with `python3 <package>/scripts/dispatch_stage.py`: `dispatch build`'s flags, `--model`, and `--roster`, `--candidate` or `--symptom` where owed. It saves the checklist, scope notes, model and the SHA it dispatches from as `<task>/dispatch/<stage>-<cycle>.md`, so the instruction a worker followed outlives the session that wrote it, checks it as below, then builds; the build's commit carries the record.
+A follow-up message to a worker FO resumes is a dispatch too, saved by hand as `<stage>-<cycle>-message-<n>.md` with a checklist of the items it asks, never a pointer to another record, and committed with `spacedock state commit <slug> --workflow-dir <dir>`.
 After each worker report, before advancing or preparing its gate, FO runs
 `python3 <package>/scripts/dispatch_records.py --coverage <task> --stage <stage>`; nonzero holds that task.
 This check does not observe unrecorded messages.
-Before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names --strict <record>` on the saved record; nonzero holds dispatch. Relative script paths are allowed; bare package script names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped context checks on stderr. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
+Each record passes `python3 <package>/scripts/dispatch_records.py <task folder>` and `--names --strict <record>` before a worker reads it; nonzero holds dispatch. Relative script paths are allowed; bare package script names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped context checks on stderr. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
 <dir> --read <task> --stage <stage> --checklist`, return any line it reports as neither
 DONE nor SKIPPED to the worker with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one, and do not edit the worker's report. The refusal itself
 does not say why; other causes are a missing evidence line or Summary and an uncommitted

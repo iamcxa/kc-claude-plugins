@@ -65,6 +65,7 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=48, why="Captain resolutions declare an Override or followed recommendation before gate record",
          captain="「准」 (Captain, chat, 2026-11-05), answering 「決定：漏寫 Override 這份設計進入實作嗎？核准即接受 D1-A（記錄裁示前先檢查理由文字）、D2-A（README 加 48 字，字數上限 5891 調到 5939）、D3-A（不加反向防護）、D4-A（不做裁示紀錄評分器）四個建議。」",
          loaded="startup and resume of the First Officer, and before each Captain gate record"),
+    dict(delta=-2, why="dispatch_stage.py saves and checks the record; the README names the script and its flags"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
