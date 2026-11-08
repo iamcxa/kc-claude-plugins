@@ -94,6 +94,9 @@ jobs:
       - name: test_observer_check.py
         run: python3 kc-dev-flow-2/scripts/test_observer_check.py
 
+      - name: test_merge_audit.py
+        run: python3 kc-dev-flow-2/scripts/test_merge_audit.py
+
       - name: test_role_triggers.py
         run: python3 kc-dev-flow-2/scripts/test_role_triggers.py
 
