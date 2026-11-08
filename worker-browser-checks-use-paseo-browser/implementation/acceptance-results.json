@@ -12,7 +12,7 @@
   {
     "name": "AC-3 dispatch word bound",
     "status": "passed",
-    "message": "{'base': 1101, 'candidate': 1116, 'guide': 222}"
+    "message": "{'base': 1101, 'candidate': 1116, 'guide': 235}"
   },
   {
     "name": "AC-3 unchanged kc-dev-flow-2/references/sd/workflow.md",
@@ -86,11 +86,26 @@
   },
   {
     "name": "AC-4 actual Claude tool calls",
-    "status": "failed",
-    "message": "['all-Paseo proof incomplete; alternate adapter used']"
+    "status": "passed",
+    "message": "[]"
   },
   {
-    "name": "AC-4 worker report",
+    "name": "AC-4 worker report and screenshots",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-4 first failed tab closed",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "FO follow-up second tab intentionally retained",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "Browser runtime unchanged after visibility documentation",
     "status": "passed",
     "message": ""
   },

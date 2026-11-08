@@ -210,3 +210,40 @@ Evidence: its report and activity log in the task folder. If absent, browser.md 
 ### Summary
 
 Designed the smallest route: FO copies one more sentence (+15 words at the Paseo dispatch moment) inside the scope-note quote it already copies, and workers read a new 222-word `browser.md` only before driving a browser. Recommended not enforcing it through `dispatch_records.py`, because a required second instruction would fail every existing Paseo dispatch record. Only kc-claude-plugins dev2 lists paseo, so the end-to-end proof runs there; qnow adopted Paseo-by-default in its own AGENTS.md on 2026-11-07 without listing paseo.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and D1/D2 recommendations using only the named product files.
+  Candidate `90192bb64db4614de9a7a94cc782ee5fa44748db` changes only `kc-dev-flow-2/extensions/paseo/{EXTENSION.md,browser.md}`; no version, workflow, budget, dispatch checker or adopter edits. Existing capability/design audit reused.
+- DONE: AC-1 scope-note quote ends with the browser sentence and preserves its original first sentence.
+  `implementation/acceptance.log`: exact quote comparison and existing consumer pass; both sentence-first and second-instruction mutations fail the unchanged consumer test in fresh exports with `python3 -B` and caches cleared.
+- DONE: AC-2 default, precedence, unchanged CI, fallback/tool-per-step reporting, not-run-never-clean, and four limits with workarounds, within 240 words.
+  Final guide is 235 words; `implementation/document-review.md` maps all four limits; removing each workaround or exceeding 240 fails `acceptance.py`. The recorded FO follow-up adds the observed visible-tab requirement.
+- DONE: AC-3 FO reading grows only at Paseo dispatch by at most 20 words; workflow README and budget unchanged.
+  EXTENSION.md is 1101 -> 1116 words (+15); guide is worker-only. `acceptance.py` checks unchanged workflow/lint/dispatch blobs and rejects moving the guide into FO's extension text; other lifecycle moments are unchanged.
+- DONE: AC-4 fresh Claude worker uses Paseo for the real candidate journey-map board, screenshot and ref-based click.
+  `implementation/attempt-2/{claude-report.md,claude-activity.json,claude-before.png,claude-after.png}`: visible before/after; ref @e34 opens the minimap. No fallback command; original background failure and documented fallback remain in `implementation/claude-*`.
+- DONE: AC-5 fresh Codex worker measures tool reachability rather than assuming it.
+  `implementation/codex-activity.json`: worker 07667725-e257-49f7-b859-a1f49e1187c3 calls browser_list_tabs exactly once successfully; no unsupported Codex limitation added. Missing-measurement and missing-Paseo/alternate-adapter record mutations are rejected.
+- DONE: Every acceptance criterion and its falsifier is exercised with rerunnable evidence.
+  `bash --noprofile --norc implementation/acceptance.sh <absolute-worktree>` gives 27 passed checks at the final SHA; `first-attempt-acceptance*.{json,log}` preserves the earlier AC-4 failure. These evidence mutations test refusal, not a claim that the failed background run passed.
+- DONE: Repository lint and the unchanged dispatch-record suite pass on the final candidate.
+  Repository `kc-dev-flow-2/scripts/lint-skills.py` exits 0; `test_dispatch_records.py` runs 115 tests, 1 optional skip, exit 0 (`implementation/{lint-skills,dispatch-tests}.log`).
+- DONE: Required package ADR, number, comment and design checks complete.
+  Package root is dispatch-pinned kc-dev-flow-2 0.35.0; `implementation/checks-results.json` records every command and exit 0. ADR lint checks 62 files; number guards PASS (no migrations-path); comment ratio is 0 code/0 comment lines, 0%, maximum 5%, not enforced below 20 code lines.
+- DONE: Affected documents have a disposition and no new decision record is introduced.
+  `implementation/doc-impact.json` is []; the two changed documents are updated; no additional retained document is listed. D1 introduces no ADR; all existing ADR bytes stay unchanged.
+- DONE: Recorded FO follow-up is executed and both browser runs are retained.
+  Fresh Claude worker a0076a47-a29b-4946-b2a3-e2477d4836dc first opens the tab, waits twice at the tool's 30-second cap, then screenshots/clicks successfully. Per `dispatch/implementation-1-message-1.md`, tab 17791416-a299-4675-a6ba-5802db8fe3cb remains open; first worker closed its own tabs.
+- DONE: Runtime provenance is explicit and temporary setup has an owner and removal condition.
+  `implementation/canvas-provenance.json`: original runtime SHA 20eb8255daf0f1267a8c0dd16daf0705a7cf82ba; final SHA only adds the visibility sentence; kc-journey-map tree equality is asserted. Captured API/Vite PIDs 96411/96412 on 5900/3900 remain for the Captain's retained tab; FO may stop these owned test processes after that review ends.
+- DONE: Commit locally and report branch, base, candidate and prepared PR text.
+  Branch `spacedock-ensign/worker-browser-checks-use-paseo-browser`; base `139feeaee7ce037a0c6535568cd6bd103155cbae`; candidate `90192bb64db4614de9a7a94cc782ee5fa44748db`; PR title/body at `/tmp/impl-worker-browser-checks-use-paseo-browser-pr.md` and `implementation/prepared-pr.md`; product worktree clean.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins and product publication/review/CI.
+  no PR opened: no push grant. No product push; `implementation/open-prs.json` is []. FO owns push, Draft PR creation, RoboRev and CI. roborev not run: FO runs RoboRev because the worker sandbox cannot reach its daemon; delegated checks are not run, never clean.
+- SKIPPED: CI cost measurement.
+  Cost per PR was not measured; no CI file or trigger changed.
+
+### Summary
+
+Implemented the Pilot slice in two local commits, with the pointer adding 15 FO-read words and the worker guide at 235 words. Codex reachability and a fresh Claude all-Paseo visible-tab walk passed; the earlier background failure is preserved, and the FO-authorized follow-up adds its observed visibility workaround. Publication, independent review, CI and the retained browser/service cleanup remain FO-owned; this report does not advance workflow state.

@@ -1,0 +1,17 @@
+[
+  {
+    "agentId": "07667725-e257-49f7-b859-a1f49e1187c3",
+    "status": "idle",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser"
+  },
+  {
+    "agentId": "f08216e1-68d6-4214-aedb-a4fbdf949c32",
+    "status": "idle",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser"
+  },
+  {
+    "agentId": "a0076a47-a29b-4946-b2a3-e2477d4836dc",
+    "status": "idle",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser"
+  }
+]

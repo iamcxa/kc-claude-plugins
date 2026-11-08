@@ -32,6 +32,7 @@ def guide_errors(text):
         "use Paseo's browser tools", "unless the repository's own instructions name another tool",
         "CI browser runs are unchanged", "If the tools are missing", "which tool ran each step and why",
         "not run, never clean", "close the tabs you open",
+        "Keep the tab visible in the Paseo app for screenshots and clicks.",
     ]
     errors = [term for term in needed if term not in text]
     limits = [
@@ -58,7 +59,6 @@ def claude_errors(data):
         ("browser_snapshot", "[Snapshot page]"),
         ("browser_click", "[Click element]"),
         ("browser_screenshot", "[Take screenshot]"),
-        ("browser_close_tab", "[Close browser tab]"),
     ]
     missing = [exact for exact, label in required if exact not in text and label not in text]
     if "agent-browser" in text:
@@ -118,10 +118,14 @@ with tempfile.TemporaryDirectory(prefix="browser-acceptance-") as tmp:
     moved = base_ext+"\n"+candidate_guide
     check("AC-3 mutation limits moved to FO rejected",len(moved.split())-len(base_ext.split())>20)
 
-claude = json.loads((evidence/"claude-activity.json").read_text())
+claude = json.loads((evidence/"attempt-2/claude-activity.json").read_text())
 codex = json.loads((evidence/"codex-activity.json").read_text())
 check("AC-4 actual Claude tool calls", not claude_errors(claude),str(claude_errors(claude)))
-check("AC-4 worker report", (evidence/"claude-report.md").is_file())
+check("AC-4 worker report and screenshots", all((evidence/"attempt-2"/p).is_file() for p in ["claude-report.md","claude-before.png","claude-after.png"]))
+first_claude = json.loads((evidence/"claude-activity.json").read_text())
+check("AC-4 first failed tab closed", "[Close browser tab]" in activity(first_claude))
+check("FO follow-up second tab intentionally retained", "[Close browser tab]" not in activity(claude) and "do not close" in (evidence/"attempt-2/claude-prompt.txt").read_text().lower())
+check("Browser runtime unchanged after visibility documentation", not git("diff", "20eb8255daf0f1267a8c0dd16daf0705a7cf82ba", head, "--", "kc-journey-map"))
 for bad, label in [
     ({}, "no Paseo browser call"),
     ({"structuredContent":{"content":activity(claude)+"\n[Shell] agent-browser open URL"}}, "alternate adapter without reason"),

@@ -3,7 +3,7 @@ F
 FAIL: test_every_shipped_instruction_is_read_from_its_extension_file (__main__.ExtensionInstructionTests.test_every_shipped_instruction_is_read_from_its_extension_file)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/browser-acceptance-ctu821c6/kc-dev-flow-2/scripts/test_dispatch_records.py", line 815, in test_every_shipped_instruction_is_read_from_its_extension_file
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/browser-acceptance-d24t6yap/kc-dev-flow-2/scripts/test_dispatch_records.py", line 815, in test_every_shipped_instruction_is_read_from_its_extension_file
     self.assertEqual(found["paseo"], ("paseo", "Start in the assigned worktree; verify pwd and git root before edits."))
     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 AssertionError: Tuples differ: ('paseo', 'For a local browser check you drive yours[65 chars]ot.') != ('paseo', 'Start in the assigned worktree; verify pw[25 chars]ts.')
