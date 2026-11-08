@@ -72,6 +72,7 @@ Result: aligned at backlog: Batch 17 backlog sitting, the Captain 「核准（�
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-08: amendment 1 only narrows AC-5 to a known limit of the pinned Spacedock builder, which the Captain accepted with its cause and harm stated; it changes no product file, and validation-3 judged its replacement AC-9 independently at 778367adde2e20e0b3e51966ddba2d9f77f9e614.
 
 ## Design
 
