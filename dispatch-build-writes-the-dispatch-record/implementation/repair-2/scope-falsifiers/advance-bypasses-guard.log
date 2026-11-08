@@ -1,0 +1,17 @@
+F
+======================================================================
+FAIL: test_scope_preservation_matrix (__main__.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-scope-mutant-d663dxyq/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 409, in test_scope_preservation_matrix
+    fixture.assert_scope_refusal(scenario, path, stage, extra)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-scope-mutant-d663dxyq/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 357, in assert_scope_refusal
+    self.assertNotEqual(result.returncode, 0, "dirty task scope was admitted")
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : dirty task scope was admitted
+
+----------------------------------------------------------------------
+Ran 1 test in 1.787s
+
+FAILED (failures=1)

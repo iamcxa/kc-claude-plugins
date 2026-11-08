@@ -1,0 +1,47 @@
+FF
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (__main__.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='flat')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 465, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.build("implementation", ("--advance",))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 98, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--entity-path", self.entity, "--stage", stage, "--model", "fixture-model",
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--spacedock", BINARY, "--host", "codex", *extra], expected, child_env)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 75, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-x3po40z_/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-x3po40z_/code/docs/dev2/.spacedock-state/dispatch-fixture-b3fa9ef17b634bf4bd9c18ba6f3f30a9.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-x3po40z_/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-x3po40z_/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--advance'], '', "[build] declared model 'sonnet' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\nerror: worktree stage 'implementation' but entity has no worktree path\n")
+
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (__main__.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='folder')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 465, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.build("implementation", ("--advance",))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 98, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--entity-path", self.entity, "--stage", stage, "--model", "fixture-model",
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--spacedock", BINARY, "--host", "codex", *extra], expected, child_env)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 75, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-x318eyzh/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-x318eyzh/code/docs/dev2/.spacedock-state/dispatch-fixture-21842c9734da474580d5c4dd5ab39f66/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-x318eyzh/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-x318eyzh/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--advance'], '', "[build] declared model 'sonnet' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\nerror: worktree stage 'implementation' but entity has no worktree path\n")
+
+----------------------------------------------------------------------
+Ran 1 test in 8.906s
+
+FAILED (failures=2)

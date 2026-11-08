@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_scope_preservation_matrix (__main__.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:fresh:report:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-scope-mutant-4db2b9ri/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 410, in test_scope_preservation_matrix
+    fixture.assert_scope_refusal(scenario, path, stage, extra)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-scope-mutant-4db2b9ri/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 357, in assert_scope_refusal
+    self.assertEqual(after, before, "refusal changed scoped or outside state")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'head': 'b9852a8dcd14c4d7afb160e1880e4ee994957e03'[6867 chars]x00'} != {'head': '20dcce6bc369381fabbf33dd4974bdd377061c77'[5439 chars]x00'}
+Diff is 14619 characters long. Set self.maxDiff to None to see it. : refusal changed scoped or outside state
+
+----------------------------------------------------------------------
+Ran 1 test in 1.314s
+
+FAILED (failures=1)

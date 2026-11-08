@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_scope_preservation_matrix (__main__.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-scope-mutant-6xxhhdyu/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 411, in test_scope_preservation_matrix
+    fixture.assert_scope_refusal(scenario, path, stage, extra)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-scope-mutant-6xxhhdyu/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 358, in assert_scope_refusal
+    self.assertEqual(after, before, "refusal changed scoped or outside state")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'hea[4908 chars]0644 6b716b66e62515318d07a32ad20d13bdafaabf93 [2151 chars]x00'} != {'hea[4908 chars]0644 02b5c67e6ff5e77bba3c2ac199c402e78b1a8695 [2151 chars]x00'}
+Diff is 13224 characters long. Set self.maxDiff to None to see it. : refusal changed scoped or outside state
+
+----------------------------------------------------------------------
+Ran 1 test in 2.272s
+
+FAILED (failures=1)

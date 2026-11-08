@@ -1,0 +1,27 @@
+FF
+======================================================================
+FAIL: test_retry_preserves_staged_record_with_worktree_at_head (__main__.DispatchStageTests.test_retry_preserves_staged_record_with_worktree_at_head)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 368, in test_retry_preserves_staged_record_with_worktree_at_head
+    self.assert_scope_refusal("reported-retry", path, stage, extra, real_builder=True)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 356, in assert_scope_refusal
+    self.assertEqual(after, before, "refusal changed scoped or outside state")
+AssertionError: {'hea[5236 chars]644 9c426a2a6907b51c5d1670935cb284583749e5cc 0[1879 chars]x00'} != {'hea[5236 chars]644 98cad0e2d29d68338e3fc6add5b6f0160547ddf7 0[1879 chars]x00'}
+Diff is 13239 characters long. Set self.maxDiff to None to see it. : refusal changed scoped or outside state
+
+======================================================================
+FAIL: test_scope_preservation_matrix (__main__.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:fresh:report:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 409, in test_scope_preservation_matrix
+    fixture.assert_scope_refusal(scenario, path, stage, extra)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 356, in assert_scope_refusal
+    self.assertEqual(after, before, "refusal changed scoped or outside state")
+AssertionError: {'hea[2045 chars]atch/ideation-1.md': [32768, 420, '23206964656[4709 chars]x00'} != {'hea[2045 chars]atch/validation-1.md': [32768, 420, '232076616[3540 chars]x00'}
+Diff is 12342 characters long. Set self.maxDiff to None to see it. : refusal changed scoped or outside state
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.056s
+
+FAILED (failures=2)

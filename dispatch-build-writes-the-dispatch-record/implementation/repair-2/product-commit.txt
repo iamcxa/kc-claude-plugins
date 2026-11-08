@@ -1,0 +1,11 @@
+commit 778367adde2e20e0b3e51966ddba2d9f77f9e614
+Author:     Kent <iamcxa@gmail.com>
+AuthorDate: Sun Nov 8 17:36:42 2026 +0800
+Commit:     Kent <iamcxa@gmail.com>
+CommitDate: Sun Nov 8 17:36:42 2026 +0800
+
+    fix(kc-dev-flow-2): preserve the whole dispatch commit scope
+
+ kc-dev-flow-2/scripts/dispatch_stage.py      |  94 ++++++-
+ kc-dev-flow-2/scripts/test_dispatch_stage.py | 357 ++++++++++++++++++++++++++-
+ 2 files changed, 434 insertions(+), 17 deletions(-)

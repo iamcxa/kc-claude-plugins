@@ -1,0 +1,47 @@
+FF...
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (__main__.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='flat')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 436, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.build()
+    ~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 98, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--entity-path", self.entity, "--stage", stage, "--model", "fixture-model",
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--spacedock", BINARY, "--host", "codex", *extra], expected, child_env)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 75, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-kpelr3lo/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-kpelr3lo/code/docs/dev2/.spacedock-state/dispatch-fixture-3788f7745c1045ecb8cdcf8b7c7d3ffa.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-kpelr3lo/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-kpelr3lo/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch build --stamp: state sync failed: git commit failed: On branch spacedock-state/dev2\nChanges not staged for commit:\n  (use "git add <file>..." to update what will be committed)\n  (use "git restore <file>..." to discard changes in working directory)\n\tmodified:   other-task.txt\n\nUntracked files:\n  (use "git add <file>..." to include in what will be committed)\n\tuntracked-other-task.txt\n\nno changes added to commit (use "git add" and/or "git commit -a")\n')
+
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (__main__.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='folder')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 436, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.build()
+    ~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 98, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--entity-path", self.entity, "--stage", stage, "--model", "fixture-model",
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--spacedock", BINARY, "--host", "codex", *extra], expected, child_env)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 75, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-lxd6fu6m/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-lxd6fu6m/code/docs/dev2/.spacedock-state/dispatch-fixture-d7e58df9f7a04007bad4d9ce34cde93a/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-lxd6fu6m/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-lxd6fu6m/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch build --stamp: state sync failed: git commit failed: On branch spacedock-state/dev2\nChanges not staged for commit:\n  (use "git add <file>..." to update what will be committed)\n  (use "git restore <file>..." to discard changes in working directory)\n\tmodified:   other-task.txt\n\nUntracked files:\n  (use "git add <file>..." to include in what will be committed)\n\tuntracked-other-task.txt\n\nno changes added to commit (use "git add" and/or "git commit -a")\n')
+
+----------------------------------------------------------------------
+Ran 4 tests in 6.458s
+
+FAILED (failures=2)

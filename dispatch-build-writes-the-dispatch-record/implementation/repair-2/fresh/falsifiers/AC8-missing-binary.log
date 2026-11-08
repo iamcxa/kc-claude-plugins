@@ -1,0 +1,1 @@
+test_dispatch_stage.py: set SPACEDOCK_BIN to the real Spacedock binary

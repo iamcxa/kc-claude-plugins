@@ -1,0 +1,11 @@
+--- kc-dev-flow-2/scripts/dispatch_stage.py
++++ kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -201,7 +201,7 @@
+                 sys.stderr.write(check.stdout + check.stderr)
+         return 1
+     # see docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md
+-    command = [args.spacedock, "dispatch", "build", "--advance" if args.advance else "--stamp"]
++    command = [args.spacedock, "dispatch", "build"] + (["--advance"] if args.advance else [])
+     for name in ("workflow_dir", "entity_path", "stage", "checklist_file", "scope_notes_file", "host", "feedback_context_file"):
+         value = getattr(args, name)
+         if value is not None:

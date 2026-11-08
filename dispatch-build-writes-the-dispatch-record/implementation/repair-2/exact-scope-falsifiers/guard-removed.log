@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_retry_preserves_staged_record_with_worktree_at_head (__main__.DispatchStageTests.test_retry_preserves_staged_record_with_worktree_at_head)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-scope-mutant-oqlo9sii/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 370, in test_retry_preserves_staged_record_with_worktree_at_head
+    self.assert_scope_refusal("reported-retry", path, stage, extra, real_builder=True)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-scope-mutant-oqlo9sii/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 358, in assert_scope_refusal
+    self.assertEqual(after, before, "refusal changed scoped or outside state")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'hea[4941 chars]0644 ac3bcdc306c33748e74e277ed3dcca6d0d9295b1 [1888 chars]x00'} != {'hea[4941 chars]0644 fb93a0ef8b9903e7ed032ed43a09d845e5a5dd16 [1888 chars]x00'}
+Diff is 12949 characters long. Set self.maxDiff to None to see it. : refusal changed scoped or outside state
+
+----------------------------------------------------------------------
+Ran 1 test in 1.244s
+
+FAILED (failures=1)

@@ -1,0 +1,11 @@
+--- kc-dev-flow-2/scripts/dispatch_stage.py
++++ kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -217,7 +217,7 @@
+     if build.returncode:
+         remove_uncommitted(path, wrote)
+         return build.returncode
+-    if args.advance:
++    if False:
+         slug = args.entity_path.parent.name if args.entity_path.name == "index.md" else args.entity_path.stem
+         commit = subprocess.run([args.spacedock, "state", "commit", slug, "--workflow-dir", str(args.workflow_dir)],
+                                 capture_output=True, text=True)

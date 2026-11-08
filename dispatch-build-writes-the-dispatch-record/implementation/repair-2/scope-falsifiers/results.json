@@ -1,0 +1,74 @@
+[
+  {
+    "name": "guard-removed",
+    "status": "passed",
+    "mutant_exit": 1,
+    "scenario": "reported-retry",
+    "oracle": "snapshot preservation",
+    "message": "Mutant must fail its matching preservation assertion"
+  },
+  {
+    "name": "index-comparison-omitted",
+    "status": "passed",
+    "mutant_exit": 1,
+    "scenario": "flat:fresh:report:equal-change",
+    "oracle": "snapshot preservation",
+    "message": "Mutant must fail its matching preservation assertion"
+  },
+  {
+    "name": "worktree-comparison-omitted",
+    "status": "passed",
+    "mutant_exit": 1,
+    "scenario": "folder:fresh:report:worktree-only",
+    "oracle": "snapshot preservation",
+    "message": "Mutant must fail its matching preservation assertion"
+  },
+  {
+    "name": "untracked-check-omitted",
+    "status": "passed",
+    "mutant_exit": 1,
+    "scenario": "flat:fresh:new-report:untracked",
+    "oracle": "snapshot preservation",
+    "message": "Mutant must fail its matching preservation assertion"
+  },
+  {
+    "name": "scope-only-selected-record",
+    "status": "passed",
+    "mutant_exit": 1,
+    "scenario": "flat:fresh:task:staged-only",
+    "oracle": "snapshot preservation",
+    "message": "Mutant must fail its matching preservation assertion"
+  },
+  {
+    "name": "scope-only-dispatch-directory",
+    "status": "passed",
+    "mutant_exit": 1,
+    "scenario": "folder:fresh:report:partial",
+    "oracle": "snapshot preservation",
+    "message": "Mutant must fail its matching preservation assertion"
+  },
+  {
+    "name": "guard-after-record-creation",
+    "status": "passed",
+    "mutant_exit": 1,
+    "scenario": "flat:fresh:report:staged-only",
+    "oracle": "snapshot preservation",
+    "message": "Mutant must fail its matching preservation assertion"
+  },
+  {
+    "name": "retry-bypasses-guard",
+    "status": "failed",
+    "mutant_exit": 1,
+    "scenario": "flat:retry:reused:staged-only",
+    "oracle": "snapshot preservation",
+    "message": "Mutant must fail its matching preservation assertion"
+  },
+  {
+    "name": "advance-bypasses-guard",
+    "status": "failed",
+    "mutant_exit": 1,
+    "scenario": "folder:advance:reused:staged-only",
+    "oracle": "snapshot preservation",
+    "message": "Mutant must fail its matching preservation assertion"
+  }
+]

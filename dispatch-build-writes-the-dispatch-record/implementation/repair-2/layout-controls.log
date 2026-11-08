@@ -1,0 +1,23 @@
+F.
+======================================================================
+FAIL: test_inline_scope_uses_the_real_commit_unit (__main__.DispatchStageTests.test_inline_scope_uses_the_real_commit_unit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 514, in test_inline_scope_uses_the_real_commit_unit
+    self.assert_committed(self.record(), f"dispatch: {self.slug} entering ideation")
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 109, in assert_committed
+    self.assertEqual(self.git(self.state, "show", f"HEAD:{path.relative_to(self.state)}"), path.read_text().strip())
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in git
+    return self.call(["git", "--literal-pathspecs", "-C", root, *args]).stdout.strip()
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 76, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 128 != 0 : (['git', '--literal-pathspecs', '-C', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-4zvdhnsr/code/docs/dev2'), 'show', 'HEAD:dispatch-fixture-283f895185e14055b41d5c7edb809c04/dispatch/ideation-1.md'], '', "fatal: path 'docs/dev2/dispatch-fixture-283f895185e14055b41d5c7edb809c04/dispatch/ideation-1.md' exists, but not 'dispatch-fixture-283f895185e14055b41d5c7edb809c04/dispatch/ideation-1.md'\nhint: Did you mean 'HEAD:docs/dev2/dispatch-fixture-283f895185e14055b41d5c7edb809c04/dispatch/ideation-1.md' aka 'HEAD:./dispatch-fixture-283f895185e14055b41d5c7edb809c04/dispatch/ideation-1.md'?\n")
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.063s
+
+FAILED (failures=1)

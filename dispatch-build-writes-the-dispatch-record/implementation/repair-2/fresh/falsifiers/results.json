@@ -1,0 +1,144 @@
+[
+  {
+    "name": "AC1-no-stamp",
+    "status": "passed",
+    "exit": 1,
+    "message": "Mutation rejected; expected 'FAILED'",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC1-no-stamp-kbq3g31n/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs"
+    ]
+  },
+  {
+    "name": "AC1-no-model",
+    "status": "passed",
+    "exit": 1,
+    "message": "Mutation rejected; expected 'FAILED'",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC1-no-model-exr3clyw/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs"
+    ]
+  },
+  {
+    "name": "AC2-drop-scope-line",
+    "status": "passed",
+    "exit": 1,
+    "message": "Mutation rejected; expected 'FAILED'",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC2-drop-scope-line-t089kl1b/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs"
+    ]
+  },
+  {
+    "name": "AC3-no-removal",
+    "status": "passed",
+    "exit": 1,
+    "message": "Mutation rejected; expected 'FAILED'",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC3-no-removal-qa200u96/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_incomplete_record_does_not_build_or_change_state"
+    ]
+  },
+  {
+    "name": "AC3-build-before-check",
+    "status": "passed",
+    "exit": 1,
+    "message": "Mutation rejected; expected 'FAILED'",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC3-build-before-check-dr8wmayr/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_incomplete_record_does_not_build_or_change_state"
+    ]
+  },
+  {
+    "name": "AC4-ignore-checker",
+    "status": "passed",
+    "exit": 1,
+    "message": "Mutation rejected; expected 'FAILED'",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC4-ignore-checker-t6p4p0w8/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_validation_candidate_is_required_before_build"
+    ]
+  },
+  {
+    "name": "AC5-no-removal",
+    "status": "passed",
+    "exit": 1,
+    "message": "Mutation rejected; expected 'FAILED'",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC5-no-removal-7vrlaf3o/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_failed_stamp_removes_uncommitted_record_and_passes_error"
+    ]
+  },
+  {
+    "name": "AC5-no-identical-reuse",
+    "status": "passed",
+    "exit": 1,
+    "message": "Mutation rejected; expected 'FAILED'",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC5-no-identical-reuse-0evv7flb/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_identical_retry_reuses_only_at_adding_commit"
+    ]
+  },
+  {
+    "name": "AC5-reuse-on-bytes-alone",
+    "status": "passed",
+    "exit": 1,
+    "message": "Mutation rejected; expected 'FAILED'",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC5-reuse-on-bytes-alone-apjtpb2z/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_identical_retry_reuses_only_at_adding_commit"
+    ]
+  },
+  {
+    "name": "AC6-no-state-commit",
+    "status": "passed",
+    "exit": 1,
+    "message": "Mutation rejected; expected 'FAILED'",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC6-no-state-commit-d3cmauje/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_advance_commits_record_and_withholds_envelope_on_commit_failure"
+    ]
+  },
+  {
+    "name": "AC7-base-passages",
+    "status": "passed",
+    "exit": 1,
+    "message": "Mutation rejected; expected '5933 words exceeds the budget of 5931'",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ]
+  },
+  {
+    "name": "AC8-no-CI-step",
+    "status": "passed",
+    "message": "Deleting the step removes the real-binary seam command; hosted run remains FO-owned"
+  },
+  {
+    "name": "AC8-missing-binary",
+    "status": "passed",
+    "exit": 1,
+    "message": "Unset binary is a hard failure"
+  }
+]

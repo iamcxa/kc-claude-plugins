@@ -1,0 +1,498 @@
+{
+  "candidate": "778367adde2e20e0b3e51966ddba2d9f77f9e614",
+  "matrix_cases": 92,
+  "refusal_snapshots": 98,
+  "all_preserved": true,
+  "scenarios": [
+    {
+      "name": "inline-staged-task",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-jdw_iufr/code/docs/dev2/dispatch-fixture-dad5d2866c7b41199459f7c14aa81ee3.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "reported-retry",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-awbmf_m7/code/docs/dev2/.spacedock-state/dispatch-fixture-2f9c158fa8c94ccc8269003c7cb8396e/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "scope-git-failure",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-o4a97g9b/code/docs/dev2/.spacedock-state/dispatch-fixture-09725e4380e94bd3977f3348a310158f.md': cannot inspect task scope (ls-tree). Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:task:staged-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ww0skal8/code/docs/dev2/.spacedock-state/dispatch-fixture-3af4f5d2e65246e793afa558eef5c352.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:task:worktree-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-8c7raakp/code/docs/dev2/.spacedock-state/dispatch-fixture-03ba836192c94492a0ea7bdc258e1195.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:task:equal-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-z1zbqmbb/code/docs/dev2/.spacedock-state/dispatch-fixture-af8c8731e7b84d3080148bb3d6685db1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:task:partial",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-8y0n7tla/code/docs/dev2/.spacedock-state/dispatch-fixture-86f7088e3acd4ad18f7188145d756f49.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:new-round:older:staged-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-qo9cv4_6/code/docs/dev2/.spacedock-state/dispatch-fixture-3d0e931bb32b4d1a9f83a331f2019cfc/dispatch/validation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:new-round:older:worktree-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-mqvfuciw/code/docs/dev2/.spacedock-state/dispatch-fixture-952723a71370409e91715fc704d46247/dispatch/validation-1.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:new-round:older:equal-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-azarip2l/code/docs/dev2/.spacedock-state/dispatch-fixture-b48db7bd8392470a9b51be27d4a96077/dispatch/validation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:new-round:older:partial",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-s1cg0i9z/code/docs/dev2/.spacedock-state/dispatch-fixture-cbb5c7cf294f48f89f6defa1da4b7bfc/dispatch/validation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:staged-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-t1eeveg7/code/docs/dev2/.spacedock-state/dispatch-fixture-64afa471152e4269adc30c196721b34f/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:worktree-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-3nz_e2ab/code/docs/dev2/.spacedock-state/dispatch-fixture-02862988c41b4eec81d49226becf7bbf/review/nested/report.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:equal-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-87pag3gu/code/docs/dev2/.spacedock-state/dispatch-fixture-6249294d77ee48569db27760706c5234/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:partial",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-qaw8fd5e/code/docs/dev2/.spacedock-state/dispatch-fixture-92a858c8d4444162a124e362ed5996f6/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:retry:reused:staged-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-qwvli95l/code/docs/dev2/.spacedock-state/dispatch-fixture-5b7f7f3cb55b44d4925b2fe8b39d5bcc/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:retry:reused:worktree-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-4u4przzi/code/docs/dev2/.spacedock-state/dispatch-fixture-f348309d1f5a4fd59247707741e01b80/dispatch/ideation-1.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:retry:reused:equal-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-r38vhv6k/code/docs/dev2/.spacedock-state/dispatch-fixture-af8f00fc8b41421a9c18c133426bc729/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:retry:reused:partial",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-h8dby0b6/code/docs/dev2/.spacedock-state/dispatch-fixture-f5c54145d653475faa5c9dff43505760/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:advance:reused:staged-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-xh6wcoyz/code/docs/dev2/.spacedock-state/dispatch-fixture-fdbfdab04203445c88f1e9b8e2624f3f/dispatch/implementation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:advance:reused:worktree-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-kbn_iwmy/code/docs/dev2/.spacedock-state/dispatch-fixture-7cd524f7cd484d8982f3cf13d14660d7/dispatch/implementation-1.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:advance:reused:equal-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-m1mvegkz/code/docs/dev2/.spacedock-state/dispatch-fixture-e6dd459ac464451e97886a581b436523/dispatch/implementation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:advance:reused:partial",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ptf4rq8y/code/docs/dev2/.spacedock-state/dispatch-fixture-9ccf4f39ee3c4b58877c3a7ab3b0b5a6/dispatch/implementation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:staged-delete",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-3o0wsd1y/code/docs/dev2/.spacedock-state/dispatch-fixture-86378e0db8e640319d7e09d9d2e1586a/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:unstaged-delete",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-_66iwsqh/code/docs/dev2/.spacedock-state/dispatch-fixture-606b427b3cc244299bfcd28c429c8eb1/review/nested/report.md': unstaged missing or unreadable worktree file (No such file or directory). Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:both-delete",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-d3txcaot/code/docs/dev2/.spacedock-state/dispatch-fixture-c5cb151437e44489b5cf8ec1c1e24028/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:mode-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-fuvveh3e/code/docs/dev2/.spacedock-state/dispatch-fixture-8407306743f847f29de666fea40a965e/review/nested/report.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:type-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-zdvbs4gc/code/docs/dev2/.spacedock-state/dispatch-fixture-5b44c3197a8d49a89456362c5c29d203/review/nested/report.md': unsupported worktree type or path escape. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:conflict",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-l7kh0d9w/code/docs/dev2/.spacedock-state/dispatch-fixture-e44c41cf247e4b6d89169ad83d328229/review/nested/report.md': unresolved index conflict. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:assume-unchanged",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-6bxhuj1r/code/docs/dev2/.spacedock-state/dispatch-fixture-69843c688e4548b1a4c012ca02ba972d/review/nested/report.md': unsupported assume-unchanged or skip-worktree index flag. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:skip-worktree",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-l1u1xzl2/code/docs/dev2/.spacedock-state/dispatch-fixture-cf6569a1e011498bba895fdf444e7ea5/review/nested/report.md': unsupported assume-unchanged or skip-worktree index flag. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:stat-spoof",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-6hiddwh6/code/docs/dev2/.spacedock-state/dispatch-fixture-1d650d12636149518f1316739d360838/review/nested/report.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:rename-out",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-t_i7n75b/code/docs/dev2/.spacedock-state/dispatch-fixture-099b6fe361f1419ab35ad73ed5c591ba/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:report:rename-in",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ln2bog04/code/docs/dev2/.spacedock-state/dispatch-fixture-5b0cad990e98446b8d909e1b65435e89/review/renamed-inside.txt': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:new-record:untracked",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-c5uk8qxt/code/docs/dev2/.spacedock-state/dispatch-fixture-cccf16de4a814bcf848f64a69413cc7a/dispatch/ideation-1.md': untracked non-ignored task file. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:new-record:staged-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-fxcopx6a/code/docs/dev2/.spacedock-state/dispatch-fixture-ede3121958804974afd9ada0bdd79876/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:new-record:staged-add-missing",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-sqrtf3xs/code/docs/dev2/.spacedock-state/dispatch-fixture-bd3eb2a3941240f5a7eca4901dc6d354/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:new-record:intent-to-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-wel70b_i/code/docs/dev2/.spacedock-state/dispatch-fixture-499ea37a01f247a0b9b2045930fe0eca/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:new-round:new-record:untracked",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-2ckqg4r5/code/docs/dev2/.spacedock-state/dispatch-fixture-9c73ed3a2484417397166f8736f89177/dispatch/ideation-2.md': untracked non-ignored task file. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:new-round:new-record:staged-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-1clcdq0p/code/docs/dev2/.spacedock-state/dispatch-fixture-2613591b1a5b4093b3627b13e6b603a1/dispatch/ideation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:new-round:new-record:staged-add-missing",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-mk_x1nyb/code/docs/dev2/.spacedock-state/dispatch-fixture-f502cb0c2b9f4e4f8f9f2dfc092465e6/dispatch/ideation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:new-round:new-record:intent-to-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-78nksywb/code/docs/dev2/.spacedock-state/dispatch-fixture-9af8cbb973364c2ba53bd8750c8d9fc1/dispatch/ideation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:advance:new-record:untracked",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ispt7aq1/code/docs/dev2/.spacedock-state/dispatch-fixture-f4d96287220f419992b9003923b4f649/dispatch/implementation-2.md': untracked non-ignored task file. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:advance:new-record:staged-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-4oq1bop2/code/docs/dev2/.spacedock-state/dispatch-fixture-eab401b60add47cbab3bf1782a49d43f/dispatch/implementation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:advance:new-record:staged-add-missing",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-5370zdmp/code/docs/dev2/.spacedock-state/dispatch-fixture-9b21c1abc3984dba9c24bf4e0560abb3/dispatch/implementation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:advance:new-record:intent-to-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-h02f3e5l/code/docs/dev2/.spacedock-state/dispatch-fixture-ada35c171339461884c591ad1b75bbfe/dispatch/implementation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:literal:literal",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-1802z_ks/code/docs/dev2/.spacedock-state/dispatch-fixture-89710af2f6124298b27e0221b5f7e16a/review/[literal] space\\nreport.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:new-record:ignored-existing",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; [Errno 17] File exists: '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-uutkcnj0/code/docs/dev2/.spacedock-state/dispatch-fixture-a97681693be244f0b6cd9a3f537f2258/dispatch/ideation-1.md'. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "flat:fresh:new-report:untracked",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-hjdv4gqa/code/docs/dev2/.spacedock-state/dispatch-fixture-62083c6750584854ba634d33537e8119/review/untracked/deep.txt': untracked non-ignored task file. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:task:staged-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-c0g50kj3/code/docs/dev2/.spacedock-state/dispatch-fixture-c83fdb77b41745199d41dec8d9358030/index.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:task:worktree-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-pdywt660/code/docs/dev2/.spacedock-state/dispatch-fixture-2897157b5a134700aea31978c2499d64/index.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:task:equal-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-h9v_jt_l/code/docs/dev2/.spacedock-state/dispatch-fixture-1f3e7a5ac11d4eb68cdeb6ac723d1a96/index.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:task:partial",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-i1r4eia7/code/docs/dev2/.spacedock-state/dispatch-fixture-663760914f234401be9537f4e7d898f9/index.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:new-round:older:staged-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-9bevbn43/code/docs/dev2/.spacedock-state/dispatch-fixture-6f8dbfe218964549a47ad3701b0bdcb6/dispatch/validation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:new-round:older:worktree-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-8otwabyv/code/docs/dev2/.spacedock-state/dispatch-fixture-25dd38915c8e4c7cb04bf7b7aa403cbf/dispatch/validation-1.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:new-round:older:equal-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ddbcympv/code/docs/dev2/.spacedock-state/dispatch-fixture-3bd9604b8f20434ba5ffae8b663b3c7b/dispatch/validation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:new-round:older:partial",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-coowvx9d/code/docs/dev2/.spacedock-state/dispatch-fixture-6192d417fc83475faf874638256d7b60/dispatch/validation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:staged-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-58w6xmi6/code/docs/dev2/.spacedock-state/dispatch-fixture-1a05d11718fc4d8ebb8a59c7ec640685/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:worktree-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-wlo6nr3n/code/docs/dev2/.spacedock-state/dispatch-fixture-5d9fa3e107094a9e8c7d4bb82c1cd338/review/nested/report.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:equal-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-2gck9ess/code/docs/dev2/.spacedock-state/dispatch-fixture-82f05086e394402e8604e0a594dd9377/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:partial",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-03tr24_m/code/docs/dev2/.spacedock-state/dispatch-fixture-945b4665769b4c0c99454f44de9490d8/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:retry:reused:staged-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-p7ds15qh/code/docs/dev2/.spacedock-state/dispatch-fixture-ecf76665ffbc4c5da40f30ef28b9d36a/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:retry:reused:worktree-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-jqh0bfzl/code/docs/dev2/.spacedock-state/dispatch-fixture-452b0ca77f734d7e9f11316a9db7f5e9/dispatch/ideation-1.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:retry:reused:equal-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-n78v9lyi/code/docs/dev2/.spacedock-state/dispatch-fixture-a978709553d8484a8d384fe80e03b686/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:retry:reused:partial",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-yaoe5ue6/code/docs/dev2/.spacedock-state/dispatch-fixture-da4ea6c91c4c4e34904a26525c93c382/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:advance:reused:staged-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0m8n92wd/code/docs/dev2/.spacedock-state/dispatch-fixture-6a2d80e76e1e44c7b604ef3076048fbb/dispatch/implementation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:advance:reused:worktree-only",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-aoqxjt7w/code/docs/dev2/.spacedock-state/dispatch-fixture-6efd3c5c5b2e484cadba0f034fb19f49/dispatch/implementation-1.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:advance:reused:equal-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-n_im6zeo/code/docs/dev2/.spacedock-state/dispatch-fixture-f424da92638a402ab14157a89b4808a3/dispatch/implementation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:advance:reused:partial",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-1u2q6dxf/code/docs/dev2/.spacedock-state/dispatch-fixture-01133af922e64b01abea05e5892471bb/dispatch/implementation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:staged-delete",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-90h5qzej/code/docs/dev2/.spacedock-state/dispatch-fixture-b8ac944166ff4ee5ab6ef8c456587ce5/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:unstaged-delete",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-yrys9gvg/code/docs/dev2/.spacedock-state/dispatch-fixture-f3f09e24e9d04029ab2fa729c1a8691d/review/nested/report.md': unstaged missing or unreadable worktree file (No such file or directory). Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:both-delete",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-mmi8na02/code/docs/dev2/.spacedock-state/dispatch-fixture-bce4ad8388fa4e44a29e14820ce8a5de/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:mode-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-cbazkdr7/code/docs/dev2/.spacedock-state/dispatch-fixture-daaef98cc07643019b54bdcfced3d054/review/nested/report.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:type-change",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-3kwjlbnq/code/docs/dev2/.spacedock-state/dispatch-fixture-906af51179354b829afeaf70f8a61021/review/nested/report.md': unsupported worktree type or path escape. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:conflict",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-id4goern/code/docs/dev2/.spacedock-state/dispatch-fixture-5eff7fa6262148bb9eea0585833c578b/review/nested/report.md': unresolved index conflict. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:assume-unchanged",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-n1zh37y2/code/docs/dev2/.spacedock-state/dispatch-fixture-ecf4c43525564e7c848867b46b0e1c06/review/nested/report.md': unsupported assume-unchanged or skip-worktree index flag. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:skip-worktree",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-zri65j2h/code/docs/dev2/.spacedock-state/dispatch-fixture-7ab337efe5b74b12bb6b1de309d4ec0d/review/nested/report.md': unsupported assume-unchanged or skip-worktree index flag. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:stat-spoof",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ih0om_s4/code/docs/dev2/.spacedock-state/dispatch-fixture-4eddae23a7904896a0d113149886a7df/review/nested/report.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:rename-out",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-lbj72k90/code/docs/dev2/.spacedock-state/dispatch-fixture-db07333d049b4bfbbd42ff3229d16586/review/nested/report.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:report:rename-in",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-wml796ft/code/docs/dev2/.spacedock-state/dispatch-fixture-e464faf43f944160bdfb66a2fe370a65/review/renamed-inside.txt': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:new-record:untracked",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-8qon1_1r/code/docs/dev2/.spacedock-state/dispatch-fixture-cf564d1980c54706b80e583006625b46/dispatch/ideation-1.md': untracked non-ignored task file. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:new-record:staged-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-nqvsv_ee/code/docs/dev2/.spacedock-state/dispatch-fixture-9358365bc32a432b9401da96f218ae49/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:new-record:staged-add-missing",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-_oklmq_1/code/docs/dev2/.spacedock-state/dispatch-fixture-5b6ce667fe0541caabc8ef990fdf7223/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:new-record:intent-to-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-x36vb7kr/code/docs/dev2/.spacedock-state/dispatch-fixture-f9abff40d860466fb934aa506b1d7bbd/dispatch/ideation-1.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:new-round:new-record:untracked",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-qrzsoq56/code/docs/dev2/.spacedock-state/dispatch-fixture-d5b75b7a6f3d4217b728649c19d6d932/dispatch/ideation-2.md': untracked non-ignored task file. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:new-round:new-record:staged-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-zspvdbgf/code/docs/dev2/.spacedock-state/dispatch-fixture-6c91d2dc458a40689674e0bfae4383d1/dispatch/ideation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:new-round:new-record:staged-add-missing",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-pnmyyo9q/code/docs/dev2/.spacedock-state/dispatch-fixture-1bb8e23cae034e84a18f71658bfe362b/dispatch/ideation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:new-round:new-record:intent-to-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-sx9r0qsx/code/docs/dev2/.spacedock-state/dispatch-fixture-6efcd6ed52714916b9784292720c8ebd/dispatch/ideation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:advance:new-record:untracked",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-idi2a7uj/code/docs/dev2/.spacedock-state/dispatch-fixture-08be2da43e5e417abd115dfe4e7d69f3/dispatch/implementation-2.md': untracked non-ignored task file. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:advance:new-record:staged-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-e5rzwo1s/code/docs/dev2/.spacedock-state/dispatch-fixture-890bb1efe7be425b9de2fa85f0fc53a3/dispatch/implementation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:advance:new-record:staged-add-missing",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-iwt2kd6a/code/docs/dev2/.spacedock-state/dispatch-fixture-10848e93d4624bc5b4d25d8b34b567e3/dispatch/implementation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:advance:new-record:intent-to-add",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-stlpmrx4/code/docs/dev2/.spacedock-state/dispatch-fixture-a4c24daadcaf4f058608369c386f0437/dispatch/implementation-2.md': staged content, existence or mode differs from HEAD. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:literal:literal",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-nbek7m0q/code/docs/dev2/.spacedock-state/dispatch-fixture-cdd37b6f10a148b39271ce525d6e5f6d/review/[literal] space\\nreport.md': unstaged content or mode differs from index. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:new-record:ignored-existing",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; [Errno 17] File exists: '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-qcciwhn0/code/docs/dev2/.spacedock-state/dispatch-fixture-f1aa52ac0d3940cca5a0ba84a833fc6e/dispatch/ideation-1.md'. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "folder:fresh:new-report:untracked",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-8kyal3qi/code/docs/dev2/.spacedock-state/dispatch-fixture-7bd76717205f40f5b8ac02ef8c75a0ce/review/untracked/deep.txt': untracked non-ignored task file. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "symlinked-task",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-uvvren6g/code/docs/dev2/.spacedock-state/dispatch-fixture-cad8ef66a7414a678131b3de91f2d0fc.md': unsupported or symlinked task layout. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "unsupported-companion",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-4a0p90jk/code/docs/dev2/.spacedock-state/dispatch-fixture-e42902e943384df28c02dbd2eee9f882': unsupported task directory type. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    },
+    {
+      "name": "unsupported-dangling",
+      "status": "passed",
+      "message": "dispatch_stage: dispatch not built; [Errno 17] File exists: '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-wzly1avu/code/docs/dev2/.spacedock-state/dispatch-fixture-03dec640acf64c399ad253f0db723fb4/dispatch/ideation-1.md'. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n"
+    }
+  ]
+}

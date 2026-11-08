@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_inline_scope_uses_the_real_commit_unit (__main__.DispatchStageTests.test_inline_scope_uses_the_real_commit_unit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 517, in test_inline_scope_uses_the_real_commit_unit
+    self.assertFalse(self.record(number=2).exists())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 1.203s
+
+FAILED (failures=1)
