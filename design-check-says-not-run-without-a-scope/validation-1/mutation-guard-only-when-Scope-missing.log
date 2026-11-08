@@ -1,0 +1,22 @@
+F
+======================================================================
+FAIL: test_a_foreign_binding_with_its_own_scope_is_not_run (test_design_surfaces.ScopeCheckTests.test_a_foreign_binding_with_its_own_scope_is_not_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-design-check-807-5kl7jk6e/scope-mutation-et4zrb2d/scripts/test_design_surfaces.py", line 1702, in test_a_foreign_binding_with_its_own_scope_is_not_run
+    self.assertEqual(ds.scope_hold(self.task), ("not run", f"backlog briefing binds {rel}, not this task file"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: ('clean', 'a20a2d4e9d2dd030c7c77a086e902c985a66e09f') != ('not run', 'backlog briefing binds review/[36 chars]ile')
+
+First differing element 0:
+'clean'
+'not run'
+
+- ('clean', 'a20a2d4e9d2dd030c7c77a086e902c985a66e09f')
++ ('not run',
++  'backlog briefing binds review/t/backlog/review.md, not this task file')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.424s
+
+FAILED (failures=1)

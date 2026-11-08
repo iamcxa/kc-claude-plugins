@@ -1,0 +1,7 @@
+{
+  "relay_head": "6008953a2501c4ff82bfb50b9d76f649259802a8",
+  "binding_sha": "01d0e0e440632472fdfc0c4ce1bd21ccd7d7d974",
+  "bound_path": "llms-teaches-versions/review/backlog-gate.md",
+  "task_scope_matches_own_file_at_binding": true,
+  "source_unchanged": true
+}

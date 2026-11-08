@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Full package suite",
+    "status": "passed",
+    "message": "985 tests; 978 executed, 7 existing environment-dependent skips. Exit 0."
+  },
+  {
+    "name": "Focused design checker",
+    "status": "passed",
+    "message": "217 tests; 213 executed, 4 existing skips. Exit 0."
+  },
+  {
+    "name": "Fresh-shell Captain acceptance",
+    "status": "passed",
+    "message": "All four steps and 25 Scope cases pass."
+  },
+  {
+    "name": "removed guard",
+    "status": "passed",
+    "message": "Mutant failed the named behavior assertion: test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit"
+  },
+  {
+    "name": "unconditional guard",
+    "status": "passed",
+    "message": "Mutant failed the named behavior assertion: test_a_scope_line_added_after_the_backlog_gate_holds_with_a_line_addressed_to_fo"
+  },
+  {
+    "name": "folder path guessed from parent",
+    "status": "passed",
+    "message": "Mutant failed the named behavior assertion: test_a_folder_task_bound_to_itself_is_checked_even_when_untracked_or_archived"
+  },
+  {
+    "name": "guard only when Scope missing",
+    "status": "passed",
+    "message": "Mutant failed the named behavior assertion: test_a_foreign_binding_with_its_own_scope_is_not_run"
+  },
+  {
+    "name": "guard before amendment lookup",
+    "status": "passed",
+    "message": "Mutant failed the named behavior assertion: test_a_dated_amendment_supplies_the_baseline_despite_a_foreign_binding"
+  },
+  {
+    "name": "AC-5 file-boundary falsifier",
+    "status": "passed",
+    "message": "Adding an unapproved path fails the exact two-file boundary."
+  }
+]

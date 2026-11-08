@@ -1,0 +1,49 @@
+FF
+======================================================================
+FAIL: test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit (test_design_surfaces.ScopeCheckTests.test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit) (changed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-design-check-807-5kl7jk6e/scope-mutation-j_hhmtjn/scripts/test_design_surfaces.py", line 1693, in test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit
+    self.assertEqual(ds.scope_hold(self.task), expected)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: ('hold', 'Scope changed after the backlog g[277 chars]ts.') != ('not run', 'backlog briefing binds t/revie[34 chars]ile')
+
+First differing element 0:
+'hold'
+'not run'
+
++ ('not run',
++  'backlog briefing binds t/review/backlog-gate.md, not this task file')
+- ('hold',
+-  'Scope changed after the backlog gate (fb823cf2): "- Source: issue 1.". FO: '
+-  "restore the line; add an '### Amendment N' with 'Supersedes: none' only if "
+-  'the Captain asked for it, with his words verbatim and where he said them. A '
+-  'worker that sees this line reports it to FO and edits neither Scope nor '
+-  'amendments.')
+
+======================================================================
+FAIL: test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit (test_design_surfaces.ScopeCheckTests.test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit) (changed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-design-check-807-5kl7jk6e/scope-mutation-j_hhmtjn/scripts/test_design_surfaces.py", line 1693, in test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit
+    self.assertEqual(ds.scope_hold(self.task), expected)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: ('hold', 'Scope changed after the backlog g[277 chars]ts.') != ('not run', 'backlog briefing binds t/revie[34 chars]ile')
+
+First differing element 0:
+'hold'
+'not run'
+
++ ('not run',
++  'backlog briefing binds t/review/backlog-gate.md, not this task file')
+- ('hold',
+-  'Scope changed after the backlog gate (fb823cf2): "- Source: issue 1.". FO: '
+-  "restore the line; add an '### Amendment N' with 'Supersedes: none' only if "
+-  'the Captain asked for it, with his words verbatim and where he said them. A '
+-  'worker that sees this line reports it to FO and edits neither Scope nor '
+-  'amendments.')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.482s
+
+FAILED (failures=2)

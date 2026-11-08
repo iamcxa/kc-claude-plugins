@@ -1,0 +1,21 @@
+F
+======================================================================
+FAIL: test_a_folder_task_bound_to_itself_is_checked_even_when_untracked_or_archived (test_design_surfaces.ScopeCheckTests.test_a_folder_task_bound_to_itself_is_checked_even_when_untracked_or_archived)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-design-check-807-5kl7jk6e/scope-mutation-3ggf__ol/scripts/test_design_surfaces.py", line 1708, in test_a_folder_task_bound_to_itself_is_checked_even_when_untracked_or_archived
+    self.assertEqual(ds.scope_hold(self.task), ("clean", sha))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: ('not run', 'backlog briefing binds f/index.md, not this task file') != ('clean', '03bb63b025e4ee186165f59c70ff24aaaace5f29')
+
+First differing element 0:
+'not run'
+'clean'
+
+- ('not run', 'backlog briefing binds f/index.md, not this task file')
++ ('clean', '03bb63b025e4ee186165f59c70ff24aaaace5f29')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.420s
+
+FAILED (failures=1)

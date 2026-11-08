@@ -1,0 +1,39 @@
+STEP 1 PASS candidate 2760f259379e9c3bb43bab9efa56d90c5b657ab1; Relay 6008953a2501c4ff82bfb50b9d76f649259802a8; evidence /tmp/design-scope-acceptance.2hQ9SB
+llms-teaches-versions.md: design surfaces presentable
+scope check not run: backlog briefing binds llms-teaches-versions/review/backlog-gate.md, not this task file
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+STEP 2 PASS original false hold is not run (exit 0)
+Scope changed after the backlog gate (01d0e0e4): "- `front-door/llms.txt` tells an agent that `read.version` is the version it rea". FO: restore the line; add an '### Amendment N' with 'Supersedes: none' only if the Captain asked for it, with his words verbatim and where he said them. A worker that sees this line reports it to FO and edits neither Scope nor amendments.
+STEP 3 PASS base reproduces the false hold (exit 1)
+test_a_dated_amendment_supplies_the_baseline_despite_a_foreign_binding (test_design_surfaces.ScopeCheckTests.test_a_dated_amendment_supplies_the_baseline_despite_a_foreign_binding) ... ok
+test_a_folder_task_bound_to_itself_is_checked_even_when_untracked_or_archived (test_design_surfaces.ScopeCheckTests.test_a_folder_task_bound_to_itself_is_checked_even_when_untracked_or_archived) ... ok
+test_a_foreign_binding_with_its_own_scope_is_not_run (test_design_surfaces.ScopeCheckTests.test_a_foreign_binding_with_its_own_scope_is_not_run) ... ok
+test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit (test_design_surfaces.ScopeCheckTests.test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit) ... ok
+test_a_scope_line_added_after_the_backlog_gate_holds_with_a_line_addressed_to_fo (test_design_surfaces.ScopeCheckTests.test_a_scope_line_added_after_the_backlog_gate_holds_with_a_line_addressed_to_fo) ... ok
+test_a_scope_line_removed_after_the_backlog_gate_holds (test_design_surfaces.ScopeCheckTests.test_a_scope_line_removed_after_the_backlog_gate_holds) ... ok
+test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it (test_design_surfaces.ScopeCheckTests.test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it) ... ok
+test_a_task_the_check_cannot_judge_prints_why_and_exits_zero (test_design_surfaces.ScopeCheckTests.test_a_task_the_check_cannot_judge_prints_why_and_exits_zero) ... ok
+test_an_amendment_committed_with_the_edit_covers_it_and_an_edit_after_it_holds (test_design_surfaces.ScopeCheckTests.test_an_amendment_committed_with_the_edit_covers_it_and_an_edit_after_it_holds) ... ok
+test_an_amendment_heading_outside_the_amendments_section_or_inside_a_fence_is_no_baseline (test_design_surfaces.ScopeCheckTests.test_an_amendment_heading_outside_the_amendments_section_or_inside_a_fence_is_no_baseline) ... ok
+test_an_earlier_look_alike_heading_with_the_same_number_is_not_the_amendment_commit (test_design_surfaces.ScopeCheckTests.test_an_earlier_look_alike_heading_with_the_same_number_is_not_the_amendment_commit) ... ok
+test_an_edit_outside_scope_is_not_a_scope_change (test_design_surfaces.ScopeCheckTests.test_an_edit_outside_scope_is_not_a_scope_change) ... ok
+test_an_unchanged_scope_is_clean_and_prints_the_presentable_line (test_design_surfaces.ScopeCheckTests.test_an_unchanged_scope_is_clean_and_prints_the_presentable_line) ... ok
+test_an_uncommitted_amendment_covers_an_uncommitted_scope_line (test_design_surfaces.ScopeCheckTests.test_an_uncommitted_amendment_covers_an_uncommitted_scope_line) ... ok
+test_fenced_lines_inside_the_real_scope_stay_compared_and_a_fenced_heading_does_not_end_it (test_design_surfaces.ScopeCheckTests.test_fenced_lines_inside_the_real_scope_stay_compared_and_a_fenced_heading_does_not_end_it) ... ok
+test_mutation_dropping_the_label_exemption_holds_a_non_goals_fill (test_design_surfaces.ScopeCheckTests.test_mutation_dropping_the_label_exemption_holds_a_non_goals_fill) ... ok
+test_mutation_dropping_the_stage_gate_holds_an_implementation_run (test_design_surfaces.ScopeCheckTests.test_mutation_dropping_the_stage_gate_holds_an_implementation_run) ... ok
+test_mutation_letting_any_amendment_exempt_every_later_edit_turns_the_edit_after_it_clean (test_design_surfaces.ScopeCheckTests.test_mutation_letting_any_amendment_exempt_every_later_edit_turns_the_edit_after_it_clean) ... ok
+test_mutation_reading_amendment_headings_from_the_whole_body_clears_a_look_alike_heading (test_design_surfaces.ScopeCheckTests.test_mutation_reading_amendment_headings_from_the_whole_body_clears_a_look_alike_heading) ... ok
+test_mutation_reading_only_the_backlog_sha_holds_a_scope_change_an_amendment_records (test_design_surfaces.ScopeCheckTests.test_mutation_reading_only_the_backlog_sha_holds_a_scope_change_an_amendment_records) ... ok
+test_seed_mode_never_reads_git (test_design_surfaces.ScopeCheckTests.test_seed_mode_never_reads_git) ... ok
+test_the_four_label_prefixes_the_readme_defines_are_filled_without_an_amendment (test_design_surfaces.ScopeCheckTests.test_the_four_label_prefixes_the_readme_defines_are_filled_without_an_amendment) ... ok
+test_the_hold_reaches_only_a_task_in_ideation (test_design_surfaces.ScopeCheckTests.test_the_hold_reaches_only_a_task_in_ideation) ... ok
+test_the_hold_wording_orders_restore_before_amendment_and_ends_with_the_worker_sentence (test_design_surfaces.ScopeCheckTests.test_the_hold_wording_orders_restore_before_amendment_and_ends_with_the_worker_sentence) ... ok
+test_the_scope_is_the_first_scope_heading_outside_a_fence (test_design_surfaces.ScopeCheckTests.test_the_scope_is_the_first_scope_heading_outside_a_fence) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 13.327s
+
+OK
+STEP 4 PASS real Scope changes remain held; foreign bindings and amendments behave as accepted
+ACCEPTANCE PASS; does not cover full-suite regressions, hosted review, merge or plugin installation.

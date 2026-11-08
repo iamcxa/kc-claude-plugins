@@ -1,0 +1,21 @@
+F
+======================================================================
+FAIL: test_a_dated_amendment_supplies_the_baseline_despite_a_foreign_binding (test_design_surfaces.ScopeCheckTests.test_a_dated_amendment_supplies_the_baseline_despite_a_foreign_binding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-design-check-807-5kl7jk6e/scope-mutation-rqlh1_go/scripts/test_design_surfaces.py", line 1724, in test_a_dated_amendment_supplies_the_baseline_despite_a_foreign_binding
+    self.assertEqual(ds.scope_hold(self.task), ("clean", "working copy"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: ('not run', 'foreign binding before amendment') != ('clean', 'working copy')
+
+First differing element 0:
+'not run'
+'clean'
+
+- ('not run', 'foreign binding before amendment')
++ ('clean', 'working copy')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.436s
+
+FAILED (failures=1)

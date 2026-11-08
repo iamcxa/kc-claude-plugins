@@ -1,0 +1,20 @@
+[
+  {
+    "name": "candidate",
+    "exit": 0,
+    "words": 78,
+    "output": "llms-teaches-versions.md: design surfaces presentable\nscope check not run: backlog briefing binds llms-teaches-versions/review/backlog-gate.md, not this task file\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "name": "base",
+    "exit": 1,
+    "words": 63,
+    "output": "Scope changed after the backlog gate (01d0e0e4): \"- `front-door/llms.txt` tells an agent that `read.version` is the version it rea\". FO: restore the line; add an '### Amendment N' with 'Supersedes: none' only if the Captain asked for it, with his words verbatim and where he said them. A worker that sees this line reports it to FO and edits neither Scope nor amendments.\n"
+  },
+  {
+    "name": "guard removed",
+    "exit": 1,
+    "words": 63,
+    "output": "Scope changed after the backlog gate (01d0e0e4): \"- `front-door/llms.txt` tells an agent that `read.version` is the version it rea\". FO: restore the line; add an '### Amendment N' with 'Supersedes: none' only if the Captain asked for it, with his words verbatim and where he said them. A worker that sees this line reports it to FO and edits neither Scope nor amendments.\n"
+  }
+]

@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_a_scope_line_added_after_the_backlog_gate_holds_with_a_line_addressed_to_fo (test_design_surfaces.ScopeCheckTests.test_a_scope_line_added_after_the_backlog_gate_holds_with_a_line_addressed_to_fo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-design-check-807-5kl7jk6e/scope-mutation-i5kx5iq3/scripts/test_design_surfaces.py", line 1739, in test_a_scope_line_added_after_the_backlog_gate_holds_with_a_line_addressed_to_fo
+    self.assertEqual(code, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.336s
+
+FAILED (failures=1)

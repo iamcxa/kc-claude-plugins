@@ -1,0 +1,190 @@
+[
+  {
+    "name": "lint-skills",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "git_metadata": false,
+    "exit": 0
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "--require",
+      "0027",
+      "0042",
+      "0048"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "git_metadata": true,
+    "exit": 0
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-check-says-not-run-without-a-scope.md",
+      "--base",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "--head",
+      "2760f259379e9c3bb43bab9efa56d90c5b657ab1"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "git_metadata": true,
+    "exit": 0
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "2760f259379e9c3bb43bab9efa56d90c5b657ab1",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "git_metadata": true,
+    "exit": 0
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "2760f259379e9c3bb43bab9efa56d90c5b657ab1",
+      "--repo",
+      "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+      "--json"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "git_metadata": true,
+    "exit": 0
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-check-says-not-run-without-a-scope"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "git_metadata": false,
+    "exit": 0
+  },
+  {
+    "name": "task-design",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-check-says-not-run-without-a-scope.md"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "git_metadata": false,
+    "exit": 0
+  },
+  {
+    "name": "focused-tests",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_design_surfaces.py"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "git_metadata": false,
+    "exit": 0
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-check-says-not-run-without-a-scope",
+      "diff",
+      "--check",
+      "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "2760f259379e9c3bb43bab9efa56d90c5b657ab1"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "git_metadata": false,
+    "exit": 0
+  },
+  {
+    "name": "relay-replay",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/validate-design-check-807-5kl7jk6e/replay.py",
+      "/tmp/validate-design-check-807-5kl7jk6e/candidate"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "exit": 0
+  },
+  {
+    "name": "mutations",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/validate-design-check-807-5kl7jk6e/mutations.py",
+      "/tmp/validate-design-check-807-5kl7jk6e/candidate"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "exit": 0
+  },
+  {
+    "name": "captain-acceptance",
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-check-says-not-run-without-a-scope/validation-1/acceptance.sh"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "exit": 0
+  },
+  {
+    "name": "full-tests",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts"
+    ],
+    "cwd": "/tmp/validate-design-check-807-5kl7jk6e/candidate",
+    "exit": 0,
+    "tests": 985,
+    "skipped": 7
+  }
+]
