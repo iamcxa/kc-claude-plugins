@@ -94,6 +94,7 @@ Result: aligned at backlog: Batch 17 backlog sitting, the Captain 「核准（�
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:engineering-reviewer astra (codex/gpt-6-astra xhigh via Paseo) 2026-11-08 — Is the default of Paseo's browser tools for a worker's self-driven check supported by the evidence for checks nobody watches? Report review/engineering-reviewer-1.md: narrow to attended pages, which withdraws the approved unattended default and AC-4 and changes the two guide sentences; Captain amendment 1 followed it.
 
 ## Design
 
