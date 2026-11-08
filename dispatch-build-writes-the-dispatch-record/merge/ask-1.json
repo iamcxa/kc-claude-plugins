@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "bd9d4abce4e0c61a69079d4e822b6ded45cfdc20",
+  "model": "not run",
+  "necessity": "the nine changed files map to the script, its tests and CI step, the README budget, the authorized observer chat-only entry and ADR 0070 (validation-4 report, Astra, 2026-11-08).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'PASSED: PR #812 at afa4523468a2e86e6c6e0467591df00bf8e51d35 satisfies'",
+    "point: deferred: 'Recommend checking index identity before reuse'",
+    "point: deferred: 'Validation-2 F1 is fixed by the'",
+    "point: deferred: 'Validation-2 F1 is fixed by the'",
+    "point: deferred: 'Both previously Material Codex comments (4505536959'",
+    "point: not-run: 'roborev not run: FO owns review/publication'",
+    "point: not-run: 'roborev not run: FO owns review/publication.'",
+    "point: not-run: 'roborev not run: FO owns review/publication.'",
+    "point: not-run: 'roborev not run: FO owns review/publication.'",
+    "point: amendment: 'Amendment 1 dated 2026-11-08'",
+    "point: path: '.github/workflows/kc-dev-flow-2-tests.yml'",
+    "point: path: 'docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-'",
+    "point: more: 7 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#812",
+  "sufficiency": "kc-dev-flow-2/scripts/dispatch_stage.py writes each stage dispatch record from the actual checklist and scope notes, runs both record checks, refuses any dirty task commit scope before writing, forwar",
+  "time": "2026-11-08T12:15:23Z",
+  "verdict": "ask"
+}
