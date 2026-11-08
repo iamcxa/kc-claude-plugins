@@ -1,0 +1,17 @@
+{
+  "class": "never",
+  "head": "90192bb64db4614de9a7a94cc782ee5fa44748db",
+  "model": "not run",
+  "necessity": "the two files are extensions/paseo/EXTENSION.md and the new extensions/paseo/browser.md (gh pr view 810 --json files, FO 2026-11-08).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'kc-dev-flow-2/extensions/paseo/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/extensions/paseo/browser.md'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#810",
+  "sufficiency": "the paseo extension now tells a worker to use Paseo's browser tools by default for local browser checks, with CI unchanged, a recorded fallback, and five known limits including that a tab must be visi",
+  "time": "2026-11-08T02:58:59Z",
+  "verdict": "ask"
+}
