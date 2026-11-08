@@ -1,0 +1,118 @@
+diff --git a/.github/workflows/kc-dev-flow-2-tests.yml b/.github/workflows/kc-dev-flow-2-tests.yml
+index f100e332d..a2952a1d1 100644
+--- a/.github/workflows/kc-dev-flow-2-tests.yml
++++ b/.github/workflows/kc-dev-flow-2-tests.yml
+@@ -126,6 +126,9 @@ jobs:
+           install -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"
+           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+ 
++      - name: test_dispatch_stage.py
++        run: SPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py
++
+       - name: test_sd_dispatch.py
+         run: python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$GITHUB_WORKSPACE/.sd-plugin-root"
+ 
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index e72efa1c8..11f0e9a0c 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -108,18 +108,12 @@ holds the dispatch and shows the Captain what the script printed. Every worker d
+ land in the dispatch file the worker reads first. Those scope notes, and every follow-up
+ message to a live worker, also carry ``Send your completion message to `main` (the README's Dispatch
+ facts: `team-lead` is not registered here).``: the builder's completion block names `team-lead`, and a
+-worker that skips the stage-definition fetch does not see the Signal fact. FO saves those scope notes, the
+-checklist, the model it dispatches on and the SHA it dispatches from as
+-`<task>/dispatch/<stage>-<cycle>.md` in the state checkout (for validation a
+-`Candidate: <full head SHA>` line per head validated),
+-committed with that dispatch's `spacedock state commit <slug> --workflow-dir <dir>`, so
+-the instruction a worker followed outlives the session that wrote it; FO runs
+-`python3 <package>/scripts/dispatch_records.py <task folder>` before committing and fixes each part it lists. A follow-up
+-message to a worker FO resumes is a dispatch too, with the same check and a checklist of the items that message asks, never a pointer to another record.
++worker that skips the stage-definition fetch does not see the Signal fact. FO builds each worker dispatch with `python3 <package>/scripts/dispatch_stage.py`: `dispatch build`'s flags, `--model`, and `--roster`, `--candidate` or `--symptom` where owed. It saves the checklist, scope notes, model and the SHA it dispatches from as `<task>/dispatch/<stage>-<cycle>.md`, so the instruction a worker followed outlives the session that wrote it, checks it as below, then builds; the build's commit carries the record.
++A follow-up message to a worker FO resumes is a dispatch too, saved by hand as `<stage>-<cycle>-message-<n>.md` with a checklist of the items it asks, never a pointer to another record, and committed with `spacedock state commit <slug> --workflow-dir <dir>`.
+ After each worker report, before advancing or preparing its gate, FO runs
+ `python3 <package>/scripts/dispatch_records.py --coverage <task> --stage <stage>`; nonzero holds that task.
+ This check does not observe unrecorded messages.
+-Before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names --strict <record>` on the saved record; nonzero holds dispatch. Relative script paths are allowed; bare package script names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped context checks on stderr. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
++Each record passes `python3 <package>/scripts/dispatch_records.py <task folder>` and `--names --strict <record>` before a worker reads it; nonzero holds dispatch. Relative script paths are allowed; bare package script names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped context checks on stderr. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
+ <dir> --read <task> --stage <stage> --checklist`, return any line it reports as neither
+ DONE nor SKIPPED to the worker with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one, and do not edit the worker's report. The refusal itself
+ does not say why; other causes are a missing evidence line or Summary and an uncommitted
+diff --git a/kc-dev-flow-2/scripts/lint-skills.py b/kc-dev-flow-2/scripts/lint-skills.py
+index 6f027bc1e..31119fe2d 100644
+--- a/kc-dev-flow-2/scripts/lint-skills.py
++++ b/kc-dev-flow-2/scripts/lint-skills.py
+@@ -65,6 +65,7 @@ WORKFLOW_BUDGET_STEPS = [
+     dict(delta=48, why="Captain resolutions declare an Override or followed recommendation before gate record",
+          captain="「准」 (Captain, chat, 2026-11-05), answering 「決定：漏寫 Override 這份設計進入實作嗎？核准即接受 D1-A（記錄裁示前先檢查理由文字）、D2-A（README 加 48 字，字數上限 5891 調到 5939）、D3-A（不加反向防護）、D4-A（不做裁示紀錄評分器）四個建議。」",
+          loaded="startup and resume of the First Officer, and before each Captain gate record"),
++    dict(delta=-2, why="dispatch_stage.py saves and checks the record; the README names the script and its flags"),
+ ]
+ DUPLICATE_RUN = 12
+ # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_records.py b/kc-dev-flow-2/scripts/test_dispatch_records.py
+index 5c296911e..a9a968dd7 100644
+--- a/kc-dev-flow-2/scripts/test_dispatch_records.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_records.py
+@@ -53,8 +53,8 @@ BARE = COMPLETE.replace("1. Independent verdict", "1. Run adr_lint.py. Independe
+ 
+ 
+ class ContextNoticeTests(unittest.TestCase):
+-    PARAGRAPH = ("Before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names --strict <record>` "
+-                 "on the saved record; nonzero holds dispatch. Relative script paths are allowed; bare package script "
++    PARAGRAPH = ("Each record passes `python3 <package>/scripts/dispatch_records.py <task folder>` and "
++                 "`--names --strict <record>` before a worker reads it; nonzero holds dispatch. Relative script paths are allowed; bare package script "
+                  "names remain errors. Plain `--names` preserves existing historical verdicts and reports skipped "
+                  "context checks on stderr.")
+ 
+@@ -157,7 +157,7 @@ class ContextNoticeTests(unittest.TestCase):
+         workflow = Path(records.__file__).parents[1] / "references/sd/workflow.md"
+         self.assertIn(self.PARAGRAPH, " ".join(workflow.read_text().split()))
+         self.assertNotIn("Repository files:", workflow.read_text())
+-        command = re.search(r"`python3 ([^`]+)`", self.PARAGRAPH)[1].split()
++        command = re.search(r"`python3 ([^`]+)`", self.PARAGRAPH)[1].split()[:1] + ["--names", "--strict", "<record>"]
+         command = [part.replace("<package>", str(workflow.parents[2])).replace("<record>", str(self.record))
+                    for part in command]
+         self.task.unlink()
+diff --git a/kc-dev-flow-2/scripts/test_sd_dispatch.py b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+index 80775d949..63f065fed 100644
+--- a/kc-dev-flow-2/scripts/test_sd_dispatch.py
++++ b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+@@ -142,14 +142,19 @@ FIXES = {
+     "dispatch-record": dict(
+         need=("the SHA it dispatches from as `<task>/dispatch/<stage>-<cycle>.md`",
+               "outlives the session that wrote it",
+-              "FO runs `python3 <package>/scripts/dispatch_records.py <task folder>` before committing and fixes each part it lists",
+-              "for validation a `Candidate: <full head SHA>` line per head validated"),
++              "FO builds each worker dispatch with `python3 <package>/scripts/dispatch_stage.py`",
++              "`--roster`, `--candidate` or `--symptom` where owed",
++              "the build's commit carries the record",
++              "Each record passes `python3 <package>/scripts/dispatch_records.py <task folder>` and `--names --strict <record>` before a worker reads it"),
+         old=(),
+-        swaps=((r"FO saves those scope notes, the checklist, the model it dispatches on.*?fixes each part it lists\. ", ""),)),
++        swaps=((r"FO builds each worker dispatch with.*?the build's commit carries the record\. ", ""),
++               (r"Each record passes.*?before a worker reads it; nonzero holds dispatch\. ", ""))),
+     "resumed-dispatch": dict(
+-        need=("A follow-up message to a worker FO resumes is a dispatch", "never a pointer to another record"),
++        need=("A follow-up message to a worker FO resumes is a dispatch",
++              "saved by hand as `<stage>-<cycle>-message-<n>.md`",
++              "never a pointer to another record, and committed with `spacedock state commit <slug> --workflow-dir <dir>`"),
+         old=(),
+-        swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, with the same check and a checklist of the items that message asks, never a pointer to another record\. ", ""),)),
++        swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, saved by hand as.*?--workflow-dir <dir>`\. ", ""),)),
+     "dispatch-coverage": dict(
+         need=("After each worker report, before advancing or preparing its gate",
+               "dispatch_records.py --coverage <task> --stage <stage>",
+diff --git a/kc-dev-flow-2/skills/observer/SKILL.md b/kc-dev-flow-2/skills/observer/SKILL.md
+index 55527f4dc..838aae733 100644
+--- a/kc-dev-flow-2/skills/observer/SKILL.md
++++ b/kc-dev-flow-2/skills/observer/SKILL.md
+@@ -99,7 +99,7 @@ the report would only say `can't tell`:
+ - FO answers a question the Captain asks at a gate
+ - python3 <package>/scripts/package_version.py
+ - python3 <package>/scripts/workflow_checkout.py
+-- python3 <package>/scripts/dispatch_records.py --names
++- --names --strict <record>
+ - assess the four evidence fields above
+ <!-- /chat-only-rules -->
+ 

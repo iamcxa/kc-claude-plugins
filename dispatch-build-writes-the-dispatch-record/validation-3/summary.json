@@ -1,0 +1,14 @@
+{
+  "head": "778367adde2e20e0b3e51966ddba2d9f77f9e614",
+  "local_verdict": "passed",
+  "overall_verdict": "REJECTED: required hosted evidence externally blocked",
+  "tests_reported": 1223,
+  "optional_skips": 11,
+  "package_commands": 28,
+  "original_falsifiers": 13,
+  "class_falsifiers": 9,
+  "additional_ac9_falsifiers": 1,
+  "matrix_rows": 92,
+  "snapshots": 98,
+  "open_findings": []
+}

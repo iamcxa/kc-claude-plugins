@@ -1,0 +1,22 @@
+[
+  {
+    "layout": "flat",
+    "first_exit": 0,
+    "retry_exit": 1,
+    "retry_stdout": "",
+    "retry_stderr": "dispatch build --stamp: state sync failed: git commit failed: On branch spacedock-state/dev2\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n\tmodified:   other-task.txt\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n\tuntracked-other-task.txt\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n",
+    "all_state_preserved": true,
+    "recovery_after_unstaging_other_task_exit": 0,
+    "record_two_exists": false
+  },
+  {
+    "layout": "folder",
+    "first_exit": 0,
+    "retry_exit": 1,
+    "retry_stdout": "",
+    "retry_stderr": "dispatch build --stamp: state sync failed: git commit failed: On branch spacedock-state/dev2\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n\tmodified:   other-task.txt\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n\tuntracked-other-task.txt\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n",
+    "all_state_preserved": true,
+    "recovery_after_unstaging_other_task_exit": 0,
+    "record_two_exists": false
+  }
+]

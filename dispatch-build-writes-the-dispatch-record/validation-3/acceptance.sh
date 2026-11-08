@@ -44,14 +44,14 @@ test "$(git -C "$WT" rev-parse HEAD)" = "$HEAD_SHA"
 test -z "$(git -C "$WT" status --porcelain)"
 printf '%s\n' 'PASS 5: candidate ADR checker passed; product tree unchanged'
 
-# 6. Check both retry boundaries; expected: dirty same-task refuses, clean same-task retries successfully.
+# 6. Check both retry boundaries; expected: dirty same-task refuses, clean same-task follows amended AC-9.
 SPACEDOCK_BIN="$SD" PYTHONDONTWRITEBYTECODE=1 python3 -B "$EVIDENCE_DIR/retry-index-probe.py" "$CHECK_ROOT" > "$OUT/retry-index.json"
 python3 - "$OUT/retry-index.json" <<'CHECK'
 import json, sys
 r=json.load(open(sys.argv[1]))
 if r['exit'] != 1 or not r['index_preserved'] or not r['worktree_preserved'] or not r['head_preserved']:
     sys.exit('FAIL 6: immediate retry discarded staged-only dispatch content')
-print('PASS 6: immediate retry refused; staged content preserved')
+print('PASS 6a: dirty same-task retry refused; staged content preserved')
 CHECK
 
 SPACEDOCK_BIN="$SD" PYTHONDONTWRITEBYTECODE=1 python3 -B "$EVIDENCE_DIR/outside-staged-retry.py" "$CHECK_ROOT" > "$OUT/outside-staged-retry.json"
@@ -59,7 +59,6 @@ python3 - "$OUT/outside-staged-retry.json" <<'CHECK'
 import json, sys
 rows=json.load(open(sys.argv[1]))
 assert len(rows)==2 and all(r['first_exit']==0 and r['all_state_preserved'] and not r['record_two_exists'] for r in rows)
-if any(r['retry_exit']!=0 for r in rows):
-    sys.exit('FAIL 6: clean-task immediate retry fails when another task has staged work (flat and folder)')
-print('PASS 6: clean-task immediate retries succeeded with unrelated staged work')
+assert all(r['retry_exit']==1 and not r['retry_stdout'] and r['recovery_after_unstaging_other_task_exit']==0 for r in rows)
+print('PASS 6: AC-9 outside-staged retry refuses without data changes in both layouts; clean retry recovers')
 CHECK

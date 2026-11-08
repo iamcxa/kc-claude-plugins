@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_scope_preservation_matrix (__main__.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:fresh:report:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-scope-mutant-761571n0/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 411, in test_scope_preservation_matrix
+    fixture.assert_scope_refusal(scenario, path, stage, extra)
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-scope-mutant-761571n0/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 358, in assert_scope_refusal
+    self.assertEqual(after, before, "refusal changed scoped or outside state")
+AssertionError: {'head': 'd813a60548d47e0612ac27775eb0d42af190593a'[6885 chars]x00'} != {'head': 'ea11d8b989c28ac1eeaed52af58b8408e629bdae'[5457 chars]x00'}
+Diff is 15218 characters long. Set self.maxDiff to None to see it. : refusal changed scoped or outside state
+
+----------------------------------------------------------------------
+Ran 1 test in 1.459s
+
+FAILED (failures=1)

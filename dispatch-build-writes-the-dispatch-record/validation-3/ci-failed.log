@@ -1,0 +1,17 @@
+unit tests (python3)	Install pinned Spacedock	﻿2026-11-08T09:55:11.7575632Z ##[group]Run set -euo pipefail
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7575984Z ^[[36;1mset -euo pipefail^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7576730Z ^[[36;1masset="spacedock_${SPACEDOCK_VERSION#v}_linux_amd64.tar.gz"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7577158Z ^[[36;1mcurl -fsSL -o /tmp/spacedock.tar.gz \^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7577685Z ^[[36;1m  "https://github.com/spacedock-dev/spacedock/releases/download/${SPACEDOCK_VERSION}/${asset}"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7578303Z ^[[36;1mecho "${SPACEDOCK_SHA256}  /tmp/spacedock.tar.gz" | sha256sum -c -^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7578723Z ^[[36;1mtar -xzf /tmp/spacedock.tar.gz -C /tmp^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7579037Z ^[[36;1mmkdir -p "$HOME/.local/bin"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7579408Z ^[[36;1minstall -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7579805Z ^[[36;1mecho "$HOME/.local/bin" >> "$GITHUB_PATH"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7628057Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7628321Z env:
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7628520Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7628929Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:11.7629400Z ##[endgroup]
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:22.8489882Z curl: (22) The requested URL returned error: 504
+unit tests (python3)	Install pinned Spacedock	2026-11-08T09:55:22.8532241Z ##[error]Process completed with exit code 22.
