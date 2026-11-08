@@ -53,6 +53,10 @@ gates:
                 id: briefing:adr-lint-tells-supersession-assertion-from-pointer:validation:attempt-1:revision-1
                 digest: sha256:98279cac2ade8e5a14ec6115606faf4a56392189cf04002ffe4cd32adde081ea
                 room-ref: ./adr-lint-tells-supersession-assertion-from-pointer/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-08T02:10:28.830313Z"
+                reason: Captain steps step 2 rerun in the candidate's clean worktree (the export run used a borrowed index); summary updated to match
 started: 2026-11-07T15:40:02Z
 worktree: .worktrees/spacedock-ensign-adr-lint-tells-supersession-assertion-from-pointer
 pr: iamcxa/kc-claude-plugins#806

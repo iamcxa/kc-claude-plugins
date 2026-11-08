@@ -1,2 +1,1 @@
 kc-dev-flow-2/scripts/test_sd_dispatch.py: points at ADR 0047, Superseded by 0050; point it at 0050 or the record in force
-required ADR 0008: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
