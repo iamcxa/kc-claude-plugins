@@ -3,7 +3,7 @@ title: The observer lists each merge in its window that no task's saved merge as
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-08), answering 「批次 17 驗證關卡：#809 讓觀察者列出任務期間沒有合併提問紀錄的合併，並把發版、同步、學習類分開列。驗收通過，Codex 和 RoboRev 沒找到問題，CI 綠；格式上的小問題我已決定不修。要合併 #809（head a43b537cd）嗎？建議合併。」, which presented the bound question 「決定：合併 #809（觀察者列出任務期間沒有合併提問紀錄的合併，分開列出發版／同步／學習類）嗎？建議合併。 Regular merge with --match-head-commit a43b537cd12d69a5ccfde38bf964c6ea35cb0de0, the batch 17 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-07T15:40:18Z
 worktree: .worktrees/spacedock-ensign-observer-lists-unasked-merges
 pr: pr-merge:809
+verdict: PASSED
+completed: 2026-11-08T03:26:08Z
+archived: 2026-11-08T03:26:08Z
 ---
 
 At archive, the observer reports every PR merged in its window whose number and merged head match no saved `merge/ask-N.json` in any state checkout it can read, so an unasked merge is found after the fact without a pre-tool hook.
