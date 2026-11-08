@@ -220,3 +220,38 @@ Recommended order: independent of every batch-17 task. If merge-guard-stops-unas
 ### Summary
 
 The observer gets a merge listing from a new read-only `merge_audit.py`. It fetches every `spacedock-state/*` ref (the `number_guards.py` pattern), lists PRs merged into trunk between FROM and TO, and sorts each one: carried (`ok`), head differs (`violation`), no ask record (`can't tell`, approval may be in chat), or release/sync/learning (`observed`). Repeats already quoted in earlier reports collapse to one line. Replayed on real data, #785 lists as no ask record (its journey-map state is not in this repository's refs), #727 lists as carried, and Release and sync PRs are named separately. `design_surfaces.py check` printed "design surfaces presentable", exit 0. D1 and D2 are the Captain's; no ADR and no word-budget raise.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria; D1 reads every local and fetched spacedock-state/* branch, D2 uses the approved producer names, only the files the design names.
+  Candidate b36fbeeec3a6699c0a82a021dc4ee0142410f6c8, base origin/main 139feeaee7ce037a0c6535568cd6bd103155cbae, branch spacedock-ensign/observer-lists-unasked-merges; four product files in implementation/identity.json; no version bump.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins.
+  no PR opened: no push grant; the dispatch gives FO publication. Conventional Commit title and body are prepared at /tmp/impl-observer-lists-unasked-merges-pr.md and mirrored in this task's implementation/pr.md.
+- DONE: AC-1 — Replay over the window that holds #785.
+  implementation/replay-live.log: actual GitHub read, exit 1, carried 54 of 82 and all eight expected gaps; snapshot.py checks every named set and #727 carried; release-removal mutation exposes no ask record #707.
+- DONE: AC-2 — Head differs is a violation line.
+  test_merge_audit.py's PR-7 fixture prints head differs and exits 1; the PR-number-only mutation fails that test; acceptance/snapshot/727-wrong-head.log separately proves the real #727 head boundary.
+- DONE: AC-3 — Named kinds come from their producers.
+  Producer-prefix, learning-length, sync-title, renamed-release and recorded-Release cases pass; the kind-before-record mutation fails the recorded-Release test.
+- DONE: AC-4 — Inputs and holds.
+  Fixtures exercise remote-only fetched refs, fetch warning/local fallback, read ref/sha/time, exact time bounds, late records, gh failure, 1000 results, no origin and invalid evidence; reading records at TO fails the late-record test.
+- DONE: AC-5 — Repeats collapse.
+  A committed earlier report suppresses #9, deleting it restores the finding, uncommitted and self reports do not hide it; disabling collapse fails the repeat test.
+- DONE: AC-6 — The observer reports it.
+  implementation/observer-candidate-final.md is the native Sonnet observer report at b36fbeeec3a6699c0a82a021dc4ee0142410f6c8; observer-base.md has no merge lines; base-control.json binds the control skill to published 0.35.0.
+- DONE: AC-7 — Words and scope.
+  Four-file product diff; workflow.md and WORKFLOW_WORD_BUDGET unchanged; independent recount.py over the pinned original 54 revisions gives median +60, max +320 (uncollapsed +422), as the approved chronological verbatim-report simulation.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared).
+  implementation/acceptance.log: fresh-shell PASS; mutate.py uses new empty directories and bytecode-disabled processes for 17 baseline tests and five rejected mutations; the native base observer supplies the sixth control.
+- DONE: Repository lint-skills.py, package adr_lint.py docs/adr --since base, number_guards.py check, and comment_ratio.py within its maximum.
+  acceptance/ logs: exit 0 at candidate; lint 5933/5933 workflow words, 62 ADR files checked, number guards no findings, comments 2/431 lines = 0.5% below 5%; no new ADR or migration.
+- DONE: Run the local package consumer checks and affected-document review.
+  implementation/suite-summary.json and suite/: 27 commands succeeded, 1199 unittest cases including 11 skips; doc-impact.json lists README.md, unaffected because its named-CI-command entry remains accurate.
+- DONE: Commit locally, no push; PR text written for FO.
+  Product worktree is clean at b36fbeeec3a6699c0a82a021dc4ee0142410f6c8; implementation/README.md maps durable proofs and the fresh-shell acceptance command.
+- SKIPPED: FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured.
+  roborev not run: dispatch assigns the local daemon review to FO; hosted CI not run and cost per PR not measured. Existing CI path triggers/job are unchanged; local dispatch used CLI 0.27.2 with plugin files 0.27.3, not the hosted pinned install.
+
+### Summary
+
+Delivered the Pilot slice as one local product commit: saved asks carry matching PR heads, differing heads are violations, and missing records stay inconclusive; release, sync, learning and repeated findings are named separately. The live replay, behavioral mutations, native observer controls, word recount, package guards and local suite passed within their recorded limits; the fresh-shell harness pins the original archive corpus so midnight does not change its 54 windows. FO retains publication, review, independent validation and delivery authority.

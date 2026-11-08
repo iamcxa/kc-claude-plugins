@@ -1,0 +1,32 @@
+[
+  {
+    "name": "baseline",
+    "status": "passed",
+    "message": "All behavioral checks passed"
+  },
+  {
+    "name": "release-removed",
+    "status": "passed",
+    "message": "Mutation rejected by test_producer_names_and_a_renamed_release"
+  },
+  {
+    "name": "pr-number-only",
+    "status": "passed",
+    "message": "Mutation rejected by test_matching_head_is_carried_and_different_head_is_a_finding"
+  },
+  {
+    "name": "kind-before-record",
+    "status": "passed",
+    "message": "Mutation rejected by test_recorded_release_reads_carried_before_kind"
+  },
+  {
+    "name": "records-at-to",
+    "status": "passed",
+    "message": "Mutation rejected by test_record_committed_after_to_is_carried_but_uncommitted_record_is_not"
+  },
+  {
+    "name": "collapse-removed",
+    "status": "passed",
+    "message": "Mutation rejected by test_repeats_collapse_only_from_another_committed_report_at_to"
+  }
+]

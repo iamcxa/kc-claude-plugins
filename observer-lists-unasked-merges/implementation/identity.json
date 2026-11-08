@@ -1,0 +1,10 @@
+{
+  "candidate": "b36fbeeec3a6699c0a82a021dc4ee0142410f6c8",
+  "base": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+  "files": {
+    ".github/workflows/kc-dev-flow-2-tests.yml": "936ccf6a73a6d816034e0c4237608aa4e8dab190248db59f082badd3a736a697",
+    "kc-dev-flow-2/scripts/merge_audit.py": "29a8352f4062a5793787c1be758b8a0d0115da1c7dda9b147bdd2dec9ee175d6",
+    "kc-dev-flow-2/scripts/test_merge_audit.py": "ccc7f99f90e4baf2dba7b882ad9c3381ce925b264377b6a326e71a8a7ea8e839",
+    "kc-dev-flow-2/skills/observer/SKILL.md": "84f61d8805d08b58bc5d47fec5944f69795a8006c14d3c228bc8b44a601b7e50"
+  }
+}

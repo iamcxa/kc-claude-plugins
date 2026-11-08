@@ -1,0 +1,218 @@
+[
+  {
+    "slug": "extension-defaults-and-install-choice",
+    "rev": "9f94f24f0cf80a8a7aeb36b2491a1c2ab61ca259"
+  },
+  {
+    "slug": "delivery-gate-reads-folder-tasks",
+    "rev": "c43fa5814c924afd8af02bd112fc9aabc24568f9"
+  },
+  {
+    "slug": "role-triggers-owe-ce-on-review-drift",
+    "rev": "0dc8ebcb786fe5898c6c49836e0c2201b9efa602"
+  },
+  {
+    "slug": "codex-review-hang-detected",
+    "rev": "dea30591ebcf86deff91b7970ffd1bf3f43f0fa5"
+  },
+  {
+    "slug": "stage-report-correction-path",
+    "rev": "38610bad437b7a7da8bb69c701f39c4d022816eb"
+  },
+  {
+    "slug": "override-reaches-gate-and-criteria-wait",
+    "rev": "47b83e5d6a5298cfdf1235837a478f31ece1007f"
+  },
+  {
+    "slug": "fo-written-lines-checked-before-dispatch",
+    "rev": "1158adc584637bdbf1b2f347b91a4c63844d6c00"
+  },
+  {
+    "slug": "codex-reader-same-head-unresolved",
+    "rev": "3e25da97432fb22a1a6a7da973730e7c829f3619"
+  },
+  {
+    "slug": "worker-knows-the-team-and-asks-early",
+    "rev": "e7f7d38d0c179e23fc6825a2797f49ffcf438969"
+  },
+  {
+    "slug": "codex-reader-resolved-mark-adr",
+    "rev": "2e243cef7ed7a01dc090a2b503e162e4c9b18f32"
+  },
+  {
+    "slug": "peers-rules-name-each-host-binding",
+    "rev": "f1a4f18078a786e0fafbf1f4b7d0945dd556b9a8"
+  },
+  {
+    "slug": "ops-metric-event-protocol",
+    "rev": "55f9929ee2064fad5557e6a3352984f095f3ecdf"
+  },
+  {
+    "slug": "peers-paseo-host-binding",
+    "rev": "bd44af60ebae7f904caaff2ce38e8099f6710c81"
+  },
+  {
+    "slug": "copilot-not-run-line-carries-quote",
+    "rev": "52bce2ab49a0d5900531f8b897f3f5d6577d4908"
+  },
+  {
+    "slug": "journey-probe-finds-nested-maps",
+    "rev": "1c757835e4ae18d0692ccc4abdf28a53d2c38895"
+  },
+  {
+    "slug": "read-adr-honors-adr-folder",
+    "rev": "b16848fc6baedf6c1261f502b160120b0698ee57"
+  },
+  {
+    "slug": "idle-hook-names-merged-tasks-without-learn",
+    "rev": "9b8b124a566cb3db12d6bba86636f0eba97343b8"
+  },
+  {
+    "slug": "seed-check-requires-schema-fields",
+    "rev": "8d7f411e98b49d606592b9ab48f38d0a6653c6e8"
+  },
+  {
+    "slug": "reused-worker-dispatch-leaves-a-record",
+    "rev": "27c9d5987b7bba29ff7b500cf3aeb8084df422e0"
+  },
+  {
+    "slug": "paseo-codex-dispatch-practice",
+    "rev": "bf3e9118dad043b660ed65bcfa865e69a0a8f02b"
+  },
+  {
+    "slug": "batch-reaches-each-gate-together",
+    "rev": "2354f5a8cc26c9d340fbf2d1c914ce6d254270a1"
+  },
+  {
+    "slug": "fo-interviews-extension",
+    "rev": "7ef6b7b11d9629ee600de4ed77e50b2c008b3629"
+  },
+  {
+    "slug": "gate-requires-recorded-reviews",
+    "rev": "52dbc4c5ebd9bbeed5a85b0299ec2bf6056adc18"
+  },
+  {
+    "slug": "captain-amendment-form-checked",
+    "rev": "a74fa8021e0dad3c66adcdced3833c5ff83c84b5"
+  },
+  {
+    "slug": "validation-rerun-waits-for-captain-ruling",
+    "rev": "8260141e88d8086afadbb1cce922019a35ea0845"
+  },
+  {
+    "slug": "adr-reserved-when-design-names-one",
+    "rev": "3751b0b3d9b84d1a3eacf37bc9720c0d7c8bdbc0"
+  },
+  {
+    "slug": "batch10-after-release-obligations",
+    "rev": "d7afce73bb4657e794269a424956a725f184593d"
+  },
+  {
+    "slug": "names-check-says-what-it-skipped",
+    "rev": "dd02c4dee9383a97eba8f33762636719d96e2143"
+  },
+  {
+    "slug": "peers-paseo-rule-matches-practice",
+    "rev": "3f71f0ab502c99e5796b7077fad5ba4856a99d2c"
+  },
+  {
+    "slug": "peer-status-reaches-fresh",
+    "rev": "a8a53fade4bb1021d521455ff3bf3cdf67d5b24c"
+  },
+  {
+    "slug": "paseo-human-surfaces-visible-and-reachable",
+    "rev": "530c0b2885a020be376aad3b08c8cd9c16f39154"
+  },
+  {
+    "slug": "model-roster-per-repo",
+    "rev": "8f6e5d79adee29163b85e7e5b149f74e24896819"
+  },
+  {
+    "slug": "worker-completion-reaches-fo-on-paseo",
+    "rev": "35c3dcec3771d8668740d0e555f1a58fcdaf1ead"
+  },
+  {
+    "slug": "special-roles-follow-the-model-table",
+    "rev": "dbd5191fedfb9101dd5dbe0e9dce4a0ff05f9ea1"
+  },
+  {
+    "slug": "model-roster-question-needs-both-families",
+    "rev": "438554d2f89b6d125cf41413e7dc44bf290446e4"
+  },
+  {
+    "slug": "second-round-prompts-a-step-back",
+    "rev": "9f584f66a60164b4b5a2ec139b74036116545e5c"
+  },
+  {
+    "slug": "validation-gate-requires-the-question-check",
+    "rev": "d3cb8593dec88a026707510f908de9d1da78e7f9"
+  },
+  {
+    "slug": "diagnosis-rounds-count-toward-step-back",
+    "rev": "6c3839027459400795a0032d9b5fddee1e13d00e"
+  },
+  {
+    "slug": "release-walk-off-production-before-release",
+    "rev": "7fe2802bef6350a3411f9da19060fe3709f04993"
+  },
+  {
+    "slug": "fo-tries-what-it-asks-the-captain",
+    "rev": "1b30eb3774997d2dffea5b1e200eb63ac5b7b111"
+  },
+  {
+    "slug": "fo-answers-own-worker-permissions-by-listed-id",
+    "rev": "c3208cce60cd594c413f00eb3c68c5cd1b69727e"
+  },
+  {
+    "slug": "rewritten-criteria-checked-against-captain-words",
+    "rev": "2ff1153a6d9ca90db7b7b4b5b990f86016a2dbbf"
+  },
+  {
+    "slug": "release-walk-due-trigger",
+    "rev": "086fba54df16c5030bf21d7217314596b9531a0a"
+  },
+  {
+    "slug": "claims-name-their-source",
+    "rev": "8c7ab2f0526fe452b9f9ce59c7e90e144e769611"
+  },
+  {
+    "slug": "override-recorded-when-captain-departs",
+    "rev": "f147b58876f29578cd120678abc896af76d2fbf6"
+  },
+  {
+    "slug": "extension-instruction-check-sees-every-listed-extension",
+    "rev": "154629749be080b2e02965956d1134ce9ffbf530"
+  },
+  {
+    "slug": "gate-presentation-asks-one-thing-plainly",
+    "rev": "6209f2eff9fc45dabe61719652ebe59808325193"
+  },
+  {
+    "slug": "merge-check-reads-two-pr-tasks",
+    "rev": "8ffd6dfa3e021c1967aeaeabd7cf0cb61db48aae"
+  },
+  {
+    "slug": "delivery-question-requires-worktree-clause",
+    "rev": "ce9072c8e2f536bf85c04fe11fdeacefb9cc0d33"
+  },
+  {
+    "slug": "codex-security-only-prompts-code-review",
+    "rev": "9f58582fe01d38ff396db0192f82dc07df222c06"
+  },
+  {
+    "slug": "delivery-check-passes-a-skipped-by-design-run",
+    "rev": "c695560634fc73e883431913356d0503b1c0983a"
+  },
+  {
+    "slug": "delivery-check-resolves-links-from-the-task",
+    "rev": "44f383fd462eb8f77c7dc7051753750c50bbda51"
+  },
+  {
+    "slug": "adr-reservation-crosses-workflows",
+    "rev": "8e7d0be0ee0b5a9cdbd20c642921e01d4878e23d"
+  },
+  {
+    "slug": "decline-becomes-task-only-with-a-bite",
+    "rev": "416271a92cd8ce35116eff84fffc46fa6a7316e1"
+  }
+]

@@ -1,0 +1,594 @@
+[
+  {
+    "slug": "extension-defaults-and-install-choice",
+    "rev": "9f94f24f0cf80a8a7aeb36b2491a1c2ab61ca259",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 1 of 1 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "delivery-gate-reads-folder-tasks",
+    "rev": "c43fa5814c924afd8af02bd112fc9aabc24568f9",
+    "words": 62,
+    "without_collapse": 62,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 7 of 11 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #707 #717\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "role-triggers-owe-ce-on-review-drift",
+    "rev": "0dc8ebcb786fe5898c6c49836e0c2201b9efa602",
+    "words": 62,
+    "without_collapse": 62,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 12 of 16 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #707 #717\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "codex-review-hang-detected",
+    "rev": "dea30591ebcf86deff91b7970ffd1bf3f43f0fa5",
+    "words": 60,
+    "without_collapse": 60,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 3 of 5 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #717\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #718\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "stage-report-correction-path",
+    "rev": "38610bad437b7a7da8bb69c701f39c4d022816eb",
+    "words": 60,
+    "without_collapse": 60,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 4 of 6 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #717\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #718\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "override-reaches-gate-and-criteria-wait",
+    "rev": "47b83e5d6a5298cfdf1235837a478f31ece1007f",
+    "words": 126,
+    "without_collapse": 126,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 15 of 20 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #707 #717\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718\" (gh pr list)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #704 head f0d3f442d5e6 merged 2026-10-23T02:34:26Z (no task in readable state)\" (gh pr list, state refs)",
+      "Coverage: a merge with no ask record may have been approved in chat or recorded in a state checkout this run cannot read; neither shows here."
+    ]
+  },
+  {
+    "slug": "fo-written-lines-checked-before-dispatch",
+    "rev": "1158adc584637bdbf1b2f347b91a4c63844d6c00",
+    "words": 60,
+    "without_collapse": 60,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 6 of 8 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #717\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #718\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "codex-reader-same-head-unresolved",
+    "rev": "3e25da97432fb22a1a6a7da973730e7c829f3619",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 1 of 1 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "worker-knows-the-team-and-asks-early",
+    "rev": "e7f7d38d0c179e23fc6825a2797f49ffcf438969",
+    "words": 75,
+    "without_collapse": 75,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 3 of 6 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #723\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #725\" (gh pr list)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "codex-reader-resolved-mark-adr",
+    "rev": "2e243cef7ed7a01dc090a2b503e162e4c9b18f32",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 2 of 2 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "peers-rules-name-each-host-binding",
+    "rev": "f1a4f18078a786e0fafbf1f4b7d0945dd556b9a8",
+    "words": 45,
+    "without_collapse": 45,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 4 of 5 merged PRs\" (gh pr list, state refs)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "ops-metric-event-protocol",
+    "rev": "55f9929ee2064fad5557e6a3352984f095f3ecdf",
+    "words": 77,
+    "without_collapse": 77,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 10 of 15 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #717 #723\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #718 #725\" (gh pr list)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "peers-paseo-host-binding",
+    "rev": "bd44af60ebae7f904caaff2ce38e8099f6710c81",
+    "words": 92,
+    "without_collapse": 145,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 20 of 30 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #707 #717 #723 #731\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718 #725 #733\" (gh pr list)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726\" (gh pr list)",
+      "observed | already in an earlier observer report | evidence: \"#704\""
+    ]
+  },
+  {
+    "slug": "copilot-not-run-line-carries-quote",
+    "rev": "52bce2ab49a0d5900531f8b897f3f5d6577d4908",
+    "words": 60,
+    "without_collapse": 60,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 8 of 10 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #731\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #733\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "journey-probe-finds-nested-maps",
+    "rev": "1c757835e4ae18d0692ccc4abdf28a53d2c38895",
+    "words": 60,
+    "without_collapse": 60,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 8 of 10 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #731\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #733\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "read-adr-honors-adr-folder",
+    "rev": "b16848fc6baedf6c1261f502b160120b0698ee57",
+    "words": 77,
+    "without_collapse": 77,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 13 of 18 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #723 #731\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #725 #733\" (gh pr list)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "idle-hook-names-merged-tasks-without-learn",
+    "rev": "9b8b124a566cb3db12d6bba86636f0eba97343b8",
+    "words": 60,
+    "without_collapse": 60,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 10 of 12 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #731\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #733\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "seed-check-requires-schema-fields",
+    "rev": "8d7f411e98b49d606592b9ab48f38d0a6653c6e8",
+    "words": 60,
+    "without_collapse": 60,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 9 of 11 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #731\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #733\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "reused-worker-dispatch-leaves-a-record",
+    "rev": "27c9d5987b7bba29ff7b500cf3aeb8084df422e0",
+    "words": 60,
+    "without_collapse": 60,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 6 of 8 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #739\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #741\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "paseo-codex-dispatch-practice",
+    "rev": "bf3e9118dad043b660ed65bcfa865e69a0a8f02b",
+    "words": 60,
+    "without_collapse": 60,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 8 of 10 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #739\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #741\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "batch-reaches-each-gate-together",
+    "rev": "2354f5a8cc26c9d340fbf2d1c914ce6d254270a1",
+    "words": 60,
+    "without_collapse": 60,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 8 of 10 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #739\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #741\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "fo-interviews-extension",
+    "rev": "7ef6b7b11d9629ee600de4ed77e50b2c008b3629",
+    "words": 80,
+    "without_collapse": 80,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 15 of 23 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #723 #731 #739 #746\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #725 #733 #741\" (gh pr list)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "gate-requires-recorded-reviews",
+    "rev": "52dbc4c5ebd9bbeed5a85b0299ec2bf6056adc18",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 2 of 2 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "captain-amendment-form-checked",
+    "rev": "a74fa8021e0dad3c66adcdced3833c5ff83c84b5",
+    "words": 61,
+    "without_collapse": 61,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 6 of 9 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #746\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #741 #747\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "validation-rerun-waits-for-captain-ruling",
+    "rev": "8260141e88d8086afadbb1cce922019a35ea0845",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 4 of 4 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "adr-reserved-when-design-names-one",
+    "rev": "3751b0b3d9b84d1a3eacf37bc9720c0d7c8bdbc0",
+    "words": 61,
+    "without_collapse": 61,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 8 of 11 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #746\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #741 #747\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "batch10-after-release-obligations",
+    "rev": "d7afce73bb4657e794269a424956a725f184593d",
+    "words": 60,
+    "without_collapse": 60,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 8 of 10 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #752\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #753\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "names-check-says-what-it-skipped",
+    "rev": "dd02c4dee9383a97eba8f33762636719d96e2143",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 4 of 4 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "peers-paseo-rule-matches-practice",
+    "rev": "3f71f0ab502c99e5796b7077fad5ba4856a99d2c",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 4 of 4 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "peer-status-reaches-fresh",
+    "rev": "a8a53fade4bb1021d521455ff3bf3cdf67d5b24c",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 4 of 4 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "paseo-human-surfaces-visible-and-reachable",
+    "rev": "530c0b2885a020be376aad3b08c8cd9c16f39154",
+    "words": 62,
+    "without_collapse": 62,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 13 of 17 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #746 #752\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #747 #753\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "model-roster-per-repo",
+    "rev": "8f6e5d79adee29163b85e7e5b149f74e24896819",
+    "words": 61,
+    "without_collapse": 61,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 10 of 13 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #752\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #747 #753\" (gh pr list)"
+    ]
+  },
+  {
+    "slug": "worker-completion-reaches-fo-on-paseo",
+    "rev": "35c3dcec3771d8668740d0e555f1a58fcdaf1ead",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 1 of 1 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "special-roles-follow-the-model-table",
+    "rev": "dbd5191fedfb9101dd5dbe0e9dce4a0ff05f9ea1",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 2 of 2 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "model-roster-question-needs-both-families",
+    "rev": "438554d2f89b6d125cf41413e7dc44bf290446e4",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 3 of 3 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "second-round-prompts-a-step-back",
+    "rev": "9f584f66a60164b4b5a2ec139b74036116545e5c",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 4 of 4 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "validation-gate-requires-the-question-check",
+    "rev": "d3cb8593dec88a026707510f908de9d1da78e7f9",
+    "words": 30,
+    "without_collapse": 30,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 5 of 5 merged PRs\" (gh pr list, state refs)"
+    ]
+  },
+  {
+    "slug": "diagnosis-rounds-count-toward-step-back",
+    "rev": "6c3839027459400795a0032d9b5fddee1e13d00e",
+    "words": 94,
+    "without_collapse": 94,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 3 of 4 merged PRs\" (gh pr list, state refs)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #776 head d071565932c9 merged 2026-11-03T15:23:40Z (no task in readable state)\" (gh pr list, state refs)",
+      "Coverage: a merge with no ask record may have been approved in chat or recorded in a state checkout this run cannot read; neither shows here."
+    ]
+  },
+  {
+    "slug": "release-walk-off-production-before-release",
+    "rev": "7fe2802bef6350a3411f9da19060fe3709f04993",
+    "words": 41,
+    "without_collapse": 94,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 3 of 4 merged PRs\" (gh pr list, state refs)",
+      "observed | already in an earlier observer report | evidence: \"#776\""
+    ]
+  },
+  {
+    "slug": "fo-tries-what-it-asks-the-captain",
+    "rev": "1b30eb3774997d2dffea5b1e200eb63ac5b7b111",
+    "words": 101,
+    "without_collapse": 191,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 47 of 66 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #707 #717 #723 #731 #739 #746 #752 #760\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718 #725 #733 #741 #747 #753 #761\" (gh pr list)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726\" (gh pr list)",
+      "observed | already in an earlier observer report | evidence: \"#704 #776\""
+    ]
+  },
+  {
+    "slug": "fo-answers-own-worker-permissions-by-listed-id",
+    "rev": "c3208cce60cd594c413f00eb3c68c5cd1b69727e",
+    "words": 120,
+    "without_collapse": 147,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 7 of 10 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #768\" (gh pr list)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #774 head b026e0d7e497 merged 2026-11-04T08:58:44Z (no task in readable state)\" (gh pr list, state refs)",
+      "observed | already in an earlier observer report | evidence: \"#776\"",
+      "Coverage: a merge with no ask record may have been approved in chat or recorded in a state checkout this run cannot read; neither shows here."
+    ]
+  },
+  {
+    "slug": "rewritten-criteria-checked-against-captain-words",
+    "rev": "2ff1153a6d9ca90db7b7b4b5b990f86016a2dbbf",
+    "words": 57,
+    "without_collapse": 147,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 7 of 10 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #768\" (gh pr list)",
+      "observed | already in an earlier observer report | evidence: \"#774 #776\""
+    ]
+  },
+  {
+    "slug": "release-walk-due-trigger",
+    "rev": "086fba54df16c5030bf21d7217314596b9531a0a",
+    "words": 102,
+    "without_collapse": 192,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 47 of 67 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #707 #717 #723 #731 #739 #746 #752 #760 #768\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718 #725 #733 #741 #747 #753 #761\" (gh pr list)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726\" (gh pr list)",
+      "observed | already in an earlier observer report | evidence: \"#774 #776\""
+    ]
+  },
+  {
+    "slug": "claims-name-their-source",
+    "rev": "8c7ab2f0526fe452b9f9ce59c7e90e144e769611",
+    "words": 102,
+    "without_collapse": 192,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 50 of 70 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #707 #717 #723 #731 #739 #746 #752 #760 #768\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718 #725 #733 #741 #747 #753 #761\" (gh pr list)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726\" (gh pr list)",
+      "observed | already in an earlier observer report | evidence: \"#774 #776\""
+    ]
+  },
+  {
+    "slug": "override-recorded-when-captain-departs",
+    "rev": "f147b58876f29578cd120678abc896af76d2fbf6",
+    "words": 320,
+    "without_collapse": 384,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 50 of 77 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #707 #717 #723 #731 #739 #746 #752 #760 #768\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718 #725 #733 #741 #747 #753 #761 #781\" (gh pr list)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726 #782\" (gh pr list)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #762 head 9530369cb452 merged 2026-11-05T02:41:10Z (no task in readable state)\" (gh pr list, state refs)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #778 head 005afcaeb68c merged 2026-11-05T08:45:11Z (no task in readable state)\" (gh pr list, state refs)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #784 head b2d0abd778d0 merged 2026-11-05T09:00:02Z (no task in readable state)\" (gh pr list, state refs)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #785 head 0c38dd60b562 merged 2026-11-05T15:03:18Z (no task in readable state)\" (gh pr list, state refs)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #789 head c37417313a12 merged 2026-11-05T15:31:50Z (no task in readable state)\" (gh pr list, state refs)",
+      "observed | already in an earlier observer report | evidence: \"#774 #776\"",
+      "Coverage: a merge with no ask record may have been approved in chat or recorded in a state checkout this run cannot read; neither shows here."
+    ]
+  },
+  {
+    "slug": "extension-instruction-check-sees-every-listed-extension",
+    "rev": "154629749be080b2e02965956d1134ce9ffbf530",
+    "words": 43,
+    "without_collapse": 170,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 2 of 5 merged PRs\" (gh pr list, state refs)",
+      "observed | already in an earlier observer report | evidence: \"#784 #785 #789\""
+    ]
+  },
+  {
+    "slug": "gate-presentation-asks-one-thing-plainly",
+    "rev": "6209f2eff9fc45dabe61719652ebe59808325193",
+    "words": 109,
+    "without_collapse": 384,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 53 of 80 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #707 #717 #723 #731 #739 #746 #752 #760 #768\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718 #725 #733 #741 #747 #753 #761 #781\" (gh pr list)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726 #782\" (gh pr list)",
+      "observed | already in an earlier observer report | evidence: \"#762 #774 #776 #778 #784 #785 #789\""
+    ]
+  },
+  {
+    "slug": "merge-check-reads-two-pr-tasks",
+    "rev": "8ffd6dfa3e021c1967aeaeabd7cf0cb61db48aae",
+    "words": 110,
+    "without_collapse": 422,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 54 of 82 merged PRs\" (gh pr list, state refs)",
+      "observed | release PRs carry no task ask | evidence: \"release: #707 #717 #723 #731 #739 #746 #752 #760 #768\" (gh pr list)",
+      "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718 #725 #733 #741 #747 #753 #761 #781\" (gh pr list)",
+      "observed | learning PRs carry no task ask | evidence: \"learning: #726 #782\" (gh pr list)",
+      "observed | already in an earlier observer report | evidence: \"#704 #762 #774 #776 #778 #784 #785 #789\""
+    ]
+  },
+  {
+    "slug": "delivery-question-requires-worktree-clause",
+    "rev": "ce9072c8e2f536bf85c04fe11fdeacefb9cc0d33",
+    "words": 94,
+    "without_collapse": 94,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 1 of 2 merged PRs\" (gh pr list, state refs)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #792 head 87b60b466acc merged 2026-11-06T03:41:19Z (no task in readable state)\" (gh pr list, state refs)",
+      "Coverage: a merge with no ask record may have been approved in chat or recorded in a state checkout this run cannot read; neither shows here."
+    ]
+  },
+  {
+    "slug": "codex-security-only-prompts-code-review",
+    "rev": "9f58582fe01d38ff396db0192f82dc07df222c06",
+    "words": 132,
+    "without_collapse": 132,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 5 of 7 merged PRs\" (gh pr list, state refs)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #796 head e7bdee42bf56 merged 2026-11-06T14:27:19Z (no task in readable state)\" (gh pr list, state refs)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #798 head 74cde7e09fb6 merged 2026-11-07T01:39:57Z (no task in readable state)\" (gh pr list, state refs)",
+      "Coverage: a merge with no ask record may have been approved in chat or recorded in a state checkout this run cannot read; neither shows here."
+    ]
+  },
+  {
+    "slug": "delivery-check-passes-a-skipped-by-design-run",
+    "rev": "c695560634fc73e883431913356d0503b1c0983a",
+    "words": 42,
+    "without_collapse": 132,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 5 of 7 merged PRs\" (gh pr list, state refs)",
+      "observed | already in an earlier observer report | evidence: \"#796 #798\""
+    ]
+  },
+  {
+    "slug": "delivery-check-resolves-links-from-the-task",
+    "rev": "44f383fd462eb8f77c7dc7051753750c50bbda51",
+    "words": 106,
+    "without_collapse": 170,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 5 of 8 merged PRs\" (gh pr list, state refs)",
+      "can't tell | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"no ask record: #795 head 80515bcdd105 merged 2026-11-06T06:30:55Z (no task in readable state)\" (gh pr list, state refs)",
+      "observed | already in an earlier observer report | evidence: \"#796 #798\"",
+      "Coverage: a merge with no ask record may have been approved in chat or recorded in a state checkout this run cannot read; neither shows here."
+    ]
+  },
+  {
+    "slug": "adr-reservation-crosses-workflows",
+    "rev": "8e7d0be0ee0b5a9cdbd20c642921e01d4878e23d",
+    "words": 44,
+    "without_collapse": 208,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 6 of 10 merged PRs\" (gh pr list, state refs)",
+      "observed | already in an earlier observer report | evidence: \"#792 #795 #796 #798\""
+    ]
+  },
+  {
+    "slug": "decline-becomes-task-only-with-a-bite",
+    "rev": "416271a92cd8ce35116eff84fffc46fa6a7316e1",
+    "words": 46,
+    "without_collapse": 284,
+    "lines": [
+      "ok | rule: \"merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it\" (Delivery authority) | evidence: \"carried: 9 of 15 merged PRs\" (gh pr list, state refs)",
+      "observed | already in an earlier observer report | evidence: \"#785 #789 #792 #795 #796 #798\""
+    ]
+  }
+]

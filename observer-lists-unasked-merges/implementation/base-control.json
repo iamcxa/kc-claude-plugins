@@ -1,0 +1,9 @@
+{
+  "tag": "kc-dev-flow-2-v0.35.0",
+  "tag_commit": "e6ed235fed97fa572870c895f7bdc15c4dd7e5e8",
+  "installed_base_observer_matches": true,
+  "skill_sha256": "1f9bf48b899c246c472c575f828847ddf3a0c627389276fb3cc6a77d0130cd7f",
+  "audit_missing_at_base": true,
+  "base_agent": "78138a4c-4fb3-443c-83a3-6583ec106eac",
+  "candidate_agent": "401d9dfd-d5df-4396-86d2-e58616632d31"
+}

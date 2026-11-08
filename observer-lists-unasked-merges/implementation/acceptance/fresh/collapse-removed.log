@@ -1,0 +1,21 @@
+F
+======================================================================
+FAIL: test_repeats_collapse_only_from_another_committed_report_at_to (__main__.MergeAuditTest.test_repeats_collapse_only_from_another_committed_report_at_to)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-audit-fresh-f61pkgtr/test_merge_audit.py", line 195, in test_repeats_collapse_only_from_another_committed_report_at_to
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : window: b43aa878012143e045d24c55ce8a17155561cbd8..2df7b3e8e52a844ade2a73ca3d70664e5584acc9 (2026-01-01T00:00:00+00:00, 2026-01-01T00:00:20+00:00]
+read: refs/heads/spacedock-state/a 2df7b3e8e52a844ade2a73ca3d70664e5584acc9 2026-01-01T00:00:20Z
+carried: 0 of 1
+release: none
+sync: none
+learning: none
+no ask record: #9 head aaaaaaaaaaaa merged 2026-01-01T00:00:05Z (no task in readable state)
+already reported: none
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.129s
+
+FAILED (failures=1)
