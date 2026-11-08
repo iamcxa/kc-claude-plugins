@@ -3,7 +3,7 @@ title: design_surfaces.py says not run when the bound artifact has no Scope inst
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-08), answering 「批次 17 驗證關卡：#807 讓設計檢查遇到綁的不是任務檔時印「沒跑」，不再誤擋。驗收通過，Codex 和 RoboRev 沒找到問題，CI 綠。要合併 #807（head 2760f2593）嗎？建議合併。」, which presented the bound question 「決定：合併 #807（設計檢查遇到綁的不是任務檔時印「沒跑」，不再誤擋）嗎？建議合併。 Regular merge with --match-head-commit 2760f259379e9c3bb43bab9efa56d90c5b657ab1, the batch 17 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-07T15:40:10Z
 worktree: .worktrees/spacedock-ensign-design-check-says-not-run-without-a-scope
 pr: pr-merge:807
+verdict: PASSED
+completed: 2026-11-08T03:24:51Z
+archived: 2026-11-08T03:24:51Z
 ---
 
 When the artifact bound at a gate has no Scope section, `design_surfaces.py check` prints a not-run line naming the artifact instead of reporting "Scope changed" against an empty baseline, and `gate prepare` warns when the artifact is not the task file.
