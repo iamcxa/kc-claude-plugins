@@ -75,7 +75,7 @@ gates:
                 state: pending
 started: 2026-11-07T15:40:02Z
 worktree: .worktrees/spacedock-ensign-adr-lint-tells-supersession-assertion-from-pointer
-pr: iamcxa/kc-claude-plugins#806
+pr: pr-merge:806
 ---
 
 `adr_lint.py` no longer reports a file an ADR protects as "points at ADR N, Superseded by M" when the only citation is a test asserting that N's Status reads "Superseded by M".
