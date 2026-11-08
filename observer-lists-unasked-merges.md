@@ -293,3 +293,30 @@ Delivered the Pilot slice as one local product commit: saved asks carry matching
 ### Summary
 
 Independent validation recommends REJECTED for b36fbeeec3a6699c0a82a021dc4ee0142410f6c8: deterministic behavior, historical replay, mutations and package checks passed, but the fresh native observer report did not faithfully record the audit's execution status. The word counts establish the accepted pinned simulation, not arbitrary model prose; no reported check proves authorization for missing-record merges. FO retains findings disposition, any repair/revalidation authorization, gate and delivery.
+
+## Stage Report: implementation
+
+- DONE: Dated addendum — 2026-11-08, implementation-1-message-1 and implementation-1-message-2.
+  Local product head a43b537cd12d69a5ccfde38bf964c6ea35cb0de0, parent b36fbeeec3a6699c0a82a021dc4ee0142410f6c8, base 139feeaee7ce037a0c6535568cd6bd103155cbae; only observer/SKILL.md changed in this repair.
+- DONE: Repair validation-1 F1 by recording the audit's own exit status before presentation.
+  implementation/repair-2026-11-08/direct-execution.json records an unpiped exit 1; observer-report-1.md records own exit 1, carried 54/82 and the same eight tokens. observer-report-2.md retains the second attempt, also with own exit 1 but abbreviated/missing row fields.
+- DONE: Keep the current observer SKILL.md wording if the existing tests and repository lint pass.
+  Repository lint passes at 5933/5933 workflow words; test_merge_audit.py 17/17 and test_lint_skills.py 47/47 pass; the final row templates are retained under FO's message-2 instruction.
+- DONE: Record both format runs as retained evidence and stop observer reruns.
+  Both unedited reports, activity transcripts and tested skill snapshots are in implementation/repair-2026-11-08/; identity.json binds their shared exit-capture instructions to the committed skill. A third create call was rejected before an agent started and was not retried.
+- SKIPPED: Claim a native pass for validation-1 F2 (row format, Polish).
+  FO declines F2 at the gate per dispatch/implementation-1-message-2.md, committed in state 03db43d8600146efba9b6d4ec59f72425e8a138e. Both format results remain false in the retained comparisons; the final template has test/lint coverage without another native format run.
+- DONE: Check the new report against a direct audit and retain a failing control.
+  compare.py rejects validation-1's original exit-0 claim and accepts exit 1 for both repair samples; it still rejects their abbreviated rows. The negated phrase "not exit 2" is excluded after manual inspection, rather than treated as a second claimed status.
+- DONE: Run the existing local package suite and required package guards.
+  implementation/repair-2026-11-08/suite-summary.json: 27 commands succeeded, 1199 unittest cases including 11 skips; ADR lint checks 62 files, number guards report no findings, design check passes, comment ratio 2/431 = 0.5% below 5%, and diff check passes.
+- DONE: Preserve approved scope and affected documents.
+  Audit script, tests, CI, workflow and version files are byte-unchanged from b36fbeeec; the full PR still has only its four approved paths. doc-impact.json lists README.md, unaffected because its named-CI-command entry remains accurate.
+- DONE: Commit locally and append this dated implementation addendum naming the new head.
+  Product worktree is clean at a43b537cd12d69a5ccfde38bf964c6ea35cb0de0; original validation-1 REJECTED evidence and earlier implementation reports are preserved.
+- SKIPPED: Push, PR edits, RoboRev, hosted CI and independent revalidation.
+  No product or state push was run during this repair. roborev not run: FO owns the daemon review; hosted CI and its cost per PR were not measured. FO retains publication, revalidation and gate ownership.
+
+### Summary
+
+This dated addendum supersedes the earlier implementation report for the repaired head: F1 is proven by the direct run and the first fresh native observer, while F2 is a declined Polish item with both failed format samples retained. The current wording is kept under FO's test/lint condition; no additional observer rerun or push follows message-2, and the historical validation-1 verdict at b36fbeeec remains unchanged.

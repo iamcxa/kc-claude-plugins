@@ -1,0 +1,56 @@
+{
+  "head": "a43b537cd12d69a5ccfde38bf964c6ea35cb0de0",
+  "parent": "b36fbeeec3a6699c0a82a021dc4ee0142410f6c8",
+  "base": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+  "checks": [
+    {
+      "name": "test_merge_audit.py",
+      "status": "passed",
+      "cases": 17,
+      "log": "audit-tests-final.log"
+    },
+    {
+      "name": "test_lint_skills.py",
+      "status": "passed",
+      "cases": 47,
+      "log": "lint-tests-final.log"
+    },
+    {
+      "name": "repository lint-skills.py",
+      "status": "passed",
+      "log": "lint-final.log"
+    },
+    {
+      "name": "ADR lint",
+      "status": "passed",
+      "log": "adr-lint.log"
+    },
+    {
+      "name": "number guards",
+      "status": "passed",
+      "log": "number-guards.log"
+    },
+    {
+      "name": "comment ratio",
+      "status": "passed",
+      "log": "comment-ratio.log"
+    },
+    {
+      "name": "design check",
+      "status": "passed",
+      "log": "design-check.log"
+    },
+    {
+      "name": "diff check",
+      "status": "passed"
+    }
+  ],
+  "disposition": {
+    "F1": "direct and first fresh native repair both own exit 1; accepted by FO in implementation-1-message-2",
+    "F2": "Polish; two raw failed format samples retained; FO declines at the gate; no further observer runs"
+  },
+  "limits": [
+    "Final template was kept under FO's test/lint condition, not claimed as a native format pass.",
+    "No product/state push, PR edit, hosted CI, RoboRev or independent revalidation performed during this repair."
+  ]
+}

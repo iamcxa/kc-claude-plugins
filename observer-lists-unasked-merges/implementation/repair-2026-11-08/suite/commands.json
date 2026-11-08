@@ -1,0 +1,274 @@
+[
+  {
+    "name": "kc-dev-flow-2/scripts/lint-skills.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_lint_skills.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_number_guards.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_validation_security.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_package_version.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_merge_audit.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_merge_audit.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_laws_check.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_learning.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "status": "passed",
+    "exit": 0
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-lists-unasked-merges/kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "status": "passed",
+    "exit": 0
+  }
+]

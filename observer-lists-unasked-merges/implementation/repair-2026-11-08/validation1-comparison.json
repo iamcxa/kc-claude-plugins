@@ -1,0 +1,108 @@
+{
+  "direct_exit": 1,
+  "piped": false,
+  "report_sha256": "22fc897a4ed5eb0071cccdc207008c17435abb7a6105090b2438c719e0b714d9",
+  "report_words": 819,
+  "checks": [
+    {
+      "name": "audit exit status",
+      "status": "failed",
+      "detail": {
+        "expected": 1,
+        "reported": [
+          0
+        ],
+        "lines": [
+          "ok | rule: \"merging the full head <package>/scripts/delivery_gate.py check passes, with --match-head-commit set to it\" (Delivery authority) | evidence: \"carried: 54 of 82\" (merge_audit, exit 0)"
+        ]
+      }
+    },
+    {
+      "name": "carried: 54 of 82",
+      "status": "passed",
+      "detail": [
+        "ok | rule: \"merging the full head <package>/scripts/delivery_gate.py check passes, with --match-head-commit set to it\" (Delivery authority) | evidence: \"carried: 54 of 82\" (merge_audit, exit 0)"
+      ]
+    },
+    {
+      "name": "release: #707 #717 #723 #731 #739 #746 #752 #760 #768",
+      "status": "failed",
+      "detail": [
+        "observed | release: #707 #717 #723 #731 #739 #746 #752 #760 #768"
+      ]
+    },
+    {
+      "name": "sync: #715 #718 #725 #733 #741 #747 #753 #761 #781",
+      "status": "failed",
+      "detail": [
+        "observed | sync: #715 #718 #725 #733 #741 #747 #753 #761 #781"
+      ]
+    },
+    {
+      "name": "learning: #726 #782",
+      "status": "failed",
+      "detail": [
+        "observed | learning: #726 #782"
+      ]
+    },
+    {
+      "name": "no ask record: #704 head f0d3f442d5e6",
+      "status": "failed",
+      "detail": [
+        "can't tell | no ask record: #704 head f0d3f442d5e6 merged 2026-10-23T02:34:26Z (no task in readable state)"
+      ]
+    },
+    {
+      "name": "no ask record: #762 head 9530369cb452",
+      "status": "failed",
+      "detail": [
+        "can't tell | no ask record: #762 head 9530369cb452 merged 2026-11-05T02:41:10Z (no task in readable state)"
+      ]
+    },
+    {
+      "name": "no ask record: #774 head b026e0d7e497",
+      "status": "failed",
+      "detail": [
+        "can't tell | no ask record: #774 head b026e0d7e497 merged 2026-11-04T08:58:44Z (no task in readable state)"
+      ]
+    },
+    {
+      "name": "no ask record: #776 head d071565932c9",
+      "status": "failed",
+      "detail": [
+        "can't tell | no ask record: #776 head d071565932c9 merged 2026-11-03T15:23:40Z (no task in readable state)"
+      ]
+    },
+    {
+      "name": "no ask record: #778 head 005afcaeb68c",
+      "status": "failed",
+      "detail": [
+        "can't tell | no ask record: #778 head 005afcaeb68c merged 2026-11-05T08:45:11Z (no task in readable state)"
+      ]
+    },
+    {
+      "name": "no ask record: #784 head b2d0abd778d0",
+      "status": "failed",
+      "detail": [
+        "can't tell | no ask record: #784 head b2d0abd778d0 merged 2026-11-05T09:00:02Z (no task in readable state)"
+      ]
+    },
+    {
+      "name": "no ask record: #785 head 0c38dd60b562",
+      "status": "failed",
+      "detail": [
+        "can't tell | no ask record: #785 head 0c38dd60b562 merged 2026-11-05T15:03:18Z (no task in readable state)"
+      ]
+    },
+    {
+      "name": "no ask record: #789 head c37417313a12",
+      "status": "failed",
+      "detail": [
+        "can't tell | no ask record: #789 head c37417313a12 merged 2026-11-05T15:31:50Z (no task in readable state)"
+      ]
+    }
+  ],
+  "passed": false,
+  "exit_status_passed": false,
+  "format_passed": false
+}

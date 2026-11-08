@@ -1,0 +1,25 @@
+{
+  "head": "a43b537cd12d69a5ccfde38bf964c6ea35cb0de0",
+  "parent": "b36fbeeec3a6699c0a82a021dc4ee0142410f6c8",
+  "base": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+  "changed_files": [
+    "kc-dev-flow-2/skills/observer/SKILL.md"
+  ],
+  "skill_sha256": "49da0347d20de77b8304329216b29e1c970a016b71f92070ed6f47f39d3d4e1a",
+  "exit_capture_block_sha256": "c6a96dd0ff14261fc658b3788d6da6497a76135f6bc6c1a8a36e8736d29b6865",
+  "same_exit_capture_instruction_in_both_native_samples": true,
+  "sample1": {
+    "agent": "7962de54-0c75-4f1a-81bb-277752d22055",
+    "skill_sha256": "2e9b5203d7cd28d445a36be4af2e4e2f78174c2068ce5870370c74832f26d60e"
+  },
+  "sample2": {
+    "agent": "bb9e4713-50e5-496f-ad3e-088e82e4850a",
+    "skill_sha256": "601825ef29d9a812cb1b6c5b2b9ee155b6ddf04f8ca245a57ba2452f0fbf10ba"
+  },
+  "sample3": {
+    "created": false,
+    "tool_result": "user rejected MCP tool call"
+  },
+  "format_disposition": "FO declined F2 per implementation-1-message-2; not a native format pass",
+  "pushes_run": false
+}

@@ -1,0 +1,8 @@
+{
+  "head": "a43b537cd12d69a5ccfde38bf964c6ea35cb0de0",
+  "commands": 27,
+  "unittest_cases": 1199,
+  "skipped": 11,
+  "status": "passed",
+  "limits": "Local CLI 0.27.2 with plugin files 0.27.3; no hosted CI or RoboRev claim"
+}

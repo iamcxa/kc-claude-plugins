@@ -1,0 +1,108 @@
+{
+  "direct_exit": 1,
+  "piped": false,
+  "report_sha256": "60c7e979587bd9651e97f23cdcc745c921f59983590ce8b34cf4ed379ff30873",
+  "report_words": 829,
+  "checks": [
+    {
+      "name": "audit exit status",
+      "status": "passed",
+      "detail": {
+        "expected": 1,
+        "reported": [
+          1
+        ],
+        "lines": [
+          "Merge audit (merge_audit.py STATE TASK --from FROM --rev TO, run unpiped, saved exit status 1, meaning findings):"
+        ]
+      }
+    },
+    {
+      "name": "carried: 54 of 82",
+      "status": "passed",
+      "detail": [
+        "ok | rule: \"merging the full head <package>/scripts/delivery_gate.py check passes, with --match-head-commit set to it\" (Delivery authority) | evidence: \"carried: 54 of 82\" (8ffd6dfa3)"
+      ]
+    },
+    {
+      "name": "release: #707 #717 #723 #731 #739 #746 #752 #760 #768",
+      "status": "passed",
+      "detail": [
+        "observed | release PRs carry no task ask | evidence: \"release: #707 #717 #723 #731 #739 #746 #752 #760 #768\" (gh pr list)"
+      ]
+    },
+    {
+      "name": "sync: #715 #718 #725 #733 #741 #747 #753 #761 #781",
+      "status": "passed",
+      "detail": [
+        "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718 #725 #733 #741 #747 #753 #761 #781\" (gh pr list)"
+      ]
+    },
+    {
+      "name": "learning: #726 #782",
+      "status": "passed",
+      "detail": [
+        "observed | learning PRs carry no task ask | evidence: \"learning: #726 #782\" (gh pr list)"
+      ]
+    },
+    {
+      "name": "no ask record: #704 head f0d3f442d5e6",
+      "status": "failed",
+      "detail": [
+        "can't tell | same merge rule | evidence: \"no ask record: #704 head f0d3f442d5e6 merged 2026-10-23T02:34:26Z (no task in readable state)\". This task's Bite line names #704 as one of the two PRs its subject task delivers through."
+      ]
+    },
+    {
+      "name": "no ask record: #762 head 9530369cb452",
+      "status": "failed",
+      "detail": [
+        "can't tell | same merge rule | evidence: \"no ask record: #762 head 9530369cb452 merged 2026-11-05T02:41:10Z (no task in readable state)\""
+      ]
+    },
+    {
+      "name": "no ask record: #774 head b026e0d7e497",
+      "status": "failed",
+      "detail": [
+        "can't tell | same merge rule | evidence: \"no ask record: #774 head b026e0d7e497 merged 2026-11-04T08:58:44Z (no task in readable state)\""
+      ]
+    },
+    {
+      "name": "no ask record: #776 head d071565932c9",
+      "status": "failed",
+      "detail": [
+        "can't tell | same merge rule | evidence: \"no ask record: #776 head d071565932c9 merged 2026-11-03T15:23:40Z (no task in readable state)\""
+      ]
+    },
+    {
+      "name": "no ask record: #778 head 005afcaeb68c",
+      "status": "failed",
+      "detail": [
+        "can't tell | same merge rule | evidence: \"no ask record: #778 head 005afcaeb68c merged 2026-11-05T08:45:11Z (no task in readable state)\""
+      ]
+    },
+    {
+      "name": "no ask record: #784 head b2d0abd778d0",
+      "status": "failed",
+      "detail": [
+        "can't tell | same merge rule | evidence: \"no ask record: #784 head b2d0abd778d0 merged 2026-11-05T09:00:02Z (no task in readable state)\""
+      ]
+    },
+    {
+      "name": "no ask record: #785 head 0c38dd60b562",
+      "status": "failed",
+      "detail": [
+        "can't tell | same merge rule | evidence: \"no ask record: #785 head 0c38dd60b562 merged 2026-11-05T15:03:18Z (no task in readable state)\""
+      ]
+    },
+    {
+      "name": "no ask record: #789 head c37417313a12",
+      "status": "failed",
+      "detail": [
+        "can't tell | same merge rule | evidence: \"no ask record: #789 head c37417313a12 merged 2026-11-05T15:31:50Z (no task in readable state)\""
+      ]
+    }
+  ],
+  "passed": false,
+  "exit_status_passed": true,
+  "format_passed": false
+}
