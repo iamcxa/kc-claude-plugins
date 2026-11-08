@@ -3,7 +3,7 @@ title: design_surfaces.py says not run when the bound artifact has no Scope inst
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
