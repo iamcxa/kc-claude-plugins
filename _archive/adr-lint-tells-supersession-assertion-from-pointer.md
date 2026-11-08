@@ -3,7 +3,7 @@ title: The ADR lint pointer scan tells a supersession assertion from a pointer
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-08), answering 「批次 17 驗證關卡：#806 讓決策紀錄檢查分得出「驗證某份已被取代」和「拿舊的當依據」。驗收和決策紀錄檢查都通過（退出碼 0），Codex 和 RoboRev 沒找到問題，CI 綠。要合併 #806（head f429f0fac）嗎？建議合併。」, which presented the bound question 「決定：合併 #806（決策紀錄檢查分得出「驗證某份已被取代」和「拿舊的當依據」）嗎？建議合併。 Regular merge with --match-head-commit f429f0fac40511c6480fd92e2cccd4c0e94b2454, the batch 17 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-07T15:40:02Z
 worktree: .worktrees/spacedock-ensign-adr-lint-tells-supersession-assertion-from-pointer
 pr: pr-merge:806
+verdict: PASSED
+completed: 2026-11-08T03:25:57Z
+archived: 2026-11-08T03:25:57Z
 ---
 
 `adr_lint.py` no longer reports a file an ADR protects as "points at ADR N, Superseded by M" when the only citation is a test asserting that N's Status reads "Superseded by M".
