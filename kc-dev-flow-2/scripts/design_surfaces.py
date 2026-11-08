@@ -6,7 +6,7 @@ The baseline is the task file at the commit that added the newest `### Amendment
 (the working copy when that heading is uncommitted), else at the sha the backlog briefing binds (`git-root://state/<sha>/<path>`);
 lines opening with Non-goals, Budget, Stop condition or Follow-up: are exempt. The check reads git history and the working copy,
 not what the Captain said; an amendment covers every earlier unrecorded Scope edit. It prints `scope check not run: <why>` and
-leaves the exit code alone in any other stage, with no closed backlog approval, or outside a git checkout.
+leaves the exit code alone in any other stage, with no closed backlog approval, outside a git checkout, or when the backlog briefing binds another file and no amendment supplies the baseline.
 A `Captain:` or `Asked:` amendment line holding a JSON backslash-quote is an error unless it sits after a `Superseded text:` line. A superseded
 criterion that is still declared is an error only once a `dispatch/*.md` checklist names the amendment; before that it waits for its worker. An
 `Override: recommended ...; Captain chose ...; area: ...` line in the body that no gate resolution reason carries is printed as a note, exit code unchanged.
@@ -864,6 +864,14 @@ def file_at(task, commit, rel):
     return None
 
 
+def unarchived(rel):
+    return rel[len("_archive/"):] if rel.startswith("_archive/") else rel
+
+
+def task_path(task):
+    return git_out(task, "rev-parse", "--show-prefix").stdout.decode().rstrip("\n") + task.name
+
+
 def records_amendment(text, number):
     return any((m := AMENDMENT_DATED.match(e)) and int(m.group(1)) == number for e in amendment_entries((text or "").split("\n")) or [])
 
@@ -906,6 +914,7 @@ def scope_hold(task):
     baseline = file_at(task, bound.group(1), bound.group(2))
     if baseline is None:
         return "not run", "backlog sha not readable by git"
+    foreign = unarchived(bound.group(2)) != unarchived(task_path(task))
     what, sha = "the backlog gate", bound.group(1)
     day = (gate.get("at") or "")[:10]
     dated = [AMENDMENT_DATED.match(e) for e in amendment_entries(body.split("\n")) or []]
@@ -919,6 +928,8 @@ def scope_hold(task):
             if baseline is None:
                 return "not run", f"amendment {max(newer)} commit not readable by git"
             what = "the newest amendment"
+    elif foreign:
+        return "not run", f"backlog briefing binds {bound.group(2)}, not this task file"
     before, now = scope_lines(baseline), scope_lines(text)
     changed = [l for l in now if l not in before] + [l for l in before if l not in now]
     changed = [l for l in changed if l.strip() and not SCOPE_EXEMPT.match(l)]
