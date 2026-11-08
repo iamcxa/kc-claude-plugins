@@ -72,8 +72,11 @@ quoting the earliest `time` and the commit time: the file cannot show whether FO
 exists the task may predate the record, so report `can't tell`. Report "FO confirms both goal sufficiency and minimal necessity"
 from the same file: `ok` quoting `sufficiency` and `necessity`; `can't tell` when it holds neither key, which predates that check.
 
-Run `python3 <package>/scripts/merge_audit.py STATE TASK --from FROM --rev TO`.
-Report `carried:` as `ok`, named `release:`, `sync:`, `learning:` and
+Run `python3 <package>/scripts/merge_audit.py STATE TASK --from FROM --rev TO`
+without a pipe. Save its own exit status immediately, before any display command,
+and report that status under Coverage. If piping is necessary, capture Bash's
+`PIPESTATUS[0]` immediately; a final pipeline `$?` does not establish the audit's status.
+Include the `carried:` line as its own `ok` row. Report named `release:`, `sync:`, `learning:` and
 `already reported:` lists as `observed` (omit empty lists), `head differs:` as
 `violation`, and `no ask record:` as `can't tell`. From Delivery authority quote
 the merge rule's clause beginning "merging the full head" through "set to it"
@@ -81,8 +84,11 @@ the merge rule's clause beginning "merging the full head" through "set to it"
 `<kind>: #<N> head <12 hex>` verbatim so later reports collapse repeats.
 Exit 2 means `can't tell`: quote its cause. Under Coverage say once that missing
 records may mean chat approval or state outside this repository; include fetch warnings.
-Keep named-kind rows short:
+Use these standalone rows, filling each evidence slot from the audit output:
+`ok | rule: "<full Delivery authority clause>" (Delivery authority) | evidence: "<carried line>" (gh pr list, state refs)`.
 `observed | <kind> PRs carry no task ask | evidence: "<line>" (gh pr list)`.
+For each no-ask finding copy this line, substituting only its evidence slot:
+`can't tell | rule: "merging the full head" (Delivery authority) | evidence: "<entire audit finding line>" (gh pr list, state refs)`.
 For repeats use `observed | already in an earlier observer report | evidence: "<numbers>"`.
 
 Do not report these rules. Their only witness is the Captain's chat or a shell run that leaves no record, so
