@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:dispatch-build-writes-the-dispatch-record:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:dispatch-build-writes-the-dispatch-record-validation-1
+              briefing:
+                id: briefing:dispatch-build-writes-the-dispatch-record:validation:attempt-1:revision-1
+                digest: sha256:730057279bbde73c0c4a24a2d251a599a56cf8c1074981351c997b6e1520cd51
+                room-ref: ./dispatch-build-writes-the-dispatch-record/review/validation/briefing-1
 started: 2026-11-08T05:08:52Z
 worktree: .worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record
 pr: iamcxa/kc-claude-plugins#812
