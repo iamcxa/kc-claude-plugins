@@ -61,6 +61,11 @@ gates:
                 at: "2026-11-08T03:17:59.980535Z"
                 decision: revise
                 reason: 'The Captain chose 「照建議改（建議）」 (host question dialog, 2026-11-08), answering 「#810（工人做瀏覽器驗收預設用 Paseo 分頁）要怎麼處理？我改變建議了：你在場時用 Paseo 本來就有規則規定；#810 新增的是「沒人看著時也預設 Paseo」，但分頁開在背景時截圖、點擊都會失敗，工人會先白試一輪才退回 agent-browser。建議改成：保留四個限制的處理方法，加上「登入要人機驗證時算作有人在場、用 Paseo」，拿掉「沒人看著也預設 Paseo」；改之前先請獨立審查者確認。」. Recommendation: followed. Ask: an independent engineering-reviewer first checks that reading against the existing Human terminals and pages section and the two runs; then implementation keeps the four limits with their workarounds, states that a login behind human verification counts as attended and uses Paseo, and removes the default of Paseo for self-driven unattended checks, which follow the repository''s own tool.'
+            - id: gate-attempt:worker-browser-checks-use-paseo-browser-validation-2
+              briefing:
+                id: briefing:worker-browser-checks-use-paseo-browser:validation:attempt-2:revision-1
+                digest: sha256:2a69ea8327a356f9bcf9c206f974ad878429b0eed5ab4cf8d21e310ca64987c0
+                room-ref: ./worker-browser-checks-use-paseo-browser/review/validation/briefing-2
 started: 2026-11-07T15:39:54Z
 worktree: .worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser
 pr: iamcxa/kc-claude-plugins#810
