@@ -2,20 +2,99 @@
 """Save and check a stage dispatch record before building its Spacedock envelope."""
 
 import argparse
+import hashlib
 import os
 from pathlib import Path
 import re
+import stat
 import subprocess
 import sys
 
 from design_surfaces import task_folder
+from number_guards import Misconfigured, frontmatter
 
 SCRIPTS = Path(__file__).resolve().parent
 
 
 def git(root, *args):
-    return subprocess.run(["git", "-C", str(root), *args], check=True,
+    return subprocess.run(["git", "--literal-pathspecs", "-C", str(root), *args], check=True,
                           capture_output=True, text=True).stdout.strip()
+
+
+def resolve_scope(args):
+    value = frontmatter(args.workflow_dir / "README.md").get("state", "")
+    relative = Path(value)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise ValueError(f"{str(args.workflow_dir / 'README.md')!r}: unsupported state path")
+    container = args.workflow_dir if value in ("", "$inline") else args.workflow_dir / relative
+    if container.resolve(strict=True) != container:
+        raise ValueError(f"{str(container)!r}: symlinked state directory")
+    state = Path(git(container, "rev-parse", "--show-toplevel")).resolve(strict=True)
+    if not container.is_relative_to(state) or (value not in ("", "$inline") and state != container):
+        raise ValueError(f"{str(container)!r}: unsupported state repository layout")
+    entity = args.entity_path
+    folder = task_folder(entity)
+    if (args.entity_input != entity or entity.suffix != ".md"
+            or (entity.parent.parent if entity.name == "index.md" else entity.parent) != container):
+        raise ValueError(f"{str(args.entity_input)!r}: unsupported or symlinked task layout")
+    for directory in (folder, folder / "dispatch"):
+        if os.path.lexists(directory) and (directory.is_symlink() or not directory.is_dir()):
+            raise ValueError(f"{str(directory)!r}: unsupported task directory type")
+    scope = [folder] if entity.name == "index.md" else [entity, folder]
+    return state, folder, [path.relative_to(state).as_posix() for path in scope]
+
+
+def check_task_scope(state, scope):
+    def read(*flags):
+        try:
+            return subprocess.run(["git", "--literal-pathspecs", "-C", str(state), *flags],
+                                  check=True, capture_output=True,
+                                  env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"}).stdout
+        except subprocess.CalledProcessError as error:
+            raise ValueError(f"{str(state / scope[0])!r}: cannot inspect task scope ({flags[0]})") from error
+
+    def refuse(name, condition):
+        raise ValueError(f"{str(state / os.fsdecode(name))!r}: {condition}")
+
+    head = {}
+    for entry in read("ls-tree", "-r", "-z", "HEAD", "--", *scope).split(b"\0"):
+        if entry:
+            metadata, name = entry.split(b"\t", 1)
+            mode, kind, oid = metadata.split()
+            if kind != b"blob" or mode not in (b"100644", b"100755"):
+                refuse(name, "unsupported HEAD type")
+            head[name] = (mode, oid)
+    index = {}
+    for entry in read("ls-files", "--stage", "-z", "--", *scope).split(b"\0"):
+        if entry:
+            metadata, name = entry.split(b"\t", 1)
+            mode, oid, stage = metadata.split()
+            if stage != b"0":
+                refuse(name, "unresolved index conflict")
+            index[name] = (mode, oid)
+    for entry in read("ls-files", "-v", "-z", "--", *scope).split(b"\0"):
+        if entry and (entry[:1].islower() or entry[:1] == b"S"):
+            refuse(entry[2:], "unsupported assume-unchanged or skip-worktree index flag")
+    for name in sorted(head.keys() | index.keys()):
+        if head.get(name) != index.get(name):
+            refuse(name, "staged content, existence or mode differs from HEAD")
+    algorithm = read("rev-parse", "--show-object-format").strip().decode("ascii")
+    for name, (mode, oid) in index.items():
+        path = state / os.fsdecode(name)
+        try:
+            info = path.lstat()
+            if not stat.S_ISREG(info.st_mode) or path.resolve(strict=True) != path:
+                refuse(name, "unsupported worktree type or path escape")
+            data = path.read_bytes()
+        except OSError as error:
+            refuse(name, f"unstaged missing or unreadable worktree file ({error.strerror})")
+        actual_mode = b"100755" if info.st_mode & stat.S_IXUSR else b"100644"
+        actual_oid = hashlib.new(algorithm, b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest().encode()
+        if (actual_mode, actual_oid) != (mode, oid):
+            refuse(name, "unstaged content or mode differs from index")
+    for name in read("ls-files", "--others", "--exclude-standard", "-z", "--", *scope).split(b"\0"):
+        if name:
+            refuse(name, "untracked non-ignored task file")
 
 
 def record_text(args, number, dispatched, checklist, notes):
@@ -34,7 +113,7 @@ def select_record(args, folder, dispatched, checklist, notes):
     directory = folder / "dispatch"
     relative = directory.relative_to(state).as_posix()
     pattern = re.compile(rf"{re.escape(args.stage)}-([1-9][0-9]*)\.md")
-    committed = git(state, "ls-tree", "-r", "--name-only", "HEAD", "--", relative).splitlines()
+    committed = git(state, "ls-tree", "-r", "-z", "--name-only", "HEAD", "--", relative).split("\0")
     numbers = [int(match[1]) for path in committed
                if (match := pattern.fullmatch(Path(path).name)) and Path(path).parent.as_posix() == relative]
     newest = max(numbers, default=0)
@@ -87,6 +166,7 @@ def parse_args(argv):
     if any(not re.fullmatch(r"[0-9a-fA-F]{40}", sha) for sha in args.candidate):
         parser.error("--candidate must be a full 40-hex SHA")
     try:
+        args.entity_input = Path(os.path.abspath(args.entity_path))
         for name in ("workflow_dir", "entity_path", "checklist_file", "scope_notes_file", "feedback_context_file"):
             value = getattr(args, name)
             if value is not None:
@@ -102,9 +182,13 @@ def parse_args(argv):
 def main(argv=None):
     args, dispatched, checklist, notes = parse_args(argv)
     try:
-        path, wrote = select_record(args, task_folder(args.entity_path), dispatched, checklist, notes)
-    except FileExistsError as error:
-        print(f"dispatch_stage: dispatch not built; refusing existing record: {error}", file=sys.stderr)
+        state, folder, scope = resolve_scope(args)
+        check_task_scope(state, scope)
+        path, wrote = select_record(args, folder, dispatched, checklist, notes)
+    except (OSError, ValueError, Misconfigured, subprocess.CalledProcessError) as error:
+        print(f"dispatch_stage: dispatch not built; {error}. "
+              "Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; "
+              "do not blindly state commit divergent data.", file=sys.stderr)
         return 1
     checks = [subprocess.run([sys.executable, "-B", str(SCRIPTS / "dispatch_records.py"), *map(str, flags)],
                              capture_output=True, text=True)

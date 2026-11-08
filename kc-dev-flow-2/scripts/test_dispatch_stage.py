@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -54,8 +55,9 @@ class DispatchStageTests(unittest.TestCase):
                               "Keep this second scope-notes line verbatim.\n")
         self.spy = self.base / "spy"
         self.marker = self.base / "called"
-        self.spy.write_text(f"#!{sys.executable}\nfrom pathlib import Path\nimport sys\n"
-                            f"Path({str(self.marker)!r}).write_text('called')\nsys.exit(0)\n")
+        self.spy.write_text(f"#!{sys.executable}\nfrom pathlib import Path\nimport subprocess, sys\n"
+                            f"Path({str(self.marker)!r}).write_text('called')\n"
+                            f"sys.exit(subprocess.call([{BINARY!r}, *sys.argv[1:]]))\n")
         self.spy.chmod(0o755)
 
     def remove_artifacts(self):
@@ -63,9 +65,9 @@ class DispatchStageTests(unittest.TestCase):
             if path.is_file():
                 path.unlink()
 
-    def call(self, args, expected=0):
-        result = subprocess.run(list(map(str, args)), cwd=self.base, env=self.env,
-                                capture_output=True, text=True, timeout=30)
+    def call(self, args, expected=0, child_env=None, data=None):
+        result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+                                input=data, capture_output=True, text=True, timeout=30)
         if os.environ.get("DISPATCH_STAGE_LOG"):
             with Path(os.environ["DISPATCH_STAGE_LOG"]).open("a") as log:
                 log.write(json.dumps(dict(argv=list(map(str, args)), exit=result.returncode,
@@ -75,28 +77,37 @@ class DispatchStageTests(unittest.TestCase):
         return result
 
     def git(self, root, *args):
-        return self.call(["git", "-C", root, *args]).stdout.strip()
+        return self.call(["git", "--literal-pathspecs", "-C", root, *args]).stdout.strip()
 
     def commit_task(self):
-        self.git(self.state, "add", "--", self.entity.name)
+        self.git(self.state, "add", "--", self.entity.relative_to(self.state))
         self.git(self.state, "commit", "-m", "test: task")
 
     def set_stage(self, stage):
         self.entity.write_text(self.entity.read_text().replace("status: ideation", f"status: {stage}"))
         self.commit_task()
 
-    def build(self, stage="ideation", extra=(), expected=0):
-        return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+    def build(self, stage="ideation", extra=(), expected=0, cleanup_spy=False, child_env=None):
+        launch = [sys.executable, "-B", WRAPPER]
+        if cleanup_spy:
+            script = ("import sys; from pathlib import Path; sys.path.insert(0, sys.argv.pop(1)); "
+                      "import dispatch_stage as subject; original = subject.remove_uncommitted; "
+                      "marker = Path(sys.argv.pop(1)); "
+                      "subject.remove_uncommitted = lambda *a: (marker.write_text('called'), original(*a))[1]; "
+                      "sys.exit(subject.main())")
+            launch = [sys.executable, "-B", "-c", script, WRAPPER.parent, self.base / "cleanup-called"]
+        return self.call([*launch, "--workflow-dir", self.workflow,
                           "--entity-path", self.entity, "--stage", stage, "--model", "fixture-model",
                           "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
-                          "--spacedock", BINARY, "--host", "codex", *extra], expected)
+                          "--spacedock", BINARY, "--host", "codex", *extra], expected, child_env)
 
     def record(self, stage="ideation", number=1):
         return self.folder / "dispatch" / f"{stage}-{number}.md"
 
     def assert_committed(self, path, subject):
         self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
-        self.assertEqual(self.git(self.state, "show", f"HEAD:{path.relative_to(self.state)}"), path.read_text().strip())
+        root = Path(self.git(self.state, "rev-parse", "--show-toplevel"))
+        self.assertEqual(self.git(self.state, "show", f"HEAD:{path.relative_to(root)}"), path.read_text().strip())
         self.assertEqual(self.git(self.state, "status", "--porcelain", "--", path), "")
 
     def test_stamp_commits_complete_record_and_exact_inputs(self):
@@ -196,7 +207,6 @@ class DispatchStageTests(unittest.TestCase):
         index = self.git(self.state, "ls-files", "--stage", "--", record)
         status = self.git(self.state, "status", "--porcelain", "--", record)
         head, task = self.git(self.state, "rev-parse", "HEAD"), self.entity.read_bytes()
-        self.notes.write_text("Send your completion message to `main`.\n")
         held = self.build(extra=("--spacedock", self.spy), expected=1)
         self.assertEqual(record.exists(), not missing, "pre-existing record was removed or recreated")
         if not missing:
@@ -218,6 +228,329 @@ class DispatchStageTests(unittest.TestCase):
 
     def test_preexisting_index_entry_without_worktree_file_is_preserved(self):
         self.assert_existing_record_is_preserved(staged=True, missing=True)
+
+    def scope_seed(self, layout="flat", route="fresh"):
+        self.env["GIT_OPTIONAL_LOCKS"] = "0"
+        if layout == "folder":
+            self.folder.mkdir()
+            destination = self.folder / "index.md"
+            self.git(self.state, "mv", "--", self.entity, destination)
+            self.entity = destination
+            self.commit_task()
+        self.older = self.folder / "dispatch/validation-1.md"
+        self.older.parent.mkdir(parents=True, exist_ok=True)
+        self.older.write_text(f"# validation-1\nDispatched: {'a' * 40}\nModel: fixture\nCandidate: {'a' * 40}\n"
+                              f"\n## Checklist\nInspect the previous artifact.\n\n## Scope notes\n{self.notes.read_text()}")
+        self.report = self.folder / "review/nested/report.md"
+        self.report.parent.mkdir(parents=True)
+        self.report.write_text("Original companion report.\n")
+        self.literal = self.folder / "review/[literal] space\nreport.md"
+        self.literal.write_text("Literal path report.\n")
+        self.outside = self.state / "other-task.txt"
+        self.outside.write_text("Outside HEAD bytes.\n")
+        (self.state / "rename-source.txt").write_text("Outside rename source.\n")
+        self.git(self.state, "add", "--", self.folder, self.outside, self.state / "rename-source.txt")
+        self.git(self.state, "commit", "-m", "test: clean task scope")
+        stage, extra = "ideation", ()
+        if route == "advance":
+            self.set_stage("implementation")
+            self.build("implementation")
+            stage, extra = "implementation", ("--advance",)
+        elif route in ("retry", "new-round"):
+            self.build()
+            if route == "new-round":
+                history = self.state / "outside-history.txt"
+                history.write_text("An unrelated state commit.\n")
+                self.git(self.state, "add", "--", history)
+                self.git(self.state, "commit", "-m", "test: outside history")
+        return stage, extra
+
+    def scope_snapshot(self):
+        files = {}
+        for root in (self.state, *getattr(self, "extra_roots", [])):
+            paths = [root]
+            if root.is_dir() and not root.is_symlink():
+                for parent, directories, names in os.walk(root, followlinks=False):
+                    directories[:] = [name for name in directories if name != ".git"]
+                    paths += [Path(parent) / name for name in directories + names if name != ".git"]
+            for path in paths:
+                info = path.lstat()
+                value = [stat.S_IFMT(info.st_mode), stat.S_IMODE(info.st_mode)]
+                value.append(os.readlink(path) if path.is_symlink() else path.read_bytes().hex() if path.is_file() else None)
+                files[str(path)] = value
+        return dict(head=self.git(self.state, "rev-parse", "HEAD"), files=files,
+                    index=self.call(["git", "-C", self.state, "ls-files", "--stage", "--debug", "-z"]).stdout,
+                    flags=self.call(["git", "-C", self.state, "ls-files", "-v", "-z"]).stdout)
+
+    def dirty_outside(self):
+        self.outside.write_text("Outside staged bytes.\n")
+        self.git(self.state, "add", "--", self.outside)
+        self.outside.write_text("Outside working bytes, different again.\n")
+        (self.state / "untracked-other-task.txt").write_text("Outside untracked bytes.\n")
+
+    def scope_dirty(self, path, change):
+        original = path.read_bytes() if path.exists() else b"Prepared record.\n"
+        edited = original + b"A preserved edit.\n"
+        if change in ("staged-only", "equal-change", "partial"):
+            path.write_bytes(edited)
+            self.git(self.state, "add", "--", path)
+            if change != "equal-change":
+                path.write_bytes(original if change == "staged-only" else edited + b"Working-only edit.\n")
+        elif change in ("worktree-only", "literal"):
+            path.write_bytes(edited)
+        elif change in ("untracked", "staged-add", "staged-add-missing", "intent-to-add", "ignored-existing"):
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(edited)
+            if change in ("staged-add", "staged-add-missing", "intent-to-add"):
+                self.git(self.state, "add", *("-N",) if change == "intent-to-add" else (), "--", path)
+            if change == "staged-add-missing":
+                path.unlink()
+        elif change == "staged-delete":
+            self.git(self.state, "rm", "--cached", "--", path)
+        elif change == "unstaged-delete":
+            path.unlink()
+        elif change == "both-delete":
+            self.git(self.state, "rm", "-f", "--", path)
+        elif change == "mode-change":
+            path.chmod(path.stat().st_mode | stat.S_IXUSR)
+            self.env.update(GIT_CONFIG_COUNT="3", GIT_CONFIG_KEY_2="core.filemode", GIT_CONFIG_VALUE_2="false")
+        elif change == "type-change":
+            external = self.base / "external-target"
+            external.write_text("External bytes must survive.\n")
+            self.extra_roots = [external]
+            path.unlink()
+            path.symlink_to(external)
+        elif change in ("assume-unchanged", "skip-worktree"):
+            self.git(self.state, "update-index", "--" + change, "--", path)
+            path.write_bytes(edited)
+        elif change == "stat-spoof":
+            info = path.stat()
+            path.write_bytes(b"X" + original[1:])
+            os.utime(path, ns=(info.st_atime_ns, info.st_mtime_ns))
+            self.env.update(GIT_CONFIG_COUNT="4", GIT_CONFIG_KEY_2="core.trustctime", GIT_CONFIG_VALUE_2="false",
+                            GIT_CONFIG_KEY_3="core.checkStat", GIT_CONFIG_VALUE_3="minimal")
+        elif change == "rename-out":
+            self.git(self.state, "mv", "--", path, self.state / "renamed-outside.txt")
+        elif change == "rename-in":
+            path = self.folder / "review/renamed-inside.txt"
+            self.git(self.state, "mv", "--", self.state / "rename-source.txt", path)
+        elif change == "conflict":
+            relative = path.relative_to(self.state)
+            oid = self.call(["git", "-C", self.state, "hash-object", "-w", "--stdin"], data="Conflict version\n").stdout.strip()
+            entries = f"0 {'0' * 40}\t{relative}\n" + "".join(f"100644 {oid} {stage}\t{relative}\n" for stage in (1, 2, 3))
+            self.call(["git", "-C", self.state, "update-index", "--index-info"], data=entries)
+        else:
+            raise AssertionError(change)
+        return path
+
+    def assert_scope_refusal(self, scenario, path, stage, extra, child_env=None, real_builder=False):
+        before = self.scope_snapshot()
+        result = self.build(stage, extra if real_builder else (*extra, "--spacedock", self.spy),
+                            expected=None, cleanup_spy=True, child_env=child_env)
+        after = self.scope_snapshot()
+        builder_called = self.marker.exists()
+        cleanup_called = (self.base / "cleanup-called").exists()
+        if os.environ.get("DISPATCH_SCOPE_LOG"):
+            with Path(os.environ["DISPATCH_SCOPE_LOG"]).open("a") as log:
+                log.write(json.dumps(dict(scenario=scenario, before=before, after=after, exit=result.returncode,
+                                          stdout=result.stdout, stderr=result.stderr,
+                                          builder_called=builder_called, cleanup_called=cleanup_called)) + "\n")
+        self.assertEqual(after, before, "refusal changed scoped or outside state")
+        self.assertNotEqual(result.returncode, 0, "dirty task scope was admitted")
+        self.assertTrue(result.stderr.startswith("dispatch_stage: dispatch not built;"), result.stderr)
+        self.assertIn(repr(str(path)), result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertFalse(builder_called, "builder ran on a dirty scope")
+        self.assertFalse(cleanup_called, "cleanup ran on a dirty scope")
+
+    def test_retry_preserves_staged_record_with_worktree_at_head(self):
+        stage, extra = self.scope_seed(route="retry")
+        path = self.scope_dirty(self.record(), "staged-only")
+        self.dirty_outside()
+        self.assert_scope_refusal("reported-retry", path, stage, extra, real_builder=True)
+
+    def test_scope_preservation_matrix(self):
+        scenarios = []
+        for layout in ("flat", "folder"):
+            for location, route in (("task", "fresh"), ("older", "new-round"), ("report", "fresh"),
+                                    ("reused", "retry"), ("reused", "advance")):
+                scenarios += [(layout, route, location, state) for state in ("staged-only", "worktree-only", "equal-change", "partial")]
+            scenarios += [(layout, "fresh", "report", state) for state in
+                          ("staged-delete", "unstaged-delete", "both-delete", "mode-change", "type-change", "conflict",
+                           "assume-unchanged", "skip-worktree", "stat-spoof", "rename-out", "rename-in")]
+            scenarios += [(layout, route, "new-record", state) for route in ("fresh", "new-round", "advance")
+                          for state in ("untracked", "staged-add", "staged-add-missing", "intent-to-add")]
+            scenarios += [(layout, "fresh", "literal", "literal"), (layout, "fresh", "new-record", "ignored-existing"),
+                          (layout, "fresh", "new-report", "untracked")]
+        selected = [row for row in scenarios if not os.environ.get("DISPATCH_SCOPE_CASE")
+                    or ":".join(row) == os.environ["DISPATCH_SCOPE_CASE"]]
+        self.assertTrue(selected, "unknown scope matrix case")
+        for layout, route, location, change in selected:
+            scenario = ":".join((layout, route, location, change))
+            with self.subTest(scenario=scenario):
+                fixture = type(self)("test_scope_preservation_matrix")
+                try:
+                    fixture.setUp()
+                    stage, extra = fixture.scope_seed(layout, route)
+                    if location == "new-record":
+                        number = 1 if route == "fresh" else 2
+                        path = fixture.record(stage, number)
+                        if route == "advance":
+                            extra += ("--note", "next", "--symptom", "none")
+                        if change == "ignored-existing":
+                            ignore = fixture.state / ".gitignore"
+                            ignore.write_text(f"/{path.relative_to(fixture.state)}\n")
+                            fixture.git(fixture.state, "add", "--", ignore)
+                            fixture.git(fixture.state, "commit", "-m", "test: ignored target")
+                    else:
+                        path = {"task": fixture.entity, "older": fixture.older, "report": fixture.report,
+                                "reused": fixture.record(stage), "literal": fixture.literal,
+                                "new-report": fixture.folder / "review/untracked/deep.txt"}[location]
+                    path = fixture.scope_dirty(path, change)
+                    fixture.dirty_outside()
+                    fixture.assert_scope_refusal(scenario, path, stage, extra)
+                finally:
+                    fixture.doCleanups()
+
+    def outside_snapshot(self):
+        relative = self.outside.relative_to(self.state)
+        return (self.outside.read_bytes(), self.git(self.state, "show", f":{relative}"),
+                self.git(self.state, "ls-files", "--stage", "--", relative),
+                (self.state / "untracked-other-task.txt").read_bytes())
+
+    def test_real_builder_allowed_routes_preserve_other_tasks(self):
+        for layout in ("flat", "folder"):
+            with self.subTest(layout=layout):
+                fixture = type(self)("test_real_builder_allowed_routes_preserve_other_tasks")
+                try:
+                    fixture.setUp()
+                    fixture.scope_seed(layout)
+                    fixture.dirty_outside()
+                    outside = fixture.outside_snapshot()
+                    first_head = fixture.git(fixture.state, "rev-parse", "HEAD")
+                    fixture.build()
+                    fixture.assert_committed(fixture.record(), f"dispatch: {fixture.slug} entering ideation")
+                    fixture.assertEqual(fixture.outside_snapshot(), outside)
+                    changed = fixture.git(fixture.state, "diff", "--name-only", first_head, "HEAD").splitlines()
+                    fixture.assertTrue(changed)
+                    fixture.assertTrue(all(path == fixture.entity.relative_to(fixture.state).as_posix()
+                                           or path.startswith(fixture.slug + "/") for path in changed), changed)
+                    held = fixture.build(expected=1)
+                    fixture.assertIn("git commit failed:", held.stderr)
+                    fixture.assertEqual(held.stdout, "")
+                    fixture.assertEqual(fixture.outside_snapshot(), outside)
+                    fixture.git(fixture.state, "restore", "--staged", "--", fixture.outside)
+                    fixture.build()
+                    fixture.assertFalse(fixture.record(number=2).exists())
+                    fixture.dirty_outside()
+                    fixture.assertEqual(fixture.outside_snapshot(), outside)
+                    fixture.checklist.write_text("Changed actual dispatch inputs.\n")
+                    fixture.build(extra=("--symptom", "changed inputs"))
+                    fixture.assert_committed(fixture.record(number=2), f"dispatch: {fixture.slug} entering ideation")
+                    fixture.assertEqual(fixture.outside_snapshot(), outside)
+                    history = fixture.state / "later-task.txt"
+                    history.write_text("Independent later commit.\n")
+                    fixture.git(fixture.state, "add", "--", history)
+                    fixture.git(fixture.state, "commit", "-m", "test: later task", "--", history)
+                    fixture.build(extra=("--symptom", "changed inputs"))
+                    fixture.assertTrue(fixture.record(number=3).exists())
+                    fixture.assertEqual(fixture.outside_snapshot(), outside)
+                    fixture.report.write_text("Owner intentionally reconciled the report.\n")
+                    fixture.git(fixture.state, "add", "--", fixture.report)
+                    fixture.git(fixture.state, "commit", "-m", "test: reconcile scope", "--", fixture.report)
+                    fixture.build(extra=("--symptom", "owner reconciliation"))
+                    fixture.assertTrue(fixture.record(number=4).exists())
+                    fixture.assertEqual(fixture.outside_snapshot(), outside)
+                    fixture.entity.write_text(fixture.entity.read_text().replace("status: ideation", "status: implementation"))
+                    fixture.git(fixture.state, "add", "--", fixture.entity)
+                    fixture.git(fixture.state, "commit", "-m", "test: implementation", "--", fixture.entity)
+                    fixture.build("implementation")
+                    fixture.build("implementation", ("--advance", "--note", "advance-route", "--symptom", "none"))
+                    fixture.assert_committed(fixture.record("implementation", 2), f"state: update {fixture.slug}")
+                    fixture.assertEqual(fixture.outside_snapshot(), outside)
+                finally:
+                    fixture.doCleanups()
+
+    def test_committed_then_assembly_failure_keeps_record_for_retry(self):
+        failing = self.base / "commit-then-fail"
+        failing.write_text(f"#!{sys.executable}\nimport subprocess, sys\n"
+                           f"result = subprocess.run([{BINARY!r}, *sys.argv[1:]], capture_output=True, text=True)\n"
+                           "sys.stderr.write(result.stderr)\n"
+                           "if result.returncode: sys.exit(result.returncode)\n"
+                           "print('fixture assembly failed after commit', file=sys.stderr)\nsys.exit(8)\n")
+        failing.chmod(0o755)
+        held = self.build(extra=("--spacedock", failing), expected=8)
+        self.assertEqual(held.stdout, "")
+        self.assertIn("fixture assembly failed after commit", held.stderr)
+        self.assert_committed(self.record(), f"dispatch: {self.slug} entering ideation")
+        content = self.record().read_bytes()
+        self.build()
+        self.assertEqual(self.record().read_bytes(), content)
+        self.assertFalse(self.record(number=2).exists())
+
+    def test_scope_git_failure_is_a_nonmutating_hold(self):
+        stage, extra = self.scope_seed()
+        bin_dir = self.base / "bin"
+        bin_dir.mkdir()
+        real_git = shutil.which("git")
+        shim = bin_dir / "git"
+        shim.write_text(f"#!{sys.executable}\nimport os, sys\n"
+                        "if 'ls-tree' in sys.argv: sys.exit(9)\n"
+                        f"os.execv({real_git!r}, [{real_git!r}, *sys.argv[1:]])\n")
+        shim.chmod(0o755)
+        env = {**self.env, "PATH": str(bin_dir) + os.pathsep + self.env["PATH"]}
+        self.assert_scope_refusal("scope-git-failure", self.entity, stage, extra, child_env=env)
+
+    def test_inline_scope_uses_the_real_commit_unit(self):
+        entity = self.workflow / self.entity.name
+        entity.write_bytes(self.entity.read_bytes())
+        readme = self.workflow / "README.md"
+        readme.write_text(readme.read_text().replace("state: .spacedock-state", "state: $inline"))
+        self.git(self.repo, "add", "--", entity, readme)
+        self.git(self.repo, "commit", "-m", "test: inline state")
+        self.entity, self.state = entity, self.workflow
+        self.folder = self.state / self.slug
+        self.env["GIT_OPTIONAL_LOCKS"] = "0"
+        self.build()
+        self.assert_committed(self.record(), f"dispatch: {self.slug} entering ideation")
+        dispatched = self.git(self.repo, "rev-parse", "HEAD")
+        self.build()
+        self.assertIn(f"Dispatched: {dispatched}", self.record(number=2).read_text())
+        path = self.scope_dirty(self.entity, "staged-only")
+        self.assert_scope_refusal("inline-staged-task", path, "ideation", ())
+
+    def test_symlinked_entity_is_a_nonmutating_hold(self):
+        external = self.base / "external-task.md"
+        external.write_bytes(self.entity.read_bytes())
+        self.extra_roots = [external]
+        self.entity.unlink()
+        self.entity.symlink_to(external)
+        self.assert_scope_refusal("symlinked-task", self.entity, "ideation", ())
+
+    def test_unsupported_companion_and_dangling_target_are_preserved(self):
+        for kind in ("companion", "dangling"):
+            with self.subTest(kind=kind):
+                fixture = type(self)("test_unsupported_companion_and_dangling_target_are_preserved")
+                try:
+                    fixture.setUp()
+                    if kind == "companion":
+                        external = fixture.base / "external"
+                        external.mkdir()
+                        (external / "sentinel.txt").write_text("External content.\n")
+                        fixture.folder.symlink_to(external, target_is_directory=True)
+                        fixture.extra_roots = [external]
+                        path = fixture.folder
+                    else:
+                        path = fixture.record()
+                        path.parent.mkdir(parents=True)
+                        ignore = fixture.state / ".gitignore"
+                        ignore.write_text(f"/{fixture.slug}/dispatch/ideation-1.md\n")
+                        fixture.git(fixture.state, "add", "--", ignore)
+                        fixture.git(fixture.state, "commit", "-m", "test: ignored dangling target")
+                        path.symlink_to(fixture.base / "absent-external-target")
+                    fixture.assert_scope_refusal("unsupported-" + kind, path, "ideation", ())
+                finally:
+                    fixture.doCleanups()
 
     def test_changed_checklist_creates_next_committed_record(self):
         self.build()
