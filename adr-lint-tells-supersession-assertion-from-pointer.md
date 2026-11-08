@@ -62,6 +62,17 @@ gates:
                 id: briefing:adr-lint-tells-supersession-assertion-from-pointer:validation:attempt-2:revision-1
                 digest: sha256:16e6a676b929043d35a88e7949f569f0f3ef31d9a8a9f0ab255be381ca1f3f08
                 room-ref: ./adr-lint-tells-supersession-assertion-from-pointer/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-lint-tells-supersession-assertion-from-pointer:validation:2
+                briefing: briefing:adr-lint-tells-supersession-assertion-from-pointer:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-08T03:20:12.27467Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-08), answering 「批次 17 驗證關卡：#806 讓決策紀錄檢查分得出「驗證某份已被取代」和「拿舊的當依據」。驗收和決策紀錄檢查都通過（退出碼 0），Codex 和 RoboRev 沒找到問題，CI 綠。要合併 #806（head f429f0fac）嗎？建議合併。」, which presented the bound question 「決定：合併 #806（決策紀錄檢查分得出「驗證某份已被取代」和「拿舊的當依據」）嗎？建議合併。 Regular merge with --match-head-commit f429f0fac40511c6480fd92e2cccd4c0e94b2454, the batch 17 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-07T15:40:02Z
 worktree: .worktrees/spacedock-ensign-adr-lint-tells-supersession-assertion-from-pointer
 pr: iamcxa/kc-claude-plugins#806
