@@ -1,0 +1,112 @@
+[
+  {
+    "name": "installed-adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "--require",
+      "0070"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "status": "passed"
+  },
+  {
+    "name": "candidate-adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "--require",
+      "0070"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "status": "passed"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-build-writes-the-dispatch-record.md"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "status": "passed"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-build-writes-the-dispatch-record"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "status": "passed"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/doc_impact.py",
+      "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "afa4523468a2e86e6c6e0467591df00bf8e51d35",
+      "--repo",
+      "/tmp/validate-pr812-tn8b6w_m",
+      "--json"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "status": "passed"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/tmp/validate-pr812-tn8b6w_m",
+      "--base",
+      "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-build-writes-the-dispatch-record.md"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "status": "passed"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/comment_ratio.py",
+      "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "afa4523468a2e86e6c6e0467591df00bf8e51d35",
+      "--repo",
+      "/tmp/validate-pr812-tn8b6w_m",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "status": "passed"
+  }
+]

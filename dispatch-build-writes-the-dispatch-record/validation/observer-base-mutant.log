@@ -1,0 +1,1 @@
+FAIL: skills/observer/SKILL.md: chat-only rule 'python3 <package>/scripts/dispatch_records.py --names' is not in references/sd/workflow.md; reword the list or restore the rule

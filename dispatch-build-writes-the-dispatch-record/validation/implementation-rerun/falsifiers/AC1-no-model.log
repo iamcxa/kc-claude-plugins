@@ -1,0 +1,25 @@
+F
+======================================================================
+FAIL: test_stamp_commits_complete_record_and_exact_inputs (__main__.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC1-no-model-sv2so3c0/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 104, in test_stamp_commits_complete_record_and_exact_inputs
+    result = self.build(extra=("--roster", "fixture roster", "--note", "README fixture"))
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC1-no-model-sv2so3c0/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in build
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--entity-path", self.entity, "--stage", stage, "--model", "fixture-model",
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--spacedock", BINARY, "--host", "codex", *extra], expected)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC1-no-model-sv2so3c0/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 74, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/AC1-no-model-sv2so3c0/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-uwj8ctfx/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-uwj8ctfx/code/docs/dev2/.spacedock-state/dispatch-fixture-383036b0e3314bc299f0435193a5d8a8.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-uwj8ctfx/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-uwj8ctfx/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--roster', 'fixture roster', '--note', 'README fixture'], '', "dispatch_stage: dispatch not built; repair the dispatch record:\nideation-1.md: needs a 'Model:' line\n")
+
+----------------------------------------------------------------------
+Ran 1 test in 0.494s
+
+FAILED (failures=1)

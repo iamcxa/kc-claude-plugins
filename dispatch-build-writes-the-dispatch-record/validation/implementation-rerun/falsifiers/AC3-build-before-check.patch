@@ -1,0 +1,10 @@
+--- kc-dev-flow-2/scripts/dispatch_stage.py
++++ kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -99,6 +99,7 @@
+ def main(argv=None):
+     args, dispatched, checklist, notes = parse_args(argv)
+     path, wrote = select_record(args, task_folder(args.entity_path), dispatched, checklist, notes)
++    subprocess.run([args.spacedock, "dispatch", "build"], capture_output=True)
+     checks = [subprocess.run([sys.executable, "-B", str(SCRIPTS / "dispatch_records.py"), *map(str, flags)],
+                              capture_output=True, text=True)
+               for flags in ((task_folder(args.entity_path),), ("--names", "--strict", path))]

@@ -1,0 +1,14 @@
+stage=validation
+status=DONE start=298 end=299 text=Independent verdict on PR #812 head afa45234 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+status=DONE start=300 end=301 text=Two FO rulings during implementation (dispatch/implementation-1-message-1.md and -message-2.md): the observer chat-only entry update is authorized; the installed 0.35.0 ADR lint exit 1 on the ADR 0047 read in kc-dev-flow-2/scripts/test_sd_dispatch.py is the known pre-#806 false positive, so run the candidate's own kc-dev-flow-2/scripts/adr_lint.py for the required ADR check and record both.
+status=DONE start=302 end=303 text=A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+status=DONE start=304 end=305 text=AC-1 and AC-2 — the stamp commits a complete record carrying the dispatched inputs.
+status=DONE start=306 end=307 text=AC-3 and AC-4 — incomplete records and missing or malformed validation candidates hold before build.
+status=DONE start=308 end=309 text=AC-5 and AC-6 — failure cleanup, immediate retry, later round and advance persistence work.
+status=DONE start=310 end=311 text=AC-7 — approved README passages, word budget and affected consumers agree.
+status=DONE start=312 end=313 text=AC-8 — exact-head hosted CI executes the real-binary seam test.
+status=DONE start=314 end=315 text=Goal sufficiency, minimal necessity and retained-document checks.
+status=DONE start=316 end=317 text=Required local gates and candidate preservation.
+status=SKIPPED start=318 end=319 text=Installed 0.35.0 ADR lint success.
+status=SKIPPED start=320 end=321 text=RoboRev, live model/worker execution, release adoption and delivery actions.
+status=SKIPPED start=322 end=323 text=Independent authentication of the existing local Spacedock source archive.

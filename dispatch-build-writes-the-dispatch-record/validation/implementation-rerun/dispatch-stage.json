@@ -1,0 +1,38 @@
+[
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_advance_commits_record_and_withholds_envelope_on_commit_failure",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_candidates_and_feedback_flags_reach_real_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_changed_checklist_creates_next_committed_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_failed_build_removes_its_staged_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_failed_stamp_removes_uncommitted_record_and_passes_error",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_identical_retry_reuses_only_at_adding_commit",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_incomplete_record_does_not_build_or_change_state",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_validation_candidate_is_required_before_build",
+    "status": "passed"
+  }
+]

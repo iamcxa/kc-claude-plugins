@@ -1,0 +1,7 @@
+{
+  "direct_build_exit": 0,
+  "direct_build_record_exists": false,
+  "wrapper_exit": 0,
+  "wrapper_record": "# ideation-1\nDispatched: 04e95457a885fe463685668aef09ca0d1ad9b830 (workflow checkout)\nModel: fixture-model\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: /private/tmp/validate-pr812-tn8b6w_m/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\n",
+  "wrapper_commit_subject": "dispatch: dispatch-fixture-6b6cfbf4f8914824bbd645f19495a90b entering ideation"
+}

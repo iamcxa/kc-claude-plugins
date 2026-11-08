@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Startup and resume",
+    "before": 5933,
+    "after": 5931,
+    "better": "lower"
+  },
+  {
+    "name": "Fresh dispatch including successful checker output",
+    "before": 116,
+    "after": 101,
+    "better": "lower"
+  },
+  {
+    "name": "Follow-up including successful checker output",
+    "before": 147,
+    "after": 87,
+    "better": "lower"
+  }
+]
