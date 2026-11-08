@@ -1,0 +1,8 @@
+{
+  "commands": 26,
+  "failed": 0,
+  "unittest_cases": 1182,
+  "optional_skips": 7,
+  "sd_plugin_root": "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3",
+  "spacedock_bin": "/Users/kent/.local/bin/spacedock"
+}

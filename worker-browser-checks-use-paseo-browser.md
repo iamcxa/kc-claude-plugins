@@ -181,16 +181,16 @@ Recommended order: this task before dispatch-build-writes-the-dispatch-record; a
 
 ## Acceptance criteria
 
-**AC-1** The paseo extension's scope-note quote ends with the sentence `Before using Paseo's browser tools, read extensions/paseo/browser.md under your Package root.`, and the quote's first sentence is unchanged.
+**AC-6** Amended by Captain, amendment 1. The paseo extension's scope-note quote ends with the sentence `Before using Paseo's browser tools, read extensions/paseo/browser.md under your Package root.`, and the quote's first sentence is unchanged.
 Evidence: at the candidate, `git show <candidate>:kc-dev-flow-2/extensions/paseo/EXTENSION.md | grep -n '^Add to scope notes:'` shows one line whose quote ends with that sentence; `python3 kc-dev-flow-2/scripts/test_dispatch_records.py` passes unchanged. Falsifier: putting the sentence first, or as a second `Add to scope notes:` line, makes that test fail.
 
-**AC-2** `extensions/paseo/browser.md` sends attended pages, including a login where the Captain performs human verification, to EXTENSION.md's Human terminals and pages; keeps repository instructions first; says unattended checks use the repository's supported adapter with no required Paseo attempt; and keeps CI unchanged, the fallback with per-step tool reporting, not-run-is-never-clean, the visible-tab limit and the four limits each with its workaround, in at most 240 words.
+**AC-7** Amended by Captain, amendment 1. `extensions/paseo/browser.md` sends attended pages, including a login where the Captain performs human verification, to EXTENSION.md's Human terminals and pages; keeps repository instructions first; says unattended checks use the repository's supported adapter with no required Paseo attempt; and keeps CI unchanged, the fallback with per-step tool reporting, not-run-is-never-clean, the visible-tab limit and the four limits each with its workaround, in at most 240 words.
 Evidence: `wc -w` on the file; a reviewer maps each of the four limits in `## Scope` to one bullet with its workaround. Falsifier: a sentence requiring a Paseo attempt for an unattended check, a limit without a workaround, or over 240 words fails.
 
 **AC-3** FO's reading rises only at the Paseo dispatch moment, by at most 20 words, and the workflow README and its word budget are untouched.
 Evidence: `git diff --stat origin/main...<candidate> -- kc-dev-flow-2/references/sd/workflow.md kc-dev-flow-2/scripts/lint-skills.py kc-dev-flow-2/scripts/dispatch_records.py` is empty; `wc -w` of EXTENSION.md at base 1101, at candidate ≤ 1121; `python3 kc-dev-flow-2/scripts/lint-skills.py` passes. Falsifier: moving the limits into EXTENSION.md exceeds the bound.
 
-**AC-4** Paseo's operation on an attended page and the fallback are shown by the two existing runs, with no new browser run: `implementation/attempt-2/` (tab visible in the Captain's Paseo app; Paseo snapshot, screenshots and a ref-based click, no fallback) and `implementation/claude-report.md` (background tab; Paseo screenshot and click failed; agent-browser fallback recorded per step).
+**AC-8** Amended by Captain, amendment 1. Paseo's operation on an attended page and the fallback are shown by the two existing runs, with no new browser run: `implementation/attempt-2/` (tab visible in the Captain's Paseo app; Paseo snapshot, screenshots and a ref-based click, no fallback) and `implementation/claude-report.md` (background tab; Paseo screenshot and click failed; agent-browser fallback recorded per step).
 Evidence: those saved reports, activity logs and images, cited in the implementation report as runs at 20eb8255daf0f1267a8c0dd16daf0705a7cf82ba. Falsifier: the implementation report claiming either run tested an unattended Paseo default fails.
 
 **AC-5** Codex reachability is measured, not assumed: one Codex worker spawned through Paseo calls `browser_list_tabs` once and reports whether the tool exists in its session.
@@ -311,3 +311,38 @@ REJECTED pending one Needs decision at candidate 90192bb64db4614de9a7a94cc782ee5
 
 - F1 Needs decision: value-ac[AC-4] requires unhinted all-Paseo completion. Run 1 fails the Paseo interaction path and run 2 explicitly names tools; dispatch/validation-1-message-1.md acknowledges FO's dispatch error and no covering Captain ruling. FO must take that evidence to the Captain; this is not an implementation defect or permission for another run.
 
+
+## Stage Report: implementation
+
+- DONE: Read and apply implementation-1-message-2, Captain amendment 1 and the independent engineering review.
+  Amendment 1's attended-page scope governs this repair; `review/engineering-reviewer-1.md` was checked against both historical runs and the existing Human terminals and pages procedure. No runtime repair or new browser check was added.
+- DONE: Apply the Captain-amendment record mechanics without rewriting accepted or superseded evidence.
+  Old AC-1/2/4 blocks remain verbatim under Superseded text; their active replacements are fresh AC-6/7/8 with “Amended by Captain, amendment 1.” The four precheck defects in `implementation/cycle-2/amendment-precheck.log` clear under design_surfaces.py; Captain/Asked/Design/Supersedes bytes and prior reports are unchanged.
+- DONE: AC-6 (amended AC-1): the scope-note quote ends with the exact conditional pointer, and its original first sentence is unchanged.
+  Final sentence is “Before using Paseo's browser tools, read extensions/paseo/browser.md under your Package root.” The unchanged dispatch consumer passes; sentence-first and second-instruction mutations fail it in fresh exports using python3 -B with caches cleared.
+- DONE: AC-7 (amended AC-2): attended pages and human-verification logins use the existing attended procedure; repository instructions come first; unattended checks use the supported adapter without a required Paseo attempt.
+  Guide is 228 words and retains unchanged CI, placement/cleanup, per-step tool/reason fallback reporting, not-run-never-clean, visibility and the four workarounds; it gives no human-challenge automation/bypass instruction. A below-240-word mutant adding an unattended Paseo-first requirement fails; each removed workaround and word overflow fails.
+- DONE: AC-3: FO reading rises only at the listed Paseo dispatch moment within the bound.
+  EXTENSION.md is 1101 -> 1112 words (+11); worker guide is 228 words. Workflow README, lint budget and dispatch checker blobs remain identical to base; moving the limits into FO's extension text exceeds the bound and is rejected.
+- DONE: AC-8 (amended AC-4): preserve and correctly attribute the two existing browser runs.
+  Both runs are at `20eb8255daf0f1267a8c0dd16daf0705a7cf82ba`: `implementation/attempt-2/` records attended foreground Paseo screenshots/ref-click; `implementation/claude-report.md` records background failures and per-step agent-browser fallback. Neither run establishes an unattended Paseo default or executes this amended guide; a mutant report claiming such proof is rejected.
+- DONE: AC-5: retain the recorded Codex reachability measurement without assuming further browser capability.
+  Existing `implementation/codex-activity.json` records exactly one successful browser_list_tabs call. No new Codex probe or unsupported Codex limitation was added; missing-measurement evidence is rejected.
+- DONE: Update implementation/acceptance.py and its falsifiers to the amended criteria and historical evidence boundary.
+  `bash --noprofile --norc implementation/acceptance.sh <absolute-worktree>` checks the final candidate with 34 assertions/mutations; the old report first fails the new boundary check (`cycle-2/pre-report-acceptance.log`). Fourteen historical evidence files retain their SHA-256 values; neither run was modified or combined into unattended proof.
+- DONE: Run existing package tests and repository skill lint from the assigned worktree root.
+  `implementation/cycle-2/package-tests.json`: all 26 CI-listed local commands exit 0, including native dispatch/recovery; 1182 unittest cases, 7 optional skips. Native tests use Spacedock binary 0.27.2 with installed plugin root 0.27.3; these are local results, not hosted CI evidence.
+- DONE: Run required package checks and assess affected documents and decision records.
+  `implementation/cycle-2/checks-results.json` records six exit-0 commands: repository lint, ADR lint (62 records), number guards, comment ratio, design surfaces, doc impact. Ratio is 0 code/0 comment lines, 0%, maximum 5% not enforced below 20 code lines; doc impact is []; no ADR added/edited, both product documents updated.
+- DONE: Commit locally on the same branch and prepare the revised PR title/body.
+  Branch `spacedock-ensign/worker-browser-checks-use-paseo-browser`; base `139feeaee7ce037a0c6535568cd6bd103155cbae`; candidate `fef21735308e7e807d04a93a5506de5284dde436`. Only the two approved product documents differ from base; product tree is clean. Title: `docs(kc-dev-flow-2): scope browser guidance to attended pages`; text at `/tmp/impl-worker-browser-checks-use-paseo-browser-pr.md` and `implementation/cycle-2/prepared-pr.md`.
+- SKIPPED: New browser execution, workers and retained-tab/service cleanup.
+  Explicitly forbidden or outside this repair; only saved reports/logs/images were read. Prior retained browser/service ownership stays with FO; no fresh attended, unattended or login success is claimed.
+- SKIPPED: Product push, PR retitle/update, fresh external review and hosted CI.
+  FO owns these steps for existing open PR #810 (remote head still 90192bb64 at the recorded read); no product push or PR mutation occurred. roborev not run: FO owns review of this new candidate; prior-head review does not clear it.
+- SKIPPED: CI cost measurement.
+  Cost per PR was not measured; no CI trigger, version, adopter file or workflow budget changed.
+
+### Summary
+
+This complete report supersedes the earlier implementation report at candidate 90192bb64db4614de9a7a94cc782ee5fa44748db. Implemented Captain amendment 1 as attended-page guidance with a 228-word guide and an 11-word dispatch increase, keeping both original runs attributed to 20eb8255daf0f1267a8c0dd16daf0705a7cf82ba; no new browser run occurred. Product publication, PR retitling/update, fresh review, CI and retained-surface cleanup remain FO-owned.

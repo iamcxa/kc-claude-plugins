@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_every_shipped_instruction_is_read_from_its_extension_file (__main__.ExtensionInstructionTests.test_every_shipped_instruction_is_read_from_its_extension_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/browser-acceptance-a0ys189w/kc-dev-flow-2/scripts/test_dispatch_records.py", line 812, in test_every_shipped_instruction_is_read_from_its_extension_file
+    self.assertEqual(len(instructions), 3)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 4 != 3
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

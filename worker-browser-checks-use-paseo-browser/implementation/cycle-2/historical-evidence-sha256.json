@@ -1,0 +1,16 @@
+{
+  "claude-prompt.txt": "3829efcc68229b370d5ec5104c57a9f2bd235879bcdc3dc63288e08ed0450ead",
+  "claude-activity.json": "b8872c8bc7b00aca524368d8c78a39ccd27b4a5216161f8b7b90bb8f7af13ada",
+  "claude-correction-activity.json": "2e196ca5053ba15a936ad059f2cb4f12dcae166e427112bc810e6332567590a3",
+  "claude-report.md": "58351a0e4060792d4d93fb9f32d91e42760cf23f7bef98e96147079a7ad7ca31",
+  "claude-board-before.png": "9834f4da89ecd899a1761efbc06a2d7b8efdcd6455c31b077b1238df760c4f5d",
+  "claude-board-after-click.png": "e6ece95f4198603047bc62220175adb4eb22448c03e7e5487838431f314be09f",
+  "attempt-2/claude-prompt.txt": "f65ea6a691c1726f1fccd2f45d6f86b56376d018762111860716f989216aa863",
+  "attempt-2/claude-activity.json": "081f72bb7b78e454aa9917a7b859d1cfbb32ddbb756bd326f1b7d3485a2c86c0",
+  "attempt-2/claude-report.md": "0878c3ef80cbc13e0cdc0c89e0eee0f53c86b3ec7414fd805e3dcbc5b9b3c303",
+  "attempt-2/claude-before.png": "06dd487dac3200ab681ffaf2300a0eae76af0fbfbcd0bfdec9aaed086faef1c3",
+  "attempt-2/claude-after.png": "c4508b5155d74f01f8793826bf93e2981cf06adac4c2617d34b8363d3925ec9e",
+  "codex-prompt.txt": "507231b221e410f1f8c4c68165251df6a01ecab05381b15d5709dd58c3ad43da",
+  "codex-activity.json": "095dd55a997451b169db997d25c2ebf88b23e861740895732f5325eafe6c10e5",
+  "canvas-provenance.json": "9b395363eb592c53bbeb2ffc74c6495092f9ff684923eb51a8c49d72c8303e18"
+}

@@ -1,18 +1,23 @@
 [
   {
-    "name": "AC-1 appended sentence and unchanged first sentence",
+    "name": "AC-6 (replaces AC-1) conditional pointer and unchanged first sentence",
     "status": "passed",
     "message": ""
   },
   {
-    "name": "AC-2 instructions and four complete workarounds",
+    "name": "AC-7 (replaces AC-2) attended routing and complete limits",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "Pre-amendment guide fails narrowed contract",
     "status": "passed",
     "message": ""
   },
   {
     "name": "AC-3 dispatch word bound",
     "status": "passed",
-    "message": "{'base': 1101, 'candidate': 1116, 'guide': 235}"
+    "message": "{'base': 1101, 'candidate': 1112, 'guide': 228}"
   },
   {
     "name": "AC-3 unchanged kc-dev-flow-2/references/sd/workflow.md",
@@ -40,42 +45,47 @@
     "message": ""
   },
   {
-    "name": "AC-1 existing consumer",
+    "name": "AC-6 existing consumer",
     "status": "passed",
     "message": "exit 0"
   },
   {
-    "name": "AC-1 mutation sentence first rejected",
+    "name": "AC-6 mutation sentence first rejected",
     "status": "passed",
     "message": "exit 1"
   },
   {
-    "name": "AC-1 mutation second instruction rejected",
+    "name": "AC-6 mutation second instruction rejected",
     "status": "passed",
     "message": "exit 1"
   },
   {
-    "name": "AC-2 mutation keyboard workaround removed rejected",
+    "name": "AC-7 mutation keyboard workaround removed rejected",
     "status": "passed",
     "message": ""
   },
   {
-    "name": "AC-2 mutation ref workaround removed rejected",
+    "name": "AC-7 mutation ref workaround removed rejected",
     "status": "passed",
     "message": ""
   },
   {
-    "name": "AC-2 mutation timeout workaround removed rejected",
+    "name": "AC-7 mutation timeout workaround removed rejected",
     "status": "passed",
     "message": ""
   },
   {
-    "name": "AC-2 mutation signature workaround removed rejected",
+    "name": "AC-7 mutation signature workaround removed rejected",
     "status": "passed",
     "message": ""
   },
   {
-    "name": "AC-2 mutation word overflow rejected",
+    "name": "AC-7 mutation word overflow rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-7 mutation unattended first attempt rejected within word cap",
     "status": "passed",
     "message": ""
   },
@@ -85,17 +95,27 @@
     "message": ""
   },
   {
-    "name": "AC-4 actual Claude tool calls",
+    "name": "AC-8 (replaces AC-4) historical attended Paseo calls",
     "status": "passed",
     "message": "[]"
   },
   {
-    "name": "AC-4 worker report and screenshots",
+    "name": "AC-8 saved attended report and screenshots",
     "status": "passed",
     "message": ""
   },
   {
-    "name": "AC-4 first failed tab closed",
+    "name": "AC-8 background failures and per-step fallback retained",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-8 both reports retain their actual runtime SHA",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-8 first failed tab closed",
     "status": "passed",
     "message": ""
   },
@@ -105,17 +125,32 @@
     "message": ""
   },
   {
-    "name": "Browser runtime unchanged after visibility documentation",
+    "name": "Historical canvas product bytes remain unchanged",
     "status": "passed",
     "message": ""
   },
   {
-    "name": "AC-4 mutation no Paseo browser call rejected",
+    "name": "AC-8 no historical browser evidence modified",
     "status": "passed",
     "message": ""
   },
   {
-    "name": "AC-4 mutation alternate adapter without reason rejected",
+    "name": "AC-8 implementation report preserves historical evidence boundary",
+    "status": "passed",
+    "message": "[]"
+  },
+  {
+    "name": "AC-8 mutation unattended-default proof claim rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-8 mutation no Paseo browser call rejected",
+    "status": "passed",
+    "message": ""
+  },
+  {
+    "name": "AC-8 mutation alternate adapter without reason rejected",
     "status": "passed",
     "message": ""
   },

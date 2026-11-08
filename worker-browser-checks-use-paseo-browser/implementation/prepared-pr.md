@@ -1,16 +1,13 @@
-docs(kc-dev-flow-2): default worker browser checks to Paseo
+docs(kc-dev-flow-2): scope browser guidance to attended pages
 
-Workers dispatched in workflows listing paseo now read a short browser guide before driving a local browser check. The guide defaults to Paseo tools, preserves repository instructions and CI behavior, and documents tool limitations, their workarounds, per-step fallback reporting and tab cleanup.
+Limit the Paseo browser guidance to attended pages, including a login where the Captain performs human verification, through the existing Human terminals and pages procedure. Repository instructions take precedence; unattended checks use the repository's supported adapter without a required Paseo attempt.
 
-The scope-note quote gains 15 words while its original first sentence and existing dispatch-record enforcement stay unchanged. The 235-word worker guide also records the observed requirement to keep the tab visible for screenshots and clicks.
+The conditional dispatch pointer adds 11 words over base. The 228-word guide keeps CI behavior, placement, cleanup, per-step fallback reporting and all five limits, including the four original workarounds. It contains no instruction to automate a human-verification challenge.
 
-Validation:
-- Existing dispatch-record suite: 115 tests, 1 optional skip; repository skill lint passed.
-- Exact-revision acceptance: 27 checks passed, including both malformed scope-note placements, four missing workarounds, word overflow and browser-evidence falsifiers; fresh exports use python3 -B with caches cleared.
-- Fresh Claude worker verified the real journey-map board, screenshot and ref-based minimap click entirely through Paseo with document.visibilityState visible. The earlier background run failed and used the documented fallback; both runs are retained.
-- Fresh Codex worker confirmed browser_list_tabs exists and called it once successfully.
-- ADR lint, number guards, design-surfaces and comment-ratio checks passed. doc_impact.py listed no other documents. Workflow README, word budget, versions and CI triggers are unchanged.
+Validation evidence:
+- All 26 existing package test/lint commands pass from the worktree root (1,182 unittest cases, 7 optional skips), including native dispatch and recovery checks. Local native checks used Spacedock 0.27.2 with the installed 0.27.3 plugin root; hosted CI remains separate.
+- Amended acceptance exercises the exact pointer, four missing-workaround mutations, the word cap and a below-cap mutation requiring an unattended Paseo attempt. Its report checker rejects a claim that the historical runs tested an unattended default.
+- The two existing browser runs remain at 20eb8255daf0f1267a8c0dd16daf0705a7cf82ba: the attended run records Paseo screenshots and a ref-based click; the background run records failures and per-step adapter fallback. Neither run establishes an unattended Paseo default. No new browser check ran.
+- ADR lint, number guards, design-surfaces and comment-ratio checks are recorded; no other retained document is listed by doc_impact.py. Only the two approved product documents changed, with no version or CI-trigger edits.
 
-The browser runtime was exercised at 20eb8255daf0f1267a8c0dd16daf0705a7cf82ba; final candidate 90192bb64db4614de9a7a94cc782ee5fa44748db only adds the observed visibility instruction. The kc-journey-map tree is identical at both revisions.
-
-RoboRev and CI are FO-owned and not run by the implementation worker. CI cost per PR was not measured.
+FO owns publication of the local candidate, PR retitling/update, fresh review and CI. RoboRev and hosted CI were not run by this implementation worker. CI cost per PR was not measured.

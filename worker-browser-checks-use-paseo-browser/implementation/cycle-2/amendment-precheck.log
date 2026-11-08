@@ -1,0 +1,5 @@
+worker-browser-checks-use-paseo-browser.md: '### Amendment 1 — 2026-11-08, host question dialog' supersedes AC-1 but it is still declared in '## Acceptance criteria'
+worker-browser-checks-use-paseo-browser.md: '### Amendment 1 — 2026-11-08, host question dialog' supersedes AC-2 but it is still declared in '## Acceptance criteria'
+worker-browser-checks-use-paseo-browser.md: '### Amendment 1 — 2026-11-08, host question dialog' supersedes AC-4 but it is still declared in '## Acceptance criteria'
+worker-browser-checks-use-paseo-browser.md: '### Amendment 1 — 2026-11-08, host question dialog' supersedes AC-1, AC-2, AC-4 but no criterion says 'Amended by Captain, amendment 1' and its 'Supersedes:' line does not say 'no replacement'
+scope check not run: stage is validation, not ideation
