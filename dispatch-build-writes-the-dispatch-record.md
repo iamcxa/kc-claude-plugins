@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-08T05:08:52Z
+worktree: .worktrees/spacedock-ensign-dispatch-build-writes-the-dispatch-record
 ---
 
 A dispatch built with `dispatch build --stamp` leaves <task>/dispatch/<stage>-<cycle>.md written from the same checklist, scope notes, model and SHA it sends, so the record no longer depends on FO remembering it.
