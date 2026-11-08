@@ -1,0 +1,31 @@
+diff --git a/kc-dev-flow-2/extensions/paseo/EXTENSION.md b/kc-dev-flow-2/extensions/paseo/EXTENSION.md
+index 9ed3bdef5..6337509fe 100644
+--- a/kc-dev-flow-2/extensions/paseo/EXTENSION.md
++++ b/kc-dev-flow-2/extensions/paseo/EXTENSION.md
+@@ -18,7 +18,7 @@ Spawn with create_agent, notifyOnFinish true and an explicit modeId, because a C
+ 
+ Resolve the stage's absolute worktree on the destination host. Pass a matching workspaceId explicitly to create_agent. If Spacedock creates the worktree during dispatch build, chain paseo workspace create --isolation local --path <worktree> --background --json onto that same build command, so create_agent stays the next host action. Paseo's CLI spawn has no finish callback; do not use it for a stage worker. Check current Paseo help before use. A prompt saying cd is not placement. If placement is unavailable or mismatched, hold and return the gap to the Captain. Preserve Spacedock's generated prompt and immediate spawn order.
+ 
+-Add to scope notes: "Start in the assigned worktree; verify pwd and git root before edits. Commit locally and report the branch, base, candidate SHA and prepared PR text; do not push the product branch or open its PR. FO owns those steps and, when roborev is listed, its review. Report delegated checks as not run, never clean. Split-root state commits and sync still follow the ensign contract."
++Add to scope notes: "Start in the assigned worktree; verify pwd and git root before edits. Commit locally and report the branch, base, candidate SHA and prepared PR text; do not push the product branch or open its PR. FO owns those steps and, when roborev is listed, its review. Report delegated checks as not run, never clean. Split-root state commits and sync still follow the ensign contract. For a local browser check you drive yourself, first read extensions/paseo/browser.md under your Package root."
+ 
+ FO reconciles the local candidate and any existing PR, then under an applicable Captain grant pushes and opens or updates the Draft PR before validation. When roborev is listed, FO runs its existing gate on that exact base/head and records its result; findings return through the existing repair route. Missing access, authority, a mismatched head or incomplete review holds the dependent step. Preserve CI, independent validation and merge gates. Never widen sandbox permissions to make this practice work.
+ 
+diff --git a/kc-dev-flow-2/extensions/paseo/browser.md b/kc-dev-flow-2/extensions/paseo/browser.md
+new file mode 100644
+index 000000000..3e65c1cd9
+--- /dev/null
++++ b/kc-dev-flow-2/extensions/paseo/browser.md
+@@ -0,0 +1,12 @@
++# Worker browser checks through Paseo
++
++For a local browser check you drive yourself, use Paseo's browser tools (`mcp__paseo__browser_*`) unless the repository's own instructions name another tool for that check. CI browser runs are unchanged. Tabs open in the background in your Paseo workspace on the most recently connected browser host; close the tabs you open.
++
++If the tools are missing from your session, or cannot perform a step after the workaround below, use the repository's supported adapter for that step and record in your report which tool ran each step and why. A step no browser ran is reported as not run, never clean.
++
++Known limits:
++- Keep the tab visible in the Paseo app for screenshots and clicks.
++- The Captain's keyboard, including his input method, can reach a field `browser_type` is filling. Fill with `browser_evaluate` instead: set the value through the element's native value setter, dispatch a bubbling `input` event, and read the value back.
++- Some React Native web buttons respond only to `browser_click` on a ref from the latest `browser_snapshot`. Refs expire when the page changes, so snapshot again first.
++- `browser_evaluate` fails with `browser_timeout` after 15 seconds. For longer work, start it in one call, park the result on `window`, and poll it with short calls.
++- Drawing on a signature canvas is untested. Try `browser_drag`; if the drawing does not register, use the repository's adapter for that step.

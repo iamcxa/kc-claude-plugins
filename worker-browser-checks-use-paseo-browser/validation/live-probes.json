@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-11-08T02:02:40.588Z",
+  "agents": [
+    {
+      "probe": 3,
+      "status": "fulfilled",
+      "data": {
+        "status": "idle",
+        "id": "a0076a47-a29b-4946-b2a3-e2477d4836dc",
+        "provider": "claude",
+        "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser",
+        "workspaceId": "wks_6ce643c3779f86a6",
+        "createdAt": "2026-11-08T01:47:09.220Z",
+        "activeTurn": null
+      }
+    },
+    {
+      "probe": 4,
+      "status": "fulfilled",
+      "data": {
+        "status": "idle",
+        "id": "07667725-e257-49f7-b859-a1f49e1187c3",
+        "provider": "codex",
+        "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-worker-browser-checks-use-paseo-browser",
+        "workspaceId": "wks_6ce643c3779f86a6",
+        "createdAt": "2026-11-07T15:44:35.159Z",
+        "activeTurn": null
+      }
+    }
+  ],
+  "browserList": {
+    "tool": "mcp__paseo__browser_list_tabs",
+    "calls": 1,
+    "ok": true,
+    "workspaceId": "wks_a8f029f6e72d90cb",
+    "note": "No new tab or tab-scoped call; unrelated tab identifiers/URLs omitted."
+  }
+}

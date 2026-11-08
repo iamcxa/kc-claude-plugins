@@ -1,0 +1,58 @@
+[
+  {
+    "path": "../implementation/acceptance.sh",
+    "sha256": "f2ac9d8a3b3a500ec0ca7e2f655c13810fd48d0062e2262c0b130f1f2aba7201"
+  },
+  {
+    "path": "../implementation/acceptance.py",
+    "sha256": "def1d1d079a4d4b823e16dae5c38c2e37c0c6bbcb78f70caf879004be30c77cf"
+  },
+  {
+    "path": "../implementation/claude-activity.json",
+    "sha256": "b8872c8bc7b00aca524368d8c78a39ccd27b4a5216161f8b7b90bb8f7af13ada"
+  },
+  {
+    "path": "../implementation/claude-prompt.txt",
+    "sha256": "3829efcc68229b370d5ec5104c57a9f2bd235879bcdc3dc63288e08ed0450ead"
+  },
+  {
+    "path": "../implementation/claude-report.md",
+    "sha256": "58351a0e4060792d4d93fb9f32d91e42760cf23f7bef98e96147079a7ad7ca31"
+  },
+  {
+    "path": "../implementation/codex-activity.json",
+    "sha256": "095dd55a997451b169db997d25c2ebf88b23e861740895732f5325eafe6c10e5"
+  },
+  {
+    "path": "../implementation/canvas-provenance.json",
+    "sha256": "9b395363eb592c53bbeb2ffc74c6495092f9ff684923eb51a8c49d72c8303e18"
+  },
+  {
+    "path": "../implementation/attempt-2/claude-activity.json",
+    "sha256": "081f72bb7b78e454aa9917a7b859d1cfbb32ddbb756bd326f1b7d3485a2c86c0"
+  },
+  {
+    "path": "../implementation/attempt-2/claude-prompt.txt",
+    "sha256": "f65ea6a691c1726f1fccd2f45d6f86b56376d018762111860716f989216aa863"
+  },
+  {
+    "path": "../implementation/attempt-2/claude-report.md",
+    "sha256": "0878c3ef80cbc13e0cdc0c89e0eee0f53c86b3ec7414fd805e3dcbc5b9b3c303"
+  },
+  {
+    "path": "../implementation/attempt-2/claude-before.png",
+    "sha256": "06dd487dac3200ab681ffaf2300a0eae76af0fbfbcd0bfdec9aaed086faef1c3"
+  },
+  {
+    "path": "../implementation/attempt-2/claude-after.png",
+    "sha256": "c4508b5155d74f01f8793826bf93e2981cf06adac4c2617d34b8363d3925ec9e"
+  },
+  {
+    "path": "../implementation/claude-board-before.png",
+    "sha256": "9834f4da89ecd899a1761efbc06a2d7b8efdcd6455c31b077b1238df760c4f5d"
+  },
+  {
+    "path": "../implementation/claude-board-after-click.png",
+    "sha256": "e6ece95f4198603047bc62220175adb4eb22448c03e7e5487838431f314be09f"
+  }
+]

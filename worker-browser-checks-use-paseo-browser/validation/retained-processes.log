@@ -1,0 +1,3 @@
+  PID  PPID COMMAND
+96411 96380 /Users/kent/n/bin/node node_modules/tsx/dist/cli.mjs server/canvas-server.ts
+96412 96380 /Users/kent/n/bin/node node_modules/vite/bin/vite.js dev --host 127.0.0.1 --strictPort

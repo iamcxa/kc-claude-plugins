@@ -248,3 +248,32 @@ Designed the smallest route: FO copies one more sentence (+15 words at the Paseo
 ### Summary
 
 Implemented the Pilot slice in two local commits, with the pointer adding 15 FO-read words and the worker guide at 235 words. Codex reachability and a fresh Claude all-Paseo visible-tab walk passed; the earlier background failure is preserved, and the FO-authorized follow-up adds its observed visibility workaround. Publication, independent review, CI and the retained browser/service cleanup remain FO-owned; this report does not advance workflow state.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #810 head 90192bb6 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict REJECTED pending F1 Needs decision at 90192bb64db4614de9a7a94cc782ee5fa44748db; AC-1/2/3/5 PASSED, AC-4 not met as written. See validation/report.md and validation/acceptance-results.json: 27 structural replay checks passed, including each criterion's falsifier; their green score does not check prompt neutrality.
+- DONE: Judge both recorded browser runs (background-tab failure with fallback, then the visible-tab Paseo run) and the added visible-tab limit; do not open a new Paseo browser tab yourself unless you first tell FO, because a screenshot needs the Captain to bring the tab to the front
+  Read both prompts/activity logs/reports and all four screenshots. Run 1 chose Paseo unhinted then fell back after four screenshot failures; run 2 visibly rendered/clicked through Paseo but named tools. Visibility guidance is supported for this host; validation opened no tab.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step validation/captain-acceptance.sh ran unchanged under bash --noprofile --norc, exit 0; validation/captain-acceptance.log names the remaining AC-4 decision. Required ADR command with base 139feeaee7ce037a0c6535568cd6bd103155cbae exits 0, 62 records, 0 legacy.
+- FAILED: AC-4 one fresh worker completes the all-Paseo check with no browser tool named in the ask.
+  Neither run meets both clauses; dispatch/validation-1-message-1.md confirms no Captain ruling covers the gap and that FO supplied the tool hint. No implementation repair or extra run authorized.
+- DONE: Finish every other item and give your verdict on the rest.
+  AC-1 exact quote/real consumer + rejected reorder/extra-line mutations; AC-2 235 words + rejected missing-workaround/overflow mutations; AC-3 +15 words + rejected limits-in-FO-text mutation; AC-5 recorded once-only Codex probe + rejected missing measurement. All PASSED.
+- DONE: Verify candidate checks, decision records, affected documents and dispatch records.
+  Candidate lint exits 0; dispatch tests run 115 tests, 1 optional skip, exit 0; six package checks exit 0 (validation/checks-results.json), final five dispatch records complete. Comment ratio 0/0 lines, 0.0%, 5% maximum not enforced below 20 lines; doc impact [].
+- DONE: Check goal sufficiency, minimal necessity, retained claims and exact artifact provenance.
+  Only approved extension/pointer and worker guide changed; base lacks the path exercised by run 1; guide/word-budget falsifiers justify the split. Browser runtime was 20eb8255d, whose journey-map tree equals final head; historical process/dependency bytes were not independently attested.
+- DONE: Follow the recorded validation follow-up and retain ownership boundaries.
+  No new browser check or worker; own Codex list-tabs call succeeded once. Named earlier workers idle; two retained server PIDs still live (validation/retained-processes.log). FO owns Captain decision, retained tab/server cleanup, review and delivery.
+- SKIPPED: New live browser run and unrelated delivery checks.
+  FO explicitly forbids another browser check. CI cost per PR not measured; no CI files changed. Remote CI, RoboRev, publishing, ready and merge remain FO-owned; no product edit or push occurred.
+
+### Summary
+
+REJECTED pending one Needs decision at candidate 90192bb64db4614de9a7a94cc782ee5fa44748db; all other acceptance criteria and executed checks pass. The successful visible run proves local Paseo screenshots/clicks, while the unhinted run proves default selection plus honest fallback; they do not form the single run the unchanged criterion requires.
+
+- F1 Needs decision: value-ac[AC-4] requires unhinted all-Paseo completion. Run 1 fails the Paseo interaction path and run 2 explicitly names tools; dispatch/validation-1-message-1.md acknowledges FO's dispatch error and no covering Captain ruling. FO must take that evidence to the Captain; this is not an implementation defect or permission for another run.
+

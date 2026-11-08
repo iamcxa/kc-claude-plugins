@@ -1,0 +1,24 @@
+candidate 90192bb64db4614de9a7a94cc782ee5fa44748db
+Add to scope notes: "Start in the assigned worktree; verify pwd and git root before edits. Commit locally and report the branch, base, candidate SHA and prepared PR text; do not push the product branch or open its PR. FO owns those steps and, when roborev is listed, its review. Report delegated checks as not run, never clean. Split-root state commits and sync still follow the ensign contract. For a local browser check you drive yourself, first read extensions/paseo/browser.md under your Package root."
+    1116 /tmp/paseo-captain-810.gpdw0v/kc-dev-flow-2/extensions/paseo/EXTENSION.md
+     235 /tmp/paseo-captain-810.gpdw0v/kc-dev-flow-2/extensions/paseo/browser.md
+    1351 total
+{
+  "base": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+  "candidate": "90192bb64db4614de9a7a94cc782ee5fa44748db",
+  "checks": 27,
+  "status": "passed",
+  "failed": 0,
+  "extension_words": 1116,
+  "guide_words": 235
+}
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+lint exit 0
+62 ADR file(s) checked, 0 legacy
+adr-lint exit 0
+Static/replay checks passed; AC-4 remains Needs decision: successful run explicitly named tools.
+No live browser run, credentials, publication, or cross-host guarantee is covered. Scratch: /tmp/paseo-captain-810.gpdw0v
