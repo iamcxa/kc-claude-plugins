@@ -57,6 +57,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-08T02:10:28.830313Z"
                 reason: Captain steps step 2 rerun in the candidate's clean worktree (the export run used a borrowed index); summary updated to match
+            - id: gate-attempt:adr-lint-tells-supersession-assertion-from-pointer-validation-2
+              briefing:
+                id: briefing:adr-lint-tells-supersession-assertion-from-pointer:validation:attempt-2:revision-1
+                digest: sha256:16e6a676b929043d35a88e7949f569f0f3ef31d9a8a9f0ab255be381ca1f3f08
+                room-ref: ./adr-lint-tells-supersession-assertion-from-pointer/review/validation/briefing-2
 started: 2026-11-07T15:40:02Z
 worktree: .worktrees/spacedock-ensign-adr-lint-tells-supersession-assertion-from-pointer
 pr: iamcxa/kc-claude-plugins#806
