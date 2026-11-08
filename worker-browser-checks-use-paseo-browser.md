@@ -346,3 +346,40 @@ REJECTED pending one Needs decision at candidate 90192bb64db4614de9a7a94cc782ee5
 ### Summary
 
 This complete report supersedes the earlier implementation report at candidate 90192bb64db4614de9a7a94cc782ee5fa44748db. Implemented Captain amendment 1 as attended-page guidance with a 228-word guide and an 11-word dispatch increase, keeping both original runs attributed to 20eb8255daf0f1267a8c0dd16daf0705a7cf82ba; no new browser run occurred. Product publication, PR retitling/update, fresh review, CI and retained-surface cleanup remain FO-owned.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #810 head fef21735 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at fef21735308e7e807d04a93a5506de5284dde436; active AC-3/5/6/7/8 and all 34 existing assertions/mutations pass. See validation/cycle-2/report.md and acceptance-results.json; candidate execution used git-archive exports, without product edits.
+- DONE: Judge Captain amendment 1 and the active criteria AC-3, AC-5, AC-6, AC-7, AC-8; superseded AC-1, AC-2, AC-4 are withdrawn. Run no browser check: AC-8 rests on the two saved runs at 20eb8255daf0f1267a8c0dd16daf0705a7cf82ba.
+  Compared the Captain's source words, independent review and amended text; original withdrawn blocks match accepted state aa6670bdd verbatim, ruling fields and AC-3/5 are unchanged. Both runs, all four images and 14 preserved evidence hashes were reviewed; no new browser action.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step validation/cycle-2/captain-acceptance.sh ran unchanged under bash --noprofile --norc, exit 0; captain-acceptance.log retains observed output. Required Claude ADR command at merge base 139feeaee7ce037a0c6535568cd6bd103155cbae exits 0: 62 records, 0 legacy.
+- DONE: AC-6 conditional pointer and unchanged dispatch consumer.
+  Exact final sentence and retained original quote pass; putting the sentence first or adding a second instruction makes the real consumer fail. Full consumer suite: 115 cases, 1 optional skip, exit 0.
+- DONE: AC-7 attended routing, human verification, repository precedence and bounded limits.
+  Guide is 228 words; each scope limit maps to its workaround, with visibility/cleanup and honest fallback retained. Missing-workaround, overflow and within-cap unattended-Paseo-first mutations fail; no challenge automation or bypass is instructed.
+- DONE: AC-3 reading bound and minimum necessary change.
+  Extension is 1101 to 1112 words (+11); limits-in-FO-text mutation exceeds +20. Base lacks the pointer/guide; only those two documents change, with workflow source/budget, package README and dispatch consumer unchanged.
+- DONE: AC-8 historical operation/fallback and AC-5 measured tool reachability.
+  Attended images show the minimap opening via fresh-ref Paseo click; background run records four screenshot failures then agent-browser page-menu fallback. False unattended-default proof, missing calls and missing Codex measurement are rejected; one historical Codex list-tabs call supports that session only.
+- DONE: Candidate package commands and required document, amendment and decision checks.
+  All 26 CI-listed local commands exit 0: 1182 unittest cases, 11 skips plus native dispatch/recovery passes; 4 extra skips versus implementation are absent journey-map dependencies in the export. ADR/design checks pass at both installed roots; doc impact []; comment ratio 0/0, 0%, maximum 5% not enforced below 20 lines. No number reserved/added; optional number check uses local refs after fetch warning.
+- DONE: Judge the implementation's provenance, runtime and delivery limits.
+  Both browser runs remain at 20eb8255daf0f1267a8c0dd16daf0705a7cf82ba; journey-map Git tree equals candidate, historical process/dependency bytes not independently attested. Native binary 0.27.2/plugin 0.27.3 is local proof, not hosted CI; package-script-sha256.json distinguishes differing Claude/Codex 0.35.0 cache bytes.
+- DONE: FO repaired dispatch/engineering-reviewer-1.md into the dispatch-record form at state commit cc856a63929c5fc771d3852d0f8667dd00460804; the bytes the reviewer read stay at state commit a113aa3e9a3dad8f16e4a6d8ba638acfe3b3dd96, named in the record's "Original brief:" line. The repair is FO's; it changes no product file and no candidate.
+  Read validation-2-message-1.md and the repaired record; earlier six-field refusal is preserved, original brief remains retrievable, candidate still fef21735308e7e807d04a93a5506de5284dde436.
+- DONE: Rerun /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py on the task folder, record its exit, and finish the verdict at head fef21735308e7e807d04a93a5506de5284dde436 with the earlier failure and this repair both in your report.
+  Initial exit 1 at both installed roots; requested rerun exits 0, 9 dispatch record(s) complete (validation/cycle-2/dispatch-records-after-repair.log). F1 Material is fixed; no open finding remains.
+- SKIPPED: New browser execution, login reproduction, cross-host proof and delivery actions.
+  No browser call/new worker was run. Scope reports/probes support the retained workarounds; signature drawing stays untested. Named checked workers are closed and recorded server PIDs absent; tab state not queried. FO owns remaining surface cleanup, review, CI, gate and delivery.
+- SKIPPED: CI cost measurement.
+  Cost per PR was not measured; this candidate changes no CI trigger or file.
+
+### Summary
+
+Cycle 2 PASSED for fef21735308e7e807d04a93a5506de5284dde436 under Captain amendment 1; the former unhinted-all-Paseo requirement is withdrawn, and the retained evidence is not claimed to execute the amended guide. Product worktree remains clean; workflow state remains validation and final review, gate and delivery stay with FO.
+
+- F1 Material — fixed by FO: the normal whole-task dispatch check refused the engineering-review record (observable exit 1; contract[kc-dev-flow-2/skills/validation/principles.md#validation-principles] requires complete dispatch records). State cc856a639 repaired the form and retained the original brief; exact requested recheck exits 0. Details and both failure/recheck logs: validation/cycle-2/report.md.
+

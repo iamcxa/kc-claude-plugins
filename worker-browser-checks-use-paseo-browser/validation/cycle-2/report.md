@@ -1,0 +1,48 @@
+# Validation cycle 2 — PASSED
+
+Candidate: `fef21735308e7e807d04a93a5506de5284dde436`, iamcxa/kc-claude-plugins PR #810.
+Effective diff base (merge base with origin/main): `139feeaee7ce037a0c6535568cd6bd103155cbae`.
+Observed local origin/main: `334d91e3165953b2ca7191e3308d80b6c02c4a99`.
+The remote PR is OPEN and has the exact candidate head (pr-identity.json). This verdict grants no delivery authority.
+
+## Scope and source discipline
+
+Pilot, Surfaces: none, Captain amendment 1. Active AC-3/5/6/7/8 govern; AC-1/2/4 are withdrawn. The prior validation's unhinted all-Paseo requirement is not reimposed.
+The candidate was exported with git archive into /tmp/paseo-validation-810-20261108-130911/candidate. All candidate execution used exports; no git worktree was created or removed, and no product file, branch or Git configuration was changed.
+The two-dot diff from current origin/main includes later unrelated main changes. The task delta uses the recorded common ancestor, and the AC-3 three-dot protected-file diff is empty.
+The installed Codex validation skill resolves its package to /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0; the dispatch explicitly names the Claude cache at the same version. Four of the six helper files differ; package-script-sha256.json records their exact bytes. The required Claude ADR command was run as written, and the decisive amendment and dispatch checks were also run from that root. Both roots agree on these outcomes; no package identity equivalence is claimed.
+
+## Criterion verdicts and falsifiers
+
+- AC-6 PASSED. The sole scope-note quote preserves the entire old quote and adds the exact conditional pointer at its end. The actual unchanged dispatch consumer passes; putting the pointer first or adding a second instruction makes that consumer fail. Logs: AC-6 existing consumer.log and the two mutation logs.
+- AC-7 PASSED. Reviewed the 228-word exported guide against all scope clauses: attended pages and human-verification logins route through Human terminals and pages; repository instructions win; unattended checks have no mandatory Paseo attempt; CI, placement, cleanup and per-step fallback/not-run reporting remain. Each removed workaround, word overflow and a within-budget unattended-Paseo-first sentence is rejected.
+- AC-3 PASSED. EXTENSION.md is 1101 to 1112 words (+11), below the +20 bound. Only its dispatch quote changes; the worker guide is not added to FO's other reading moments. Workflow source, lint budget, dispatch consumer and package README retain their base bytes. Moving the guide into FO's extension text is rejected by the bound.
+- AC-8 PASSED under the amendment's historical boundary. Read both prompts, complete saved activity payloads and corrected reports; inspected all four PNGs. Both reports name runtime 20eb8255daf0f1267a8c0dd16daf0705a7cf82ba. Background: four screenshot failures, evaluate/click timeout, then documented agent-browser page-menu click and screenshots; own tabs closed. Attended: two waits, visible state, fresh snapshot, two screenshots and ref @e34 minimap click; the image visibly gains a minimap, no fallback. Its tab was retained by FO instruction. A mutant claim that these runs prove an unattended default is rejected; missing calls and an alternate-adapter record are also rejected. All 14 historical evidence hashes remain unchanged.
+- AC-5 PASSED as a saved measurement. Codex activity has one list-tabs call and a successful tool-availability report. Missing measurement is rejected; the guide asserts no unmeasured Codex capability or limitation. It proves that worker/session/host only, not Codex screenshots, clicks or authentication.
+- All 34 existing acceptance assertions/mutations passed when rerun on copied evidence; acceptance-results.json records them. The harness's prose checks complement the manual semantic review and do not establish browser runtime behavior.
+
+## Amendment fidelity and minimum necessary change
+
+The independent engineering review precedes this repair and supports narrowing to attended pages while retaining the four workarounds. New AC-6/7/8 implement the Captain's quoted choice without requiring a new unattended run or automated human verification.
+amendment-results.json confirms the original accepted AC-1/2/4 blocks from state aa6670bdd are preserved verbatim under Superseded text, AC-3/5 remain unchanged, and Captain/Asked/Design/Supersedes source fields are unchanged. The earlier comparison with the immediate pre-implementation state failed because that state already had rewritten text under old IDs; amendment-predecessor-comparison.json preserves that diagnostic, not a current defect.
+Only the approved extension and new guide differ from the merge base. Base already provides attended placement and sign-in boundaries but lacks the limits guide and conditional pointer. The guide therefore supplements that path; it does not introduce a human-interaction procedure, broad browser default or runtime repair. Removing its pointer loses discoverability; moving the limits to FO's text exceeds the accepted reading bound. No workflow, version, CI, adopter, checker, or decision-record change is needed for this approved slice.
+doc-impact returns []; both affected product documents are updated. No added code comments or ADRs; comment ratio is 0 code/0 comment lines, 0%, with the 5% maximum not enforced below 20 lines. Number guards reports PASS with no migration path; its state-ref fetch warning means reservations were read locally. No new/reserved number exists in this task or product diff, so that limit affects no criterion.
+
+## Commands actually run
+
+captain-acceptance.sh is five steps with exact commands and expected observations. Ran unchanged using bash --noprofile --norc, exit 0; captain-acceptance.log is the observed output and captain-execution.json binds the command, candidate and scratch export. Its prerequisite paths and tools are explicit. It has no user-visible product screen to open and tests the instruction consumer plus saved evidence instead.
+Step 3 reports 34 passed / 0 failed; step 4 runs 115 dispatch tests, 1 optional skip, and lint exit 0; step 5 runs the dispatch-pinned Claude adr_lint.py docs/adr --since 139feeaee7ce037a0c6535568cd6bd103155cbae, exit 0, 62 records, 0 legacy.
+All 26 CI-listed package commands were independently executed from the export (package-results.json): 1182 unittest cases, 11 skipped, and native dispatch/recovery commands passed. The earlier implementation had 7 skips; this export additionally lacks journey-map dependencies for 4 optional release-producer cases. Other skipped cases require optional corpus/native fixture inputs. No omitted case is promoted into a pass.
+Local Spacedock binary 0.27.2 and plugin root 0.27.3 were used by the native tests, matching the implementation setup. This is not hosted Linux CI. No CI files changed; cost per PR was not measured.
+
+## Findings and disposition
+
+- F1 Material — FIXED by FO. Normal workflow: FO/validator runs dispatch_records.py on this task folder. Observable harm: exit 1 rejects the independent engineering-review dispatch for six absent structural fields, preventing the prescribed whole-folder check from passing. Boundary: contract[kc-dev-flow-2/skills/validation/principles.md#validation-principles] requires complete saved dispatch records. Trigger: dispatch-records.log and dispatch-records-dispatch-package.log reproduce the same failure with both installed roots. FO repaired only its state record in cc856a63929c5fc771d3852d0f8667dd00460804; the Original brief line points to a113aa3e9a3dad8f16e4a6d8ba638acfe3b3dd96, preserving the actual dispatched bytes. Read validation-2-message-1.md and reran the exact requested Claude checker: exit 0, 9 dispatch record(s) complete (dispatch-records-after-repair.log). The candidate SHA remains unchanged. No open Material, Needs decision, Deferred risk or Polish finding remains for this dispatch.
+
+## Evidence limits and ownership
+
+No new browser call or worker was run. The saved activity summaries abbreviate shell commands and omit raw tool responses: detailed browser errors and visibility are worker-reported, cross-checked with call order and screenshots. The historical server/dependency bytes were not independently attested; the journey-map Git tree equals the final candidate.
+The native-setter workaround is supported by the scope's report and limited ideation probe, not a fresh concurrent-IME experiment. The fresh-ref guidance remains scoped to the reported React Native buttons; the minimap run establishes only its own ref-click. The 15-second evaluation limit and start/store/poll workaround derive from that host's reports/probe, not a universal platform guarantee. Signature drawing remains explicitly untested. Visibility is an observed condition, not an independently proven failure cause or guarantee.
+Neither saved run executes the amended guide or a login challenge. The motivating QNow authentication success remains the attributed earlier FO report. The candidate instructs routing and preserves manual sign-in/confirmation boundaries; it does not promise bypass, fresh login success, unattended Paseo reliability or another host/device's behavior.
+Recorded workers checked now are closed; the scoped active-agent list was empty. The two saved server PIDs are no longer present (retained-processes.log). Tab state was not queried under the no-browser instruction. FO retains any remaining surface cleanup, exact-head reviews, CI, gate decision, merge and publication. Task status remains validation.
+

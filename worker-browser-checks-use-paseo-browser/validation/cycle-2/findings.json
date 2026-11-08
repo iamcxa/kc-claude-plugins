@@ -1,0 +1,10 @@
+[
+  {
+    "severity": "medium",
+    "title": "派工紀錄缺少欄位，已由 FO 修復",
+    "file": "worker-browser-checks-use-paseo-browser/dispatch/engineering-reviewer-1.md",
+    "line": 1,
+    "detail": "Material（阻擋既有流程）：兩個套件的整個任務資料夾檢查原先皆 exit 1。FO 在 cc856a63929c5fc771d3852d0f8667dd00460804 補正；原始派工內容保留於 a113aa3e9a3dad8f16e4a6d8ba638acfe3b3dd96。重跑 exit 0，九份紀錄完整，產品候選不變。",
+    "status": "fixed"
+  }
+]
