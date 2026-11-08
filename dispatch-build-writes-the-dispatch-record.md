@@ -212,6 +212,10 @@ Recommended order: merge-guard-stops-unasked-merges, then this task; the batch-1
 
 **AC-8** CI runs the seam test with the real binary. Evidence: `kc-dev-flow-2-tests.yml` holds the new step after "Install pinned Spacedock", and the PR's run shows it passing; `test_dispatch_stage.py` with `SPACEDOCK_BIN` unset exits nonzero naming it. Falsifier: deleting the step removes the check from the run.
 
+## Number guards
+
+ADR: 0070
+
 ## Stage Report: ideation
 
 - DONE: Design how a stamped dispatch leaves a dispatch record that /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/dispatch_records.py accepts without FO hand-writing it, or why Spacedock cannot and what the package does instead, after reading Spacedock's own dispatch build source
