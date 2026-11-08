@@ -2,6 +2,7 @@
 """Exercise dispatch records through the real Spacedock binary in split-root repos."""
 
 import json
+from contextlib import nullcontext
 import os
 from pathlib import Path
 import shutil
@@ -65,9 +66,12 @@ class DispatchStageTests(unittest.TestCase):
             if path.is_file():
                 path.unlink()
 
-    def call(self, args, expected=0, child_env=None, data=None):
-        result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
-                                input=data, capture_output=True, text=True, timeout=30)
+    def call(self, args, expected=0, child_env=None, data=None, stderr_path=None):
+        with stderr_path.open("w") if stderr_path else nullcontext(subprocess.PIPE) as stderr:
+            result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+                                    input=data, stdout=subprocess.PIPE, stderr=stderr, text=True, timeout=30)
+        if stderr_path:
+            result.stderr = stderr_path.read_text()
         if os.environ.get("DISPATCH_STAGE_LOG"):
             with Path(os.environ["DISPATCH_STAGE_LOG"]).open("a") as log:
                 log.write(json.dumps(dict(argv=list(map(str, args)), exit=result.returncode,
@@ -87,7 +91,7 @@ class DispatchStageTests(unittest.TestCase):
         self.entity.write_text(self.entity.read_text().replace("status: ideation", f"status: {stage}"))
         self.commit_task()
 
-    def build(self, stage="ideation", extra=(), expected=0, cleanup_spy=False, child_env=None):
+    def build(self, stage="ideation", extra=(), expected=0, cleanup_spy=False, child_env=None, stderr_path=None):
         launch = [sys.executable, "-B", WRAPPER]
         if cleanup_spy:
             script = ("import sys; from pathlib import Path; sys.path.insert(0, sys.argv.pop(1)); "
@@ -99,7 +103,7 @@ class DispatchStageTests(unittest.TestCase):
         return self.call([*launch, "--workflow-dir", self.workflow,
                           "--entity-path", self.entity, "--stage", stage, "--model", "fixture-model",
                           "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
-                          "--spacedock", BINARY, "--host", "codex", *extra], expected, child_env)
+                          "--spacedock", BINARY, "--host", "codex", *extra], expected, child_env, stderr_path=stderr_path)
 
     def record(self, stage="ideation", number=1):
         return self.folder / "dispatch" / f"{stage}-{number}.md"
@@ -192,6 +196,48 @@ class DispatchStageTests(unittest.TestCase):
         self.assertEqual(held.stderr, "fixture staged then failed\n")
         self.assertFalse(self.record().exists())
         self.assertEqual(self.git(self.state, "status", "--porcelain"), "")
+
+    def test_successful_same_symptom_forwards_one_reminder_before_real_build(self):
+        self.set_stage("implementation")
+        first = self.build("implementation", ("--symptom", "same failure"))
+        self.assertNotIn("step back:", first.stderr)
+        stderr_path = self.base / "wrapper-stderr.txt"
+        observation = self.base / "before-build.json"
+        observer = self.base / "observe-and-build"
+        observer.write_text(f"#!{sys.executable}\nimport json, subprocess, sys\nfrom pathlib import Path\n"
+                            f"Path({str(observation)!r}).write_text(json.dumps(dict(stderr=Path({str(stderr_path)!r}).read_text())))\n"
+                            f"sys.exit(subprocess.call([{BINARY!r}, *sys.argv[1:]]))\n")
+        observer.chmod(0o755)
+        result = self.build("implementation", ("--symptom", "same failure", "--note", "second round",
+                                                "--spacedock", observer), stderr_path=stderr_path)
+        marker = f'{self.record("implementation", 2)}:1: step back: 2 implementation dispatches name symptom "same failure";'
+        questions = ("is what I am solving still the outcome first asked for",
+                     "can this gap be tested now, or am I waiting",
+                     "what breaks if this criterion or process is deleted?")
+        before_build = json.loads(observation.read_text())["stderr"]
+        for text in (marker, *questions):
+            self.assertEqual(result.stderr.count(text), 1, "successful check reminder was lost or duplicated")
+            self.assertEqual(before_build.count(text), 1, "reminder was not visible before building")
+        self.assertTrue(Path(json.loads(result.stdout)["dispatch_file_path"]).is_file())
+        self.assertNotIn("dispatch record(s) complete", result.stdout)
+        self.assert_committed(self.record("implementation", 2), f"dispatch: {self.slug} entering implementation")
+        for flags in ((self.folder,), ("--names", "--strict", self.record("implementation", 2))):
+            checked = self.call([sys.executable, "-B", CHECKER, *flags])
+            self.assertIn(marker, checked.stderr)
+
+    def test_successful_checks_keep_distinct_other_stage_warnings(self):
+        self.set_stage("validation")
+        validation = ("--candidate", "a" * 40, "--symptom", "previous failure")
+        self.build("validation", validation)
+        self.build("validation", (*validation, "--note", "second round"))
+        self.entity.write_text(self.entity.read_text().replace("status: validation", "status: implementation"))
+        self.commit_task()
+        self.build("implementation", ("--symptom", "current failure"))
+        result = self.build("implementation", ("--symptom", "current failure", "--note", "second round"))
+        for stage, symptom in (("validation", "previous failure"), ("implementation", "current failure")):
+            marker = f'{self.record(stage, 2)}:1: step back: 2 {stage} dispatches name symptom "{symptom}";'
+            self.assertEqual(result.stderr.count(marker), 1, "a distinct reminder was lost or shared reminder duplicated")
+        self.assertTrue(Path(json.loads(result.stdout)["dispatch_file_path"]).is_file())
 
     def assert_existing_record_is_preserved(self, staged=False, missing=False):
         record = self.record()

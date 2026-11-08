@@ -200,6 +200,8 @@ def main(argv=None):
             if check.returncode:
                 sys.stderr.write(check.stdout + check.stderr)
         return 1
+    for line in dict.fromkeys(line for check in checks for line in check.stderr.splitlines(keepends=True)):
+        sys.stderr.write(line)
     # see docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md
     command = [args.spacedock, "dispatch", "build", "--advance" if args.advance else "--stamp"]
     for name in ("workflow_dir", "entity_path", "stage", "checklist_file", "scope_notes_file", "host", "feedback_context_file"):
