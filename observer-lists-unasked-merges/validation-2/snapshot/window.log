@@ -1,0 +1,26 @@
+window: 70b0f2f66b7a756171ba4962f2f33eb1fb2cac79..8ffd6dfa3e021c1967aeaeabd7cf0cb61db48aae (2026-10-23T10:17:22+08:00, 2026-11-06T08:30:20+08:00]
+read: refs/heads/spacedock-state/dev 42189002dd842803f6fb924a3fce6a139ad160c1 2026-09-17T07:55:19+08:00
+read: refs/heads/spacedock-state/dev2 895cd4b37eb11fe0cab9ed3a0f77f67eac0f90e5 2026-11-08T10:40:44+08:00
+read: refs/heads/spacedock-state/dev2-poc 34732bd6f90ebe7bf4a2d02ea34d95e1e0db70d7 2026-10-26T22:09:59+08:00
+read: refs/heads/spacedock-state/ship 068b069404375a7c5eee8ab6f1ea8ebf2802392c 2026-09-16T07:23:43+08:00
+read: refs/heads/spacedock-state/ship-flow 91c4a0554c82da30e1214a8529d9849014a0a8fc 2026-07-24T17:38:58+08:00
+read: refs/remotes/origin/spacedock-state/dev 42189002dd842803f6fb924a3fce6a139ad160c1 2026-09-17T07:55:19+08:00
+read: refs/remotes/origin/spacedock-state/dev-recovery-4b20a918 4b20a91804cd3752e19928dd50628dbd1aab53c0 2026-09-10T16:49:44+08:00
+read: refs/remotes/origin/spacedock-state/dev-recovery-9826ffcf 9826ffcf3cdcc097f5c8841ed415463bb62067e8 2026-09-10T16:49:44+08:00
+read: refs/remotes/origin/spacedock-state/dev2 895cd4b37eb11fe0cab9ed3a0f77f67eac0f90e5 2026-11-08T10:40:44+08:00
+read: refs/remotes/origin/spacedock-state/dev2-poc 34732bd6f90ebe7bf4a2d02ea34d95e1e0db70d7 2026-10-26T22:09:59+08:00
+read: refs/remotes/origin/spacedock-state/ship 068b069404375a7c5eee8ab6f1ea8ebf2802392c 2026-09-16T07:23:43+08:00
+read: refs/remotes/origin/spacedock-state/ship-flow 91c4a0554c82da30e1214a8529d9849014a0a8fc 2026-07-24T17:38:58+08:00
+carried: 54 of 82
+release: #707 #717 #723 #731 #739 #746 #752 #760 #768
+sync: #715 #718 #725 #733 #741 #747 #753 #761 #781
+learning: #726 #782
+no ask record: #704 head f0d3f442d5e6 merged 2026-10-23T02:34:26Z (no task in readable state)
+no ask record: #762 head 9530369cb452 merged 2026-11-05T02:41:10Z (no task in readable state)
+no ask record: #774 head b026e0d7e497 merged 2026-11-04T08:58:44Z (no task in readable state)
+no ask record: #776 head d071565932c9 merged 2026-11-03T15:23:40Z (no task in readable state)
+no ask record: #778 head 005afcaeb68c merged 2026-11-05T08:45:11Z (no task in readable state)
+no ask record: #784 head b2d0abd778d0 merged 2026-11-05T09:00:02Z (no task in readable state)
+no ask record: #785 head 0c38dd60b562 merged 2026-11-05T15:03:18Z (no task in readable state)
+no ask record: #789 head c37417313a12 merged 2026-11-05T15:31:50Z (no task in readable state)
+already reported: none

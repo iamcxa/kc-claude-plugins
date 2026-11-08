@@ -1,0 +1,9 @@
+.github/workflows/kc-dev-flow-2-tests.yml
+kc-dev-flow-2/scripts/merge_audit.py
+kc-dev-flow-2/scripts/test_merge_audit.py
+kc-dev-flow-2/skills/observer/SKILL.md
+Saved window matches all AC-1 sets; #727 is carried, and changing its head produces a violation.
+Fresh baseline (17 tests) and all five reverse mutations passed; release removal exposes #707 in the saved PR snapshot.
+{"snapshot": "13d91fadd2fa8e6184b1b925e50638e6aff38aab", "windows": 54, "median": 60.0, "max": 320, "max_task": "override-recorded-when-captain-departs", "uncollapsed_max": 422, "scope": "candidate classifications over ideation's 92-PR fixture; chronological verbatim-report collapse simulation"}
+62 ADR file(s) checked, 0 legacy
+PASS: deterministic checks only; native observer report remains separately judged. Artifacts: /tmp/observer-captain-acceptance.XTPUw3

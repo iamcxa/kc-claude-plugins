@@ -1,0 +1,12 @@
+{
+  "piped": false,
+  "tool_result": {
+    "exit_code": 1
+  },
+  "command": "python3 -B /tmp/observer-validation-a43b537c/candidate/kc-dev-flow-2/scripts/merge_audit.py /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state merge-check-reads-two-pr-tasks --rev 8ffd6dfa3e021c1967aeaeabd7cf0cb61db48aae",
+  "stdout": "replay-live.log",
+  "sandbox_attempt": {
+    "exit_code": 2,
+    "output": "replay-live-sandbox.log"
+  }
+}

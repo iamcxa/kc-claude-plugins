@@ -1,0 +1,7 @@
+window: 11ba6ff28d07b20c688c28f997c585941439f956..bd44af60ebae7f904caaff2ce38e8099f6710c81 (2026-10-21T19:51:22+08:00, 2026-10-27T23:13:47+08:00]
+carried: 20 of 30
+release: #707 #717 #723 #731
+sync: #715 #718 #725 #733
+learning: #726
+no ask record: #704 head f0d3f442d5e6 merged 2026-10-23T02:34:26Z (no task in readable state)
+already reported: none

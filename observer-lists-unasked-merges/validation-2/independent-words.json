@@ -1,0 +1,13 @@
+{
+  "windows": 54,
+  "median": 60.0,
+  "max": 320,
+  "uncollapsed_max": 422,
+  "falsifier": {
+    "change": "append one extra word per rendered report",
+    "median": 61.0,
+    "max": 321,
+    "budget_accepts": false
+  },
+  "scope": "Independent rendering of candidate audit outputs, pinned chronological verbatim-report simulation; not a promise about arbitrary native model wording."
+}

@@ -1,0 +1,9 @@
+window: cbfa552e2091617aca9da3c7facbbce36f8a1ed0..154629749be080b2e02965956d1134ce9ffbf530 (2026-11-05T16:50:04+08:00, 2026-11-05T23:38:08+08:00]
+carried: 2 of 5
+release: none
+sync: none
+learning: none
+no ask record: #784 head b2d0abd778d0 merged 2026-11-05T09:00:02Z (no task in readable state)
+no ask record: #785 head 0c38dd60b562 merged 2026-11-05T15:03:18Z (no task in readable state)
+no ask record: #789 head c37417313a12 merged 2026-11-05T15:31:50Z (no task in readable state)
+already reported: none

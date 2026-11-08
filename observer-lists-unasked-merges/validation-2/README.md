@@ -1,0 +1,55 @@
+# Independent validation, cycle 2 — PR #809
+
+Verdict: **PASSED** at `a43b537cd12d69a5ccfde38bf964c6ea35cb0de0`, base `139feeaee7ce037a0c6535568cd6bd103155cbae`. The repaired native observer records the audit's own exit status and preserves the eight finding tokens. This supersedes the candidate verdict for delivery consideration; validation-1's REJECTED verdict at `b36fbeeec3a6699c0a82a021dc4ee0142410f6c8` remains historical evidence. Gate, hosted review and delivery remain FO-owned.
+
+## Identity and evidence carried forward
+
+The candidate was exported with `git archive` to `/tmp/observer-validation-a43b537c/candidate`. No worktree was created or removed, and no product files were edited. `identity.json` hashes all four changed paths against the commit. `repair.diff` confirms the repair touches only `kc-dev-flow-2/skills/observer/SKILL.md`; the audit, tests, CI step, workflow, lint ceiling and version files did not change from validation-1.
+
+All deterministic commands, live replay, reverse mutations, guards and 27-command suite were rerun here. The only native evidence carried forward without another model run is validation-1's base 0.35.0 control (`../validation/observer-base.md`, agent `3e58869e-4f45-437a-a99a-3428ed99482d`): it has no new merge rows, its installed skill hash still matches the published tag, and this repair does not affect that control. The former candidate's report is a failing control, never evidence of a passing repaired candidate.
+
+## Acceptance criteria and falsifiers
+
+- **AC-1 PASS.** `replay-live.log` is a fresh GitHub query, unpiped, exit 1, carried 54/82; gaps 704, 762, 774, 776, 778, 784, 785, 789; release 707, 717, 723, 731, 739, 746, 752, 760, 768; sync 715, 718, 725, 733, 741, 747, 753, 761, 781; learning 726, 782. PR 785 is `0c38dd60b562`. `identity-check.py` asserts the live sets; `snapshot/` checks PR 727 carried. Removing release recognition exposes PR 707 (`mutations/release-removed-snapshot-replay.log`).
+- **AC-2 PASS.** The A/B-head fixture and real PR-727 snapshot with a changed head return a head-difference finding. Matching on PR number alone fails the corresponding test (`mutations/pr-number-only.log`).
+- **AC-3 PASS.** Producer component/group prefixes, learning-length boundary, sync titles, renamed releases and matching recorded releases pass. Classifying a recorded release before checking its matching record fails (`mutations/kind-before-record.log`).
+- **AC-4 PASS.** Tests cover fetched remote-only state refs, warning/local fallback, printed ref SHA/time, precise time bounds, late committed records and uncommitted exclusion, failed gh, 1000 results, missing origin/refs and malformed evidence. Reading state at TO instead of current tips fails (`mutations/records-at-to.log`). The first direct network attempt exited 2 in the sandbox; its preserved `replay-live-sandbox.log` is environment evidence. The unchanged approved retry obtained live data and exited 1.
+- **AC-5 PASS.** A committed sibling report collapses PR 9; deleting it restores the finding. Uncommitted and self reports cannot hide it. Removing repeat collapse fails (`mutations/collapse-removed.log`).
+- **AC-6 PASS for this slice.** One fresh Sonnet 5.5 observer, agent `a45b399f-c67f-489c-9298-bd6dd9029a15`, read the exact exported skill and returned `observer-candidate.md`, unedited. `native-execution.json` extracts its actual tool invocation/result: the audit has no pipe, `echo "audit exit $?"` immediately follows it before `cat`, and the tool result says `audit exit 1`. Coverage records 1; the carried row, all named kinds and eight exact can't-tell tokens agree with the direct audit, with the missing-record caveat once. `comparison-fresh.json` passes all 13 comparisons. The original candidate report still fails the exit-status comparison (`comparison-original-control.json`); the unchanged native base control has no new merge rows.
+- **AC-7 PASS within the approved simulation.** Exactly four product paths; workflow and word ceiling unchanged; repository lint passes. `words/` reruns the pinned original 54 windows, and `independent-words.py` independently reconstructs each line: median 60, maximum 320, uncollapsed maximum 422. Adding one word per report exceeds both limits (`independent-words.json`). This retained full-clause rendering is conservative for the repair's shorter no-ask rule and carried row, not a claim that arbitrary model prose stays within it.
+
+## Repair disposition
+
+Validation-1 **F1 (Material, false audit exit status): repaired and independently verified**. Both retained implementation samples also pass the exit comparison, and `identity.json` verifies their exit-capture instruction block equals the final candidate's block. Their format failures remain in `comparison-repair-1.json` and `comparison-repair-2.json`; their full skills differ from the final template, so neither is misrepresented as a full final-head native pass. The new exact-head sample supplies that missing execution.
+
+Validation-1 **F2 (Polish, abbreviated row format): declined by FO**, per `dispatch/implementation-1-message-2.md`, state commit `03db43d8600146efba9b6d4ec59f72425e8a138e`. This validation does not reopen it or rerun for formatting. The one dispatched fresh run happens to preserve the tested row fields, but that does not turn the two retained failed format samples into passes. No new Material finding or decision is required by this slice.
+
+**F3 — Polish: the fresh report says 13 state refs; its audit output has 12.** The normal observer/unedited relay is the trigger (`observer-candidate.md` Coverage versus `native-execution.json`). This is an incorrect aggregate count, with all ref identities/timestamps and every merge classification retained in the tool output. It changes no finding, provenance identity or exit status; no current value-criterion loss or protected-boundary harm is established. It would become Material if a missing or misidentified ref changed the audit conclusion. No rerun or product repair was made for this count slip; FO may disposition it independently.
+
+## Checks, necessity and limits
+
+- `suite-summary.json`: 27 local commands succeeded, 1199 unittest cases including 11 skips. The skipped cases remain unverified. `checks.json` records exit 0 for repository lint, installed-package ADR lint, number guard, design check, comment ratio, document impact and diff check. `dispatch-records.log` reports seven complete records.
+- Required ADR command, from the export with read-only `GIT_DIR`/`GIT_WORK_TREE`: `python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since 139feeaee7ce037a0c6535568cd6bd103155cbae`, exit 0, 62 records and no legacy. No new ADR or migration reservation is owed.
+- `comment-ratio.log`: 2 comment lines of 431 code lines, 0.5%, below the 5% ceiling. The two added comments are interpreter shebangs. `doc-impact.json` names `kc-dev-flow-2/README.md`: **unaffected**, because its instruction to run every explicitly named CI command still holds. There is no graphical screen or changed product diagram (`Surfaces: none`).
+- Goal sufficiency: the observer now exposes the selected window's record gaps, identifies carried and named kinds, and faithfully records audit completion. Minimal necessity: the helper supplies classification, its tests reject the demonstrated errors, the existing job's single new test step runs that coverage, and the skill invokes and reports it. Removing the repair's capture instruction restores the known false-status failure mode. No extra product paths or release changes were added.
+- CI adds one standard-library test command to the existing job; existing path filters, main push trigger, permissions, runner and setup are unchanged. These package/workflow filters catch changes to this audit and its producers/consumers. **Hosted CI cost per PR was not measured.** Local suite time is not a hosted cost estimate. No hosted CI was invoked by this validator.
+- **roborev not run: FO owns the daemon review.** Local Spacedock CLI 0.27.2 with plugin files 0.27.3 does not prove the hosted pinned install. An open Draft PR and passing validation do not grant merge authority.
+- Matching asks at current ref tips do not prove approval existed when a merge happened, or that its question named the merge. Missing records may be chat approvals or state outside this repository; they are not accusations of an unauthorized merge. Producer naming conventions remain the accepted classifier boundary. The audit's intended state-ref fetch is its only repository write.
+- The fresh native report has 816 whitespace-delimited words, beyond the pre-existing under-500 instruction, as earlier native controls also did. The 54-window measure covers added merge lines in the accepted chronological simulation, not total native report length or unrelated observer judgments. The new report's claim of 13 refs is a count slip: its tool output contains 12; all 12 refs and timestamps are retained. This does not alter an audit set, finding token or exit result and is not promoted to a new Material finding.
+- The fresh observer initially required permission to read the exported wrapper/skill; these were routed to FO under the stage contract, not self-approved. The only failed create call was a provider-mode configuration error and created no agent. No alternate outcome was selected and no second native validation run was made.
+
+## Captain acceptance
+
+Five steps, no graphical screen. The script declares Python/Git, local checkout/state/package prerequisites, creates a fresh archive export, checks the saved historical replay, rejects five reverse mutations, recounts the pinned corpus, and runs package/ADR lint. Each step states the expected result. It does not cover native prose, hosted CI, RoboRev or delivery authority; those evidence boundaries are explicit in the script.
+
+Run exactly:
+
+```bash
+bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-lists-unasked-merges/validation-2/acceptance.sh
+```
+
+The validator ran these bytes in a fresh bash shell; `acceptance.log` records exit 0 and the expected observations. `acceptance-first.log` preserves the first run from `/tmp` before the identical script was copied to the durable path. The script depends on the explicitly named state evidence corpus and local installed package; it is not advertised as a standalone public-package test.
+
+## Ownership
+
+Evidence and the appended stage report are restricted to this task's state paths. Product HEAD remains the clean dispatched branch, with PR #809 open and Draft at the same head (`pr.json`). The native child is idle, and test processes completed. The task remains at validation for FO's acceptance replay, gate and delivery decision. Only the prescribed `spacedock state commit` may publish this report; no product push, PR comment, review request or readiness change is authorized or performed.

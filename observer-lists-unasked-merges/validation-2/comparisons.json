@@ -1,0 +1,22 @@
+[
+  {
+    "name": "fresh",
+    "exit": 0,
+    "output": "{\"passed\": true, \"checks\": 13, \"failed\": []}"
+  },
+  {
+    "name": "original-control",
+    "exit": 1,
+    "output": "{\"passed\": false, \"checks\": 13, \"failed\": [\"audit exit status\", \"release: #707 #717 #723 #731 #739 #746 #752 #760 #768\", \"sync: #715 #718 #725 #733 #741 #747 #753 #761 #781\", \"learning: #726 #782\", \"no ask record: #704 head f0d3f442d5e6\", \"no ask record: #762 head 9530369cb452\", \"no ask record: #774 head b026e0d7e497\", \"no ask record: #776 head d071565932c9\", \"no ask record: #778 head 005afcaeb68c\", \"no ask record: #784 head b2d0abd778d0\", \"no ask record: #785 head 0c38dd60b562\", \"no ask record: #789 head c37417313a12\"]}"
+  },
+  {
+    "name": "repair-1",
+    "exit": 1,
+    "output": "{\"passed\": false, \"checks\": 13, \"failed\": [\"no ask record: #704 head f0d3f442d5e6\", \"no ask record: #762 head 9530369cb452\", \"no ask record: #774 head b026e0d7e497\", \"no ask record: #776 head d071565932c9\", \"no ask record: #778 head 005afcaeb68c\", \"no ask record: #784 head b2d0abd778d0\", \"no ask record: #785 head 0c38dd60b562\", \"no ask record: #789 head c37417313a12\"]}"
+  },
+  {
+    "name": "repair-2",
+    "exit": 1,
+    "output": "{\"passed\": false, \"checks\": 13, \"failed\": [\"carried: 54 of 82\", \"no ask record: #704 head f0d3f442d5e6\", \"no ask record: #762 head 9530369cb452\", \"no ask record: #774 head b026e0d7e497\", \"no ask record: #776 head d071565932c9\", \"no ask record: #778 head 005afcaeb68c\", \"no ask record: #784 head b2d0abd778d0\", \"no ask record: #785 head 0c38dd60b562\", \"no ask record: #789 head c37417313a12\"]}"
+  }
+]

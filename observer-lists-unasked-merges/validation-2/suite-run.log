@@ -1,0 +1,2 @@
+{"commands": 27, "unittest_cases": 1199, "skipped": 11, "limits": "Local CLI 0.27.2 with plugin files 0.27.3; not the pinned hosted installation. CI cost per PR not measured."}
+failed: []

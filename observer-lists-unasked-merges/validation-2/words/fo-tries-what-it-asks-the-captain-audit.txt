@@ -1,0 +1,8 @@
+window: 321e1d76374e22a6c85f8d5e59649cbf4f90eb58..1b30eb3774997d2dffea5b1e200eb63ac5b7b111 (2026-10-21T23:25:13+08:00, 2026-11-04T10:17:14+08:00]
+carried: 47 of 66
+release: #707 #717 #723 #731 #739 #746 #752 #760
+sync: #715 #718 #725 #733 #741 #747 #753 #761
+learning: #726
+no ask record: #704 head f0d3f442d5e6 merged 2026-10-23T02:34:26Z (no task in readable state)
+no ask record: #776 head d071565932c9 merged 2026-11-03T15:23:40Z (no task in readable state)
+already reported: none

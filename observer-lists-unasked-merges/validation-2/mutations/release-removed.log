@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_producer_names_and_a_renamed_release (__main__.MergeAuditTest.test_producer_names_and_a_renamed_release)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/merge-audit-fresh-50wzviwr/test_merge_audit.py", line 122, in test_producer_names_and_a_renamed_release
+    self.assertIn("release: #1 #2", out)
+AssertionError: 'release: #1 #2' not found in 'window: b43aa878012143e045d24c55ce8a17155561cbd8..005a4cc7e7b7812d3938c5bec554eddaf04e7abd (2026-01-01T00:00:00+00:00, 2026-01-01T00:00:10+00:00]\nread: refs/heads/spacedock-state/a 005a4cc7e7b7812d3938c5bec554eddaf04e7abd 2026-01-01T00:00:10Z\ncarried: 0 of 6\nrelease: none\nsync: #4\nlearning: #3\nno ask record: #1 head aaaaaaaaaaaa merged 2026-01-01T00:00:05Z (no task in readable state)\nno ask record: #2 head aaaaaaaaaaaa merged 2026-01-01T00:00:05Z (no task in readable state)\nno ask record: #5 head aaaaaaaaaaaa merged 2026-01-01T00:00:05Z (no task in readable state)\nno ask record: #6 head aaaaaaaaaaaa merged 2026-01-01T00:00:05Z (no task in readable state)\nalready reported: none\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.563s
+
+FAILED (failures=1)

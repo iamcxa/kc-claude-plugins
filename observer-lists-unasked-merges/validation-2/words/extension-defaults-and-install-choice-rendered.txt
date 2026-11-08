@@ -1,0 +1,1 @@
+ok | rule: "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it" (Delivery authority) | evidence: "carried: 1 of 1 merged PRs" (gh pr list, state refs)

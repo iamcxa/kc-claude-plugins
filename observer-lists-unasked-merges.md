@@ -320,3 +320,40 @@ Independent validation recommends REJECTED for b36fbeeec3a6699c0a82a021dc4ee0142
 ### Summary
 
 This dated addendum supersedes the earlier implementation report for the repaired head: F1 is proven by the direct run and the first fresh native observer, while F2 is a declined Polish item with both failed format samples retained. The current wording is kept under FO's test/lint condition; no additional observer rerun or push follows message-2, and the historical validation-1 verdict at b36fbeeec remains unchanged.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #809 head a43b537c against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Cycle 2, 2026-11-08: PASSED at a43b537cd12d69a5ccfde38bf964c6ea35cb0de0, base 139feeaee7ce037a0c6535568cd6bd103155cbae; full matrix, falsifiers and limits in validation-2/README.md; no new Material finding.
+- DONE: Re-validate at the repair head: judge validation-1 F1's repair (the observer records merge_audit's own exit status) against the retained repair runs and one fresh observer run of your own, carry forward validation-1 evidence only where the diff from b36fbeeec leaves it unchanged, and treat F2 (row format) as declined by FO
+  validation-2/native-execution.json proves the fresh observer ran unpiped and printed the immediate audit status 1 before cat; report and direct run agree. Both retained repair samples pass exit capture; original exit-0 report fails. Only the unchanged 0.35.0 native base control is carried forward; F2 remains declined.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step validation-2/acceptance.sh ran in fresh bash, exit 0; acceptance.log holds observed output. Installed-package adr_lint.py docs/adr --since 139feeaee7ce037a0c6535568cd6bd103155cbae exits 0, 62 records, no legacy; F3 below is Polish.
+- DONE: AC-1 — Replay over the window that holds #785.
+  New live GitHub run exits 1, carried 54/82, all eight specified gaps and exact named-kind sets; snapshot proves #727 carried. Removing release recognition exposes #707 (validation-2/replay-live.log, snapshot/, mutations/release-removed-snapshot-replay.log).
+- DONE: AC-2 — Head differs is a violation line.
+  A/B fixture and changed #727 head report a mismatch; PR-number-only mutation fails the head-boundary test (validation-2/mutations/pr-number-only.log).
+- DONE: AC-3 — Named kinds come from their producers.
+  Producer-prefix, learning-length, sync-title, renamed-release and recorded-Release cases pass; kind-before-record mutation fails (validation-2/mutations/kind-before-record.log).
+- DONE: AC-4 — Inputs and holds.
+  Fetch fallback/remote refs, timestamps, exact bounds, late committed asks and missing/malformed/network holds pass; records-at-TO mutation fails. Initial sandbox exit 2 remains separate from the approved live exit 1 (validation-2/mutations/records-at-to.log, replay-live-sandbox.log).
+- DONE: AC-5 — Repeats collapse.
+  Committed sibling report suppresses #9; deleting it restores the line; self/uncommitted reports cannot suppress it. Removing collapse fails (validation-2/mutations/collapse-removed.log).
+- DONE: AC-6 — The observer reports it.
+  One fresh Sonnet observer a45b399f-c67f-489c-9298-bd6dd9029a15 read the exact export: carried/kinds/eight no-ask tokens and one caveat survive; 13 comparisons pass. Original candidate fails the exit comparison; unchanged native base has no merge rows (validation-2/comparison-fresh.json, comparison-original-control.json, identity.json).
+- DONE: AC-7 — Words and scope.
+  Four product paths; only observer SKILL.md changed since b36fbeeec; workflow/budget unchanged. Independent 54-window simulation repeats median 60/max 320, uncollapsed 422; extra-word control exceeds both bounds. Final shorter templates fit this conservative rendering; no total model-prose guarantee (validation-2/independent-words.json).
+- DONE: Local package checks and affected-document review.
+  27 commands succeeded, 1199 unittest cases including 11 skips; lint/ADR/number/design/comment/doc/diff checks exit 0, seven dispatch records complete. README unaffected because its named-CI-command guidance stays correct (validation-2/suite-summary.json, checks.json, doc-impact.json).
+- DONE: Preserve implementation limits and the exact product candidate.
+  Matching records at current tips do not prove approval timing or question content; chat/other-repository state remain outside scope. Native full-report length and unrelated observer prose are not certified; product remains clean on its dispatched branch (validation-2/README.md, identity.json).
+- SKIPPED: Independently reproduce FO-owned RoboRev and hosted CI.
+  roborev not run: FO owns the daemon review. Hosted CI cost per PR not measured; existing narrow triggers/job unchanged except one stdlib test step. Local CLI 0.27.2/plugin 0.27.3 checks do not prove the hosted pinned installation.
+- DONE: Append cycle-2 evidence and report using the prescribed task-scoped state commit.
+  New proof is confined to observer-lists-unasked-merges/validation-2/ plus this body append; prior failure and repair reports remain unchanged. No product push, PR edit or review request.
+- F3 Polish: Fresh observer prose counts 13 state refs where the tool output has 12.
+  Trigger: validation-2/observer-candidate.md Coverage versus native-execution.json; no ref identity, classification, finding token or exit status is lost. Material only if a missing/misidentified ref changes the conclusion; no repair or format rerun made.
+
+### Summary
+
+Cycle 2 independently recommends PASSED for a43b537cd12d69a5ccfde38bf964c6ea35cb0de0: the repair closes validation-1 F1 with an actual unpiped native execution and matching report, while deterministic replay, falsifiers, suite and guards pass again. Validation-1's rejection remains historical, F2 stays declined by FO, and F3 is a nonblocking count slip for FO disposition. FO retains acceptance replay, gate and delivery authority; this report does not authorize merge.

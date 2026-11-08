@@ -1,0 +1,108 @@
+{
+  "direct_exit": 1,
+  "piped": false,
+  "report_sha256": "6906d0264d415d0e7a7aa50e273c962cca6d343f403af286a5d1d0b814aa1f77",
+  "report_words": 816,
+  "checks": [
+    {
+      "name": "audit exit status",
+      "status": "passed",
+      "detail": {
+        "expected": 1,
+        "reported": [
+          1
+        ],
+        "lines": [
+          "merge_audit.py: exit status 1, with the findings listed above. It ran against the whole window, not just this task, so the eight no ask record PRs belong to other tasks. #704 is the bite PR this task names, and its task is not in readable state."
+        ]
+      }
+    },
+    {
+      "name": "carried: 54 of 82",
+      "status": "passed",
+      "detail": [
+        "ok | rule: \"merging the full head <package>/scripts/delivery_gate.py check passes, with --match-head-commit set to it\" (Delivery authority) | evidence: \"carried: 54 of 82\" (gh pr list, state refs)"
+      ]
+    },
+    {
+      "name": "release: #707 #717 #723 #731 #739 #746 #752 #760 #768",
+      "status": "passed",
+      "detail": [
+        "observed | release PRs carry no task ask | evidence: \"release: #707 #717 #723 #731 #739 #746 #752 #760 #768\" (gh pr list)"
+      ]
+    },
+    {
+      "name": "sync: #715 #718 #725 #733 #741 #747 #753 #761 #781",
+      "status": "passed",
+      "detail": [
+        "observed | sync PRs carry no task ask | evidence: \"sync: #715 #718 #725 #733 #741 #747 #753 #761 #781\" (gh pr list)"
+      ]
+    },
+    {
+      "name": "learning: #726 #782",
+      "status": "passed",
+      "detail": [
+        "observed | learning PRs carry no task ask | evidence: \"learning: #726 #782\" (gh pr list)"
+      ]
+    },
+    {
+      "name": "no ask record: #704 head f0d3f442d5e6",
+      "status": "passed",
+      "detail": [
+        "can't tell | rule: \"merging the full head\" (Delivery authority) | evidence: \"no ask record: #704 head f0d3f442d5e6 merged 2026-10-23T02:34:26Z (no task in readable state)\" (gh pr list, state refs)"
+      ]
+    },
+    {
+      "name": "no ask record: #762 head 9530369cb452",
+      "status": "passed",
+      "detail": [
+        "can't tell | rule: \"merging the full head\" (Delivery authority) | evidence: \"no ask record: #762 head 9530369cb452 merged 2026-11-05T02:41:10Z (no task in readable state)\" (gh pr list, state refs)"
+      ]
+    },
+    {
+      "name": "no ask record: #774 head b026e0d7e497",
+      "status": "passed",
+      "detail": [
+        "can't tell | rule: \"merging the full head\" (Delivery authority) | evidence: \"no ask record: #774 head b026e0d7e497 merged 2026-11-04T08:58:44Z (no task in readable state)\" (gh pr list, state refs)"
+      ]
+    },
+    {
+      "name": "no ask record: #776 head d071565932c9",
+      "status": "passed",
+      "detail": [
+        "can't tell | rule: \"merging the full head\" (Delivery authority) | evidence: \"no ask record: #776 head d071565932c9 merged 2026-11-03T15:23:40Z (no task in readable state)\" (gh pr list, state refs)"
+      ]
+    },
+    {
+      "name": "no ask record: #778 head 005afcaeb68c",
+      "status": "passed",
+      "detail": [
+        "can't tell | rule: \"merging the full head\" (Delivery authority) | evidence: \"no ask record: #778 head 005afcaeb68c merged 2026-11-05T08:45:11Z (no task in readable state)\" (gh pr list, state refs)"
+      ]
+    },
+    {
+      "name": "no ask record: #784 head b2d0abd778d0",
+      "status": "passed",
+      "detail": [
+        "can't tell | rule: \"merging the full head\" (Delivery authority) | evidence: \"no ask record: #784 head b2d0abd778d0 merged 2026-11-05T09:00:02Z (no task in readable state)\" (gh pr list, state refs)"
+      ]
+    },
+    {
+      "name": "no ask record: #785 head 0c38dd60b562",
+      "status": "passed",
+      "detail": [
+        "can't tell | rule: \"merging the full head\" (Delivery authority) | evidence: \"no ask record: #785 head 0c38dd60b562 merged 2026-11-05T15:03:18Z (no task in readable state)\" (gh pr list, state refs)"
+      ]
+    },
+    {
+      "name": "no ask record: #789 head c37417313a12",
+      "status": "passed",
+      "detail": [
+        "can't tell | rule: \"merging the full head\" (Delivery authority) | evidence: \"no ask record: #789 head c37417313a12 merged 2026-11-05T15:31:50Z (no task in readable state)\" (gh pr list, state refs)"
+      ]
+    }
+  ],
+  "passed": true,
+  "exit_status_passed": true,
+  "format_passed": true
+}
