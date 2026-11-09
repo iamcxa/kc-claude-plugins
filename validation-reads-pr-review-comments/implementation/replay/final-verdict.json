@@ -1,0 +1,97 @@
+{
+  "verdict": "HOLD: AC-3 not met",
+  "raw_attempts": 14,
+  "scheduled_attempts": 12,
+  "scheduled_reports": 10,
+  "valid_reports": 7,
+  "required_valid_reports": 12,
+  "hard_stop": 16,
+  "remaining_budget": 2,
+  "best_case_valid_at_hard_stop": 9,
+  "primary_grader_unchanged": true,
+  "wording_used": 1,
+  "wording_2_run": false,
+  "third_wording": false,
+  "product_candidate": "7f47317bb278931a873c0ec63302fbc70fc53fc4",
+  "product_base": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+  "product_branch": "spacedock-ensign/validation-reads-pr-review-comments",
+  "hosts": {
+    "codex": {
+      "valid_runs": {
+        "base": 2,
+        "candidate": 2
+      },
+      "found": {
+        "base": 1,
+        "candidate": 2
+      },
+      "passed": false,
+      "precision_misses": 0,
+      "mean_report_words": {
+        "base": 842,
+        "candidate": 1030.5
+      },
+      "post_hoc_found": {
+        "base": 2,
+        "candidate": 2
+      },
+      "post_hoc_complete": false,
+      "primary_beats_base": null,
+      "post_hoc_beats_base": null,
+      "counts_disagree_on_beating_base": null,
+      "precision_misses_all_completed": 0,
+      "precision_candidate_reports_assessed": 3,
+      "precision_candidate_reports_missing": 0,
+      "available_subset_primary_beats_base": true,
+      "available_subset_post_hoc_beats_base": false,
+      "available_subset_counts_disagree": true
+    },
+    "claude": {
+      "valid_runs": {
+        "base": 3,
+        "candidate": 0
+      },
+      "found": {
+        "base": 3,
+        "candidate": 0
+      },
+      "passed": false,
+      "precision_misses": 0,
+      "mean_report_words": {
+        "base": 958.3333333333334,
+        "candidate": null
+      },
+      "post_hoc_found": {
+        "base": 3,
+        "candidate": 0
+      },
+      "post_hoc_complete": false,
+      "primary_beats_base": null,
+      "post_hoc_beats_base": null,
+      "counts_disagree_on_beating_base": null,
+      "precision_misses_all_completed": 0,
+      "precision_candidate_reports_assessed": 1,
+      "precision_candidate_reports_missing": 2,
+      "available_subset_primary_beats_base": null,
+      "available_subset_post_hoc_beats_base": null,
+      "available_subset_counts_disagree": null
+    }
+  },
+  "CI_cost_per_PR": "not measured; triggers unchanged",
+  "provider_timeouts": [
+    "claude-candidate-2-registered",
+    "claude-candidate-3-registered"
+  ],
+  "scheduled_fixture_gap_runs": [
+    "claude-candidate-1-registered",
+    "claude-candidate-2-registered",
+    "claude-candidate-3-registered",
+    "codex-base-2-registered",
+    "codex-candidate-3-registered"
+  ],
+  "scheduled_completed_fixture_gaps": [
+    "claude-candidate-1-registered",
+    "codex-base-2-registered",
+    "codex-candidate-3-registered"
+  ]
+}

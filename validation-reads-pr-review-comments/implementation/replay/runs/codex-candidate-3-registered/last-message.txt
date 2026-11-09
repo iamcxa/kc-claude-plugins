@@ -1,0 +1,10 @@
+REJECTED at `778367ad`: successful repeat dispatches suppress required reminders. Report and evidence committed locally as `101e502bb`; candidate code unchanged.
+
+Done: spacedock dispatch build --stamp writes the task's dispatch record itself completed validation. [Report](/private/tmp/validation-review-replay/codex-candidate-3/wf/.spacedock-state/dispatch-build-writes-the-dispatch-record.md:473).
+
+```text
+Remaining: Material finding requires disposition.
+Next: First Officer authorizes repair and revalidation (you).
+Closable: no
+```
+

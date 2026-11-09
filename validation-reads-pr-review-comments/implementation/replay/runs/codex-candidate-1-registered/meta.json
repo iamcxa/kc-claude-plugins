@@ -28,5 +28,15 @@
   "start": "2026-11-09T07:32:50.785181+00:00",
   "dispatch_sha256": "e2a20e09085f37713767659420ff7cf6c534c3bc9ae727efcad1e649cb1e761b",
   "timeout_seconds": 1800,
-  "tokens": null
+  "tokens": {
+    "input_tokens": 5760144,
+    "cached_input_tokens": 5614464,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 30531,
+    "reasoning_output_tokens": 11709
+  },
+  "exit": 0,
+  "report_written": true,
+  "end": "2026-11-09T07:54:37.699425+00:00",
+  "elapsed_seconds": 1306.8998405418824
 }

@@ -1,0 +1,31 @@
+{
+  "host": "claude",
+  "complete": false,
+  "runs": [
+    {
+      "run": "claude-candidate-1-registered",
+      "exit": 0
+    },
+    {
+      "run": "claude-base-2-registered",
+      "exit": 0
+    },
+    {
+      "run": "claude-base-3-registered",
+      "exit": 0
+    },
+    {
+      "run": "claude-base-1-registered",
+      "exit": 0
+    },
+    {
+      "run": "claude-candidate-2-registered",
+      "exit": 1
+    },
+    {
+      "run": "claude-candidate-3-registered",
+      "exit": 1
+    }
+  ],
+  "D1_halt": false
+}

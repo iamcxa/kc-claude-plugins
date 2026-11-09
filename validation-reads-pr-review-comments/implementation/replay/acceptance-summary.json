@@ -1,0 +1,25 @@
+[
+  {
+    "name": "AC-1: single approved file and word budget",
+    "status": "passed"
+  },
+  {
+    "name": "AC-2: preregistration, frozen fixture and grader controls",
+    "status": "passed"
+  },
+  {
+    "name": "AC-3: per-host behavior improvement",
+    "status": "failed",
+    "note": "Claude baseline 3/3; only 7 valid reports of required 12."
+  },
+  {
+    "name": "AC-4: bounded wording path",
+    "status": "passed",
+    "note": "Only wording 1; no further provider calls."
+  },
+  {
+    "name": "AC-5: precision disclosed",
+    "status": "passed",
+    "note": "Completed candidate reports: Codex 0/3 misses; Claude 0/1, with 2 unavailable after timeouts."
+  }
+]

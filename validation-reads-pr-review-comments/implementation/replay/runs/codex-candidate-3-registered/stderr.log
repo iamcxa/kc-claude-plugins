@@ -4,3 +4,4 @@
 2026-11-09T07:44:53.414466Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://codex-app.tldraw.xyz/.well-known/oauth-protected-resource/mcp\", scope=\"openid profile email offline_access\"" })
 2026-11-09T07:44:54.067002Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: "Bearer resource_metadata=\"https://ai.todoist.net/.well-known/oauth-protected-resource/mcp\"" })
 2026-11-09T07:44:54.403701Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (http://127.0.0.1:16106/mcp)")))
+2026-11-09T07:49:21.269705Z ERROR codex_models_manager::manager: failed to refresh available models: request timed out

@@ -1,0 +1,26 @@
+[
+  {
+    "shell": "/bin/zsh",
+    "flag": "-c",
+    "exit": 0,
+    "resolved": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-reads-pr-review-comments/implementation/replay/bin/gh"
+  },
+  {
+    "shell": "/bin/zsh",
+    "flag": "-lc",
+    "exit": 0,
+    "resolved": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-reads-pr-review-comments/implementation/replay/bin/gh"
+  },
+  {
+    "shell": "/bin/bash",
+    "flag": "-c",
+    "exit": 0,
+    "resolved": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-reads-pr-review-comments/implementation/replay/bin/gh"
+  },
+  {
+    "shell": "/bin/bash",
+    "flag": "-lc",
+    "exit": 0,
+    "resolved": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-reads-pr-review-comments/implementation/replay/bin/gh"
+  }
+]

@@ -65,6 +65,42 @@
       "source": "runs/codex-candidate-3-registered/report.md",
       "basis": "blocking finding describes lost successful-check reminders",
       "post_hoc": true
+    },
+    {
+      "run": "claude-base-2-registered",
+      "found": true,
+      "quote_line": 26,
+      "quote": "- F1 Material: dispatch_stage.py `main` discards successful `dispatch_records.py` stderr, so the round-two step-back questions are never shown before dispatch. Boundary contract[docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md#consequences] (amended 2026-11-03); trigger acceptance step 4, probe.json, Codex review comment 4505793059 on this head. Needs decision instead only if FO reads the design's \"prints nothing of theirs\" as a ruling over ADR 0026.",
+      "source": "runs/claude-base-2-registered/report.md",
+      "basis": "blocking finding describes lost successful-check reminders",
+      "post_hoc": true
+    },
+    {
+      "run": "claude-base-3-registered",
+      "found": true,
+      "quote_line": 30,
+      "quote": "- F1 Material: The wrapper swallows dispatch_records.py's step-back questions on a successful check.",
+      "source": "runs/claude-base-3-registered/report.md",
+      "basis": "blocking finding describes lost successful-check reminders",
+      "post_hoc": true
+    },
+    {
+      "run": "claude-candidate-1-registered",
+      "found": true,
+      "quote_line": 26,
+      "quote": "- F1 Material: a successful round-two dispatch built through `dispatch_stage.py` does not show the step-back questions (Codex P2, review comment 4505793059 on 778367ad). `main` captures both checks' output and writes stderr only when a check fails.",
+      "source": "runs/claude-candidate-1-registered/report.md",
+      "basis": "blocking finding describes lost successful-check reminders",
+      "post_hoc": true
+    },
+    {
+      "run": "claude-base-1-registered",
+      "found": true,
+      "quote_line": 28,
+      "quote": "- F1 Material: on the README's new dispatch path, dispatch_stage.py drops the round-two step-back questions (kc-dev-flow-2/scripts/dispatch_stage.py `main`, where checks pass).",
+      "source": "runs/claude-base-1-registered/report.md",
+      "basis": "blocking finding describes lost successful-check reminders",
+      "post_hoc": true
     }
   ]
 }

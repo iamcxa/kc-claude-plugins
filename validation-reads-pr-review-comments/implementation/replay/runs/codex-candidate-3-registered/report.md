@@ -1,0 +1,27 @@
+## Stage Report: validation
+
+- SKIPPED: Independent verdict on PR #812 head 778367ad against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Independent verdict REJECTED at 778367adde2e20e0b3e51966ddba2d9f77f9e614; validation-replay/evidence.md assesses all eight criteria and limits. Exhaustive suite/mutation reruns are excluded by this replay; prior pass counts are read evidence only.
+- SKIPPED: Judge the class repair of validation-2 F1 against review/chief-engineer-1.md (one clean-scope precondition before select_record; its matrix and falsifiers) and every criterion again; the FO rulings in dispatch/implementation-1-message-1.md and -message-2.md still stand. Hosted CI on head 778367adde2e20e0b3e51966ddba2d9f77f9e614 is now green: FO reran the three 504-failed runs at 2026-11-08T11:03Z after three consecutive successful downloads, and run 42468880068 (attempt 3) shows Install pinned Spacedock, and the dispatch-stage, Spacedock dispatch and observer recovery test steps (kc-dev-flow-2/scripts/test_dispatch_stage.py, kc-dev-flow-2/scripts/test_sd_dispatch.py, kc-dev-flow-2/scripts/test_observer_recovery.py) success; PR #812 mergeStateStatus CLEAN, 7 SUCCESS and 1 SKIPPED (gh pr view 812, FO 2026-11-08T11:09:08Z). Report AC-8 from run 42468880068 attempt 3. Keep any download under a new /tmp directory, never in the task state folder.
+  Complete-scope design inspected; one real staged-only retry preserves state and guard removal breaks the snapshot assertion (scope-control.json). The full 92-case/nine-mutant matrix is not rerun. Recorded run 42468880068 attempt 3 matches this head and passes the required real-binary steps (ci-attempt-3.json).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four-step acceptance.sh ran unchanged via bash --noprofile --norc: first three steps pass, reminder step fails, exit 1. Candidate/package ADR lint exit 0; requested installed 0.35.0 lint exit 1 is the follow-up-2-settled false positive. See acceptance.stdout and checks.json for exact commands/output.
+- FAILED: Preserve the binding pre-dispatch reminder on a successful same-symptom repeat.
+  Real builder gives two successful dispatches and a committed second record; direct folder/strict checks print step-back questions, wrapper drops them. Candidate dispatch_stage.py:197–206; current-head review comment 4505793059 and acceptance.stdout.
+- DONE: Read open-PR review evidence and separate unavailable checks from clean results.
+  Supplied transport confirms current head, seven SUCCESS/one SKIPPED checks, review bodies and two inline findings. Configured Codex reader exits 2: replay fixture not recorded; not clean, not bypassed. RoboRev is FO-owned and not run.
+- DONE: Required package checks and candidate preservation.
+  Comment ratio 0.4%/5%, ten dispatch records, design surfaces, thirteen document dispositions, assigned-base number guard and candidate diff check pass; state-fetch freshness is unverified. Tracked product bytes unchanged; detached replay checkout and pre-existing untracked shell log preserved.
+- SKIPPED: Application unit, integration and end-to-end suites; full historical acceptance and falsifier chains.
+  Explicit replay restriction; only the narrow real-builder warning reproduction, staged-only retry control and guard-removal counterexample ran. No server, database or browser started.
+
+### Findings
+
+- F1 Material: Required step-back reminder is suppressed on successful repeated dispatch.
+  Released user/normal workflow: First Officer sends a second implementation dispatch with the same Symptom through the prescribed wrapper. Observable harm: mandatory questions disappear before sending, despite successful checks and a committed dispatch.
+  Protected boundary: contract[docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md#consequences] requires the reminder before dispatch; its 2026-11-03 amendment and ADR 0027 remain binding.
+  Trigger: https://github.com/iamcxa/kc-claude-plugins/pull/812#discussion_r4505793059, independently reproduced at this head; direct checks return 0 with step-back stderr, wrapper returns 0 without it. No recorded FO decline found. Return for distinct FO fix authorization; product bytes remain unchanged.
+
+### Summary
+
+REJECTED at 778367adde2e20e0b3e51966ddba2d9f77f9e614: the repaired staged-only retry control passes and recorded hosted AC-8 is green, but a separately reproduced current-head Material finding loses a binding reminder. Full suite/matrix reruns remain unverified under this replay; exclusive same-task ownership, upstream no-op retry limits, manual inputs, unproven adoption and unmeasured CI cost remain explicit in validation-replay/evidence.md. This appended verdict supersedes earlier validation conclusions for this candidate; FO owns disposition, authorized repair, independent revalidation and the Captain's pending delivery decision, with no publication or remote mutation performed here.

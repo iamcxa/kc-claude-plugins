@@ -1,0 +1,10 @@
+驗證未通過：已重現必要提醒被吞掉。報告已本地提交，產品內容未改動。
+
+Done: spacedock dispatch build --stamp writes the task's dispatch record itself completed validation. Report written to /private/tmp/validation-review-replay/codex-base-3/wf/.spacedock-state/dispatch-build-writes-the-dispatch-record.md.
+
+```text
+剩餘：修復提醒遺失問題
+下一步：主責協調者處置並派修（你）
+可收線：否
+```
+

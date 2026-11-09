@@ -1,0 +1,7 @@
+## Final disposition
+
+HOLD: AC-3 is not claimed. The original 12 scheduled cells were attempted on both hosts; 14 raw attempts include the two excluded preliminary runs. Only 7 reports meet the registered validity rules. Five scheduled calls were refused by the frozen transport; two of those Claude candidate runs also timed out without reports at the registered 1800-second limit. Final CLI token totals were not returned for those timeouts; per-message usage snapshots are retained separately, without inventing a total. There is no Claude-only substitute and no Codex route failure claim.
+
+Claude base scored 3 of 3, so the strict candidate-greater-than-base bar cannot be achieved for this fixed baseline even with three candidate hits. Codex's available valid subset differs by scoring method: registered 1/2 base versus 2/2 candidate, post-hoc 2/2 versus 2/2. The primary method says candidate beats base on that subset; the post-hoc method says tied. This is a disclosed difference, not an eligible three-per-arm result; the Captain owns the interpretation under FO message-3.
+
+Wording 2 was not run: valid comparisons are incomplete, the Claude baseline is saturated, and the remaining budget cannot complete the required valid cells. No third wording or further fixture extension was applied. Stop at 14, not 16, because even two perfect retries could supply only 9 valid reports, short of 12. Recommend keeping the product candidate local and returning the evidence route to FO/Captain; no improvement, publication, merge, adoption or release is proved.

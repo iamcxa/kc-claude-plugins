@@ -1,0 +1,31 @@
+{
+  "host": "codex",
+  "complete": true,
+  "runs": [
+    {
+      "run": "codex-base-1-registered",
+      "exit": 0
+    },
+    {
+      "run": "codex-candidate-2-registered",
+      "exit": 0
+    },
+    {
+      "run": "codex-candidate-1-registered",
+      "exit": 0
+    },
+    {
+      "run": "codex-base-3-registered",
+      "exit": 0
+    },
+    {
+      "run": "codex-base-2-registered",
+      "exit": 0
+    },
+    {
+      "run": "codex-candidate-3-registered",
+      "exit": 0
+    }
+  ],
+  "D1_halt": false
+}

@@ -1,0 +1,117 @@
+{
+  "criterion": "calls 4505536959 unaddressed at frozen head",
+  "rows": [
+    {
+      "run": "claude-base-1-registered",
+      "precision_miss": false,
+      "source": "runs/claude-base-1-registered/report.md",
+      "report_sha256": "e312af9bf17e33c49b02ca574ae335c6e83074a49d620076de913eb6dcd032c0",
+      "old_comment_lines": [],
+      "basis": "Manually reviewed completed findings; old preservation comment is repaired or not alleged unaddressed."
+    },
+    {
+      "run": "claude-base-2-registered",
+      "precision_miss": false,
+      "source": "runs/claude-base-2-registered/report.md",
+      "report_sha256": "3afca17aafdd66530addfa98f132fd0deab5e82aeb1d15a1cce36d1123fb98c1",
+      "old_comment_lines": [],
+      "basis": "Manually reviewed completed findings; old preservation comment is repaired or not alleged unaddressed."
+    },
+    {
+      "run": "claude-base-3-registered",
+      "precision_miss": false,
+      "source": "runs/claude-base-3-registered/report.md",
+      "report_sha256": "f26e40a9cb8bb36a4daacd58b7fc0d1528e2f5110cd71c23026d0fbdd5e9a9df",
+      "old_comment_lines": [],
+      "basis": "Manually reviewed completed findings; old preservation comment is repaired or not alleged unaddressed."
+    },
+    {
+      "run": "claude-candidate-1-registered",
+      "precision_miss": false,
+      "source": "runs/claude-candidate-1-registered/report.md",
+      "report_sha256": "b28d72fda58b2f09e6855d9d736fa83a8dcf777696fe069ed0188f0290a7832e",
+      "old_comment_lines": [],
+      "basis": "Manually reviewed completed findings; old preservation comment is repaired or not alleged unaddressed."
+    },
+    {
+      "run": "codex-base-1-fixed",
+      "precision_miss": false,
+      "source": "runs/codex-base-1-fixed/report.md",
+      "report_sha256": "b56f3abf9feb4d190e41bde1312327b451b2d869b2f9ab1a5a5f17de4368010c",
+      "old_comment_lines": [],
+      "basis": "Manually reviewed completed findings; old preservation comment is repaired or not alleged unaddressed."
+    },
+    {
+      "run": "codex-base-1-registered",
+      "precision_miss": false,
+      "source": "runs/codex-base-1-registered/report.md",
+      "report_sha256": "0314560f032fbcfbcb0430aa745ecdb4c6e48633bc886e22607a4aae332d19f3",
+      "old_comment_lines": [],
+      "basis": "Manually reviewed completed findings; old preservation comment is repaired or not alleged unaddressed."
+    },
+    {
+      "run": "codex-base-2-registered",
+      "precision_miss": false,
+      "source": "runs/codex-base-2-registered/report.md",
+      "report_sha256": "1806d553efa9d4a64114a705c8454e7a3290439589bfedd148044c72b5e4baa1",
+      "old_comment_lines": [
+        {
+          "line": 26,
+          "quote": "- F1 Material: Candidate suppresses successful checkers' required step-back reminder (kc-dev-flow-2/scripts/dispatch_stage.py:194\u2013202); independently confirms https://github.com/iamcxa/kc-claude-plugins/pull/812#discussion_r4505793059, original_commit_id 778367adde2e20e0b3e51966ddba2d9f77f9e614. Earlier comment 4505536959 originated at afa4523468 and its preservation defect is repaired by the verified whole-scope guard; current-commit mapping alone does not make it a new finding."
+        },
+        {
+          "line": 92,
+          "quote": "- F1 Material: Candidate suppresses successful checkers' required step-back reminder (kc-dev-flow-2/scripts/dispatch_stage.py:194\u2013202); independently confirms https://github.com/iamcxa/kc-claude-plugins/pull/812#discussion_r4505793059, original_commit_id 778367adde2e20e0b3e51966ddba2d9f77f9e614. Earlier comment 4505536959 originated at afa4523468 and its preservation defect is repaired by the verified whole-scope guard; current-commit mapping alone does not make it a new finding."
+        }
+      ],
+      "basis": "Manually reviewed completed findings; old preservation comment is repaired or not alleged unaddressed."
+    },
+    {
+      "run": "codex-base-3-registered",
+      "precision_miss": false,
+      "source": "runs/codex-base-3-registered/report.md",
+      "report_sha256": "40e57f8d2860c92e18607a16e7b049815056a08ccf85d85e69ca2e84ba603817",
+      "old_comment_lines": [
+        {
+          "line": 16,
+          "quote": "  Recorded comment 4505793059/review 5817439075 binds to this head; warning-probe.json reproduces lost successful-check stderr, and warning-control.json restores it only in a disposable copy. Earlier comment 4505536959's preservation concern is repaired; no committed decline of the new finding was found."
+        }
+      ],
+      "basis": "Manually reviewed completed findings; old preservation comment is repaired or not alleged unaddressed."
+    },
+    {
+      "run": "codex-candidate-1-registered",
+      "precision_miss": false,
+      "source": "runs/codex-candidate-1-registered/report.md",
+      "report_sha256": "be51d97911db11d03ae824a8f2e49235ed531abe2cd7007c28fb9d2b81bb10a2",
+      "old_comment_lines": [
+        {
+          "line": 31,
+          "quote": "The prior record-loss review comment 4505536959 and validation-2 F1 are addressed by the pre-selection whole-scope check and preservation controls. Exclusive same-task ownership through check/build/commit/cleanup is an accepted limit, not concurrency proof; manual follow-ups, typed model/roster, separate preflights and post-release adoption remain declared limits. The nine changed files map to the goal, safety checks, ADR, CI/pin updates and authorized observer coupling, but F1 means the integrated outcome is insufficient. Diagram rendering, live provider state and adoption remain unverified."
+        }
+      ],
+      "basis": "Manually reviewed completed findings; old preservation comment is repaired or not alleged unaddressed."
+    },
+    {
+      "run": "codex-candidate-2-registered",
+      "precision_miss": false,
+      "source": "runs/codex-candidate-2-registered/report.md",
+      "report_sha256": "2f207e75ae2224f5880485350550a4f07f589e3dc1e55dc59c526bc00f89f6d4",
+      "old_comment_lines": [
+        {
+          "line": 10,
+          "quote": "  Historical shim: OPEN draft, exact head/base, CLEAN, seven SUCCESS/one SKIPPED; both inline comments read. Comment 4505536959 is the older repaired loss case; same-head comment 4505793059 is the newly reproduced Material finding, not a clean review (review-comments.json)."
+        }
+      ],
+      "basis": "Manually reviewed completed findings; old preservation comment is repaired or not alleged unaddressed."
+    },
+    {
+      "run": "codex-candidate-3-registered",
+      "precision_miss": false,
+      "source": "runs/codex-candidate-3-registered/report.md",
+      "report_sha256": "fef2e5fd1837b497396223d3b610a0873f0b6073f1abb2651aa514b1b7143560",
+      "old_comment_lines": [],
+      "basis": "Manually reviewed completed findings; old preservation comment is repaired or not alleged unaddressed."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+驗證結論：**退回修正**。候選版本仍會隱藏必要提醒；報告已提交。
+
+Done: spacedock dispatch build --stamp writes the task's dispatch record itself completed validation. Report written to /private/tmp/validation-review-replay/codex-base-2/wf/.spacedock-state/dispatch-build-writes-the-dispatch-record.md.
+
+```text
+剩餘：修復提醒遺失，補齊未完成驗證
+下一步：派工負責人裁定修正並重驗（你）
+可收線：否
+```
+

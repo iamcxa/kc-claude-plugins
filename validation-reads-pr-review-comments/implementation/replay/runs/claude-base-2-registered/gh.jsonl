@@ -1,0 +1,6 @@
+{"at": "2026-11-09T08:07:19.848006+00:00", "args": ["pr", "view", "812"], "served": "pr-view.json", "refused": false, "carries_review_comments": false, "query_exit": 0}
+{"at": "2026-11-09T08:07:19.903330+00:00", "args": ["api", "repos/iamcxa/kc-claude-plugins/pulls/812/reviews", "--paginate"], "served": "reviews.json", "refused": false, "carries_review_comments": false, "query_exit": 0}
+{"at": "2026-11-09T08:07:19.956237+00:00", "args": ["api", "repos/iamcxa/kc-claude-plugins/pulls/812/comments", "--paginate"], "served": "review-comments.json", "refused": false, "carries_review_comments": true, "query_exit": 0}
+{"at": "2026-11-09T08:07:20.008502+00:00", "args": ["api", "repos/iamcxa/kc-claude-plugins/issues/812/comments", "--paginate"], "served": "issue-comments.json", "refused": false, "carries_review_comments": false, "query_exit": 0}
+{"at": "2026-11-09T08:07:20.067030+00:00", "args": ["api", "repos/iamcxa/kc-claude-plugins/actions/runs/42468880068/attempts/3"], "served": "run-rest.json", "refused": false, "carries_review_comments": false, "query_exit": 0}
+{"at": "2026-11-09T08:07:58.946096+00:00", "args": ["run", "view", "42468880068", "--attempt", "3", "--json", "jobs"], "served": "run.json", "refused": false, "carries_review_comments": false, "query_exit": 0}

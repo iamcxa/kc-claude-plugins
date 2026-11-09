@@ -1,0 +1,10 @@
+REJECTED: required reminders are suppressed.
+
+Done: spacedock dispatch build --stamp writes the task's dispatch record itself completed validation. Report written and committed locally to [the task report](/private/tmp/validation-review-replay/fixed-candidate/wf/.spacedock-state/dispatch-build-writes-the-dispatch-record.md:473).
+
+```text
+Remaining: Reminder repair and retry-scope decision.
+Next: First Officer routes both (you)
+Closable: no
+```
+

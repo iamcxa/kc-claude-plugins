@@ -10,3 +10,5 @@ The interrupted attempt is excluded from D1 by FO; it remains one raw provider a
 
 ## One registered fixture extension
 See extension-1.json and live source/extension-run-attempt-3.json. Adds the recorded third-attempt number and database id to run-view projections, plus truthful field-gap logging. The triggering codex-base-1-fixed run is excluded even if it completes; its original refused field remains in the raw event stream. This transport projection does not validate real gh JSON field syntax. No second extension is available.
+
+The initial reconstruction script is retained as ../prepare_fixture_initial.py. It predates the explicitly recorded metadata extension and shell repair; final fixture bytes and rewrite records are authoritative. Do not regenerate over the retained final evidence.

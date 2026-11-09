@@ -1,0 +1,12 @@
+watching claude-base-1-registered
+started claude-candidate-1-registered
+started claude-base-2-registered
+started claude-candidate-2-registered
+started claude-base-3-registered
+finished claude-candidate-1-registered exit=0
+started claude-candidate-3-registered
+finished claude-base-2-registered exit=0
+finished claude-base-3-registered exit=0
+finished claude-base-1-registered exit=0
+finished claude-candidate-2-registered exit=1
+finished claude-candidate-3-registered exit=1

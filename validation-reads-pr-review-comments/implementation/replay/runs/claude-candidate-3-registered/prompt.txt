@@ -1,0 +1,1 @@
+$spacedock:ensign; then Read /private/tmp/validation-review-replay/claude-candidate-3/dispatch.md and treat its content as your assignment.

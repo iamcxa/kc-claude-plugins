@@ -1,0 +1,77 @@
+[
+  {
+    "path": "/tmp/validation-review-replay/base",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/base\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/candidate",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/candidate\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/claude-base-1",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/claude-base-1\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/claude-base-2",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/claude-base-2\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/claude-base-3",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/claude-base-3\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/claude-candidate-1",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/claude-candidate-1\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/claude-candidate-2",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/claude-candidate-2\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/claude-candidate-3",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/claude-candidate-3\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/codex-base-1-repeat",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/codex-base-1-repeat\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/codex-base-2",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/codex-base-2\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/codex-base-3",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/codex-base-3\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/codex-candidate-2",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/codex-candidate-2\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/codex-candidate-3",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/codex-candidate-3\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/fixed-base",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/fixed-base\n"
+  },
+  {
+    "path": "/tmp/validation-review-replay/fixed-candidate",
+    "exit": 0,
+    "output": "removed /private/tmp/validation-review-replay/fixed-candidate\n"
+  }
+]
