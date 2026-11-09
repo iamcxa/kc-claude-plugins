@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-09T04:58:40Z
+worktree: .worktrees/spacedock-ensign-validation-reads-pr-review-comments
 ---
 
 ## Scope
