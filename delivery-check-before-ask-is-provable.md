@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-09T04:59:10Z
+worktree: .worktrees/spacedock-ensign-delivery-check-before-ask-is-provable
 ---
 
 ## Scope
