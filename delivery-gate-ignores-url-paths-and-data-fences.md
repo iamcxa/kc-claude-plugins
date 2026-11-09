@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:delivery-gate-ignores-url-paths-and-data-fences:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:delivery-gate-ignores-url-paths-and-data-fences-validation-1
+              briefing:
+                id: briefing:delivery-gate-ignores-url-paths-and-data-fences:validation:attempt-1:revision-1
+                digest: sha256:29933be9a3786146b43fd2fb5051efb38918dfc7df0cb675b34c7c8b2788f70b
+                room-ref: ./delivery-gate-ignores-url-paths-and-data-fences/review/validation/briefing-1
 started: 2026-11-09T04:59:05Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences
 pr: iamcxa/kc-claude-plugins#818
