@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-check-before-ask-is-provable:backlog:attempt-1:revision-1",
+  "question": "決定：第 18 批這四張（驗證回答 Captain 能不能合併並因此主動讀完審查意見、合併檢查不再把網址和資料區塊當成檔案和指令、合併提問紀錄能證明檢查在提問前跑、數字寫明是哪次執行算出來的並涵蓋 learn 證據）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？建議核准。核准即接受四張任務檔現在寫下的內容；要改哪張直接說。",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-check-before-ask-is-provable:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/46353e9d952e6df1fa86b0da859d6340a1625b6e/delivery-check-before-ask-is-provable.md",
+      "rev": "sha256:6d11dae588fd04bd6cbb8d1a873874fae7e58e41aa898a600a75281affe4931d",
+      "mediaType": "text/markdown",
+      "summary": "Batch 18 backlog sitting: seed check exits 0 (design_surfaces.py check --seed, FO 2026-11-09); profile pilot; scope, budget and stop condition as written in the task file."
+    }
+  ]
+}

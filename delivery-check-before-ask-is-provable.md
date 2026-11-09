@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:delivery-check-before-ask-is-provable:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:delivery-check-before-ask-is-provable-backlog-1
+              briefing:
+                id: briefing:delivery-check-before-ask-is-provable:backlog:attempt-1:revision-1
+                digest: sha256:973beb8a677426dcd56bd3e3df4910207d10319e6d04dd19ac1fc708fb8c933a
+                room-ref: ./delivery-check-before-ask-is-provable/review/backlog/briefing-1
 ---
 
 ## Scope
