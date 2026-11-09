@@ -3,7 +3,7 @@ title: Pilot ui ideation states the lifecycle of data kept across screens or sig
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
