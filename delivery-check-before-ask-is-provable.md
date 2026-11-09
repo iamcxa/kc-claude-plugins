@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:delivery-check-before-ask-is-provable:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:delivery-check-before-ask-is-provable-ideation-1
+              briefing:
+                id: briefing:delivery-check-before-ask-is-provable:ideation:attempt-1:revision-1
+                digest: sha256:0eed174540720412e22a499e87d330d04f72b9f7697aff640fc6a321dceb2268
+                room-ref: ./delivery-check-before-ask-is-provable/review/ideation/briefing-1
 started: 2026-11-09T04:59:10Z
 ---
 
