@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:role-call-asks-for-the-mechanism:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:role-call-asks-for-the-mechanism-ideation-1
+              briefing:
+                id: briefing:role-call-asks-for-the-mechanism:ideation:attempt-1:revision-1
+                digest: sha256:fb14352a121a88f2a9d0baf3617bbfa53c45f589945ebbcbb3f59f5c8fd87546
+                room-ref: ./role-call-asks-for-the-mechanism/review/ideation/briefing-1
 started: 2026-11-09T14:37:22Z
 ---
 
