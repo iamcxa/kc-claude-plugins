@@ -36,3 +36,7 @@ Release review: not needed: story S01's journey has no release yet.
 ## Held: run elsewhere
 
 Held 2026-11-09 at backlog, not in a dev2 batch. Relayed by Paseo 2d26599b (the Chief Engineer session, relayed, not a ruling here): the Captain 「這件事我想要你從 relay 那邊把 poc 任務拿回來，讓你先做」 (chat, 2026-11-09), meaning that session runs the measurement itself. This FO does not prepare a gate or dispatch for it; the run records and report return here so the task can close or be re-scoped through the normal path.
+
+## Result from the run elsewhere
+
+Received 2026-11-09 from Paseo 2d26599b; report and harness copied to `poc/report.md` and `poc/harness/` (the runs and results.json hold private subspace-relay contents and stay outside this repository, at the CE session's local store). Summary (that session's report, not re-run here): with no note 0 of 6 runs planned the two-family browser runs; A and B were opened in 20 of 20 Codex and Claude runs and graded YES 18 of 20 by a blinded Sonnet judge (the two PARTIALs meet the rubric on reading); C graded YES 10 of 10; the result does not separate A from B. The trap, harness location and judge model were that session's choices, not the Captain's. Open: A or B is an operational choice for the Captain, and q2's wording waits on it.
