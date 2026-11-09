@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:kept-data-lifecycle-at-ui-ideation:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:kept-data-lifecycle-at-ui-ideation-backlog-1
+              briefing:
+                id: briefing:kept-data-lifecycle-at-ui-ideation:backlog:attempt-1:revision-1
+                digest: sha256:ed90aac6650f772a26d37c2cae82034cd5b2c2364e8e9cde0905d6203551fe7c
+                room-ref: ./kept-data-lifecycle-at-ui-ideation/review/backlog/briefing-1
 ---
 
 ## Scope

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kept-data-lifecycle-at-ui-ideation:backlog:attempt-1:revision-1",
+  "question": "第 19 批：這三張（工人開工先查有沒有欠的審查、總工程師改問根本原因、跨畫面資料先寫生命週期）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？我建議進入。",
+  "artifacts": [
+    {
+      "id": "artifact:kept-data-lifecycle-at-ui-ideation:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/59de77e911d289a52adb4c4e85033e64747addc0/kept-data-lifecycle-at-ui-ideation.md",
+      "rev": "sha256:dc1abb1678910d282dad82878243150c0b2193bb88a2e42a551b906cdf702ea3",
+      "mediaType": "text/markdown",
+      "summary": "Batch 19 backlog: the Captain approved the qnow-case direction and ship conditions (「准」, 2026-11-09); this gate admits the task to ideation under its written scope, budget and stop condition."
+    }
+  ]
+}
