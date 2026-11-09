@@ -61,8 +61,9 @@ Both `question` and `check` print a claim-source reminder on entry, without addi
 
 Usage: delivery_gate.py steps <record> --text-file <message>
 Reads Captain step observations without executing commands. Missing observations, unmatched steps,
-unrecorded fenced commands or links (including fences in named Markdown files), missing absolute
-paths, and Captain-only steps without a reason hold the ask (exit 1). Unreadable input is exit 2.
+unrecorded fenced commands or links (named Markdown files contribute shell or untagged fences;
+a URI right after `{` is not a link), missing absolute paths whose top-level directory exists,
+and Captain-only steps without a reason hold the ask (exit 1). Unreadable input is exit 2.
 Candidate may be none outside a validation gate. The check trusts recorded observations.
 Relative Markdown names resolve from the task folder, including names prefixed by its slug.
 Report-only Markdown files contribute fenced commands; missing-path checks cover FO's text and Asked lines.
@@ -734,6 +735,7 @@ STEP_FIELD = re.compile(r"^(Asked|Ran|Observed|Only he can):[ \t]*(.*?)(?=^(?:As
 FENCE = re.compile(r"^[ \t]*(`{3,}|~{3,})([^\n]*)\n(.*?)(?:^[ \t]*\1[`~]*[ \t]*$|\Z)", re.M | re.S)
 URL = re.compile(r"https?://[^\s<>`\"')\]]+")
 ABS_PATH = re.compile(r'''(?<![\w:/>])(?:"(?:~/|/)[^"\n]+"|'(?:~/|/)[^'\n]+'|(?:~/|/)[^\s`"'()\[\]{}]+)''')
+SHELL = {"", "sh", "bash", "zsh", "shell", "console"}
 
 
 def normalized(text):
@@ -744,17 +746,19 @@ def absolute_paths(text):
     paths = []
     for value in ABS_PATH.findall(URL.sub(" ", text)):
         value = re.sub(r":\d+(?::\d+)?$", "", value.strip("\"'").rstrip(".,;:"))
-        if "<" not in value and ">" not in value:
-            paths.append(Path(value).expanduser())
+        path = Path(value).expanduser()
+        if "<" not in value and ">" not in value and len(path.parts) > 1 and Path(*path.parts[:2]).exists():
+            paths.append(path)
     return list(dict.fromkeys(paths))
 
 
-def fenced_steps(text):
-    return [body.strip() for _, _, body in FENCE.findall(text) if body.strip()]
+def fenced_steps(text, shell_only=False):
+    return [body.strip() for _, info, body in FENCE.findall(text)
+            if body.strip() and (not shell_only or (info.split() or [""])[0] in SHELL)]
 
 
 def links(text):
-    return [value.rstrip(".,;") for value in URL.findall(text)]
+    return [m[0].rstrip(".,;") for m in URL.finditer(text) if text[m.start() - 1:m.start()] != "{"]
 
 
 def execution_recorded(ran):
@@ -804,7 +808,7 @@ def inspect_steps(record_path, message, folder, evidence=""):
             texts.append(card)
             if path.resolve() in own:
                 link_texts.append(card)
-            commands += fenced_steps(card)
+            commands += fenced_steps(card, shell_only=True)
     expanded = "\n".join(texts)
     asked = [normalized(fields.get("Asked", "")) for _, fields in steps]
     left = 0

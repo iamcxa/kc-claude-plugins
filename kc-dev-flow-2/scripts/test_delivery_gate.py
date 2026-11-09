@@ -11,6 +11,7 @@ import sys
 import tempfile
 import types
 import unittest
+import uuid
 from unittest import mock
 
 spec = importlib.util.spec_from_file_location("delivery_gate", Path(__file__).with_name("delivery_gate.py"))
@@ -1455,6 +1456,73 @@ class CaptainStepFixture(unittest.TestCase):
 
 
 class CaptainStepsTests(CaptainStepFixture):
+    def test_site_and_elided_paths_are_not_files_without_a_real_top_level_directory(self):
+        absent = f"/delivery-gate-{uuid.uuid4().hex}/x.txt"
+        message = (f"`fix(relay): /llms.txt teaches agents` `/web/favicon.svg` `/pair` {absent}\n"
+                   "`python3 .../scripts/adr_lint.py docs/adr --since a3f28ef6`\n")
+        body = self.step("/llms.txt")
+        code, out = self.run_steps(body, message)
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("S4", out)
+        wide = variant_of(' and len(path.parts) > 1 and Path(*path.parts[:2]).exists()', '')
+        code, out = self.run_steps(body, message, wide)
+        self.assertEqual(code, 1, out)
+        self.assertIn("S4: missing path /llms.txt", out)
+
+    def test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold(self):
+        message = "Read this note. `{http://www.w3.org/2000/svg}svg`"
+        body = self.step("Read this note.")
+        self.assertEqual(self.run_steps(body, message)[0], 0)
+        wide = variant_of(' if text[m.start() - 1:m.start()] != "{"', '')
+        code, out = self.run_steps(body, message, wide)
+        self.assertEqual(code, 1, out)
+        self.assertIn("S5: unrecorded command or link 'http://www.w3.org/2000/svg}svg'", out)
+        no_links = variant_of(' if text[m.start() - 1:m.start()] != "{"',
+                              ' if text[m.start() - 1:m.start()] != "{" and False')
+        for link in ("https://example.test/a", "see http://www.w3.org/2000/svg"):
+            with self.subTest(link=link):
+                shown = message + "\n" + link
+                code, out = self.run_steps(body, shown)
+                self.assertEqual(code, 1, out)
+                self.assertIn("S5", out)
+                self.assertEqual(self.run_steps(body, shown, no_links)[0], 0)
+
+    def test_named_cards_require_shell_and_untagged_fences_but_skip_data(self):
+        card = self.root / "card.md"
+        message, command = f"Read {card}", "printf unrecorded"
+        body = self.step(message)
+        no_cards = variant_of('fenced_steps(card, shell_only=True)', '[]')
+        all_fences = variant_of('fenced_steps(card, shell_only=True)', 'fenced_steps(card)')
+        for language in ("", "sh", "sh run", "bash", "zsh", "shell", "console", "yaml", "json", "mermaid", "xml", "python"):
+            with self.subTest(language=language):
+                card.write_text(f"```{language}\n{command}\n```\n")
+                shell = language in ("", "sh", "sh run", "bash", "zsh", "shell", "console")
+                code, out = self.run_steps(body, message)
+                self.assertEqual(code, 1 if shell else 0, out)
+                if shell:
+                    self.assertIn("S5", out)
+                    self.assertEqual(self.run_steps(body, message, no_cards)[0], 0)
+                else:
+                    self.assertIn("S5", self.run_steps(body, message, all_fences)[1])
+
+    def test_yaml_message_and_missing_paths_keep_their_holds(self):
+        message, body = "Read this note.\n```yaml\nkey: value\n```\n", self.step("Read this note.")
+        code, out = self.run_steps(body, message)
+        self.assertEqual(code, 1, out)
+        self.assertIn("S5", out)
+        shell_only = variant_of('fenced_steps(texts[0])', 'fenced_steps(texts[0], shell_only=True)')
+        self.assertEqual(self.run_steps(body, message, shell_only)[0], 0)
+        no_paths = variant_of('paths.append(path)', 'pass')
+        missing = self.root / "missing.txt"
+        shown = f"Read {missing}"
+        code, out = self.run_steps(self.step(shown), shown)
+        self.assertEqual(code, 1, out)
+        self.assertIn(f"message S4: missing path {missing}", out)
+        self.assertIn(f"step 1 S4: missing path {missing}", out)
+        self.assertEqual(self.run_steps(self.step(shown), shown, no_paths)[0], 0)
+        missing.touch()
+        self.assertEqual(self.run_steps(self.step(shown), shown)[0], 0)
+
     def test_recorded_output_paths_are_not_requests_but_unrecorded_paths_still_hold(self):
         missing = self.root / "unrecorded-path"
         for output in ("GET /health 200", f"GET {missing} 200"):
@@ -2163,7 +2231,7 @@ class QuestionTests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertIn(CLAIM_SOURCE, out.getvalue().splitlines())
 
-    def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False, summary=None):
+    def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False, summary=None, cards=None, cli=False):
         with tempfile.TemporaryDirectory() as d:
             readme(d)
             if as_folder:
@@ -2173,6 +2241,10 @@ class QuestionTests(unittest.TestCase):
             else:
                 entry = Path(d, "task.md")
                 entry.write_text(task)
+            for name, contents in (cards or {}).items():
+                card = gate.task_folder(entry) / name
+                card.parent.mkdir(parents=True, exist_ok=True)
+                card.write_text(contents)
             Path(d, "gate.txt").write_text((CLAUSES if clauses else "") + text + captain_record(entry))
             argv = ["question", str(entry), "--text-file", str(Path(d, "gate.txt"))]
             if summary is not None:
@@ -2185,11 +2257,61 @@ class QuestionTests(unittest.TestCase):
                 steps = gate.task_folder(entry) / "captain-steps/1.md"
                 steps.write_text(steps.read_text().replace(HEAD40, head))
                 gate.write_record(entry, dict(head=head, sufficiency=gate.clause(CLAUSES, "Sufficiency"),
-                                              necessity=gate.clause(CLAUSES, "Necessity")))
+                                               necessity=gate.clause(CLAUSES, "Necessity")))
+            if cli:
+                run = subprocess.run([sys.executable, "-B", gate.__file__, *argv], capture_output=True, text=True)
+                return run.returncode, run.stdout + run.stderr
             out = io.StringIO()
             with contextlib.redirect_stdout(out):
                 code = (module or gate).main(argv)
             return code, out.getvalue()
+
+    def test_question_accepts_site_and_elided_paths(self):
+        text = ("`fix(relay): /llms.txt teaches agents` `/web/favicon.svg` `/pair`\n"
+                "`python3 .../scripts/adr_lint.py docs/adr --since a3f28ef6`")
+        code, out = self.ask(text, cli=True)
+        self.assertEqual(code, 0, out)
+        self.assertIn("gate text complete", out)
+        self.assertNotIn("S4", out)
+
+    def test_question_accepts_namespace_uri_in_message_and_report(self):
+        text = "`{http://www.w3.org/2000/svg}svg`"
+        code, out = self.ask(text, task=TASK + "\n## Stage Report: validation\n" + text, cli=True)
+        self.assertEqual(code, 0, out)
+        self.assertIn("gate text complete", out)
+        self.assertNotIn("S5", out)
+
+    def test_question_keeps_yaml_fences_in_the_report_as_steps(self):
+        task = TASK + "\n## Stage Report: validation\n```yaml\nkey: unrecorded\n```\n"
+        code, out = self.ask("Review this candidate.", task=task, cli=True)
+        self.assertEqual(code, 1, out)
+        self.assertIn("Captain steps record fails", out)
+        self.assertIn("S5", out)
+
+    def test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths(self):
+        cards = {
+            "design/built-review.md": "```yaml\ndesign_review:\n  adrs_read:\n    - docs/adr/0064-the-first-screen-leads-with-sign-in.md (Accepted)\n```\n",
+            "review/chief-engineer-1.md": "```yaml\nchief_engineer_advice:\n  outcome: continue\n```\n",
+        }
+        for name, contents in cards.items():
+            with self.subTest(card=name):
+                code, out = self.ask("Review this candidate.", summary=f"Read {name}", cards={name: contents}, cli=True)
+                self.assertEqual(code, 0, out)
+                self.assertIn("gate text complete", out)
+                all_fences = variant_of('fenced_steps(card, shell_only=True)', 'fenced_steps(card)')
+                code, out = self.ask("Review this candidate.", summary=f"Read {name}", cards={name: contents}, module=all_fences)
+                self.assertEqual(code, 1, out)
+                self.assertIn("S5", out)
+        code, out = self.ask("Review this candidate.", summary="Read card.md",
+                             cards={"card.md": "```sh\nprintf unrecorded\n```\n"}, cli=True)
+        self.assertEqual(code, 1, out)
+        self.assertIn("Captain steps record fails", out)
+        self.assertIn("S5", out)
+        with tempfile.TemporaryDirectory() as d:
+            code, out = self.ask(f"Read {d}/missing.txt", cli=True)
+            self.assertEqual(code, 1, out)
+            self.assertIn("Captain steps record fails", out)
+            self.assertIn("S4", out)
 
     def test_recorded_merge_questions_require_the_worktree_removal_clause(self):
         for number, text in self.recorded_questions.items():
