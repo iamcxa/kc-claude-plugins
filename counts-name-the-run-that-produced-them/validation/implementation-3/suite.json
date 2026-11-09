@@ -1,0 +1,25 @@
+{
+  "name": "suite",
+  "pid": 91555,
+  "command": [
+    "env",
+    "SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock",
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "kc-dev-flow-2/scripts",
+    "-p",
+    "test_*.py"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "start": "2026-11-09T16:14:21.231049+00:00",
+  "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+  "end": "2026-11-09T16:25:30.011933+00:00",
+  "exit": 0,
+  "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+  "log": "suite.log",
+  "log_sha256": "f4eab0db27023a352863aa40ab910fc95d289c3e823632bc89440a0c9af70e67"
+}

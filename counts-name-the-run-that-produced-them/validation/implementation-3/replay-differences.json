@@ -1,0 +1,112 @@
+{
+  "comma_defect_absent": true,
+  "differences": [
+    {
+      "job": "13df332879bb0b766569f69a5baf90798922de7dec3e4045ce3c3bba1fdc9df5",
+      "record_sha256": "911134b71b8ed59631855e3435dd89b279d1684908cec39a61448b2335fad6b3",
+      "before": [
+        "3 passed"
+      ],
+      "after": [],
+      "missing": []
+    },
+    {
+      "job": "441fe280d07513b3bfa7c1cd29444490994538c6e7fe6202b76d177129a67303",
+      "record_sha256": "d32e37498186fdd24e726a9eedd8906b133d3dc086cddb311c5dddf92ce59ca1",
+      "before": [
+        "63 words",
+        "4 of 4",
+        "15 words"
+      ],
+      "after": [
+        "63 words",
+        "4 of 4",
+        "15 words"
+      ],
+      "missing": [
+        {
+          "sentence": "The author had read each script's failure output first (design table 'Measured pointer candidates'), and validation passed that head with 4 of 4 CI checks green.",
+          "missing": [
+            "4"
+          ]
+        }
+      ]
+    },
+    {
+      "job": "a22107a3d634a30e0fe25ab8bd82409f7d943841be697417087197caa3d23c5d",
+      "record_sha256": "4ec8ba0417062f067449b9e863f68b379ba1e45a8944a872a7215de5d333055a",
+      "before": [],
+      "after": [
+        "31 checks"
+      ],
+      "missing": []
+    },
+    {
+      "job": "d829872c2ba7e3e7ee8d4959f55d1447fe80038165a88731d5566dc460bf84b9",
+      "record_sha256": "4610007a6365cb5affbd28f9005be42f1729e4db90ca54b968ae5dfa1c5201a8",
+      "before": [
+        "69 existing task",
+        "64 task files",
+        "258 task files",
+        "2, round"
+      ],
+      "after": [
+        "69 existing task",
+        "64 task files",
+        "258 task files"
+      ],
+      "missing": [
+        {
+          "sentence": "its implementation report measured '69 existing task files (45 here, 22 beirut-dev2, 2 montpellier-v2) had 0 duplicates' and the one-line counts were fence-blind.",
+          "missing": [
+            "69"
+          ]
+        },
+        {
+          "sentence": "Validation of cycle 3 then ran base and candidate `design_surfaces.py check` and `check --seed` over 64 task files here: 63 identical, 1 differed, `_archive/amendment-form-check.md` going from exit 0 to exit 1 with \"has 3 'Surfaces:' lines, expected exactly 1\" because fenced fixture lines were counted.",
+          "missing": [
+            "64"
+          ]
+        }
+      ]
+    },
+    {
+      "job": "ed2d3ee114280792035b9f231a95202d61ce3360dddf3bc31a84955474b1d28e",
+      "record_sha256": "12475438381f21de575331993a7de52ec37830112aae69104f637c578a9b9b70",
+      "before": [
+        "507 words",
+        "1 FO line"
+      ],
+      "after": [
+        "507 words",
+        "1 FO line"
+      ],
+      "missing": [
+        {
+          "sentence": "Recorded in spacedock-state/dev2:_archive/fo-lifecycle-mod.md under '### Why the cycle-2 design grew' and '### Words FO reads at each moment', and in the Cycle 1 FO line of its feedback record.",
+          "missing": [
+            "1"
+          ]
+        }
+      ]
+    },
+    {
+      "job": "efee0619799d0c728a8fd9bd41ecc5fdcd97fbbfb4c8df6b326efa5c53c2b78a",
+      "record_sha256": "5726e183b3a608fe59177c1cdbbcd65b08f9e33817357bc2aec0a21de78b14eb",
+      "before": [
+        "2 items"
+      ],
+      "after": [],
+      "missing": []
+    },
+    {
+      "job": "f2d9f491964441157eef70995fcb60892e701de4f513d09e63b3e8101a16f138",
+      "record_sha256": "9f6daffbefb643af54ebc48ae010ece0149278bcf03aaf4fbd9875674ff36f6f",
+      "before": [
+        "3 passed"
+      ],
+      "after": [],
+      "missing": []
+    }
+  ]
+}

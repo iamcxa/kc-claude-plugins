@@ -1,0 +1,243 @@
+{
+  "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+  "suite_summary": [
+    "Ran 1050 tests in 668.359s",
+    "OK (skipped=7)"
+  ],
+  "checks": [
+    {
+      "name": "suite",
+      "pid": 91555,
+      "command": [
+        "env",
+        "SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock",
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "kc-dev-flow-2/scripts",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+      "start": "2026-11-09T16:14:21.231049+00:00",
+      "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "end": "2026-11-09T16:25:30.011933+00:00",
+      "exit": 0,
+      "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "log": "suite.log",
+      "log_sha256": "f4eab0db27023a352863aa40ab910fc95d289c3e823632bc89440a0c9af70e67"
+    },
+    {
+      "name": "lint",
+      "pid": 91558,
+      "command": [
+        "python3",
+        "-B",
+        "kc-dev-flow-2/scripts/lint-skills.py"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+      "start": "2026-11-09T16:14:21.237104+00:00",
+      "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "end": "2026-11-09T16:14:21.529499+00:00",
+      "exit": 0,
+      "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "log": "lint.log",
+      "log_sha256": "08575019d0a7bf55eedb28ed7824ba9f27a5f5e36d2265b0ce89d95b6ff0e16e"
+    },
+    {
+      "name": "adr",
+      "pid": 91551,
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py",
+        "docs/adr",
+        "--since",
+        "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+        "--require",
+        "0072"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+      "start": "2026-11-09T16:14:21.222155+00:00",
+      "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "end": "2026-11-09T16:14:21.458094+00:00",
+      "exit": 0,
+      "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "log": "adr.log",
+      "log_sha256": "0146a629e05b3b85b8ca874787a9654954afcbd08049c5d63651d9d14dd88a24"
+    },
+    {
+      "name": "comments",
+      "pid": 91552,
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/comment_ratio.py",
+        "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+        "HEAD",
+        "--workflow-dir",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/.."
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+      "start": "2026-11-09T16:14:21.222760+00:00",
+      "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "end": "2026-11-09T16:14:21.316404+00:00",
+      "exit": 0,
+      "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "log": "comments.log",
+      "log_sha256": "951b797b22d7ec8e6b7e1c165ce4ad1aa68ce69ea541a6b703d8d1b0435da2a8"
+    },
+    {
+      "name": "numbers",
+      "pid": 94023,
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/number_guards.py",
+        "check",
+        "--workflow-dir",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/..",
+        "--task",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them.md",
+        "--base",
+        "82c9e67ae892b80647c3f6a8b6929f993e42dbc2"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+      "start": "2026-11-09T16:14:39.933559+00:00",
+      "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "end": "2026-11-09T16:14:48.052862+00:00",
+      "exit": 0,
+      "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "log": "numbers.log",
+      "log_sha256": "1718051bb48a2738e914c68e7f46117d7ccff1a57d70c368dbb4c8ddeaf0d862"
+    },
+    {
+      "name": "design",
+      "pid": 91559,
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/design_surfaces.py",
+        "check",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them.md"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+      "start": "2026-11-09T16:14:21.248223+00:00",
+      "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "end": "2026-11-09T16:14:21.325162+00:00",
+      "exit": 0,
+      "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "log": "design.log",
+      "log_sha256": "e22fb7585fe6cc5d12ad408f58b41f948e506bc7373d9ef04c438e7fcbbd03e7"
+    },
+    {
+      "name": "words",
+      "pid": 91560,
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/implementation-3/words.py",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+        "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/implementation-3"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+      "start": "2026-11-09T16:14:21.252954+00:00",
+      "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "end": "2026-11-09T16:14:22.873473+00:00",
+      "exit": 0,
+      "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "log": "words.log",
+      "log_sha256": "49d9178d22e4e235be338417af0b4e61352aa1e5b513ee7f44ff27e0186fef30"
+    },
+    {
+      "name": "mutations",
+      "pid": 91556,
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/implementation-3/mutations.py",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/implementation-3"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+      "start": "2026-11-09T16:14:21.233098+00:00",
+      "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "end": "2026-11-09T16:14:25.799537+00:00",
+      "exit": 0,
+      "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "log": "mutations.log",
+      "log_sha256": "fe15bc7e2171ce37ff99370f60f3d2b2731676662a05aae78060a11813156419"
+    },
+    {
+      "name": "learn-replay",
+      "pid": 91557,
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/implementation-3/replay.py",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+        "learn",
+        "kc-claude-plugins|/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git",
+        "relay|/Users/kent/conductor/repos/subspace-relay/.git",
+        "web|/Users/kent/conductor/repos/subspace-web/.git",
+        "qnow|/Users/kent/conductor/repos/qnow/.git",
+        "v0|/Users/kent/conductor/repos/subspace-v0/.git"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+      "start": "2026-11-09T16:14:21.235024+00:00",
+      "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "end": "2026-11-09T16:14:21.471870+00:00",
+      "exit": 0,
+      "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "log": "learn-replay.log",
+      "log_sha256": "d5ab484d2307315c141d269b50569e73bdfe225ec67e790f0b1c68d4a7cee5ad"
+    },
+    {
+      "name": "gate-replay",
+      "pid": 91554,
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/implementation-3/replay.py",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+        "gate",
+        "kc-plugin-dev2|/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state|2a00a2a1e",
+        "relay|/Users/kent/conductor/workspaces/subspace-relay/dhaka/docs/dev/.spacedock-state|f85b62c65",
+        "v0|/Users/kent/conductor/repos/subspace-v0/docs/dev/.spacedock-state|77c06a14b",
+        "qnow|/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state|8207a9729"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+      "start": "2026-11-09T16:14:21.225537+00:00",
+      "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "end": "2026-11-09T16:14:41.575652+00:00",
+      "exit": 0,
+      "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "log": "gate-replay.log",
+      "log_sha256": "5ac842d2886883c7fd47d4eb27c9f8a2e3c8642a1bd62ca62f9536206ae20104"
+    },
+    {
+      "name": "doc-impact",
+      "pid": 91561,
+      "command": [
+        "python3",
+        "-B",
+        "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/doc_impact.py",
+        "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+        "HEAD",
+        "--json"
+      ],
+      "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+      "start": "2026-11-09T16:14:21.256774+00:00",
+      "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "end": "2026-11-09T16:14:21.531310+00:00",
+      "exit": 0,
+      "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+      "log": "doc-impact.log",
+      "log_sha256": "c4797ecd17064f7dfb4fcf5583a8a6dcf826ee2dd191608fb2fffdcfbfe8af8e"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+[
+ {
+  "doc": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/delivery_gate.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/delivery_gate.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/delivery_gate.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/delivery_gate.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+  "state": "updated",
+  "terms": [
+   "count_disclosure",
+   "kc-dev-flow-2/scripts/count_tokens.py",
+   "kc-dev-flow-2/scripts/delivery_gate.py",
+   "kc-dev-flow-2/scripts/learning.py"
+  ]
+ }
+]

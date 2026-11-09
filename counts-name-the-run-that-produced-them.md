@@ -342,3 +342,43 @@ Implementation is on hold pending an FO-reserved ADR number in this task's ## Nu
 ### Summary
 
 This complete report supersedes the earlier missing-ADR hold report: ADR 0072 is implemented and the approved local code, mutation evidence and PR text are prepared. Implementation remains on hold because the automatic summary write requires an out-of-scope test fixture update; no all-green or completed-implementation claim is made, and FO must authorize that file before work continues.
+
+
+## Stage Report: implementation
+
+- DONE: Apply Captain amendment 1 and implement the approved Design and current Acceptance criteria.
+  AC-2/AC-3 remain verbatim under Superseded text; fresh AC-7/AC-8 require tool-written disclosure with no disclosure hold. ADR 0072 records the Captain's words and protects the count pattern, writer and learn join.
+- DONE: Follow FO authorization in dispatch/implementation-1-message-2.md for test_poc_readme.py, expected forwarded bytes only.
+  Candidate changes that fixture's expected bytes to the post-check Unchecked counts line; wrong-summary and failure holds are untouched. mutations.py poc-writer removes the write and that test fails in both workflow routes (validation/implementation-3/poc-writer.log).
+- DONE: Commit locally on the assigned branch from origin/main and prepare the PR title and body for FO.
+  Branch spacedock-ensign/counts-name-the-run-that-produced-them; base 82c9e67ae892b80647c3f6a8b6929f993e42dbc2; candidate 90f43f801be3d03ebd7d98d1a41ad78801aea54d; clean code worktree, nine authorized files (validation/implementation-3/identity.json). PR text: /tmp/impl-counts-name-the-run-that-produced-them-pr.md, copied to validation/implementation-3/prepared-pr.md.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins; push the product branch and open its PR.
+  No PR opened: no push grant. FO owns publication; this worker has made local commits and prepared the Conventional Commit title scoped to kc-dev-flow-2.
+- DONE: AC-1 learn refuses an unsupported Evidence count before completion and leaves correction usable.
+  suite.log/suite.json at candidate pass the 18-versus-15 referenced-pack test, pending-token correction, historical completed reads and file-based imports. Removing the join fails (mutations.log and learn-join.log), without treating a count elsewhere in the pack as a reference.
+- DONE: AC-7 question lists wrong, checked and derived counts and writes the computed line without holding it.
+  CountDisclosureTests cover missing/wrong/duplicate lines, cited-file contents, task-folder containment, legacy input, derived 3 of 6, fence preservation and idempotence. Dropping the number comparison or automatic write fails (number-in-file.log, writer.log).
+- DONE: AC-8 check scans ask plus PR body and writes the disclosure into the ask.
+  The gh fixture's uncited 18 findings affects the saved ask; removing the body scan or writer fails (pr-body.log, writer.log). Other holds remain, and write failure exits 2 without saving a merge ask.
+- DONE: AC-4 rerun both replays with final pattern, script, revision and UTC date, and explain each difference.
+  replay.py gate-replay.log at candidate reads the four pinned ideation revisions; learn-replay.log reads the five stores and still refuses 441fe280/d829872c, with extra ed2d3ee1 explained in replay-differences.json. The comma defect is absent; the adopter's original issue record was unavailable.
+- DONE: Preserve the extra replay refusal as a known limit, without claiming count truth.
+  ed2d3ee1's "Cycle 1 FO line" matches the approved pattern; its refs' P1/S1 identifiers no longer count as standalone 1. The earlier substring check false-passed this join; the heading is still a syntactic false positive. Fenced claims and unsupported passed/items forms explain the other recognition differences.
+- DONE: AC-5 independently recount actual base/candidate reading cost at each affected moment.
+  words.py words.log: startup 5931+48 unchanged; validation 826→848, evaluator 877→896; question zero-count stdout 92→97 and check 84→89. pr_watch, design_surfaces and lint budget bytes are unchanged; no withdrawn disclosure-hold output remains.
+- DONE: Every current acceptance criterion green with its named evidence; complete unittest discover (AC-6).
+  run.py suite.json/.log binds both start/end to candidate and records env SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock plus python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py': exit 0, "Ran 1050 tests", "OK (skipped=7)". No intermediate run is promoted to this proof.
+- DONE: Each named falsifier shown failing by a mutation, python3 -B and caches absent.
+  mutations.py mutations.log at candidate requires exit 1 with FAIL and no ERROR for learn join, number comparison, writer, PR body and POC writer removals; it asserts no bytecode caches before/after each disposable copy under the assigned worktree.
+- DONE: Repository lint-skills.py, package adr_lint.py docs/adr --since <base> --require 0072, number_guards.py check and comment_ratio.py within maximum.
+  lint.json, adr.json, numbers.json and comments.json each exit 0 at candidate; numbers refreshes remote reservations without a stale-fetch warning. WORKFLOW_WORD_BUDGET remains 5931; comments.log reports 1.3% against maximum 5%.
+- DONE: Scope and affected-document verdicts.
+  identity.json confirms only Design's files plus FO's authorized test file, with no version, workflow.md, _mods or CI workflow change. document-verdicts.json: ADR 0044 unaffected (reviewer routing); 0051 unaffected (round-count holds); 0062 unaffected (approval authority); 0071 unaffected (record matching); 0072 updated. The two skill sentences are updated.
+- DONE: Retain exact artifact identity and observed run evidence; finish the worker's checks.
+  verification.json checks producer exits, start/end candidate and output hashes. Captured suite PID 91555 exited 0; the earlier sessions 74900/25520 also ended and are superseded evidence. No agent was messaged and no process was stopped by command pattern.
+- SKIPPED: FO runs RoboRev after report, pushes, opens the Draft PR and reads CI; CI cost measured or stated as not measured.
+  Delegated checks not run, never clean. CI cost not measured; no CI workflow changed. Independent validation, review, merge, publication and adoption remain FO/Captain-owned.
+
+### Summary
+
+This complete report supersedes both earlier implementation hold reports. The approved implementation and FO-authorized expected-byte fixture change are committed locally, all required worker checks and mutation falsifiers pass at the exact candidate, and the prepared PR text is ready for FO; publication and independent review remain delegated.

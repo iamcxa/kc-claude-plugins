@@ -1,0 +1,17 @@
+{
+  "name": "lint",
+  "pid": 91558,
+  "command": [
+    "python3",
+    "-B",
+    "kc-dev-flow-2/scripts/lint-skills.py"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "start": "2026-11-09T16:14:21.237104+00:00",
+  "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+  "end": "2026-11-09T16:14:21.529499+00:00",
+  "exit": 0,
+  "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+  "log": "lint.log",
+  "log_sha256": "08575019d0a7bf55eedb28ed7824ba9f27a5f5e36d2265b0ce89d95b6ff0e16e"
+}

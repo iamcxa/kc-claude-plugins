@@ -1,0 +1,20 @@
+F
+======================================================================
+FAIL: test_evidence_count_refusal_leaves_pending_token_correctable (test_learning.LearningTests.test_evidence_count_refusal_leaves_pending_token_correctable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-c0c6iztf/kc-dev-flow-2/scripts/test_learning.py", line 128, in test_evidence_count_refusal_leaves_pending_token_correctable
+    refused = self.complete(claim, self.result_file([decision]), code=1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-c0c6iztf/kc-dev-flow-2/scripts/test_learning.py", line 89, in complete
+    return self.cli("complete", "--job", claim["job"], "--token", claim["token"], "--result", path, code=code)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-c0c6iztf/kc-dev-flow-2/scripts/test_learning.py", line 70, in cli
+    self.assertEqual(result.returncode, code, result.stdout + result.stderr)
+AssertionError: 0 != 1 : {"job": "f92c7bb8ea94e5aea4c361e0bb1c132ef63d4c074930aefadc121b4a0a97802e", "digest": "9e1105a9deb970488a373c9cfb87553ffb05fa3f83419394b8ed62b3c1cc5a08", "state": "completed", "evaluation": {"decisions": [{"action": "add", "entry": {"Applicability": "Synthetic export path", "Evidence": "18 findings", "Practice": "Check header order"}, "evidence": ["recount 2026-11-08: 15 findings (20 overall)"], "reason": "Synthetic schema/control input only"}], "schema_version": 1}, "input": {"closed": true, "closure_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evidence": ["recount 2026-11-08: 15 findings (20 overall)", "Earlier pass: 18 findings"], "landed_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "learning": [{"Applicability": "Synthetic import path", "Evidence": "Synthetic case A", "Practice": "Check encoding"}], "learning_task": false, "merged": true, "pr": "example/project#1", "profile": "pilot", "project_rules": ["No authority changes"], "schema_version": 1, "task_id": "task-1", "variant": "kc-dev-flow-2", "verdict": "passed", "workflow": "docs/dev2"}, "owner": "session-fixture", "proposal": {"add": [{"Applicability": "Synthetic export path", "Evidence": "18 findings", "Practice": "Check header order"}], "remove": []}, "recovery": null, "schema_version": 1}
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.226s
+
+FAILED (failures=1)

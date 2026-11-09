@@ -1,0 +1,29 @@
+FFF
+======================================================================
+FAIL: test_check_scans_pr_body_and_rewrites_ask_idempotently (test_delivery_gate.CountDisclosureTests.test_check_scans_pr_body_and_rewrites_ask_idempotently) (declaration='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-sx14yv17/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2953, in test_check_scans_pr_body_and_rewrites_ask_idempotently
+    self.assertIn("counts: 0 checked, 1 unchecked", result.out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n'
+
+======================================================================
+FAIL: test_check_scans_pr_body_and_rewrites_ask_idempotently (test_delivery_gate.CountDisclosureTests.test_check_scans_pr_body_and_rewrites_ask_idempotently) (declaration='Unchecked counts: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-sx14yv17/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2953, in test_check_scans_pr_body_and_rewrites_ask_idempotently
+    self.assertIn("counts: 0 checked, 1 unchecked", result.out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n'
+
+======================================================================
+FAIL: test_check_scans_pr_body_and_rewrites_ask_idempotently (test_delivery_gate.CountDisclosureTests.test_check_scans_pr_body_and_rewrites_ask_idempotently) (declaration='Unchecked counts: 99\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-sx14yv17/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2953, in test_check_scans_pr_body_and_rewrites_ask_idempotently
+    self.assertIn("counts: 0 checked, 1 unchecked", result.out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.465s
+
+FAILED (failures=3)

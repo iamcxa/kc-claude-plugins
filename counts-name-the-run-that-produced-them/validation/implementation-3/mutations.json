@@ -1,0 +1,19 @@
+{
+  "name": "mutations",
+  "pid": 91556,
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/implementation-3/mutations.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/implementation-3"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "start": "2026-11-09T16:14:21.233098+00:00",
+  "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+  "end": "2026-11-09T16:14:25.799537+00:00",
+  "exit": 0,
+  "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+  "log": "mutations.log",
+  "log_sha256": "fe15bc7e2171ce37ff99370f60f3d2b2731676662a05aae78060a11813156419"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "numbers",
+  "pid": 94023,
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/number_guards.py",
+    "check",
+    "--workflow-dir",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/..",
+    "--task",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them.md",
+    "--base",
+    "82c9e67ae892b80647c3f6a8b6929f993e42dbc2"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "start": "2026-11-09T16:14:39.933559+00:00",
+  "candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+  "end": "2026-11-09T16:14:48.052862+00:00",
+  "exit": 0,
+  "end_candidate": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+  "log": "numbers.log",
+  "log_sha256": "1718051bb48a2738e914c68e7f46117d7ccff1a57d70c368dbb4c8ddeaf0d862"
+}
