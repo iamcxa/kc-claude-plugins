@@ -265,3 +265,41 @@ Ideation for the Pilot ui kept-data rule: one paragraph appended to the ideation
 ### Summary
 
 Implemented the approved Pilot ui kept-data paragraph in local candidate `8470611d718f19aa8ef1f7ae66ba9f72c3c01422`, with exact replay-text binding, unchanged workflow words/budget, mutation falsifiers and all prescribed local checks passing. FO still owns product publication, RoboRev, fresh independent validation and CI; saved single-case replay evidence and its limits remain as recorded under Design.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #820 head 8470611d against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at `8470611d718f19aa8ef1f7ae66ba9f72c3c01422`, base `82c9e67ae892b80647c3f6a8b6929f993e42dbc2`; exact candidate exported with `git archive` to `/tmp/validate-pr820-0VHkSC0d/candidate`; product worktree stayed clean and no worktree was created.
+- DONE: AC-1 — only the approved paragraph changes, with the Captain's option a.
+  Re-ran the named candidate diff: only `kc-dev-flow-2/skills/ideation/profiles/pilot.md`, nine added lines, byte-equal to the replay patch; reused the implementation verifier against the export, rejecting reworded text and a second package-file edit.
+- DONE: AC-2 — skill lint passes and word budget/readable text stay unchanged.
+  Repository `python3 -B kc-dev-flow-2/scripts/lint-skills.py` exits 0, `references/sd/workflow.md: 5931 of 5931 words`; adopted `docs/dev2/README.md` is byte-identical (5936 words before/after); budget script also byte-identical. Moving the paragraph into workflow.md exits 1 at 6025 > 5931.
+- DONE: AC-3 — shipped text matches the winning replay; independent fresh saved-text rescore retains its ordering.
+  All 24 saved score JSONs re-parse to the recorded sums (revised/current: 19/11 and 22/10; second pass 20/11 and 22/5). Re-ran kit `bash -e score.sh` with fresh Claude Sonnet on the first amendment-4 text per arm (`x51560f44`, `xcf30fdd8`): current 3, revised 8, both exit 0; quote/input/output hashes in `/tmp/validate-pr820-0VHkSC0d/rescore-manifest.json`. Rewording the candidate breaks the binding.
+- DONE: AC-4 — no new First Officer reading at the six named lifecycle moments.
+  Re-ran the exact candidate `git grep` command: hits only in tests; the sole changed file is the ideation worker's profile route. A scratch startup reference is detected and a workflow change rejected; ideation-gate task reading can still grow as the approved design states.
+- DONE: Replay and implementation limits independently judged.
+  The saved-text rescore is the expressly allowed AC-3 alternative, not fresh design generation. Single-case, same-author rubric/wording, longer revised text, early arm-visible paths, model scoring noise/lenience, Codex-only text generation, absent picture-cycle evidence and untested reviewer hand-off remain limits; none is claimed resolved. Fresh current-arm C9 still rewards clearing without an explicit late-reply rule; the revised text's explicit late-writer and reset criteria preserve the observed direction, without proving a general effect.
+- DONE: Goal sufficiency and minimal necessity at this candidate.
+  The approved single-case stop condition holds and the missing design questions are now in the existing worker route; old-wording comparison supplies the without-change evidence. Only the replayed paragraph is retained. The Captain's approved option a relies on the existing engineering-reviewer amendment call plus the sibling worker-hold task; no new hand-off or first-design multi-writer guarantee is claimed.
+- DONE: Re-run prescribed decision, numbering, comment, design, document and dispatch checks.
+  `python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py docs/adr --since 82c9e67ae892b80647c3f6a8b6929f993e42dbc2` in the export with read-only git metadata: exit 0, 64 records, 0 legacy; no reserved ADR number. Loaded-skill package root is the Codex 0.36.0 install.
+  `number_guards.py check` at explicit base/head after successful state fetch: exit 0, no findings, no migrations-path; `comment_ratio.py`: exit 0, code 0/comments 0/0.0%, 5% threshold not enforced below 20 code lines; no added code comments.
+  `design_surfaces.py check`: exit 0, presentable; `doc_impact.py <base> <head>`: exit 0, zero listed documents; `dispatch_records.py <task-folder>`: exit 0, three complete records. Read implementation-1: its requirements trace to the approved scope/ruling; pilot.md's reader entry remains valid.
+- DONE: Minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by me exactly as written in a fresh bash shell, with its observed output.
+  Run `cd /tmp && bash --noprofile --norc /tmp/validate-pr820-0VHkSC0d/acceptance.sh`; five commented steps carry exact commands and expected observations; SHA-256 `cba68d4effa28570e08632ea9979345a27d03f680a42290c8640658d58b05c5e`.
+  Observed exit 0: exact-head export; 63 acceptance assertions/four mutation cases; ADR 64/0; four supporting checks exit 0; fresh-rescore receipts revised 8 > current 3; final PASS. Full output `/tmp/validate-pr820-0VHkSC0d/acceptance.log`; fresh-run evidence `/tmp/pr820-acceptance-vsBJpp7W`.
+  Prerequisites are declared in the script: this repository/state, installed 0.36.0 package, validation folder and saved private replay texts, git/tar/Python. It has no changed screen and covers no new model generation, browser flow, review or delivery.
+- DONE: Hosted candidate identity and existing CI observed read-only.
+  PR #820 remains OPEN/Draft at the exact candidate. GitHub test run `42648596614` completed successfully at that head; observed build, route gate, version parity and security checks also succeeded; docs deploy was skipped. Evidence `/tmp/validate-pr820-0VHkSC0d/{pr-final,ci}.json`; CI cost per PR was not measured and no CI configuration changed.
+- DONE: Review-finding disposition.
+  No new Material, Needs decision or Polish finding; accepted evidence limitations above remain deferred risks. No code repair, scope expansion, unapproved ADR, new runtime guarantee or gate waiver is recommended.
+- SKIPPED: Fresh full design-generation replay, UI screenshots, and a new reviewer hand-off.
+  AC-3 explicitly permits two saved-text re-scores; Surfaces is none, and the approved option a excludes the hand-off. The new score calls initially reported not logged in inside the sandbox, then completed after the authorized retry; only successful receipts support the verdict.
+- SKIPPED: RoboRev, PR publication/reviews, readiness, merge and adoption.
+  These remain FO-owned; existing CI was read, not rerun. Product bytes and revision remain unchanged; no PR comment, review request or product push was made. Report publication uses only the prescribed path-scoped state helper.
+
+### Summary
+
+PASSED for PR #820 head `8470611d718f19aa8ef1f7ae66ba9f72c3c01422`: all four criteria, their named falsifiers, fresh two-text blind scoring and the five-step fresh-shell acceptance passed. This establishes the approved bounded wording change with its recorded replay limits; FO retains review, Captain gate and delivery authority.
+
