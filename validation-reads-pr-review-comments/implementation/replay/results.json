@@ -1,0 +1,27 @@
+{
+  "runs": [
+    {
+      "host": "codex",
+      "arm": "base",
+      "wording": 0,
+      "run": 1,
+      "cli_exit": 0,
+      "verdict": "no completed report; invalid harness",
+      "found": null,
+      "read_comments_endpoint": null,
+      "precision_miss": null,
+      "tokens": null,
+      "counted": false,
+      "reason": "login shell PATH bypassed the registered gh shim; interrupted; no completed turn usage"
+    }
+  ],
+  "stop": "D1 after first incomplete Codex attempt",
+  "attempts": 1,
+  "planned": 12,
+  "hard_stop": 16,
+  "claude_runs": 0,
+  "per_host_comparison": "not evaluable",
+  "precision": "not measured",
+  "mean_report_words": "not measured",
+  "cost": "not measured"
+}

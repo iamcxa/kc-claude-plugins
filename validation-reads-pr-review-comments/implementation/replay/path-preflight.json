@@ -1,0 +1,8 @@
+{
+  "supplied_first_PATH_entry": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-reads-pr-review-comments/implementation/replay/bin",
+  "login_shell_resolved_gh": "/opt/homebrew/bin/gh",
+  "exit": 0,
+  "expected": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-reads-pr-review-comments/implementation/replay/bin/gh",
+  "status": "failed",
+  "consequence": "First Codex run is invalid. No completed report and no usage returned. Stop under D1; no further provider calls."
+}
