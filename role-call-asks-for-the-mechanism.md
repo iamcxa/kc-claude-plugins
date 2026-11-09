@@ -3,7 +3,7 @@ title: The owed chief-engineer call asks for the mechanism, and a decline names 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
