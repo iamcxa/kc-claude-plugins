@@ -1,0 +1,5 @@
+{
+  "name": "diff-check",
+  "command": "git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-role-call-asks-for-the-mechanism diff --check 82c9e67ae892b80647c3f6a8b6929f993e42dbc2 ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9",
+  "exit": 0
+}

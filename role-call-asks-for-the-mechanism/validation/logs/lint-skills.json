@@ -1,0 +1,7 @@
+{
+  "name": "lint-skills",
+  "command": "python3 -B kc-dev-flow-2/scripts/lint-skills.py",
+  "cwd": "/tmp/validate-pr821-fiafayp5/candidate",
+  "exit": 0,
+  "seconds": 0.24
+}

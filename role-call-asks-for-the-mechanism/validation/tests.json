@@ -1,0 +1,42 @@
+[
+  {
+    "name": "test_role_triggers",
+    "status": "passed",
+    "message": "46 passed, 0 skipped",
+    "total": 46,
+    "passed": 46,
+    "skipped": 0,
+    "command": "python3 -B kc-dev-flow-2/scripts/test_role_triggers.py",
+    "exit": 0
+  },
+  {
+    "name": "test_delivery_gate",
+    "status": "passed",
+    "message": "191 passed, 1 skipped",
+    "total": 192,
+    "passed": 191,
+    "skipped": 1,
+    "command": "python3 -B kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "exit": 0
+  },
+  {
+    "name": "test_pr_watch",
+    "status": "passed",
+    "message": "135 passed, 0 skipped",
+    "total": 135,
+    "passed": 135,
+    "skipped": 0,
+    "command": "python3 -B kc-dev-flow-2/scripts/test_pr_watch.py",
+    "exit": 0
+  },
+  {
+    "name": "test_dispatch_records",
+    "status": "passed",
+    "message": "114 passed, 1 skipped",
+    "total": 115,
+    "passed": 114,
+    "skipped": 1,
+    "command": "python3 -B kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "exit": 0
+  }
+]

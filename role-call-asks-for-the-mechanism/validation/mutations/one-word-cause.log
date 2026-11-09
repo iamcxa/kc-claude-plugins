@@ -1,0 +1,26 @@
+test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) ... 
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 exit; F2 late response') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 exit; F2 late response') ... FAIL
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 exit; F2 late response')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-41j4pwar/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 exit; F2 late response')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-41j4pwar/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 7.129s
+
+FAILED (failures=2)

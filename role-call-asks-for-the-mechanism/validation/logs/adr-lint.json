@@ -1,0 +1,5 @@
+{
+  "name": "adr-lint",
+  "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py docs/adr --since 82c9e67ae892b80647c3f6a8b6929f993e42dbc2 --require 0026",
+  "exit": 0
+}

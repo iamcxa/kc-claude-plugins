@@ -1,0 +1,41 @@
+# Independent validation: role-call-asks-for-the-mechanism
+
+Verdict: PASSED for PR #821 candidate `ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9`, against base `82c9e67ae892b80647c3f6a8b6929f993e42dbc2`. All seven accepted criteria are met. No Material, Needs decision, Deferred risk or Polish finding is proposed. This is validation evidence, not approval to merge or a claim of installed adoption.
+
+## Reproduce the Captain steps
+
+Run this exact command in a fresh bash shell:
+
+```bash
+bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/role-call-asks-for-the-mechanism/validation/acceptance.sh
+```
+
+The script has five numbered steps, states prerequisites, actions and expected observations inline, and finishes well under five minutes in this run. It exports pinned revisions without creating a worktree or writing shared git config. The package path is the installed Codex skill root selected by the stage contract. The dispatch's Claude package ADR command was separately rerun and also exited 0. `logs/acceptance.log` is observed output from running the identical script bytes under fresh `bash --noprofile --norc`; the exact executed pathname is in `logs/acceptance.json`.
+
+There is no graphical screen in this task. The observable surface is the actual `role_triggers.py` CLI: a plain decline keeps the call owed and prints the mechanism question; two distinct causes clear it. The script also runs six focused tests, rejects the old checker with eight assertion failures, validates ADR structure, and compares the workflow bytes. It does not re-grade model answers, rerun all suites, call a model, reproduce qnow at runtime, or prove release/adoption.
+
+## Evidence and falsifiers
+
+`acceptance.json` maps each criterion to evidence. `tests.json` and `logs/test_*.{json,log}` bind each suite's command and exit: 46/192/135/115 total, 486 passed and two existing optional skips. The full suites were run once on the exact fresh export; the focused rerun is the explicitly required Captain script.
+
+`mutations.py` reuses the implementation's six negative controls, adapting only the baseline read to the adjacent archived `base/` directory. Run `python3 -B mutations.py EXPORT_ROOT/candidate EXISTING_OUTPUT_DIRECTORY`, with `EXPORT_ROOT/base` holding the pinned base export. Every variant runs in a fresh temporary directory with `python3 -B`; all six exited 1 through assertions, with no test errors. Old question fails both event families; accepting any decline fails the form and four recorded answers; allowing one-word or case-sensitive duplicate causes fails two cases each; restoring question-substring suppression prints an unwanted reminder. These controls also demonstrate AC-7's tests detect the relevant wrong behavior.
+
+AC-3's candidate fixtures were compared to the ideation replay's four literal strings. They agree: three transcribed FO answers plus the quoted package-feedback form, not four independently transcribed FO answers. The old checker clears all eight answer/event combinations in the Captain script's negative control. The historic qnow archive replay and its original 143/262-word measurement were read as prior evidence, not independently rerun; the accepted portable fixture and suppression tests were rerun.
+
+`regrade.json` is this validator's semantic re-grade of all six complete saved answers against `ideation/grader.md`: current 2/3, mechanism 3/3. Current-3 is counted as a pass because its one-class statement and proposed binding check whether each continuation belongs to the same booking attempt, across several findings. Current-2 identifies the broad class but assigns separate screen-lifetime and slot-key rules; it does not name one shared identity. All mechanism answers explicitly describe the common identity and bind late writers to it. `replay-inputs.json` hashes the grader and all six files. `noncode-falsifiers.py` exercises tie/loss rejection for AC-5 and removed-amendment/workflow-byte-drift controls for AC-6. Its counting controls do not independently grade prose.
+
+ADR 0026 preserves the entire prior file and appends one paragraph containing the recorded Captain words, question, decline grammar, form-not-truth limit and approved reminder ruling. The accepted gate's bound question approves that ruling; it is not an unaccepted proposal. `adr_lint.py` checks structure, not semantic fidelity; the latter was independently read against the gate. Workflow bytes are identical. `doc_impact.py` lists ADR 0049: unaffected because Astra rank, Opus floor and the model table do not change. The lone added code comment links the governing ADR rather than narrating code. The measured ratio is 1 comment / 118 code lines, 0.8%, below the 5% ceiling (`logs/comment-ratio.log`).
+
+`corpus.py` reuses the prior corpus comparison with only the archived-base read adapted. Rerun with `python3 -B corpus.py EXPORT_ROOT/candidate STATE_CHECKOUT OUTPUT_JSON bd507c059bacfd7c27b748ee50bcee39e049924a`. All 220 tasks were independently exercised at that pinned state: 219 identical outputs, one intended question/template change in `_archive/paseo-codex-dispatch-practice.md`, zero exit changes and zero unverifiable tasks. The changed row was inspected, not accepted solely from the script's automatic label.
+
+Additional observed exits: repository `lint-skills.py`, both package ADR commands (`--since BASE --require 0026`), number guards, comment ratio, document impact, design surfaces, dispatch records and `git diff --check` all 0. Number guards initially warned its state fetch was unavailable in the sandbox; the exact command was rerun with authorized access and succeeded without that warning. No migration path is declared, so its migration branch was intentionally skipped. Design surfaces reports the scope check not run at validation; it does not establish a new ideation-scope check. Three dispatch records are complete.
+
+## Sufficiency, necessity and limits
+
+The actual CLI, committed-state fixtures and real `delivery_gate.py` calls exercise the accepted route: invalid declines keep the owed call and merge question held; a qualifying committed call or reason clears under existing rules. `pr_watch.py` forwards the trigger output, and `dispatch_records.py` retains the unchanged step-back constant. The four changed files are the implementation, its focused tests, two consumer expectations and the governing ADR. Restoring old code loses the accepted behavior, restoring substring suppression violates the approved reminder rule, and removing the amendment loses the governing decision. No package version, CI configuration, workflow text or unrelated product file changed.
+
+- The decline check validates written form, not whether the causes are true; a well-formed false explanation can clear. This is an explicitly accepted boundary, confirmed with the reasoned control, not a newly introduced review finding.
+- The six saved model answers cover one case, one model family and three runs per arm, with a one-run margin. The inputs already mention the booking attempt/slot; a literal leak scan does not prove absence of semantic hints. Re-grading is independent but not blind. No statistical improvement, repaired product or new model run is claimed. Suggested mechanisms and authority assertions inside those answers are not independently validated or adopted.
+- HistoricalBoundQuestionTests and the real Spacedock builder test remain skipped without their optional environment inputs. Their absence is not claimed clean. Four accepted suites and the consumer calls above are the acceptance depth; the unrelated historical replays and real builder are outside this change's required seam.
+- RoboRev, external reviews, ready, merge and installed adoption remain FO-owned and were not performed. `pr.json` records the read-only hosted snapshot: the same open Draft head, six successful checks and a skipped docs deploy. Required-check selection and merge eligibility were not evaluated. CI cost per PR was not measured; CI configuration is unchanged.
+- Existing staged/untracked sibling state work was preserved. Product worktree stayed clean at the candidate. Validation writes only this task's state report and evidence.

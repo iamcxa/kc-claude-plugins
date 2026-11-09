@@ -1,0 +1,7 @@
+{
+  "name": "test_delivery_gate",
+  "command": "python3 -B kc-dev-flow-2/scripts/test_delivery_gate.py",
+  "cwd": "/tmp/validate-pr821-fiafayp5/candidate",
+  "exit": 0,
+  "seconds": 134.9
+}

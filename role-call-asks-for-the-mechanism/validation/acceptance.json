@@ -1,0 +1,37 @@
+[
+  {
+    "name": "AC-1 Findings ask mechanism; other event questions preserved",
+    "status": "passed",
+    "evidence": "logs/test_role_triggers.log; mutations/old-question.log"
+  },
+  {
+    "name": "AC-2 Reasoned declines, date and model rules preserved",
+    "status": "passed",
+    "evidence": "logs/test_role_triggers.log; mutations/any-decline-clears.log; mutations/one-word-cause.log; mutations/case-sensitive-causes.log"
+  },
+  {
+    "name": "AC-3 Four verbatim answers leave both calls owed",
+    "status": "passed",
+    "evidence": "logs/acceptance.log; mutations/base-0.36.0.log"
+  },
+  {
+    "name": "AC-4 Approved suppression and independent reminders preserved",
+    "status": "passed",
+    "evidence": "logs/test_role_triggers.log; mutations/substring-suppression.log"
+  },
+  {
+    "name": "AC-5 Independent saved-answer regrade: mechanism 3, current 2",
+    "status": "passed",
+    "evidence": "regrade.json; noncode-falsifiers.json"
+  },
+  {
+    "name": "AC-6 Approved ADR amendment, byte-identical workflow",
+    "status": "passed",
+    "evidence": "logs/adr-lint.log; noncode-falsifiers.json; candidate.json"
+  },
+  {
+    "name": "AC-7 Four suites passed: 486 passed, 2 optional skipped",
+    "status": "passed",
+    "evidence": "tests.json; mutations/mutations.json"
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "name": "test_role_triggers",
+  "command": "python3 -B kc-dev-flow-2/scripts/test_role_triggers.py",
+  "cwd": "/tmp/validate-pr821-fiafayp5/candidate",
+  "exit": 0,
+  "seconds": 86.07
+}

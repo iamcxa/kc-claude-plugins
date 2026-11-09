@@ -1,0 +1,29 @@
+{
+  "grader_sha256": "f2336d1f0abd86ec526ac48f89db1485b8454e2a9471545c967f1f87c930e29d",
+  "answers": [
+    {
+      "name": "current-1",
+      "sha256": "4b204888c3684a446d962a86e58bd9b6de3398d5cde378f67446b2af6a03100e"
+    },
+    {
+      "name": "current-2",
+      "sha256": "d93d6899a3bd3ae6c65f5d8f9ff87b09a4d535d0a553f06cbb10ddff8fc1cefb"
+    },
+    {
+      "name": "current-3",
+      "sha256": "d9fd8dd12a0784b557044eb813193d2a216af51667924c5b53fc324997135144"
+    },
+    {
+      "name": "mechanism-1",
+      "sha256": "a8bb0f9f1e01cacea0cd8a4550348c1e07f3fafc7a670f40419808d7fc451c91"
+    },
+    {
+      "name": "mechanism-2",
+      "sha256": "6c0ef79f3ad5b189806460fc6e61a3e9b2a97af0d76397b44c5b4930d17614ae"
+    },
+    {
+      "name": "mechanism-3",
+      "sha256": "b2eb3c845c234ea5c25e90af909782aa44dcfd7716411de97c6ad1b2c8553d21"
+    }
+  ]
+}

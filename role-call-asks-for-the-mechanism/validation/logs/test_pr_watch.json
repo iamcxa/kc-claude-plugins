@@ -1,0 +1,7 @@
+{
+  "name": "test_pr_watch",
+  "command": "python3 -B kc-dev-flow-2/scripts/test_pr_watch.py",
+  "cwd": "/tmp/validate-pr821-fiafayp5/candidate",
+  "exit": 0,
+  "seconds": 109.26
+}

@@ -1,0 +1,56 @@
+{
+  "method": "Independent validation re-grade of all six saved complete answers against the pre-registered semantic rule; not blind, no new model runs. Read grader before answers. Current-3 counted as pass; conservative toward the claimed benefit.",
+  "current": 2,
+  "mechanism": 3,
+  "strictly_beats": true,
+  "rows": [
+    {
+      "name": "current-1",
+      "pass": true,
+      "basis": "Defines one booking-attempt identity checked after every await, links it to F5 and F6 and other continuation sites.",
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/role-call-asks-for-the-mechanism/ideation/runs/current-1.md",
+      "sha256": "4b204888c3684a446d962a86e58bd9b6de3398d5cde378f67446b2af6a03100e"
+    },
+    {
+      "name": "current-2",
+      "pass": false,
+      "basis": "Recognizes the broader late-response class but prescribes screen/detour currency separately from the slot-bound key; no one attempt identity shared across the findings.",
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/role-call-asks-for-the-mechanism/ideation/runs/current-2.md",
+      "sha256": "d93d6899a3bd3ae6c65f5d8f9ff87b09a4d535d0a553f06cbb10ddff8fc1cefb"
+    },
+    {
+      "name": "current-3",
+      "pass": true,
+      "basis": "Names one class: an await continuation acts without checking it is still the same booking attempt, then binds every listed site and the summary key to the current attempt. Accept as semantic identity; no literal attemptId token required by the grader.",
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/role-call-asks-for-the-mechanism/ideation/runs/current-3.md",
+      "sha256": "d9fd8dd12a0784b557044eb813193d2a216af51667924c5b53fc324997135144"
+    },
+    {
+      "name": "mechanism-1",
+      "pass": true,
+      "basis": "Says the attempt has no identity of its own; one token record is checked by callbacks and governs context changes across multiple findings.",
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/role-call-asks-for-the-mechanism/ideation/runs/mechanism-1.md",
+      "sha256": "a8bb0f9f1e01cacea0cd8a4550348c1e07f3fafc7a670f40419808d7fc451c91"
+    },
+    {
+      "name": "mechanism-2",
+      "pass": true,
+      "basis": "Explicit attemptId and isCurrent shared across late callbacks and the fresh F6 send; ties the common mechanism to F1/F2/F5/F6.",
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/role-call-asks-for-the-mechanism/ideation/runs/mechanism-2.md",
+      "sha256": "6c0ef79f3ad5b189806460fc6e61a3e9b2a97af0d76397b44c5b4930d17614ae"
+    },
+    {
+      "name": "mechanism-3",
+      "pass": true,
+      "basis": "Says the booking has no identity of its own; expands root draft revision to include slot context and has every continuation and send check that record.",
+      "source": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/role-call-asks-for-the-mechanism/ideation/runs/mechanism-3.md",
+      "sha256": "b2eb3c845c234ea5c25e90af909782aa44dcfd7716411de97c6ad1b2c8553d21"
+    }
+  ],
+  "limits": [
+    "One qnow case; three Claude runs per arm; one-run margin; no statistical/general improvement claim.",
+    "The known validation input already names actual booking attempt/slot; the leak scan does not prove absence of semantic hints.",
+    "All six answers recognize the late-response class; success measures identity framing, not repair success or code correctness.",
+    "Replay recommendations and authority claims are unvalidated advice; they do not authorize qnow changes."
+  ]
+}

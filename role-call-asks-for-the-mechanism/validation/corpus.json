@@ -1,0 +1,3091 @@
+{
+  "state": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+  "rev": "bd507c059bacfd7c27b748ee50bcee39e049924a",
+  "tasks": 220,
+  "counts": {
+    "intended question/template change": 1,
+    "unchanged": 219
+  },
+  "rows": [
+    {
+      "path": "_archive/adr-lint-tells-supersession-assertion-from-pointer.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/adr-protected-path-guard.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/adr-reservation-crosses-workflows.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/adr-reserved-when-design-names-one.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/agent-reads-governing-adr.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/amendment-form-check.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: amendment-form-check has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: amendment-form-check has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/batch-reaches-each-gate-together.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/batch10-after-release-obligations.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/board-optout.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/canvas-document-popup.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/captain-amendment-form-checked.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/captain-question-load.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/chat-only-evidence-observer-blind.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/claims-name-their-source.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "next: claims-name-their-source has 1 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "next: claims-name-their-source has 1 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/codex-reader-counts-code-review-only.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/codex-reader-reads-receipt-marker.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 3 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 3 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/codex-reader-resolved-mark-adr.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/codex-reader-same-head-unresolved.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/codex-review-hang-detected.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/codex-review-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/codex-security-only-prompts-code-review.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/commissioned-by-names-spacedock.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/copilot-not-run-line-carries-quote.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/copilot-quota-refusal-is-not-a-review.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/db-surface-without-migrations.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/decline-becomes-task-only-with-a-bite.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/delivery-check-before-ask-is-provable.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/delivery-check-passes-a-skipped-by-design-run.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/delivery-check-resolves-links-from-the-task.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/delivery-gate-candidate-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/delivery-gate-ignores-url-paths-and-data-fences.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/delivery-gate-reads-folder-tasks.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/delivery-gate-settles-skipped-checks-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/delivery-gate-settles-skipped-checks.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/delivery-gate-verdict-form.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: delivery-gate-verdict-form has replacing amendments 1, 2; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\nnext: delivery-gate-verdict-form has 0 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: delivery-gate-verdict-form has replacing amendments 1, 2; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\nnext: delivery-gate-verdict-form has 0 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/delivery-question-requires-worktree-clause.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/design-check-says-not-run-without-a-scope.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/design-director-runs-ui-design-review.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/dev2-laws-check.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: dev2-laws-check has 5 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: dev2-laws-check has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: dev2-laws-check has 5 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: dev2-laws-check has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/diagnosis-rounds-count-toward-step-back.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/dispatch-and-report-hygiene.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/dispatch-build-writes-the-dispatch-record.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/extension-defaults-and-install-choice.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/extension-instruction-check-sees-every-listed-extension.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/extension-instruction-reaches-dispatch.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: extension-instruction-reaches-dispatch has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: extension-instruction-reaches-dispatch has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: extension-instruction-reaches-dispatch has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: extension-instruction-reaches-dispatch has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/fo-answers-own-worker-permissions-by-listed-id.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "next: fo-answers-own-worker-permissions-by-listed-id has 0 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "next: fo-answers-own-worker-permissions-by-listed-id has 0 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/fo-batch-sittings.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "next: fo-batch-sittings has 0 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "next: fo-batch-sittings has 0 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/fo-interviews-extension.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "next: fo-interviews-extension has 2 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "next: fo-interviews-extension has 2 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/fo-lifecycle-mod.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: fo-lifecycle-mod has 9 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: fo-lifecycle-mod has replacing amendments 1, 2, 3, 4, 5, 6; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: fo-lifecycle-mod has 9 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: fo-lifecycle-mod has replacing amendments 1, 2, 3, 4, 5, 6; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/fo-record-checks.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/fo-tries-what-it-asks-the-captain.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/fo-write-checks-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/fo-write-checks.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: fo-write-checks has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: fo-write-checks has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/fo-write-rules-checked.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 3 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 3 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/fo-written-lines-checked-before-dispatch.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/followup-dispatch-records-checked.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: followup-dispatch-records-checked has 5 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: followup-dispatch-records-checked has 5 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/followup-dispatch-records-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/gate-presentation-asks-one-thing-plainly.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/gate-requires-recorded-reviews.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/ideation-gaps.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/idle-hook-names-merged-tasks-without-learn.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/idle-names-failing-seeds.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/journey-map-dev2-contract.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/journey-probe-finds-nested-maps.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/journey-render-keeps-annotations.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/kc-adr-format-source.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/kc-adr-tools-with-dev2-copy.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/kc-decision-log-cli.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: kc-decision-log-cli has 5 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: kc-decision-log-cli has 5 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/kc-decision-log-p1/index.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/laws-check-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/learn-delivery-follow-through.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/learn-delivery-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/learning-serialize-evaluation.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/merge-ask-holds-missing-clauses.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/merge-check-reads-two-pr-tasks.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/merge-gatekeeper-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/merge-gatekeeper.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: merge-gatekeeper has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (profile prod) with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: merge-gatekeeper has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (profile prod) with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/migration-and-number-guards.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/model-roster-per-repo.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/model-roster-question-needs-both-families.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "next: model-roster-question-needs-both-families has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "next: model-roster-question-needs-both-families has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/names-check-before-dispatch.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: names-check-before-dispatch has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: names-check-before-dispatch has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/names-check-says-what-it-skipped.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/new-work-starts-from-a-story-map.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/number-guards-readme-shrink-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/number-guards-readme-shrink.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/observer-before-merge-guard.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/observer-check-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/observer-lists-unasked-merges.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/ops-metric-event-protocol.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/override-reaches-gate-and-criteria-wait.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/override-recorded-when-captain-departs.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/paseo-codex-dispatch-practice.md",
+      "verdict": "intended question/template change",
+      "base": {
+        "exit": 1,
+        "stdout": "next: paseo-codex-dispatch-practice has 4 validations with a Material or Needs decision finding; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: paseo-codex-dispatch-practice has 4 validations with a Material or Needs decision finding; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what single mechanism produces these findings, and what one change closes that class?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: unrelated: <finding> <its own cause>; <finding> <its own cause>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/paseo-human-surfaces-visible-and-reachable.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/patch-0102.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/patch-0103.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: patch-0103 has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: patch-0103 has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/peer-status-reaches-fresh.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: peer-status-reaches-fresh has 3 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: peer-status-reaches-fresh has 3 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/peers-paseo-host-binding.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/peers-paseo-rule-matches-practice.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: peers-paseo-rule-matches-practice has 3 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: peers-paseo-rule-matches-practice has 3 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/peers-rules-name-each-host-binding.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/poc-no-migrations.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/pr-watch-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/pr-watch-state-per-session.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/pr-watch-tasks-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/prod-security-review-gates.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: prod-security-review-gates has 7 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: prod-security-review-gates has a Reviewer: line for chief-engineer under \"### Feedback Cycles\", where it does not count; move it under ## FO alignment.\nnext: prod-security-review-gates has replacing amendments 1, 2; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\nnext: prod-security-review-gates has 0 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: prod-security-review-gates has 7 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: prod-security-review-gates has a Reviewer: line for chief-engineer under \"### Feedback Cycles\", where it does not count; move it under ## FO alignment.\nnext: prod-security-review-gates has replacing amendments 1, 2; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\nnext: prod-security-review-gates has 0 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/prod-security-validation-gate-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/prod-security-validation-gate.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/read-adr-honors-adr-folder.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "next: read-adr-honors-adr-folder has 1 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "next: read-adr-honors-adr-folder has 1 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/read-adr-reporting-rule-followup.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/reflow-order.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/release-acceptance/index.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "next: release-acceptance has 0 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "next: release-acceptance has 0 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/release-please-exclude-paths.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/release-review-staleness-held-at-dispatch.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/release-review.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/release-walk-due-trigger.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "next: release-walk-due-trigger has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "next: release-walk-due-trigger has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/release-walk-off-production-before-release.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/release-walk-picky-reviewers-and-director.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 2 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/replay-control-arm-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/reused-worker-dispatch-leaves-a-record.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/review-cadence.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/review-followups-0102.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/rewritten-criteria-checked-against-captain-words.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/role-triggers-owe-ce-on-review-drift.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/second-round-prompts-a-step-back.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/seed-check-requires-schema-fields.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "next: seed-check-requires-schema-fields has 3 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "next: seed-check-requires-schema-fields has 3 validations with a Material or Needs decision finding and 2 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/special-role-calls-fire-when-needed.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/special-role-triggers-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/special-role-triggers.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: special-role-triggers has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: special-role-triggers has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: special-role-triggers has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: special-role-triggers has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/special-roles-follow-the-model-table.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/stage-report-correction-path.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/ui-design-review-in-ideation.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/ui-design-review-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/validation-gate-requires-the-question-check.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/validation-rerun-waits-for-captain-ruling.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/worker-browser-checks-use-paseo-browser.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "next: worker-browser-checks-use-paseo-browser has 2 validations with a Material or Needs decision finding and 1 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "next: worker-browser-checks-use-paseo-browser has 2 validations with a Material or Needs decision finding and 1 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/worker-completion-goes-to-main.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/worker-completion-reaches-fo-on-paseo.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/worker-knows-the-team-and-asks-early.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/worker-loads-declared-package.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/workflow-budget-ratchet-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/workflow-budget-ratchet.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/workflow-checkout-must-match-trunk-readme.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "_archive/workflow-gaps-from-qnow-1270.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "a-worker-holds-while-a-role-call-is-owed.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "adoption-asks-which-extensions.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "adr-required-statement.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: adr-required-statement has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: adr-required-statement has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "adr-silent-undo-probe.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "agents-md-holds-instructions.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "amendment-checked-when-written.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "amendment-form-check-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "archive-waits-for-observer-report.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "autopilot-l3-dogfood-spacedock-bridge.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "built-screen-check-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "captain-ruling-sources-checked.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "chat-only-evidence-observer-blind-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "ci-pinned-spacedock-survives-release-download-outage.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "codex-picky-reviewers.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "comment-check-reaches-delivery-gate.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "counts-name-the-run-that-produced-them.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: counts-name-the-run-that-produced-them has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: counts-name-the-run-that-produced-them has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "delivery-gate-pr-body-attribution-link.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "deprecate-kc-dev-flow-v1.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "design-director-model-follows-task.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "design-director-runs-where-it-pays.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "design-surfaces-task-dir-crash.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "dispatch-carries-reserved-adr-number.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "dispatch-sets-reasoning-effort.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "domain-note-reaches-worker-poc.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "extension-instruction-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "fo-asks-to-raise-concurrency.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "fo-narrates-outward-writes.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "fo-write-checks-parse-top-level.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "gate-summary-names-each-decline.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "gemini-skill-agy-default-truth.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "gpt-partner-extension-proposal.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "ideation-preview-is-one-static-file.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "interrogation-strangers-isolated.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "issue-815-fo-record-gaps.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "journey-canvas-hosted-poc.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "journey-card-notes.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "journey-fold-answers-open-placeholders.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "journey-map-contract-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "journey-map-progress-and-provenance.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "journey-review-check-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "journey-server-host-pilot/index.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: journey-server-host-pilot has 9 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: journey-server-host-pilot has replacing amendment 6; dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (Surfaces db) with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: journey-server-host-pilot has 9 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: journey-server-host-pilot has replacing amendment 6; dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (Surfaces db) with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "kc-adr-dev2-sharing-better-way.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "kc-decision-log-handoff-trial.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 1 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "kept-data-lifecycle-at-ui-ideation.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "learn-fallback-pr-after-wrong-evidence.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "learn-names-agents-md-candidates.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "local-agent-roles-and-profiles.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "local-extensions-load-automatically.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "merge-guard-stops-unasked-merges.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "names-check-newest-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "new-work-checks-what-exists-first.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "observer-check-learn-only-when-listed.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "ops-inbox-r1-setup-and-isolation.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: ops-inbox-r1-setup-and-isolation has 3 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.\nnext: ops-inbox-r1-setup-and-isolation has replacing amendments 1, 2, 3; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: ops-inbox-r1-setup-and-isolation has 3 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.\nnext: ops-inbox-r1-setup-and-isolation has replacing amendments 1, 2, 3; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "paseo-fo-board.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "picky-reviewers-may-run-on-gemini.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "pr-review-lite-value-pilot.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 1,
+        "stdout": "next: pr-review-lite-value-pilot has 31 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 1,
+        "stdout": "next: pr-review-lite-value-pilot has 31 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "pr-watch-tasks-foreign-worktree.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "prod-security-check-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "prod-split-owes-chief-engineer-route-review.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "product-review-path-before-backlog.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "published-ui-docs-checked-on-screen-change.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "relay-rr-replay-in-paseo.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "repair-dispatch-asks-for-sibling-sites.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "retire-task-with-unconsumed-approval.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "review-briefing-links-repeated-in-chat.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "reviewer-negative-claim-shows-reach.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "rewalk-binds-prior-and-carries-complaints.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "role-call-asks-for-the-mechanism.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "seed-check-requires-alignment-result.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "special-role-calls-fire-when-needed-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "special-role-dispatch-records-built-by-script.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "step-back-answer-has-a-record-line.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "superseded-criterion-without-dispatch-caught.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "unattended-browser-check-without-repo-tool.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "validation-reads-pr-review-comments.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "worker-loads-declared-package-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "workflow-checkout-round3-followups.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "workflow-readme-in-invocation-test.md",
+      "verdict": "unchanged",
+      "base": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      },
+      "candidate": {
+        "exit": 0,
+        "stdout": "role triggers: 0 event(s) read at bd507c059bacfd7c27b748ee50bcee39e049924a, each with a call or a waiver.\n",
+        "stderr": ""
+      }
+    }
+  ]
+}

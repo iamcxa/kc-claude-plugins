@@ -1,0 +1,207 @@
+test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) ... 
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='the outcome is unchanged; the gap is testable now') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 home exit') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 exit; F2 late response') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 late async write; F2 late async write') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 LATE  async WRITE; F2 late async write') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 home exit; F2 late response;') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='the outcome is unchanged; the gap is testable now') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 home exit') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 exit; F2 late response') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 late async write; F2 late async write') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 LATE  async WRITE; F2 late async write') ... FAIL
+  test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 home exit; F2 late response;') ... FAIL
+test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) ... 
+  test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='My answer is yes. The original problem is fixed: a first-time owner chooses the car only once, can see the plate-number step, and has a back button. The last few rounds dealt with smaller defects found in review, not a drift in direction.') ... FAIL
+  test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer="These two bugs are in the booking draft we're delivering. Tests can reproduce them now, and if we deleted those two acceptance criteria, the release would ship data loss.") ... FAIL
+  test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='The goal is still the original one: an owner picks the car once and can always see how to finish the booking. The remaining gaps can all be tested now.') ... FAIL
+  test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='the outcome is unchanged; the gap is testable now') ... FAIL
+  test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='My answer is yes. The original problem is fixed: a first-time owner chooses the car only once, can see the plate-number step, and has a back button. The last few rounds dealt with smaller defects found in review, not a drift in direction.') ... FAIL
+  test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer="These two bugs are in the booking draft we're delivering. Tests can reproduce them now, and if we deleted those two acceptance criteria, the release would ship data loss.") ... FAIL
+  test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='The goal is still the original one: an owner picks the car once and can always see how to finish the booking. The remaining gaps can all be tested now.') ... FAIL
+  test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='the outcome is unchanged; the gap is testable now') ... FAIL
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='the outcome is unchanged; the gap is testable now')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 home exit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 exit; F2 late response')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 late async write; F2 late async write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 LATE  async WRITE; F2 late async write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 home exit; F2 late response;')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='the outcome is unchanged; the gap is testable now')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 home exit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 exit; F2 late response')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 late async write; F2 late async write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 LATE  async WRITE; F2 late async write')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 home exit; F2 late response;')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 680, in test_both_findings_events_require_distinct_causes_in_the_decline
+    self.assertEqual(code, expected, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='My answer is yes. The original problem is fixed: a first-time owner chooses the car only once, can see the plate-number step, and has a back button. The last few rounds dealt with smaller defects found in review, not a drift in direction.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 702, in test_recorded_outcome_answers_leave_both_findings_calls_owed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer="These two bugs are in the booking draft we're delivering. Tests can reproduce them now, and if we deleted those two acceptance criteria, the release would ship data loss.")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 702, in test_recorded_outcome_answers_leave_both_findings_calls_owed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='The goal is still the original one: an owner picks the car once and can always see how to finish the booking. The remaining gaps can all be tested now.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 702, in test_recorded_outcome_answers_leave_both_findings_calls_owed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='the outcome is unchanged; the gap is testable now')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 702, in test_recorded_outcome_answers_leave_both_findings_calls_owed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='My answer is yes. The original problem is fixed: a first-time owner chooses the car only once, can see the plate-number step, and has a back button. The last few rounds dealt with smaller defects found in review, not a drift in direction.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 702, in test_recorded_outcome_answers_leave_both_findings_calls_owed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer="These two bugs are in the booking draft we're delivering. Tests can reproduce them now, and if we deleted those two acceptance criteria, the release would ship data loss.")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 702, in test_recorded_outcome_answers_leave_both_findings_calls_owed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='The goal is still the original one: an owner picks the car once and can always see how to finish the booking. The remaining gaps can all be tested now.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 702, in test_recorded_outcome_answers_leave_both_findings_calls_owed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+======================================================================
+FAIL: test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='the outcome is unchanged; the gap is testable now')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-3003qltf/test_role_triggers.py", line 702, in test_recorded_outcome_answers_leave_both_findings_calls_owed
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 9.635s
+
+FAILED (failures=20)

@@ -1,0 +1,23 @@
+test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds (test_role_triggers.StepBackTest.test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds) ... FAIL
+test_second_advises_third_owes_and_only_committed_records_count (test_role_triggers.SymptomRoundsTest.test_second_advises_third_owes_and_only_committed_records_count) ... FAIL
+
+======================================================================
+FAIL: test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds (test_role_triggers.StepBackTest.test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-jog4brs6/test_role_triggers.py", line 400, in test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds
+    self.assertIn(MECHANISM, out)
+AssertionError: 'what single mechanism produces these findings, and what one change closes that class?' not found in 'next: some-task has 4 repair passes and 2 review rounds and 3 validations with a Material or Needs decision finding; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: unrelated: <finding> <its own cause>; <finding> <its own cause>` instead.\n'
+
+======================================================================
+FAIL: test_second_advises_third_owes_and_only_committed_records_count (test_role_triggers.SymptomRoundsTest.test_second_advises_third_owes_and_only_committed_records_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-jog4brs6/test_role_triggers.py", line 589, in test_second_advises_third_owes_and_only_committed_records_count
+    self.assertIn(MECHANISM, out)
+AssertionError: 'what single mechanism produces these findings, and what one change closes that class?' not found in 'next: some-task has 3 implementation dispatches on symptom "page freeze"; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: unrelated: <finding> <its own cause>; <finding> <its own cause>` instead.\n'
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.475s
+
+FAILED (failures=2)

@@ -254,3 +254,41 @@ The owed chief-engineer call for repeated validation failures or one repeated sy
 ### Summary
 
 The candidate asks for the common mechanism on the two findings events and requires a written unrelated-causes claim to decline them, preserving the approved reminder states and existing trigger/date/model rules. Local suites and reverse mutations pass their expected outcomes; the saved model replay still meets the ship rule on author re-read. FO receives the local candidate and prepared Draft PR text; independent validation, RoboRev, publication and hosted checks remain owed.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #821 head ebbac3de against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9 against 82c9e67ae892b80647c3f6a8b6929f993e42dbc2; seven criteria met; validation/README.md maps proof, necessity and limits; no review findings proposed.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation/acceptance.sh has five executable steps, run via bash --noprofile --norc; observed CLI hold/clear, six tests, eight expected old-version failures and ADR pass in validation/logs/acceptance.log; both installed-package ADR commands exit 0.
+- DONE: AC-1 — findings calls ask the mechanism question while other event families retain their questions.
+  Re-ran failure/symptom and repair/review/amendment cases; restoring STEP_BACK for findings fails both affected families (validation/mutations/old-question.log).
+- DONE: AC-2 — reasoned declines require distinct causes and preserve date/model rules and other-event plain declines.
+  Both-event reason table and existing date/model controls pass; any-decline, one-word-cause and case-sensitive duplicate mutations are caught (validation/mutations/mutations.json).
+- DONE: AC-3 — all four recorded outcome answers leave both findings calls owed.
+  Verbatim fixture agrees with ideation's three transcribed answers plus one quoted form; old checker wrongly clears all eight answer/event subcases, caught by the Captain script.
+- DONE: AC-4 — preserve the Captain-approved reminder states.
+  Cleared-event independence and owed findings/amendment suppression pass; restoring question-substring suppression prints the unwanted reminder and fails (validation/mutations/substring-suppression.log).
+- DONE: AC-5 — independently re-grade all six saved answers against the pre-registered rule.
+  Mechanism 3/3 versus current 2/3; current-3 counts as semantic identity, current-2 stays separate screen/slot rules; tie/loss falsifiers reject. validation/regrade.json records reasoning, source hashes and limits.
+- DONE: AC-6 — retain one approved ADR 0026 amendment and byte-identical workflow.md.
+  ADR --since base --require 0026 exits 0; Captain quote/bound decision checked independently; removed amendment and one-byte workflow drift controls fail the respective checks (validation/noncode-falsifiers.json).
+- DONE: AC-7 — test_role_triggers.py, test_delivery_gate.py, test_pr_watch.py and test_dispatch_records.py pass.
+  46/192/135/115 tests: 486 passed, two existing optional skips; all four commands exit 0. Restoring old behavior fails assertions, not imports (validation/tests.json and mutation logs).
+- DONE: Package evidence commands, implementation dispatch and affected documents independently checked.
+  Repository lint, number guards, comment ratio, doc impact, design surfaces, dispatch records and diff --check exit 0; ADR 0049 unaffected because model rank/floor stays unchanged; comment ratio 1/118 = 0.8%, maximum 5%.
+- DONE: Newly refusing checker compared against the implementation's pinned committed corpus.
+  State bd507c059bacfd7c27b748ee50bcee39e049924a: 220 tasks, zero exit changes, 219 identical outputs and one inspected intended archived question/template change (validation/corpus.json).
+- DONE: Goal sufficiency and minimal necessity checked at the same exact candidate.
+  Actual trigger CLI and real delivery-gate consumer calls cover owed/cleared behavior; reverse mutations justify changed logic and two consumer assertions; governing ADR justifies retained decision; four scoped product files only.
+- DONE: Judge implementation limits and record live hosted identity without delivery claims.
+  Form-not-truth boundary accepted; replay is one case, three Claude runs per arm, independent but not blind and a one-run margin; no qnow fix or broader effectiveness proven. Same Draft head has six successful hosted checks and skipped docs deploy (validation/pr.json); required-check eligibility not evaluated.
+- SKIPPED: Historical gate replays, real Spacedock builder and original qnow archive/word-count rerun.
+  Optional environment inputs absent; portable accepted fixtures and all four required suites ran. Historical measurements were read only; design_surfaces scope check is not run in validation. None is reported clean.
+- SKIPPED: RoboRev, external reviews, ready, merge and installed adoption.
+  FO-owned; no product mutation/publication. CI cost per PR not measured; CI configuration unchanged. Number-guard state fetch initially sandbox-blocked, then exact authorized rerun succeeded.
+
+### Summary
+
+PASSED for PR #821 at ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9: all seven accepted criteria, independent replay grading and relevant falsifiers pass, with the five-step fresh-shell acceptance script and raw evidence in validation/. No Material, Needs decision, Deferred risk or Polish finding is proposed; the accepted form-only decline and small replay remain explicit evidence limits. Product worktree stays clean; FO retains the validation gate, review, delivery and adoption decisions.

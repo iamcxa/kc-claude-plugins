@@ -1,0 +1,26 @@
+[
+  {
+    "criterion": "AC-5",
+    "name": "tie",
+    "caught": true,
+    "observation": "3:3 does not satisfy strictly more passes"
+  },
+  {
+    "criterion": "AC-5",
+    "name": "current-wins",
+    "caught": true,
+    "observation": "2:3 does not satisfy strictly more passes"
+  },
+  {
+    "criterion": "AC-6",
+    "name": "remove-approved-amendment",
+    "caught": true,
+    "observation": "Base ADR has no 2026-11-09 amendment; candidate is the base plus one amendment paragraph."
+  },
+  {
+    "criterion": "AC-6",
+    "name": "workflow-one-byte-drift",
+    "caught": true,
+    "observation": "Byte comparison accepts candidate and refuses an added newline."
+  }
+]

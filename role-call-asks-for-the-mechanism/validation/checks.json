@@ -1,0 +1,37 @@
+[
+  {
+    "name": "adr-lint",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py docs/adr --since 82c9e67ae892b80647c3f6a8b6929f993e42dbc2 --require 0026",
+    "exit": 0
+  },
+  {
+    "name": "dispatch-adr-lint",
+    "command": "python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py docs/adr --since 82c9e67ae892b80647c3f6a8b6929f993e42dbc2 --require 0026",
+    "exit": 0
+  },
+  {
+    "name": "comment-ratio",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/comment_ratio.py 82c9e67ae892b80647c3f6a8b6929f993e42dbc2 ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9 --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+    "exit": 0
+  },
+  {
+    "name": "doc-impact",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/doc_impact.py 82c9e67ae892b80647c3f6a8b6929f993e42dbc2 ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9 --json",
+    "exit": 0
+  },
+  {
+    "name": "design-surfaces",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/design_surfaces.py check /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/role-call-asks-for-the-mechanism.md",
+    "exit": 0
+  },
+  {
+    "name": "dispatch-records-check",
+    "command": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/dispatch_records.py /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/role-call-asks-for-the-mechanism",
+    "exit": 0
+  },
+  {
+    "name": "diff-check",
+    "command": "git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-role-call-asks-for-the-mechanism diff --check 82c9e67ae892b80647c3f6a8b6929f993e42dbc2 ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9",
+    "exit": 0
+  }
+]
