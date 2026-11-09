@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-check-before-ask-is-provable:validation:attempt-1:revision-1",
+  "question": "決定：合併 #817（合併提問要附上當時跑過的檢查紀錄，沒有紀錄就不讓準備問題；新增決策紀錄 0071）嗎？建議合併。 Regular merge with --match-head-commit 85f9a65928958f78a4eaf12b3ce38ca4e25e2ab0, the batch 18 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-check-before-ask-is-provable:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/211afd0c44abc72c308021f02512ba55000da350/delivery-check-before-ask-is-provable.md",
+      "rev": "sha256:4d7e9f84251b82ea379a943fe814df114e1ea70f73fbb8799d0bac8f6cb95f47",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of delivery-check-before-ask-is-provable, PR #817, in the batch 18 validation sitting, with ADR 0071.\nSufficiency: delivery_gate.py question now holds when no committed check record matches the task's current head and reasons, so the merge-ask record shows from state alone that the check ran before the question (validation report, Astra, 2026-11-09, PASSED at 85f9a6592).\nNecessity: the five changed files are the gate script and its tests, the workflow passage, the observer skill line and ADR 0071 (validation report, Astra, 2026-11-09).\nAcceptance, run by FO in a fresh shell 2026-11-09, exit 0: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-before-ask-is-provable/validation/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-check-before-ask-is-provable/captain-steps/1.md\nPR link step, run by FO in a fresh shell 2026-11-09, exit 0: open https://github.com/iamcxa/kc-claude-plugins/pull/817 and check it is open, ready and at the candidate head\nCI: mergeStateStatus CLEAN, 7 SUCCESS and 1 SKIPPED on 85f9a6592 (gh pr view 817 --json mergeStateStatus,statusCheckRollup, FO 2026-11-09T08:05:08Z).\nValidation answered merge-readiness: it read every review and comment on the PR at the head and found none unaddressed (validation report, Astra, 2026-11-09).\nExternal rounds: 1.\nExternal round sources: Codex reviewed 85f9a6592 (PR comments read by FO 2026-11-09).\nSecond reviewer: Copilot because the PR changes merge rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5822750551\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: \"Didn't find any major issues\" on 85f9a6592 (codex-review-receipt comment on #817, read by FO 2026-11-09).\nRoboRev: clean on 85f9a6592, evidence=roborev:1624 (FO run 2026-11-09).\nLimit: the new hold applies once a release carries it; the installed 0.36.0 package FO runs today does not hold yet (FO read 2026-11-09)."
+    }
+  ]
+}

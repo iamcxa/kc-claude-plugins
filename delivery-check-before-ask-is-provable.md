@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:delivery-check-before-ask-is-provable:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:delivery-check-before-ask-is-provable-validation-1
+              briefing:
+                id: briefing:delivery-check-before-ask-is-provable:validation:attempt-1:revision-1
+                digest: sha256:c4710a2ffa7a4f88460fa30a5c5f00c1028276fcdc3869ac950d195565f02787
+                room-ref: ./delivery-check-before-ask-is-provable/review/validation/briefing-1
 started: 2026-11-09T04:59:10Z
 worktree: .worktrees/spacedock-ensign-delivery-check-before-ask-is-provable
 pr: iamcxa/kc-claude-plugins#817
