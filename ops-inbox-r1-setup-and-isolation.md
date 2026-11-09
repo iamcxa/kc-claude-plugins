@@ -134,6 +134,8 @@ Captain 2026-10-27 (chat): 「恢復 r1。但是確認一下有沒有哪些 ext 
 
 Captain 2026-10-29 (chat): 「開始 r1 上線」. FO outward action the same day: S1 repin, `ops-event.yml` in spacedock-dev/subspace-relay-ops-trigger now pins kc-claude-plugins 7aa5ccad2b631400bd6ec8239f6c6c2f1d929d41 (trigger repo commit bc10c5a4; read back: `ref:` line and `actions/workflows` total_count 1). relay FO (Paseo 1671c3a9) asked the same day to file relay's emitter task against contract d7eeeef2.
 
+Captain 2026-11-09 (chat): 「剛才那個轉簡報需求的沒錯，等於讓他接手完成 metric 設計，然後把 inbox 一樣放到我的 plugin repo 但是讓 relay adopt」. Handoff written to `ops-inbox-r1-setup-and-isolation/handoff-2026-11-09.md`; the kc-ops-inbox FO session (Paseo 46c2ebdf) closes after handing over.
+
 ## Number guards
 
 ADR: 0040
