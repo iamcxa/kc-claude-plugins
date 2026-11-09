@@ -1,0 +1,32 @@
+{
+  "host": "codex",
+  "arm": "candidate",
+  "wording": 1,
+  "argv": [
+    "/Users/kent/.npm-global/bin/codex",
+    "exec",
+    "-m",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=xhigh",
+    "-c",
+    "allow_login_shell=false",
+    "-c",
+    "shell_environment_policy.inherit=\"all\"",
+    "-s",
+    "workspace-write",
+    "--add-dir",
+    "/private/tmp/validation-review-replay/codex-candidate-3",
+    "--json",
+    "--ephemeral",
+    "-o",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-reads-pr-review-comments/implementation/replay/runs/codex-candidate-3-registered/last-message.txt",
+    "-"
+  ],
+  "cwd": "/private/tmp/validation-review-replay/codex-candidate-3/code",
+  "normal_HOME": true,
+  "start": "2026-11-09T07:44:43.475528+00:00",
+  "dispatch_sha256": "edc453378f6e25dd81958fca2a45b4978d9cae3e45dd13c0f2c9018054b2731f",
+  "timeout_seconds": 1800,
+  "tokens": null
+}

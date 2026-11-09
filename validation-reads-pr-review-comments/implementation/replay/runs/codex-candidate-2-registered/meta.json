@@ -1,0 +1,42 @@
+{
+  "host": "codex",
+  "arm": "candidate",
+  "wording": 1,
+  "argv": [
+    "/Users/kent/.npm-global/bin/codex",
+    "exec",
+    "-m",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=xhigh",
+    "-c",
+    "allow_login_shell=false",
+    "-c",
+    "shell_environment_policy.inherit=\"all\"",
+    "-s",
+    "workspace-write",
+    "--add-dir",
+    "/private/tmp/validation-review-replay/codex-candidate-2",
+    "--json",
+    "--ephemeral",
+    "-o",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-reads-pr-review-comments/implementation/replay/runs/codex-candidate-2-registered/last-message.txt",
+    "-"
+  ],
+  "cwd": "/private/tmp/validation-review-replay/codex-candidate-2/code",
+  "normal_HOME": true,
+  "start": "2026-11-09T07:32:51.641573+00:00",
+  "dispatch_sha256": "46aa36135ea541a60604078a73a0c723f57836eb2cfed0530713e6abf448d0bc",
+  "timeout_seconds": 1800,
+  "tokens": {
+    "input_tokens": 2487826,
+    "cached_input_tokens": 2381952,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 22051,
+    "reasoning_output_tokens": 7227
+  },
+  "exit": 0,
+  "report_written": true,
+  "end": "2026-11-09T07:46:32.991096+00:00",
+  "elapsed_seconds": 821.3413918330334
+}

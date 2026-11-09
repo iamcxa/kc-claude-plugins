@@ -4,24 +4,186 @@
       "host": "codex",
       "arm": "base",
       "wording": 0,
-      "run": 1,
-      "cli_exit": 0,
-      "verdict": "no completed report; invalid harness",
-      "found": null,
-      "read_comments_endpoint": null,
-      "precision_miss": null,
       "tokens": null,
+      "exit": 0,
+      "report_written": false,
+      "name": "codex-base-1",
+      "verdict": "no verdict",
+      "report_words": 0,
+      "found": false,
+      "read_comments_endpoint": false,
+      "precision_miss": false,
+      "fixture_gap": false,
+      "defect": false,
       "counted": false,
-      "reason": "login shell PATH bypassed the registered gh shim; interrupted; no completed turn usage"
+      "invalid_harness": true
+    },
+    {
+      "host": "codex",
+      "arm": "base",
+      "wording": 0,
+      "tokens": {
+        "input_tokens": 3558585,
+        "cached_input_tokens": 3432704,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 28699,
+        "reasoning_output_tokens": 9219
+      },
+      "exit": 0,
+      "report_written": true,
+      "name": "codex-base-1-fixed",
+      "verdict": "REJECTED",
+      "report_words": 831,
+      "found": true,
+      "read_comments_endpoint": true,
+      "precision_miss": false,
+      "fixture_gap": true,
+      "defect": false,
+      "counted": false
+    },
+    {
+      "host": "codex",
+      "arm": "base",
+      "wording": 0,
+      "tokens": {
+        "input_tokens": 2245802,
+        "cached_input_tokens": 2128000,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 20393,
+        "reasoning_output_tokens": 5657
+      },
+      "exit": 0,
+      "report_written": true,
+      "name": "codex-base-1-registered",
+      "verdict": "REJECTED",
+      "report_words": 797,
+      "found": false,
+      "read_comments_endpoint": true,
+      "precision_miss": false,
+      "fixture_gap": false,
+      "defect": false,
+      "counted": true
+    },
+    {
+      "host": "codex",
+      "arm": "base",
+      "wording": 0,
+      "tokens": null,
+      "exit": null,
+      "report_written": null,
+      "name": "codex-base-2-registered",
+      "verdict": "no verdict",
+      "report_words": 0,
+      "found": false,
+      "read_comments_endpoint": false,
+      "precision_miss": false,
+      "fixture_gap": true,
+      "defect": false,
+      "counted": false
+    },
+    {
+      "host": "codex",
+      "arm": "base",
+      "wording": 0,
+      "tokens": null,
+      "exit": null,
+      "report_written": null,
+      "name": "codex-base-3-registered",
+      "verdict": "no verdict",
+      "report_words": 0,
+      "found": false,
+      "read_comments_endpoint": false,
+      "precision_miss": false,
+      "fixture_gap": false,
+      "defect": false,
+      "counted": false
+    },
+    {
+      "host": "codex",
+      "arm": "candidate",
+      "wording": 1,
+      "tokens": null,
+      "exit": null,
+      "report_written": null,
+      "name": "codex-candidate-1-registered",
+      "verdict": "no verdict",
+      "report_words": 0,
+      "found": false,
+      "read_comments_endpoint": false,
+      "precision_miss": false,
+      "fixture_gap": false,
+      "defect": false,
+      "counted": false
+    },
+    {
+      "host": "codex",
+      "arm": "candidate",
+      "wording": 1,
+      "tokens": null,
+      "exit": null,
+      "report_written": null,
+      "name": "codex-candidate-2-registered",
+      "verdict": "no verdict",
+      "report_words": 0,
+      "found": false,
+      "read_comments_endpoint": false,
+      "precision_miss": false,
+      "fixture_gap": false,
+      "defect": false,
+      "counted": false
+    },
+    {
+      "host": "codex",
+      "arm": "candidate",
+      "wording": 1,
+      "tokens": null,
+      "exit": null,
+      "report_written": null,
+      "name": "codex-candidate-3-registered",
+      "verdict": "no verdict",
+      "report_words": 0,
+      "found": false,
+      "read_comments_endpoint": false,
+      "precision_miss": false,
+      "fixture_gap": false,
+      "defect": false,
+      "counted": false
     }
   ],
-  "stop": "D1 after first incomplete Codex attempt",
-  "attempts": 1,
-  "planned": 12,
-  "hard_stop": 16,
-  "claude_runs": 0,
-  "per_host_comparison": "not evaluable",
-  "precision": "not measured",
-  "mean_report_words": "not measured",
-  "cost": "not measured"
+  "hosts": {
+    "codex": {
+      "valid_runs": {
+        "base": 1,
+        "candidate": 0
+      },
+      "found": {
+        "base": 0,
+        "candidate": 0
+      },
+      "passed": false,
+      "precision_misses": 0,
+      "mean_report_words": {
+        "base": 797,
+        "candidate": null
+      }
+    },
+    "claude": {
+      "valid_runs": {
+        "base": 0,
+        "candidate": 0
+      },
+      "found": {
+        "base": 0,
+        "candidate": 0
+      },
+      "passed": false,
+      "precision_misses": 0,
+      "mean_report_words": {
+        "base": null,
+        "candidate": null
+      }
+    }
+  },
+  "raw_attempts": 8,
+  "hard_stop": 16
 }

@@ -1,0 +1,28 @@
+{
+  "base_worker": {
+    "words": 826,
+    "sha256": "3fdd713f9e783ff3dc46bfb137cb7f9b864fc1d911d99deb1a5b74c511657ddf",
+    "wc_output": "826 /tmp/validation-review-replay/base/package/kc-dev-flow-2/skills/validation/principles.md"
+  },
+  "candidate_worker": {
+    "words": 877,
+    "sha256": "64bf44990c543e3fa6608ef5b9898811333b8ac691407b61c3fa684a8e7831c4",
+    "wc_output": "877 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-reads-pr-review-comments/kc-dev-flow-2/skills/validation/principles.md"
+  },
+  "base_workflow": {
+    "words": 5931,
+    "sha256": "4fc6fe2901c023fc7d15676e3a51ebc449c6f6ceddab1094f8f231b79a9c90dc",
+    "wc_output": "5931 /tmp/validation-review-replay/base/package/kc-dev-flow-2/references/sd/workflow.md"
+  },
+  "candidate_workflow": {
+    "words": 5931,
+    "sha256": "4fc6fe2901c023fc7d15676e3a51ebc449c6f6ceddab1094f8f231b79a9c90dc",
+    "wc_output": "5931 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-reads-pr-review-comments/kc-dev-flow-2/references/sd/workflow.md"
+  },
+  "FO_unchanged_moments": [
+    "startup/resume README + mod",
+    "dispatch text and context passages",
+    "idle open/merged PR and merge ask"
+  ],
+  "FO_gate_report_words": "Measured from completed replay reports by summarize.py, separately for valid and all completed runs."
+}

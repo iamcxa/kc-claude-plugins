@@ -1,0 +1,26 @@
+[
+  {
+    "path": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "commit": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+    "sha256": "978f2731eda46ecb8351e435bed023d77620e25714c9b6defe5f0fbd962a6029",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md",
+    "commit": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+    "sha256": "2341648d26b6e8ff55c02308aec56487af47bf7082c1219ce39f236d1fbb40dd",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0042-paseo-codex-workers-hand-publication-and-local-review-to-fo.md",
+    "commit": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+    "sha256": "4f8603fd34f432392c6031be761c6cf3fe8c8bb37338e914b63865ab04cad4b4",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md",
+    "commit": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+    "sha256": "97f14773e680927e218eb3f866bd733f232d607134f37ecda344de9244187953",
+    "status": "Accepted"
+  }
+]

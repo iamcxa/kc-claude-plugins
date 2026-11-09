@@ -1,0 +1,8 @@
+驗證判定拒絕：PR #812 的 `778367ad` 會吞掉必要的派工提醒，已重現。完整測試依派工限制未重跑；[報告已寫入](/private/tmp/validation-review-replay/codex-candidate-2/wf/.spacedock-state/dispatch-build-writes-the-dispatch-record.md:473)，但沙箱權限阻擋提交，候選程式碼未改動。
+
+```text
+剩餘: 報告提交、缺陷處置及未跑驗證
+下一步: 首席協調員接手提交並分派修復（你）
+可收線: 否
+```
+

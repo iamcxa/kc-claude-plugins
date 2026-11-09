@@ -1,13 +1,51 @@
-# Replay result: HOLD, no behavioral verdict
+# Registered replay results
 
-The first Codex base run started gpt-6-astra at xhigh, then was interrupted when the launcher PATH control was shown invalid. The login shell resolved /opt/homebrew/bin/gh rather than the registered shim. events.jsonl records real gh command invocations and no shim log was created. The CLI wrapper returned 0 after SIGTERM, but there is no completed stage report or turn-completed usage event; exit 0 is not a successful run. See path-preflight.json and bypassed-shim-commands.json. No model or wording failure is inferred.
-
-| Host | Arm | Wording | Verdict | Found | Read comments | Precision miss | Tokens | Counted |
+| Run | Host | Arm / wording | Verdict | Found | Read comments | Precision miss | Tokens | Counted |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Codex gpt-6-astra xhigh | base 1 | original | no completed report; invalid harness | not measured | not measured | not measured | not returned | no |
+| codex-base-1 | codex | base / 0 | no verdict | False | False | False | null | False |
+| codex-base-1-fixed | codex | base / 0 | REJECTED | True | True | False | {"input_tokens": 3558585, "cached_input_tokens": 3432704, "cache_write_input_tokens": 0, "output_tokens": 28699, "reasoning_output_tokens": 9219} | False |
+| codex-base-1-registered | codex | base / 0 | REJECTED | False | True | False | {"input_tokens": 2245802, "cached_input_tokens": 2128000, "cache_write_input_tokens": 0, "output_tokens": 20393, "reasoning_output_tokens": 5657} | True |
+| codex-base-2-registered | codex | base / 0 | no verdict | False | False | False | null | False |
+| codex-base-3-registered | codex | base / 0 | no verdict | False | False | False | null | False |
+| codex-candidate-1-registered | codex | candidate / 1 | no verdict | False | False | False | null | False |
+| codex-candidate-2-registered | codex | candidate / 1 | no verdict | False | False | False | null | False |
+| codex-candidate-3-registered | codex | candidate / 1 | no verdict | False | False | False | null | False |
 
-Attempts: 1 of planned 12, hard stop 16. D1 stops the task after the first incomplete Codex attempt. Claude and the remaining Codex cells were not run. No wording-2 run or third wording was used. Neither per-host stop condition, precision, report-word means nor cost can be evaluated. The product candidate remains wording 1; it has static proof only.
+## Per-host comparison
 
-Pre-registration commit: e7e7b74b4, before runs/codex-base-1 was created. Historical fixture substitutions/removals follow dispatch/implementation-1-message-1.md and fixture/rewrites.json. Static checks and the workflow-budget/grader/shim-refusal controls pass. The shim refusal control alone did not exercise the host login-shell boundary; that missing preflight caused this failure.
+{
+  "codex": {
+    "valid_runs": {
+      "base": 1,
+      "candidate": 0
+    },
+    "found": {
+      "base": 0,
+      "candidate": 0
+    },
+    "passed": false,
+    "precision_misses": 0,
+    "mean_report_words": {
+      "base": 797,
+      "candidate": null
+    }
+  },
+  "claude": {
+    "valid_runs": {
+      "base": 0,
+      "candidate": 0
+    },
+    "found": {
+      "base": 0,
+      "candidate": 0
+    },
+    "passed": false,
+    "precision_misses": 0,
+    "mean_report_words": {
+      "base": null,
+      "candidate": null
+    }
+  }
+}
 
-Needs decision for FO: repair and prove the launcher's command resolution, then obtain explicit restart authority. The Captain's D1 ruling does not permit silently retrying or substituting a Claude-only result. This is a harness defect, not evidence that Codex cannot authenticate or that wording 1 misses review comments.
+Only completed reports without fixture gaps or falsifier defects enter host counts. Original interrupted harness attempt is retained but excluded by FO dispatch/implementation-1-message-2.md. A run with any refused call is excluded. Three valid base and candidate runs per host are required. The comment was available from run start; these are reconstructed historical responses, not live PR proof. No delivery, adoption or future error-rate claim follows.

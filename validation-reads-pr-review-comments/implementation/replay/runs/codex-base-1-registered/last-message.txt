@@ -1,0 +1,8 @@
+**REJECTED:** successful dispatches discard required diagnostic reminders. Validation is complete; the [report](/private/tmp/validation-review-replay/codex-base-1-repeat/wf/.spacedock-state/dispatch-build-writes-the-dispatch-record.md:473) and evidence are committed locally.
+
+```text
+Remaining: Finding disposition and repair.
+Next: Route the finding for repair (you).
+Closable: no
+```
+
