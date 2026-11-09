@@ -15,6 +15,17 @@ gates:
                 id: briefing:a-worker-holds-while-a-role-call-is-owed:backlog:attempt-1:revision-1
                 digest: sha256:deb0f461d712825a818f0fedce964b1b569bea2a906df4bf3b8ce46a876ba2ae
                 room-ref: ./a-worker-holds-while-a-role-call-is-owed/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:a-worker-holds-while-a-role-call-is-owed:backlog:1
+                briefing: briefing:a-worker-holds-while-a-role-call-is-owed:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-09T14:36:35.693096Z"
+                decision: approve
+                reason: 'The Captain chose 「進入（建議）」 (host question dialog, 2026-11-09), answering 「第 19 批：這三張（工人開工先查有沒有欠的審查、總工程師改問根本原因、跨畫面資料先寫生命週期）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？我建議進入。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
