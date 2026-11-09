@@ -242,3 +242,9 @@ The bite was confirmed at source. Comment 4505793059 was posted two minutes afte
 ### Summary
 
 HOLD: the proposed one-file change is committed locally, but its required behavioral proof failed. Both prescribed hosts were exercised within 14 of 16 attempts; fixture gaps, timeouts and a 3/3 Claude baseline prevent the accepted improvement claim. FO receives the pinned branch/base/candidate, prepared PR text and retained evidence; this report grants no publication or merge authority.
+
+## Closed by the Captain
+
+Closed 2026-11-09 in implementation, without a PR. The Captain 「收掉、不合併（建議）」 (host question dialog, 2026-11-09), answering 「「驗證回答能不能合併」這張要怎麼處理？重播結果：舊說法的 Claude 就已經 3/3 自己找到那則意見，Codex 新舊說法用人工判讀是平手，有效樣本 7 份不夠要求的 12 份；而且當初漏看是時間差（意見在驗證開始後 2 分半才留），不是想法問題，我在關卡也抓到了。建議收掉這張、不合併說法修改。」.
+
+Findings kept: the replay (implementation/replay/results.md) found the current validation wording already surfaces the unaddressed comment (Claude base 3/3; Codex base 1/2 registered, 2/2 post-hoc); the #812 miss was timing: validation-3 was dispatched at 2026-11-08T09:52Z and Codex review comment 4505793059 was created at 09:54:39Z (FO read of the state commit time and `gh api pulls/comments/4505793059`, 2026-11-09), and FO caught it at the gate. The local candidate 7f47317bb278931a873c0ec63302fbc70fc53fc4 on branch spacedock-ensign/validation-reads-pr-review-comments is kept unpushed.
