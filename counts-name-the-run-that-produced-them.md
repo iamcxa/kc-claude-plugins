@@ -44,6 +44,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-09T04:59:15Z
+worktree: .worktrees/spacedock-ensign-counts-name-the-run-that-produced-them
 ---
 
 ## Scope
