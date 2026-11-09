@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:delivery-gate-ignores-url-paths-and-data-fences:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:delivery-gate-ignores-url-paths-and-data-fences-ideation-1
+              briefing:
+                id: briefing:delivery-gate-ignores-url-paths-and-data-fences:ideation:attempt-1:revision-1
+                digest: sha256:b336e17c671bf6b16fd3adabdd4ac2fc7a85946ee240c032898f5474593e65bc
+                room-ref: ./delivery-gate-ignores-url-paths-and-data-fences/review/ideation/briefing-1
 started: 2026-11-09T04:59:05Z
 ---
 
