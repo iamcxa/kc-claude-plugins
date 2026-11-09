@@ -231,3 +231,36 @@ Precedent: no `Override:` line in this workflow's gate records bears on reviewer
 ### Summary
 
 Ideation for the Pilot ui kept-data rule: one paragraph appended to the ideation pilot route asks a ui design that keeps typed or chosen data across screens or sign-in for its start, every end and every writer including late replies, each with a criterion. A pre-registered replay of qnow's ideation at amendments 4 and 6 (Codex, 3 runs per arm) found the revised wording names more of the engineering reviewer's nine checks at both amendments (19 vs 11, 22 vs 10), so by the Stop condition the task ships; limits are one corpus, same-author rubric and wording, and longer revised designs. D1 asks the Captain to drop the design-director hand-off, which cannot work because the director reads only pictures, and to rely on the existing amendment call to the engineering reviewer plus task a-worker-holds-while-a-role-call-is-owed. The results are ready for the qnow dev2 FO's Captain report; this worker sent nothing.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria using only the files the design names, based on origin/main.
+  Branch `spacedock-ensign/kept-data-lifecycle-at-ui-ideation`; base `82c9e67ae892b80647c3f6a8b6929f993e42dbc2`; candidate `8470611d718f19aa8ef1f7ae66ba9f72c3c01422`; one file, `kc-dev-flow-2/skills/ideation/profiles/pilot.md`, nine added lines; clean code worktree after commit.
+- DONE: Apply the Captain's D1 option a: no design-director hand-off; one paragraph in the ideation pilot route.
+  Ideation gate 2026-11-09T15:40:07.656743Z accepts 「跨畫面資料：不交給設計總監（它只看圖），靠既有的工程審查員呼叫加上第 (1) 張」; candidate adds the approved paragraph without a new reviewer route or budget change.
+- DONE: AC-1 — exactly the replayed paragraph, no second package file.
+  Candidate blob equals base blob plus the added lines of `ideation/replay/pilot-revised.diff`; `git diff --name-only <base>...<candidate> -- kc-dev-flow-2` lists only pilot.md. The scratch acceptance check rejects both a reworded line and a second file edit.
+- DONE: AC-2 — repository skill lint passes; workflow word count and budget unchanged.
+  `python3 -B kc-dev-flow-2/scripts/lint-skills.py` exits 0, `references/sd/workflow.md: 5931 of 5931 words`; base and candidate agree. Moving the paragraph into workflow.md in the cache-free scratch tree exits 1: 6025 exceeds 5931.
+- DONE: AC-3 — shipped wording is the wording that won the approved replay.
+  Exact candidate-byte match above; re-ran saved `parse.py` with `python3 -B` on all 12 saved texts and each of the two saved scorer passes, reproducing revised/current 19/11 and 22/10, then 20/11 and 22/5. Rewording the candidate fails the replay-text binding; these are saved model outputs, not new model runs.
+- DONE: AC-4 — no FO-read passage or script output changes at the named lifecycle moments.
+  Only the worker pilot route changes; candidate `git grep` over scripts, references/sd, skills/dev and agents finds test references only. A scratch startup reference is detected; a workflow text change is rejected. FO's task-design reading at the ideation gate can grow as already stated in the design.
+- DONE: Show each named acceptance falsifier failing by a mutation run using python3 -B, caches cleared.
+  `/tmp/impl-kept-data-lifecycle-at-ui-ideation/verify.py` exits 0 with 63 assertions; four mutations exercise reworded text, another package file, paragraph moved into workflow, and a new FO route. Scratch copies exclude `__pycache__`, `*.pyc`, `*.pyo`; temporary fixtures removed; no product bytes changed after candidate commit.
+- DONE: Run the repository copy of kc-dev-flow-2/scripts/lint-skills.py, package adr_lint.py, number_guards.py and comment_ratio.py.
+  All exit 0 at candidate: ADR lint checks 64 records; fresh number guards reports `PASS: no findings` at base 82c9e67ae892 / head 8470611d718f, no migrations-path declared; comment ratio is code 0, comments 0, 0.0%, maximum 5% not enforced below 20 added code lines. Logs: `/tmp/impl-kept-data-lifecycle-at-ui-ideation/{lint,adr-lint,number-guards-fresh,comment-ratio}.log`.
+- DONE: Check design surfaces and affected documents.
+  Package `design_surfaces.py check <task>` exits 0, design surfaces presentable; `doc_impact.py <base> HEAD` exits 0, 0 documents listed. pilot.md is updated; its ideation SKILL.md route remains the reader entry; no affected diagram or other retained claim changes. Existing-code audit from ideation remains applicable at the pinned base.
+- DONE: Commit locally, do not bump versions, and prepare PR text for FO.
+  Candidate above is local only; title/body at `/tmp/impl-kept-data-lifecycle-at-ui-ideation-pr.md`; pre-work all-state branch PR lookup returned `[]`. No product push, PR comment, review request, ready action or merge performed.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins; FO pushes and opens the Draft PR.
+  No PR opened: no push grant. The enabled Paseo exception assigns product publication to FO; branch, base, full candidate and prepared text are supplied above.
+- SKIPPED: RoboRev, fresh independent validation (including the saved-text model rescore or new replay) and hosted CI.
+  FO owns these checks; none was run or claimed clean. The implementation re-parses saved scoring JSON and verifies its quotes, not a fresh scorer judgment. CI cost per PR was not measured; no CI workflow changes.
+- SKIPPED: New ADR, numbered reservation and workflow-budget raise.
+  Approved option a names only pilot.md and explicitly takes no ADR number or budget step; no unapproved decision, script or test text was added.
+
+### Summary
+
+Implemented the approved Pilot ui kept-data paragraph in local candidate `8470611d718f19aa8ef1f7ae66ba9f72c3c01422`, with exact replay-text binding, unchanged workflow words/budget, mutation falsifiers and all prescribed local checks passing. FO still owns product publication, RoboRev, fresh independent validation and CI; saved single-case replay evidence and its limits remain as recorded under Design.
