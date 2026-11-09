@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-09T14:37:26Z
+worktree: .worktrees/spacedock-ensign-kept-data-lifecycle-at-ui-ideation
 ---
 
 ## Scope
