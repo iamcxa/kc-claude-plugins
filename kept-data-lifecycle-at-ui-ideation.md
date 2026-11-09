@@ -15,6 +15,17 @@ gates:
                 id: briefing:kept-data-lifecycle-at-ui-ideation:backlog:attempt-1:revision-1
                 digest: sha256:ed90aac6650f772a26d37c2cae82034cd5b2c2364e8e9cde0905d6203551fe7c
                 room-ref: ./kept-data-lifecycle-at-ui-ideation/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kept-data-lifecycle-at-ui-ideation:backlog:1
+                briefing: briefing:kept-data-lifecycle-at-ui-ideation:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-09T14:36:50.835954Z"
+                decision: approve
+                reason: 'The Captain chose 「進入（建議）」 (host question dialog, 2026-11-09), answering 「第 19 批：這三張（工人開工先查有沒有欠的審查、總工程師改問根本原因、跨畫面資料先寫生命週期）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？我建議進入。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
