@@ -24,6 +24,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:counts-name-the-run-that-produced-them:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:counts-name-the-run-that-produced-them-ideation-1
+              briefing:
+                id: briefing:counts-name-the-run-that-produced-them:ideation:attempt-1:revision-1
+                digest: sha256:1054acbf0ced5b5e8292a7396ee667ead4f7466433bce192f5803cecaaf919da
+                room-ref: ./counts-name-the-run-that-produced-them/review/ideation/briefing-1
 started: 2026-11-09T04:59:15Z
 ---
 
