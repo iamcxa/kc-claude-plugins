@@ -1,0 +1,13 @@
+STEP 1 PASS: exported 8470611d718f19aa8ef1f7ae66ba9f72c3c01422
+STEP 2 PASS: 63 acceptance assertions; four mutation cases rejected; workflow 5931/5931 words
+64 ADR file(s) checked, 0 legacy
+STEP 3 PASS: ADR lint exit 0
+kept-data-lifecycle-at-ui-ideation.md: design surfaces presentable
+scope check not run: stage is validation, not ideation
+3 dispatch record(s) complete
+0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'
+code lines 0, comment lines 0, 0.0%
+maximum 5% (package default) not enforced: 0 code lines added, fewer than 20
+STEP 4 PASS: all four checks exit 0
+STEP 5 PASS: fresh saved-text blind rescore revised 8 > current 3; input/output hashes and quotes match
+PASS: five acceptance steps; evidence /tmp/pr820-acceptance-T4421fHa
