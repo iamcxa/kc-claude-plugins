@@ -1,0 +1,61 @@
+{
+  "defined_after_first_valid_result": true,
+  "authority": "dispatch/implementation-1-message-3.md",
+  "criterion": "names unaddressed 4505793059 or describes exact defect as blocking",
+  "rows": [
+    {
+      "run": "codex-base-1-fixed",
+      "found": true,
+      "quote_line": 30,
+      "quote": "- F1 Material: Same-head review comment 4505793059 reproduces: valid repeated-symptom dispatch suppresses the required operator questions (dispatch_stage.py:193\u2013202).",
+      "source": "runs/codex-base-1-fixed/report.md",
+      "basis": "reports the exact lost-successful-check-reminder defect as Material",
+      "post_hoc": true
+    },
+    {
+      "run": "codex-base-1-registered",
+      "found": true,
+      "quote_line": 28,
+      "quote": "- F1 Material: Successful checker stderr is discarded by the prescribed dispatcher (kc-dev-flow-2/scripts/dispatch_stage.py:191-202).",
+      "source": "runs/codex-base-1-registered/report.md",
+      "basis": "reports the exact lost-successful-check-reminder defect as Material",
+      "post_hoc": true
+    },
+    {
+      "run": "codex-candidate-2-registered",
+      "found": true,
+      "quote_line": 27,
+      "quote": "- F1 Material: Candidate drops successful record checks' required step-back questions (kc-dev-flow-2/scripts/dispatch_stage.py:193-202; PR inline comment 4505793059).",
+      "source": "runs/codex-candidate-2-registered/report.md",
+      "basis": "reports the exact lost-successful-check-reminder defect as Material",
+      "post_hoc": true
+    },
+    {
+      "run": "codex-base-2-registered",
+      "found": true,
+      "quote_line": 26,
+      "quote": "- F1 Material: Candidate suppresses successful checkers' required step-back reminder (kc-dev-flow-2/scripts/dispatch_stage.py:194\u2013202); independently confirms https://github.com/iamcxa/kc-claude-plugins/pull/812#discussion_r4505793059, original_commit_id 778367adde2e20e0b3e51966ddba2d9f77f9e614. Earlier comment 4505536959 originated at afa4523468 and its preservation defect is repaired by the verified whole-scope guard; current-commit mapping alone does not make it a new finding.",
+      "source": "runs/codex-base-2-registered/report.md",
+      "basis": "blocking finding describes lost successful-check reminders",
+      "post_hoc": true
+    },
+    {
+      "run": "codex-base-3-registered",
+      "found": true,
+      "quote_line": 28,
+      "quote": "- F2 Material: Successful record checks lose the repeated-diagnosis step-back reminder.",
+      "source": "runs/codex-base-3-registered/report.md",
+      "basis": "blocking finding describes lost successful-check reminders",
+      "post_hoc": true
+    },
+    {
+      "run": "codex-candidate-1-registered",
+      "found": true,
+      "quote_line": 25,
+      "quote": "- F1 Material: current-head review comment [4505793059](https://github.com/iamcxa/kc-claude-plugins/pull/812#discussion_r4505793059) is independently reproduced at `kc-dev-flow-2/scripts/dispatch_stage.py:193\u2013201`. Released user/workflow: First Officer using the prescribed second implementation dispatch with the same symptom. Observable harm: the wrapper returns a successful real envelope while suppressing the required three questions. Boundary: contract[docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md#consequences], 2026-11-03 amendment, requires the reminder before dispatch. Trigger: `reproduce-warning.py`, `warning-probe.log`, repeated in `acceptance.log`; direct strict checker exits 0 with the questions, wrapper exits 0 without them. No supplied FO decline or Captain waiver covers it; return for authorized repair and exact-head validation.",
+      "source": "runs/codex-candidate-1-registered/report.md",
+      "basis": "blocking finding describes lost successful-check reminders",
+      "post_hoc": true
+    }
+  ]
+}

@@ -22,7 +22,7 @@ prompt=f'$spacedock:ensign; then Read {dispatch} and treat its content as your a
 if a.host=='codex':
     argv=['/Users/kent/.npm-global/bin/codex','exec','-m','gpt-6-astra','-c','model_reasoning_effort=xhigh','-c','allow_login_shell=false','-c','shell_environment_policy.inherit="all"','-s','workspace-write','--add-dir',str(scratch),'--json','--ephemeral','-o',str(out/'last-message.txt'),'-']
 else:
-    argv=['/Users/kent/.local/bin/claude','-p','--model','claude-opus-5-5','--output-format','stream-json','--verbose','--permission-mode','dontAsk','--allowedTools','Read,Write,Edit,Bash','--add-dir',str(scratch),prompt]
+    argv=['/Users/kent/.local/bin/claude','-p',prompt,'--model','claude-opus-5-5','--output-format','stream-json','--verbose','--permission-mode','dontAsk','--allowedTools','Read,Write,Edit,Bash','--add-dir',str(scratch)]
 transport=R/'bin'
 env={**os.environ,'PATH':str(R/'bin')+os.pathsep+os.environ['PATH'],'REPLAY_GH_LOG':str(scratch/'gh.jsonl'),'PYTHONDONTWRITEBYTECODE':'1','ZDOTDIR':str(R/'shell'),'BASH_ENV':str(R/'shell/guard.sh'),'REPLAY_SHELL_LOG':str(scratch/'shell.log')}
 probes=[]
