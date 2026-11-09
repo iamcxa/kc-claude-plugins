@@ -37,6 +37,11 @@ meta={'host':a.host,'arm':a.arm,'wording':0 if a.arm=='base' else 1,'argv':argv,
 start=time.monotonic()
 with (out/'events.jsonl').open('w') as stdout,(out/'stderr.log').open('w') as stderr:
     child=subprocess.Popen(argv,cwd=scratch/'code',env=env,stdin=subprocess.PIPE,stdout=stdout,stderr=stderr,text=True,start_new_session=True)
+    def interrupted(sig, frame):
+        meta['interrupted_by_parent']=sig
+        try:os.killpg(child.pid,sig)
+        except ProcessLookupError:pass
+    signal.signal(signal.SIGTERM,interrupted)
     try:
         child.communicate(prompt if a.host=='codex' else '',timeout=1800)
         meta['exit']=child.returncode
@@ -60,4 +65,4 @@ for source,name in [(scratch/'gh.jsonl','gh.jsonl'),(scratch/'shell.log','shell.
     if source.exists():(out/name).write_bytes(source.read_bytes())
 (out/'meta.json').write_text(json.dumps(meta,indent=2)+'\n')
 print(json.dumps(meta))
-raise SystemExit(0 if meta['exit']==0 and meta['report_written'] else 1)
+raise SystemExit(0 if meta['exit']==0 and meta['report_written'] and not meta.get('interrupted_by_parent') else 1)

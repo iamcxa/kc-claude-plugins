@@ -1,0 +1,8 @@
+Done: dispatch-record validation completed — **REJECTED**. Required reminders are suppressed; retry acceptance needs a ruling. [Report](/private/tmp/validation-review-replay/fixed-base/wf/.spacedock-state/dispatch-build-writes-the-dispatch-record.md:473) committed locally as `0720402fa`; product unchanged.
+
+```text
+Remaining: Reminder repair and retry ruling
+Next: First Officer routes findings (you)
+Closable: no
+```
+
