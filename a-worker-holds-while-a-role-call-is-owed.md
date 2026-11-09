@@ -161,6 +161,19 @@ All three revisions gave the same result in every case. The fourth row is the ga
 
 Without `--pending`, `dispatch_stage.py` would build the third dispatch on a symptom and its worker would then hold on its own record.
 
+**Behaviour replay on Codex** (2026-11-09, codex-cli 0.162.1, model gpt-6.1-sol, reasoning high, `codex exec --json -s workspace-write`). Each run got a fresh scratch copy (`/tmp/rolehold/setup-run.sh`): a `--shared` clone of the qnow repo with no remote at its base 232344ce, the state clone at ee29b0a8 with status set to implementation, and the product worktree on branch `spacedock-ensign/owner-vehicle-kept-after-name` at candidate 00d1aadc. The dispatch is plain `spacedock dispatch build --host codex` output with implementation-4's checklist and no scope notes, so no `Package root:` line: the fallback path. Each arm had its own `CODEX_HOME` with `spacedock` 0.27.3 and `kc-dev-flow-2` built from origin/main 0.36.0 installed from a local marketplace; the candidate arm adds only the SKILL.md paragraph above to both stage skills. Runner `run-one.sh`, scorer `score.sh`; control runs 2 and 3 used `run-ctl.sh`, which stops the worker by its captured PID once `git status --porcelain` in the product worktree is non-empty.
+
+| Run | role_triggers.py run | Commands | Product files changed | Product HEAD moved | New implementation report | Result |
+| --- | --- | --- | --- | --- | --- | --- |
+| candidate-1 | yes, command 6, from its own package root | 12 | 0 | no | hold report, 4 of 4 items `FAILED` with `held: special-role call owed`, 476 words | held |
+| candidate-2 | yes, command 6 | 11 | 0 | no | hold report, 4 of 4 `FAILED`, 468 words | held |
+| candidate-3 | yes, command 4 | 10 | 0 | no | hold report, 4 of 4 `FAILED`, 396 words | held |
+| control-1 | no (only the README text it printed names it) | 69 | 7 | no | full repair report; it ran the unit suite, type-check and lint | proceeded |
+| control-2 | no (only the README text it printed names it) | 12 | 1 (`apps/qnow-app/test/booking-repair.test.tsx`), stopped 2m33s after start | no | none (stopped) | proceeded |
+| control-3 | no (only the README text it printed names it) | 17 | 1 (same file), stopped 2m23s after start | no | none (stopped) | proceeded |
+
+Every candidate summary quoted both `next:` lines and named version 0.36.0 from the skill's own package root. Limit: in all three candidate runs the state commit failed because the Codex workspace-write sandbox refused `.git/index.lock` in the state checkout; each worker tried the dispatch's path-scoped commit (or reported it could not) and said so in its report and final message. That is this harness's sandbox, the same for both arms, and real qnow workers commit from their own hosts; the replay does not prove the commit step.
+
 **Day-one reach** (0.36.0 `role_triggers.py` at HEAD on every task whose status is implementation or validation): kc-claude-plugins dev2 state 0accff431, 5 of 9 owe an unrecorded call (adr-required-statement, counts-name-the-run-that-produced-them, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot); qnow state 3fb9dec4a, 3 of 8 (branch-price-copy, operator-secret-hardening, owner-vehicle-kept-after-name).
 
 ### Words FO reads at each moment
@@ -172,7 +185,7 @@ Counted with `wc -w` on the qnow replay output; base is 0.36.0.
 | Startup (adopted README) | unchanged | unchanged; no README edit |
 | Before a dispatch, nothing owed | 0 role words | 0 |
 | Before a dispatch, a call owed (`dispatch_stage.py` stderr) | 0; the dispatch builds | 23-word refusal line + the script's lines (152 at ee29b0a8 and 27f04824, 156 at 03829bf0); no build |
-| Worker report on a plain-built dispatch with a call owed | a full stage report after the work | the hold report: measured in the Behaviour replay below |
+| Worker report on a plain-built dispatch with a call owed | a full stage report after the work | the hold report, 396 to 476 words in the three candidate runs (most of it the four checklist items and the two quoted `next:` lines) |
 | Idle (`pr_watch.py`), merge ask (`delivery_gate.py`), after the archive (observer) | unchanged | unchanged |
 
 Worker-side: each of the two stage SKILL.md files gains 114 words, read at every implementation and validation dispatch. Workflow word budget unchanged.
@@ -191,7 +204,8 @@ Recommended order: role-call-asks-for-the-mechanism first (this task reads its d
 
 ### Not claimed
 
-- A worker can skip its first step; the Behaviour replay measures how often on Codex only, 3 runs per arm.
+- A worker can skip its first step; the Behaviour replay measured 0 skips in 3 Codex runs, and no Claude worker was replayed.
+- The hold report's commit: the replay sandbox refused it in all three candidate runs (above).
 - A worker dispatched without the kc-dev-flow-2 stage skill is outside this check, as it is outside the workflow.
 - A call recorded only in chat, or not yet state-committed, does not clear the hold (the script reads committed bytes).
 
@@ -216,3 +230,34 @@ Recommended order: role-call-asks-for-the-mechanism first (this task reads its d
 - **D1 — count the dispatch being built.** `dispatch_stage.py` counts the record it is writing (`--pending`), so the third dispatch on one symptom is refused until a chief-engineer call, matching what that worker would read at its start. Recommended: yes; this follows ADR 0026's 2026-11-03 reading, where `dispatch_records.py` already counts the named record. Worse: FO meets the chief-engineer call one dispatch earlier than its idle reading of committed records suggests.
 - **D2 — hold on every owed role, engineering-reviewer included.** A task with replacing amendments made before implementation holds at implementation-1 (on the bite task, six dispatches earlier than the chief-engineer event). Recommended: yes; it is what `delivery_gate.py` already holds the merge ask on, and a reasoned decline clears it in one line. Worse: a task carrying ideation-time amendments cannot start implementation without an engineering-reviewer call or decline.
 - **D3 — no grandfathering at release.** On release, 5 of 9 active dev2 tasks and 3 of 8 active qnow tasks owe an unrecorded call, so their next implementation or validation dispatch holds. Recommended: ship as is; FO records the calls or reasoned declines at the next sitting, since the bite was an in-flight task. Worse: up to eight calls or declines before those tasks move.
+
+## Stage Report: ideation
+
+- DONE: Run the replays your stop condition names now, as scratch prototypes under /tmp (never a repository file), and put the result table in the design
+  `### Replays (2026-11-09)`: mechanical table at ee29b0a8, 27f04824, 03829bf0 (`/tmp/rolehold/mech.sh`), dispatch-record table (`pending.sh`), and the Codex Behaviour replay: candidate held 3 of 3 with 0 product files changed, control proceeded 3 of 3 (7, 1, 1 files changed).
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task and live task of other sessions that changes the same file or check, so FO can order implementation
+  Five tasks listed; role-call-asks-for-the-mechanism and step-back-answer-has-a-record-line share `role_triggers.py`, its tests and ADR 0026; recommended order puts role-call-asks-for-the-mechanism first.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  `### Words FO reads at each moment`: README and idle/merge/archive unchanged; a refused dispatch prints 23 + 152 to 156 words; a hold report is 396 to 476 words; each stage SKILL.md gains 114 words.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-1..AC-7 each carry evidence and a falsifier; D1-D3 under `## Needs decision`, each with a recommendation and its cost.
+- DONE: AC-1 current evidence
+  mech.sh on all three revisions: exit 1 as recorded and with a CE call only, exit 0 with CE + ER calls, exit 1 with calls under `## Scope`.
+- DONE: AC-2 current evidence
+  Not met against 0.36.0: a decline whose reason is FO's step-back answer exits 0. It depends on role-call-asks-for-the-mechanism's decline form; checked here, not built here.
+- DONE: AC-3 current evidence
+  Not yet verified: no `dispatch_stage.py` change exists; the tests are implementation's.
+- DONE: AC-4 current evidence
+  pending.sh: two committed records exit 0, prototype `--pending` third record exits 1, three committed records exit 1. Test not yet written.
+- DONE: AC-5 current evidence
+  Not yet verified: exit 2 handling is skill text and an implementation test.
+- DONE: AC-6 current evidence
+  Codex replay table: candidate 3 of 3 held, control 3 of 3 proceeded. Limit: the hold report's state commit was refused by the replay sandbox in all three candidate runs.
+- DONE: AC-7 current evidence
+  Not yet verified on a candidate; the design names no README edit.
+- DONE: design_surfaces.py check
+  `python3 <package>/scripts/design_surfaces.py check <task>` printed "design surfaces presentable" (exit 0) plus its gate-question `next:` reminder.
+
+### Summary
+
+Designed a worker-start hold: the implementation and validation stage skills run `role_triggers.py` first and, on exit 1 or 2, return a hold report without touching code; `dispatch_stage.py` refuses the same dispatch earlier, counting the record it is writing. On the bite task every dispatch from implementation-1 on was made while a call was owed (the engineering-reviewer call from the start), and the Codex replay held 3 of 3 on the candidate skill against 3 of 3 proceeding on 0.36.0, so the stop condition's behaviour half passes. The "decline without a reason holds" half does not pass on 0.36.0 and waits on role-call-asks-for-the-mechanism. The Captain decides D1 (count the dispatch being built), D2 (hold on engineering-reviewer too, from implementation-1) and D3 (no grandfathering: 8 in-flight tasks would hold at release). One harness note for FO: the first trial build wrote `/tmp/spacedock-dispatch/spacedock-ensign-owner-vehicle-kept-after-name-implementation.md` (a path shared with qnow) before it was moved out; whether a real qnow file stood there before is unknown, and the qnow FO's own dispatch files carry a UUID prefix.
