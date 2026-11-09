@@ -56,7 +56,8 @@ class DeriveTests(unittest.TestCase):
             script = command + "\ncode=$?\n" + ("" if ignore else 'test "$code" -eq 0 || exit "$code"\n')
             script += shlex.join([sys.executable, "-B", str(recorder), str(forward), str(prepared)])
             done = subprocess.run(["/bin/sh", "-c", script], cwd=d, capture_output=True, text=True)
-            return done.returncode, prepared.read_bytes() if prepared.exists() else None, done.stdout, checked
+            expected = b"Unchecked counts: 0\n" + checked if not omit else checked
+            return done.returncode, prepared.read_bytes() if prepared.exists() else None, done.stdout, expected
 
     def test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes(self):
         for source in (SOURCE, poc.derive(SOURCE)):
