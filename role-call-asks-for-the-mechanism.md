@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-11-09T14:37:22Z
 worktree: .worktrees/spacedock-ensign-role-call-asks-for-the-mechanism
+pr: iamcxa/kc-claude-plugins#821
 ---
 
 ## Scope
