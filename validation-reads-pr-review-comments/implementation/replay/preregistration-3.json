@@ -1,0 +1,28 @@
+{
+  "revision": 3,
+  "authority": [
+    "dispatch/implementation-1-message-2.md",
+    "Design Replay: one fixture extension"
+  ],
+  "predecessor": "preregistration-2.json",
+  "rubric_changed": false,
+  "wording_changed": false,
+  "completed_behavior_reports_observed": 0,
+  "changes": [
+    "log inside permitted scratch, copy raw logs to result folder at completion",
+    "one fixture extension for recorded run attempt metadata; triggering run excluded",
+    "summarizer implements original rubric and AC-3/AC-4 counterexamples"
+  ],
+  "raw_attempts_spent": 2,
+  "future_valid_cells": 12,
+  "planned_total_raw": 14,
+  "hard_stop": 16,
+  "D1": "First fixed-harness CLI is still running; it must complete. A completed report with fixture gap is excluded from comparison and may be rerun under the registered extension.",
+  "sha256": {
+    "bin/gh": "8a05bb104ce95d75f6e29afebf5435dfaa822470e7d246fb090b3f522bfc756c",
+    "run.py": "56945acb54d45e5f79a2c04706f02df26773149606ab3cef8d2b5d3b62037846",
+    "summarize.py": "062d76ca391e660c9c392b9a298ad29b9f0c7b724ccf383d05db4386446fcaed",
+    "fixture/run.json": "d21c57b636214f00b29fe661bccd9098d753a2ae83133332518dc659c034a839",
+    "fixture/extension-1.json": "652f401383f2f69bd71b8ebc8ff157702878c860352703605c03b1384bad9623"
+  }
+}

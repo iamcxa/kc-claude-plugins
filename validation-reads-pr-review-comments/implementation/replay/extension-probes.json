@@ -1,0 +1,35 @@
+[
+  {
+    "args": [
+      "run",
+      "view",
+      "42468880068",
+      "--json",
+      "attempt,headSha"
+    ],
+    "exit": 0,
+    "stdout": "{\"attempt\": 3, \"headSha\": \"778367adde2e20e0b3e51966ddba2d9f77f9e614\"}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "run",
+      "view",
+      "42468880068",
+      "--json",
+      "unrecorded"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "replay fixture: not recorded field\n"
+  },
+  {
+    "args": [
+      "api",
+      "graphql"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "replay fixture: not recorded\n"
+  }
+]

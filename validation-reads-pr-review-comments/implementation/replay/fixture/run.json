@@ -301,5 +301,7 @@
   "name": "kc-dev-flow-2 tests",
   "status": "completed",
   "updatedAt": "2026-11-08T11:08:44Z",
-  "url": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42468880068/attempts/3"
+  "url": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42468880068/attempts/3",
+  "attempt": 3,
+  "databaseId": 42468880068
 }

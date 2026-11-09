@@ -41,17 +41,19 @@ if len(clean)==2 and clean[0]=='api':
     }
     file=mapping.get(endpoint.split('?')[0])
 if bad:file=None
-entry={'at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'args':args,'served':file,'refused':file is None,'carries_review_comments':file=='review-comments.json'}
+data=json.loads((fixture/file).read_text()) if file else None
+field_gap=fields is not None and (not isinstance(data,dict) or any(k not in data for k in fields))
+refused=file is None or field_gap
+if fields is not None and not refused:data={k:data[k] for k in fields}
+payload=json.dumps(data) if not refused else ''
+query_exit=0
+if query is not None and not refused:
+    done=subprocess.run(['jq',query],input=payload,text=True,capture_output=True)
+    payload=done.stdout;query_exit=done.returncode
+    if done.stderr:print(done.stderr,file=sys.stderr,end='')
+entry={'at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'args':args,'served':file,'refused':refused,'carries_review_comments':file=='review-comments.json' and ('4505793059' in payload or "Forward successful record checks' step-back warnings" in payload),'query_exit':query_exit}
 with open(os.environ['REPLAY_GH_LOG'],'a') as log:log.write(json.dumps(entry)+'\n')
-if file is None:
-    print('replay fixture: not recorded',file=sys.stderr);sys.exit(1)
-data=json.loads((fixture/file).read_text())
-if fields is not None:
-    if not isinstance(data,dict) or any(k not in data for k in fields):
-        print('replay fixture: not recorded field',file=sys.stderr);sys.exit(1)
-    data={k:data[k] for k in fields}
-payload=json.dumps(data)
-if query is not None:
-    done=subprocess.run(['jq',query],input=payload,text=True)
-    sys.exit(done.returncode)
+if refused:
+    print('replay fixture: not recorded field' if field_gap else 'replay fixture: not recorded',file=sys.stderr);sys.exit(1)
 print(payload)
+sys.exit(query_exit)

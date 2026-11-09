@@ -1,0 +1,14 @@
+{
+  "extension": 1,
+  "source": "source/extension-run-attempt-3.json",
+  "source_created_at": "2026-11-08T11:03:28Z",
+  "source_updated_at": "2026-11-08T11:08:44Z",
+  "changes": [
+    "project recorded run_attempt as attempt for run-view JSON projection",
+    "project id as databaseId",
+    "log unknown-field refusals truthfully",
+    "log whether projected comment response carries target id/title"
+  ],
+  "first_trigger": "codex-base-1-fixed requested --json ...attempt...; that run is a fixture gap and must be excluded",
+  "authority": "Design Replay: one fixture extension allowed; historical source substitution authorized by implementation-1-message-1"
+}

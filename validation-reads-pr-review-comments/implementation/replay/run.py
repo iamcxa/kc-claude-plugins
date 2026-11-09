@@ -24,7 +24,7 @@ if a.host=='codex':
 else:
     argv=['/Users/kent/.local/bin/claude','-p','--model','claude-opus-5-5','--output-format','stream-json','--verbose','--permission-mode','dontAsk','--add-dir',str(scratch),prompt]
 transport=R/'bin'
-env={**os.environ,'PATH':str(R/'bin')+os.pathsep+os.environ['PATH'],'REPLAY_GH_LOG':str(out/'gh.jsonl'),'PYTHONDONTWRITEBYTECODE':'1','ZDOTDIR':str(R/'shell'),'BASH_ENV':str(R/'shell/guard.sh'),'REPLAY_SHELL_LOG':str(out/'shell.jsonl')}
+env={**os.environ,'PATH':str(R/'bin')+os.pathsep+os.environ['PATH'],'REPLAY_GH_LOG':str(scratch/'gh.jsonl'),'PYTHONDONTWRITEBYTECODE':'1','ZDOTDIR':str(R/'shell'),'BASH_ENV':str(R/'shell/guard.sh'),'REPLAY_SHELL_LOG':str(scratch/'shell.log')}
 probes=[]
 for shell,flag in [('/bin/zsh','-c'),('/bin/zsh','-lc'),('/bin/bash','-c'),('/bin/bash','-lc')]:
     probe=subprocess.run([shell,flag,'command -v gh'],env=env,capture_output=True,text=True)
@@ -56,6 +56,8 @@ for line in (out/'events.jsonl').read_text().splitlines():
     if event.get('type')=='result':
         meta['tokens']={k:event.get(k) for k in ['usage','modelUsage','total_cost_usd']}
 meta.update(end=stamp(),elapsed_seconds=time.monotonic()-start)
+for source,name in [(scratch/'gh.jsonl','gh.jsonl'),(scratch/'shell.log','shell.log')]:
+    if source.exists():(out/name).write_bytes(source.read_bytes())
 (out/'meta.json').write_text(json.dumps(meta,indent=2)+'\n')
 print(json.dumps(meta))
 raise SystemExit(0 if meta['exit']==0 and meta['report_written'] else 1)
