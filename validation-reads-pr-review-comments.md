@@ -15,6 +15,17 @@ gates:
                 id: briefing:validation-reads-pr-review-comments:backlog:attempt-1:revision-1
                 digest: sha256:b3fcb4f81dc95178b54aff527f54955265853d3fedb986ba562155e31f9c00a5
                 room-ref: ./validation-reads-pr-review-comments/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:validation-reads-pr-review-comments:backlog:1
+                briefing: briefing:validation-reads-pr-review-comments:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-09T04:57:33.377666Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-09), answering 「決定：第 18 批這四張（驗證回答 Captain 能不能合併並因此主動讀完審查意見、合併檢查不再把網址和資料區塊當成檔案和指令、合併提問紀錄能證明檢查在提問前跑、數字寫明是哪次執行算出來的並涵蓋 learn 證據）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？建議核准。核准即接受四張任務檔現在寫下的內容；要改哪張直接說。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
