@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:role-call-asks-for-the-mechanism:backlog:attempt-1:revision-1",
+  "question": "第 19 批：這三張（工人開工先查有沒有欠的審查、總工程師改問根本原因、跨畫面資料先寫生命週期）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？我建議進入。",
+  "artifacts": [
+    {
+      "id": "artifact:role-call-asks-for-the-mechanism:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/394a40302ff4595eb63930582f0d3bc08ede2500/role-call-asks-for-the-mechanism.md",
+      "rev": "sha256:b207d6a6466cb49b3a84b710d231a40460c247352b308df4c7313b9d04007397",
+      "mediaType": "text/markdown",
+      "summary": "Batch 19 backlog: the Captain approved the qnow-case direction and ship conditions (「准」, 2026-11-09); this gate admits the task to ideation under its written scope, budget and stop condition."
+    }
+  ]
+}

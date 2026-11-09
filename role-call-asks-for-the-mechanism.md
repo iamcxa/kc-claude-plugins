@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:role-call-asks-for-the-mechanism:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:role-call-asks-for-the-mechanism-backlog-1
+              briefing:
+                id: briefing:role-call-asks-for-the-mechanism:backlog:attempt-1:revision-1
+                digest: sha256:e647dad0e3c0c1bbc1712782da68f6c307d1a4399261a720e8e6b56dd1652d8f
+                room-ref: ./role-call-asks-for-the-mechanism/review/backlog/briefing-1
 ---
 
 ## Scope
