@@ -332,3 +332,41 @@ PASSED for the six accepted criteria at `6f2fe8f33de15cf4e9283bf9dfed185a5691ed5
 ### Summary
 
 Resolved the one test-fixture conflict with a merge commit, preserving both approved runtime changes; the new candidate and its acceptance evidence are ready for FO. This report supersedes the earlier implementation report's candidate and check results at 6f2fe8f33; it does not replace the old-head validation verdict with a new independent verdict. Publication and new-head review/validation remain FO-owned.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #818 head b8362fb9 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at b8362fb901cd27bd367be1cd5b826f21fefad70e against base 8c8313823f353f631e2b7cca4559dd3e643f30a5; checks ran from a fresh archive, export bytes verified; criterion/limit map in validation-2/README.md.
+- DONE: Focused re-validation of the merge with main: the prior validation-1 PASSED at 6f2fe8f33; judge only what the merge could change. Show the five recorded inputs still pass, the held controls still hold, and #817's hold (question refuses when no matching check record exists) still works at this head; diff the two features' functions against their parents. Answer the merge-readiness question: read every review comment and review on the PR at this head before your verdict. Keep any download under a new /tmp directory, never in the task state folder.
+  Four input-classification functions equal the first parent; matching_delivery_record/question equal main; five real merge-question CLI passes and missing/matching/newest-mismatched record exits 1/0/1; all hosted downloads retained under /tmp/validate-pr818-merge-15Eaje (source-preservation.json, combined-observations.json, review-summary.json).
+- DONE: AC-1 Site URL paths and an elided package path are not files.
+  Original strings, generated absent root and Asked /llms.txt pass; removing the top-level-root predicate restores S4 (fixtures-candidate.log, mutation-observations.json).
+- DONE: AC-2 A namespace URI right after a brace is not a link.
+  Braced namespace passes in message/report through the CLI; removing brace exclusion restores S5, and unbraced URLs remain held (combined-observations.json, mutation-observations.json).
+- DONE: AC-3 Data fences in named cards are not commands.
+  Both exact named YAML cards pass; scanning all card fences restores S5; the acceptance script retains the full recorded chief-engineer outcome (acceptance-published-path.log, mutation-observations.json).
+- DONE: AC-4 Real steps and missing files still hold.
+  Shell/untagged card fences, YAML message/report fences, bare links and missing message/Asked paths hold; existing files pass; four weakening mutations break their respective controls, with all seven mutations run using -B after cache clearing (mutations.log).
+- DONE: AC-5 The stop condition holds through question.
+  All five original inputs pass real merge questions with matching records and fail on main; sh-card and missing-path questions remain held; eight #817 record tests pass (base-observations.json, combined-observations.json, delivery-record-hold.log).
+- DONE: AC-6 Nothing else moves.
+  Only delivery_gate.py and its tests differ; workflow bytes/count stay 5931/5931, and an extra-path falsifier fails; core 192 tests/1 skip and configured full-suite 1040 tests/7 skips, exit 0; lint and all extension/native checks pass (scope.json, verification.json).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output
+  Five-step validation-2/acceptance.sh run unchanged from its published path with bash --noprofile --norc: exit 0, five gate-text passes, seven focused and eight record tests OK, then scope/workflow unchanged and PASS (acceptance-published-path.log); no graphical surface or hosted/approval/merge claim.
+- DONE: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py docs/adr --since <base> with its exit code
+  Exact dispatch-path command at base 8c8313823f353f631e2b7cca4559dd3e643f30a5 exits 0, 64 ADRs; loaded Codex package and --require 0044 0051 0062 0071 also exit 0 (adr-dispatch-command.json, adr-lint-dispatch-path.log, adr-lint-required.log).
+- DONE: Required workflow checks and each affected-document disposition.
+  Design, five dispatch records, refreshed number guards, version parity and comment ratio 0/128 (0.0%, max 5%) pass; unaffected ADR 0044/0051/0062/0071 dispositions remain correct (checks.json, extra-checks.json, doc-impact.json).
+- DONE: Answer the merge-readiness question after reading every PR review/comment.
+  No unaddressed review finding: read five conversation comments, zero inline comments and one quota refusal; current-head Codex clean, PR ready/MERGEABLE, both required checks and all four workflow runs pass. Eligible for FO's gate, not immediate merge: exact-head RoboRev evidence, fresh gate records and Captain authority remain FO-owned (README.md, review-summary.json).
+- DONE: Verdict naming the head, with findings classified by the workflow's Review-finding disposition.
+  No new Material, Deferred risk, Polish or Needs decision product finding. Accepted absent-root/non-shell-card limits and retained attribution-link hold reproduced; Copilot quota refusal remains not run, not clean, with no retry absent Captain confirmation (limits.log, README.md).
+- SKIPPED: Optional runtime paths, local RoboRev and delivery operations outside this worker's authority.
+  Seven full-suite corpus/dependency skips and four release-acceptance dependency skips remain unproven; model-free local Spacedock 0.27.2/plugin 0.27.3 checks are not host/model execution. No product/PR mutation, merge or worktree removal; CI cost unmeasured, configuration unchanged.
+- DONE: Preserve and explain verification setup failures rather than treating them as product defects.
+  Initial full discovery omitted SPACEDOCK_BIN and dispatch tests received None; one-test failure/pass reproduction and configured rerun recorded. Initial number-guard fetch warning cleared on its authorized narrow rerun (missing-binary-probe.log, configured-binary-probe.log, number-guards-refreshed.log).
+
+### Summary
+
+PASSED for the six accepted criteria at b8362fb901cd27bd367be1cd5b826f21fefad70e: the merge preserves both approved behaviors, each original false positive passes, and required controls still reject. This report supersedes validation-1 only for the new candidate; passing code/CI and the clean Codex review support FO proceeding to the delivery gate, while the Copilot not-run status, current-head local review evidence, fresh gate records and Captain merge decision remain explicit obligations.
+

@@ -1,0 +1,33 @@
+candidate b8362fb901cd27bd367be1cd5b826f21fefad70e
+site paths: exit 0 / gate text complete
+elided package: exit 0 / gate text complete
+namespace: exit 0 / gate text complete
+design YAML: exit 0 / gate text complete
+review YAML: exit 0 / gate text complete
+test_site_and_elided_paths_are_not_files_without_a_real_top_level_directory (test_delivery_gate.CaptainStepsTests.test_site_and_elided_paths_are_not_files_without_a_real_top_level_directory) ... ok
+test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold (test_delivery_gate.CaptainStepsTests.test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold) ... ok
+test_named_cards_require_shell_and_untagged_fences_but_skip_data (test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data) ... ok
+test_yaml_message_and_missing_paths_keep_their_holds (test_delivery_gate.CaptainStepsTests.test_yaml_message_and_missing_paths_keep_their_holds) ... ok
+test_non_shell_fences_need_a_recorded_step_unless_they_match_observed (test_delivery_gate.CaptainStepsTests.test_non_shell_fences_need_a_recorded_step_unless_they_match_observed) ... ok
+test_question_keeps_yaml_fences_in_the_report_as_steps (test_delivery_gate.QuestionTests.test_question_keeps_yaml_fences_in_the_report_as_steps) ... ok
+test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths (test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.392s
+
+OK
+test_each_clause_and_an_ad_hoc_run_on_another_text_hold (test_delivery_gate.DeliveryCheckBeforeQuestionTests.test_each_clause_and_an_ad_hoc_run_on_another_text_hold) ... ok
+test_malformed_missing_or_nonobject_record_holds (test_delivery_gate.DeliveryCheckBeforeQuestionTests.test_malformed_missing_or_nonobject_record_holds) ... ok
+test_missing_record_holds_preparation (test_delivery_gate.DeliveryCheckBeforeQuestionTests.test_missing_record_holds_preparation) ... ok
+test_newest_record_is_selected_numerically (test_delivery_gate.DeliveryCheckBeforeQuestionTests.test_newest_record_is_selected_numerically) ... ok
+test_no_merge_question_needs_no_delivery_record (test_delivery_gate.DeliveryCheckBeforeQuestionTests.test_no_merge_question_needs_no_delivery_record) ... ok
+test_question_and_summary_clauses_use_the_record_truncation (test_delivery_gate.DeliveryCheckBeforeQuestionTests.test_question_and_summary_clauses_use_the_record_truncation) ... ok
+test_record_must_match_a_latest_dispatched_candidate (test_delivery_gate.DeliveryCheckBeforeQuestionTests.test_record_must_match_a_latest_dispatched_candidate) ... ok
+test_record_must_match_the_head_named_by_the_question (test_delivery_gate.DeliveryCheckBeforeQuestionTests.test_record_must_match_the_head_named_by_the_question) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.022s
+
+OK
+scope and workflow unchanged
+PASS

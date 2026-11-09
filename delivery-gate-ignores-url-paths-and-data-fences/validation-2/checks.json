@@ -1,0 +1,178 @@
+[
+  {
+    "name": "mutations",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr818-merge-15Eaje/run_mutations.py",
+      "/tmp/validate-pr818-merge-15Eaje/candidate",
+      "/tmp/validate-pr818-merge-15Eaje"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/mutations.log"
+  },
+  {
+    "name": "delivery-gate",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/delivery-gate.log"
+  },
+  {
+    "name": "delivery-record-hold",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_delivery_gate.py",
+      "-k",
+      "DeliveryCheckBeforeQuestionTests",
+      "-v"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/delivery-record-hold.log"
+  },
+  {
+    "name": "lint-skills",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/lint-skills.log"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8c8313823f353f631e2b7cca4559dd3e643f30a5"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/adr-lint.log"
+  },
+  {
+    "name": "adr-lint-required",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8c8313823f353f631e2b7cca4559dd3e643f30a5",
+      "--require",
+      "0044",
+      "0051",
+      "0062",
+      "0071"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/adr-lint-required.log"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-ignores-url-paths-and-data-fences.md",
+      "--base",
+      "8c8313823f353f631e2b7cca4559dd3e643f30a5",
+      "--head",
+      "b8362fb901cd27bd367be1cd5b826f21fefad70e"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/number-guards.log"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/comment_ratio.py",
+      "8c8313823f353f631e2b7cca4559dd3e643f30a5",
+      "b8362fb901cd27bd367be1cd5b826f21fefad70e",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/comment-ratio.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/doc_impact.py",
+      "8c8313823f353f631e2b7cca4559dd3e643f30a5",
+      "b8362fb901cd27bd367be1cd5b826f21fefad70e",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences",
+      "--json"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/doc-impact.json"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-ignores-url-paths-and-data-fences.md"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/design-surfaces.log"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-ignores-url-paths-and-data-fences"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/dispatch-records.log"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences",
+      "diff",
+      "--check",
+      "8c8313823f353f631e2b7cca4559dd3e643f30a5",
+      "b8362fb901cd27bd367be1cd5b826f21fefad70e"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "/tmp/validate-pr818-merge-15Eaje/diff-check.log"
+  }
+]

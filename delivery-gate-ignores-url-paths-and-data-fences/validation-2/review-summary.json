@@ -1,0 +1,41 @@
+{
+  "observed_at": "2026-11-09T14:30:44.237439+00:00",
+  "head": "b8362fb901cd27bd367be1cd5b826f21fefad70e",
+  "state": "OPEN",
+  "draft": false,
+  "merge_state": "CLEAN",
+  "comments_read": 5,
+  "inline_comments_read": 0,
+  "submitted_reviews_read": 1,
+  "unaddressed_review_findings": [],
+  "codex": "completed, no findings at candidate",
+  "copilot": "not run; quota refusal on prior head; do not retry absent Captain confirmation",
+  "sources": [
+    "https://github.com/iamcxa/kc-claude-plugins/pull/818#issuecomment-6734589760",
+    "https://github.com/iamcxa/kc-claude-plugins/pull/818#issuecomment-6738566177",
+    "https://github.com/iamcxa/kc-claude-plugins/pull/818#pullrequestreview-5823039113",
+    "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42598477207",
+    "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42598477219",
+    "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42598477266",
+    "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42598477206"
+  ],
+  "required_checks": [
+    {
+      "bucket": "pass",
+      "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42598477266/job/129096835171",
+      "name": "multi-profile route gate (live Spacedock)",
+      "state": "SUCCESS",
+      "workflow": "kc-dev-flow release gate"
+    },
+    {
+      "bucket": "pass",
+      "link": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42598477219/job/129096834738",
+      "name": "version parity (plugin.json / marketplace.json / codex / README)",
+      "state": "SUCCESS",
+      "workflow": "marketplace version parity"
+    }
+  ],
+  "raw_download_directory": "/tmp/validate-pr818-merge-15Eaje",
+  "final_recheck_at": "2026-11-09T14:40:00.034539+00:00",
+  "final_head_base_reviews_unchanged": true
+}

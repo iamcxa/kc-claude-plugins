@@ -1,0 +1,12 @@
+{
+  "tests": 1040,
+  "failures": 52,
+  "errors": 1,
+  "skipped": 7,
+  "affected_module": "test_dispatch_stage",
+  "all_failure_headers_in_module": true,
+  "cause": "SPACEDOCK_BIN was omitted from validator launch; --spacedock None",
+  "single_reproduction_exit": 1,
+  "configured_reproduction_exit": 0,
+  "corrected_full_run": "discover-configured.log"
+}

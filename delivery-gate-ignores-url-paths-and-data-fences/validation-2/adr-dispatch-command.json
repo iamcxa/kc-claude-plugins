@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python3",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py",
+    "docs/adr",
+    "--since",
+    "8c8313823f353f631e2b7cca4559dd3e643f30a5"
+  ],
+  "exit": 0
+}

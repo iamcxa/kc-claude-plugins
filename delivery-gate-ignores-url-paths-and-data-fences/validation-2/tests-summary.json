@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Full package discovery: 1040 tests, 7 corpus/dependency skips",
+    "status": "passed",
+    "message": "Direct exit 0; raw complete output is discover-configured.log"
+  },
+  {
+    "name": "Five-step Captain acceptance from published path",
+    "status": "passed"
+  },
+  {
+    "name": "Seven reverse source mutations",
+    "status": "passed"
+  },
+  {
+    "name": "Merged delivery record: missing/matching/mismatched -> 1/0/1",
+    "status": "passed"
+  }
+]

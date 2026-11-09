@@ -1,0 +1,4 @@
+accepted limitation: python named-card fence is not inferred as a Captain step
+accepted limitation: node named-card fence is not inferred as a Captain step
+accepted limitation: yaml named-card fence is not inferred as a Captain step
+retained out-of-scope hold: FO-named PR-body attribution URL needs a step

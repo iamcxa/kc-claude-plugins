@@ -1,0 +1,20 @@
+test_stamp_commits_complete_record_and_exact_inputs (test_dispatch_stage.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs) ... FAIL
+
+======================================================================
+FAIL: test_stamp_commits_complete_record_and_exact_inputs (test_dispatch_stage.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-pr818-merge-15Eaje/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 119, in test_stamp_commits_complete_record_and_exact_inputs
+    result = self.build(extra=("--roster", "fixture roster", "--note", "README fixture"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/validate-pr818-merge-15Eaje/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/validate-pr818-merge-15Eaje/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-pr818-merge-15Eaje/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0mywvf1w/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0mywvf1w/code/docs/dev2/.spacedock-state/dispatch-fixture-29e1db4939b54135bb2b190141643967.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0mywvf1w/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0mywvf1w/notes.txt'), '--spacedock', None, '--host', 'codex', '--roster', 'fixture roster', '--note', 'README fixture'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+----------------------------------------------------------------------
+Ran 1 test in 0.789s
+
+FAILED (failures=1)
