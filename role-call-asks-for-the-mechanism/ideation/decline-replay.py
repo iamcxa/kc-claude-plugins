@@ -2,6 +2,7 @@ import subprocess, sys, pathlib, shutil, re
 Q, M = sys.argv[1], pathlib.Path(sys.argv[2])
 BASE = "/tmp/rcm/proto/role_triggers.base.py"; PROTO = "/tmp/rcm/proto/role_triggers.py"
 answers = {
+ "A0 impl-3 (verbatim, FO transcript 2026-11-09T06:10:26Z)": "My answer is yes. The original problem is fixed: a first-time owner chooses the car only once, can see the plate-number step, and has a back button. The last few rounds dealt with smaller defects found in review, not a drift in direction.",
  "A1 impl-4 (verbatim, FO transcript 2026-11-09T07:50:32Z)": "These two bugs are in the booking draft we're delivering. Tests can reproduce them now, and if we deleted those two acceptance criteria, the release would ship data loss.",
  "A2 validation-2 (verbatim, FO transcript 2026-11-09T08:12:15Z)": "The goal is still the original one: an owner picks the car once and can always see how to finish the booking. The remaining gaps can all be tested now.",
  "A3 package-feedback.md quoted form": "the outcome is unchanged; the gap is testable now",

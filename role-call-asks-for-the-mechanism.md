@@ -107,15 +107,16 @@ Inputs: qnow state at 27f04824 (the task file, dispatch records, validation-1 an
 | mechanism-2 | mechanism | yes | "The class is \"the attempt has no identity,\" not \"callbacks are unguarded.\"" |
 | mechanism-3 | mechanism | yes | "A booking in progress has no identity of its own." |
 
-Mechanism 3/3, current 2/3 (generous) or 1/3 (strict): the ship condition is met under both gradings. All three mechanism answers open with the mechanism; all three current answers open with whether the outcome is delivered. Limits: Claude only, 3 runs per arm, one grader (this worker), a one-run margin on the generous grading. All six answers also said the original symptom was fixed and the repairs were on another class, so making the call happen at all (task a-worker-holds-while-a-role-call-is-owed) carries much of the case's value; this task adds a consistent mechanism-first answer.
+Mechanism 3/3, current 2/3 (generous) or 1/3 (strict): the ship condition is met under both gradings. All three mechanism answers open with the mechanism; all three current answers open with whether the outcome is delivered. Limits: Claude only, 3 runs per arm, one grader (this worker), a one-run margin on the generous grading. Validation-2's own F6 text says "scope ... to the actual booking attempt/slot", so the word "attempt" was in both arms' inputs; the grade is on the single-cause claim, not the word. All six answers also said the original symptom was fixed and the repairs were on another class, so making the call happen at all (task a-worker-holds-while-a-role-call-is-owed) carries much of the case's value; this task adds a consistent mechanism-first answer.
 
 ### Replay: the recorded step-back answers against the decline form
 
-The case record says FO answered the step-back four times. The qnow FO transcript (2026-11-09) shows `dispatch_records.py` printing it for two dispatches, implementation-4 and validation-2, and FO answering each once, verbatim (A1, A2); no print or answer was found for implementation-5, implementation-6 or validation-3. A3 is the form `package-feedback.md` quotes. Each was written as `Reviewer: kc-dev-flow-2:chief-engineer not run 2026-11-09: <answer>` under `## FO alignment` in a scratch copy at each revision (`ideation/decline-replay.py`, `ideation/decline-replay-table.md`).
+The case record says FO answered the step-back four times. Search (2026-11-09): `rg -l -e 'step back:' -e 'before you send this one'` over every `*.jsonl` under the Claude project directories for `qnow-adopt-dev2` and the Codex sessions of 2026-11-08 and 2026-11-09. For this task, the qnow FO's session prints it for implementation-3, implementation-4 and validation-2, and FO answered each once, verbatim (A0, A1, A2). The prints for implementation-6, validation-3, implementation-7 and validation-4 are only in Codex worker sessions, with no FO answer. A3 is the form `package-feedback.md` quotes. Each was written as `Reviewer: kc-dev-flow-2:chief-engineer not run 2026-11-09: <answer>` under `## FO alignment` in a scratch copy at each revision (`ideation/decline-replay.py`, `ideation/decline-replay-table.md`).
 
 | Decline reason | 0.36.0 at ee29b0a8 / 27f04824 / 03829bf0 | Prototype at the same three |
 | --- | --- | --- |
 | none | owed / owed / owed | owed / owed / owed |
+| A0 "My answer is yes. The original problem is fixed: ... not a drift in direction." | cleared ×3 | owed ×3 |
 | A1 "These two bugs are in the booking draft we're delivering. Tests can reproduce them now, ..." | cleared ×3 | owed ×3 |
 | A2 "The goal is still the original one: ... The remaining gaps can all be tested now." | cleared ×3 | owed ×3 |
 | A3 "the outcome is unchanged; the gap is testable now" | cleared ×3 | owed ×3 |
@@ -152,8 +153,8 @@ Verified by: new `test_role_triggers.py` cases, one per event family; falsifier:
 **AC-2**: For those two events, a decline clears the call only when its reason is `unrelated:` followed by two or more `;`-separated items, each a name plus two or more words, with no two causes equal after casefolding; the existing date rules still apply. A plain decline still clears repair-pass, review-round and amendment events.
 Verified by: `test_role_triggers.py` cases for a reasoned decline (clears), a plain decline, one item, a one-word cause and a repeated cause (each still owes), and a plain decline on a repair-pass-only task (clears); falsifier: clearing the two events with any decline again makes the plain-decline cases pass wrongly.
 
-**AC-3**: The three recorded step-back answers above (A1, A2, A3, verbatim) written as decline reasons leave the chief-engineer call owed.
-Verified by: a `test_role_triggers.py` case with the three texts as fixtures (no qnow checkout needed); ideation evidence on qnow state at ee29b0a8, 27f04824 and 03829bf0 is `ideation/decline-replay-table.md`; falsifier: the 0.36.0 script clears all three.
+**AC-3**: The four recorded step-back answers above (A0, A1, A2, A3, verbatim) written as decline reasons leave the chief-engineer call owed.
+Verified by: a `test_role_triggers.py` case with the four texts as fixtures (no qnow checkout needed); ideation evidence on qnow state at ee29b0a8, 27f04824 and 03829bf0 is `ideation/decline-replay-table.md`; falsifier: the 0.36.0 script clears all three.
 
 **AC-4**: The count-two step-back reminder is printed in exactly the states it was printed in 0.36.0 (D1 recommendation): an owed findings or amendment chief-engineer line suppresses it whatever question that line carries.
 Verified by: the updated `test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated` asserts the mechanism question once and the three questions zero times; on qnow state at 27f04824 the output is 143 words with the prototype against 262 with the substring check; falsifier: restoring `STEP_BACK in line` makes that test print the reminder.
@@ -174,22 +175,22 @@ Verified by: their runs saved in the implementation evidence folder, each with c
 ## Stage Report: ideation
 
 - DONE: Run the replays your stop condition names now, as scratch prototypes under /tmp (never a repository file), and put the result table in the design
-  Behaviour: mechanism 3/3 vs current 2/3 generous or 1/3 strict, 6 opus chief-engineer runs on leak-scanned qnow 27f04824 + 35fd5f65 inputs, grader pre-registered 14:44:25Z (`ideation/grading.md`); mechanical: A1-A3 declines clear on 0.36.0 and stay owed on the prototype at all three revisions (`ideation/decline-replay-table.md`). Only two verbatim step-back answers exist (impl-4, validation-2), not four; stated in the design.
+  Behaviour: mechanism 3/3 vs current 2/3 generous or 1/3 strict, 6 opus chief-engineer runs on leak-scanned qnow 27f04824 + 35fd5f65 inputs, grader pre-registered 14:44:25Z (`ideation/grading.md`); mechanical: A1-A3 declines clear on 0.36.0 and stay owed on the prototype at all three revisions (`ideation/decline-replay-table.md`). FO's verbatim step-back answers for this task are three (implementation-3, -4, validation-2), plus the quoted form, not four; search and result stated in the design.
 - DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (a-worker-holds-while-a-role-call-is-owed, role-call-asks-for-the-mechanism, kept-data-lifecycle-at-ui-ideation) and live task of other sessions (step-back-answer-has-a-record-line (held at ideation), counts-name-the-run-that-produced-them and delivery-gate-ignores-url-paths-and-data-fences (batch 18, live)) that changes the same file or check, so FO can order implementation
   `### Batch overlap` names role_triggers.py, test_role_triggers.py, test_delivery_gate.py and ADR 0026 per task, with a Recommended order line.
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
   `### Words FO reads at each moment`: workflow.md 5931 unchanged; role_triggers output on qnow 152/152/156 → 143/143/147 (262/266 under D1's alternative); owed CE line 95 → 86; CE question 26 → 15.
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
   AC-1..AC-7 each with Verified by and a falsifier; D1 (reminder suppression vs ADR 0026's literal sentence) with recommendation and cost.
-- DONE: AC-1 owed line asks the mechanism question for the two findings events: prototype prints it at 27f04824 (`ideation/proto-owed-line.txt`); product test not yet written.
-- DONE: AC-2 reasoned decline form: prototype controls C1 clears, C2/C3 owe (`ideation/decline-replay-table.md`); repair-pass plain decline untested in product tests yet.
-- DONE: AC-3 recorded answers stay owed: A1-A3 owed ×3 revisions on the prototype; product fixture test not yet written.
-- DONE: AC-4 reminder suppression unchanged: prototype 143 words vs 262 with the substring check at 27f04824; updated test not yet written.
-- DONE: AC-5 mechanism beats current: measured at ideation, 3/3 vs 2/3 (1/3 strict); validation re-grade not yet run.
-- DONE: AC-6 ADR 0026 amendment and workflow.md unchanged: not yet verified (implementation).
-- DONE: AC-7 suites pass: not yet verified on a PR head; prototype in a scratch copy fails only the 8 + 2 tests the design lists as changed.
+- DONE: AC-1 mapped to its evidence — new test_role_triggers cases; current evidence: the prototype prints the mechanism question at 27f04824 (`ideation/proto-owed-line.txt`); product test not yet verified, implementation.
+- DONE: AC-2 mapped to its evidence — test_role_triggers decline cases; current evidence: prototype control C1 clears, C2 and C3 owe (`ideation/decline-replay-table.md`); repair-pass plain decline not yet verified, implementation.
+- DONE: AC-3 mapped to its evidence — a fixture test with A0-A3; current evidence: A0-A3 owed at all three qnow revisions on the prototype, cleared on 0.36.0; product test not yet verified, implementation.
+- DONE: AC-4 mapped to its evidence — the updated suppression test; current evidence: prototype 143 words vs 262 with the substring check at 27f04824; product test not yet verified, implementation; depends on D1.
+- DONE: AC-5 mapped to its evidence — `ideation/grader.md`, `ideation/runs/`, `ideation/grading.md`; current evidence: mechanism 3/3 vs current 2/3 (1/3 strict); validation re-grade not yet verified.
+- DONE: AC-6 mapped to its evidence — ADR lint and the workflow.md diff on the PR head; not yet verified, implementation.
+- DONE: AC-7 mapped to its evidence — saved suite runs on the PR head; not yet verified; current evidence: in a scratch copy the prototype fails only the 8 + 2 tests the design lists as changed.
 - DONE: design_surfaces.py check: `role-call-asks-for-the-mechanism.md: design surfaces presentable`, exit 0 (0.36.0 package).
 
 ### Summary
 
-The owed chief-engineer call for repeated validation failures or one repeated symptom asks for the single mechanism, and its decline must name two or more findings each with its own cause. The replay met the ship condition (mechanism 3/3 against current 2/3 or 1/3), with the limit that all six chief-engineers saw the class once called, so the call happening at all carries much of the value. One Captain decision: D1, whether the step-back reminder stays suppressed beside the new question (recommended, amends one ADR 0026 sentence). For the qnow FO's report: the case record's "four" step-back answers are two in the transcript.
+The owed chief-engineer call for repeated validation failures or one repeated symptom asks for the single mechanism, and its decline must name two or more findings each with its own cause. The replay met the ship condition (mechanism 3/3 against current 2/3 or 1/3), with the limit that all six chief-engineers saw the class once called, so the call happening at all carries much of the value. One Captain decision: D1, whether the step-back reminder stays suppressed beside the new question (recommended, amends one ADR 0026 sentence). For the qnow FO's report: the case record's "four" step-back answers are three FO answers in its transcript (implementation-3, implementation-4, validation-2); later prints were in worker sessions only.
