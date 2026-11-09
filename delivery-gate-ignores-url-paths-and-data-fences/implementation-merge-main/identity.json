@@ -1,0 +1,13 @@
+{
+  "candidate": "b8362fb901cd27bd367be1cd5b826f21fefad70e",
+  "parents": [
+    "6f2fe8f33de15cf4e9283bf9dfed185a5691ed57",
+    "8c8313823f353f631e2b7cca4559dd3e643f30a5"
+  ],
+  "base": "8c8313823f353f631e2b7cca4559dd3e643f30a5",
+  "branch": "spacedock-ensign/delivery-gate-ignores-url-paths-and-data-fences",
+  "files": {
+    "kc-dev-flow-2/scripts/delivery_gate.py": "0a5a2c7a7fc97d6a25464abbe4f211272aff76d24d840a96c793b48157e5c704",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "c9b534cd606d8bb1830651b61a85b956946991d713042761ebd9fe887d9af9c0"
+  }
+}

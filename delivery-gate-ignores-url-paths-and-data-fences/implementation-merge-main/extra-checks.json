@@ -1,0 +1,91 @@
+[
+  {
+    "name": "extension-codex",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "log": "/tmp/opencode/delivery-gate-ignores-url-paths-and-data-fences/merge-main/extension-codex.log"
+  },
+  {
+    "name": "extension-roborev",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "log": "/tmp/opencode/delivery-gate-ignores-url-paths-and-data-fences/merge-main/extension-roborev.log"
+  },
+  {
+    "name": "extension-copilot",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "log": "/tmp/opencode/delivery-gate-ignores-url-paths-and-data-fences/merge-main/extension-copilot.log"
+  },
+  {
+    "name": "extension-journey-map",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "log": "/tmp/opencode/delivery-gate-ignores-url-paths-and-data-fences/merge-main/extension-journey-map.log"
+  },
+  {
+    "name": "extension-release-acceptance",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "log": "/tmp/opencode/delivery-gate-ignores-url-paths-and-data-fences/merge-main/extension-release-acceptance.log"
+  },
+  {
+    "name": "sd-dispatch",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "log": "/tmp/opencode/delivery-gate-ignores-url-paths-and-data-fences/merge-main/sd-dispatch.log"
+  },
+  {
+    "name": "observer-recovery",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "log": "/tmp/opencode/delivery-gate-ignores-url-paths-and-data-fences/merge-main/observer-recovery.log"
+  },
+  {
+    "name": "version-parity",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "bash",
+      "scripts/version-parity-check.sh"
+    ],
+    "log": "/tmp/opencode/delivery-gate-ignores-url-paths-and-data-fences/merge-main/version-parity.log"
+  }
+]

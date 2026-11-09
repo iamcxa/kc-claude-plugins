@@ -1,0 +1,7 @@
+site paths: matching record plus original input passes the real merge question CLI
+elided package: matching record plus original input passes the real merge question CLI
+namespace: matching record plus original input passes the real merge question CLI
+design YAML: matching record plus original input passes the real merge question CLI
+review YAML: matching record plus original input passes the real merge question CLI
+missing/matching/newest-mismatched delivery record: exit 1/0/1 with URL and namespace inputs
+PASS: both gate changes hold together

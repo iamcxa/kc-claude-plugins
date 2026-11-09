@@ -299,3 +299,36 @@ Implemented the three approved narrowings at the named candidate, with all accep
 ### Summary
 
 PASSED for the six accepted criteria at `6f2fe8f33de15cf4e9283bf9dfed185a5691ed57`: the five reported misclassifications disappear through the real question CLI, and the required true positives remain held. The base and seven reverse mutations justify the retained changes; product scope and workflow bytes stay fixed. This is not a merge recommendation yet: FO must clear the remaining hosted version-parity failure and complete the remaining delivery checks on this same head.
+
+## Stage Report: implementation
+
+- DONE: Fetch origin, merge origin/main into this branch with a merge commit, and resolve the conflict so both changes hold; change no behaviour of either.
+  Candidate `b8362fb901cd27bd367be1cd5b826f21fefad70e` has parents `6f2fe8f33de15cf4e9283bf9dfed185a5691ed57` and origin/main `8c8313823f353f631e2b7cca4559dd3e643f30a5`; no rebase. Only QuestionTests.ask conflicted: keep main's matching-record fixture before this task's CLI call (`implementation-merge-main/identity.json`).
+- DONE: Preserve both production behaviours without edits.
+  Source comparison asserts absolute_paths/fenced_steps/links/inspect_steps equal the original task head, and matching_delivery_record/question equal #817's merged head (`implementation-merge-main/source-preservation.log`). Relative to current base, only the two originally approved files differ.
+- DONE: Rerun the existing acceptance runner on the merged head.
+  Original validation-1/acceptance.sh ran unchanged at its original pinned head, exit 0; a copy changing only candidate/base pins ran at b8362fb90 against 8c8313823, exit 0, five CLI inputs plus seven focused controls/mutations pass (`implementation-merge-main/acceptance.sh`, `acceptance-original-runner.log`, `acceptance-merged-head.log`).
+- DONE: Show #817's new hold and this task's five passing inputs still behave as approved.
+  With a matching record, all five original inputs pass a real merge-question CLI with --reference. Missing/matching/newest-mismatched records with URL/namespace inputs return 1/0/1; all eight DeliveryCheckBeforeQuestionTests pass (`implementation-merge-main/combined-probe.log`, `combined-observations.json`, `delivery-record-hold.log`).
+- DONE: Rerun kc-dev-flow-2/scripts/test_delivery_gate.py and the package tests on the merged head.
+  Core: 192 tests, 1 skip, exit 0; full discovery: 1040 tests, 7 skips, exit 0; all five extension suites and native local dispatch/recovery exit 0. Four release-acceptance dependency skips remain unproven (`implementation-merge-main/delivery-gate.log`, `discover.log`, `extra-checks.json`).
+- DONE: Retain the seven falsifiers and all six accepted criteria.
+  Existing run_mutations.py ran with python3 -B after clearing caches: all seven reverse mutations break their respective path/URI/fence controls; merged acceptance and combined probes retain real shell, real missing-path and ordinary-link holds (`implementation-merge-main/mutations.log`, `mutation-observations.json`).
+- DONE: Repository lint-skills.py, pinned package ADR lint, number guards, comment ratio, design surfaces and version parity.
+  All exit 0 at base 8c8313823/head b8362fb90: 64 ADR files, fresh state-ref number checks clean, 0/128 comment/code lines (0.0%, maximum 5%), workflow 5931/5931 words and byte-identical to main; no version edits (`implementation-merge-main/*lint*.log`, `number-guards.log`, `comment-ratio.log`, `workflow-parity.log`, `extra-checks.json`).
+- DONE: doc_impact.py disposition for docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md.
+  unaffected: separate-summary reviewer facts and legacy combined input are unchanged relative to main (`implementation-merge-main/doc-impact.json`, regression suite).
+- DONE: doc_impact.py disposition for docs/adr/0051-the-merge-ask-check-requires-the-round-count.md.
+  unaffected: check's round-count enforcement is unchanged relative to main (`implementation-merge-main/doc-impact.json`, regression suite).
+- DONE: doc_impact.py disposition for docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md.
+  unaffected: question authority and ASK_FORM/ASK_UNQUOTED remain unchanged relative to main (`implementation-merge-main/doc-impact.json`, regression suite).
+- DONE: doc_impact.py disposition for docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md.
+  unaffected: main's matching-record requirement/reference output and this record's bytes are preserved; its eight tests and combined hold/pass probes pass (`implementation-merge-main/doc-impact.json`, `source-preservation.log`, `combined-observations.json`).
+- DONE: Commit locally on the same branch and append an implementation stage report with the new candidate SHA.
+  Merge commit b8362fb901cd27bd367be1cd5b826f21fefad70e is local on spacedock-ensign/delivery-gate-ignores-url-paths-and-data-fences; product worktree clean. Prepared PR text refreshed at /tmp/impl-delivery-gate-ignores-url-paths-and-data-fences-pr.md and implementation-merge-main/pr.md; prior reports remain intact.
+- SKIPPED: FO pushes PR #818, runs RoboRev and hosted CI, and owns independent validation/delivery operations.
+  No product push, PR edit/comment/review request, ready, merge or worktree removal by this worker. RoboRev/hosted CI not run; CI cost per PR not measured, CI configuration unchanged. Model-free local Spacedock checks used binary 0.27.2 and plugin/mod root 0.27.3, not hosted delivery proof.
+
+### Summary
+
+Resolved the one test-fixture conflict with a merge commit, preserving both approved runtime changes; the new candidate and its acceptance evidence are ready for FO. This report supersedes the earlier implementation report's candidate and check results at 6f2fe8f33; it does not replace the old-head validation verdict with a new independent verdict. Publication and new-head review/validation remain FO-owned.

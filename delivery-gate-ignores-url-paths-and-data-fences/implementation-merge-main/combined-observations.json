@@ -1,0 +1,42 @@
+[
+  {
+    "name": "site paths",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpofem8vn7`, then run `gate prepare` with `--reference /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpofem8vn7/task/merge/ask-1.json`.\n"
+  },
+  {
+    "name": "elided package",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfokacxym`, then run `gate prepare` with `--reference /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfokacxym/task/merge/ask-1.json`.\n"
+  },
+  {
+    "name": "namespace",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjfexw7jp`, then run `gate prepare` with `--reference /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjfexw7jp/task/merge/ask-1.json`.\n"
+  },
+  {
+    "name": "design YAML",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpsgt1kjh0`, then run `gate prepare` with `--reference /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpsgt1kjh0/task/merge/ask-1.json`.\n"
+  },
+  {
+    "name": "review YAML",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp9a803k54`, then run `gate prepare` with `--reference /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp9a803k54/task/merge/ask-1.json`.\n"
+  },
+  {
+    "name": "missing delivery record",
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nthe newest delivery check record is missing, unreadable or differs from the dispatched head, merge head or clauses\nnext: hold preparation; run delivery_gate.py check on this question and summary, then this check again.\n"
+  },
+  {
+    "name": "matching delivery record",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpokfzds53`, then run `gate prepare` with `--reference /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpokfzds53/task/merge/ask-1.json`.\n"
+  },
+  {
+    "name": "newest mismatched delivery record",
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nthe newest delivery check record is missing, unreadable or differs from the dispatched head, merge head or clauses\nnext: hold preparation; run delivery_gate.py check on this question and summary, then this check again.\n"
+  }
+]
