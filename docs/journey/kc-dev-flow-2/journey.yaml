@@ -18,4 +18,4 @@ steps:
           - id: q2
             ask: 「要用什麼機制確保這些領域知識一定是同步的，最新的？」 — Kent, chat, 2026-11-06
             status: answered
-            answer: 「落後就停下來等我」 — Kent, chat, 2026-11-06, to 「派工前發現落後時，要照 ADR 0014 停下來等你，還是只警告、照樣派工？」
+            answer: 「採用 B，q2 改成更新不了才停」 — Kent, chat, 2026-11-09, after the domain-note-reaches-worker-poc measurement; B means FO pulls the source into a gitignored docs/domain/ before each dispatch. Supersedes 「落後就停下來等我」 (2026-11-06).
