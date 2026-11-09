@@ -34,6 +34,17 @@ gates:
                 id: briefing:role-call-asks-for-the-mechanism:ideation:attempt-1:revision-1
                 digest: sha256:fb14352a121a88f2a9d0baf3617bbfa53c45f589945ebbcbb3f59f5c8fd87546
                 room-ref: ./role-call-asks-for-the-mechanism/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:role-call-asks-for-the-mechanism:ideation:1
+                briefing: briefing:role-call-asks-for-the-mechanism:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-09T15:40:01.396699Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-09), answering 「決定：第 19 批三張設計照下列建議進實作嗎？建議核准。三張的重跑都達到上線條件（工人停手：新版 3/3 停、現行版 0/3 停；改問根本原因：新問題 3/3 點出缺的嘗試編號、舊問題 1 到 2/3；跨畫面資料：新寫法點出的檢查 19 比 11、22 比 10）。(1) 工人停手：同一問題派第 3 次就擋，算進正在派的這次；欠工程審查員也擋，從第一次實作起算；上線時不給進行中任務豁免，約 8 張下次派工前要先補審查或寫理由；停手回報也算一輪修正。(2) 改問根本原因：婉拒審查要寫「unrelated: 某發現 + 它自己的原因」，至少兩項且原因不同；舊的退一步提醒維持現在被壓掉的位置，並修改決策紀錄（ADR）0026 那一句，代價是那些狀態下 FO 看不到三個退一步問題。(3) 跨畫面資料：不交給設計總監（它只看圖），靠既有的工程審查員呼叫加上第 (1) 張。核准即接受上列每一項建議；要改哪項直接說。」. Recommendation: followed; approving accepts each listed recommendation.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-09T14:37:22Z
 ---
 
