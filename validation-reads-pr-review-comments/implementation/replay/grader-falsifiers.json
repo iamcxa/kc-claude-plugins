@@ -1,0 +1,32 @@
+[
+  {
+    "name": "validation-3",
+    "expected": false,
+    "actual": false,
+    "status": "passed"
+  },
+  {
+    "name": "validation-4",
+    "expected": false,
+    "actual": false,
+    "status": "passed"
+  },
+  {
+    "name": "positive",
+    "expected": true,
+    "actual": true,
+    "status": "passed"
+  },
+  {
+    "name": "id-anywhere mutation rejected on validation-4",
+    "mutant_found": true,
+    "expected": false,
+    "status": "passed"
+  },
+  {
+    "name": "shim refuses unrecorded call",
+    "status": "passed",
+    "exit": 1,
+    "stderr": "replay fixture: not recorded"
+  }
+]

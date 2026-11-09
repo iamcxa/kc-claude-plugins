@@ -1,0 +1,305 @@
+{
+  "conclusion": "success",
+  "createdAt": "2026-11-08T11:03:28Z",
+  "displayTitle": "feat(kc-dev-flow-2): record stage dispatches before building",
+  "event": "pull_request",
+  "headBranch": "spacedock-ensign/dispatch-build-writes-the-dispatch-record",
+  "headSha": "778367adde2e20e0b3e51966ddba2d9f77f9e614",
+  "jobs": [
+    {
+      "completedAt": "2026-11-08T11:08:43Z",
+      "conclusion": "success",
+      "databaseId": 128711252528,
+      "name": "unit tests (python3)",
+      "startedAt": "2026-11-08T11:03:31Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-08T11:03:32Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-08T11:03:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:34Z",
+          "conclusion": "success",
+          "name": "Checkout",
+          "number": 2,
+          "startedAt": "2026-11-08T11:03:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:34Z",
+          "conclusion": "success",
+          "name": "lint-skills.py",
+          "number": 3,
+          "startedAt": "2026-11-08T11:03:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:42Z",
+          "conclusion": "success",
+          "name": "test_lint_skills.py",
+          "number": 4,
+          "startedAt": "2026-11-08T11:03:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:46Z",
+          "conclusion": "success",
+          "name": "test_design_surfaces.py",
+          "number": 5,
+          "startedAt": "2026-11-08T11:03:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:47Z",
+          "conclusion": "success",
+          "name": "test_adr_doc_checks.py",
+          "number": 6,
+          "startedAt": "2026-11-08T11:03:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:48Z",
+          "conclusion": "success",
+          "name": "test_poc_readme.py",
+          "number": 7,
+          "startedAt": "2026-11-08T11:03:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:51Z",
+          "conclusion": "success",
+          "name": "test_comment_ratio.py",
+          "number": 8,
+          "startedAt": "2026-11-08T11:03:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:58Z",
+          "conclusion": "success",
+          "name": "test_number_guards.py",
+          "number": 9,
+          "startedAt": "2026-11-08T11:03:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:58Z",
+          "conclusion": "success",
+          "name": "extensions/codex/test_codex_review.py",
+          "number": 10,
+          "startedAt": "2026-11-08T11:03:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:59Z",
+          "conclusion": "success",
+          "name": "extensions/roborev/test_roborev_gate.py",
+          "number": 11,
+          "startedAt": "2026-11-08T11:03:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:59Z",
+          "conclusion": "success",
+          "name": "extensions/copilot/test_copilot_review.py",
+          "number": 12,
+          "startedAt": "2026-11-08T11:03:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:03:59Z",
+          "conclusion": "success",
+          "name": "extensions/journey-map/test_map_footprint.py",
+          "number": 13,
+          "startedAt": "2026-11-08T11:03:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:04:02Z",
+          "conclusion": "success",
+          "name": "extensions/release-acceptance/test_release_acceptance.py",
+          "number": 14,
+          "startedAt": "2026-11-08T11:03:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:05:01Z",
+          "conclusion": "success",
+          "name": "test_dispatch_records.py",
+          "number": 15,
+          "startedAt": "2026-11-08T11:04:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:06:02Z",
+          "conclusion": "success",
+          "name": "test_delivery_gate.py",
+          "number": 16,
+          "startedAt": "2026-11-08T11:05:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:06:02Z",
+          "conclusion": "success",
+          "name": "test_validation_security.py",
+          "number": 17,
+          "startedAt": "2026-11-08T11:06:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:06:23Z",
+          "conclusion": "success",
+          "name": "test_pr_watch.py",
+          "number": 18,
+          "startedAt": "2026-11-08T11:06:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:06:24Z",
+          "conclusion": "success",
+          "name": "test_replay_dispatch.py",
+          "number": 19,
+          "startedAt": "2026-11-08T11:06:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:06:24Z",
+          "conclusion": "success",
+          "name": "test_decision_ledger.py",
+          "number": 20,
+          "startedAt": "2026-11-08T11:06:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:06:24Z",
+          "conclusion": "success",
+          "name": "test_package_version.py",
+          "number": 21,
+          "startedAt": "2026-11-08T11:06:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:06:26Z",
+          "conclusion": "success",
+          "name": "test_workflow_checkout.py",
+          "number": 22,
+          "startedAt": "2026-11-08T11:06:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:06:28Z",
+          "conclusion": "success",
+          "name": "test_observer_check.py",
+          "number": 23,
+          "startedAt": "2026-11-08T11:06:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:06:31Z",
+          "conclusion": "success",
+          "name": "test_merge_audit.py",
+          "number": 24,
+          "startedAt": "2026-11-08T11:06:28Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:06:43Z",
+          "conclusion": "success",
+          "name": "test_role_triggers.py",
+          "number": 25,
+          "startedAt": "2026-11-08T11:06:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:07:12Z",
+          "conclusion": "success",
+          "name": "test_laws_check.py",
+          "number": 26,
+          "startedAt": "2026-11-08T11:06:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:07:48Z",
+          "conclusion": "success",
+          "name": "test_learning.py",
+          "number": 27,
+          "startedAt": "2026-11-08T11:07:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:07:49Z",
+          "conclusion": "success",
+          "name": "Checkout pinned Spacedock plugin root",
+          "number": 28,
+          "startedAt": "2026-11-08T11:07:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:07:50Z",
+          "conclusion": "success",
+          "name": "Install pinned Spacedock",
+          "number": 29,
+          "startedAt": "2026-11-08T11:07:49Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:08:21Z",
+          "conclusion": "success",
+          "name": "test_dispatch_stage.py",
+          "number": 30,
+          "startedAt": "2026-11-08T11:07:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:08:41Z",
+          "conclusion": "success",
+          "name": "test_sd_dispatch.py",
+          "number": 31,
+          "startedAt": "2026-11-08T11:08:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:08:42Z",
+          "conclusion": "success",
+          "name": "test_observer_recovery.py",
+          "number": 32,
+          "startedAt": "2026-11-08T11:08:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:08:42Z",
+          "conclusion": "success",
+          "name": "Post Checkout pinned Spacedock plugin root",
+          "number": 63,
+          "startedAt": "2026-11-08T11:08:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:08:42Z",
+          "conclusion": "success",
+          "name": "Post Checkout",
+          "number": 64,
+          "startedAt": "2026-11-08T11:08:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-08T11:08:42Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 65,
+          "startedAt": "2026-11-08T11:08:42Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42468880068/job/128711252528"
+    }
+  ],
+  "name": "kc-dev-flow-2 tests",
+  "status": "completed",
+  "updatedAt": "2026-11-08T11:08:44Z",
+  "url": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42468880068/attempts/3"
+}

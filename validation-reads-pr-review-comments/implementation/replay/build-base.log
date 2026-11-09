@@ -1,0 +1,2 @@
+replay_dispatch: git worktree add --detach /private/tmp/validation-review-replay/base/wf/.spacedock-state 82f2e963989b61f15c080f48187b0107e7e36460: Preparing worktree (detached HEAD 82f2e9639)
+fatal: could not create directory of '/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/-spacedock-state1': Operation not permitted

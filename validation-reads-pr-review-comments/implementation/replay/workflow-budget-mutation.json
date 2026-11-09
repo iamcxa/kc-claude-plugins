@@ -1,0 +1,7 @@
+{
+  "mutation": "append one word to throwaway workflow.md",
+  "exit": 1,
+  "expected_exit": 1,
+  "status": "passed",
+  "root": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/validation-budget-iahpbb4y/kc-dev-flow-2"
+}

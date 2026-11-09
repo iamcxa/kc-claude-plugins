@@ -1,0 +1,144 @@
+[
+  {
+    "url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/pulls/comments/4505536959",
+    "pull_request_review_id": 5817166949,
+    "id": 4505536959,
+    "node_id": "PRRC_kwDORid8-c8AAAABDI0Jvw",
+    "diff_hunk": "@@ -0,0 +1,142 @@\n+#!/usr/bin/env python3\n+\"\"\"Save and check a stage dispatch record before building its Spacedock envelope.\"\"\"\n+\n+import argparse\n+import os\n+from pathlib import Path\n+import re\n+import subprocess\n+import sys\n+\n+from design_surfaces import task_folder\n+\n+SCRIPTS = Path(__file__).resolve().parent\n+\n+\n+def git(root, *args):\n+    return subprocess.run([\"git\", \"-C\", str(root), *args], check=True,\n+                          capture_output=True, text=True).stdout.strip()\n+\n+\n+def record_text(args, number, dispatched, checklist, notes):\n+    annotation = \"workflow checkout\" + (f\", {args.note}\" if args.note else \"\")\n+    header = [f\"# {args.stage}-{number}\", f\"Dispatched: {dispatched} ({annotation})\", f\"Model: {args.model}\"]\n+    if args.roster:\n+        header.append(f\"Roster: {args.roster}\")\n+    header += [f\"Candidate: {sha}\" for sha in args.candidate]\n+    if args.symptom:\n+        header.append(f\"Symptom: {args.symptom}\")\n+    return \"\\n\".join(header) + \"\\n\\n## Checklist\\n\" + checklist + \"\\n## Scope notes\\n\" + notes\n+\n+\n+def select_record(args, folder, dispatched, checklist, notes):\n+    state = Path(git(args.entity_path.parent, \"rev-parse\", \"--show-toplevel\"))\n+    directory = folder / \"dispatch\"\n+    relative = directory.relative_to(state).as_posix()\n+    pattern = re.compile(rf\"{re.escape(args.stage)}-([1-9][0-9]*)\\.md\")\n+    committed = git(state, \"ls-tree\", \"-r\", \"--name-only\", \"HEAD\", \"--\", relative).splitlines()\n+    numbers = [int(match[1]) for path in committed\n+               if (match := pattern.fullmatch(Path(path).name)) and Path(path).parent.as_posix() == relative]\n+    newest = max(numbers, default=0)\n+    if newest:\n+        path = directory / f\"{args.stage}-{newest}.md\"\n+        rel = path.relative_to(state).as_posix()\n+        expected = record_text(args, newest, dispatched, checklist, notes)\n+        added = git(state, \"log\", \"-1\", \"--diff-filter=A\", \"--format=%H\", \"--\", rel)\n+        if (added == git(state, \"rev-parse\", \"HEAD\") and path.is_file()\n+                and path.read_bytes() == expected.encode(\"utf-8\")):\n+            return path, False\n+    path = directory / f\"{args.stage}-{newest + 1}.md\"\n+    directory.mkdir(parents=True, exist_ok=True)\n+    path.write_bytes(record_text(args, newest + 1, dispatched, checklist, notes).encode(\"utf-8\"))\n+    return path, True",
+    "path": "kc-dev-flow-2/scripts/dispatch_stage.py",
+    "commit_id": "778367adde2e20e0b3e51966ddba2d9f77f9e614",
+    "original_commit_id": "afa4523468a2e86e6c6e0467591df00bf8e51d35",
+    "user": {
+      "login": "chatgpt-codex-connector[bot]",
+      "id": 199175422,
+      "node_id": "BOT_kgDOC98s_g",
+      "avatar_url": "https://avatars.githubusercontent.com/in/1144995?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D",
+      "html_url": "https://github.com/apps/chatgpt-codex-connector",
+      "followers_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Preserve existing uncommitted dispatch records**\n\nIf the next numbered record already exists untracked or staged\u2014for example, a manually prepared record or one retained after an advance commit failed\u2014this unconditionally overwrites it because numbering only considers `HEAD`. If validation or the subsequent build then fails, `remove_uncommitted()` also removes that pre-existing file and its index entry. I reproduced both the overwrite and deletion in a disposable repository. Refuse conflicting existing records, or preserve and restore their original contents and staging state; cleanup should only delete records genuinely created by the current invocation.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+    "created_at": "2026-11-08T08:16:50Z",
+    "updated_at": "2026-11-08T08:16:50Z",
+    "html_url": "https://github.com/iamcxa/kc-claude-plugins/pull/812#discussion_r4505536959",
+    "pull_request_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/pulls/812",
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/repos/iamcxa/kc-claude-plugins/pulls/comments/4505536959"
+      },
+      "html": {
+        "href": "https://github.com/iamcxa/kc-claude-plugins/pull/812#discussion_r4505536959"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/iamcxa/kc-claude-plugins/pulls/812"
+      }
+    },
+    "reactions": {
+      "url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/pulls/comments/4505536959/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "start_line": 128,
+    "original_start_line": 49,
+    "start_side": "RIGHT",
+    "line": 134,
+    "original_line": 52,
+    "side": "RIGHT",
+    "author_association": "NONE",
+    "original_position": 52,
+    "position": 134,
+    "subject_type": "line",
+    "is_copilot_code_review": false,
+    "copilot_code_review_sources": []
+  },
+  {
+    "url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/pulls/comments/4505793059",
+    "pull_request_review_id": 5817439075,
+    "id": 4505793059,
+    "node_id": "PRRC_kwDORid8-c8AAAABDJDyIw",
+    "diff_hunk": "@@ -0,0 +1,233 @@\n+#!/usr/bin/env python3\n+\"\"\"Save and check a stage dispatch record before building its Spacedock envelope.\"\"\"\n+\n+import argparse\n+import hashlib\n+import os\n+from pathlib import Path\n+import re\n+import stat\n+import subprocess\n+import sys\n+\n+from design_surfaces import task_folder\n+from number_guards import Misconfigured, frontmatter\n+\n+SCRIPTS = Path(__file__).resolve().parent\n+\n+\n+def git(root, *args):\n+    return subprocess.run([\"git\", \"--literal-pathspecs\", \"-C\", str(root), *args], check=True,\n+                          capture_output=True, text=True).stdout.strip()\n+\n+\n+def resolve_scope(args):\n+    value = frontmatter(args.workflow_dir / \"README.md\").get(\"state\", \"\")\n+    relative = Path(value)\n+    if relative.is_absolute() or \"..\" in relative.parts:\n+        raise ValueError(f\"{str(args.workflow_dir / 'README.md')!r}: unsupported state path\")\n+    container = args.workflow_dir if value in (\"\", \"$inline\") else args.workflow_dir / relative\n+    if container.resolve(strict=True) != container:\n+        raise ValueError(f\"{str(container)!r}: symlinked state directory\")\n+    state = Path(git(container, \"rev-parse\", \"--show-toplevel\")).resolve(strict=True)\n+    if not container.is_relative_to(state) or (value not in (\"\", \"$inline\") and state != container):\n+        raise ValueError(f\"{str(container)!r}: unsupported state repository layout\")\n+    entity = args.entity_path\n+    folder = task_folder(entity)\n+    if (args.entity_input != entity or entity.suffix != \".md\"\n+            or (entity.parent.parent if entity.name == \"index.md\" else entity.parent) != container):\n+        raise ValueError(f\"{str(args.entity_input)!r}: unsupported or symlinked task layout\")\n+    for directory in (folder, folder / \"dispatch\"):\n+        if os.path.lexists(directory) and (directory.is_symlink() or not directory.is_dir()):\n+            raise ValueError(f\"{str(directory)!r}: unsupported task directory type\")\n+    scope = [folder] if entity.name == \"index.md\" else [entity, folder]\n+    return state, folder, [path.relative_to(state).as_posix() for path in scope]\n+\n+\n+def check_task_scope(state, scope):\n+    def read(*flags):\n+        try:\n+            return subprocess.run([\"git\", \"--literal-pathspecs\", \"-C\", str(state), *flags],\n+                                  check=True, capture_output=True,\n+                                  env={**os.environ, \"GIT_OPTIONAL_LOCKS\": \"0\"}).stdout\n+        except subprocess.CalledProcessError as error:\n+            raise ValueError(f\"{str(state / scope[0])!r}: cannot inspect task scope ({flags[0]})\") from error\n+\n+    def refuse(name, condition):\n+        raise ValueError(f\"{str(state / os.fsdecode(name))!r}: {condition}\")\n+\n+    head = {}\n+    for entry in read(\"ls-tree\", \"-r\", \"-z\", \"HEAD\", \"--\", *scope).split(b\"\\0\"):\n+        if entry:\n+            metadata, name = entry.split(b\"\\t\", 1)\n+            mode, kind, oid = metadata.split()\n+            if kind != b\"blob\" or mode not in (b\"100644\", b\"100755\"):\n+                refuse(name, \"unsupported HEAD type\")\n+            head[name] = (mode, oid)\n+    index = {}\n+    for entry in read(\"ls-files\", \"--stage\", \"-z\", \"--\", *scope).split(b\"\\0\"):\n+        if entry:\n+            metadata, name = entry.split(b\"\\t\", 1)\n+            mode, oid, stage = metadata.split()\n+            if stage != b\"0\":\n+                refuse(name, \"unresolved index conflict\")\n+            index[name] = (mode, oid)\n+    for entry in read(\"ls-files\", \"-v\", \"-z\", \"--\", *scope).split(b\"\\0\"):\n+        if entry and (entry[:1].islower() or entry[:1] == b\"S\"):\n+            refuse(entry[2:], \"unsupported assume-unchanged or skip-worktree index flag\")\n+    for name in sorted(head.keys() | index.keys()):\n+        if head.get(name) != index.get(name):\n+            refuse(name, \"staged content, existence or mode differs from HEAD\")\n+    algorithm = read(\"rev-parse\", \"--show-object-format\").strip().decode(\"ascii\")\n+    for name, (mode, oid) in index.items():\n+        path = state / os.fsdecode(name)\n+        try:\n+            info = path.lstat()\n+            if not stat.S_ISREG(info.st_mode) or path.resolve(strict=True) != path:\n+                refuse(name, \"unsupported worktree type or path escape\")\n+            data = path.read_bytes()\n+        except OSError as error:\n+            refuse(name, f\"unstaged missing or unreadable worktree file ({error.strerror})\")\n+        actual_mode = b\"100755\" if info.st_mode & stat.S_IXUSR else b\"100644\"\n+        actual_oid = hashlib.new(algorithm, b\"blob \" + str(len(data)).encode() + b\"\\0\" + data).hexdigest().encode()\n+        if (actual_mode, actual_oid) != (mode, oid):\n+            refuse(name, \"unstaged content or mode differs from index\")\n+    for name in read(\"ls-files\", \"--others\", \"--exclude-standard\", \"-z\", \"--\", *scope).split(b\"\\0\"):\n+        if name:\n+            refuse(name, \"untracked non-ignored task file\")\n+\n+\n+def record_text(args, number, dispatched, checklist, notes):\n+    annotation = \"workflow checkout\" + (f\", {args.note}\" if args.note else \"\")\n+    header = [f\"# {args.stage}-{number}\", f\"Dispatched: {dispatched} ({annotation})\", f\"Model: {args.model}\"]\n+    if args.roster:\n+        header.append(f\"Roster: {args.roster}\")\n+    header += [f\"Candidate: {sha}\" for sha in args.candidate]\n+    if args.symptom:\n+        header.append(f\"Symptom: {args.symptom}\")\n+    return \"\\n\".join(header) + \"\\n\\n## Checklist\\n\" + checklist + \"\\n## Scope notes\\n\" + notes\n+\n+\n+def select_record(args, folder, dispatched, checklist, notes):\n+    state = Path(git(args.entity_path.parent, \"rev-parse\", \"--show-toplevel\"))\n+    directory = folder / \"dispatch\"\n+    relative = directory.relative_to(state).as_posix()\n+    pattern = re.compile(rf\"{re.escape(args.stage)}-([1-9][0-9]*)\\.md\")\n+    committed = git(state, \"ls-tree\", \"-r\", \"-z\", \"--name-only\", \"HEAD\", \"--\", relative).split(\"\\0\")\n+    numbers = [int(match[1]) for path in committed\n+               if (match := pattern.fullmatch(Path(path).name)) and Path(path).parent.as_posix() == relative]\n+    newest = max(numbers, default=0)\n+    if newest:\n+        path = directory / f\"{args.stage}-{newest}.md\"\n+        rel = path.relative_to(state).as_posix()\n+        expected = record_text(args, newest, dispatched, checklist, notes)\n+        added = git(state, \"log\", \"-1\", \"--diff-filter=A\", \"--format=%H\", \"--\", rel)\n+        if (added == git(state, \"rev-parse\", \"HEAD\") and path.is_file()\n+                and path.read_bytes() == expected.encode(\"utf-8\")):\n+            return path, False\n+    path = directory / f\"{args.stage}-{newest + 1}.md\"\n+    if git(state, \"ls-files\", \"--\", path.relative_to(state).as_posix()):\n+        raise FileExistsError(f\"record already exists in index: {path}\")\n+    directory.mkdir(parents=True, exist_ok=True)\n+    with path.open(\"xb\") as output:\n+        output.write(record_text(args, newest + 1, dispatched, checklist, notes).encode(\"utf-8\"))\n+    return path, True\n+\n+\n+def remove_uncommitted(path, wrote):\n+    if wrote:\n+        state = Path(git(path.parent, \"rev-parse\", \"--show-toplevel\"))\n+        relative = path.relative_to(state).as_posix()\n+        committed = subprocess.run([\"git\", \"-C\", str(state), \"cat-file\", \"-e\", f\"HEAD:{relative}\"], capture_output=True)\n+        if committed.returncode:\n+            subprocess.run([\"git\", \"-C\", str(state), \"update-index\", \"--force-remove\", \"--\", relative], check=True)\n+            path.unlink(missing_ok=True)\n+\n+\n+def parse_args(argv):\n+    parser = argparse.ArgumentParser(description=__doc__)\n+    for name in (\"workflow-dir\", \"entity-path\", \"checklist-file\", \"scope-notes-file\"):\n+        parser.add_argument(f\"--{name}\", type=Path, required=True)\n+    parser.add_argument(\"--stage\", required=True)\n+    parser.add_argument(\"--model\", required=True)\n+    for name in (\"roster\", \"symptom\", \"note\"):\n+        parser.add_argument(f\"--{name}\")\n+    parser.add_argument(\"--candidate\", action=\"append\", default=[])\n+    parser.add_argument(\"--spacedock\", default=os.environ.get(\"SPACEDOCK_BIN\") or \"spacedock\")\n+    parser.add_argument(\"--host\", choices=(\"claude\", \"codex\", \"pi\"))\n+    parser.add_argument(\"--feedback-context-file\", type=Path)\n+    parser.add_argument(\"--feedback-reflow\", action=\"store_true\")\n+    mode = parser.add_mutually_exclusive_group()\n+    mode.add_argument(\"--advance\", action=\"store_true\")\n+    mode.add_argument(\"--bare-mode\", action=\"store_true\")\n+    args = parser.parse_args(argv)\n+    if not re.fullmatch(r\"[a-z][a-z0-9_-]*\", args.stage):\n+        parser.error(\"--stage must be a stage name\")\n+    if any(not re.fullmatch(r\"[0-9a-fA-F]{40}\", sha) for sha in args.candidate):\n+        parser.error(\"--candidate must be a full 40-hex SHA\")\n+    try:\n+        args.entity_input = Path(os.path.abspath(args.entity_path))\n+        for name in (\"workflow_dir\", \"entity_path\", \"checklist_file\", \"scope_notes_file\", \"feedback_context_file\"):\n+            value = getattr(args, name)\n+            if value is not None:\n+                setattr(args, name, value.resolve(strict=True))\n+        checklist = args.checklist_file.read_text()\n+        notes = args.scope_notes_file.read_text()\n+        dispatched = git(args.workflow_dir, \"rev-parse\", \"HEAD\")\n+    except (OSError, UnicodeError, subprocess.CalledProcessError) as error:\n+        parser.error(str(error))\n+    return args, dispatched, checklist, notes\n+\n+\n+def main(argv=None):\n+    args, dispatched, checklist, notes = parse_args(argv)\n+    try:\n+        state, folder, scope = resolve_scope(args)\n+        check_task_scope(state, scope)\n+        path, wrote = select_record(args, folder, dispatched, checklist, notes)\n+    except (OSError, ValueError, Misconfigured, subprocess.CalledProcessError) as error:\n+        print(f\"dispatch_stage: dispatch not built; {error}. \"\n+              \"Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; \"\n+              \"do not blindly state commit divergent data.\", file=sys.stderr)\n+        return 1\n+    checks = [subprocess.run([sys.executable, \"-B\", str(SCRIPTS / \"dispatch_records.py\"), *map(str, flags)],\n+                             capture_output=True, text=True)\n+              for flags in ((task_folder(args.entity_path),), (\"--names\", \"--strict\", path))]\n+    if any(check.returncode for check in checks):\n+        remove_uncommitted(path, wrote)\n+        print(\"dispatch_stage: dispatch not built; repair the dispatch record:\", file=sys.stderr)\n+        for check in checks:\n+            if check.returncode:\n+                sys.stderr.write(check.stdout + check.stderr)",
+    "path": "kc-dev-flow-2/scripts/dispatch_stage.py",
+    "commit_id": "778367adde2e20e0b3e51966ddba2d9f77f9e614",
+    "original_commit_id": "778367adde2e20e0b3e51966ddba2d9f77f9e614",
+    "user": {
+      "login": "chatgpt-codex-connector[bot]",
+      "id": 199175422,
+      "node_id": "BOT_kgDOC98s_g",
+      "avatar_url": "https://avatars.githubusercontent.com/in/1144995?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D",
+      "html_url": "https://github.com/apps/chatgpt-codex-connector",
+      "followers_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/chatgpt-codex-connector%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Forward successful record checks' step-back warnings**\n\nWhen a second implementation or validation dispatch names the same `Symptom:`, `dispatch_records.py` returns zero but prints the required step-back questions on stderr. This wrapper captures that output and forwards it only for failing checks, so the newly prescribed dispatch path silently removes the pre-dispatch reminder required by binding ADR 0026. I reproduced a successful second dispatch with empty wrapper stderr while running `--names --strict` directly on its record printed the questions. Forward successful checks' stderr before building, deduplicating the two checks' reminders if needed.\n\nAGENTS.md reference: [AGENTS.md:L5-L5](https://github.com/iamcxa/kc-claude-plugins/blob/778367adde2e20e0b3e51966ddba2d9f77f9e614/AGENTS.md#L5-L5)\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.\n\n<!-- codex-code-review-finding:v1 -->",
+    "created_at": "2026-11-08T09:54:39Z",
+    "updated_at": "2026-11-08T09:54:39Z",
+    "html_url": "https://github.com/iamcxa/kc-claude-plugins/pull/812#discussion_r4505793059",
+    "pull_request_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/pulls/812",
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/repos/iamcxa/kc-claude-plugins/pulls/comments/4505793059"
+      },
+      "html": {
+        "href": "https://github.com/iamcxa/kc-claude-plugins/pull/812#discussion_r4505793059"
+      },
+      "pull_request": {
+        "href": "https://api.github.com/repos/iamcxa/kc-claude-plugins/pulls/812"
+      }
+    },
+    "reactions": {
+      "url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/pulls/comments/4505793059/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "start_line": 199,
+    "original_start_line": 199,
+    "start_side": "RIGHT",
+    "line": 201,
+    "original_line": 201,
+    "side": "RIGHT",
+    "author_association": "NONE",
+    "original_position": 201,
+    "position": 201,
+    "subject_type": "line",
+    "is_copilot_code_review": false,
+    "copilot_code_review_sources": []
+  }
+]

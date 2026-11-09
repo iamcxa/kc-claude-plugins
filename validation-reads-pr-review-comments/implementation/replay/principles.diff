@@ -1,0 +1,17 @@
+--- base/principles.md
++++ candidate/principles.md
+@@ -1,4 +1,6 @@
+ # Validation principles
++
++Your verdict answers one question for the Captain: can he merge this candidate at its head? Answer it from everything that bears on it when you give the verdict, the open pull request included, not only the acceptance criteria.
+ 
+ Check the exact delivered artifact against the approved outcome and relevant
+ primary evidence. Separate checks actually run, evidence only read, and work
+@@ -69,6 +71,6 @@
+ SD stage report. List each finding as its own `- F<N> <Class>: …` bullet, and split a
+ finding with parts into one bullet per part. A code repair returns through implementation feedback; scope or
+ profile changes return to the affected user decision. The user or named owner
+-retains gate and delivery authority. Green checks do not prove merge or adoption.
++retains gate and delivery authority. Your PASSED answers that question at that head; it is not the merge, and green checks do not prove adoption.
+ Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless
+ the specific action is authorized.

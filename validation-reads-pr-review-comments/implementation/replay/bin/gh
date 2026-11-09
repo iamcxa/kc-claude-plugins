@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+import json, os, subprocess, sys, datetime
+from pathlib import Path
+
+root=Path(__file__).resolve().parents[1]
+fixture=root/'fixture'
+args=sys.argv[1:]
+clean=[]
+fields=None
+query=None
+bad=False
+i=0
+while i<len(args):
+    x=args[i]
+    if x in ('--repo','-R'):
+        i+=2;continue
+    if x in ('--json','--jq','-q'):
+        if i+1>=len(args):bad=True;break
+        if x=='--json':fields=args[i+1].split(',')
+        else:query=args[i+1]
+        i+=2;continue
+    if x in ('--paginate','--silent'):
+        i+=1;continue
+    if x=='--attempt' and i+1<len(args) and args[i+1]=='3':
+        i+=2;continue
+    clean.append(x);i+=1
+
+file=None
+if clean[:3]==['pr','view','812'] and len(clean)==3:
+    file='pr-view.json'
+if clean[:3]==['run','view','42468880068'] and len(clean)==3:
+    file='run.json'
+if len(clean)==2 and clean[0]=='api':
+    endpoint=clean[1].lstrip('/').replace('https://api.github.com/','')
+    mapping={
+        'repos/iamcxa/kc-claude-plugins/pulls/812/comments':'review-comments.json',
+        'repos/iamcxa/kc-claude-plugins/pulls/812/reviews':'reviews.json',
+        'repos/iamcxa/kc-claude-plugins/issues/812/comments':'issue-comments.json',
+        'repos/iamcxa/kc-claude-plugins/actions/runs/42468880068':'run-rest.json',
+        'repos/iamcxa/kc-claude-plugins/actions/runs/42468880068/attempts/3':'run-rest.json',
+    }
+    file=mapping.get(endpoint.split('?')[0])
+if bad:file=None
+entry={'at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'args':args,'served':file,'refused':file is None,'carries_review_comments':file=='review-comments.json'}
+with open(os.environ['REPLAY_GH_LOG'],'a') as log:log.write(json.dumps(entry)+'\n')
+if file is None:
+    print('replay fixture: not recorded',file=sys.stderr);sys.exit(1)
+data=json.loads((fixture/file).read_text())
+if fields is not None:
+    if not isinstance(data,dict) or any(k not in data for k in fields):
+        print('replay fixture: not recorded field',file=sys.stderr);sys.exit(1)
+    data={k:data[k] for k in fields}
+payload=json.dumps(data)
+if query is not None:
+    done=subprocess.run(['jq',query],input=payload,text=True)
+    sys.exit(done.returncode)
+print(payload)

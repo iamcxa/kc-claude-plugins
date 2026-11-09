@@ -1,0 +1,122 @@
+[
+  {
+    "source": "_archive/dispatch-build-writes-the-dispatch-record/validation-3/hosted-refresh/pr.json",
+    "record": "headRefOid",
+    "change": "replace live PR field with captured historical value",
+    "timestamp": "2026-11-08T11:13:00Z"
+  },
+  {
+    "source": "_archive/dispatch-build-writes-the-dispatch-record/validation-3/hosted-refresh/pr.json",
+    "record": "isDraft",
+    "change": "replace live PR field with captured historical value",
+    "timestamp": "2026-11-08T11:13:00Z"
+  },
+  {
+    "source": "_archive/dispatch-build-writes-the-dispatch-record/validation-3/hosted-refresh/pr.json",
+    "record": "mergeStateStatus",
+    "change": "replace live PR field with captured historical value",
+    "timestamp": "2026-11-08T11:13:00Z"
+  },
+  {
+    "source": "_archive/dispatch-build-writes-the-dispatch-record/validation-3/hosted-refresh/pr.json",
+    "record": "state",
+    "change": "replace live PR field with captured historical value",
+    "timestamp": "2026-11-08T11:13:00Z"
+  },
+  {
+    "source": "_archive/dispatch-build-writes-the-dispatch-record/validation-3/hosted-refresh/pr.json",
+    "record": "statusCheckRollup",
+    "change": "replace live PR field with captured historical value",
+    "timestamp": "2026-11-08T11:13:00Z"
+  },
+  {
+    "source": "_archive/dispatch-build-writes-the-dispatch-record/validation-3/hosted-refresh/pr.json",
+    "record": "url",
+    "change": "replace live PR field with captured historical value",
+    "timestamp": "2026-11-08T11:13:00Z"
+  },
+  {
+    "source": "82f2e963989b61f15c080f48187b0107e7e36460:dispatch-build-writes-the-dispatch-record/implementation/repair-2/prepared-pr.md",
+    "record": "PR body",
+    "change": "replace post-repair live body with committed pre-cutoff prepared body; prepared text, not a historical GitHub body capture",
+    "timestamp": "2026-11-08T17:52:23+08:00"
+  },
+  {
+    "source": "source/pr-view.json",
+    "record": "mergedAt",
+    "change": "remove post-cutoff mutable metadata",
+    "timestamp": "2026-11-08T12:33:07Z"
+  },
+  {
+    "source": "source/pr-view.json",
+    "record": "updatedAt",
+    "change": "remove post-cutoff mutable metadata",
+    "timestamp": "2026-11-08T12:33:10Z"
+  },
+  {
+    "source": "source/pr-view.json",
+    "record": "IC_kwDORid8-c8AAAABkH4y2g",
+    "change": "remove comments created or updated after cutoff",
+    "timestamp": "2026-11-08T11:57:59Z"
+  },
+  {
+    "source": "source/pr-view.json",
+    "record": "IC_kwDORid8-c8AAAABkJo-Xg",
+    "change": "remove comments created or updated after cutoff",
+    "timestamp": "2026-11-08T11:37:05Z"
+  },
+  {
+    "source": "source/pr-view.json",
+    "record": "IC_kwDORid8-c8AAAABkJqhoA",
+    "change": "remove comments created or updated after cutoff",
+    "timestamp": "2026-11-08T11:39:49Z"
+  },
+  {
+    "source": "source/pr-view.json",
+    "record": "bd9d4abce4e0c61a69079d4e822b6ded45cfdc20",
+    "change": "remove commits created or updated after cutoff",
+    "timestamp": "2026-11-08T11:20:14Z"
+  },
+  {
+    "source": "source/review-comments.json",
+    "record": 4505536959,
+    "change": "rewrite moving diff commit_id from bd9d4abce4e0c61a69079d4e822b6ded45cfdc20 to frozen head; original_commit_id retained",
+    "timestamp": "2026-11-08T08:16:50Z"
+  },
+  {
+    "source": "source/review-comments.json",
+    "record": 4505793059,
+    "change": "rewrite moving diff commit_id from bd9d4abce4e0c61a69079d4e822b6ded45cfdc20 to frozen head; original_commit_id retained",
+    "timestamp": "2026-11-08T09:54:39Z"
+  },
+  {
+    "source": "source/issue-comments.json",
+    "record": 6719156954,
+    "change": "remove created/updated after cutoff",
+    "timestamp": "2026-11-08T11:57:59Z"
+  },
+  {
+    "source": "source/issue-comments.json",
+    "record": 6720994910,
+    "change": "remove created/updated after cutoff",
+    "timestamp": "2026-11-08T11:37:05Z"
+  },
+  {
+    "source": "source/issue-comments.json",
+    "record": 6721020320,
+    "change": "remove created/updated after cutoff",
+    "timestamp": "2026-11-08T11:39:49Z"
+  },
+  {
+    "source": "_archive/dispatch-build-writes-the-dispatch-record/validation-3/hosted-refresh/run-attempt-3.json",
+    "record": 42468880068,
+    "change": "substitute historical REST attempt 3 metadata",
+    "timestamp": "2026-11-08T11:08:44Z"
+  },
+  {
+    "source": "_archive/dispatch-build-writes-the-dispatch-record/validation-3/hosted-refresh/run-pipeline.json",
+    "record": 42468880068,
+    "change": "substitute historical gh run view job/step response",
+    "timestamp": "2026-11-08T11:08:44Z"
+  }
+]

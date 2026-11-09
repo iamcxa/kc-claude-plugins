@@ -1,0 +1,301 @@
+{
+  "author": {
+    "id": "MDQ6VXNlcjE1MjI4MDg=",
+    "is_bot": false,
+    "login": "iamcxa",
+    "name": "Kent Chen"
+  },
+  "baseRefName": "main",
+  "baseRefOid": "4deaa2aa108adeaf3c934fd2309e69d90ac3a076",
+  "body": "Stage dispatch records previously depended on FO saving a separate copy before\nbuilding the worker artifact. Add `dispatch_stage.py` to write the record from\nthe build's checklist and scope notes, run both existing record checks, then\nbuild through Spacedock. The pinned stamp commit includes the record; advance\ndispatches commit it before returning their envelope. Immediate identical retries\nreuse their record, while changed input or an intervening state commit creates a\nnew round. Failed checks/builds remove only a record this invocation created and which is still absent from HEAD, including its index entry; a record already committed is retained for retry.\n\nKeep model/roster supplied by FO and leave the package-version/workflow-checkout\npreflights separate. Record the accepted ruling in ADR 0070. Replace the three\napproved workflow passages verbatim and lower the word budget from 5933 to 5931.\n\nThe additional `kc-dev-flow-2/skills/observer/SKILL.md` edit was authorized by FO\nin implementation follow-up 1: its chat-only command entry must match the shortened\nREADME command, as enforced by `lint-skills.py`. The uncorrected entry fails lint;\nthe updated entry passes. No other observer behavior changes.\n\nValidation: real Spacedock 0.27.2 split-root seam tests, the lint mutation suite,\ndispatch-record tests and real dispatch transport checks; thirteen counterexamples\nexercise the accepted falsifiers. A fresh-shell acceptance runner exports the\nexact candidate without bytecode caches and retains its logs under the task's\n`implementation/fresh/` state evidence. Candidate ADR lint, number guards,\ncomment ratio and document dispositions are recorded there. The installed 0.35.0\nADR linter has the base's known pre-#806 false positive on a deliberate historical\nADR assertion; FO authorized using the candidate's corrected linter. That historical\nassertion is unchanged.\n\nThe new CI step uses the workflow's existing package/workflow path triggers and\npinned real binary. CI cost per PR: not measured. Hosted CI and RoboRev are not\nrun by this worker; FO owns product publication and both reviews. No version bump.\n\n\nThe repair now checks Spacedock's complete task commit unit before selecting or\ncreating a record: the flat task file and companion directory, or the whole\nfolder-form task. HEAD, index and raw worktree bytes/modes must agree; conflicts,\nhidden index flags, unsupported types/escapes and nonignored untracked task files\nhold dispatch without builder/cleanup calls or state changes. Owners must\npreserve and reconcile staged/worktree versions before an intentional commit;\nblindly running state commit on divergent versions is unsafe.\n\nExclusive same-task write ownership must last through the check, build, commit\nand cleanup. This single precondition is not a transaction lock and provides no\nconcurrent-writer safety guarantee. Other tasks may remain dirty. The pinned\nSpacedock 0.27.2 builder has an inherited no-op retry limitation: if an unrelated\npath is staged, its global cached-diff check may attempt an empty task-scoped\ncommit and fail. The repair preserves all versions in that case; ordinary\nretries succeed, and dispatches that change this task leave unrelated staged,\nunstaged and untracked work intact and outside their commit.\n\nThe whole-scope proof covers flat/folder layouts, fresh dispatch, reused record,\nnew round and advance, and snapshots HEAD, index entries/flags, file bytes/modes\nand outside sentinels. Nine isolated mutations must fail their matching snapshot\npreservation assertion. Evidence for this repair is implementation/repair-2 in\nthe shared task state. Hosted CI, independent review and publication remain FO-owned.\n",
+  "comments": [
+    {
+      "id": "IC_kwDORid8-c8AAAABkH4olA",
+      "author": {
+        "login": "iamcxa"
+      },
+      "authorAssociation": "OWNER",
+      "body": "@codex review",
+      "createdAt": "2026-11-08T08:15:26Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/iamcxa/kc-claude-plugins/pull/812#issuecomment-6719154324",
+      "viewerDidAuthor": true
+    },
+    {
+      "id": "IC_kwDORid8-c8AAAABkIMlGw",
+      "author": {
+        "login": "iamcxa"
+      },
+      "authorAssociation": "OWNER",
+      "body": "@codex review",
+      "createdAt": "2026-11-08T08:51:47Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/iamcxa/kc-claude-plugins/pull/812#issuecomment-6719481115",
+      "viewerDidAuthor": true
+    },
+    {
+      "id": "IC_kwDORid8-c8AAAABkIOedA",
+      "author": {
+        "login": "chatgpt-codex-connector"
+      },
+      "authorAssociation": "NONE",
+      "body": "<!-- codex-review-receipt:v1 -->\n\nCodex Review: Didn't find any major issues. :+1:\n\n**Reviewed commit:** `0d84d5d1b9`\n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+      "createdAt": "2026-11-08T08:55:17Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/iamcxa/kc-claude-plugins/pull/812#issuecomment-6719512180",
+      "viewerDidAuthor": false
+    },
+    {
+      "id": "IC_kwDORid8-c8AAAABkIt5Qw",
+      "author": {
+        "login": "iamcxa"
+      },
+      "authorAssociation": "OWNER",
+      "body": "@codex review",
+      "createdAt": "2026-11-08T09:51:41Z",
+      "includesCreatedEdit": false,
+      "isMinimized": false,
+      "minimizedReason": "",
+      "reactionGroups": [],
+      "url": "https://github.com/iamcxa/kc-claude-plugins/pull/812#issuecomment-6720026947",
+      "viewerDidAuthor": true
+    }
+  ],
+  "commits": [
+    {
+      "authoredDate": "2026-11-08T05:20:03Z",
+      "authors": [
+        {
+          "email": "iamcxa@gmail.com",
+          "id": "MDQ6VXNlcjE1MjI4MDg=",
+          "login": "iamcxa",
+          "name": "Kent"
+        }
+      ],
+      "committedDate": "2026-11-08T05:20:03Z",
+      "messageBody": "",
+      "messageHeadline": "feat(kc-dev-flow-2): record stage dispatches before building",
+      "oid": "afa4523468a2e86e6c6e0467591df00bf8e51d35"
+    },
+    {
+      "authoredDate": "2026-11-08T08:43:04Z",
+      "authors": [
+        {
+          "email": "iamcxa@gmail.com",
+          "id": "MDQ6VXNlcjE1MjI4MDg=",
+          "login": "iamcxa",
+          "name": "Kent"
+        }
+      ],
+      "committedDate": "2026-11-08T08:43:04Z",
+      "messageBody": "",
+      "messageHeadline": "fix(kc-dev-flow-2): preserve existing dispatch records",
+      "oid": "0d84d5d1b96fd674dba3a442d69c2e7898cceccd"
+    },
+    {
+      "authoredDate": "2026-11-08T09:36:42Z",
+      "authors": [
+        {
+          "email": "iamcxa@gmail.com",
+          "id": "MDQ6VXNlcjE1MjI4MDg=",
+          "login": "iamcxa",
+          "name": "Kent"
+        }
+      ],
+      "committedDate": "2026-11-08T09:36:42Z",
+      "messageBody": "",
+      "messageHeadline": "fix(kc-dev-flow-2): preserve the whole dispatch commit scope",
+      "oid": "778367adde2e20e0b3e51966ddba2d9f77f9e614"
+    }
+  ],
+  "createdAt": "2026-11-08T08:15:09Z",
+  "files": [
+    {
+      "path": ".github/workflows/kc-dev-flow-2-tests.yml",
+      "additions": 3,
+      "deletions": 0,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
+      "additions": 60,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "kc-dev-flow-2/references/sd/workflow.md",
+      "additions": 3,
+      "deletions": 9,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/dispatch_stage.py",
+      "additions": 235,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/lint-skills.py",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "additions": 3,
+      "deletions": 3,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "additions": 639,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "additions": 10,
+      "deletions": 5,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "kc-dev-flow-2/skills/observer/SKILL.md",
+      "additions": 1,
+      "deletions": 1,
+      "changeType": "MODIFIED"
+    }
+  ],
+  "headRefName": "spacedock-ensign/dispatch-build-writes-the-dispatch-record",
+  "headRefOid": "778367adde2e20e0b3e51966ddba2d9f77f9e614",
+  "isDraft": true,
+  "labels": [],
+  "mergeStateStatus": "CLEAN",
+  "mergeable": "UNKNOWN",
+  "number": 812,
+  "reviews": [
+    {
+      "id": "PRR_kwDORid8-c8AAAABWrrsZQ",
+      "author": {
+        "login": "chatgpt-codex-connector"
+      },
+      "authorAssociation": "NONE",
+      "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `afa4523468`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+      "submittedAt": "2026-11-08T08:16:49Z",
+      "includesCreatedEdit": false,
+      "reactionGroups": [],
+      "state": "COMMENTED",
+      "commit": {
+        "oid": "afa4523468a2e86e6c6e0467591df00bf8e51d35"
+      }
+    },
+    {
+      "id": "PRR_kwDORid8-c8AAAABWr8TYw",
+      "author": {
+        "login": "chatgpt-codex-connector"
+      },
+      "authorAssociation": "NONE",
+      "body": "<!-- codex-review-receipt:v1 -->\n\n\n### \ud83d\udca1 Codex Review\n\nHere are some automated review suggestions for this pull request.\n\n**Reviewed commit:** `778367adde`\n    \n\n<details> <summary>\u2139\ufe0f About Codex in GitHub</summary>\n<br/>\n\n[Your team has set up Codex to review pull requests in this repo](https://chatgpt.com/codex/cloud/settings/general). Reviews are triggered when you\n- Open a pull request for review\n- Mark a draft as ready\n- Comment \"@codex review\".\n\nIf Codex has suggestions, it will comment; otherwise it will react with \ud83d\udc4d.\n\n\n\n\nCodex can also answer questions or update the PR. Try commenting \"@codex address that feedback\".\n            \n</details>",
+      "submittedAt": "2026-11-08T09:54:39Z",
+      "includesCreatedEdit": false,
+      "reactionGroups": [],
+      "state": "COMMENTED",
+      "commit": {
+        "oid": "778367adde2e20e0b3e51966ddba2d9f77f9e614"
+      }
+    }
+  ],
+  "state": "OPEN",
+  "statusCheckRollup": [
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-08T09:50:43Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42468880078/job/128694714161",
+      "name": "adr-path-check",
+      "startedAt": "2026-11-08T09:50:38Z",
+      "status": "COMPLETED",
+      "workflowName": "adr-path-check"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-08T09:51:05Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42468880199/job/128694714670",
+      "name": "build",
+      "startedAt": "2026-11-08T09:50:38Z",
+      "status": "COMPLETED",
+      "workflowName": "docs site"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-08T09:50:43Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42468880056/job/128694713709",
+      "name": "multi-profile route gate (live Spacedock)",
+      "startedAt": "2026-11-08T09:50:37Z",
+      "status": "COMPLETED",
+      "workflowName": "kc-dev-flow release gate"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-08T11:08:43Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42468880068/job/128711252528",
+      "name": "unit tests (python3)",
+      "startedAt": "2026-11-08T11:03:31Z",
+      "status": "COMPLETED",
+      "workflowName": "kc-dev-flow-2 tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-08T11:03:49Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42468880154/job/128711259822",
+      "name": "review CI routing and static contracts",
+      "startedAt": "2026-11-08T11:03:32Z",
+      "status": "COMPLETED",
+      "workflowName": "kc-pr-flow review CI contracts"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-08T11:04:22Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42468880263/job/128711264665",
+      "name": "version parity (plugin.json / marketplace.json / codex / README)",
+      "startedAt": "2026-11-08T11:03:34Z",
+      "status": "COMPLETED",
+      "workflowName": "marketplace version parity"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-08T09:51:05Z",
+      "conclusion": "SKIPPED",
+      "detailsUrl": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42468880199/job/128694822440",
+      "name": "deploy",
+      "startedAt": "2026-11-08T09:51:06Z",
+      "status": "COMPLETED",
+      "workflowName": "docs site"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-11-08T09:50:33Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://dashboard.gitguardian.com",
+      "name": "GitGuardian Security Checks",
+      "startedAt": "2026-11-08T09:50:33Z",
+      "status": "COMPLETED",
+      "workflowName": ""
+    }
+  ],
+  "title": "feat(kc-dev-flow-2): record stage dispatches before building",
+  "url": "https://github.com/iamcxa/kc-claude-plugins/pull/812"
+}

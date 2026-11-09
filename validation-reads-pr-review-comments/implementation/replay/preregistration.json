@@ -1,0 +1,79 @@
+{
+  "registered_at": "2026-11-09",
+  "base_package_ref": "kc-dev-flow-2-v0.36.0",
+  "candidate_package_ref": "7f47317bb278931a873c0ec63302fbc70fc53fc4",
+  "state_commit": "82f2e963989b61f15c080f48187b0107e7e36460",
+  "code_commit": "778367adde2e20e0b3e51966ddba2d9f77f9e614",
+  "host_models": {
+    "codex": [
+      "gpt-6-astra",
+      "xhigh"
+    ],
+    "claude": [
+      "claude-opus-5-5"
+    ]
+  },
+  "run_order": "Codex base/candidate alternating, three each; then Claude base/candidate alternating, three each. First Codex no-completed-report stops all remaining calls (D1).",
+  "planned_runs": 12,
+  "hard_stop": 16,
+  "wording": 1,
+  "wording2": "its checks, reviews and review comments at that head,",
+  "wording2_rule": "Only a host missing the registered bar gets three candidate wording-2 runs, within 16 total. No third wording.",
+  "per_host_pass": "candidate found > base found AND candidate found >= 2/3",
+  "found_rubric": "grader.py; F-number finding naming target id/title, or non-PASSED verdict citing unaddressed target. Fixed mentions alone do not count.",
+  "secondary": "Read-comment-response calls and fixed comment 4505536959 wrongly reported as unaddressed; >1 candidate precision misses per host returns Needs decision.",
+  "fixture_gap": "any refused gh call excludes run; fixture may extend once and cell rerun within hard stop",
+  "false_positive": "found without a comments-bearing gh call voids the count",
+  "dispatches": {
+    "base": {
+      "sha256": "92a91fc7004b8cce23914453ec4a30a9b37d73b51ef12ffb6e371a12acf37541",
+      "normalized_sha256": "3f0d66e5202b4036836cd1d2d59c66b4cbcfd72b74f4a8257e5d1f8adf66991e"
+    },
+    "candidate": {
+      "sha256": "1d7488c858cf9b0dc2c9ad643ab466a8f2088263969016dcaf3d524d2ecc0bcf",
+      "normalized_sha256": "3f0d66e5202b4036836cd1d2d59c66b4cbcfd72b74f4a8257e5d1f8adf66991e"
+    }
+  },
+  "dispatch_comparison": "runtime-root paths normalized; dispatch text identical; exported package bytes differ only principles.md",
+  "fixture_override": "dispatch/implementation-1-message-1.md",
+  "timeout_seconds_per_call": 1800,
+  "sha256": {
+    "dispatch-candidate-normalized.md": "3f0d66e5202b4036836cd1d2d59c66b4cbcfd72b74f4a8257e5d1f8adf66991e",
+    "scope.txt": "1b8aa2a76fc6c14cf4439d2b865d95afffab1a1120d145e07663d2dffc57f844",
+    "adopter-readme.md": "282d81566b7715fd69282ec45b0a8e3bdfe2c17ae8379d2376ccefdc3cf8fd42",
+    "run.py": "67869817444890462fc09eded24aacc420c713adea12116e34fea03176ecc657",
+    "workflow-budget-mutation.log": "cb4cd1fc062181700de38516380b7cd4752deffa7d20a301c67a2e49d5dda342",
+    "principles.diff": "4d5cbfcfb9e6184a900ece12c775fb4c62e8b51bb732a8dd54aea3a45955e069",
+    "grader.py": "c2a9ee0c06a0dd89fb34f5c32e6bef460ca79cd6ce9e91ac115e273133812706",
+    "validation-review-codex-help.txt": "df0d864ca2076f7654288c6a1e3394e3eaa2ea8f15021df2524efdd90c70986c",
+    "build-base-authorized.log": "8066c10a8e7b2e934da4462ee773f5a1388223bae02b6b3278c954ff3aa6dd19",
+    "workflow-budget-mutation.json": "ed76ada257695adc07708cfe6d22cfa98a0298b7cf5d9b35130a6b451cd46e85",
+    "dispatch-base.md": "92a91fc7004b8cce23914453ec4a30a9b37d73b51ef12ffb6e371a12acf37541",
+    "validation-review-claude-help.txt": "5ca3a9dac2026e56c221fdd34380c7d7d45ebbb51c1d01b7c17c75cb076a0be8",
+    "dispatch-normalized.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "grader-falsifiers.json": "baaeea5281a1cc6dc29e8338c4bbc2761ed91fec016a00eb36d5191a467c7b12",
+    "dispatch-candidate.md": "1d7488c858cf9b0dc2c9ad643ab466a8f2088263969016dcaf3d524d2ecc0bcf",
+    "checklist.txt": "ae4350fb21ca7209173dae43877d930b7d636828438cdb1994f1e00d52758191",
+    "build-base.log": "c083a29e382ddb3a8da09a3b39e6af85696b9f67e3e186f48f2a896fb5768ead",
+    "shim-refusal.jsonl": "6b5a0bd5dc23bc2e357ce2b2dc9a60dbb95bf53272916c0646b71b18143e0960",
+    "dispatch-base-normalized.md": "3f0d66e5202b4036836cd1d2d59c66b4cbcfd72b74f4a8257e5d1f8adf66991e",
+    "build-candidate-authorized.log": "c46841c4fa8d1ac8b0a0b1c31cd0cf02eeccd332e746d426ced343dfe0dd4be0",
+    "bin/gh": "af7b90f2bb360506d903f8603c50cbb53bb8f955c9afd202775503d0db29dee8",
+    "fixture/rewrites.json": "3746cfc7c4f1fc1f57c09c347aac144ead202b6c584eef452506424496205ff4",
+    "fixture/run-rest.json": "cd95927ef73eabf3c031ee3fd9e7d6f6e943e8c92ce4c410d3616f78723234d5",
+    "fixture/reviews.json": "28e6036302b390977464b8659bdfa69e531b1555f0329136744ff026b94a46d3",
+    "fixture/review-comments.json": "ba6cd2ec881086083d7c4f455d700de63e6a9ff7b2ca4dd8818f47c22eed17c1",
+    "fixture/pr-view.json": "0c36b0f92879086d806d7448e97f3a906853b137c6ac100e7ac3c0b6a705514d",
+    "fixture/README.md": "9a9a2e33ca41232ee2e21e049baeddb13d3a0e7fccd55b63f6c45a2a88010482",
+    "fixture/issue-comments.json": "d56f073e3dd134a351a10e1ea6f656182f754062a1ca27540d606f07e2ec8785",
+    "fixture/run.json": "67e8d83aae7031a4a32ea9a12e648f7d434cd3b6d232c6e7668d2b3080a42de5",
+    "source/reviews.json": "091b18c0d02afee95cf162f65d7a3f064775c6b06b1015a8edfdce3135d8507e",
+    "source/review-comments.json": "71a48eeef725c80a248e405a65f5169706000ca288f9328576cccab355ba6292",
+    "source/pr-view.json": "3f93a85db46af63be51ad160bcf0a75a74a3133bcdba4574658198cbab4a4070",
+    "source/issue-comments.json": "4dfb68e7acebf480df298f7b8f2aa6615913174587856a6e1add02234226c6d2",
+    "source/run.json": "b6747592ee0783d4c658843412b32181945e6aea3d513a3de39aff0b8971f16d",
+    "grader-inputs/validation-4.md": "bfd01a28107b226346fdcbd4f589985313f0ffcc7df524c5315d8621edce8ab1",
+    "grader-inputs/positive.md": "514cc95c72ef464046384f4a43336cbcdf8847d3e72ef6be3008236b1017f562",
+    "grader-inputs/validation-3.md": "81063e0cecf58e43e146e6473d6da31b82eef13f1ea77e0c428afb18159ffa3c"
+  }
+}
