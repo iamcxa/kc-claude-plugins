@@ -214,3 +214,42 @@ Verified by: their runs saved in the implementation evidence folder, each with c
 ### Summary
 
 The owed chief-engineer call for repeated validation failures or one repeated symptom asks for the single mechanism, and its decline must name two or more findings each with its own cause. The replay met the ship condition (mechanism 3/3 against current 2/3 or 1/3), with the limit that all six chief-engineers saw the class once called, so the call happening at all carries much of the value. One Captain decision: D1, whether the step-back reminder stays suppressed beside the new question (recommended, amends one ADR 0026 sentence). For the qnow FO's report: the case record's "four" step-back answers are three FO answers in its transcript (implementation-3, implementation-4, validation-2); later prints were in worker sessions only.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design on a branch off origin/main; only the files the design names.
+  Branch spacedock-ensign/role-call-asks-for-the-mechanism; base 82c9e67ae892b80647c3f6a8b6929f993e42dbc2; candidate ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9; four files, clean product tree, hashes in implementation/candidate.json.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins.
+  No PR opened: no push grant. Dispatch delegates product push/open to FO; exact title/body prepared at /tmp/impl-role-call-asks-for-the-mechanism-pr.md and implementation/pr.md.
+- DONE: AC-1: findings calls ask the mechanism question; repair/review/amendment-only questions remain.
+  test_role_triggers StepBackTest, SymptomRoundsTest and repair/review-only case; old-question mutation fails both findings families (implementation/old-question.log).
+- DONE: AC-2: two or more findings with distinct causes are required; prior date/model and other-event decline rules remain.
+  Both-event reason table, dated/undated symptom controls and failure-model controls pass; any-decline, one-word-cause and case-sensitive-causes mutations fail (implementation/mutations.json).
+- DONE: AC-3: all four recorded outcome answers leave the findings calls owed.
+  Verbatim fixtures exercised against both failure and symptom events; the 0.36.0 baseline clears all eight subcases and fails the candidate assertions (implementation/base-0.36.0.log).
+- DONE: AC-4: keep the count-two reminder suppressed in the approved former states.
+  Cleared-event independence and owed-call suppression tests pass; substring-suppression mutation adds the forbidden reminder and fails the named case (implementation/substring-suppression.log).
+- DONE: AC-5: confirm the saved behavioral replay meets its ship condition.
+  Read the pre-registered grader and all six answers: mechanism 3/3, current 2/3 generous or 1/3 strict; implementation/replay-author-regrade.md explains each verdict; replay-inputs.json binds the saved answers.
+- SKIPPED: AC-5 independent validation re-grade.
+  Delegated to the validation worker; the author re-read is not independent review, and no new model runs or live qnow repair are claimed.
+- DONE: AC-6: append the Captain-approved ADR 0026 paragraph, including D1 and form-not-truth limit; workflow.md byte-unchanged.
+  Captain's 「核准（建議）」 and the bound recommendation quoted; ADR lint --since base --require 0026 exits 0; workflow diff empty, repository lint reports 5931/5931 words.
+- DONE: AC-7: test_role_triggers.py, test_delivery_gate.py, test_pr_watch.py and test_dispatch_records.py pass.
+  implementation/tests.json and each command/exit/log: 46/192/135/115 tests, 488 total, 486 passed and 2 optional checks skipped; no candidate byte changes since these runs.
+- SKIPPED: Optional historical gate replay and real Spacedock builder checks.
+  Existing skips require GATE_PRESENTATION_STATE or SPACEDOCK_BIN plus SD_PLUGIN_ROOT; not run, never clean; reasons in implementation/README.md.
+- DONE: Every named code falsifier exercised with python3 -B and caches cleared.
+  Six fresh-directory variants exit 1 through assertions, no import errors; original baseline fails 22 subcases, old question 2, any decline 20, short cause 2, casefold 2, reminder suppression 1.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (repository CI copy), package adr_lint.py, number_guards.py check and comment_ratio.py.
+  All exit 0 on the candidate; number guards rerun with successful state fetch; comment ratio: code lines 118, comment lines 1, 0.8%, maximum 5% met (implementation/*.json and *.log).
+- DONE: Affected documents and existing-code consumers checked.
+  doc_impact.py lists docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md: unaffected, Astra rank/opus floor unchanged; ADR 0026 updated. delivery_gate.py/pr_watch.py forward lines unchanged; dispatch_records.py imports unchanged STEP_BACK.
+- DONE: Compare newly refusing checker against every committed task in this state checkout.
+  implementation/corpus.json at bd507c059bacfd7c27b748ee50bcee39e049924a: 220 tasks, 0 exit changes, 219 identical outputs and one intended archived findings-question/template change; no unverifiable tasks.
+- SKIPPED: RoboRev, product publication, hosted CI, reviews, ready and merge.
+  FO owns these actions; RoboRev and hosted CI not run, never clean. CI cost per PR not measured; CI configuration and version files unchanged.
+
+### Summary
+
+The candidate asks for the common mechanism on the two findings events and requires a written unrelated-causes claim to decline them, preserving the approved reminder states and existing trigger/date/model rules. Local suites and reverse mutations pass their expected outcomes; the saved model replay still meets the ship rule on author re-read. FO receives the local candidate and prepared Draft PR text; independent validation, RoboRev, publication and hosted checks remain owed.

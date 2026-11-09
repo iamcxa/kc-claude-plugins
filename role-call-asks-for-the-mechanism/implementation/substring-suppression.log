@@ -1,0 +1,14 @@
+test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated (test_role_triggers.SymptomRoundsTest.test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated) ... FAIL
+
+======================================================================
+FAIL: test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated (test_role_triggers.SymptomRoundsTest.test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/rcm-mutation-o1rg_49v/test_role_triggers.py", line 658, in test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated
+    self.assertEqual(out.count(question), 0)
+AssertionError: 2 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 2.758s
+
+FAILED (failures=1)

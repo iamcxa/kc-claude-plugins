@@ -1,0 +1,7 @@
+{
+  "name": "doc-impact",
+  "command": "python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/doc_impact.py 82c9e67ae892b80647c3f6a8b6929f993e42dbc2 HEAD --json",
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-role-call-asks-for-the-mechanism",
+  "exit": 0,
+  "seconds": 0.32
+}

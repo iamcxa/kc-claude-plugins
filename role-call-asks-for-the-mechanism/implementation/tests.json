@@ -1,0 +1,26 @@
+[
+  {
+    "name": "test_role_triggers",
+    "status": "passed",
+    "message": "46 tests, 0 skipped; exit 0",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-role-call-asks-for-the-mechanism/kc-dev-flow-2/scripts/test_role_triggers.py"
+  },
+  {
+    "name": "test_delivery_gate",
+    "status": "passed",
+    "message": "192 tests, 1 skipped; exit 0",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-role-call-asks-for-the-mechanism/kc-dev-flow-2/scripts/test_delivery_gate.py"
+  },
+  {
+    "name": "test_pr_watch",
+    "status": "passed",
+    "message": "135 tests, 0 skipped; exit 0",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-role-call-asks-for-the-mechanism/kc-dev-flow-2/scripts/test_pr_watch.py"
+  },
+  {
+    "name": "test_dispatch_records",
+    "status": "passed",
+    "message": "115 tests, 1 skipped; exit 0",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-role-call-asks-for-the-mechanism/kc-dev-flow-2/scripts/test_dispatch_records.py"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-role-call-asks-for-the-mechanism",
+  "branch": "spacedock-ensign/role-call-asks-for-the-mechanism",
+  "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+  "candidate": "ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9",
+  "files": {
+    "docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md": "44f014d53ded15ed50ca173595258a1952ec8a46346033def953c108823b924e",
+    "kc-dev-flow-2/scripts/role_triggers.py": "6c1f4c2b5a7e5537fd75bf66b5bca48e6bd7f3422278ed6e83e73bd0d8db5cd8",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "9ba51daee33aabd88b1a766f0be6c57eb9208b59cd085531696d30eab6a3fea7",
+    "kc-dev-flow-2/scripts/test_role_triggers.py": "025b2d2982b28607b6d704cba8fe82371d79b403ca2e3b41669c17f2ac27e284"
+  },
+  "tests": "Executed after last product edit; clean working tree checked after commit; two optional environment-dependent checks skipped."
+}

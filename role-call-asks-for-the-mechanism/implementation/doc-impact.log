@@ -1,0 +1,9 @@
+[
+ {
+  "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/role_triggers.py"
+  ]
+ }
+]

@@ -1,0 +1,7 @@
+{
+  "name": "test_delivery_gate",
+  "command": "python3 -B kc-dev-flow-2/scripts/test_delivery_gate.py",
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-role-call-asks-for-the-mechanism",
+  "exit": 0,
+  "seconds": 155.64
+}

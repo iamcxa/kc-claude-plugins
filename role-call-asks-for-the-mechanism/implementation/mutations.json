@@ -1,0 +1,152 @@
+[
+  {
+    "name": "base-0.36.0",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "test_role_triggers.StepBackTest.test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds",
+      "test_role_triggers.SymptomRoundsTest.test_second_advises_third_owes_and_only_committed_records_count",
+      "test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline",
+      "test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed"
+    ],
+    "exit": 1,
+    "failed_cases": [
+      "test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds (test_role_triggers.StepBackTest.test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds)",
+      "test_second_advises_third_owes_and_only_committed_records_count (test_role_triggers.SymptomRoundsTest.test_second_advises_third_owes_and_only_committed_records_count)",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='the outcome is unchanged; the gap is testable now')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 home exit')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 exit; F2 late response')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 late async write; F2 late async write')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 LATE  async WRITE; F2 late async write')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 home exit; F2 late response;')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='the outcome is unchanged; the gap is testable now')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 home exit')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 exit; F2 late response')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 late async write; F2 late async write')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 LATE  async WRITE; F2 late async write')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 home exit; F2 late response;')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='My answer is yes. The original problem is fixed: a first-time owner chooses the car only once, can see the plate-number step, and has a back button. The last few rounds dealt with smaller defects found in review, not a drift in direction.')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer=\"These two bugs are in the booking draft we're delivering. Tests can reproduce them now, and if we deleted those two acceptance criteria, the release would ship data loss.\")",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='The goal is still the original one: an owner picks the car once and can always see how to finish the booking. The remaining gaps can all be tested now.')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='the outcome is unchanged; the gap is testable now')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='My answer is yes. The original problem is fixed: a first-time owner chooses the car only once, can see the plate-number step, and has a back button. The last few rounds dealt with smaller defects found in review, not a drift in direction.')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer=\"These two bugs are in the booking draft we're delivering. Tests can reproduce them now, and if we deleted those two acceptance criteria, the release would ship data loss.\")",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='The goal is still the original one: an owner picks the car once and can always see how to finish the booking. The remaining gaps can all be tested now.')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='the outcome is unchanged; the gap is testable now')"
+    ],
+    "caught": true,
+    "cache": "fresh temporary directory, __pycache__ removed, python3 -B"
+  },
+  {
+    "name": "old-question",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "test_role_triggers.StepBackTest.test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds",
+      "test_role_triggers.SymptomRoundsTest.test_second_advises_third_owes_and_only_committed_records_count"
+    ],
+    "exit": 1,
+    "failed_cases": [
+      "test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds (test_role_triggers.StepBackTest.test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds)",
+      "test_second_advises_third_owes_and_only_committed_records_count (test_role_triggers.SymptomRoundsTest.test_second_advises_third_owes_and_only_committed_records_count)"
+    ],
+    "caught": true,
+    "cache": "fresh temporary directory, __pycache__ removed, python3 -B"
+  },
+  {
+    "name": "any-decline-clears",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline",
+      "test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed"
+    ],
+    "exit": 1,
+    "failed_cases": [
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='the outcome is unchanged; the gap is testable now')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 home exit')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 exit; F2 late response')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 late async write; F2 late async write')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 LATE  async WRITE; F2 late async write')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 home exit; F2 late response;')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='the outcome is unchanged; the gap is testable now')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 home exit')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 exit; F2 late response')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 late async write; F2 late async write')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 LATE  async WRITE; F2 late async write')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 home exit; F2 late response;')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='My answer is yes. The original problem is fixed: a first-time owner chooses the car only once, can see the plate-number step, and has a back button. The last few rounds dealt with smaller defects found in review, not a drift in direction.')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer=\"These two bugs are in the booking draft we're delivering. Tests can reproduce them now, and if we deleted those two acceptance criteria, the release would ship data loss.\")",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='The goal is still the original one: an owner picks the car once and can always see how to finish the booking. The remaining gaps can all be tested now.')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='failures', answer='the outcome is unchanged; the gap is testable now')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='My answer is yes. The original problem is fixed: a first-time owner chooses the car only once, can see the plate-number step, and has a back button. The last few rounds dealt with smaller defects found in review, not a drift in direction.')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer=\"These two bugs are in the booking draft we're delivering. Tests can reproduce them now, and if we deleted those two acceptance criteria, the release would ship data loss.\")",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='The goal is still the original one: an owner picks the car once and can always see how to finish the booking. The remaining gaps can all be tested now.')",
+      "test_recorded_outcome_answers_leave_both_findings_calls_owed (test_role_triggers.SymptomRoundsTest.test_recorded_outcome_answers_leave_both_findings_calls_owed) (event='symptom', answer='the outcome is unchanged; the gap is testable now')"
+    ],
+    "caught": true,
+    "cache": "fresh temporary directory, __pycache__ removed, python3 -B"
+  },
+  {
+    "name": "one-word-cause",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline"
+    ],
+    "exit": 1,
+    "failed_cases": [
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 exit; F2 late response')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 exit; F2 late response')"
+    ],
+    "caught": true,
+    "cache": "fresh temporary directory, __pycache__ removed, python3 -B"
+  },
+  {
+    "name": "case-sensitive-causes",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline"
+    ],
+    "exit": 1,
+    "failed_cases": [
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='failures', reason='unrelated: F1 LATE  async WRITE; F2 late async write')",
+      "test_both_findings_events_require_distinct_causes_in_the_decline (test_role_triggers.SymptomRoundsTest.test_both_findings_events_require_distinct_causes_in_the_decline) (event='symptom', reason='unrelated: F1 LATE  async WRITE; F2 late async write')"
+    ],
+    "caught": true,
+    "cache": "fresh temporary directory, __pycache__ removed, python3 -B"
+  },
+  {
+    "name": "substring-suppression",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "test_role_triggers.SymptomRoundsTest.test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated"
+    ],
+    "exit": 1,
+    "failed_cases": [
+      "test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated (test_role_triggers.SymptomRoundsTest.test_cleared_symptom_cannot_mask_another_second_event_and_owed_questions_are_not_duplicated)"
+    ],
+    "caught": true,
+    "cache": "fresh temporary directory, __pycache__ removed, python3 -B"
+  }
+]

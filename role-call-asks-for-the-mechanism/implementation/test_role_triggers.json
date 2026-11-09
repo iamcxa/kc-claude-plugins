@@ -1,0 +1,6 @@
+{
+  "name": "test_role_triggers",
+  "command": "python3 -B kc-dev-flow-2/scripts/test_role_triggers.py",
+  "exit": 0,
+  "verification": "unified exec session 11734 exit 0; full log saved"
+}

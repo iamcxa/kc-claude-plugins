@@ -1,0 +1,7 @@
+{
+  "name": "test_dispatch_records",
+  "command": "python3 -B kc-dev-flow-2/scripts/test_dispatch_records.py",
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-role-call-asks-for-the-mechanism",
+  "exit": 0,
+  "seconds": 179.28
+}
