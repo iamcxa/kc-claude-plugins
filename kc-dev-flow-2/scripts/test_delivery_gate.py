@@ -318,7 +318,8 @@ SECURITY = (f"Security review (validation): security/validation-1.yaml at {HEAD4
             "Security finding (validation 1) 1: Needs decision: cap sessions\n"
             "Security finding (validation 1) 2: Needs decision: add the sentence\n"
             "Security finding (validation 1) 3: declined: stated unverified\n")
-EQUALS = CLAIM_SOURCE + "\n" + f"PR head {HEAD40[:8]} equals dispatched candidate {HEAD40[:8]}; no second reviewer outcome is missing\n"
+EMPTY_COUNTS = "counts: 0 checked, 0 unchecked\nUnchecked counts: 0\n"
+EQUALS = CLAIM_SOURCE + "\n" + EMPTY_COUNTS + f"PR head {HEAD40[:8]} equals dispatched candidate {HEAD40[:8]}; no second reviewer outcome is missing\n"
 PILOT_OUT = EQUALS + "class: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n"
 
 
@@ -470,7 +471,8 @@ def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=N
         written = {p.name: json.loads(p.read_text()) for p in sorted(Path(d, "task", "merge").glob("ask-*.json"))}
         calls = Path(d, "stub", "calls.log").read_text() if Path(d, "stub", "calls.log").exists() else ""
         OUTPUTS.append(out.getvalue())
-        return types.SimpleNamespace(code=code, out=out.getvalue(), lines=out.getvalue().split("\n"), written=written, calls=calls)
+        return types.SimpleNamespace(code=code, out=out.getvalue(), lines=out.getvalue().split("\n"), written=written, calls=calls,
+                                     text=Path(d, "gate.txt").read_text())
 
 
 def nexts(result):
@@ -497,7 +499,7 @@ class CheckRoundCountTests(unittest.TestCase):
             with self.subTest(text=text):
                 result = run_check(rounds=text)
                 self.assertEqual(result.code, 1, result.out)
-                self.assertEqual(result.lines, [CLAIM_SOURCE, self.PROBLEM, self.NEXT, ""])
+                self.assertEqual(result.lines, [CLAIM_SOURCE, "counts: 0 checked, 0 unchecked", "Unchecked counts: 0", self.PROBLEM, self.NEXT, ""])
                 self.assertEqual(result.written, {})
 
     def test_zero_and_detail_counts_preserve_the_complete_text_output(self):
@@ -658,7 +660,7 @@ class SettledChecksTests(unittest.TestCase):
 
     def test_required_check_read_adds_one_gh_call(self):
         base_calls = [
-            "pr view 9 --repo o/r --json headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles",
+            "pr view 9 --repo o/r --json headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles,body",
             "api --paginate repos/o/r/pulls/9/files",
             f"api repos/o/r/actions/runs?head_sha={HEAD40}&per_page=100",
             "pr checks 9 --repo o/r --required --json name,bucket",
@@ -1108,12 +1110,12 @@ class DeclineAndAdrTests(unittest.TestCase):
     def test_a_decline_item_names_its_first_words_and_the_hold_is_the_ask_not_a_record(self):
         code, out = self.check(text="Declined, with reasons: Polish, a docstring wording; Deferred risk, one more (a real reason here).")
         self.assertEqual(code, 1)
-        self.assertEqual(out.splitlines()[1], "declined item has no reason: 'Polish, a docstring wording'")
+        self.assertEqual(out.splitlines()[3], "declined item has no reason: 'Polish, a docstring wording'")
 
     def test_a_short_declined_item_is_judged_and_a_none_form_is_not_an_item(self):
         code, out = self.check(text="Declined: Polish, typo.")
         self.assertEqual(code, 1, out)
-        self.assertEqual(out.splitlines()[1], "declined item has no reason: 'Polish, typo'")
+        self.assertEqual(out.splitlines()[3], "declined item has no reason: 'Polish, typo'")
         self.assertEqual(self.check(text="Declined: Polish (wording only, no behavior change).")[0], 0)
         for text in ("Declined: none.", "FO declines: n/a.", "Declined: nothing"):
             self.assertEqual(self.check(text=text)[0], 0, text)
@@ -1829,13 +1831,13 @@ class CaptainGateTests(CaptainStepFixture):
         for summary in (False, True):
             code, out = self.ask_gate(summary=summary, declaration=False)
             self.assertEqual(code, 1, out)
-            self.assertEqual(len(out.splitlines()), 3, out)
+            self.assertEqual(len(out.splitlines()), 5, out)
             self.assertIn("Captain steps:", out)
-            self.assertTrue(out.splitlines()[2].startswith("next:"))
+            self.assertTrue(out.splitlines()[-1].startswith("next:"))
             code, out = self.ask_gate(candidate="e623efd2" + "0" * 32, summary=summary)
             self.assertEqual(code, 1, out)
             self.assertIn("differs from latest dispatched Candidate", out)
-            self.assertEqual(self.ask_gate(summary=summary), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
+            self.assertEqual(self.ask_gate(summary=summary), (0, CLAIM_SOURCE + "\n" + EMPTY_COUNTS + "gate text complete\n" + gate.ASK_FORM + "\n"))
         no_clause = variant_of('missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)', 'missing = []')
         self.assertEqual(self.ask_gate(declaration=False, module=no_clause)[0], 0)
         no_binding = variant_of('if candidate not in candidates:', 'if False:')
@@ -2231,7 +2233,7 @@ class QuestionTests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertIn(CLAIM_SOURCE, out.getvalue().splitlines())
 
-    def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False, summary=None, cards=None, cli=False):
+    def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False, summary=None, cards=None, cli=False, saved=None):
         with tempfile.TemporaryDirectory() as d:
             readme(d)
             if as_folder:
@@ -2260,10 +2262,16 @@ class QuestionTests(unittest.TestCase):
                                                necessity=gate.clause(CLAUSES, "Necessity")))
             if cli:
                 run = subprocess.run([sys.executable, "-B", gate.__file__, *argv], capture_output=True, text=True)
+                if saved is not None:
+                    saved.update(text=Path(d, "gate.txt").read_text(),
+                                 summary=Path(d, "summary.txt").read_text() if summary is not None else None)
                 return run.returncode, run.stdout + run.stderr
             out = io.StringIO()
             with contextlib.redirect_stdout(out):
                 code = (module or gate).main(argv)
+            if saved is not None:
+                saved.update(text=Path(d, "gate.txt").read_text(),
+                             summary=Path(d, "summary.txt").read_text() if summary is not None else None)
             return code, out.getvalue()
 
     def test_question_accepts_site_and_elided_paths(self):
@@ -2361,7 +2369,7 @@ class QuestionTests(unittest.TestCase):
 
     def test_legacy_combined_text_still_accepts_no_round_count(self):
         self.assertNotIn("External rounds:", CLAUSES)
-        self.assertEqual(self.ask("Deliver it."), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
+        self.assertEqual(self.ask("Deliver it."), (0, CLAIM_SOURCE + "\n" + EMPTY_COUNTS + "gate text complete\n" + gate.ASK_FORM + "\n"))
 
     def test_a_question_that_names_the_merge_without_the_hold_out_clause_is_refused(self):
         code, out = self.ask(MERGE_ASK.format(tail="."))
@@ -2375,9 +2383,9 @@ class QuestionTests(unittest.TestCase):
             with self.subTest(label):
                 code, out = self.ask(MERGE_ASK.format(tail=tail))
                 self.assertEqual(code, 0, out)
-                self.assertTrue(out.startswith(CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"), out)
+                self.assertTrue(out.startswith(CLAIM_SOURCE + "\n" + EMPTY_COUNTS + "gate text complete\n" + gate.ASK_FORM + "\n"), out)
                 self.assertIn("--reference ", out.splitlines()[-1])
-        self.assertEqual(self.ask("Admit the sample task?"), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
+        self.assertEqual(self.ask("Admit the sample task?"), (0, CLAIM_SOURCE + "\n" + EMPTY_COUNTS + "gate text complete\n" + gate.ASK_FORM + "\n"))
         self.assertEqual(self.ask(MERGE_ASK.format(tail="."), as_folder=True)[0], 1)
 
     def test_the_other_text_checks_run_and_an_unreadable_input_exits_2(self):
@@ -2905,6 +2913,95 @@ class SummaryTests(unittest.TestCase):
         self.assertEqual(self.ask(None)[0], 0)
         with self.assertRaises(TypeError):
             self.ask(None, module=legacy_broken)
+
+
+class CountDisclosureTests(unittest.TestCase):
+    ask = QuestionTests.ask
+
+    def test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold(self):
+        for declaration in ("", "Unchecked counts: 0\n", "Unchecked counts: 7\nUnchecked counts: 2\n"):
+            with self.subTest(declaration=declaration):
+                saved = {}
+                code, out = self.ask("Admit it?", summary="2 cells not re-run (validation/validation-1/cells.txt).\n" + declaration,
+                                     cards={"validation/validation-1/cells.txt": "S6\nS7\nS8\n"}, saved=saved, cli=True)
+                self.assertEqual(code, 0, out)
+                self.assertIn("counts: 0 checked, 1 unchecked", out)
+                self.assertEqual(out.count("unchecked count:"), 1)
+                self.assertEqual(re.findall(r"^Unchecked counts:.*$", saved["summary"], re.M), ["Unchecked counts: 1"])
+                self.assertNotIn("Unchecked counts:", saved["text"])
+
+    def test_question_checked_and_derived_counts_and_legacy_write(self):
+        for summary, body, expected in (("3 cells (validation/cells.txt).", "3", 0),
+                                        ("3 of 6 (validation/cells.txt).", "1/3\n2/3", 1)):
+            for folder in (False, True):
+                with self.subTest(summary=summary, folder=folder):
+                    saved = {}
+                    code, out = self.ask("Admit it?", summary=summary, cards={"validation/cells.txt": body},
+                                         as_folder=folder, saved=saved)
+                    self.assertEqual(code, 0, out)
+                    self.assertIn(f"Unchecked counts: {expected}\n", saved["summary"])
+        saved = {}
+        code, out = self.ask("2 tests passed.", saved=saved)
+        self.assertEqual(code, 0, out)
+        self.assertIn("Unchecked counts: 1\n", saved["text"])
+
+    def test_check_scans_pr_body_and_rewrites_ask_idempotently(self):
+        for declaration in ("", "Unchecked counts: 0\n", "Unchecked counts: 99\n"):
+            with self.subTest(declaration=declaration):
+                result = run_check(text=declaration, facts={"body": "18 findings remain."})
+                self.assertEqual(result.code, 0, result.out)
+                self.assertIn("counts: 0 checked, 1 unchecked", result.out)
+                self.assertIn("unchecked count: 18 findings remain.", result.out)
+                self.assertEqual(re.findall(r"^Unchecked counts:.*$", result.text, re.M), ["Unchecked counts: 1"])
+                self.assertIn("body", result.calls)
+                self.assertTrue(result.written)
+
+    def test_file_content_boundary_and_fences(self):
+        saved = {}
+        summary = ("2 tests (validation/cells.txt).\n3 tests (../outside.txt).\n"
+                   "1,000 tests (task/validation/thousand.out).\n"
+                   "```text\n99 tests\n```\n~~~text\n88 tests\n~~~\n")
+        code, out = self.ask("Admit it?", summary=summary,
+                             cards={"validation/cells.txt": "12 tests", "validation/thousand.out": "1000", "../outside.txt": "3"}, saved=saved)
+        self.assertEqual(code, 1, out)
+        self.assertIn("message S5", out)
+        self.assertIn("counts: 1 checked, 2 unchecked", out)
+        self.assertIn("Unchecked counts: 2\n", saved["summary"])
+
+    def test_disclosure_does_not_clear_other_holds_and_cuts_diagnostics(self):
+        code, out = self.ask("18 findings remain.\n", clauses=False)
+        self.assertEqual(code, 1, out)
+        self.assertIn("Sufficiency", out)
+        result = run_check(text="\n".join(f"{i} tests " + "word " * 20 for i in range(10)))
+        self.assertEqual(result.code, 0, result.out)
+        lines = [line for line in result.lines if line.startswith("unchecked count:")]
+        self.assertEqual(len(lines), 8)
+        self.assertTrue(all(len(line.removeprefix("unchecked count: ").split()) <= 12 for line in lines))
+
+    def test_rewrite_is_idempotent_and_preserves_fenced_examples(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory, "summary.txt")
+            example = "```text\nUnchecked counts: 7\n```\n"
+            path.write_text("Unchecked counts: 7\n" + example + "Unchecked counts: wrong\n2 tests passed.\n")
+            with contextlib.redirect_stdout(io.StringIO()):
+                first = gate.count_disclosure(Path(directory), path.read_text(), path, path.read_text())
+                second = gate.count_disclosure(Path(directory), path.read_text(), path, path.read_text())
+            self.assertEqual(first, second)
+            self.assertEqual(path.read_text(), first)
+            self.assertIn(example, first)
+            self.assertTrue(first.startswith("Unchecked counts: 1\n"))
+
+    def test_disclosure_write_error_is_input_failure(self):
+        write = Path.write_text
+        def unwritable(path, *args, **kwargs):
+            if path.name == "gate.txt" and str(args[0]).startswith("Unchecked counts:"):
+                raise PermissionError("summary read-only")
+            return write(path, *args, **kwargs)
+        with mock.patch.object(Path, "write_text", unwritable):
+            result = run_check()
+        self.assertEqual(result.code, 2, result.out)
+        self.assertIn("cannot write count disclosure", result.out)
+        self.assertFalse(result.written)
 
 
 if __name__ == "__main__":

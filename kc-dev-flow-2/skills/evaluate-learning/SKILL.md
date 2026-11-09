@@ -94,6 +94,7 @@ item). Remove must match a supplied existing entry; add must
 not duplicate one. The helper checks schema/identity, not whether the reasoning
 is sound. An all-no-change result has a null proposal, not an empty proposal.
 A completed receipt remains a proposal record; it has no activation authority.
+Each count in an entry's Evidence must appear in an evidence item the decision references; `complete` refuses it otherwise.
 
 Pending means an owner has the claim, not that it is alive or stopped. Check its
 actual session before recovery; a PID alone is insufficient. Missing/torn records

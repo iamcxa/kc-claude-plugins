@@ -9,6 +9,7 @@ profile's depth, and does the without-it observation justify each retained chang
 or removal? Check that remaining surfaces map to the goal, a named falsifier,
 safety boundary or required lifecycle obligation; a deletion earns its place by
 the same standard as retention. Use existing evidence, not a new proof harness.
+Report each count with the task-folder path of the saved output that shows it; `<package>/scripts/delivery_gate.py` counts a count without one as unchecked.
 
 Read every comment the candidate adds. A comment that narrates the change, restates
 the code beside it, cites a line number or marks a section is a repair finding.

@@ -118,6 +118,47 @@ class LearningTests(unittest.TestCase):
         self.assertEqual((self.repo / "learning.md").read_text(), "existing rules\n")
         self.assertEqual((self.repo / "AGENTS.md").read_text(), "existing authority\n")
 
+    def test_evidence_count_refusal_leaves_pending_token_correctable(self):
+        primary = "recount 2026-11-08: 15 findings (20 overall)"
+        self.pack["evidence"] = [primary, "Earlier pass: 18 findings"]
+        self.write_pack()
+        claim = self.claim()
+        item = dict(NEW, Evidence="18 findings")
+        decision = dict(self.decision("add", item), evidence=[primary])
+        refused = self.complete(claim, self.result_file([decision]), code=1)
+        self.assertIn("18 findings", refused["error"])
+        self.assertIn("in no referenced evidence item", refused["error"])
+        pending = self.cli("read", "--job", claim["job"])
+        self.assertEqual(pending["state"], "pending")
+        self.assertEqual(self.claim()["state"], "pending")
+        item["Evidence"] = "15 findings"
+        done = self.complete(claim, self.result_file([decision]))
+        self.assertEqual(done["state"], "completed")
+        self.assertEqual(self.cli("read", "--job", claim["job"])["proposal"]["add"], [item])
+
+    def test_count_pattern_thousands_derived_and_punctuation(self):
+        primary = "recount: 1000 tests; 3 cells; 6 runs"
+        self.pack["evidence"] = [primary]
+        self.write_pack()
+        claim = self.claim()
+        for evidence in ("1,001 tests", "3 of 7", "12 cells"):
+            with self.subTest(evidence=evidence):
+                decision = dict(self.decision("add", dict(NEW, Evidence=evidence)), evidence=[primary])
+                self.complete(claim, self.result_file([decision]), code=1)
+        item = dict(NEW, Evidence="1,000 tests; 3/6 runs (cycle 2, round 2).")
+        decision = dict(self.decision("add", item), evidence=[primary])
+        self.assertEqual(self.complete(claim, self.result_file([decision]))["state"], "completed")
+
+    def test_completed_legacy_counts_remain_readable(self):
+        claim = self.claim()
+        self.complete(claim, self.result_file([self.decision("add", NEW)]))
+        path = self.record_path(claim["job"])
+        stored = json.loads(path.read_text())
+        for item in (stored["evaluation"]["decisions"][0]["entry"], stored["proposal"]["add"][0]):
+            item["Evidence"] = "18 findings"
+        path.write_text(json.dumps(stored))
+        self.assertEqual(self.cli("read", "--job", claim["job"])["state"], "completed")
+
     def test_linked_worktree_multiprocess_claim_race(self):
         other = self.base / "other"
         subprocess.run(["git", "-C", self.repo, "worktree", "add", "--detach", other], capture_output=True, check=True)
