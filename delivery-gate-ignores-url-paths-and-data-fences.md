@@ -53,6 +53,10 @@ gates:
                 id: briefing:delivery-gate-ignores-url-paths-and-data-fences:validation:attempt-1:revision-1
                 digest: sha256:29933be9a3786146b43fd2fb5051efb38918dfc7df0cb675b34c7c8b2788f70b
                 room-ref: ./delivery-gate-ignores-url-paths-and-data-fences/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-09T14:47:51.0659Z"
+                reason: Candidate 6f2fe8f33 superseded by the merge of main at b8362fb90; validation-2 PASSED there.
 started: 2026-11-09T04:59:05Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences
 pr: iamcxa/kc-claude-plugins#818

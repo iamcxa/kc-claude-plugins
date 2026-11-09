@@ -1,0 +1,19 @@
+{
+  "class": "never",
+  "head": "b8362fb901cd27bd367be1cd5b826f21fefad70e",
+  "model": "not run",
+  "necessity": "only kc-dev-flow-2/scripts/delivery_gate.py and its tests change (validation-2 report, Astra, 2026-11-09).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'No new Material, Deferred risk, Polish'",
+    "point: deferred: 'No new Material, Deferred risk, Polish'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#818",
+  "sufficiency": "delivery_gate.py question passes each of the five recorded false-positive inputs at the merged head, #817's missing/matching/newest-mismatched record holds still exit 1/0/1, and the shell-card, YAML-i",
+  "time": "2026-11-09T14:47:41Z",
+  "verdict": "ask"
+}
