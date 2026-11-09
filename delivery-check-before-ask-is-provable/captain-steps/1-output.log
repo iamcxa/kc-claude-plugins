@@ -1,0 +1,17 @@
+PASS step 1: pinned head and declared local dependencies
+PASS step 2: candidate and base exported
+........
+----------------------------------------------------------------------
+Ran 8 tests in 2.548s
+
+OK
+PASS step 3: eight delivery-before-question tests
+PASS: baseline missing-record control; seven rejected code mutations; native uncommitted/modified reference holds and committed digest; 12 observer replays and fallback mutation; lifecycle words 80/80, 92/107, check unchanged.
+PASS: independent recount README 80/80, question 92/107, check unchanged; extra README/output words and missing ADR 0071 rejected.
+PASS step 4: native reference, historical replay and all AC falsifiers
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5931 of 5931 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+64 ADR file(s) checked, 0 legacy
+PASS step 5: workflow budget and ADR 0071
+Evidence: /tmp/pr817-acceptance.WB9Zga
