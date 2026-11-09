@@ -1,0 +1,156 @@
+FFFFFFFFFFFFFFFF
+======================================================================
+FAIL: test_check_scans_pr_body_and_rewrites_ask_idempotently (test_delivery_gate.CountDisclosureTests.test_check_scans_pr_body_and_rewrites_ask_idempotently) (declaration='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2952, in test_check_scans_pr_body_and_rewrites_ask_idempotently
+    self.assertIn("counts: 0 checked, 1 unchecked", result.out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n'
+
+======================================================================
+FAIL: test_check_scans_pr_body_and_rewrites_ask_idempotently (test_delivery_gate.CountDisclosureTests.test_check_scans_pr_body_and_rewrites_ask_idempotently) (declaration='Unchecked counts: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2952, in test_check_scans_pr_body_and_rewrites_ask_idempotently
+    self.assertIn("counts: 0 checked, 1 unchecked", result.out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n'
+
+======================================================================
+FAIL: test_check_scans_pr_body_and_rewrites_ask_idempotently (test_delivery_gate.CountDisclosureTests.test_check_scans_pr_body_and_rewrites_ask_idempotently) (declaration='Unchecked counts: 99\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2952, in test_check_scans_pr_body_and_rewrites_ask_idempotently
+    self.assertIn("counts: 0 checked, 1 unchecked", result.out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n'
+
+======================================================================
+FAIL: test_disclosure_does_not_clear_other_holds_and_cuts_diagnostics (test_delivery_gate.CountDisclosureTests.test_disclosure_does_not_clear_other_holds_and_cuts_diagnostics)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2971, in test_disclosure_does_not_clear_other_holds_and_cuts_diagnostics
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+======================================================================
+FAIL: test_file_content_boundary_and_fences (test_delivery_gate.CountDisclosureTests.test_file_content_boundary_and_fences)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2966, in test_file_content_boundary_and_fences
+    self.assertIn("counts: 1 checked, 2 unchecked", out)
+AssertionError: 'counts: 1 checked, 2 unchecked' not found in "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nsummary needs one top-level External rounds: N line (nonnegative integer)\nCaptain steps record fails: message S5: unrecorded command or link '99 tests'\nnext: hold preparation; record the external round count in the summary.\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+
+======================================================================
+FAIL: test_question_checked_and_derived_counts_and_legacy_write (test_delivery_gate.CountDisclosureTests.test_question_checked_and_derived_counts_and_legacy_write) (summary='3 cells (validation/cells.txt).', folder=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2941, in test_question_checked_and_derived_counts_and_legacy_write
+    self.assertIn(f"Unchecked counts: {expected}\n", saved["summary"])
+AssertionError: 'Unchecked counts: 0\n' not found in 'Sufficiency: every acceptance criterion in the validation report was met.\nNecessity: the relay adopter reads it at each merge ask.\nExternal rounds: 0\n3 cells (validation/cells.txt).\nReview this candidate.\nCaptain steps: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp9mly67np/task/captain-steps/1.md\n'
+
+======================================================================
+FAIL: test_question_checked_and_derived_counts_and_legacy_write (test_delivery_gate.CountDisclosureTests.test_question_checked_and_derived_counts_and_legacy_write) (summary='3 cells (validation/cells.txt).', folder=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2941, in test_question_checked_and_derived_counts_and_legacy_write
+    self.assertIn(f"Unchecked counts: {expected}\n", saved["summary"])
+AssertionError: 'Unchecked counts: 0\n' not found in 'Sufficiency: every acceptance criterion in the validation report was met.\nNecessity: the relay adopter reads it at each merge ask.\nExternal rounds: 0\n3 cells (validation/cells.txt).\nReview this candidate.\nCaptain steps: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpn1wdyq5m/t/captain-steps/1.md\n'
+
+======================================================================
+FAIL: test_question_checked_and_derived_counts_and_legacy_write (test_delivery_gate.CountDisclosureTests.test_question_checked_and_derived_counts_and_legacy_write) (summary='3 of 6 (validation/cells.txt).', folder=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2941, in test_question_checked_and_derived_counts_and_legacy_write
+    self.assertIn(f"Unchecked counts: {expected}\n", saved["summary"])
+AssertionError: 'Unchecked counts: 1\n' not found in 'Sufficiency: every acceptance criterion in the validation report was met.\nNecessity: the relay adopter reads it at each merge ask.\nExternal rounds: 0\n3 of 6 (validation/cells.txt).\nReview this candidate.\nCaptain steps: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp2tu3vqr8/task/captain-steps/1.md\n'
+
+======================================================================
+FAIL: test_question_checked_and_derived_counts_and_legacy_write (test_delivery_gate.CountDisclosureTests.test_question_checked_and_derived_counts_and_legacy_write) (summary='3 of 6 (validation/cells.txt).', folder=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2941, in test_question_checked_and_derived_counts_and_legacy_write
+    self.assertIn(f"Unchecked counts: {expected}\n", saved["summary"])
+AssertionError: 'Unchecked counts: 1\n' not found in 'Sufficiency: every acceptance criterion in the validation report was met.\nNecessity: the relay adopter reads it at each merge ask.\nExternal rounds: 0\n3 of 6 (validation/cells.txt).\nReview this candidate.\nCaptain steps: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3_54vgqz/t/captain-steps/1.md\n'
+
+======================================================================
+FAIL: test_question_checked_and_derived_counts_and_legacy_write (test_delivery_gate.CountDisclosureTests.test_question_checked_and_derived_counts_and_legacy_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2945, in test_question_checked_and_derived_counts_and_legacy_write
+    self.assertIn("Unchecked counts: 1\n", saved["text"])
+AssertionError: 'Unchecked counts: 1\n' not found in 'Sufficiency: every acceptance criterion in the validation report was met.\nNecessity: the relay adopter reads it at each merge ask.\n2 tests passed.\nReview this candidate.\nCaptain steps: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmporqwyq4n/task/captain-steps/1.md\n'
+
+======================================================================
+FAIL: test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold (test_delivery_gate.CountDisclosureTests.test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold) (declaration='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2927, in test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold
+    self.assertIn("counts: 0 checked, 1 unchecked", out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\n'
+
+======================================================================
+FAIL: test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold (test_delivery_gate.CountDisclosureTests.test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold) (declaration='Unchecked counts: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2927, in test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold
+    self.assertIn("counts: 0 checked, 1 unchecked", out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\n'
+
+======================================================================
+FAIL: test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold (test_delivery_gate.CountDisclosureTests.test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold) (declaration='Unchecked counts: 7\nUnchecked counts: 2\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2927, in test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold
+    self.assertIn("counts: 0 checked, 1 unchecked", out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\n'
+
+======================================================================
+FAIL: test_evidence_count_refusal_leaves_pending_token_correctable (test_learning.LearningTests.test_evidence_count_refusal_leaves_pending_token_correctable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_learning.py", line 128, in test_evidence_count_refusal_leaves_pending_token_correctable
+    refused = self.complete(claim, self.result_file([decision]), code=1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_learning.py", line 89, in complete
+    return self.cli("complete", "--job", claim["job"], "--token", claim["token"], "--result", path, code=code)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_learning.py", line 70, in cli
+    self.assertEqual(result.returncode, code, result.stdout + result.stderr)
+AssertionError: 0 != 1 : {"job": "f92c7bb8ea94e5aea4c361e0bb1c132ef63d4c074930aefadc121b4a0a97802e", "digest": "2dacb0bedd3153dd830b59a099172253d0a9a069735084f40cb4f2430265dbab", "state": "completed", "evaluation": {"decisions": [{"action": "add", "entry": {"Applicability": "Synthetic export path", "Evidence": "18 findings", "Practice": "Check header order"}, "evidence": ["recount 2026-11-08: 15 findings (20 overall)"], "reason": "Synthetic schema/control input only"}], "schema_version": 1}, "input": {"closed": true, "closure_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evidence": ["recount 2026-11-08: 15 findings (20 overall)", "Earlier pass: 18 findings"], "landed_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "learning": [{"Applicability": "Synthetic import path", "Evidence": "Synthetic case A", "Practice": "Check encoding"}], "learning_task": false, "merged": true, "pr": "example/project#1", "profile": "pilot", "project_rules": ["No authority changes"], "schema_version": 1, "task_id": "task-1", "variant": "kc-dev-flow-2", "verdict": "passed", "workflow": "docs/dev2"}, "owner": "session-fixture", "proposal": {"add": [{"Applicability": "Synthetic export path", "Evidence": "18 findings", "Practice": "Check header order"}], "remove": []}, "recovery": null, "schema_version": 1}
+
+
+======================================================================
+FAIL: test_count_pattern_thousands_derived_and_punctuation (test_learning.LearningTests.test_count_pattern_thousands_derived_and_punctuation) (evidence='1,001 tests')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_learning.py", line 147, in test_count_pattern_thousands_derived_and_punctuation
+    self.complete(claim, self.result_file([decision]), code=1)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_learning.py", line 89, in complete
+    return self.cli("complete", "--job", claim["job"], "--token", claim["token"], "--result", path, code=code)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_learning.py", line 70, in cli
+    self.assertEqual(result.returncode, code, result.stdout + result.stderr)
+AssertionError: 0 != 1 : {"job": "f92c7bb8ea94e5aea4c361e0bb1c132ef63d4c074930aefadc121b4a0a97802e", "digest": "ecf7d9637ce954b7e143a024ca0cbce35c4d2aa666fd960fea1f24345384b4bd", "state": "completed", "evaluation": {"decisions": [{"action": "add", "entry": {"Applicability": "Synthetic export path", "Evidence": "1,001 tests", "Practice": "Check header order"}, "evidence": ["recount: 1000 tests; 3 cells; 6 runs"], "reason": "Synthetic schema/control input only"}], "schema_version": 1}, "input": {"closed": true, "closure_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evidence": ["recount: 1000 tests; 3 cells; 6 runs"], "landed_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "learning": [{"Applicability": "Synthetic import path", "Evidence": "Synthetic case A", "Practice": "Check encoding"}], "learning_task": false, "merged": true, "pr": "example/project#1", "profile": "pilot", "project_rules": ["No authority changes"], "schema_version": 1, "task_id": "task-1", "variant": "kc-dev-flow-2", "verdict": "passed", "workflow": "docs/dev2"}, "owner": "session-fixture", "proposal": {"add": [{"Applicability": "Synthetic export path", "Evidence": "1,001 tests", "Practice": "Check header order"}], "remove": []}, "recovery": null, "schema_version": 1}
+
+
+======================================================================
+FAIL: test_count_pattern_thousands_derived_and_punctuation (test_learning.LearningTests.test_count_pattern_thousands_derived_and_punctuation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_learning.py", line 150, in test_count_pattern_thousands_derived_and_punctuation
+    self.assertEqual(self.complete(claim, self.result_file([decision]))["state"], "completed")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_learning.py", line 89, in complete
+    return self.cli("complete", "--job", claim["job"], "--token", claim["token"], "--result", path, code=code)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_learning.py", line 70, in cli
+    self.assertEqual(result.returncode, code, result.stdout + result.stderr)
+AssertionError: 1 != 0 : {"state": "error", "error": "job is not pending"}
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 2.636s
+
+FAILED (failures=16)

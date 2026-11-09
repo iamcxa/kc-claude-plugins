@@ -1,0 +1,74 @@
+.......................................................FF............F.............................s................................................................................FF................
+======================================================================
+FAIL: test_a_short_declined_item_is_judged_and_a_none_form_is_not_an_item (test_delivery_gate.DeclineAndAdrTests.test_a_short_declined_item_is_judged_and_a_none_form_is_not_an_item)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1121, in test_a_short_declined_item_is_judged_and_a_none_form_is_not_an_item
+    self.assertEqual(self.check(text=text)[0], 0, text)
+AssertionError: 1 != 0 : Declined: nothing
+
+======================================================================
+FAIL: test_every_item_with_a_bracketed_reason_passes_and_a_one_word_bracket_is_no_reason (test_delivery_gate.DeclineAndAdrTests.test_every_item_with_a_bracketed_reason_passes_and_a_one_word_bracket_is_no_reason)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1108, in test_every_item_with_a_bracketed_reason_passes_and_a_one_word_bracket_is_no_reason
+    self.assertEqual(self.check(text="Declined: nothing. FO declines: none")[0], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_a_not_run_with_no_reason_or_a_token_for_another_name_does_not_count (test_delivery_gate.DeliveryGateTests.test_a_not_run_with_no_reason_or_a_token_for_another_name_does_not_count) [Second reviewer: copilot because merge path; copilot not run:
+]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 274, in test_a_not_run_with_no_reason_or_a_token_for_another_name_does_not_count
+    self.assertEqual(self.check(text=text)[0], 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_required_check_read_adds_one_gh_call (test_delivery_gate.SettledChecksTests.test_required_check_read_adds_one_gh_call) [plain]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 670, in test_required_check_read_adds_one_gh_call
+    self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
+AssertionError: Lists differ: ['pr [109 chars]Files,body', 'api --paginate repos/o/r/pulls/9[152 chars]ket'] != ['pr [109 chars]Files', 'api --paginate repos/o/r/pulls/9/file[147 chars]ket']
+
+First differing element 0:
+'pr v[56 chars]tusCheckRollup,title,headRefName,baseRefName,changedFiles,body'
+'pr v[56 chars]tusCheckRollup,title,headRefName,baseRefName,changedFiles'
+
+  ['pr view 9 --repo o/r --json '
+-  'headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles,body',
+?                                                                                            -----
+
++  'headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles',
+   'api --paginate repos/o/r/pulls/9/files',
+   'api '
+   'repos/o/r/actions/runs?head_sha=40c714a600000000000000000000000000000000&per_page=100',
+   'pr checks 9 --repo o/r --required --json name,bucket']
+
+======================================================================
+FAIL: test_required_check_read_adds_one_gh_call (test_delivery_gate.SettledChecksTests.test_required_check_read_adds_one_gh_call) [skipped and neutral]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 670, in test_required_check_read_adds_one_gh_call
+    self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
+AssertionError: Lists differ: ['pr [109 chars]Files,body', 'api --paginate repos/o/r/pulls/9[152 chars]ket'] != ['pr [109 chars]Files', 'api --paginate repos/o/r/pulls/9/file[147 chars]ket']
+
+First differing element 0:
+'pr v[56 chars]tusCheckRollup,title,headRefName,baseRefName,changedFiles,body'
+'pr v[56 chars]tusCheckRollup,title,headRefName,baseRefName,changedFiles'
+
+  ['pr view 9 --repo o/r --json '
+-  'headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles,body',
+?                                                                                            -----
+
++  'headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles',
+   'api --paginate repos/o/r/pulls/9/files',
+   'api '
+   'repos/o/r/actions/runs?head_sha=40c714a600000000000000000000000000000000&per_page=100',
+   'pr checks 9 --repo o/r --required --json name,bucket']
+
+----------------------------------------------------------------------
+Ran 197 tests in 126.227s
+
+FAILED (failures=5, skipped=1)

@@ -1,0 +1,18 @@
+.........F
+======================================================================
+FAIL: test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head (test_delivery_gate.CaptainGateTests.test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1833, in test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head
+    self.assertEqual(len(out.splitlines()), 3, out)
+AssertionError: 5 != 3 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+Unchecked counts: 0
+gate text needs one Captain steps: <record path> line
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 2.849s
+
+FAILED (failures=1)

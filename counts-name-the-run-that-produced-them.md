@@ -304,3 +304,41 @@ The design adds a structured check where a structured record exists, and disclos
 ### Summary
 
 Implementation is on hold pending an FO-reserved ADR number in this task's ## Number guards section. The approved Captain amendment is applied and the assigned product branch is clean at origin/main; this is preparation only, not a completed implementation. Resume after the FO supplies the reservation; the product deliverable, acceptance evidence and PR handoff remain outstanding.
+
+
+## Stage Report: implementation
+
+- DONE: Resume implementation with FO-reserved ADR 0072; apply Captain amendment 1 before implementing.
+  AC-2/AC-3 remain verbatim under Superseded text; AC-7/AC-8 require automatic writes without disclosure holds. ADR 0072 records the Captain's words and protects the three code sites; frontmatter and prior reports are retained.
+- DONE: Base on origin/main, implement only the files the design names, commit locally, and prepare PR text for FO.
+  Branch spacedock-ensign/counts-name-the-run-that-produced-them; base 82c9e67ae892b80647c3f6a8b6929f993e42dbc2; candidate 9ca4b287d559728242439508e8f355112ae54432, three local commits, eight approved files (validation/implementation-2/handoff-identity.json); PR text: /tmp/impl-counts-name-the-run-that-produced-them-pr.md.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins.
+  No PR opened: no push grant; FO owns product push and Draft creation. Candidate is not ready for publication because the unlisted POC test below still fails.
+- DONE: AC-1 learn refusal before completion, pending correction and completed-record compatibility.
+  run.py handoff-focus at the candidate exits 0 (handoff-focus.json/.log): unsupported 18 findings refuses, the pending token completes corrected 15, historical reads and file-based imports work; removing the learn join fails (handoff-mutations.json, learn-join.log).
+- DONE: AC-7 question lists wrong, checked and derived counts and writes the computed line without a hold.
+  handoff-focus tests wrong/missing/duplicate declarations, task-folder bytes, derived 3 of 6, legacy input, fences and idempotence. Removing the number-in-file comparison or the write fails (number-in-file.log, writer.log; python3 -B, caches absent).
+- DONE: AC-8 check scans both ask and PR body and rewrites the ask.
+  handoff-focus uses the gh stub's uncited 18 findings with otherwise empty ask; removing body scan or the write fails (pr-body.log, writer.log). Existing reviewer/decline holds remain; an unwritable input exits 2 and saves no ask.
+- DONE: AC-4 rerun both replays with the final shared pattern and explain differences.
+  replay.py at cc58048f8, pattern unchanged at candidate: gate-accepted.json/.log reads the four pinned ideation state revisions; 24 of 30 recent summaries disclose a nonzero count. learn-accepted.json/.log reads 28 entries in five stores and refuses 441fe280, d829872c and ed2d3ee1; replay-differences.json explains removed passed/items forms, added checks and the comma fix.
+- DONE: Explain the extra learn refusal rather than reporting exactly the original two.
+  ed2d3ee1 says "Cycle 1 FO line"; final pattern treats "1 FO line" as a count. Its refs contain P1/S1 identifiers, which the ideation substring check mistook for 1; normalized standalone numbers no longer do. This is a syntactic false positive, not proof the heading is a measured count. The "2, round" defect is absent.
+- DONE: AC-5 independently recount the actual base and candidate reading cost.
+  words.py words-accepted.log: startup 5931+48 unchanged; validation 826→848, evaluator 877→896; question zero-count 92→97 and check 84→89, plus at most eight 14-word diagnostics. The withdrawn disclosure-hold row no longer applies; pr_watch, design_surfaces and lint budget bytes are unchanged.
+- SKIPPED: Every acceptance criterion green with its named evidence; complete unittest discover passes (AC-6).
+  HOLD: handoff-scope.json/.log at candidate exits 1: test_poc_readme.py:70 compares prepared bytes to the pre-check summary and fails in both source and derived POC routes after the approved automatic write. scope_probe.py proves base exit 0 versus candidate exit 1 (handoff-scope-comparison.json/.log); this test file is not in Design's file list, so the dispatch requires return to FO before editing it.
+- DONE: Repository lint-skills.py, package adr_lint.py docs/adr --since <base> --require 0072, and comment_ratio.py.
+  handoff-lint.json, handoff-adr.json and handoff-comments.json at candidate each exit 0; WORKFLOW_WORD_BUDGET stays 5931 and comment maximum 5% is met. No version, workflow template, _mods or CI workflow change.
+- DONE: Package number_guards.py check with remote reservation refresh.
+  number-accepted.json/.log at cc58048f8 exits 0 after an escalated rerun removed the sandbox fetch warning; the later import-only repair changes no numbered file or reservation. Not claimed as a fresh check at the later candidate.
+- DONE: Affected-document verdicts.
+  document-verdicts.json: ADR 0044 unaffected (reviewer routing retained); 0051 unaffected (External rounds holds retained); 0062 unaffected (approval authority retained); 0071 unaffected (record matching retained); 0072 updated. Validation principles and evaluator instruction each gain the approved sentence.
+- SKIPPED: FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured.
+  Delegated checks not run, never clean. CI cost not measured; no CI topology changed. No agents messaged. A process-inventory permission was rejected, so the earlier full-suite sessions 74900 and 25520 may still be running; their suite-final/suite-accepted logs are superseded, not accepted final-head proof.
+- DONE: Return the precise missing scope and test precondition to FO.
+  Add kc-dev-flow-2/scripts/test_poc_readme.py to the allowed files; update its expected forwarded bytes to the post-check summary while retaining wrong-summary and failure holds. A subsequent complete suite must declare SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock (the dispatched executable); unset runs pass None into dispatch fixtures and are not product proof.
+
+### Summary
+
+This complete report supersedes the earlier missing-ADR hold report: ADR 0072 is implemented and the approved local code, mutation evidence and PR text are prepared. Implementation remains on hold because the automatic summary write requires an out-of-scope test fixture update; no all-green or completed-implementation claim is made, and FO must authorize that file before work continues.

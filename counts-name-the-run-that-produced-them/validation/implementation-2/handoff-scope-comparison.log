@@ -1,0 +1,30 @@
+{
+  "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+  "candidate": "9ca4b287d559728242439508e8f355112ae54432",
+  "results": [
+    {
+      "label": "base",
+      "command": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "test_poc_readme.DeriveTests.test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes"
+      ],
+      "exit": 0,
+      "log": "scope-base.log"
+    },
+    {
+      "label": "candidate",
+      "command": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "test_poc_readme.DeriveTests.test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes"
+      ],
+      "exit": 1,
+      "log": "scope-candidate.log"
+    }
+  ]
+}

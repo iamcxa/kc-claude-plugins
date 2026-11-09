@@ -1,0 +1,23 @@
+{
+  "name": "learn-accepted",
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/implementation-2/replay.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+    "learn",
+    "kc-claude-plugins|/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git",
+    "relay|/Users/kent/conductor/repos/subspace-relay/.git",
+    "web|/Users/kent/conductor/repos/subspace-web/.git",
+    "qnow|/Users/kent/conductor/repos/qnow/.git",
+    "v0|/Users/kent/conductor/repos/subspace-v0/.git"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "start": "2026-11-09T16:01:22.387253+00:00",
+  "end": "2026-11-09T16:01:22.644995+00:00",
+  "exit": 0,
+  "candidate": "cc58048f871b013431702f84db3a341bed10e268",
+  "end_candidate": "cc58048f871b013431702f84db3a341bed10e268",
+  "log": "learn-accepted.log",
+  "log_sha256": "5225dd749e6ca1dbc63c06e2d5a1706490ca6f27478bb547b7b5e52756178329"
+}

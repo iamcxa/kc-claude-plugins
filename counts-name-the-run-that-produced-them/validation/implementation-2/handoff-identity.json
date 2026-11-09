@@ -1,0 +1,16 @@
+{
+  "branch": "spacedock-ensign/counts-name-the-run-that-produced-them",
+  "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+  "candidate": "9ca4b287d559728242439508e8f355112ae54432",
+  "changed": [
+    "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+    "kc-dev-flow-2/scripts/count_tokens.py",
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/learning.py",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "kc-dev-flow-2/scripts/test_learning.py",
+    "kc-dev-flow-2/skills/evaluate-learning/SKILL.md",
+    "kc-dev-flow-2/skills/validation/principles.md"
+  ],
+  "scope_blocker": "kc-dev-flow-2/scripts/test_poc_readme.py:70"
+}

@@ -1,0 +1,39 @@
+{
+  "run": "2026-11-09T16:01:25.129658+00:00",
+  "script_sha256": "6683d94d26fc606683baad3a9fe3d5bd3498ff7d1855eef1a7959a59a9bcff0c",
+  "results": [
+    {
+      "mutation": "learn-join",
+      "exit": 1,
+      "tests": [
+        "test_learning.LearningTests.test_evidence_count_refusal_leaves_pending_token_correctable"
+      ],
+      "log": "learn-join.log"
+    },
+    {
+      "mutation": "number-in-file",
+      "exit": 1,
+      "tests": [
+        "test_delivery_gate.CountDisclosureTests.test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold"
+      ],
+      "log": "number-in-file.log"
+    },
+    {
+      "mutation": "writer",
+      "exit": 1,
+      "tests": [
+        "test_delivery_gate.CountDisclosureTests.test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold",
+        "test_delivery_gate.CountDisclosureTests.test_check_scans_pr_body_and_rewrites_ask_idempotently"
+      ],
+      "log": "writer.log"
+    },
+    {
+      "mutation": "pr-body",
+      "exit": 1,
+      "tests": [
+        "test_delivery_gate.CountDisclosureTests.test_check_scans_pr_body_and_rewrites_ask_idempotently"
+      ],
+      "log": "pr-body.log"
+    }
+  ]
+}

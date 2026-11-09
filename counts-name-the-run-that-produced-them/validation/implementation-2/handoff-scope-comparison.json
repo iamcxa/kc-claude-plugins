@@ -1,0 +1,18 @@
+{
+  "name": "handoff-scope-comparison",
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/implementation-2/scope_probe.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/implementation-2"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "start": "2026-11-09T16:07:05.277069+00:00",
+  "end": "2026-11-09T16:07:09.947117+00:00",
+  "exit": 0,
+  "candidate": "9ca4b287d559728242439508e8f355112ae54432",
+  "end_candidate": "9ca4b287d559728242439508e8f355112ae54432",
+  "log": "handoff-scope-comparison.log",
+  "log_sha256": "f9e98861e2060242a8ab4ce757cbafbf560e25688817de89d5e4af40eb141caa"
+}

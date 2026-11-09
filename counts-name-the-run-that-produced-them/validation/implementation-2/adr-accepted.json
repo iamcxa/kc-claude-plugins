@@ -1,0 +1,21 @@
+{
+  "name": "adr-accepted",
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py",
+    "docs/adr",
+    "--since",
+    "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "--require",
+    "0072"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "start": "2026-11-09T16:01:22.253176+00:00",
+  "end": "2026-11-09T16:01:22.558014+00:00",
+  "exit": 0,
+  "candidate": "cc58048f871b013431702f84db3a341bed10e268",
+  "end_candidate": "cc58048f871b013431702f84db3a341bed10e268",
+  "log": "adr-accepted.log",
+  "log_sha256": "0146a629e05b3b85b8ca874787a9654954afcbd08049c5d63651d9d14dd88a24"
+}

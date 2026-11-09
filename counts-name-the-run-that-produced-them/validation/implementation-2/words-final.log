@@ -1,0 +1,97 @@
+{
+  "script": "words.py",
+  "script_sha256": "10200a05b860a35c954b1405e4e1d2015d52472e7ef875328a435ccaf95fd121",
+  "run": "2026-11-09T15:56:02.511631+00:00",
+  "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+  "candidate": "5c163fdecf370b72c1fea76dc5c072388bb1d2a3",
+  "files": [
+    {
+      "path": "references/sd/workflow.md",
+      "before": 5931,
+      "after": 5931,
+      "identical": true
+    },
+    {
+      "path": "references/sd/mods/kc-dev-flow-2.md",
+      "before": 48,
+      "after": 48,
+      "identical": true
+    },
+    {
+      "path": "skills/validation/principles.md",
+      "before": 826,
+      "after": 848,
+      "identical": false
+    },
+    {
+      "path": "skills/evaluate-learning/SKILL.md",
+      "before": 877,
+      "after": 896,
+      "identical": false
+    },
+    {
+      "path": "scripts/pr_watch.py",
+      "before": 4077,
+      "after": 4077,
+      "identical": true
+    },
+    {
+      "path": "scripts/design_surfaces.py",
+      "before": 5756,
+      "after": 5756,
+      "identical": true
+    },
+    {
+      "path": "scripts/lint-skills.py",
+      "before": 2274,
+      "after": 2274,
+      "identical": true
+    }
+  ],
+  "observed": {
+    "base": {
+      "question-zero": {
+        "exit": 0,
+        "text": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n",
+        "words": 92
+      },
+      "question-unchecked": {
+        "exit": 0,
+        "text": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n",
+        "words": 92
+      },
+      "check-zero": {
+        "exit": 0,
+        "text": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+        "words": 84
+      },
+      "check-unchecked": {
+        "exit": 0,
+        "text": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+        "words": 84
+      }
+    },
+    "candidate": {
+      "question-zero": {
+        "exit": 0,
+        "text": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nUnchecked counts: 0\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n",
+        "words": 100
+      },
+      "question-unchecked": {
+        "exit": 0,
+        "text": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 1 unchecked\nunchecked count: 2 tests passed.\nUnchecked counts: 1\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n",
+        "words": 105
+      },
+      "check-zero": {
+        "exit": 0,
+        "text": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nUnchecked counts: 0\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+        "words": 92
+      },
+      "check-unchecked": {
+        "exit": 0,
+        "text": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 1 unchecked\nunchecked count: 2 tests passed.\nUnchecked counts: 1\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+        "words": 97
+      }
+    }
+  }
+}

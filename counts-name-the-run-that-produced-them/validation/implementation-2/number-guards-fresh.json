@@ -1,0 +1,22 @@
+{
+  "name": "number-guards-fresh",
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/number_guards.py",
+    "check",
+    "--workflow-dir",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/..",
+    "--task",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them.md",
+    "--base",
+    "82c9e67ae892b80647c3f6a8b6929f993e42dbc2"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "start": "2026-11-09T15:56:32.081120+00:00",
+  "end": "2026-11-09T15:56:46.356115+00:00",
+  "exit": 0,
+  "candidate": "5c163fdecf370b72c1fea76dc5c072388bb1d2a3",
+  "log": "number-guards-fresh.log",
+  "log_sha256": "433f7ca34d085c883bbc71095ebed9eada4a4531b7524191aab5016f262338d3"
+}

@@ -1,0 +1,29 @@
+FFF
+======================================================================
+FAIL: test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold (test_delivery_gate.CountDisclosureTests.test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold) (declaration='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-zmqmsm5n/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2928, in test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold
+    self.assertIn("counts: 0 checked, 1 unchecked", out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 1 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\n'
+
+======================================================================
+FAIL: test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold (test_delivery_gate.CountDisclosureTests.test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold) (declaration='Unchecked counts: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-zmqmsm5n/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2928, in test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold
+    self.assertIn("counts: 0 checked, 1 unchecked", out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 1 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\n'
+
+======================================================================
+FAIL: test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold (test_delivery_gate.CountDisclosureTests.test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold) (declaration='Unchecked counts: 7\nUnchecked counts: 2\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-zmqmsm5n/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2928, in test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold
+    self.assertIn("counts: 0 checked, 1 unchecked", out)
+AssertionError: 'counts: 0 checked, 1 unchecked' not found in 'next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 1 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.279s
+
+FAILED (failures=3)

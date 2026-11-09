@@ -1,0 +1,23 @@
+{
+  "name": "handoff-focus",
+  "command": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "test_delivery_gate.CountDisclosureTests",
+    "test_learning.LearningTests.test_process_crash_during_publication_preserves_uncertainty_or_prior_record",
+    "test_learning.LearningTests.test_distinct_jobs_cannot_both_claim",
+    "test_learning.LearningTests.test_evidence_count_refusal_leaves_pending_token_correctable",
+    "test_learning.LearningTests.test_count_pattern_thousands_derived_and_punctuation",
+    "test_learning.LearningTests.test_completed_legacy_counts_remain_readable"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/kc-dev-flow-2/scripts",
+  "start": "2026-11-09T16:06:01.366675+00:00",
+  "end": "2026-11-09T16:06:05.736305+00:00",
+  "exit": 0,
+  "candidate": "9ca4b287d559728242439508e8f355112ae54432",
+  "end_candidate": "9ca4b287d559728242439508e8f355112ae54432",
+  "log": "handoff-focus.log",
+  "log_sha256": "3f18a30898cf7bab5e0be2b9054f3d12427212e6586b2527b5fdc8a2d82b235e"
+}
