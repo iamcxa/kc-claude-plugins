@@ -26,6 +26,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-11-09T14:37:10Z
 ---
 
 ## Scope
