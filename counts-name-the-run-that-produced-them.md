@@ -250,6 +250,14 @@ Past rulings read: ADR 0027 D4 (fo-write-rules-checked `Override:`, no phrase ch
   Alternative: print only, which follows ADR 0055 literally; he then sees the list only if FO copies it.
 - **D2. Refuse a learn `complete` whose `add` Evidence quotes a count that no referenced pack item holds (recommended)?** It is a structural join like the existing ref-equality refusal, and it fires before the point where #811 got stuck. On local evidence it refuses 2 of 28 entries, both real misses. What gets worse: an evaluator stating a derived count must quote it as the pack states it. And a stale count that the pack itself carries still passes.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-09, host question dialog
+Captain: 「核准（建議）」 (host question dialog, 2026-11-09)
+Asked: 「決定：第 18 批四張設計照下列建議進實作嗎？建議核准。(1) 驗證回答能不能合併：Claude 和 Codex 兩邊都要跑，Codex 跑不了就停下來回報，不接受只有 Claude 的結果；這次不寫決策紀錄，等第 19 批觀察者的數字出來再定。(2) 合併檢查誤判：只在引用的文件裡，把 shell 或沒標語言的程式區塊算成你要跑的步驟；問題和報告裡的區塊照舊全算。(3) 檢查跑在提問前：沒有對應的檢查紀錄就不讓準備問題，所以 PR 要先 ready、CI 綠才能開驗證關卡。(4) 數字寫明出處：learn 提案完成時，證據裡的數字在它引用的資料找不到就擋下；摘要裡的「未查核的數字：N」改由工具自己寫進去，不擋、也不用我抄（工人原案是擋到我抄上那一行）。核准即接受上列每一項建議，包括 (4) 改成工具自己寫；要改哪項直接說。」
+Supersedes: AC-2, AC-3
+Design: **Gate summary, merge ask and PR body: a count the tool computes, and no refusal of the claim.** The scan cannot tell a wrong count from a derived one (the "3 of 6" case), so it never holds a count. Instead, `question` and `check` list each count sentence that names no task file holding its number, and require the text to carry the tool's own figure as `Unchecked counts: N` (D1). The Captain then sees how many numbers nobody checked, in the text he reads. A count is checked by citing the saved output, for example a validator's log or a Captain steps record, by its task-folder path. Following ADR 0027 D4, nothing judges whether a count is true.
+
 ## Stage Report: ideation
 
 - DONE: Design how a count or measured number names the command or run that produced it in gate summaries, PR bodies and learn evidence packs, so a count with no source is visible as unchecked; prefer the tool recording the source over prose rules, and name the check and its falsifier. Batch overlap: name each file your design changes; siblings validation-reads-pr-review-comments, delivery-gate-ignores-url-paths-and-data-fences, delivery-check-before-ask-is-provable and counts-name-the-run-that-produced-them may touch kc-dev-flow-2/scripts/delivery_gate.py, so say the order you need relative to them.
