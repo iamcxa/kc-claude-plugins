@@ -108,7 +108,7 @@ The 4 misses come from 2 of the 28 entries. Three are real counts that appear in
 
 **FAQ**
 - *Does a checked count mean it is right?* No. It means the cited file holds that number. A file can hold a stale number. If a learn pack item carried the stale 18 of #811, the learn check passes it.
-- *What is still invisible?* A count written as a list with no number in it, such as kc-adr's "S6/S7 Codex not re-run" (ADR 0055 says the same). Chat. Stage reports, which are read only through the summary FO writes.
+- *What is still invisible?* A count written as a list with no number in it, such as kc-adr's "S6/S7 Codex not re-run" (ADR 0055 says the same). Chat. Stage reports, which are read only through the summary FO writes. A reader of the PR on GitHub, because the `Unchecked counts:` line lives in the ask text and not in the body.
 - *Why hold on the line and not on the count?* Holding the count would stop correct derived sums. Holding the line stops only a missing disclosure, as `External rounds: N` does (ADR 0051).
 - *What does FO do differently?* At a hold, it copies the `Unchecked counts:` line the script prints. Or it cites the saved file and runs the script again.
 
@@ -148,7 +148,7 @@ flowchart TD
 - `kc-dev-flow-2/scripts/test_learning.py`: the AC-1 fixtures.
 - `kc-dev-flow-2/skills/validation/principles.md`: one sentence, "Report each count with the task-folder path of the saved output that shows it; `delivery_gate.py` counts a count without one as unchecked."
 - `kc-dev-flow-2/skills/evaluate-learning/SKILL.md`: one sentence, "Each count in an entry's Evidence must appear in an evidence item the decision references; `complete` refuses it otherwise."
-- An ADR, with no number until FO reserves one: "A count cites the saved output that shows it, and the gate scripts count the ones that do not". It records both replays and both bites. It cites ADR 0055's reopen condition for the learn refusal and follows ADR 0027 D4 for the gate half (no claim is held), with ADR 0051's precedent for the disclosure line. It states the limits in the FAQ.
+- An ADR, with no number until FO reserves one: "A count cites the saved output that shows it, and the gate scripts count the ones that do not". It records both replays and both bites. It cites ADR 0055's reopen condition for the learn refusal and follows ADR 0027 D4 for the gate half (no claim is held), with ADR 0051's precedent for the disclosure line. It amends ADR 0055's consequence "The reminder adds no source-pattern hold": the new hold is on a missing `Unchecked counts: N` line, not on any count's source pattern, and 0055's reminder and its stance that no claim is judged both stand. It states the limits in the FAQ.
 - Not changed: `references/sd/workflow.md`, so the startup budget does not move. FO meets the rule in the script's output when it writes the text, and ADR 0055's sentence there still holds. Also unchanged: `_mods/`, `design_surfaces.py`, `pr_watch.py`, the observer, the CI workflow and any adopter file.
 
 ### Existing-code check
@@ -223,7 +223,7 @@ Current evidence: not yet run.
 
 Past rulings read: ADR 0027 D4 (fo-write-rules-checked `Override:`, no phrase check), ADR 0055 and its reopen condition, ADR 0051 (the round-count line), and agent-reads-governing-adr's `Override:` (a deterministic refusal where it fully separated good from bad).
 
-- **D1. Hold the validation summary and the merge ask until they carry the script's own `Unchecked counts: N` (recommended), rather than only printing the list?** It is the only way the count reaches the Captain without depending on FO. Under ADR 0055's printed line, 14 of 32 recent count sentences still name no source (`sourced-after-*.out`). It does not repeat D4's error: no claim is judged, and only a figure the tool computed is required, as with `External rounds: N`. What gets worse:
+- **D1. Hold the validation summary and the merge ask until they carry the script's own `Unchecked counts: N` (recommended), rather than only printing the list?** It is the only way the count reaches the Captain without depending on FO. Under ADR 0055's printed line, 14 of 32 recent count sentences still name no source (`sourced-after-*.out`). It does not repeat D4's error: no claim is judged, and only a figure the tool computed is required. The closest precedent is `findings_join` (ADR 0027 D5), which holds declined items against the validator's F-bullet count. Approving D1 also records that ADR 0055's "adds no source-pattern hold" is amended to allow this one disclosure hold. What gets worse:
   - 20 of 30 recent summaries would need the line, one more edit at most gates;
   - FO can clear it by copying the line, so it discloses and does not correct;
   - the Captain sees "unchecked", not "wrong".
