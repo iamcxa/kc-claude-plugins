@@ -266,6 +266,10 @@ Falsifier: drop the number-in-file comparison, and the wrong "2 cells" counts as
 
 **AC-3** `check` scans the ask text and the PR body. Evidence: a fixture PR body (through the existing `gh` stub) holding one uncited count, with ask text that holds none. `check` exits 1 until the text carries `Unchecked counts: 1`. Falsifier: scan only `--text-file`, and the test fails. Current evidence: not yet built.
 
+## Number guards
+
+ADR: 0072
+
 ## Stage Report: ideation
 
 - DONE: Design how a count or measured number names the command or run that produced it in gate summaries, PR bodies and learn evidence packs, so a count with no source is visible as unchecked; prefer the tool recording the source over prose rules, and name the check and its falsifier. Batch overlap: name each file your design changes; siblings validation-reads-pr-review-comments, delivery-gate-ignores-url-paths-and-data-fences, delivery-check-before-ask-is-provable and counts-name-the-run-that-produced-them may touch kc-dev-flow-2/scripts/delivery_gate.py, so say the order you need relative to them.
