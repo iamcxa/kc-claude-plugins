@@ -1,0 +1,12 @@
+Candidate: ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9
+Base: 82c9e67ae892b80647c3f6a8b6929f993e42dbc2
+decline exit=1: next: some-task has 3 validations with a Material or Needs decision finding; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "what single mechanism produces these findings, and what one change closes that class?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: unrelated: <finding> <its own cause>; <finding> <its own cause>` instead.
+decline exit=0: role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+......
+----------------------------------------------------------------------
+Ran 6 tests in 8.093s
+
+OK
+Old checker rejected: 8 assertion failures, no test errors
+64 ADR file(s) checked, 0 legacy
+PASS: five acceptance steps; evidence remains at /tmp/pr821-acceptance.pyUZ00
