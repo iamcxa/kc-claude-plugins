@@ -1,0 +1,10 @@
+{
+  "preregistration": "preregistration-3.json",
+  "rubric_changed": false,
+  "CLI_changes": [
+    "Claude allowedTools explicitly Read,Write,Edit,Bash under dontAsk; no secret setup or custom HOME",
+    "per-run scratch gh/shell logs copied to retained output at completion"
+  ],
+  "launch_schedule": "After first fixed Codex completes, launch remaining registered cells in deterministic base/candidate order with at most five CLI processes; complete Codex before Claude. A non-completing Codex CLI stops subsequent calls.",
+  "raw_hard_stop": 16
+}
