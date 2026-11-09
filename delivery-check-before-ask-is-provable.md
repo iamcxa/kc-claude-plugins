@@ -193,6 +193,10 @@ Recommended order: after #794 merges; then in any order with the other batch 18 
 
 **AC-8** The ADR lands with the Captain's words from this gate and states that it amends ADR 0051's consequence and leaves its decision. Verified by `adr_lint.py docs/adr --require <reserved number>` exiting 0.
 
+## Number guards
+
+ADR: 0071
+
 ## Stage Report: ideation
 
 - DONE: Design how the merge-ask record shows, from state alone, that kc-dev-flow-2/scripts/delivery_gate.py check ran before the question was presented; prefer the tool writing that fact over a new written rule. Batch overlap: name each file your design changes; siblings validation-reads-pr-review-comments, delivery-gate-ignores-url-paths-and-data-fences, delivery-check-before-ask-is-provable and counts-name-the-run-that-produced-them may touch kc-dev-flow-2/scripts/delivery_gate.py, so say the order you need relative to them.
