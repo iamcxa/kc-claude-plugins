@@ -2,6 +2,17 @@
 title: A count or measured number names the command and run that produced it
 status: backlog
 variant: kc-dev-flow-2
+gates:
+    version: 1
+    records:
+        - id: gate:counts-name-the-run-that-produced-them:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:counts-name-the-run-that-produced-them-backlog-1
+              briefing:
+                id: briefing:counts-name-the-run-that-produced-them:backlog:attempt-1:revision-1
+                digest: sha256:1d19a15110b48655c29fca3770ac70e28e75fe6aea188487a8423520ba648b5d
+                room-ref: ./counts-name-the-run-that-produced-them/review/backlog/briefing-1
 ---
 
 ## Scope
