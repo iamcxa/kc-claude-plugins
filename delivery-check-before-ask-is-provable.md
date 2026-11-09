@@ -53,6 +53,17 @@ gates:
                 id: briefing:delivery-check-before-ask-is-provable:validation:attempt-1:revision-1
                 digest: sha256:c4710a2ffa7a4f88460fa30a5c5f00c1028276fcdc3869ac950d195565f02787
                 room-ref: ./delivery-check-before-ask-is-provable/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-check-before-ask-is-provable:validation:1
+                briefing: briefing:delivery-check-before-ask-is-provable:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-09T08:27:38.98495Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-09), answering 「批次 18 驗證關卡（快照 sha256:c4710a2f…）：要合併 #817 嗎？它讓合併提問要附上當時跑過的檢查紀錄，沒有紀錄就不讓準備問題，並新增決策紀錄 0071。驗證通過，而且驗證者讀完 PR 上所有意見、沒有未處理的；我在乾淨 shell 重跑驗收腳本通過；Codex 和 RoboRev 沒找到問題；CI 全綠；Copilot 因額度不足沒審。剩下的限制：新的「沒紀錄就擋」要等下一版發布才生效。#818 目前卡在 GitHub 下載 504，等恢復後再問你。建議先合併 #817。」, which presented the bound question 「決定：合併 #817（合併提問要附上當時跑過的檢查紀錄，沒有紀錄就不讓準備問題；新增決策紀錄 0071）嗎？建議合併。 Regular merge with --match-head-commit 85f9a65928958f78a4eaf12b3ce38ca4e25e2ab0, the batch 18 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-09T04:59:10Z
 worktree: .worktrees/spacedock-ensign-delivery-check-before-ask-is-provable
 pr: iamcxa/kc-claude-plugins#817
