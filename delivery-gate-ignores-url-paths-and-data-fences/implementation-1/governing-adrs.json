@@ -1,0 +1,14 @@
+[
+  {
+    "path": "docs/adr/0054-fo-runs-a-step-before-asking-the-captain-and-records-it.md",
+    "commit": "6f2fe8f33de15cf4e9283bf9dfed185a5691ed57",
+    "sha256": "23cee65f32c5b92f8ae06c39a8501c24002aec045b8ebca58e22ddc7ed4d0eb4",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md",
+    "commit": "6f2fe8f33de15cf4e9283bf9dfed185a5691ed57",
+    "sha256": "97f14773e680927e218eb3f866bd733f232d607134f37ecda344de9244187953",
+    "status": "Accepted"
+  }
+]

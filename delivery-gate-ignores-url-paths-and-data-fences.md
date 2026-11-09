@@ -216,3 +216,42 @@ Recommended order: any order; land after #794 if it merges first, and rebase `te
 ### Summary
 
 Reproduced all five inputs on 0.36.0 and designed three one-line narrowings; a scratch prototype passes them, keeps every control held and leaves the existing 176-test suite green. The design keeps the 2026-11-03 every-fence rule for FO's message and the report and narrows only named cards to shell or untagged fences (D1, Captain). The replay also found a new 0.36.0 hold on the PR-body attribution link, returned to FO as D2 rather than adopted.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria in the assigned worktree, only the files the design names.
+  Candidate `6f2fe8f33de15cf4e9283bf9dfed185a5691ed57`, branch `spacedock-ensign/delivery-gate-ignores-url-paths-and-data-fences`, parent/base `e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e` after `git fetch origin`; only delivery_gate.py and test_delivery_gate.py change (`implementation-1/candidate.json`).
+- DONE: D1 as recommended; D2 is FO's; PR #794 stays held and is not a prerequisite.
+  Applied the Captain's batch 18 「核准（建議）」 card-only fence rule; the message/report still check every fence, card links stay checked, and the candidate's parent is origin/main rather than #794.
+- DONE: AC-1 Site URL paths and an elided package path are not files.
+  `CaptainStepsTests.test_site_and_elided_paths_are_not_files_without_a_real_top_level_directory` passes the five tokens and Asked `/llms.txt`; removing the top-level-root predicate returns exit 1 with S4 (`implementation-1/mutation-observations.json`).
+- DONE: AC-2 A namespace URI right after a brace is not a link.
+  Steps and real-CLI question pass `{http://www.w3.org/2000/svg}svg` in message/report; removing the brace exclusion returns S5, and bare namespace URLs still hold (`implementation-1/mutations.log`, `discover.log`).
+- DONE: AC-3 Data fences in named cards are not commands.
+  `QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths` passes both exact named YAML cards from the summary; replacing the card shell-only call with all fences returns S5 for each (`implementation-1/baseline-regressions.log`, `mutation-observations.json`).
+- DONE: AC-4 Real steps and missing files still hold.
+  Shell/untagged card fences, YAML message/report fences, ordinary links, and missing message/Asked paths hold; existing files pass. Message shell-only, dropping paths, dropping links and dropping card fences each break a hold; all seven named falsifiers ran with python3 -B after cache removal (`implementation-1/run_mutations.py`, `mutations.log`).
+- DONE: AC-5 The stop condition holds through question.
+  Real CLI cases for all three mechanisms print `gate text complete`; an unrecorded sh card or missing temp path exits 1 with `Captain steps record fails` (`QuestionTests.test_question_accepts*`, `implementation-1/discover.log`).
+- DONE: AC-6 Nothing else moves; every acceptance criterion is green with its named evidence.
+  python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py': 1032 tests, 7 skips, exit 0; five extension suites, real local dispatch/recovery and version parity exit 0; workflow bytes unchanged at 5931 words; diff names only the two approved files (`implementation-1/discover.log`, `extra-checks.json`, `workflow-parity.log`).
+- DONE: kc-dev-flow-2/scripts/lint-skills.py, package adr_lint.py docs/adr --since <base>, package number_guards.py check, and package comment_ratio.py within its maximum.
+  Repository lint exits 0; pinned 0.36.0 ADR lint checks 63 files, number guard at base e7c9381f2ae7/head 6f2fe8f33de1 has no findings after a fresh state fetch, and comment ratio is 0.0% (127 code/0 comment lines), maximum 5% (`implementation-1/*lint*.log`, `number-guards.log`, `comment-ratio.log`).
+- DONE: design_surfaces.py check.
+  Pinned 0.36.0 prints `design surfaces presentable`, exit 0 (`implementation-1/design-surfaces.log`); no design amendment or new decision record is needed.
+- DONE: doc_impact.py disposition for docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md.
+  unaffected: optional separate-summary review-fact checks and legacy combined-input compatibility are unchanged; full regression suite passes (`implementation-1/doc-impact.json`).
+- DONE: doc_impact.py disposition for docs/adr/0051-the-merge-ask-check-requires-the-round-count.md.
+  unaffected: check's round-count rule is untouched; full regression suite passes (`implementation-1/doc-impact.json`).
+- DONE: doc_impact.py disposition for docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md.
+  unaffected: ASK_FORM, ASK_UNQUOTED and bound-question authority are untouched; full regression suite passes (`implementation-1/doc-impact.json`).
+- DONE: Commit locally, no product push; prepare Conventional Commit PR text for FO, without a version bump.
+  Local candidate is committed and clean; first-line title `fix(kc-dev-flow-2): distinguish gate data from Captain steps`, body at `/tmp/impl-delivery-gate-ignores-url-paths-and-data-fences-pr.md` and `implementation-1/pr.md`; same-branch all-state PR lookup was empty.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins; FO pushes, opens the Draft PR, runs RoboRev and reads CI.
+  No PR opened: no push grant; this dispatch assigns those actions to FO. No product push, review request, comment, ready or merge was performed.
+- SKIPPED: RoboRev and hosted CI; CI cost per PR measured or stated as not measured.
+  RoboRev not run: FO owns local review; hosted CI not run: no PR opened. CI cost per PR not measured; CI configuration is unchanged. Local model-free dispatch used Spacedock binary 0.27.2 with plugin/mod root 0.27.3, not hosted CI proof.
+
+### Summary
+
+Implemented the three approved narrowings at the named candidate, with all acceptance checks and seven falsifiers exercised on 2026-11-09; local evidence and PR text are ready for FO. The accepted tradeoff remains: non-shell fences in named cards, including Python or Node, are not inferred as steps; publication, independent review and validation remain FO-owned.

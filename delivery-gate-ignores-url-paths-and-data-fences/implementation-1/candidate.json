@@ -1,0 +1,8 @@
+{
+  "base": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+  "candidate": "6f2fe8f33de15cf4e9283bf9dfed185a5691ed57",
+  "files": {
+    "kc-dev-flow-2/scripts/delivery_gate.py": "c6f7a3564adb6c0c0d8d87e8c01141c1abe95b0747090736d742a037fb87ad41",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "9d64c65c7f94654af27ccf90b772bffcef2577ba2067ad20aed58747f6ca3df2"
+  }
+}
