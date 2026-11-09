@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:role-call-asks-for-the-mechanism:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:role-call-asks-for-the-mechanism-validation-1
+              briefing:
+                id: briefing:role-call-asks-for-the-mechanism:validation:attempt-1:revision-1
+                digest: sha256:d7ce055332c2506f722e8ed8f00ea2aa2ba9947bdb307b5aff688e2e901e7d14
+                room-ref: ./role-call-asks-for-the-mechanism/review/validation/briefing-1
 started: 2026-11-09T14:37:22Z
 worktree: .worktrees/spacedock-ensign-role-call-asks-for-the-mechanism
 pr: iamcxa/kc-claude-plugins#821
