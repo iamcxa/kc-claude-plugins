@@ -1,0 +1,18 @@
+[
+  {
+    "version": "base",
+    "startup": 80,
+    "question": 92,
+    "check": 84,
+    "question_output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n",
+    "check_output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n"
+  },
+  {
+    "version": "candidate",
+    "startup": 80,
+    "question": 107,
+    "check": 84,
+    "question_output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmplisorcwb`, then run `gate prepare` with `--reference /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmplisorcwb/task/merge/ask-1.json`.\n",
+    "check_output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n"
+  }
+]

@@ -1,0 +1,290 @@
+[
+  {
+    "name": "bound reference",
+    "expected": "ok",
+    "actual": "ok"
+  },
+  {
+    "name": "mismatched head",
+    "expected": "violation",
+    "actual": "violation"
+  },
+  {
+    "name": "mismatched sufficiency",
+    "expected": "violation",
+    "actual": "violation"
+  },
+  {
+    "name": "mismatched necessity",
+    "expected": "violation",
+    "actual": "violation"
+  },
+  {
+    "name": "digest mismatch",
+    "expected": "violation",
+    "actual": "violation"
+  },
+  {
+    "name": "new rules without Reference",
+    "expected": "violation",
+    "actual": "violation"
+  },
+  {
+    "name": "design-check-says-not-run-without-a-scope",
+    "expected": "can't tell",
+    "actual": "can't tell",
+    "briefing_commit": "b635d3096398b568c823efbd2fa0a9f90d34292f",
+    "event_time": "2026-11-08T02:10:41Z",
+    "rules_commit": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+    "records": [
+      {
+        "class": "never",
+        "head": "2760f259379e9c3bb43bab9efa56d90c5b657ab1",
+        "model": "not run",
+        "necessity": "the two files are design_surfaces.py and its test (gh pr view 807 --json files, FO 2026-11-08).",
+        "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: 'Full suite exits 0: 985 tests,'",
+          "point: not-run: 'Fresh standalone clone of Relay `spacedock-state/dev2`'",
+          "point: not-run: 'copilot not run: \"Copilot was unable'",
+          "point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'",
+          "point: path: 'kc-dev-flow-2/scripts/test_design_surfaces.py'",
+          "point: second-reviewer: 'copilot'"
+        ],
+        "pr": "iamcxa/kc-claude-plugins#807",
+        "sufficiency": "when the backlog briefing bound a file other than the task, the design check now prints a not-run line naming it instead of a false Scope hold, the relay llms-teaches-versions case replays without the",
+        "time": "2026-11-08T02:10:46Z",
+        "verdict": "ask"
+      }
+    ]
+  },
+  {
+    "name": "adr-lint-tells-supersession-assertion-from-pointer",
+    "expected": "can't tell",
+    "actual": "can't tell",
+    "briefing_commit": "7e04b54632ea55db52c91c19089771a22e0d2bd5",
+    "event_time": "2026-11-08T02:07:29Z",
+    "rules_commit": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+    "records": [
+      {
+        "class": "never",
+        "head": "f429f0fac40511c6480fd92e2cccd4c0e94b2454",
+        "model": "not run",
+        "necessity": "the four files are the kc-adr linter and its test, the identical dev2 copy, and the one-line un-split in test_sd_dispatch.py (gh pr view 806 --json files, FO 2026-11-08).",
+        "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: '- F1 Deferred risk: multiline/regex assertions'",
+          "point: deferred: '- F2 Deferred risk: a same-line'",
+          "point: deferred: 'Declined: Deferred risk, validation-1 F1 at'",
+          "point: deferred: 'Declined: Deferred risk, validation-1 F2 at'",
+          "point: deferred: 'Declined: Polish, validation-1 F3 at f429f0fac,'",
+          "point: not-run: 'roborev not run: FO owns local'",
+          "point: not-run: 'copilot not run: \"Copilot was unable'",
+          "point: path: 'kc-dev-flow-2/scripts/adr_lint.py'",
+          "point: path: 'kc-dev-flow-2/scripts/test_sd_dispatch.py'",
+          "point: second-reviewer: 'copilot'"
+        ],
+        "pr": "iamcxa/kc-claude-plugins#806",
+        "sufficiency": "a protected file that asserts a superseded ADR's Status no longer fails the lint while a file citing a superseded ADR as its authority still does, and the PR #800 false positive replays clean with the",
+        "time": "2026-11-08T02:07:35Z",
+        "verdict": "ask"
+      },
+      {
+        "class": "never",
+        "head": "f429f0fac40511c6480fd92e2cccd4c0e94b2454",
+        "model": "not run",
+        "necessity": "the four files are the kc-adr linter and its test, the identical dev2 copy, and the one-line un-split in test_sd_dispatch.py (gh pr view 806 --json files, FO 2026-11-08).",
+        "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: '- F1 Deferred risk: multiline/regex assertions'",
+          "point: deferred: '- F2 Deferred risk: a same-line'",
+          "point: deferred: 'Declined: Deferred risk, validation-1 F1 at'",
+          "point: deferred: 'Declined: Deferred risk, validation-1 F2 at'",
+          "point: deferred: 'Declined: Polish, validation-1 F3 at f429f0fac,'",
+          "point: not-run: 'roborev not run: FO owns local'",
+          "point: not-run: 'copilot not run: \"Copilot was unable'",
+          "point: path: 'kc-dev-flow-2/scripts/adr_lint.py'",
+          "point: path: 'kc-dev-flow-2/scripts/test_sd_dispatch.py'",
+          "point: second-reviewer: 'copilot'"
+        ],
+        "pr": "iamcxa/kc-claude-plugins#806",
+        "sufficiency": "a protected file that asserts a superseded ADR's Status no longer fails the lint while a file citing a superseded ADR as its authority still does, and the PR #800 false positive replays clean with the",
+        "time": "2026-11-08T02:10:37Z",
+        "verdict": "ask"
+      }
+    ]
+  },
+  {
+    "name": "observer-lists-unasked-merges",
+    "expected": "can't tell",
+    "actual": "can't tell",
+    "briefing_commit": "909b1ffe88e300db3d2339be2798e05fbeafffb2",
+    "event_time": "2026-11-08T02:55:44Z",
+    "rules_commit": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+    "records": [
+      {
+        "class": "never",
+        "head": "a43b537cd12d69a5ccfde38bf964c6ea35cb0de0",
+        "model": "not run",
+        "necessity": "the four files are merge_audit.py and its test, one observer SKILL.md paragraph, and one test step in .github/workflows/kc-dev-flow-2-tests.yml (gh pr view 809 --json files, FO 2026-11-08).",
+        "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: '- DONE: Re-validate at the repair'",
+          "point: deferred: 'validation-2/native-execution.json proves the fresh observer ran'",
+          "point: deferred: 'Cycle 2 independently recommends PASSED for'",
+          "point: deferred: 'Declined: Polish, validation-1 F2 at b36fbeeec,'",
+          "point: deferred: 'Declined: Polish, validation-2 F3 at a43b537cd,'",
+          "point: not-run: 'roborev not run: FO owns the'",
+          "point: not-run: 'roborev not run: FO owns the'",
+          "point: not-run: 'copilot not run: \"Copilot was unable'",
+          "point: path: '.github/workflows/kc-dev-flow-2-tests.yml'",
+          "point: path: 'kc-dev-flow-2/scripts/merge_audit.py'",
+          "point: path: 'kc-dev-flow-2/scripts/test_merge_audit.py'",
+          "point: path: 'kc-dev-flow-2/skills/observer/SKILL.md'",
+          "point: more: 1 not shown"
+        ],
+        "pr": "iamcxa/kc-claude-plugins#809",
+        "sufficiency": "merge_audit.py sorts every PR merged in a task's window into carried, head differs, no ask record (can't tell), and release, sync or learning, the window holding #785 lists #785 as no ask record, and ",
+        "time": "2026-11-08T02:55:50Z",
+        "verdict": "ask"
+      }
+    ]
+  },
+  {
+    "name": "worker-browser-checks-use-paseo-browser",
+    "expected": "can't tell",
+    "actual": "can't tell",
+    "briefing_commit": "1ee493daa21ceb7cb3d619db6ce72f8990aec471",
+    "event_time": "2026-11-08T02:58:52Z",
+    "rules_commit": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+    "records": [
+      {
+        "class": "never",
+        "head": "90192bb64db4614de9a7a94cc782ee5fa44748db",
+        "model": "not run",
+        "necessity": "the two files are extensions/paseo/EXTENSION.md and the new extensions/paseo/browser.md (gh pr view 810 --json files, FO 2026-11-08).",
+        "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: not-run: 'copilot not run: \"Copilot was unable'",
+          "point: path: 'kc-dev-flow-2/extensions/paseo/EXTENSION.md'",
+          "point: path: 'kc-dev-flow-2/extensions/paseo/browser.md'",
+          "point: second-reviewer: 'copilot'"
+        ],
+        "pr": "iamcxa/kc-claude-plugins#810",
+        "sufficiency": "the paseo extension now tells a worker to use Paseo's browser tools by default for local browser checks, with CI unchanged, a recorded fallback, and five known limits including that a tab must be visi",
+        "time": "2026-11-08T02:58:59Z",
+        "verdict": "ask"
+      },
+      {
+        "class": "never",
+        "head": "fef21735308e7e807d04a93a5506de5284dde436",
+        "model": "not run",
+        "necessity": "only kc-dev-flow-2/extensions/paseo/EXTENSION.md and kc-dev-flow-2/extensions/paseo/browser.md differ from the merge base (validation cycle-2 report, Astra, 2026-11-08).",
+        "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: not-run: 'copilot not run: \"Copilot was unable'",
+          "point: amendment: 'Amendment 1 dated 2026-11-08'",
+          "point: path: 'kc-dev-flow-2/extensions/paseo/EXTENSION.md'",
+          "point: path: 'kc-dev-flow-2/extensions/paseo/browser.md'",
+          "point: second-reviewer: 'copilot'"
+        ],
+        "pr": "iamcxa/kc-claude-plugins#810",
+        "sufficiency": "the paseo extension's dispatch quote now ends with a pointer read only before using Paseo's browser tools, and the 228-word guide sends attended pages and logins where the Captain performs human verif",
+        "time": "2026-11-08T05:22:46Z",
+        "verdict": "ask"
+      }
+    ]
+  },
+  {
+    "name": "dispatch-build-writes-the-dispatch-record",
+    "expected": "can't tell",
+    "actual": "can't tell",
+    "briefing_commit": "f4986f22b30eb98a47171a584f0e39a1ee20d3a3",
+    "event_time": "2026-11-08T12:14:53Z",
+    "rules_commit": "4deaa2aa108adeaf3c934fd2309e69d90ac3a076",
+    "records": [
+      {
+        "class": "never",
+        "head": "bd9d4abce4e0c61a69079d4e822b6ded45cfdc20",
+        "model": "not run",
+        "necessity": "the nine changed files map to the script, its tests and CI step, the README budget, the authorized observer chat-only entry and ADR 0070 (validation-4 report, Astra, 2026-11-08).",
+        "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: 'PASSED: PR #812 at afa4523468a2e86e6c6e0467591df00bf8e51d35 satisfies'",
+          "point: deferred: 'Recommend checking index identity before reuse'",
+          "point: deferred: 'Validation-2 F1 is fixed by the'",
+          "point: deferred: 'Validation-2 F1 is fixed by the'",
+          "point: deferred: 'Both previously Material Codex comments (4505536959'",
+          "point: not-run: 'roborev not run: FO owns review/publication'",
+          "point: not-run: 'roborev not run: FO owns review/publication.'",
+          "point: not-run: 'roborev not run: FO owns review/publication.'",
+          "point: not-run: 'roborev not run: FO owns review/publication.'",
+          "point: amendment: 'Amendment 1 dated 2026-11-08'",
+          "point: path: '.github/workflows/kc-dev-flow-2-tests.yml'",
+          "point: path: 'docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-'",
+          "point: more: 7 not shown"
+        ],
+        "pr": "iamcxa/kc-claude-plugins#812",
+        "sufficiency": "kc-dev-flow-2/scripts/dispatch_stage.py writes each stage dispatch record from the actual checklist and scope notes, runs both record checks, refuses any dirty task commit scope before writing, forwar",
+        "time": "2026-11-08T12:15:23Z",
+        "verdict": "ask"
+      }
+    ]
+  },
+  {
+    "name": "agent-reads-governing-adr",
+    "expected": "ok",
+    "actual": "ok",
+    "briefing_commit": "dae03dc331506a94e3e0e886f8c0273af605781a",
+    "event_time": "2026-10-22T07:29:52Z",
+    "rules_commit": "cebd0ab93c7f9b681d55434cfc99c19b2d9dd8ba",
+    "records": [
+      {
+        "class": "never",
+        "head": "589c54e57fe969b6049bad737be8615e96b7b54e",
+        "model": "not run",
+        "necessity": "five files (AGENTS.md, CLAUDE.md one line, scripts/adr-path-check.py, scripts/adr-path-check.test.py, one workflow file), each named in the design and Amendment 1.",
+        "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: \"- F2 Deferred risk: the pointer's\"",
+          "point: deferred: '- F3 Deferred risk: the `REF:`'",
+          "point: deferred: '- F4 Deferred risk: after-compaction reload'",
+          "point: deferred: 'FO declines: Deferred risk, Codex P2'",
+          "point: amendment: 'Amendment 1 dated 2026-10-22'",
+          "point: path: '.github/workflows/adr-path-check.yml'",
+          "point: path: 'AGENTS.md'",
+          "point: path: 'CLAUDE.md'",
+          "point: path: 'scripts/adr-path-check.py'",
+          "point: path: 'scripts/adr-path-check.test.py'"
+        ],
+        "pr": "iamcxa/kc-claude-plugins#698",
+        "sufficiency": "AGENTS.md carries a 39-word pointer to docs/adr and CLAUDE.md imports it with @AGENTS.md, which reached the Claude main session, a spacedock:ensign subagent and Codex in a clean-clone probe and was ab",
+        "time": "2026-10-22T07:29:32Z",
+        "verdict": "ask"
+      },
+      {
+        "class": "never",
+        "head": "589c54e57fe969b6049bad737be8615e96b7b54e",
+        "model": "not run",
+        "necessity": "five files (AGENTS.md, CLAUDE.md one line, scripts/adr-path-check.py, scripts/adr-path-check.test.py, one workflow file), each named in the design and Amendment 1.",
+        "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [
+          "point: deferred: \"- F2 Deferred risk: the pointer's\"",
+          "point: deferred: '- F3 Deferred risk: the `REF:`'",
+          "point: deferred: '- F4 Deferred risk: after-compaction reload'",
+          "point: deferred: 'FO declines: Deferred risk, Codex P2'",
+          "point: amendment: 'Amendment 1 dated 2026-10-22'",
+          "point: path: '.github/workflows/adr-path-check.yml'",
+          "point: path: 'AGENTS.md'",
+          "point: path: 'CLAUDE.md'",
+          "point: path: 'scripts/adr-path-check.py'",
+          "point: path: 'scripts/adr-path-check.test.py'"
+        ],
+        "pr": "iamcxa/kc-claude-plugins#698",
+        "sufficiency": "AGENTS.md carries a 39-word pointer to docs/adr and CLAUDE.md imports it with @AGENTS.md, which reached the Claude main session, a spacedock:ensign subagent and Codex in a clean-clone probe and was ab",
+        "time": "2026-10-22T07:50:15Z",
+        "verdict": "ask"
+      }
+    ]
+  }
+]

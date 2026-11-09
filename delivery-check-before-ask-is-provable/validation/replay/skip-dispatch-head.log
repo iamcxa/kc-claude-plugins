@@ -1,0 +1,19 @@
+......F.
+======================================================================
+FAIL: test_record_must_match_a_latest_dispatched_candidate (__main__.Mutation_skip-dispatch-head.test_record_must_match_a_latest_dispatched_candidate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr817-validation.xGoxMd/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2102, in test_record_must_match_a_latest_dispatched_candidate
+    self.assert_held()
+  File "/private/tmp/pr817-validation.xGoxMd/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfgjfpsvh`, then run `gate prepare` with `--reference /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfgjfpsvh/task/merge/ask-1.json`.
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.056s
+
+FAILED (failures=1)

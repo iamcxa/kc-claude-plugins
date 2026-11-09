@@ -1,0 +1,22 @@
+[
+  {
+    "path": "docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md",
+    "sha256": "2f030ea33803ac78b9d5863848d73ab1cb4c5466aceb81d4c2e2097eaece0506"
+  },
+  {
+    "path": "kc-dev-flow-2/references/sd/workflow.md",
+    "sha256": "3f8d8f33c2f0ec80ceff87e765235f368b37600b6f3b49394a7a86c2d175ce03"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "sha256": "e4729990002afbda5e99b1e1e8b4c8c268ad93a5f4ec0c06b50be366dc1f1fcc"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "sha256": "d5be8ca675c2390f9529a6d4992bf50d6fdba74241f1281521b7f281943ea9bc"
+  },
+  {
+    "path": "kc-dev-flow-2/skills/observer/SKILL.md",
+    "sha256": "adb6dfa588118c8efa160d8dd391165456e06e48dbf62405988ed55da35072a2"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "name": "base-question",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/pr817-validation.xGoxMd/base/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp_lcg82xd/task.md",
+      "--text-file",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp_lcg82xd/question.txt",
+      "--summary-file",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp_lcg82xd/summary.txt"
+    ],
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "candidate-question",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/pr817-validation.xGoxMd/candidate/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp_lcg82xd/task.md",
+      "--text-file",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp_lcg82xd/question.txt",
+      "--summary-file",
+      "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp_lcg82xd/summary.txt"
+    ],
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "AC-7 extra output word rejected",
+    "observed": 108,
+    "expected": 107,
+    "mutant_rejected": true
+  },
+  {
+    "name": "AC-5-unbudgeted-word-mutant",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 1,
+    "expected": 1
+  },
+  {
+    "name": "AC-8-missing-required-adr-mutant",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py",
+      "/tmp/pr817-validation.xGoxMd/independent/adr-copy",
+      "--require",
+      "0071"
+    ],
+    "exit": 1,
+    "expected": 1
+  }
+]

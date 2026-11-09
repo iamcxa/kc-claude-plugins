@@ -1,0 +1,37 @@
+[
+  {
+    "name": "missing-hold",
+    "status": "passed",
+    "message": "mutant rejected: 16 assertion failures, 0 errors"
+  },
+  {
+    "name": "oldest-record",
+    "status": "passed",
+    "message": "mutant rejected: 4 assertion failures, 0 errors"
+  },
+  {
+    "name": "skip-dispatch-head",
+    "status": "passed",
+    "message": "mutant rejected: 1 assertion failures, 0 errors"
+  },
+  {
+    "name": "skip-question-head",
+    "status": "passed",
+    "message": "mutant rejected: 1 assertion failures, 0 errors"
+  },
+  {
+    "name": "skip-sufficiency",
+    "status": "passed",
+    "message": "mutant rejected: 2 assertion failures, 0 errors"
+  },
+  {
+    "name": "skip-necessity",
+    "status": "passed",
+    "message": "mutant rejected: 1 assertion failures, 0 errors"
+  },
+  {
+    "name": "omit-reference-line",
+    "status": "passed",
+    "message": "mutant rejected: 1 assertion failures, 0 errors"
+  }
+]

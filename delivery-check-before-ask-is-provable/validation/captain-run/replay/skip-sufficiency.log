@@ -1,0 +1,33 @@
+F....F..
+======================================================================
+FAIL: test_each_clause_and_an_ad_hoc_run_on_another_text_hold (__main__.Mutation_skip-sufficiency.test_each_clause_and_an_ad_hoc_run_on_another_text_hold) (changes={'sufficiency': 'another run'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr817-acceptance.wYwDEt/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2129, in test_each_clause_and_an_ad_hoc_run_on_another_text_hold
+    self.assert_held()
+  File "/private/tmp/pr817-acceptance.wYwDEt/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfv704e51`, then run `gate prepare` with `--reference /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfv704e51/task/merge/ask-2.json`.
+
+
+======================================================================
+FAIL: test_question_and_summary_clauses_use_the_record_truncation (__main__.Mutation_skip-sufficiency.test_question_and_summary_clauses_use_the_record_truncation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr817-acceptance.wYwDEt/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2139, in test_question_and_summary_clauses_use_the_record_truncation
+    self.assert_held()
+  File "/private/tmp/pr817-acceptance.wYwDEt/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3kyogepn`, then run `gate prepare` with `--reference /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3kyogepn/task/merge/ask-1.json`.
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.055s
+
+FAILED (failures=2)

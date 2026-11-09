@@ -1,0 +1,1 @@
+PASS: baseline missing-record control; seven rejected code mutations; native uncommitted/modified reference holds and committed digest; 12 observer replays and fallback mutation; lifecycle words 80/80, 92/107, check unchanged.

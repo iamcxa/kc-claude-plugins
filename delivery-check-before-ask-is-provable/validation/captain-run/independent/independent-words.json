@@ -1,0 +1,14 @@
+[
+  {
+    "name": "base",
+    "readme": 80,
+    "question": 92,
+    "check": 84
+  },
+  {
+    "name": "candidate",
+    "readme": 80,
+    "question": 107,
+    "check": 84
+  }
+]

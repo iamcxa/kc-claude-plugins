@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Delivery gate suite: 183 passed, one optional historical approval replay skipped",
+    "status": "passed",
+    "message": "184 tests, OK (skipped=1)"
+  },
+  {
+    "name": "Lint suite: 47 tests",
+    "status": "passed"
+  },
+  {
+    "name": "POC README suite: 9 tests",
+    "status": "passed"
+  },
+  {
+    "name": "All eight ACs with falsifiers",
+    "status": "passed"
+  },
+  {
+    "name": "Native Spacedock reference binding",
+    "status": "passed"
+  },
+  {
+    "name": "First post-release live observer run",
+    "status": "skipped",
+    "message": "Explicitly post-merge evidence, not PR acceptance"
+  }
+]

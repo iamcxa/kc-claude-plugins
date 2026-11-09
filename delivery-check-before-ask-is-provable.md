@@ -263,3 +263,37 @@ Design: `check` runs first, `question` refuses a merge question unless the newes
 ### Summary
 
 Implemented the approved Pilot hold: check first, then prepare a merge question only with the newest matching record, and bind that committed record through --reference. Product candidate 85f9a65928958f78a4eaf12b3ce38ca4e25e2ab0 is locally committed and clean; evidence is in this task's implementation/ companion folder. FO retains publication, Draft PR, RoboRev, hosted CI, validation and merge authority; no product push, review request, comment, ready or merge was performed.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #817 head 85f9a659 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 85f9a65928958f78a4eaf12b3ce38ca4e25e2ab0 against origin/main e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e; primary evidence and limit dispositions: validation/report.md.
+- DONE: AC-1 missing delivery record holds preparation.
+  Same fixture: base exit 0, candidate exit 1; removing the hold fails assertions (validation/replay/baseline-control.json and missing-hold.log).
+- DONE: AC-2 newest delivery record must match the dispatched head, question head and both clauses.
+  Newest-number, mismatched heads/clauses, malformed/nonobject/unreadable and ad-hoc text cases hold; oldest-record and four skipped-comparison mutants fail assertions (validation/replay/mutations.json).
+- DONE: AC-3 successful question names the exact newest record, with legacy non-merge behavior retained.
+  Numeric ask-10 selection and last-line path pass; omitting the reference line fails; full delivery suite and eight targeted command cases pass (validation/unit.log, acceptance-published.log).
+- DONE: AC-4 native Spacedock binds the committed record.
+  Installed 0.27.2: uncommitted/edited file exit 1, committed file exit 0; URI commit/path and sha256 equal real bytes, in standalone /tmp fixture repositories (validation/replay/commands.jsonl, native-reference.json).
+- DONE: AC-5 unchanged README word count and WORKFLOW_BUDGET_STEPS.
+  Lint passes at 5931/5931 and budget script is byte-identical to base; unbudgeted instruction mutation exits 1 (validation/lint.log, independent/AC-5-unbudgeted-word-mutant.log).
+- DONE: AC-6 observer procedure distinguishes bound evidence and retains historical fallback.
+  Twelve replays match; bad digest/head/clauses/new-rule missing Reference violate, five batch-17 cases remain can't tell, earlier agent-reads-governing-adr remains ok; deleting fallback changes it to can't tell (validation/replay/observer-replay.json).
+- DONE: AC-7 independent lifecycle recount.
+  Separate validator script executes both versions: README 80/80, question 92/107, check 84/84; added output word is caught at 108 (validation/independent/independent-words.json, falsifiers.json).
+- DONE: AC-8 Captain wording and ADR 0051 amendment.
+  ADR 0071 matches the recorded answer/question, amends the ordering consequence and keeps the round-count decision; removing required 0071 makes lint exit 1 (validation/independent/AC-8-missing-required-adr-mutant.log).
+- DONE: Answer the merge-readiness question for PR #817 at this head: read every review comment and review on the PR at the head before your verdict, and say which, if any, stand unaddressed. PR #794 is held by the Captain; judge this PR against origin/main. Keep any download under a new /tmp directory, never in the task state folder.
+  Product PASSED, but not immediately merge-ready: still Draft, configured Copilot outcome absent, delegated local RoboRev result unverified. Read all 0 reviews, 0 inline comments and 3 issue comments; Codex completed clean at this head, no finding unaddressed. Hosted run 42577978797 passes exact head (validation/*-final.json, hosted-run.json).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step validation/acceptance.sh executed via bash --noprofile --norc at its final path, exit 0 (acceptance-published.log); both package and prescribed-path ADR lint --since e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e --require 0071 exit 0. No new Material, Deferred risk, Polish or Needs decision product finding.
+- DONE: Package checks, document dispositions, scope and product preservation.
+  Delivery 184 tests (one optional skip), lint 47 and POC README 9 pass; design/dispatch/comment/doc-impact checks pass; number guard rerun with authorized remote refresh passes. All affected ADRs dispositioned; five changed product files match candidate Git blobs (validation/checks.json, number-guards-refreshed.log, candidate-manifest.json).
+- SKIPPED: Actual post-release observer-agent execution and FO-owned delivery actions.
+  AC-6 explicitly defers live observer execution; no product push, ready/review request, PR comment, merge, worktree operation or git-config write performed. Local RoboRev not independently verified; Copilot review has not appeared. These are not called clean.
+
+### Summary
+
+PASSED product validation for PR #817 at 85f9a65928958f78a4eaf12b3ce38ca4e25e2ab0, with every accepted criterion and falsifier exercised from exports. The five changed surfaces are sufficient and necessary for the approved hold/reference/observer route; accepted non-merge, omitted-reference, 200-character-clause and post-release-observer limits remain explicit. FO retains the pending delivery obligations and Captain merge decision; CI cost per PR was not measured and no CI trigger changed.
+
