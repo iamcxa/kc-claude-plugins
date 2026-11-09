@@ -1,0 +1,39 @@
+--- base/kc-dev-flow-2/scripts/delivery_gate.py	2026-11-09 12:53:08
++++ proto/kc-dev-flow-2/scripts/delivery_gate.py	2026-11-09 13:13:49
+@@ -743,17 +743,22 @@
+     paths = []
+     for value in ABS_PATH.findall(URL.sub(" ", text)):
+         value = re.sub(r":\d+(?::\d+)?$", "", value.strip("\"'").rstrip(".,;:"))
+-        if "<" not in value and ">" not in value:
+-            paths.append(Path(value).expanduser())
++        path = Path(value).expanduser()
++        if "<" not in value and ">" not in value and len(path.parts) > 1 and Path(*path.parts[:2]).exists():
++            paths.append(path)
+     return list(dict.fromkeys(paths))
+ 
+ 
+-def fenced_steps(text):
+-    return [body.strip() for _, _, body in FENCE.findall(text) if body.strip()]
++SHELL = {"", "sh", "bash", "zsh", "shell", "console"}
+ 
+ 
++def fenced_steps(text, shell_only=False):
++    return [body.strip() for _, info, body in FENCE.findall(text)
++            if body.strip() and (not shell_only or (info.split() or [""])[0].lower() in SHELL)]
++
++
+ def links(text):
+-    return [value.rstrip(".,;") for value in URL.findall(text)]
++    return [m[0].rstrip(".,;") for m in URL.finditer(text) if text[m.start() - 1:m.start()] != "{"]
+ 
+ 
+ def execution_recorded(ran):
+@@ -803,7 +808,7 @@
+             texts.append(card)
+             if path.resolve() in own:
+                 link_texts.append(card)
+-            commands += fenced_steps(card)
++            commands += fenced_steps(card, shell_only=True)
+     expanded = "\n".join(texts)
+     asked = [normalized(fields.get("Asked", "")) for _, fields in steps]
+     left = 0

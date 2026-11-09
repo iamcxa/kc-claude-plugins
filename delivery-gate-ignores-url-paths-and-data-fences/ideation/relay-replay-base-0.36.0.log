@@ -1,0 +1,12 @@
+===== pair-pages-favicon
+Captain steps record fails: message S4: missing path /web/favicon.svg
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+exit 1
+===== signed-in-job-split
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+exit 0
+===== llms-teaches-versions
+Captain steps record fails: message S4: missing path /llms.txt
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+exit 1

@@ -1,0 +1,13 @@
+BAD in1 site URL paths in code spans: exit 1 (want 0) | message S4: missing path /llms.txt ; message S4: missing path /web/favicon.svg ; message S4: missing path /pair
+BAD in2 elided package path: exit 1 (want 0) | message S4: missing path /scripts/adr_lint.py
+BAD in3 XML namespace URI in braces: exit 1 (want 0) | message S5: unrecorded command or link 'http://www.w3.org/2000/svg}svg'
+BAD in4 YAML block in a mentioned design file: exit 1 (want 0) | message S5: unrecorded command or link 'design_review: adrs_read: - docs/adr/0064-the-first-screen-leads-with-sign-in.md (Accepted)'
+BAD in5 YAML block in a chief-engineer report: exit 1 (want 0) | message S5: unrecorded command or link 'chief_engineer_advice: outcome: A Pilot stage dispatch records its actual inputs'
+ok  hold1 real sh fence in a mentioned card: exit 1 (want 1) | message S5: unrecorded command or link 'printf unrecorded'
+ok  hold2 real shell fence in the message: exit 1 (want 1) | message S5: unrecorded command or link 'printf unrecorded'
+ok  hold3 empty-info fence in the message: exit 1 (want 1) | message S5: unrecorded command or link 'printf unrecorded'
+ok  hold4 missing path under an existing root: exit 1 (want 1) | message S4: missing path /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpiqshwln9/missing.txt
+ok  hold5 existing absolute path passes: exit 0 (want 0) | captain steps complete: 1 steps, 0 left to him
+ok  hold6 bare https link in the message: exit 1 (want 1) | message S5: unrecorded command or link 'https://example.test/a'
+ok  hold7 yaml fence in the message itself (11/03 rule): exit 1 (want 1) | message S5: unrecorded command or link 'key: value'
+ok  hold8 'sh run' fence in a mentioned card: exit 1 (want 1) | message S5: unrecorded command or link 'printf unrecorded'

@@ -1,0 +1,17 @@
+== M1 reverted
+BAD in1 site URL paths in code spans: exit 1 (want 0) | message S4: missing path /llms.txt ; message S4: missi
+BAD in2 elided package path: exit 1 (want 0) | message S4: missing path /scripts/adr_lint.py
+== M2 reverted
+BAD in3 XML namespace URI in braces: exit 1 (want 0) | message S5: unrecorded command or link 'http://www.w3.o
+== M3 reverted
+BAD in4 YAML block in a mentioned design file: exit 1 (want 0) | message S5: unrecorded command or link 'desig
+BAD in5 YAML block in a chief-engineer report: exit 1 (want 0) | message S5: unrecorded command or link 'chief
+== over_fence
+BAD hold7 yaml fence in the message itself (11/03 rule): exit 0 (want 1) | captain steps c
+== over_path
+BAD hold4 missing path under an existing root: exit 0 (want 1) | captain steps complete: 1
+== over_link
+BAD hold6 bare https link in the message: exit 0 (want 1) | captain steps complete: 1 step
+== over_card
+BAD hold1 real sh fence in a mentioned card: exit 0 (want 1) | captain steps complete: 1 s
+BAD hold8 'sh run' fence in a mentioned card: exit 0 (want 1) | captain steps complete: 1 
