@@ -214,15 +214,6 @@ Recommended order: merge-guard-stops-unasked-merges, then delivery-gate-ignores-
 
 **AC-1** Learn refuses an unsourced Evidence count before completion. Evidence: in `test_learning.py`, a pack item "recount 2026-11-08: 15 findings (20 overall)" and an `add` entry whose Evidence says "18 findings" while referencing that item. `complete` exits 1 naming the count, and `read` still shows the job pending with its token usable. The same entry saying "15 findings" completes. Falsifier: remove the join from `evaluation()`, and the 18 entry completes and the test fails. Current evidence: not yet built. The pattern was replayed in `learn_replay.out`.
 
-**AC-2** `question` lists unchecked counts and holds on a missing or wrong line. Evidence, in `test_delivery_gate.py`:
-- the K shape: a summary saying "2 cells not re-run (validation/validation-1/cells.txt)", where `cells.txt` lists three cells and holds no `2`. It prints one `unchecked count:` line. It exits 1 with `Unchecked counts: 0` and passes with `Unchecked counts: 1`;
-- "3 cells (validation/validation-1/cells.txt)" with a file holding `3` is checked and passes with `Unchecked counts: 0`;
-- a derived "3 of 6" against a file holding `1/3` and `2/3` is listed as unchecked, never refused.
-
-Falsifier: drop the number-in-file comparison, and the wrong "2 cells" counts as checked, so the test fails. Current evidence: not yet built.
-
-**AC-3** `check` scans the ask text and the PR body. Evidence: a fixture PR body (through the existing `gh` stub) holding one uncited count, with ask text that holds none. `check` exits 1 until the text carries `Unchecked counts: 1`. Falsifier: scan only `--text-file`, and the test fails. Current evidence: not yet built.
-
 **AC-4** Both replays rerun with the final pattern, saved in the validation folder, each number naming its script, revision and date. Evidence:
 - the gate replay over the four state checkouts lists how many recent summaries would need a non-zero line;
 - the learn replay over the five stores refuses exactly the two entries `441fe280…` and `d829872c…` named in `learn_replay.out`, or explains each difference. The `2, round` defect no longer appears.
@@ -238,6 +229,11 @@ Current evidence: the ideation run is in `ideation/` (2026-11-09); the final pat
 - `git diff --stat <base>` names neither `references/sd/workflow.md` nor `_mods/`.
 
 Current evidence: not yet run.
+
+
+**AC-7** Amended by Captain, amendment 1, replacing AC-2. `question` scans the question and summary, lists unchecked counts and writes the computed `Unchecked counts: N` line into the summary itself. Evidence in `test_delivery_gate.py`: the K-shape summary "2 cells not re-run (validation/validation-1/cells.txt)" cites a file listing three cells and holding no `2`; it lists that count as unchecked and writes `Unchecked counts: 1` whether the incoming line is missing or wrong, without holding on that line or the count. "3 cells (validation/validation-1/cells.txt)" with a file holding `3` is checked and writes `Unchecked counts: 0`. A derived "3 of 6" against a file holding `1/3` and `2/3` is listed as unchecked without refusal. Falsifier: drop the number-in-file comparison and the wrong "2 cells" counts as checked; remove the tool's write and the missing/wrong-line cases fail. Current evidence: not yet built.
+
+**AC-8** Amended by Captain, amendment 1, replacing AC-3. `check` scans the ask text and PR body and writes the computed `Unchecked counts: N` line into the ask text itself. Evidence in `test_delivery_gate.py`: a fixture PR body (through the existing `gh` stub) holds one uncited count while the ask holds none; with the line missing or wrong, `check` writes `Unchecked counts: 1` without holding on that line or the count. Falsifier: scan only `--text-file` and the output is wrong; remove the tool's write and the missing/wrong-line cases fail. Current evidence: not yet built.
 
 ## Needs decision
 
@@ -259,6 +255,17 @@ Asked: 「決定：第 18 批四張設計照下列建議進實作嗎？建議核
 Supersedes: AC-2, AC-3
 Design: **Gate summary, merge ask and PR body: a count the tool computes, and no refusal of the claim.** The scan cannot tell a wrong count from a derived one (the "3 of 6" case), so it never holds a count. Instead, `question` and `check` list each count sentence that names no task file holding its number, and require the text to carry the tool's own figure as `Unchecked counts: N` (D1). The Captain then sees how many numbers nobody checked, in the text he reads. A count is checked by citing the saved output, for example a validator's log or a Captain steps record, by its task-folder path. Following ADR 0027 D4, nothing judges whether a count is true.
 
+Superseded text:
+
+**AC-2** `question` lists unchecked counts and holds on a missing or wrong line. Evidence, in `test_delivery_gate.py`:
+- the K shape: a summary saying "2 cells not re-run (validation/validation-1/cells.txt)", where `cells.txt` lists three cells and holds no `2`. It prints one `unchecked count:` line. It exits 1 with `Unchecked counts: 0` and passes with `Unchecked counts: 1`;
+- "3 cells (validation/validation-1/cells.txt)" with a file holding `3` is checked and passes with `Unchecked counts: 0`;
+- a derived "3 of 6" against a file holding `1/3` and `2/3` is listed as unchecked, never refused.
+
+Falsifier: drop the number-in-file comparison, and the wrong "2 cells" counts as checked, so the test fails. Current evidence: not yet built.
+
+**AC-3** `check` scans the ask text and the PR body. Evidence: a fixture PR body (through the existing `gh` stub) holding one uncited count, with ask text that holds none. `check` exits 1 until the text carries `Unchecked counts: 1`. Falsifier: scan only `--text-file`, and the test fails. Current evidence: not yet built.
+
 ## Stage Report: ideation
 
 - DONE: Design how a count or measured number names the command or run that produced it in gate summaries, PR bodies and learn evidence packs, so a count with no source is visible as unchecked; prefer the tool recording the source over prose rules, and name the check and its falsifier. Batch overlap: name each file your design changes; siblings validation-reads-pr-review-comments, delivery-gate-ignores-url-paths-and-data-fences, delivery-check-before-ask-is-provable and counts-name-the-run-that-produced-them may touch kc-dev-flow-2/scripts/delivery_gate.py, so say the order you need relative to them.
@@ -273,3 +280,23 @@ Design: **Gate summary, merge ask and PR body: a count the tool computes, and no
 ### Summary
 
 The design adds a structured check where a structured record exists, and disclosure where only prose exists. Learn evidence is joined against the pack items the evaluator cites and refused before completion. That catches the #811 class unless the pack itself carried the stale number. Gate summaries, merge asks and PR bodies get a count the script computes, `Unchecked counts: N`, because the replay shows that a content hold would stop correct derived sums ("3 of 6"). The list form "S6/S7 not re-run" stays invisible, as ADR 0055 already says. The #811 record is not on this machine, so the learn half is replayed on 28 local entries and not on the bite itself.
+
+
+## Stage Report: implementation
+
+- DONE: Start in the assigned worktree; verify pwd and git root before edits; fetch origin and base on origin/main.
+  Assigned branch is spacedock-ensign/counts-name-the-run-that-produced-them; clean code worktree fast-forwarded from e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e to fetched origin/main 82c9e67ae892b80647c3f6a8b6929f993e42dbc2; no product edits or product commit.
+- DONE: Apply Captain amendments Amendment 1 first: move AC-2 and AC-3 under the amendment as superseded text and write replacement criteria with fresh ids.
+  AC-2/AC-3 moved verbatim; AC-7/AC-8 require automatic writes without disclosure holds. Comparison with the committed entity confirmed unchanged frontmatter and ideation report; package design_surfaces.py check exits 0, "design surfaces presentable" (scope check not run at implementation).
+- SKIPPED: One Draft PR implementing the approved design and acceptance criteria; commit locally and prepare PR text at /tmp/impl-counts-name-the-run-that-produced-them-pr.md.
+  HOLD: the design requires a new ADR, but this entity has no ## Number guards / ADR: reservation. Package skills/read-adr/writing.md requires the coordinator to reserve it and forbids the worker from running the reserver. No PR opened: no push grant; no PR text prepared for an unimplemented candidate.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation run with python3 -B and caches cleared.
+  Implementation, replays, word recount and mutations not run pending the missing ADR reservation; none is claimed clean. Existing product bytes remain unchanged at the fetched base.
+- SKIPPED: Repository lint-skills.py, package adr_lint.py docs/adr --since <base>, number_guards.py check, and comment_ratio.py within its maximum.
+  Product implementation/checks not run because the mandatory reserved decision-record input is missing; WORKFLOW_WORD_BUDGET unchanged, no version or CI changes. CI cost not measured.
+- SKIPPED: FO pushes the product branch, opens the Draft PR, runs RoboRev and reads CI.
+  Delegated checks not run, never clean. A Paseo send_agent_prompt clarification to the dispatching FO returned "user rejected MCP tool call"; the clarification was not delivered. This report and final reply are the handback; no retry through another transport.
+
+### Summary
+
+Implementation is on hold pending an FO-reserved ADR number in this task's ## Number guards section. The approved Captain amendment is applied and the assigned product branch is clean at origin/main; this is preparation only, not a completed implementation. Resume after the FO supplies the reservation; the product deliverable, acceptance evidence and PR handoff remain outstanding.
