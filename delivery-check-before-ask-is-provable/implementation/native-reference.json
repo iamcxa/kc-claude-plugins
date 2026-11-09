@@ -1,0 +1,36 @@
+{
+  "version": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3\n",
+  "uncommitted_exit": 1,
+  "modified_exit": 1,
+  "reference": {
+    "type": "Reference",
+    "id": "reference:fixture:validation:attempt-1:revision-1:item-2",
+    "uri": "git-root://state/04ad21c828d5866235af0f791d424f259a77a696/fixture/merge/ask-1.json",
+    "mediaType": "application/json",
+    "rev": "sha256:9ca7cb33c016c4d98df1e5139a9dbeeefa15fcb434c8036bbb2fcee18b70b8cb"
+  },
+  "briefing": {
+    "type": "Briefing",
+    "version": "1",
+    "id": "briefing:fixture:validation:attempt-1:revision-1",
+    "question": "Deliver #9 head 40c714a6. Approving merges it with gh pr merge --match-head-commit 40c714a6 and removing its clean, pushed worktree, unless he says he merges or holds.",
+    "artifacts": [
+      {
+        "id": "artifact:fixture:validation:attempt-1:revision-1:item-1",
+        "uri": "git-root://state/04ad21c828d5866235af0f791d424f259a77a696/fixture.md",
+        "rev": "sha256:9ce9158c1c8eb496f367311534af99e657e53105f77432edc3db577cc4fca15e",
+        "mediaType": "text/markdown",
+        "summary": "Sufficiency: every acceptance criterion in the validation report was met.\nNecessity: the relay adopter reads it at each merge ask.\n"
+      }
+    ],
+    "context": [
+      {
+        "type": "Reference",
+        "id": "reference:fixture:validation:attempt-1:revision-1:item-2",
+        "uri": "git-root://state/04ad21c828d5866235af0f791d424f259a77a696/fixture/merge/ask-1.json",
+        "mediaType": "application/json",
+        "rev": "sha256:9ca7cb33c016c4d98df1e5139a9dbeeefa15fcb434c8036bbb2fcee18b70b8cb"
+      }
+    ]
+  }
+}

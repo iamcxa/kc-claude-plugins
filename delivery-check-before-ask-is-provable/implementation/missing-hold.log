@@ -1,0 +1,261 @@
+FFFFFFFFFFFFF.FFF
+======================================================================
+FAIL: test_each_clause_and_an_ad_hoc_run_on_another_text_hold (__main__.Mutation_missing-hold.test_each_clause_and_an_ad_hoc_run_on_another_text_hold) (changes={'sufficiency': 'another run'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2129, in test_each_clause_and_an_ad_hoc_run_on_another_text_hold
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpcz8r5qq8`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_each_clause_and_an_ad_hoc_run_on_another_text_hold (__main__.Mutation_missing-hold.test_each_clause_and_an_ad_hoc_run_on_another_text_hold) (changes={'necessity': 'another run'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2129, in test_each_clause_and_an_ad_hoc_run_on_another_text_hold
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpcz8r5qq8`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_each_clause_and_an_ad_hoc_run_on_another_text_hold (__main__.Mutation_missing-hold.test_each_clause_and_an_ad_hoc_run_on_another_text_hold) (changes={'sufficiency': 'another run', 'necessity': 'another run'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2129, in test_each_clause_and_an_ad_hoc_run_on_another_text_hold
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpcz8r5qq8`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_malformed_missing_or_nonobject_record_holds (__main__.Mutation_missing-hold.test_malformed_missing_or_nonobject_record_holds) (body='not json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2117, in test_malformed_missing_or_nonobject_record_holds
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxa7p627e`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_malformed_missing_or_nonobject_record_holds (__main__.Mutation_missing-hold.test_malformed_missing_or_nonobject_record_holds) (body='null')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2117, in test_malformed_missing_or_nonobject_record_holds
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxa7p627e`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_malformed_missing_or_nonobject_record_holds (__main__.Mutation_missing-hold.test_malformed_missing_or_nonobject_record_holds) (body='[]')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2117, in test_malformed_missing_or_nonobject_record_holds
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxa7p627e`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_malformed_missing_or_nonobject_record_holds (__main__.Mutation_missing-hold.test_malformed_missing_or_nonobject_record_holds) (body='"record"')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2117, in test_malformed_missing_or_nonobject_record_holds
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxa7p627e`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_malformed_missing_or_nonobject_record_holds (__main__.Mutation_missing-hold.test_malformed_missing_or_nonobject_record_holds) (body='{}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2117, in test_malformed_missing_or_nonobject_record_holds
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxa7p627e`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_malformed_missing_or_nonobject_record_holds (__main__.Mutation_missing-hold.test_malformed_missing_or_nonobject_record_holds) (body='{"head": 42}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2117, in test_malformed_missing_or_nonobject_record_holds
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxa7p627e`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_malformed_missing_or_nonobject_record_holds (__main__.Mutation_missing-hold.test_malformed_missing_or_nonobject_record_holds) (body='{"head": "40c714a600000000000000000000000000000000", "sufficiency": "wrong", "necessity": "wrong"}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2117, in test_malformed_missing_or_nonobject_record_holds
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxa7p627e`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_malformed_missing_or_nonobject_record_holds (__main__.Mutation_missing-hold.test_malformed_missing_or_nonobject_record_holds)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2121, in test_malformed_missing_or_nonobject_record_holds
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxa7p627e`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_missing_record_holds_preparation (__main__.Mutation_missing-hold.test_missing_record_holds_preparation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2083, in test_missing_record_holds_preparation
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp0u4fiahl`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_newest_record_is_selected_numerically (__main__.Mutation_missing-hold.test_newest_record_is_selected_numerically)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2089, in test_newest_record_is_selected_numerically
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpbmv547r_`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_question_and_summary_clauses_use_the_record_truncation (__main__.Mutation_missing-hold.test_question_and_summary_clauses_use_the_record_truncation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2139, in test_question_and_summary_clauses_use_the_record_truncation
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpb7drnpt4`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_record_must_match_a_latest_dispatched_candidate (__main__.Mutation_missing-hold.test_record_must_match_a_latest_dispatched_candidate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2102, in test_record_must_match_a_latest_dispatched_candidate
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzgt7k99u`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+======================================================================
+FAIL: test_record_must_match_the_head_named_by_the_question (__main__.Mutation_missing-hold.test_record_must_match_the_head_named_by_the_question)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2110, in test_record_must_match_the_head_named_by_the_question
+    self.assert_held()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2077, in assert_held
+    self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp8jbwowh3`, then run `gate prepare` with `--reference missing-record.json`.
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.284s
+
+FAILED (failures=16)

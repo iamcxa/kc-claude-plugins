@@ -1,0 +1,19 @@
+...F....
+======================================================================
+FAIL: test_newest_record_is_selected_numerically (__main__.Mutation_omit-reference-line.test_newest_record_is_selected_numerically)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-check-before-ask-is-provable/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2093, in test_newest_record_is_selected_numerically
+    self.assertEqual(done.stdout.splitlines()[-1],
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     f"next: run `spacedock state commit task --workflow-dir {self.root}`, then run `gate prepare` with `--reference {newest}`.")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'next: before gate prepare, write the question t[328 chars]>」`.' != 'next: run `spacedock state commit task --workfl[193 chars]on`.'
+- next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
++ next: run `spacedock state commit task --workflow-dir /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpvjvslkgb`, then run `gate prepare` with `--reference /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpvjvslkgb/task/merge/ask-10.json`.
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.121s
+
+FAILED (failures=1)

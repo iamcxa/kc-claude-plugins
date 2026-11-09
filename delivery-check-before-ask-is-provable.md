@@ -222,3 +222,43 @@ ADR: 0071
 ### Summary
 
 Design: `check` runs first, `question` refuses a merge question unless the newest `merge/ask-N.json` matches the dispatched head and the text's Sufficiency and Necessity, and FO passes that record to `gate prepare --reference`, where Spacedock 0.27.3 already refuses an uncommitted file and records its sha256 in the briefing. The observer gains a digest comparison, keeping the time comparison as the fallback for older briefings. The README stays at 80 words; FO reads 15 more words only at validation preparation. The change amends ADR 0051's consequence ("binding first is not refused") through its own reopen clause; one Captain decision, D1. Chain: Spacedock needs no change; kc-dev-flow-2 has the record and the Captain-steps precedent; subspace-web cites the record in prose without a digest.
+
+
+## Stage Report: implementation
+
+- DONE: Commit locally from origin/main, named files only, without version changes.
+  Fetched origin first; base e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e; branch spacedock-ensign/delivery-check-before-ask-is-provable; candidate 85f9a65928958f78a4eaf12b3ce38ca4e25e2ab0; five designed product files, clean worktree.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins.
+  No PR opened: no push grant; FO owns product publication. Prepared title/body at /tmp/impl-delivery-check-before-ask-is-provable-pr.md and implementation/pr.md; gh pr list on 2026-11-09 found no existing PR for this branch.
+- DONE: ADR 0071 records the ruling the design names, quoting the Captain's words from the task file and its gate records.
+  docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md quotes 「核准（建議）」 and the full ideation question; amends 0051's ordering consequence and leaves its round-count decision intact.
+- DONE: AC-1 question holds a merge-naming question that has no check record.
+  test_missing_record_holds_preparation exits 1; identical fixture exits 0 at base. implementation/baseline-control.json; bypassing the hold fails the test (mutations.json, missing-hold).
+- DONE: AC-2 question holds when the newest record does not match.
+  Newest numeric record, dispatched Candidate, question head, both clauses, malformed/nonobject/unreadable JSON and another-text run covered; oldest-record and each skipped comparison are rejected mutations (implementation/mutations.json).
+- DONE: AC-3 matching question exits 0 and its last line names the exact newest record for --reference.
+  test_newest_record_is_selected_numerically checks ask-10.json; omit-reference-line mutation fails it. Legacy non-merge output remains unchanged (question-final.log).
+- DONE: AC-4 Spacedock binds the record into the briefing.
+  Real 0.27.2 split-root fixture: uncommitted and post-commit edited records exit 1; after state commit, prepare exits 0 and context uri identifies that commit while rev equals shasum -a 256 (implementation/commands.jsonl, native-reference.json). Synthetic task, no real approval.
+- DONE: AC-5 README word count and WORKFLOW_BUDGET_STEPS are unchanged.
+  Repository kc-dev-flow-2/scripts/lint-skills.py exits 0: 5931 of 5931 words; budget script unchanged (implementation/lint.log).
+- DONE: AC-6 the observer can tell from state alone, with the older time fallback retained.
+  Twelve replays: bound reference ok; bad digest/head/either clause and new-rule missing Reference violation; five batch 17 briefing-1 copies can't tell under event-time main README; agent-reads-governing-adr remains ok at dae03dc3. Removing fallback changes that last result to can't tell (observer-replay.json, verify.py).
+- DONE: AC-7 lifecycle word recount at base and candidate.
+  Independent script executes both commands: README passage 80 to 80; question exit-0 output 92 to 107; check exit-0 output unchanged (implementation/words.json); next line adds “run” to the draft wording to reach its approved 15-word rise.
+- DONE: AC-8 ADR lint requires the reserved number and exits 0.
+  Package 0.36.0 adr_lint.py docs/adr --since e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e --require 0071 passes (implementation/adr.log); governing records and digests in governing-adrs.json.
+- DONE: Every acceptance criterion green with reproducible evidence and mutation falsifiers (python3 -B, caches cleared).
+  Fresh-shell implementation/verify.py WORKTREE STATE OUTPUT SPACEDOCK exits 0 on candidate, creates a fresh native fixture, clears generated Python caches and rejects seven code mutants plus the time-fallback mutant (implementation/acceptance.log).
+- DONE: Repository tests and package design, number and comment checks.
+  Delivery suite 184 tests, 1 optional historical-approval replay skipped; final question checks 21 tests, same skip; lint tests 47 and POC README tests 9 pass. Checks exit 0; number guard remotely refreshed reservations; comments 1/127 = 0.8%, maximum 5% (implementation/checks.json and named logs).
+- DONE: Affected documents reviewed with package doc_impact.py at base and candidate.
+  Updated: ADR 0071, workflow.md and observer SKILL.md. Unaffected: ADR 0044 legacy summary/reviewer rules retained; ADR 0051 immutable, consequence amended by 0071; ADR 0062 quoted approval/grant unchanged (implementation/doc-impact.json).
+- SKIPPED: RoboRev review and hosted CI.
+  roborev not run: FO runs it after handoff; hosted CI not run because product push is FO-owned. Neither is called clean. CI cost per PR not measured; no CI file or trigger changed.
+- SKIPPED: First real post-release observer run.
+  AC-6 explicitly leaves this to post-merge evidence; scripted replay proves only the comparison procedure, not an observer agent's later execution.
+
+### Summary
+
+Implemented the approved Pilot hold: check first, then prepare a merge question only with the newest matching record, and bind that committed record through --reference. Product candidate 85f9a65928958f78a4eaf12b3ce38ca4e25e2ab0 is locally committed and clean; evidence is in this task's implementation/ companion folder. FO retains publication, Draft PR, RoboRev, hosted CI, validation and merge authority; no product push, review request, comment, ready or merge was performed.

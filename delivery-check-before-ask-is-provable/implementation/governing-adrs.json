@@ -1,0 +1,32 @@
+[
+  {
+    "path": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "commit": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+    "digest": "sha256:a49b4da2665730f648334a0a8465bde6df3c779e9b0c42b3e61510cc96185afb",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0023-a-delivery-gate-question-may-carry-the-merge-of-the-validated-head.md",
+    "commit": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+    "digest": "sha256:d2a2d715e2fe1be91050210dc4751c0ab83175caf3376f7c3fe5b99830e20bc2",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "commit": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+    "digest": "sha256:43899808ea25e44156e3d645e985d9f4a967db2206702f0a2180fb9c36c3dab2",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0054-fo-runs-a-step-before-asking-the-captain-and-records-it.md",
+    "commit": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+    "digest": "sha256:23cee65f32c5b92f8ae06c39a8501c24002aec045b8ebca58e22ddc7ed4d0eb4",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "commit": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+    "digest": "sha256:c897fee1fb109d3e67eecbaee9f363f663e49e5bd4230b48a8cb3e884d35c8d9",
+    "status": "Accepted"
+  }
+]
