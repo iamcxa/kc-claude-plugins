@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:a-worker-holds-while-a-role-call-is-owed:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:a-worker-holds-while-a-role-call-is-owed-ideation-1
+              briefing:
+                id: briefing:a-worker-holds-while-a-role-call-is-owed:ideation:attempt-1:revision-1
+                digest: sha256:8937da7b7d34e9aa8a9ebc87a14f4b2fadcdd0f0cd6cfbfe8541782ba8d52069
+                room-ref: ./a-worker-holds-while-a-role-call-is-owed/review/ideation/briefing-1
 started: 2026-11-09T14:37:10Z
 ---
 
