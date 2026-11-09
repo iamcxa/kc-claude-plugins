@@ -1,0 +1,6 @@
+UNS office-ui-tests-finish-on-ci | Validation 1 PASSED: independent policy 47/47, classifier 44/44, coverage/status 62/62, deploy-config 215 (+1 existing skip), workflow lint clean;
+UNS office-ui-tests-finish-on-ci | full Office coverage in a 2-CPU Node 22.23.4 Linux container 485/485 with the identical base test population, slowest 3.64 s;
+UNS office-ui-tests-finish-on-ci | GitHub run 42006237473 attempt 1: Office job 485 passed (slowest 3.88 s), node job passed, ci-gate success.
+UNS office-ui-tests-finish-on-ci | Findings: F1 record gap (RoboRev run by FO, clean roborev:1491), F2 restating comment deleted in 8841ec9fa (1 line), F3 native-load noise deferred.
+UNS office-ui-tests-finish-on-ci | AC-4 0/3, open after merge, #1307 first.
+{"repo": "kc-plugin dev2", "rev": "8207a9729", "cut": "2026-11-05T00:00:00Z", "before": [137, 74, 89, 88], "after": [5, 1, 6, 5]}

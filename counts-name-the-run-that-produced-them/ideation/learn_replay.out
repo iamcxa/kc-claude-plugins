@@ -1,0 +1,9 @@
+{"store": "kc-claude-plugins", "entries": 14, "with_count": 8, "counts": 14, "in_refs": 10, "pack_only": 0, "nowhere": 4}
+   ('nowhere', '441fe280', '4 of 4', "sign table 'Measured pointer candidates'), and validation passed that head with 4 of 4 CI checks green. Codex round 1 raised o")
+   ('nowhere', 'd829872c', '69 existing task', "ne `Surfaces:` count to design_surfaces.py; its implementation report measured '69 existing task files (45 here, 22 beirut-dev2, 2 montp")
+   ('nowhere', 'd829872c', '64 task files', ' then ran base and candidate `design_surfaces.py check` and `check --seed` over 64 task files here: 63 identical, 1 differed, `_archi')
+   ('nowhere', 'd829872c', '2, round', " under '### Feedback Cycles' (Cycle 3), '## Stage Report: implementation (cycle 2, round 2)', '## Stage Report: validation (cycl")
+{"store": "subspace-relay", "entries": 5, "with_count": 1, "counts": 1, "in_refs": 1, "pack_only": 0, "nowhere": 0}
+{"store": "subspace-web", "entries": 3, "with_count": 3, "counts": 12, "in_refs": 12, "pack_only": 0, "nowhere": 0}
+{"store": "qnow", "entries": 6, "with_count": 1, "counts": 1, "in_refs": 1, "pack_only": 0, "nowhere": 0}
+{"store": "subspace-v0", "entries": 0, "with_count": 0, "counts": 0, "in_refs": 0, "pack_only": 0, "nowhere": 0}

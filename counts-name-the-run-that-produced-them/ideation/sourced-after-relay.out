@@ -1,0 +1,12 @@
+UNS continuity-earlier-comments-beside-latest | cold e2e-expiry 30/30 and e2e-sweep 24/24;
+UNS continuity-room-points-to-latest | Validation cycle 2 PASSED at 7e8e6e88 on pinned Web 0.2.38: stale-Finish matrix 10/10, scroll fix proven (old helper 9.3 px fails, new 29.3 px passes), amendment 3 restores AC-17 as AC-24;
+UNS llms-teaches-versions | Checks: focused front-door, generator and continuity tests 43/43;
+UNS llms-teaches-versions | full unit suite 1765/1765 on Linux node:24.18.0 (implementation-2);
+UNS llms-teaches-versions | close-race.wire.test.ts fails on this Mac for base and candidate alike and passes 8/8 on Linux for both;
+UNS room-result-skips-legacy-retraction | Checks: guard red with only the Room exclusion removed and green restored (3/0, 2/1, 3/0);
+UNS room-result-skips-legacy-retraction | endpoint suites 39/0;
+UNS room-result-skips-legacy-retraction | full unit suite 1768/0 on Linux arm64 node:24.18.0 with only the long-running ops container present;
+UNS rr-revise-follows-latest | hermetic shell suite exit 0, 13 pass and 9 skips;
+UNS signed-in-job-split | Checks: corrected owner-decision case 20/20 and 5/5 with a 1000 ms theme delay;
+UNS signed-in-job-split | a failing entry of the same e2e-netlify-dev matrix turned ci-gate red in PR #481's run 42461333105 attempt 1.
+{"repo": "kc-plugin dev2", "rev": "f85b62c65", "cut": "2026-11-05T00:00:00Z", "before": [122, 63, 91, 91], "after": [7, 6, 12, 11]}
