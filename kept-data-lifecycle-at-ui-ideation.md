@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:kept-data-lifecycle-at-ui-ideation:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:kept-data-lifecycle-at-ui-ideation-ideation-1
+              briefing:
+                id: briefing:kept-data-lifecycle-at-ui-ideation:ideation:attempt-1:revision-1
+                digest: sha256:0151218c7d3cf81e84b497df1401f518e932cf3c5c87eba50508d939e51e592b
+                room-ref: ./kept-data-lifecycle-at-ui-ideation/review/ideation/briefing-1
 started: 2026-11-09T14:37:26Z
 ---
 
