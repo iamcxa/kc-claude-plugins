@@ -15,6 +15,17 @@ gates:
                 id: briefing:role-call-asks-for-the-mechanism:backlog:attempt-1:revision-1
                 digest: sha256:e647dad0e3c0c1bbc1712782da68f6c307d1a4399261a720e8e6b56dd1652d8f
                 room-ref: ./role-call-asks-for-the-mechanism/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:role-call-asks-for-the-mechanism:backlog:1
+                briefing: briefing:role-call-asks-for-the-mechanism:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-09T14:36:43.819308Z"
+                decision: approve
+                reason: 'The Captain chose 「進入（建議）」 (host question dialog, 2026-11-09), answering 「第 19 批：這三張（工人開工先查有沒有欠的審查、總工程師改問根本原因、跨畫面資料先寫生命週期）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構思嗎？我建議進入。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
