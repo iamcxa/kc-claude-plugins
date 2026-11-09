@@ -3,6 +3,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 from pathlib import Path
 import stat
 import subprocess
@@ -2114,6 +2115,104 @@ class HistoricalBoundQuestionTests(unittest.TestCase):
         (evidence / "historical-replays.json").write_text(json.dumps(results, ensure_ascii=False, indent=2))
 
 
+class DeliveryCheckBeforeQuestionTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        readme(self.root)
+        self.task, self.message, self.summary = [self.root / name for name in ("task.md", "question.txt", "summary.txt")]
+        self.task.write_text(TASK)
+        self.message.write_text(MERGE_ASK.format(tail=HOLD_OUT_TAIL["unless he says he merges or holds"]))
+        self.summary.write_text(CLAUSES + ROUNDS + captain_record(self.task))
+
+    def save(self, number=1, **changes):
+        data = dict(head=HEAD40, sufficiency=gate.clean(gate.clause(CLAUSES, "Sufficiency"))[:200],
+                    necessity=gate.clean(gate.clause(CLAUSES, "Necessity"))[:200])
+        data.update(changes)
+        path = gate.task_folder(self.task) / "merge" / f"ask-{number}.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(data))
+        return path
+
+    def run_question(self):
+        return subprocess.run([sys.executable, "-B", gate.__file__, "question", str(self.task),
+                               "--text-file", str(self.message), "--summary-file", str(self.summary)],
+                              capture_output=True, text=True)
+
+    def assert_held(self):
+        done = self.run_question()
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn("delivery check record", done.stdout)
+        self.assertIn("next: hold preparation; run delivery_gate.py check on this question and summary, then this check again.", done.stdout)
+        self.assertNotIn("gate text complete", done.stdout)
+
+    def test_missing_record_holds_preparation(self):
+        self.assert_held()
+
+    def test_newest_record_is_selected_numerically(self):
+        self.save(1)
+        self.save(9)
+        self.save(10, head=S2)
+        self.assert_held()
+        newest = self.save(10)
+        done = self.run_question()
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        self.assertEqual(done.stdout.splitlines()[-1],
+                         f"next: run `spacedock state commit task --workflow-dir {self.root}`, then run `gate prepare` with `--reference {newest}`.")
+
+    def test_record_must_match_a_latest_dispatched_candidate(self):
+        self.save()
+        dispatch = gate.task_folder(self.task) / "dispatch/validation-2.md"
+        dispatch.write_text(record(S2))
+        steps = gate.task_folder(self.task) / "captain-steps/1.md"
+        steps.write_text(steps.read_text().replace(HEAD40, S2))
+        self.assert_held()
+        dispatch.write_text(record(S2, HEAD40))
+        done = self.run_question()
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+
+    def test_record_must_match_the_head_named_by_the_question(self):
+        self.save()
+        self.message.write_text(self.message.read_text().replace("40c714a6", S2))
+        self.assert_held()
+
+    def test_malformed_missing_or_nonobject_record_holds(self):
+        for body in ("not json", "null", "[]", '"record"', "{}", '{"head": 42}',
+                     json.dumps(dict(head=HEAD40, sufficiency="wrong", necessity="wrong"))):
+            with self.subTest(body=body):
+                self.save().write_text(body)
+                self.assert_held()
+        path = self.save()
+        path.unlink()
+        path.mkdir()
+        self.assert_held()
+
+    def test_each_clause_and_an_ad_hoc_run_on_another_text_hold(self):
+        self.save(1)
+        for changes in (dict(sufficiency="another run"), dict(necessity="another run"),
+                        dict(sufficiency="another run", necessity="another run")):
+            with self.subTest(changes=changes):
+                self.save(2, **changes)
+                self.assert_held()
+
+    def test_question_and_summary_clauses_use_the_record_truncation(self):
+        value = "meets\t" + "x" * 220
+        self.message.write_text(self.message.read_text() + "\nSufficiency: " + value + "\n")
+        self.summary.write_text(self.summary.read_text().replace(gate.clause(CLAUSES, "Sufficiency"), "unused"))
+        self.save(sufficiency=gate.clean(value)[:200])
+        done = self.run_question()
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        self.save(sufficiency=gate.clean(value)[:199])
+        self.assert_held()
+
+    def test_no_merge_question_needs_no_delivery_record(self):
+        self.message.write_text("Approve this candidate?")
+        done = self.run_question()
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        self.assertEqual(done.stdout.splitlines()[-1], gate.ASK_FORM)
+
+
 class QuestionTests(unittest.TestCase):
     recorded_questions = {
         786: "決定：合併 #786（漏寫 Override 的記錄前檢查）嗎？ Regular merge with --match-head-commit 69d62c772c5f4fd28d9105c6f5d49516d559c947, first of the batch 14 validation sitting. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
@@ -2151,6 +2250,14 @@ class QuestionTests(unittest.TestCase):
             if summary is not None:
                 Path(d, "summary.txt").write_text(CLAUSES + ROUNDS + summary + captain_record(entry))
                 argv += ["--summary-file", str(Path(d, "summary.txt"))]
+            if grant := re.search(r"--match-head-commit ([0-9a-f]+)", text + (summary or "")):
+                head = grant[1].ljust(40, "0")
+                dispatch = gate.task_folder(entry) / "dispatch/validation-1.md"
+                dispatch.write_text(record(head))
+                steps = gate.task_folder(entry) / "captain-steps/1.md"
+                steps.write_text(steps.read_text().replace(HEAD40, head))
+                gate.write_record(entry, dict(head=head, sufficiency=gate.clause(CLAUSES, "Sufficiency"),
+                                               necessity=gate.clause(CLAUSES, "Necessity")))
             if cli:
                 run = subprocess.run([sys.executable, "-B", gate.__file__, *argv], capture_output=True, text=True)
                 return run.returncode, run.stdout + run.stderr
@@ -2266,7 +2373,10 @@ class QuestionTests(unittest.TestCase):
     def test_both_wordings_in_use_and_a_question_that_names_no_merge_pass(self):
         for label, tail in HOLD_OUT_TAIL.items():
             with self.subTest(label):
-                self.assertEqual(self.ask(MERGE_ASK.format(tail=tail)), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
+                code, out = self.ask(MERGE_ASK.format(tail=tail))
+                self.assertEqual(code, 0, out)
+                self.assertTrue(out.startswith(CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"), out)
+                self.assertIn("--reference ", out.splitlines()[-1])
         self.assertEqual(self.ask("Admit the sample task?"), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
         self.assertEqual(self.ask(MERGE_ASK.format(tail="."), as_folder=True)[0], 1)
 

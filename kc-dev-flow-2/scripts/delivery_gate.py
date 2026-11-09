@@ -51,6 +51,7 @@ Runs the text checks of `check` on the validation gate question before `gate pre
 `--match-head-commit` and has no sentence of the form "unless he says he merges or holds" (`unless` or `if`, then `he`, `you`, `the Captain` or `Captain`, then `say`, then `merge` or `hold`). Exit 0
 prints `gate text complete` then `ASK_FORM`; exit 1 prints each problem; exit 2 when an input cannot be read. `check` does not judge either clause.
 Merge-naming text also needs the question file to name removing its clean, pushed worktree, in one sentence.
+It requires the newest delivery check record to match the dispatched head, named merge head and clauses, and prints its --reference path.
 With --summary-file, ordinary text checks use question plus summary; reviewer checks use only
 the summary outside fences. It requires one top-level External rounds: N (nonnegative integer),
 optionally followed by a full stop or a semicolon/full stop and detail. Without it, legacy checks apply.
@@ -873,6 +874,27 @@ def captain_step_problems(task, gate_text, summary):
     return []
 
 
+def matching_delivery_record(task, text):
+    records = [(int(m[1]), path) for path in (task_folder(task) / "merge").glob("ask-*.json")
+               if (m := re.fullmatch(r"ask-(\d+)\.json", path.name))]
+    if not records:
+        return None
+    path = max(records)[1]
+    try:
+        record = json.loads(path.read_text())
+    except (OSError, UnicodeDecodeError, ValueError):
+        return None
+    if not isinstance(record, dict) or not isinstance(head := record.get("head"), str) or not re.fullmatch(r"[0-9a-f]{7,40}", head):
+        return None
+    candidates, _ = dispatched_candidates(task)
+    grants = re.findall(r"--match-head-commit\s+([0-9a-f]{7,40})\b", text)
+    if not any(candidate.startswith(head) for candidate in candidates) or not grants or not all(head.startswith(sha) for sha in grants):
+        return None
+    if any(record.get(label.lower()) != clean(clause(text, label) or "")[:200] for label in CONFIRMATIONS):
+        return None
+    return path
+
+
 def question(args):
     emit(CLAIM_SOURCE)
     task = Path(args.task)
@@ -906,6 +928,13 @@ def question(args):
         emit(f"cannot read input: {error}")
         return 2
     problems, nexts = text_problems(task_text, gate_text, at_gate=True, reviewer_text=reviewer_text)
+    delivery_record = None
+    # see docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md
+    if GRANT.search(gate_text):
+        delivery_record = matching_delivery_record(task, gate_text)
+        if delivery_record is None:
+            problems.append("the newest delivery check record is missing, unreadable or differs from the dispatched head, merge head or clauses")
+            nexts.append("next: hold preparation; run delivery_gate.py check on this question and summary, then this check again.")
     if GRANT.search(gate_text) and not WORKTREE_REMOVAL.search(question_text):
         problems.append("the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree")
         nexts.append("next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.")
@@ -914,6 +943,8 @@ def question(args):
     emit(*problems, *dict.fromkeys(nexts))
     if not problems:
         emit("gate text complete", ASK_FORM)
+        if delivery_record is not None:
+            emit(f"next: run `spacedock state commit {task_folder(task).name} --workflow-dir {workflow_dir}`, then run `gate prepare` with `--reference {delivery_record}`.")
     return 1 if problems else 0
 
 
