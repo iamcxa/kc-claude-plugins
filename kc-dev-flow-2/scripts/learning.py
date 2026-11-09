@@ -11,7 +11,10 @@ from pathlib import Path
 import re
 import secrets
 import subprocess
+import sys
 import tempfile
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from count_tokens import count_sentences, numbers
 
 
