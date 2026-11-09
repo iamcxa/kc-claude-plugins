@@ -17,8 +17,18 @@ active={};finished=[];halt=False
 while cells or active:
     while cells and len(active)<5 and not halt:
         arm,n,scratch=cells.pop(0)
-        assert len(list((R/'runs').glob('*/meta.json')))<16, 'hard stop'
         label=f'{a.host}-{arm}-{n}-registered'
+        existing=R/'runs'/label/'meta.json'
+        if existing.exists():
+            done=json.loads(existing.read_text())
+            if not done.get('end'):
+                active[label]=(None,label,None)
+                print('watching '+label,flush=True)
+                continue
+            assert done.get('exit')==0 and done.get('report_written'), 'existing cell did not complete'
+            finished.append({'run':label,'exit':0})
+            continue
+        assert len(list((R/'runs').glob('*/meta.json')))<16, 'hard stop'
         argv=['python3','-B',str(R/'run.py'),a.host,arm,str(n),'/tmp/validation-review-replay/'+scratch,'--label',label]
         log=(R/f'launch-{label}.log').open('w')
         proc=subprocess.Popen(argv,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
@@ -27,13 +37,18 @@ while cells or active:
         # Wait for durable attempt registration before the next launch.
         while not (R/'runs'/label/'meta.json').exists() and proc.poll() is None:time.sleep(.1)
     for pid,(proc,label,log) in list(active.items()):
-        rc=proc.poll()
+        if proc is None:
+            observed=json.loads((R/'runs'/label/'meta.json').read_text())
+            rc=(0 if observed.get('exit')==0 and observed.get('report_written') else 1) if observed.get('end') else None
+        else:rc=proc.poll()
         if rc is None:continue
-        log.close();finished.append({'run':label,'exit':rc});del active[pid]
+        if log:log.close()
+        finished.append({'run':label,'exit':rc});del active[pid]
         print('finished '+label+' exit='+str(rc),flush=True)
         if rc and a.host=='codex':
             halt=True;cells=[]
-            for other,_,_ in active.values():other.send_signal(signal.SIGTERM)
+            for other,_,_ in active.values():
+                if other is not None:other.send_signal(signal.SIGTERM)
     if active:time.sleep(10)
 result={'host':a.host,'complete':not halt and len(finished)==6 and all(x['exit']==0 for x in finished),'runs':finished,'D1_halt':halt}
 (R/f'batch-{a.host}.json').write_text(json.dumps(result,indent=2)+'\n')

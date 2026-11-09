@@ -56,6 +56,15 @@
       "source": "runs/codex-candidate-1-registered/report.md",
       "basis": "blocking finding describes lost successful-check reminders",
       "post_hoc": true
+    },
+    {
+      "run": "codex-candidate-3-registered",
+      "found": true,
+      "quote_line": 20,
+      "quote": "- F1 Material: Required step-back reminder is suppressed on successful repeated dispatch.",
+      "source": "runs/codex-candidate-3-registered/report.md",
+      "basis": "blocking finding describes lost successful-check reminders",
+      "post_hoc": true
     }
   ]
 }
