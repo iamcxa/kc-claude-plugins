@@ -815,7 +815,7 @@ def count_disclosure(folder, text, destination, declared):
     checked, unchecked = count_problems(folder, text)
     line = f"Unchecked counts: {len(unchecked)}"
     emit(f"counts: {checked} checked, {len(unchecked)} unchecked",
-         *("unchecked count: " + " ".join(sentence.split()[:12]) for sentence in unchecked[:8]), line)
+         *("unchecked count: " + " ".join(sentence.split()[:12]) for sentence in unchecked[:8]))
     declarations = {index for index, row in prose_lines(declared) if row.startswith("Unchecked counts:")}
     updated = [row for index, row in enumerate(declared.splitlines()) if index not in declarations]
     result = line + "\n" + "\n".join(updated).rstrip("\n") + "\n"

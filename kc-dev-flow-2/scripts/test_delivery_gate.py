@@ -318,7 +318,7 @@ SECURITY = (f"Security review (validation): security/validation-1.yaml at {HEAD4
             "Security finding (validation 1) 1: Needs decision: cap sessions\n"
             "Security finding (validation 1) 2: Needs decision: add the sentence\n"
             "Security finding (validation 1) 3: declined: stated unverified\n")
-EMPTY_COUNTS = "counts: 0 checked, 0 unchecked\nUnchecked counts: 0\n"
+EMPTY_COUNTS = "counts: 0 checked, 0 unchecked\n"
 EQUALS = CLAIM_SOURCE + "\n" + EMPTY_COUNTS + f"PR head {HEAD40[:8]} equals dispatched candidate {HEAD40[:8]}; no second reviewer outcome is missing\n"
 PILOT_OUT = EQUALS + "class: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n"
 
@@ -499,7 +499,7 @@ class CheckRoundCountTests(unittest.TestCase):
             with self.subTest(text=text):
                 result = run_check(rounds=text)
                 self.assertEqual(result.code, 1, result.out)
-                self.assertEqual(result.lines, [CLAIM_SOURCE, "counts: 0 checked, 0 unchecked", "Unchecked counts: 0", self.PROBLEM, self.NEXT, ""])
+                self.assertEqual(result.lines, [CLAIM_SOURCE, "counts: 0 checked, 0 unchecked", self.PROBLEM, self.NEXT, ""])
                 self.assertEqual(result.written, {})
 
     def test_zero_and_detail_counts_preserve_the_complete_text_output(self):
@@ -1110,12 +1110,12 @@ class DeclineAndAdrTests(unittest.TestCase):
     def test_a_decline_item_names_its_first_words_and_the_hold_is_the_ask_not_a_record(self):
         code, out = self.check(text="Declined, with reasons: Polish, a docstring wording; Deferred risk, one more (a real reason here).")
         self.assertEqual(code, 1)
-        self.assertEqual(out.splitlines()[3], "declined item has no reason: 'Polish, a docstring wording'")
+        self.assertEqual(out.splitlines()[2], "declined item has no reason: 'Polish, a docstring wording'")
 
     def test_a_short_declined_item_is_judged_and_a_none_form_is_not_an_item(self):
         code, out = self.check(text="Declined: Polish, typo.")
         self.assertEqual(code, 1, out)
-        self.assertEqual(out.splitlines()[3], "declined item has no reason: 'Polish, typo'")
+        self.assertEqual(out.splitlines()[2], "declined item has no reason: 'Polish, typo'")
         self.assertEqual(self.check(text="Declined: Polish (wording only, no behavior change).")[0], 0)
         for text in ("Declined: none.", "FO declines: n/a.", "Declined: nothing"):
             self.assertEqual(self.check(text=text)[0], 0, text)
@@ -1831,7 +1831,7 @@ class CaptainGateTests(CaptainStepFixture):
         for summary in (False, True):
             code, out = self.ask_gate(summary=summary, declaration=False)
             self.assertEqual(code, 1, out)
-            self.assertEqual(len(out.splitlines()), 5, out)
+            self.assertEqual(len(out.splitlines()), 4, out)
             self.assertIn("Captain steps:", out)
             self.assertTrue(out.splitlines()[-1].startswith("next:"))
             code, out = self.ask_gate(candidate="e623efd2" + "0" * 32, summary=summary)
