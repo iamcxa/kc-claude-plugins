@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:a-worker-holds-while-a-role-call-is-owed:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:a-worker-holds-while-a-role-call-is-owed-backlog-1
+              briefing:
+                id: briefing:a-worker-holds-while-a-role-call-is-owed:backlog:attempt-1:revision-1
+                digest: sha256:deb0f461d712825a818f0fedce964b1b569bea2a906df4bf3b8ce46a876ba2ae
+                room-ref: ./a-worker-holds-while-a-role-call-is-owed/review/backlog/briefing-1
 ---
 
 ## Scope
