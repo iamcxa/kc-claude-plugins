@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:delivery-gate-ignores-url-paths-and-data-fences:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:delivery-gate-ignores-url-paths-and-data-fences-backlog-1
+              briefing:
+                id: briefing:delivery-gate-ignores-url-paths-and-data-fences:backlog:attempt-1:revision-1
+                digest: sha256:189dd7b6de15cb7c390c51d9dc49ede301d33182e83d828dd6b98da2dcb399e2
+                room-ref: ./delivery-gate-ignores-url-paths-and-data-fences/review/backlog/briefing-1
 ---
 
 ## Scope
