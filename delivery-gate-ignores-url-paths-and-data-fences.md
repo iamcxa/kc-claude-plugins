@@ -75,7 +75,7 @@ gates:
                 state: pending
 started: 2026-11-09T04:59:05Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences
-pr: iamcxa/kc-claude-plugins#818
+pr: pr-merge:818
 ---
 
 ## Scope
