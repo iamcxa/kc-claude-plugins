@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:kept-data-lifecycle-at-ui-ideation:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:kept-data-lifecycle-at-ui-ideation-validation-1
+              briefing:
+                id: briefing:kept-data-lifecycle-at-ui-ideation:validation:attempt-1:revision-1
+                digest: sha256:a0c0b26515b29c9f9b1941d6cb77b2e61f293b93798db2fa6ad6251b0cafbc4a
+                room-ref: ./kept-data-lifecycle-at-ui-ideation/review/validation/briefing-1
 started: 2026-11-09T14:37:26Z
 worktree: .worktrees/spacedock-ensign-kept-data-lifecycle-at-ui-ideation
 pr: iamcxa/kc-claude-plugins#820

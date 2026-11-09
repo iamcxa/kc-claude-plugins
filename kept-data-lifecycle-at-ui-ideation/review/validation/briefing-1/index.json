@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kept-data-lifecycle-at-ui-ideation:validation:attempt-1:revision-1",
+  "question": "決定：合併 #820（設計階段遇到跨畫面或跨登入保留的資料時，要寫明它從哪開始、怎麼結束、誰會改）嗎？建議合併。 Regular merge with --match-head-commit 8470611d718f19aa8ef1f7ae66ba9f72c3c01422, the batch 19 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:kept-data-lifecycle-at-ui-ideation:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d2a3c4feb6e2fb673c151d5a24b546b6d9513268/kept-data-lifecycle-at-ui-ideation.md",
+      "rev": "sha256:f58166e71f39f140853e3ab13deadb65f5ea5f4f1795870d3b8c6e0811cbe868",
+      "mediaType": "text/markdown",
+      "summary": "Delivery of kept-data-lifecycle-at-ui-ideation, PR #820, in the batch 19 validation sitting.\nSufficiency: the Pilot ideation route gains one paragraph asking a ui design that keeps data across screens or sign-in for its start, every end and every writer; a fresh blind re-score of the approved replay texts gave revised 8 against current 3 (validation-1 report, Astra, 2026-11-09, PASSED at 8470611d7).\nNecessity: only kc-dev-flow-2/skills/ideation/profiles/pilot.md changes, and the workflow stays at 5931 words (validation-1 report, Astra, 2026-11-09).\nAcceptance, run by FO in a fresh shell 2026-11-09, exit 0: cd /tmp \u0026\u0026 bash --noprofile --norc /tmp/validate-pr820-0VHkSC0d/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/kept-data-lifecycle-at-ui-ideation/captain-steps/1.md\nPR link step, run by FO in a fresh shell 2026-11-09, exit 0: open https://github.com/iamcxa/kc-claude-plugins/pull/820 and check it is open, ready and at the candidate head\nValidation answered merge-readiness: it read the PR at the head and found no unaddressed review (validation-1 report, Astra, 2026-11-09).\nExternal rounds: 1.\nExternal round sources: Codex reviewed 8470611d7 (PR comments read by FO 2026-11-09).\nSecond reviewer: not triggered.\nCodex review: \"Didn't find any major issues\" on 8470611d71 (codex-review-receipt comment on #820, read by FO 2026-11-09).\nRoboRev: clean on 8470611d7, evidence=roborev:1666 (FO run 2026-11-09).\nLimit: one corpus, same-author rubric, and the revised designs are longer (qnow dev2 FO case check, 2026-11-09, case-confirmation.md)."
+    }
+  ]
+}
