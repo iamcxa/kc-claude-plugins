@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:validation-reads-pr-review-comments:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:validation-reads-pr-review-comments-ideation-1
+              briefing:
+                id: briefing:validation-reads-pr-review-comments:ideation:attempt-1:revision-1
+                digest: sha256:68e6d20985399a9502f57488873d3759ff67b8e5e5968c8709454de10b36f91c
+                room-ref: ./validation-reads-pr-review-comments/review/ideation/briefing-1
 started: 2026-11-09T04:58:40Z
 ---
 

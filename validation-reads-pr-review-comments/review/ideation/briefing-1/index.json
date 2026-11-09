@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-reads-pr-review-comments:ideation:attempt-1:revision-1",
+  "question": "決定：第 18 批四張設計照下列建議進實作嗎？建議核准。(1) 驗證回答能不能合併：Claude 和 Codex 兩邊都要跑，Codex 跑不了就停下來回報，不接受只有 Claude 的結果；這次不寫決策紀錄，等第 19 批觀察者的數字出來再定。(2) 合併檢查誤判：只在引用的文件裡，把 shell 或沒標語言的程式區塊算成你要跑的步驟；問題和報告裡的區塊照舊全算。(3) 檢查跑在提問前：沒有對應的檢查紀錄就不讓準備問題，所以 PR 要先 ready、CI 綠才能開驗證關卡。(4) 數字寫明出處：learn 提案完成時，證據裡的數字在它引用的資料找不到就擋下；摘要裡的「未查核的數字：N」改由工具自己寫進去，不擋、也不用我抄（工人原案是擋到我抄上那一行）。核准即接受上列每一項建議，包括 (4) 改成工具自己寫；要改哪項直接說。",
+  "artifacts": [
+    {
+      "id": "artifact:validation-reads-pr-review-comments:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b63df43d582ec4ee95043df2271fbb95052a4991/validation-reads-pr-review-comments.md",
+      "rev": "sha256:5a4ec11a6be47a8547d937276c7c3476c2acec261efd168ddd6ce2142f412884",
+      "mediaType": "text/markdown",
+      "summary": "Batch 18 ideation sitting: design_surfaces.py check reports design surfaces presentable and dispatch_records.py --coverage reports ideation complete (FO 2026-11-09); the design and its decisions are in the task file."
+    }
+  ]
+}
