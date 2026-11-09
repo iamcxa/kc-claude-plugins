@@ -1,0 +1,11 @@
+fixtures-base: exit 0
+fixtures-candidate: exit 0
+mutations: exit 0
+lint-skills: exit 0
+adr-lint: exit 0
+number-guards: exit 0
+comment-ratio: exit 0
+doc-impact: exit 0
+design-surfaces: exit 0
+dispatch-records: exit 0
+diff-check: exit 0

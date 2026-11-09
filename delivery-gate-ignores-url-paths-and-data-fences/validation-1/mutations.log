@@ -1,0 +1,10 @@
+test_site_and_elided_paths_are_not_files_without_a_real_top_level_directory (test_delivery_gate.CaptainStepsTests.test_site_and_elided_paths_are_not_files_without_a_real_top_level_directory) ... ok
+test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold (test_delivery_gate.CaptainStepsTests.test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold) ... ok
+test_named_cards_require_shell_and_untagged_fences_but_skip_data (test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data) ... ok
+test_yaml_message_and_missing_paths_keep_their_holds (test_delivery_gate.CaptainStepsTests.test_yaml_message_and_missing_paths_keep_their_holds) ... ok
+test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths (test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.499s
+
+OK

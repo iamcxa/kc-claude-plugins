@@ -1,0 +1,22 @@
+[
+  {
+    "name": "test_delivery_gate.HistoricalBoundQuestionTests.test_historical_answers_lose_grant_and_whole_question_restores_it",
+    "reason": "set GATE_PRESENTATION_STATE for the five committed validation replays"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentCorpusTests.test_every_pinned_task_and_artifact_with_per_file_verdicts",
+    "reason": "set DEV2_AMENDMENT_CORPORA and DEV2_AMENDMENT_BASE for frozen corpus CLI replay"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentHistoricalTests.test_declared_reading_manifest_and_fixture_stdout",
+    "reason": "set DEV2_AMENDMENT_STATE for exact historical CLI replays"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentHistoricalTests.test_real_form_bites_and_single_field_repairs_with_event_artifacts",
+    "reason": "set DEV2_AMENDMENT_STATE for exact historical CLI replays"
+  },
+  {
+    "name": "test_design_surfaces.AmendmentHistoricalTests.test_real_rewrite_cli_ranges_and_exact_state_workflow_invocation",
+    "reason": "set DEV2_AMENDMENT_STATE for exact historical CLI replays"
+  }
+]

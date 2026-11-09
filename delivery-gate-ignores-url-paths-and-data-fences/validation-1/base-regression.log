@@ -1,0 +1,55 @@
+test_question_accepts_site_and_elided_paths (test_delivery_gate.QuestionTests.test_question_accepts_site_and_elided_paths) ... FAIL
+test_question_accepts_namespace_uri_in_message_and_report (test_delivery_gate.QuestionTests.test_question_accepts_namespace_uri_in_message_and_report) ... FAIL
+test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths (test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths) ... 
+  test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths (test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths) (card='design/built-review.md') ... FAIL
+  test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths (test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths) (card='review/chief-engineer-1.md') ... FAIL
+
+======================================================================
+FAIL: test_question_accepts_site_and_elided_paths (test_delivery_gate.QuestionTests.test_question_accepts_site_and_elided_paths)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr818-validation-pP1gbX/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2166, in test_question_accepts_site_and_elided_paths
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+Captain steps record fails: message S4: missing path /llms.txt
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+
+
+======================================================================
+FAIL: test_question_accepts_namespace_uri_in_message_and_report (test_delivery_gate.QuestionTests.test_question_accepts_namespace_uri_in_message_and_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr818-validation-pP1gbX/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2173, in test_question_accepts_namespace_uri_in_message_and_report
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+Captain steps record fails: message S5: unrecorded command or link 'http://www.w3.org/2000/svg}svg'
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+
+
+======================================================================
+FAIL: test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths (test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths) (card='design/built-review.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr818-validation-pP1gbX/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2192, in test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+Captain steps record fails: message S5: unrecorded command or link 'design_review: adrs_read: - docs/adr/0064-the-first-screen-leads-with-sign-in.md (Accepted)'
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+
+
+======================================================================
+FAIL: test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths (test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths) (card='review/chief-engineer-1.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr818-validation-pP1gbX/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2192, in test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+Captain steps record fails: message S5: unrecorded command or link 'chief_engineer_advice: outcome: continue'
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.522s
+
+FAILED (failures=4)
+BASE NEGATIVE CONTROL CONFIRMED: the 3 new CLI tests detect all four affected cases; 4 assertion failures.

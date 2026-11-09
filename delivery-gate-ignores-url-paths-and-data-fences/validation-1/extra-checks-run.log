@@ -1,0 +1,8 @@
+extension-codex: exit 0
+extension-roborev: exit 0
+extension-copilot: exit 0
+extension-journey-map: exit 0
+extension-release-acceptance: exit 0
+sd-dispatch: exit 0
+observer-recovery: exit 0
+version-parity: exit 128

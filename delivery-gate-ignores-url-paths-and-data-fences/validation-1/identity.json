@@ -1,0 +1,12 @@
+{
+  "head": "6f2fe8f33de15cf4e9283bf9dfed185a5691ed57",
+  "base": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+  "base_equals_installed_0_36_0": true,
+  "base_sha256": "1ec361e1ac3cdec8e42b6fbda3c62eca258cee2aa36ce66b3f0e401914c48b6d",
+  "workflow_bytes_equal": true,
+  "workflow_base_words": 5931,
+  "workflow_candidate_words": 5931,
+  "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+  "full_discovery_python": "3.15.0 /opt/homebrew/opt/python@3.15/bin/python3.15, resolved in assigned worktree launcher",
+  "fixture_and_package_checks_python": "3.11.14 (main, Oct 13 2025, 15:28:41) [Clang 17.0.0 (clang-1700.0.13.5)]"
+}

@@ -1,0 +1,285 @@
+[
+  {
+    "name": "fixtures-base",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-I",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-ignores-url-paths-and-data-fences/ideation/fixtures.py",
+      "/tmp/pr818-validation-pP1gbX/base/kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "fixtures-candidate",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-I",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-ignores-url-paths-and-data-fences/ideation/fixtures.py",
+      "/tmp/pr818-validation-pP1gbX/candidate/kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "mutations",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-ignores-url-paths-and-data-fences/implementation-1/run_mutations.py",
+      "/tmp/pr818-validation-pP1gbX/candidate",
+      "/tmp/pr818-validation-pP1gbX/evidence"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "lint-skills",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-ignores-url-paths-and-data-fences.md",
+      "--base",
+      "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+      "--head",
+      "6f2fe8f33de15cf4e9283bf9dfed185a5691ed57"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "note": "Sandbox state fetch warning resolved by authorized same-command rerun; number-guards-refreshed.log."
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/comment_ratio.py",
+      "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+      "6f2fe8f33de15cf4e9283bf9dfed185a5691ed57",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/doc_impact.py",
+      "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+      "6f2fe8f33de15cf4e9283bf9dfed185a5691ed57",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences",
+      "--json"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-ignores-url-paths-and-data-fences.md"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-ignores-url-paths-and-data-fences"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences",
+      "diff",
+      "--check",
+      "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+      "6f2fe8f33de15cf4e9283bf9dfed185a5691ed57"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "extension-codex",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "log": "/tmp/pr818-validation-pP1gbX/evidence/extension-codex.log"
+  },
+  {
+    "name": "extension-roborev",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "log": "/tmp/pr818-validation-pP1gbX/evidence/extension-roborev.log"
+  },
+  {
+    "name": "extension-copilot",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "log": "/tmp/pr818-validation-pP1gbX/evidence/extension-copilot.log"
+  },
+  {
+    "name": "extension-journey-map",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "log": "/tmp/pr818-validation-pP1gbX/evidence/extension-journey-map.log"
+  },
+  {
+    "name": "extension-release-acceptance",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "log": "/tmp/pr818-validation-pP1gbX/evidence/extension-release-acceptance.log",
+    "note": "122 tests; 4 skipped: optional node/journey-map dependencies absent."
+  },
+  {
+    "name": "sd-dispatch",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "log": "/tmp/pr818-validation-pP1gbX/evidence/sd-dispatch.log"
+  },
+  {
+    "name": "observer-recovery",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "log": "/tmp/pr818-validation-pP1gbX/evidence/observer-recovery.log",
+    "note": "Model-free real local recovery only."
+  },
+  {
+    "name": "version-parity",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "bash",
+      "scripts/version-parity-check.sh"
+    ],
+    "log": "/tmp/pr818-validation-pP1gbX/evidence/version-parity-with-metadata.log",
+    "note": "Initial archive-only run exited 128 because .git was absent; rerun with read-only GIT_DIR/GIT_WORK_TREE exited 0."
+  },
+  {
+    "name": "acceptance-four-steps",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-ignores-url-paths-and-data-fences/validation-1/acceptance.sh"
+    ],
+    "log": "acceptance-published-path.log"
+  },
+  {
+    "name": "base-cli-negative-control",
+    "status": "passed",
+    "exit": 0,
+    "note": "Expected three new tests to reject base, four assertion failures; observed.",
+    "log": "base-regression.log"
+  },
+  {
+    "name": "adr-lint-required",
+    "status": "passed",
+    "exit": 0,
+    "note": "--since base --require 0044 0051 0062",
+    "log": "adr-lint-required.log"
+  },
+  {
+    "name": "full-discovery",
+    "status": "passed",
+    "exit": 0,
+    "tests": 1032,
+    "skipped": 7,
+    "command": [
+      "env",
+      "TMPDIR=/tmp",
+      "SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_*.py"
+    ],
+    "python": "3.15.0",
+    "log": "discover.log"
+  }
+]

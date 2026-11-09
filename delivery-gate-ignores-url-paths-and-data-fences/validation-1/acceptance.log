@@ -1,0 +1,20 @@
+candidate 6f2fe8f33de15cf4e9283bf9dfed185a5691ed57
+site paths: exit 0 / gate text complete
+elided package: exit 0 / gate text complete
+namespace: exit 0 / gate text complete
+design YAML: exit 0 / gate text complete
+review YAML: exit 0 / gate text complete
+test_site_and_elided_paths_are_not_files_without_a_real_top_level_directory (test_delivery_gate.CaptainStepsTests.test_site_and_elided_paths_are_not_files_without_a_real_top_level_directory) ... ok
+test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold (test_delivery_gate.CaptainStepsTests.test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold) ... ok
+test_named_cards_require_shell_and_untagged_fences_but_skip_data (test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data) ... ok
+test_yaml_message_and_missing_paths_keep_their_holds (test_delivery_gate.CaptainStepsTests.test_yaml_message_and_missing_paths_keep_their_holds) ... ok
+test_non_shell_fences_need_a_recorded_step_unless_they_match_observed (test_delivery_gate.CaptainStepsTests.test_non_shell_fences_need_a_recorded_step_unless_they_match_observed) ... ok
+test_question_keeps_yaml_fences_in_the_report_as_steps (test_delivery_gate.QuestionTests.test_question_keeps_yaml_fences_in_the_report_as_steps) ... ok
+test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths (test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.236s
+
+OK
+scope and workflow unchanged
+PASS

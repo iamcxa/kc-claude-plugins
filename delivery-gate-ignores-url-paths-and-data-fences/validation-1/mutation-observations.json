@@ -1,0 +1,260 @@
+[
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_site_and_elided_paths_are_not_files_without_a_real_top_level_directory",
+    "variant": false,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_site_and_elided_paths_are_not_files_without_a_real_top_level_directory",
+    "variant": true,
+    "exit": 1,
+    "output": "step 1 S4: missing path /llms.txt\nmessage S4: missing path /llms.txt\nmessage S4: missing path /web/favicon.svg\nmessage S4: missing path /pair\nmessage S4: missing path /delivery-gate-4b50a511681b4f1d82ebaeec0cc3b7cd/x.txt\nmessage S4: missing path /scripts/adr_lint.py\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold",
+    "variant": false,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold",
+    "variant": true,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'http://www.w3.org/2000/svg}svg'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold",
+    "variant": false,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'https://example.test/a'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold",
+    "variant": true,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold",
+    "variant": false,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'http://www.w3.org/2000/svg'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_braced_namespace_uri_is_not_a_link_but_plain_urls_still_hold",
+    "variant": true,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": false,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_named_cards_require_shell_and_untagged_fences_but_skip_data",
+    "variant": true,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'printf unrecorded'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_yaml_message_and_missing_paths_keep_their_holds",
+    "variant": false,
+    "exit": 1,
+    "output": "message S5: unrecorded command or link 'key: value'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_yaml_message_and_missing_paths_keep_their_holds",
+    "variant": true,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_yaml_message_and_missing_paths_keep_their_holds",
+    "variant": false,
+    "exit": 1,
+    "output": "step 1 S4: missing path /tmp/tmpynxndw03/missing.txt\nmessage S4: missing path /tmp/tmpynxndw03/missing.txt\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> \u2014 <why: his credential, account, device or judgment>\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_yaml_message_and_missing_paths_keep_their_holds",
+    "variant": true,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.CaptainStepsTests.test_yaml_message_and_missing_paths_keep_their_holds",
+    "variant": false,
+    "exit": 0,
+    "output": "captain steps complete: 1 steps, 0 left to him\n"
+  },
+  {
+    "test": "test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths",
+    "variant": false,
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "test": "test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths",
+    "variant": true,
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: message S5: unrecorded command or link 'design_review: adrs_read: - docs/adr/0064-the-first-screen-leads-with-sign-in.md (Accepted)'\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  {
+    "test": "test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths",
+    "variant": false,
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "test": "test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths",
+    "variant": true,
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: message S5: unrecorded command or link 'chief_engineer_advice: outcome: continue'\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  {
+    "test": "test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths",
+    "variant": false,
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: message S5: unrecorded command or link 'printf unrecorded'\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  {
+    "test": "test_delivery_gate.QuestionTests.test_question_accepts_named_yaml_cards_and_holds_real_steps_and_paths",
+    "variant": false,
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: message S4: missing path /tmp/tmprk5rd4ue/missing.txt\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  }
+]

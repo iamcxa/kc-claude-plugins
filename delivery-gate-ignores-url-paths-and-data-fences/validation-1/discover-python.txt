@@ -1,0 +1,2 @@
+3.11.14 (main, Oct 13 2025, 15:28:41) [Clang 17.0.0 (clang-1700.0.13.5)]
+/Users/kent/.pyenv/versions/3.11.14/bin/python3

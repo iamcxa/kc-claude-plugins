@@ -1,0 +1,74 @@
+[
+  {
+    "revision": "candidate",
+    "name": "site paths",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "revision": "candidate",
+    "name": "elided package",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "revision": "candidate",
+    "name": "namespace",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "revision": "candidate",
+    "name": "design YAML",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "revision": "candidate",
+    "name": "review YAML",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "revision": "base",
+    "name": "site paths",
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: message S4: missing path /llms.txt\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  {
+    "revision": "base",
+    "name": "elided package",
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: message S4: missing path /scripts/adr_lint.py\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  {
+    "revision": "base",
+    "name": "namespace",
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: message S5: unrecorded command or link 'http://www.w3.org/2000/svg}svg'\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  {
+    "revision": "base",
+    "name": "design YAML",
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: message S5: unrecorded command or link 'design_review: adrs_read: - docs/adr/0064-the-first-screen-leads-with-sign-in.md (Accepted)'\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  {
+    "revision": "base",
+    "name": "review YAML",
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: message S5: unrecorded command or link 'chief_engineer_advice: outcome: A Pilot stage dispatch records its actual inputs'\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  {
+    "revision": "candidate",
+    "name": "Python fence in card accepted",
+    "exit": 0,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "revision": "candidate",
+    "name": "PR attribution link retained",
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: message S5: unrecorded command or link 'https://claude.com/claude-code'\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  }
+]

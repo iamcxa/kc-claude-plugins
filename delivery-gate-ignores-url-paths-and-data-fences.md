@@ -256,3 +256,38 @@ Reproduced all five inputs on 0.36.0 and designed three one-line narrowings; a s
 ### Summary
 
 Implemented the three approved narrowings at the named candidate, with all acceptance checks and seven falsifiers exercised on 2026-11-09; local evidence and PR text are ready for FO. The accepted tradeoff remains: non-shell fences in named cards, including Python or Node, are not inferred as steps; publication, independent review and validation remain FO-owned.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #818 head 6f2fe8f3 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at exact head `6f2fe8f33de15cf4e9283bf9dfed185a5691ed57`, base `e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e`; source executed from fresh archives, product worktree unchanged; primary evidence: `validation-1/README.md`.
+- DONE: AC-1 Site URL paths and an elided package path are not files.
+  Original site/elided tokens and generated absent root pass; reversing the existing-root predicate restores S4 (`validation-1/mutation-observations.json`, `fixtures-candidate.log`).
+- DONE: AC-2 A namespace URI right after a brace is not a link.
+  Braced URI passes message/report through the real CLI; reversing the brace exclusion restores S5, while bare HTTP/HTTPS still hold (`validation-1/question-replay.json`, `mutations.log`).
+- DONE: AC-3 Data fences in named cards are not commands.
+  Both original YAML card strings pass question; changing the card call to all fences restores S5 for each (`validation-1/acceptance-published-path.log`, `mutation-observations.json`).
+- DONE: AC-4 Real steps and missing files still hold.
+  Shell/untagged card fences, YAML message/report, bare links and missing paths under a real root hold; existing files pass. Four weakening mutations break the respective controls; all seven named mutations run with -B and fresh/cleared caches (`validation-1/mutations.log`).
+- DONE: AC-5 The stop condition holds through question.
+  All five recorded inputs pass the real candidate CLI and fail the byte-identical 0.36.0/base CLI; real sh-card and missing-path controls hold. The new CLI tests reject the base with four expected assertion failures (`validation-1/question-replay.json`, `base-regression.log`).
+- DONE: AC-6 Nothing else moves.
+  Only the two approved files differ; workflow bytes and 5931-word count are unchanged; full discovery: 1032 tests, 7 opt-in skips, exit 0; lint and extension checks pass, with skips disclosed (`validation-1/discover.log`, `checks-reconciled.json`, `identity.json`).
+- DONE: Answer the merge-readiness question for PR #818 at this head: read every review comment and review on the PR at the head before your verdict, and say which, if any, stand unaddressed.
+  Not merge-ready: still Draft and version-parity attempt 2 still fails downloading Spacedock with HTTP 504; hosted unit tests have since passed. Read all three conversation comments, zero inline comments and zero submitted reviews; exact-head Codex completion/clean receipt reports no findings, none stand unaddressed. Hosted sources and raw snapshot paths are in `validation-1/README.md`.
+- DONE: Reproduce each of the five recorded inputs passing and a real shell fence and an existing absolute path still holding. PR #794 is held by the Captain; judge this PR against origin/main.
+  Five CLI passes, shell fence held, missing file under existing /tmp held, existing file passes as AC-4 requires; base is origin/main, not #794. Each narrowing is necessary under its reversed/base control (`validation-1/acceptance-published-path.log`, `question-replay.json`).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output
+  Four steps in `validation-1/acceptance.sh`; ran its absolute path with `bash --noprofile --norc`, exit 0, five “gate text complete” results, seven focused tests OK and final PASS (`validation-1/acceptance-published-path.log`); no graphical surface, hosted/approval/merge excluded.
+- DONE: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py docs/adr --since <base> with its exit code
+  Ran with base e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e and read-only Git metadata for the export: exit 0, 63 ADRs; repeated with --require 0044 0051 0062, exit 0 (`validation-1/adr-lint.log`, `adr-lint-required.log`).
+- DONE: Required workflow evidence and affected-document dispositions.
+  Design check, three dispatch records, refreshed number guards, comment ratio (0/127, 0.0%, max 5%), diff check and metadata-enabled version parity exit 0; ADRs 0044/0051/0062 retain the implementation's correct unaffected dispositions (`validation-1/checks-reconciled.json`, `doc-impact.json`).
+- DONE: Verdict naming the head, with findings classified by the workflow's Review-finding disposition.
+  No new Material, Deferred risk, Polish or Needs decision product finding. Accepted absent-root/non-shell-card limits reproduced; named-card attribution link still holds and belongs to the existing backlog task. CI download failures are delivery holds, not demonstrated product defects.
+- SKIPPED: Optional runtime coverage, local RoboRev and delivery operations not owned by this validation.
+  Four release-acceptance dependency skips and full-suite opt-in skips remain unproven; local model-free dispatch/recovery passed, not host/model execution. FO owns RoboRev, CI reruns, ready state and the Captain delivery gate; CI cost not measured, configuration unchanged; no product push, PR mutation, merge or worktree removal.
+
+### Summary
+
+PASSED for the six accepted criteria at `6f2fe8f33de15cf4e9283bf9dfed185a5691ed57`: the five reported misclassifications disappear through the real question CLI, and the required true positives remain held. The base and seven reverse mutations justify the retained changes; product scope and workflow bytes stay fixed. This is not a merge recommendation yet: FO must clear the remaining hosted version-parity failure and complete the remaining delivery checks on this same head.

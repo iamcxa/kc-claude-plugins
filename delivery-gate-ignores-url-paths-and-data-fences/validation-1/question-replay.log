@@ -1,0 +1,12 @@
+candidate site paths: exit 0
+candidate elided package: exit 0
+candidate namespace: exit 0
+candidate design YAML: exit 0
+candidate review YAML: exit 0
+base site paths: exit 1
+base elided package: exit 1
+base namespace: exit 1
+base design YAML: exit 1
+base review YAML: exit 1
+Python fence in card accepted: exit 0
+PR attribution link retained: exit 1

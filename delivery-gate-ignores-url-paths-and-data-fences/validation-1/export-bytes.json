@@ -1,0 +1,12 @@
+[
+  {
+    "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "blob": "95805ef05c525c10c7fc2ca85f9bd07b46f153a8",
+    "matches_candidate": true
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "blob": "0c3a8550ab411acc4245538a6466c602bd15b552",
+    "matches_candidate": true
+  }
+]
