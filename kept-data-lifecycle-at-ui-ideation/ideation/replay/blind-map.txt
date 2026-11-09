@@ -1,0 +1,12 @@
+a4-cur-1 x51560f44
+a6-cur-1 xd481db54
+a4-rev-1 xcf30fdd8
+r02 x923ca732
+a6-rev-1 xe8d73690
+r01 xc15f595b
+r03 xa55e049d
+r04 x5b7d27a3
+r05 x0ff90660
+r06 xccafd939
+r07 xaf369b04
+r08 x99af1be1

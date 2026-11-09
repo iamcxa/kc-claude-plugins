@@ -1,0 +1,4 @@
+Replay of a past ideation cycle, text only. Read ## Captain amendments first and do not re-litigate them. Write the design and acceptance criteria into the task file in the state checkout; draw no pictures, build or serve no preview, open no browser, and do not run the design review or design_surfaces.py check: pictures and review are out of scope for this replay, so say so in the report instead.
+Base origin/main 232344ce0b012c0b8899a3525d1707de7c4a8500; read code with git -C on the code worktree (read only).
+Do not create agents or message anyone. Never run git stash. Do not commit: leave your edits uncommitted in the state checkout's working tree.
+Append a new ## Stage Report: ideation with each checklist item DONE, SKIPPED or FAILED with evidence.

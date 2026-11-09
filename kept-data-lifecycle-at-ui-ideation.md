@@ -105,13 +105,13 @@ including a reply that lands after the person has moved on, and what that reply 
 still change. Give each end and each late writer an acceptance criterion.
 ```
 
-No script, README, agent or test text changes under D1 option a. `scripts/lint-skills.py` exits 0 on origin/main with and without this patch (scratch copy `/tmp/p3-eval/lintcopy`, logs `/tmp/p3-eval/lint-base.txt`, `lint-rev.txt`, 2026-11-09).
+No script, README, agent or test text changes under D1 option a. `scripts/lint-skills.py` exits 0 on origin/main with and without this patch (scratch copy of origin/main, logs `~/.local/state/kc-dev-flow-2-replays/kept-data-lifecycle-at-ui-ideation/lint-base.txt` and `lint-rev.txt`, 2026-11-09).
 
 ### Behaviour replay (Stop condition)
 
 Result: the revised wording beats the current wording at both amendments, so by the Stop condition this task ships. Amendment 4: 19 vs 11 checks summed over 3 runs each. Amendment 6: 22 vs 10. A second, independent scoring pass gives 20 vs 11 and 22 vs 5.
 
-Method, fixed before any run (rubric written 2026-11-09 22:4x, before the first launch; `/tmp/p3-eval/rubric.md`):
+Method, fixed before any run (rubric file written 2026-11-09 22:46:47, before the first run was launched; the second pair launched at 22:50:44). The reproduction kit is `kept-data-lifecycle-at-ui-ideation/ideation/replay/` in this state checkout: `rubric.md`, `build.sh` (the exact `replay_dispatch.py build` call), `run-codex.sh`, `extract.sh`, `score.sh`, `parse.py`, `scope.txt`, `pilot-revised.diff`, `results.tsv`, `blind-map.txt`, `kept-words.txt`.
 - Replayed dispatches: qnow ideation-6 (state e387a77b3, the commit amendment 4 was dispatched from) and ideation-10 (state c934dfb11, amendment 6). Code base 232344ce. Built with the package's `replay_dispatch.py build` from 0.36.0; arms differ only in `skills/ideation/profiles/pilot.md` (current = tag kc-dev-flow-2-v0.36.0, revised = that tag plus the paragraph under "The change"). Adopter README: qnow's, merged from its synced base kc-dev-flow-2-v0.35.0. The pilot ideation text is the same in 0.35.0 and 0.36.0 (`git diff --stat` on `skills/ideation` and `references/profiles` between the two tags: empty).
 - Checklist: the original FO checklist items with the pictures item removed; scope notes say text only, no pictures, preview, browser, design review or agents, no commit. Neither names the rule under test (`grep -ciE 'lifecycle|writer|late repl|kept data'`: 0 in all three files).
 - Host: Codex `gpt-6-astra`, `model_reasoning_effort=xhigh`, the host and model the original cycles ran on (dispatch headers). 12 runs, each a fresh `codex exec`; every run exited 0 in 615–975 s and committed nothing.
@@ -144,11 +144,11 @@ Limits:
 - Isolation: the first four runs lived under `/tmp/qnow-case/p3-replay/runs/<arm>-<n>` (arm visible in the path); one of them (a4-rev-1) listed files across `/tmp/qnow-case` but read none of the proposal, the rubric or another arm's package (`grep` of its log). The other eight ran under `/tmp/p3r/runs/r01..r08` with the rubric moved out of reach.
 - Codex only; the Claude host was not replayed. Text only: whether the section survives picture cycles and the design review was not tested.
 - The engineering-reviewer hand-off (D1 option b) was not replayed: no run dispatched anyone.
-- Evidence stays in `/tmp/p3-eval` (rubric, `results.tsv`, both scorer passes, scored texts, each run's final task file and dispatch). It is not copied into this state checkout because the scored texts are qnow product text and this branch is published with a public repository.
+- The qnow-derived evidence (both scorer passes, the scored texts, each run's final task file and dispatch, and the two replay checklists) stays on this machine at `~/.local/state/kc-dev-flow-2-replays/kept-data-lifecycle-at-ui-ideation`, not in this state checkout: it is qnow product text and this branch is published with a public repository. A re-run needs only the kit, qnow state and code at the named commits, and those checklists (FO's ideation-6 and ideation-10 checklists with the pictures item removed).
 
 ### Words read at each moment
 
-Counted with `wc -w` on the package files at tag kc-dev-flow-2-v0.36.0 (equal to origin/main for every file below) and on the revised arm (`/tmp/p3-eval/pkgrepo`, tag `revised`), 2026-11-09.
+Counted with `wc -w` on the package files at tag kc-dev-flow-2-v0.36.0 (equal to origin/main for every file below) and on the revised arm (`~/.local/state/kc-dev-flow-2-replays/kept-data-lifecycle-at-ui-ideation/pkgrepo`, tag `revised`), 2026-11-09.
 
 | Reader and moment | Before | After |
 | --- | --- | --- |
@@ -172,13 +172,13 @@ Recommended order: any; this PR touches one file. If D1 is option c, land it aft
 ## Acceptance criteria
 
 **AC-1**: The package PR changes `kc-dev-flow-2/skills/ideation/profiles/pilot.md` by appending exactly the paragraph under "The change", and no other package file (under D1 option a).
-Verified by: `git diff --name-only origin/main...<PR head> -- kc-dev-flow-2` lists only that file, and `git diff origin/main...<PR head> -- kc-dev-flow-2/skills/ideation/profiles/pilot.md` has the same added lines as `/tmp/p3-eval/pilot-revised.diff`. Falsifier: any reworded line, or any second package file, fails this criterion; a reworded paragraph also voids AC-3 until the replay is rerun.
+Verified by: `git diff --name-only origin/main...<PR head> -- kc-dev-flow-2` lists only that file, and `git diff origin/main...<PR head> -- kc-dev-flow-2/skills/ideation/profiles/pilot.md` has the same added lines as `kept-data-lifecycle-at-ui-ideation/ideation/replay/pilot-revised.diff` in this state checkout. Falsifier: any reworded line, or any second package file, fails this criterion; a reworded paragraph also voids AC-3 until the replay is rerun.
 
 **AC-2**: The package's own skill lint still passes and the adopted README's word count and budget are unchanged.
 Verified by: at the PR head, `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0 and reports `references/sd/workflow.md: 5931 of 5931 words`. Falsifier: placing the paragraph in `references/sd/workflow.md` instead raises that count above 5931 and the budget check fails.
 
 **AC-3**: The shipped wording is the wording that won the replay: revised beats current at both amendments on the pre-registered rubric.
-Verified by: the table under "Behaviour replay" (pass 1: amendment 4, 19 vs 11; amendment 6, 22 vs 10; 3 Codex gpt-6-astra xhigh runs per arm), with AC-1's byte match tying the PR to the replayed text. Validation re-scores at least two saved texts from `/tmp/p3-eval/texts` (one per arm) with `/tmp/p3-eval/score.sh` and reports whether the arm order holds. Falsifier: if the PR text differs from the replayed paragraph, or a re-run of both arms at either amendment (same build commands and rubric) gives revised a sum no higher than current, the criterion fails and the task closes with the table.
+Verified by: the table under "Behaviour replay" (pass 1: amendment 4, 19 vs 11; amendment 6, 22 vs 10; 3 Codex gpt-6-astra xhigh runs per arm), with AC-1's byte match tying the PR to the replayed text. Validation re-runs one run per arm at one amendment with the kit's `build.sh`, `run-codex.sh`, `extract.sh` and `score.sh` and reports whether the arm order holds; where the local evidence at `~/.local/state/kc-dev-flow-2-replays/kept-data-lifecycle-at-ui-ideation` still exists, re-scoring two saved texts (one per arm) is the cheaper check. Falsifier: if the PR text differs from the replayed paragraph, or a re-run of both arms at either amendment (same build commands and rubric) gives revised a sum no higher than current, the criterion fails and the task closes with the table.
 
 **AC-4**: No passage or script output that FO reads at startup, resume, idle on an open PR, idle on a merged PR, after the archive or at the merge ask changes.
 Verified by: AC-1's file list (the one file is loaded only by the ideation worker through `skills/ideation/SKILL.md`'s route table), and `git grep -n 'profiles/pilot.md\|ideation/profiles' <PR head> -- kc-dev-flow-2/scripts kc-dev-flow-2/references/sd kc-dev-flow-2/skills/dev kc-dev-flow-2/agents` returning no line outside test files. Falsifier: a hit in any of those paths, or any change to `references/sd/workflow.md`.
@@ -194,15 +194,15 @@ Precedent: no `Override:` line in this workflow's gate records bears on reviewer
 ## Stage Report: ideation
 
 - DONE: Run the replays your stop condition names now, as scratch prototypes under /tmp (never a repository file), and put the result table in the design: replay inputs are listed in /tmp/qnow-case/paths.md (qnow state: read-only detached worktrees only, never the live checkout); the case proposal is /tmp/qnow-case/proposal.md and p1-revised.md; for this task: ideation replays at amendments 4 and 6, current vs revised pilot ui wording, 3 runs each, scored against the nine stand-in checks in the qnow engineering reviewer's report
-  12 Codex gpt-6-astra xhigh runs from qnow state e387a77b3 and c934dfb11, rubric fixed before the first run; pass 1: amendment 4 revised 19 vs current 11, amendment 6 revised 22 vs 10 (pass 2: 20 vs 11, 22 vs 5); table and limits under `### Behaviour replay`; replay worktrees removed, evidence in /tmp/p3-eval. The full reviewer report is not committed in qnow state; the nine checks come from qnow booking-attempt-identity.md and were each confirmed in qnow code at 6bd09a1c.
+  12 Codex gpt-6-astra xhigh runs from qnow state e387a77b3 and c934dfb11, rubric fixed before the first run; pass 1: amendment 4 revised 19 vs current 11, amendment 6 revised 22 vs 10 (pass 2: 20 vs 11, 22 vs 5); table and limits under `### Behaviour replay`; replay worktrees removed; kit in `ideation/replay/`, qnow-derived evidence at `~/.local/state/kc-dev-flow-2-replays/kept-data-lifecycle-at-ui-ideation`. For the qnow FO: the engineering reviewer's full report is not committed in qnow state (owner-vehicle-kept-after-name's `## FO alignment` holds only its `Reviewer:` line), so the nine checks were taken from booking-attempt-identity.md and each confirmed in qnow code at 6bd09a1c.
 - DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (a-worker-holds-while-a-role-call-is-owed, role-call-asks-for-the-mechanism, kept-data-lifecycle-at-ui-ideation) and live task of other sessions (step-back-answer-has-a-record-line (held at ideation), counts-name-the-run-that-produced-them and delivery-gate-ignores-url-paths-and-data-fences (batch 18, live)) that changes the same file or check, so FO can order implementation
   One file (`skills/ideation/profiles/pilot.md`) under D1 option a; no shared file with any of the five tasks; option c would share `role_triggers.py` with two; recommended order: any.
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
   `### Words read at each moment`: FO package text unchanged at every moment (workflow.md 5931 → 5931); the ideation gate design grows by a Kept data section, mean 737 words over 6 revised runs; worker load 1690 → 1784.
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
   AC-1..AC-4 each with a command and falsifier; D1 (who hands kept data to the engineering reviewer) recommends option a and states what gets worse.
-- DONE: AC-1 (only pilot.md changes, text equal to the replayed paragraph): not yet verified; no PR exists. The paragraph exists as `/tmp/p3-eval/pilot-revised.diff`.
-- DONE: AC-2 (lint passes, README 5931 words): verified on a scratch copy of origin/main with the patch, `lint-skills.py` exit 0 and "5931 of 5931 words" (/tmp/p3-eval/lint-rev.txt); not yet verified at a PR head.
+- DONE: AC-1 (only pilot.md changes, text equal to the replayed paragraph): not yet verified; no PR exists. The paragraph exists as `ideation/replay/pilot-revised.diff` in this task's folder.
+- DONE: AC-2 (lint passes, README 5931 words): verified on a scratch copy of origin/main with the patch, `lint-skills.py` exit 0 and "5931 of 5931 words" (`~/.local/state/kc-dev-flow-2-replays/kept-data-lifecycle-at-ui-ideation/lint-rev.txt`); not yet verified at a PR head.
 - DONE: AC-3 (revised beats current): verified by this replay, both scorer passes, both amendments; validation's re-score not yet run.
 - DONE: AC-4 (no FO-read text changes): verified for the replayed patch by `git grep 'profiles/pilot.md\|ideation/profiles'` over scripts, references/sd, skills/dev and agents (no hit outside tests); not yet verified at a PR head.
 - DONE: design_surfaces.py check

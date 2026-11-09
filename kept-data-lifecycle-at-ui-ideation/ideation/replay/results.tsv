@@ -1,0 +1,13 @@
+arm	amend	run	pass1 (score and per-check)	pass2	kept-data words	scored words
+cur	a4	a4-cur-1	4 C1=0 C2=1 C3=1 C4=1 C5=0 C6=0 C7=0 C8=0 C9=1	4	0	5476
+cur	a4	r02	5 C1=0 C2=1 C3=1 C4=1 C5=1 C6=0 C7=0 C8=0 C9=1	4	0	6125
+cur	a4	r05	2 C1=0 C2=1 C3=1 C4=0 C5=0 C6=0 C7=0 C8=0 C9=0	3	0	6845
+cur	a6	a6-cur-1	3 C1=0 C2=0 C3=1 C4=1 C5=1 C6=0 C7=0 C8=0 C9=0	2	0	8764
+cur	a6	r03	4 C1=0 C2=0 C3=1 C4=1 C5=0 C6=1 C7=1 C8=0 C9=0	1	0	8406
+cur	a6	r08	3 C1=0 C2=1 C3=1 C4=1 C5=0 C6=0 C7=0 C8=0 C9=0	2	0	8151
+rev	a4	a4-rev-1	6 C1=1 C2=1 C3=1 C4=1 C5=1 C6=0 C7=0 C8=0 C9=1	7	4766	6839
+rev	a4	r01	8 C1=1 C2=1 C3=1 C4=1 C5=1 C6=1 C7=0 C8=1 C9=1	7	4255	6173
+rev	a4	r06	5 C1=1 C2=1 C3=1 C4=1 C5=0 C6=0 C7=0 C8=0 C9=1	6	4971	6859
+rev	a6	a6-rev-1	8 C1=0 C2=1 C3=1 C4=1 C5=1 C6=1 C7=1 C8=1 C9=1	8	871	11340
+rev	a6	r04	8 C1=0 C2=1 C3=1 C4=1 C5=1 C6=1 C7=1 C8=1 C9=1	7	896	9464
+rev	a6	r07	6 C1=0 C2=1 C3=1 C4=1 C5=1 C6=1 C7=0 C8=0 C9=1	7	1065	9152
