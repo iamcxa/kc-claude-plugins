@@ -32,6 +32,17 @@ gates:
                 id: briefing:counts-name-the-run-that-produced-them:ideation:attempt-1:revision-1
                 digest: sha256:1054acbf0ced5b5e8292a7396ee667ead4f7466433bce192f5803cecaaf919da
                 room-ref: ./counts-name-the-run-that-produced-them/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:counts-name-the-run-that-produced-them:ideation:1
+                briefing: briefing:counts-name-the-run-that-produced-them:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-09T06:49:23.008656Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-09), answering 「決定：第 18 批四張設計照下列建議進實作嗎？建議核准。(1) 驗證回答能不能合併：Claude 和 Codex 兩邊都要跑，Codex 跑不了就停下來回報，不接受只有 Claude 的結果；這次不寫決策紀錄，等第 19 批觀察者的數字出來再定。(2) 合併檢查誤判：只在引用的文件裡，把 shell 或沒標語言的程式區塊算成你要跑的步驟；問題和報告裡的區塊照舊全算。(3) 檢查跑在提問前：沒有對應的檢查紀錄就不讓準備問題，所以 PR 要先 ready、CI 綠才能開驗證關卡。(4) 數字寫明出處：learn 提案完成時，證據裡的數字在它引用的資料找不到就擋下；摘要裡的「未查核的數字：N」改由工具自己寫進去，不擋、也不用我抄（工人原案是擋到我抄上那一行）。核准即接受上列每一項建議，包括 (4) 改成工具自己寫；要改哪項直接說。」. Recommendation: followed; approving accepts each listed recommendation, including (4) written by the tool.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-09T04:59:15Z
 ---
 
