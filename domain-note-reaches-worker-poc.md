@@ -32,3 +32,7 @@ Alignment: needed at backlog: the trap, the run count per cell and where the har
 Surfaces: none
 Visible change: none
 Release review: not needed: story S01's journey has no release yet.
+
+## Held: run elsewhere
+
+Held 2026-11-09 at backlog, not in a dev2 batch. Relayed by Paseo 2d26599b (the Chief Engineer session, relayed, not a ruling here): the Captain 「這件事我想要你從 relay 那邊把 poc 任務拿回來，讓你先做」 (chat, 2026-11-09), meaning that session runs the measurement itself. This FO does not prepare a gate or dispatch for it; the run records and report return here so the task can close or be re-scoped through the normal path.
