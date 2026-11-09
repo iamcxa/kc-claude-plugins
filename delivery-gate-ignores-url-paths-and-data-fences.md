@@ -57,6 +57,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-09T14:47:51.0659Z"
                 reason: Candidate 6f2fe8f33 superseded by the merge of main at b8362fb90; validation-2 PASSED there.
+            - id: gate-attempt:delivery-gate-ignores-url-paths-and-data-fences-validation-2
+              briefing:
+                id: briefing:delivery-gate-ignores-url-paths-and-data-fences:validation:attempt-2:revision-1
+                digest: sha256:3f85ad3974818081a1978609a2a83a0bdf1d7b87b47599a74c884a0c51f31c95
+                room-ref: ./delivery-gate-ignores-url-paths-and-data-fences/review/validation/briefing-2
 started: 2026-11-09T04:59:05Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences
 pr: iamcxa/kc-claude-plugins#818
