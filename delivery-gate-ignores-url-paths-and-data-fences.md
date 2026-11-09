@@ -3,7 +3,7 @@ title: delivery_gate.py question stops reading URL paths and data fences as Capt
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
