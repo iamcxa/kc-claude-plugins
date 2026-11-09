@@ -6,7 +6,7 @@
     "name": "Kent Chen"
   },
   "baseRefName": "main",
-  "baseRefOid": "4deaa2aa108adeaf3c934fd2309e69d90ac3a076",
+  "baseRefOid": "334d91e3165953b2ca7191e3308d80b6c02c4a99",
   "body": "Stage dispatch records previously depended on FO saving a separate copy before\nbuilding the worker artifact. Add `dispatch_stage.py` to write the record from\nthe build's checklist and scope notes, run both existing record checks, then\nbuild through Spacedock. The pinned stamp commit includes the record; advance\ndispatches commit it before returning their envelope. Immediate identical retries\nreuse their record, while changed input or an intervening state commit creates a\nnew round. Failed checks/builds remove only a record this invocation created and which is still absent from HEAD, including its index entry; a record already committed is retained for retry.\n\nKeep model/roster supplied by FO and leave the package-version/workflow-checkout\npreflights separate. Record the accepted ruling in ADR 0070. Replace the three\napproved workflow passages verbatim and lower the word budget from 5933 to 5931.\n\nThe additional `kc-dev-flow-2/skills/observer/SKILL.md` edit was authorized by FO\nin implementation follow-up 1: its chat-only command entry must match the shortened\nREADME command, as enforced by `lint-skills.py`. The uncorrected entry fails lint;\nthe updated entry passes. No other observer behavior changes.\n\nValidation: real Spacedock 0.27.2 split-root seam tests, the lint mutation suite,\ndispatch-record tests and real dispatch transport checks; thirteen counterexamples\nexercise the accepted falsifiers. A fresh-shell acceptance runner exports the\nexact candidate without bytecode caches and retains its logs under the task's\n`implementation/fresh/` state evidence. Candidate ADR lint, number guards,\ncomment ratio and document dispositions are recorded there. The installed 0.35.0\nADR linter has the base's known pre-#806 false positive on a deliberate historical\nADR assertion; FO authorized using the candidate's corrected linter. That historical\nassertion is unchanged.\n\nThe new CI step uses the workflow's existing package/workflow path triggers and\npinned real binary. CI cost per PR: not measured. Hosted CI and RoboRev are not\nrun by this worker; FO owns product publication and both reviews. No version bump.\n\n\nThe repair now checks Spacedock's complete task commit unit before selecting or\ncreating a record: the flat task file and companion directory, or the whole\nfolder-form task. HEAD, index and raw worktree bytes/modes must agree; conflicts,\nhidden index flags, unsupported types/escapes and nonignored untracked task files\nhold dispatch without builder/cleanup calls or state changes. Owners must\npreserve and reconcile staged/worktree versions before an intentional commit;\nblindly running state commit on divergent versions is unsafe.\n\nExclusive same-task write ownership must last through the check, build, commit\nand cleanup. This single precondition is not a transaction lock and provides no\nconcurrent-writer safety guarantee. Other tasks may remain dirty. The pinned\nSpacedock 0.27.2 builder has an inherited no-op retry limitation: if an unrelated\npath is staged, its global cached-diff check may attempt an empty task-scoped\ncommit and fail. The repair preserves all versions in that case; ordinary\nretries succeed, and dispatches that change this task leave unrelated staged,\nunstaged and untracked work intact and outside their commit.\n\nThe whole-scope proof covers flat/folder layouts, fresh dispatch, reused record,\nnew round and advance, and snapshots HEAD, index entries/flags, file bytes/modes\nand outside sentinels. Nine isolated mutations must fail their matching snapshot\npreservation assertion. Evidence for this repair is implementation/repair-2 in\nthe shared task state. Hosted CI, independent review and publication remain FO-owned.\n",
   "comments": [
     {
@@ -122,56 +122,47 @@
     {
       "path": ".github/workflows/kc-dev-flow-2-tests.yml",
       "additions": 3,
-      "deletions": 0,
-      "changeType": "MODIFIED"
+      "deletions": 0
     },
     {
       "path": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
       "additions": 60,
-      "deletions": 0,
-      "changeType": "ADDED"
+      "deletions": 0
     },
     {
       "path": "kc-dev-flow-2/references/sd/workflow.md",
       "additions": 3,
-      "deletions": 9,
-      "changeType": "MODIFIED"
+      "deletions": 9
     },
     {
       "path": "kc-dev-flow-2/scripts/dispatch_stage.py",
-      "additions": 235,
-      "deletions": 0,
-      "changeType": "ADDED"
+      "additions": 233,
+      "deletions": 0
     },
     {
       "path": "kc-dev-flow-2/scripts/lint-skills.py",
       "additions": 1,
-      "deletions": 0,
-      "changeType": "MODIFIED"
+      "deletions": 0
     },
     {
       "path": "kc-dev-flow-2/scripts/test_dispatch_records.py",
       "additions": 3,
-      "deletions": 3,
-      "changeType": "MODIFIED"
+      "deletions": 3
     },
     {
       "path": "kc-dev-flow-2/scripts/test_dispatch_stage.py",
-      "additions": 639,
-      "deletions": 0,
-      "changeType": "ADDED"
+      "additions": 593,
+      "deletions": 0
     },
     {
       "path": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
       "additions": 10,
-      "deletions": 5,
-      "changeType": "MODIFIED"
+      "deletions": 5
     },
     {
       "path": "kc-dev-flow-2/skills/observer/SKILL.md",
       "additions": 1,
-      "deletions": 1,
-      "changeType": "MODIFIED"
+      "deletions": 1
     }
   ],
   "headRefName": "spacedock-ensign/dispatch-build-writes-the-dispatch-record",

@@ -118,5 +118,17 @@
     "record": 42468880068,
     "change": "substitute historical gh run view job/step response",
     "timestamp": "2026-11-08T11:08:44Z"
+  },
+  {
+    "source": "historical validation-3/hosted-refresh/stage-report.md + validation-3/evidence.md",
+    "record": "baseRefOid",
+    "timestamp": "2026-11-08T11:13:00Z",
+    "change": "replace live baseRefOid 4deaa2aa... with recorded historical base 334d91e3165953b2ca7191e3308d80b6c02c4a99"
+  },
+  {
+    "source": "git diff --numstat 334d91e3165953b2ca7191e3308d80b6c02c4a99 778367adde2e20e0b3e51966ddba2d9f77f9e614",
+    "record": "PR files",
+    "timestamp": "2026-11-08T09:36:42Z",
+    "change": "replace post-repair live file counts with frozen historical candidate diff"
   }
 ]

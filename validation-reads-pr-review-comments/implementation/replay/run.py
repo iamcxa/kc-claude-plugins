@@ -8,21 +8,29 @@ p.add_argument('host',choices=['codex','claude'])
 p.add_argument('arm',choices=['base','candidate'])
 p.add_argument('number',type=int)
 p.add_argument('scratch')
+p.add_argument('--label',default='')
 a=p.parse_args()
 assert len(list((R/'runs').glob('*/meta.json'))) < 16, 'hard stop 16'
 assert (R/'preregistration.json').exists()
 scratch=Path(a.scratch).resolve()
-out=R/'runs'/f'{a.host}-{a.arm}-{a.number}'
+out=R/'runs'/(a.label or f'{a.host}-{a.arm}-{a.number}')
 out.mkdir(parents=True)
 entity=scratch/'wf/.spacedock-state/dispatch-build-writes-the-dispatch-record.md'
 before=entity.read_text()
 dispatch=scratch/'dispatch.md'
 prompt=f'$spacedock:ensign; then Read {dispatch} and treat its content as your assignment.'
 if a.host=='codex':
-    argv=['/Users/kent/.npm-global/bin/codex','exec','-m','gpt-6-astra','-c','model_reasoning_effort=xhigh','-s','workspace-write','--add-dir',str(scratch),'--json','--ephemeral','-o',str(out/'last-message.txt'),'-']
+    argv=['/Users/kent/.npm-global/bin/codex','exec','-m','gpt-6-astra','-c','model_reasoning_effort=xhigh','-c','allow_login_shell=false','-c','shell_environment_policy.inherit="all"','-s','workspace-write','--add-dir',str(scratch),'--json','--ephemeral','-o',str(out/'last-message.txt'),'-']
 else:
     argv=['/Users/kent/.local/bin/claude','-p','--model','claude-opus-5-5','--output-format','stream-json','--verbose','--permission-mode','dontAsk','--add-dir',str(scratch),prompt]
-env={**os.environ,'PATH':str(R/'bin')+os.pathsep+os.environ['PATH'],'REPLAY_GH_LOG':str(out/'gh.jsonl'),'PYTHONDONTWRITEBYTECODE':'1'}
+transport=R/'bin'
+env={**os.environ,'PATH':str(R/'bin')+os.pathsep+os.environ['PATH'],'REPLAY_GH_LOG':str(out/'gh.jsonl'),'PYTHONDONTWRITEBYTECODE':'1','ZDOTDIR':str(R/'shell'),'BASH_ENV':str(R/'shell/guard.sh'),'REPLAY_SHELL_LOG':str(out/'shell.jsonl')}
+probes=[]
+for shell,flag in [('/bin/zsh','-c'),('/bin/zsh','-lc'),('/bin/bash','-c'),('/bin/bash','-lc')]:
+    probe=subprocess.run([shell,flag,'command -v gh'],env=env,capture_output=True,text=True)
+    probes.append({'shell':shell,'flag':flag,'exit':probe.returncode,'resolved':probe.stdout.strip()})
+assert all(v['exit']==0 and v['resolved']==str(R/'bin/gh') for v in probes),probes
+(out/'shell-preflight.json').write_text(json.dumps(probes,indent=2)+'\n')
 meta={'host':a.host,'arm':a.arm,'wording':0 if a.arm=='base' else 1,'argv':argv,'cwd':str(scratch/'code'),'normal_HOME':True,'start':stamp(),'dispatch_sha256':hashlib.sha256(dispatch.read_bytes()).hexdigest(),'timeout_seconds':1800,'tokens':None}
 (out/'meta.json').write_text(json.dumps(meta,indent=2)+'\n')
 (out/'prompt.txt').write_text(prompt+'\n')
