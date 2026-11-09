@@ -3,7 +3,7 @@ title: delivery_gate.py question stops reading URL paths and data fences as Capt
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-09), answering 「決定：合併 #818（合併檢查不再把網址路徑、引用文件裡的資料區塊和括號裡的網址當成檔案或你要跑的指令）嗎？建議合併。 Regular merge with --match-head-commit b8362fb901cd27bd367be1cd5b826f21fefad70e, the batch 18 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-09T04:59:05Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-ignores-url-paths-and-data-fences
 pr: pr-merge:818
+verdict: PASSED
+completed: 2026-11-09T15:41:14Z
+archived: 2026-11-09T15:41:14Z
 ---
 
 ## Scope
