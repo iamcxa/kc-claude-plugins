@@ -2452,7 +2452,7 @@ class OwedRoleCallTests(unittest.TestCase):
         result = run_check(task=ALIGNED, records={**RECORDS, **dispatches}, setup=setup, roles=True)
         self.assertEqual(result.code, 1, result.out)
         self.assertIn('3 implementation dispatches on symptom "page freeze"', result.out)
-        self.assertIn("what breaks if this criterion or process is deleted?", result.out)
+        self.assertIn("what single mechanism produces these findings, and what one change closes that class?", result.out)
         self.assertNotIn(gate.ASK, result.out)
         self.assertEqual(result.written, {})
 
@@ -2483,7 +2483,7 @@ class OwedRoleCallTests(unittest.TestCase):
             self.assertEqual(gate.ASK in result.out, not expected, result.out)
             if expected:
                 self.assertIn("dispatch kc-dev-flow-2:chief-engineer", result.out)
-                self.assertIn("what breaks if this criterion or process is deleted?", result.out)
+                self.assertIn("what single mechanism produces these findings, and what one change closes that class?", result.out)
                 self.assertNotIn("before the next step", result.out)
 
     def test_a_committed_amendment_with_no_call_holds_with_the_scripts_next_line(self):

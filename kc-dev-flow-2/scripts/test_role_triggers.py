@@ -15,6 +15,8 @@ IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NA
             "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull}
 SLUG = "some-task"
 CE, ER = "kc-dev-flow-2:chief-engineer", "kc-dev-flow-2:engineering-reviewer"
+MECHANISM = "what single mechanism produces these findings, and what one change closes that class?"
+UNRELATED = "unrelated: F1 explicit home exit keeps the draft; F2 late 201 response after Back"
 
 
 def git(where, *args):
@@ -69,6 +71,17 @@ def call(agent, model, date, question="q"):
 
 
 class RoleTriggersTest(Fixture):
+    def test_repair_and_review_only_events_keep_the_smallest_next_step_question(self):
+        for repairs, rounds in ((4, 0), (0, 2)):
+            self.put(task(repairs=repairs))
+            code, out = run(self.state, SLUG, "--review-rounds", rounds)
+            self.assertEqual(code, 1, out)
+            self.assertIn('with the question "what is the smallest next step, given the findings so far?"', out)
+            self.assertNotIn(MECHANISM, out)
+            self.assertNotIn("unrelated:", out)
+            self.put(task(repairs=repairs, extra=f"Reviewer: {CE} not run: Captain ordered it"))
+            self.assertEqual(run(self.state, SLUG, "--review-rounds", rounds)[0], 0)
+
     def test_four_repair_passes_owe_chief_engineer_in_every_record_shape(self):
         self.put(task(repairs=3))
         self.assertEqual(self.owed()[0], 0)
@@ -379,12 +392,15 @@ class StepBackTest(Fixture):
             if expected:
                 self.assert_questions(out)
 
-    def test_third_failure_owes_one_call_with_the_questions_even_with_repairs_and_rounds(self):
+    def test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds(self):
         self.put(task(repairs=4) + validations(*([self.failed] * 3)))
         code, out = run(self.state, SLUG, "--review-rounds", 2)
         self.assertEqual((code, len(out.splitlines())), (1, 1), out)
         self.assertIn("4 repair passes and 2 review rounds and 3 validations", out)
-        self.assert_questions(out)
+        self.assertIn(MECHANISM, out)
+        self.assertIn("not run <date>: unrelated: <finding> <its own cause>; <finding> <its own cause>", out)
+        for question in self.questions:
+            self.assertNotIn(question, out)
         self.assertNotIn("before the next step", out)
 
     def test_two_replacements_still_remind_after_validation_event_is_cleared(self):
@@ -407,13 +423,20 @@ class StepBackTest(Fixture):
             self.assertIn("before the next step", out)
             self.assert_questions(out)
 
-    def test_a_third_event_deduplicates_only_a_call_line_carrying_the_three_questions(self):
+    def test_a_third_findings_or_amendment_call_suppresses_the_second_event_reminder(self):
         for failures, replacements in ((3, 2), (2, 3)):
             self.put(task(amendments=self.amendments[:replacements], extra=call(ER, "opus", "2026-10-20"))
                      + validations(*([self.failed] * failures)))
             code, out = run(self.state, SLUG)
             self.assertEqual((code, len(out.splitlines())), (1, 1), out)
-            self.assert_questions(out)
+            if failures == 3:
+                self.assertIn(MECHANISM, out)
+                for question in self.questions:
+                    self.assertNotIn(question, out)
+            else:
+                self.assert_questions(out)
+                self.assertNotIn(MECHANISM, out)
+                self.assertIn("not run <date>: <reason>", out)
             self.assertIn(f"dispatch {CE}", out)
             self.assertNotIn("before the next step", out)
         self.put(task(repairs=4) + validations(self.failed, self.failed))
@@ -423,16 +446,17 @@ class StepBackTest(Fixture):
         self.assertIn("before the next step", out)
         self.assertEqual(out.count(self.questions[0]), 1, out)
 
-    def test_failure_calls_need_the_model_floor_but_no_date_floor_and_waivers_clear(self):
+    def test_failure_calls_need_the_model_floor_but_no_date_floor_and_reasoned_waivers_clear(self):
         for extra, expected in (("", 1), (call(CE, "sonnet", "2026-10-20"), 1),
                 (call(CE, "gpt-6-astra", "2026-01-01"), 0), (call(CE, "opus", "2026-01-01"), 0),
-                (f"Reviewer: {CE} not run: Captain waived", 0), (f"Reviewer: {CE} not run 2026-01-01: waived", 0)):
+                (f"Reviewer: {CE} not run: Captain waived", 1), (f"Reviewer: {CE} not run 2026-01-01: waived", 1),
+                (f"Reviewer: {CE} not run: {UNRELATED}", 0), (f"Reviewer: {CE} not run 2026-01-01: {UNRELATED}", 0)):
             self.put(task(extra=extra) + validations(*([self.failed] * 3)))
             code, out = run(self.state, SLUG)
             self.assertEqual(code, expected, out)
             if expected:
-                self.assert_questions(out)
-                self.assertLessEqual(len(out.split()), 73)
+                self.assertIn(MECHANISM, out)
+                self.assertLessEqual(len(out.split()), 77)
 
     def test_third_replacement_dates_the_call_or_waiver_and_fourth_owes_no_second_call(self):
         er = call(ER, "opus", "2026-10-20") + "\n"
@@ -532,7 +556,7 @@ class SymptomRoundsTest(Fixture):
         code, out = run(self.state, SLUG)
         self.assertEqual(code, 1, out)
         self.assertIn('3 implementation dispatches on symptom "page freeze"', out)
-        self.assertIn("what breaks if this criterion or process is deleted?", out)
+        self.assertIn(MECHANISM, out)
         self.put(task(extra=call(CE, "opus", "2026-11-04")))
         self.assertEqual(run(self.state, SLUG)[0], 1)
         self.put(task(extra=call(CE, "opus", "2026-11-05")))
@@ -562,7 +586,8 @@ class SymptomRoundsTest(Fixture):
         code, out = run(self.state, SLUG)
         self.assertEqual((code, out.count("next:")), (1, 1))
         self.assertIn('3 implementation dispatches on symptom "page freeze"', out)
-        self.assertIn("what breaks if this criterion or process is deleted?", out)
+        self.assertIn(MECHANISM, out)
+        self.assertIn("not run <date>: unrelated: <finding> <its own cause>; <finding> <its own cause>", out)
         self.assertEqual(run(self.state, SLUG, "--rev", "HEAD~1")[0], 0)
         for path in (self.state / SLUG / "dispatch").iterdir():
             path.unlink()
@@ -575,14 +600,17 @@ class SymptomRoundsTest(Fixture):
                                (call(CE, "opus", "2026-11-03"), 0), (call(CE, "gpt-6-astra", "2026-11-04"), 0),
                                (f"Reviewer: {CE} not run: reason", 1),
                                (f"Reviewer: {CE} not run 2026-11-02: reason", 1),
-                               (f"Reviewer: {CE} not run 2026-11-03: reason", 0)):
+                               (f"Reviewer: {CE} not run 2026-11-03: reason", 1),
+                               (f"Reviewer: {CE} not run: {UNRELATED}", 1),
+                               (f"Reviewer: {CE} not run 2026-11-02: {UNRELATED}", 1),
+                               (f"Reviewer: {CE} not run 2026-11-03: {UNRELATED}", 0)):
             with self.subTest(line=line):
                 self.put(task(extra=line))
                 self.assertEqual(run(self.state, SLUG)[0], expected)
                 if not expected:
                     self.assertNotIn("next:", run(self.state, SLUG)[1])
         self.dispatch(4, date="")
-        self.put(task(extra=f"Reviewer: {CE} not run: reason"))
+        self.put(task(extra=f"Reviewer: {CE} not run: {UNRELATED}"))
         self.assertEqual(run(self.state, SLUG)[0], 0)
 
     def test_groups_normalize_but_keep_stages_and_symptoms_separate(self):
@@ -625,7 +653,54 @@ class SymptomRoundsTest(Fixture):
         self.assertIn('2 implementation dispatches on symptom "new failure"', run(self.state, SLUG)[1])
         self.put(task() + report * 2)
         out = run(self.state, SLUG)[1]
-        self.assertEqual(out.count("what breaks if this criterion or process is deleted?"), 1)
+        self.assertEqual(out.count(MECHANISM), 1)
+        for question in StepBackTest.questions:
+            self.assertEqual(out.count(question), 0)
+
+    def test_both_findings_events_require_distinct_causes_in_the_decline(self):
+        reasons = ((UNRELATED, 0),
+                   ("Unrelated: F1 home exit; F2 late response; F3 slot removed", 0),
+                   ("the outcome is unchanged; the gap is testable now", 1),
+                   ("unrelated: F1 home exit", 1),
+                   ("unrelated: F1 exit; F2 late response", 1),
+                   ("unrelated: F1 late async write; F2 late async write", 1),
+                   ("unrelated: F1 LATE  async WRITE; F2 late async write", 1),
+                   ("unrelated: F1 home exit; F2 late response;", 1))
+        for event in ("failures", "symptom"):
+            if event == "symptom":
+                for n in (1, 2, 3):
+                    self.dispatch(n)
+            for reason, expected in reasons:
+                with self.subTest(event=event, reason=reason):
+                    body = task(extra=f"Reviewer: {CE} not run 2026-11-03: {reason}")
+                    if event == "failures":
+                        body += validations(*([StepBackTest.failed] * 3))
+                    self.put(body)
+                    code, out = run(self.state, SLUG)
+                    self.assertEqual(code, expected, out)
+                    if expected:
+                        self.assertIn(MECHANISM, out)
+
+    def test_recorded_outcome_answers_leave_both_findings_calls_owed(self):
+        answers = (
+            "My answer is yes. The original problem is fixed: a first-time owner chooses the car only once, can see the plate-number step, and has a back button. The last few rounds dealt with smaller defects found in review, not a drift in direction.",
+            "These two bugs are in the booking draft we're delivering. Tests can reproduce them now, and if we deleted those two acceptance criteria, the release would ship data loss.",
+            "The goal is still the original one: an owner picks the car once and can always see how to finish the booking. The remaining gaps can all be tested now.",
+            "the outcome is unchanged; the gap is testable now",
+        )
+        for event in ("failures", "symptom"):
+            if event == "symptom":
+                for n in (1, 2, 3):
+                    self.dispatch(n)
+            for answer in answers:
+                with self.subTest(event=event, answer=answer):
+                    body = task(extra=f"Reviewer: {CE} not run 2026-11-09: {answer}")
+                    if event == "failures":
+                        body += validations(*([StepBackTest.failed] * 3))
+                    self.put(body)
+                    code, out = run(self.state, SLUG)
+                    self.assertEqual(code, 1, out)
+                    self.assertIn(MECHANISM, out)
 
 
 if __name__ == "__main__":
