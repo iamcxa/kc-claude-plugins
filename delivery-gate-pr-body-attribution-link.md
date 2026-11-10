@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-10T04:59:26Z
+worktree: .worktrees/spacedock-ensign-delivery-gate-pr-body-attribution-link
 ---
 
 ## Scope
