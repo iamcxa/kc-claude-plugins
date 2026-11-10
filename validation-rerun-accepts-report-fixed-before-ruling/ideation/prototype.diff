@@ -1,0 +1,63 @@
+--- a/kc-dev-flow-2/scripts/dispatch_records.py	2026-11-10 21:47:00
++++ b/kc-dev-flow-2/scripts/dispatch_records.py	2026-11-11 00:22:53
+@@ -335,6 +335,9 @@
+ DECISION_FINDING = re.compile(r"^[ \t]*[-*][ \t]+\*{0,2}(F[0-9]+)\*{0,2}[ \t]*[:(—–-]?[ \t]*Needs decision\b([^\n]*)", re.M)
+ RECOVERY = ("For an older free-form ruling, verify its original question and reply, preserve them, and record it as a "
+             "native gate or Captain amendment before rerunning; if unavailable, hold for the Captain.")
++
++
++VERDICT_WORDS = re.compile(r"\b(PASSED|REJECTED)\b")
+ 
+ 
+ class RulingHistoryError(Exception):
+@@ -422,7 +425,7 @@
+     if len(reports) <= ordinal or reports[ordinal] != selected[-1]:
+         raise RulingHistoryError("uncommitted-report")
+     _, committed = captain_records(pinned, slug)
+-    first, introduced, absent = {}, [], []
++    first, introduced, absent, versions = {}, [], [], []
+     commits = ruling_git(root, "log", "--full-history", "--reverse", "--topo-order", "--format=%H",
+                          head, "--", *paths).splitlines()
+     for commit in commits:
+@@ -431,13 +434,12 @@
+             absent.append(commit)
+             continue
+         reports = validation_reports(snapshot)
+-        if len(reports) > ordinal:
+-            if reports[ordinal] != selected[-1]:
+-                raise RulingHistoryError("rewritten-report")
++        identities, _ = captain_records(snapshot, slug)
++        if len(reports) > ordinal:
+             introduced.append(commit)
++            versions.append((commit, reports[ordinal], identities))
+         else:
+             absent.append(commit)
+-        identities, _ = captain_records(snapshot, slug)
+         for key in identities:
+             first.setdefault(key, []).append(commit)
+     if not introduced:
+@@ -459,6 +461,24 @@
+     report_commit = origins[0]
+     if any(ancestor(report_commit, commit) for commit in absent):
+         raise RulingHistoryError("discontinuous-report-history")
++    stale = [(c, ids) for c, report, ids in versions if report != selected[-1]]
++    if stale:
++        words = VERDICT_WORDS.findall(selected[-1])
++        if not words:
++            raise RulingHistoryError("rewritten-report-verdict-unreadable")
++        if any(VERDICT_WORDS.findall(report) != words for _, report, _ in versions):
++            raise RulingHistoryError("rewritten-report-verdict-changed")
++        settled = []
++        for commit in (c for c, report, _ in versions if report == selected[-1]):
++            if not any(ancestor(prior, commit) for prior in settled):
++                settled.append(commit)
++        if len(settled) != 1:
++            raise RulingHistoryError("ambiguous-report-origin")
++        known = next(ids for c, _, ids in versions if c == report_commit)
++        for commit, ids in stale:
++            if ids - known or ancestor(settled[0], commit):
++                raise RulingHistoryError("rewritten-report-after-ruling")
++        report_commit = settled[0]
+     for key in current & committed:
+         appearances = first.get(key, [])
+         if appearances and all(c != report_commit and ancestor(report_commit, c) for c in appearances):
