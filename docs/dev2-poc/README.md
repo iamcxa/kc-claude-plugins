@@ -44,7 +44,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.36.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.37.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -512,10 +512,10 @@ to finalize/archive. Where `learn` is listed, the sentinel waits for a committed
 CI green, PR creation, gate approval and a locally manufactured sentinel do not prove merge.
 FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<package>/references/sd/mods/`.
 
-Before the validation `gate prepare`, FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question file> --summary-file <summary file>`; nonzero holds preparation. The summary declares `External rounds: N` and the configured second-reviewer outcome. Use that summary unchanged; callers omitting `--summary-file` retain combined-text checks.
-
 Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
 --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask, as does a head other than the latest `Candidate:`; FO shows the Captain what it printed.
+
+FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question file> --summary-file <summary file>`; nonzero holds `gate prepare`, which takes `--reference <check record>`. The summary declares `External rounds: N` and the configured second-reviewer outcome. Use it unchanged; callers omitting `--summary-file` retain combined-text checks.
 
 `merge guard --rework` supersedes the approval and routes the task back, but its
 help names no commit or publish step, unlike the archive path. After it, FO runs
