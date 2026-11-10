@@ -67,6 +67,7 @@ Alignment: not needed; the Captain chose to file it from the batch 17 observer f
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-11-10 — Amendment 1: do these amendments withdraw what the Captain approved, and what changes in the build?
 
 ## Design
 
@@ -197,6 +198,12 @@ Recommended order: no ordering is needed within batch 20. Among the `design_surf
 Captain: 「改成 5 次（建議）」 (host question dialog, 2026-11-10)
 Asked: 「決定：「修改驗收條件的檢查」那張的歷史重跑驗收條件，要從抓到 7 次改成 5 次嗎？建議改成 5 次。你核准的設計同時寫了「歷史重跑抓到 7 次」和「任務檔格式有問題時新規則不判，留給既有的格式規則」，兩者衝突：照後者實作只抓到 5 次，少的 2 次檔案都有格式問題（實作工人的報告，我沒重跑）。同意即把這條驗收條件改成 5 次，並寫明另外 2 次留給既有格式規則；缺點是格式壞掉的檔案裡的編號重用，要等格式修好才會被新規則看到。」
 Supersedes: AC-4
+
+### Amendment 2 — 2026-11-10, host question dialog
+Captain: 「這張就做到 7 次」 (host question dialog, 2026-11-10)
+Asked: 「決定：「修改驗收條件的檢查」這張，要維持 5 次先交付、漏掉的 2 次另開待辦任務嗎？建議這樣做。我上一題說錯了：工程審查員重跑後發現，被跳過的 2 次並沒有被既有規則接住——dev2 那次只回報「無法判定」，relay 那次整次通過、沒有任何警訊；格式修好之後也不會補報。同意即接受：驗收條件寫成 5 次並照實寫明這 2 次的結果，程式不動；我另開一張待辦任務，把跳過範圍縮小到只跳過格式壞掉的那一筆修改紀錄。缺點是那張待辦做完前，同一份檔案裡有別的修改紀錄格式壞掉時，新寫入的編號重用不會被抓到。」
+Supersedes: none
+Design: A file whose `parse_amendments` reports structural issues is left to L2/L3 and not judged by L4.
 
 ## Stage Report: ideation
 
