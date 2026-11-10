@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_missing_task_zero_two_open_attempts_and_unreadable_room_are_exit_two (test_decision_ledger.OpenAttemptReasonTests.test_missing_task_zero_two_open_attempts_and_unreadable_room_are_exit_two)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/issue-815/mutations/mutants-exwwgmwk/kc-dev-flow-2/scripts/test_decision_ledger.py", line 229, in test_missing_task_zero_two_open_attempts_and_unreadable_room_are_exit_two
+    self.assertEqual(run.returncode, 2)
+AssertionError: 0 != 2
+
+----------------------------------------------------------------------
+Ran 1 test in 0.077s
+
+FAILED (failures=1)

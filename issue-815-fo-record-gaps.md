@@ -253,3 +253,48 @@ ADR: 0073
 ### Summary
 
 Designed four fixes in one package PR: item 1 extends the reason check FO already runs (`decision_ledger.py --reason`, now with `--task`) to refuse a reason that does not quote the open attempt's bound question, which partly departs from ADR 0062 D2 and is the one Captain decision (D1, +2 README words); item 4 lets a built-screen `preview:` be a YAML list; item 5 makes `--coverage` accept a task folder (the real cause, not archive); item 6 makes `delivery_gate.py` hold a Captain steps record outside `captain-steps/<N>.md`, by ADR 0054 precedent. Recommended order puts adr-required-statement and validation-reads-pr-review-comments first and this task after fo-write-checks-parse-top-level settles its parser.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria in the task file, using only the files the design names
+  Branch `spacedock-ensign/issue-815-fo-record-gaps`; base `6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1`; candidate `e608489c62fd387aeafaa5a1a6111ae59cd7d383`; `implementation/scope.json` confirms exactly 13 approved files; worktree clean and origin/main still at base after fetch. No version bump.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main
+  No PR opened: no push grant. FO owns product push and Draft PR creation; title/body are `/tmp/impl-issue-815-fo-record-gaps-pr.md` and `implementation/pr.md`; issue #815 stays open for its separate items 2 and 3.
+- DONE: ADR 0073 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  `docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md` quotes 「核准（建議）」 and its bound question, partially replaces ADR 0062 D2 for Captain records, retains ASK_UNQUOTED and observer behavior; exact prior ADR bytes/digests in `implementation/adr-source-hashes.json`.
+- DONE: Every in-scope implementation acceptance criterion has the evidence each names; each named falsifier shown failing by a mutation (python3 -B, caches cleared)
+  AC-1/2: CLI fixtures select Y from the one open attempt, reject X, ignore a newer resolved room, and return 2 for missing task, zero/two opens and unreadable/invalid room data; skipping the quote, choosing the newest room or treating missing input as pass fails the acceptance test. AC-6: scalar plus multi-item previews, invalid second paths and duplicate-ideation bytes; checking only the first or skipping bytes fails. AC-9: both task layouts match file-form output/exit, including missing coverage; removing folder resolution fails. AC-10: real question/check/steps entry points hold review/ and nonnumeric/zero records; relative and absolute numbered records pass; dropping the helper or resolving literally fails. Ten caught mutations: `implementation/mutations/tests.json`, harness `implementation/mutations.py`, logs beside it.
+  AC-3: `implementation/replay/replay.json` compares quote strings alone: relay state `e73a7c34cd146eaa89a6dba718adfb79c4b4a68a` refuses 11/12; own state `5254e465b7a3beff9e08074532b717f1cf1ea408` since 2026-11-06 refuses 8/63; this does not prove open-attempt lookup, covered above. Harness `implementation/replay.py` exports committed state read-only.
+  AC-7/9: temporary archived theme-switch-keeps-draft copy sets status to validation solely to exercise the validation check, and expands the 14 commented pictures into preview sequence items; base screen exit 1/0 preview lines, candidate exit 0/14 lines; folder coverage base exit 2, candidate exit 0 `dispatch coverage complete: validation`. `implementation/replay/*-{base,candidate}.log`; no relay writes.
+  AC-4/5/8: README 5931→5933 words with the approved +2 budget step; removing the step fails lint, removing required ADR 0073 fails ADR lint. Validation principles 848→849 words; director 1211→1216; scalar/list guidance updated and ideation callback keeps its one-preview rule. Counts: `implementation/reading.json`.
+  AC-11: all 28 repository CI commands exit 0 locally; final design suite 220 tests (4 conditional skips), total CI-command run has 11 conditional skips. Native CLI 0.27.2 used installed SD plugin root 0.27.3; exact hosted 0.27.2 plugin-root parity not run. `implementation/suite-summary.json`, `implementation/suite/`, `implementation/design-final.log`; fresh shell acceptance exit 0, `implementation/acceptance.sh` and `implementation/acceptance-tests.log`.
+- SKIPPED: AC-12 Issue #815 is answered with the drafted text after Captain approval and release
+  Post-release issue comment is FO-owned and not sent; filled text in `implementation/issue-answer.md`. No comment URL yet; items 2 and 3 stay separate.
+- DONE: Repository lint-skills.py, packaged adr_lint.py --since <base> --require 0073, number_guards.py check, and comment_ratio.py pass
+  `implementation/lint.log`: 5933/5933; `implementation/adr-final.log`: 66 ADRs, 0 legacy; fresh-ref `implementation/numbers-final.log`: PASS, base/head as above; `implementation/comments.log`: 248 code lines, 1 comment, 0.4% ≤5%; package 0.37.0; design_surfaces.py check also exit 0. Initial sandbox-only state fetch warning was superseded by the fresh-ref rerun.
+- SKIPPED: Product publication, RoboRev, hosted CI and released issue reply
+  roborev not run: FO runs RoboRev after this local handoff because the worker sandbox cannot reach its daemon. No product push, review request, PR comment, ready/merge action or release. CI cost per PR not measured; no workflow or trigger changes.
+- DONE: Affected documents (doc_impact.py rerun at the candidate)
+  docs/adr/0011-fo-decides-for-the-captain-by-a-delegation-ladder.md — unaffected: ledger JSON and delegation ladder unchanged.
+  docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md — unaffected: budget arithmetic retained; the approved +2 step follows this ruling.
+  docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md — unaffected: the protected +144 step and collaboration contract unchanged.
+  docs/adr/0041-seed-admission-enforces-required-fields.md — unaffected: seed fields and seed-only call unchanged.
+  docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md — unaffected: reviewer summary and legacy compatibility unchanged.
+  docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md — unaffected: validation rerun and later-ruling checks unchanged.
+  docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md — unaffected: Paseo completion recognition unchanged.
+  docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md — unaffected: agent table and effort comparison unchanged.
+  docs/adr/0051-the-merge-ask-check-requires-the-round-count.md — unaffected: external-round-count rule unchanged.
+  docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md — unaffected: permission routing and extension word bound unchanged.
+  docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md — unaffected: criterion amendment parser and added_words unchanged.
+  docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md — unaffected: historical ruling remains; ADR 0073 records the narrow Captain pre-record successor; observer and merge-grant rule retained.
+  docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md — unaffected: matching delivery record and question hold unchanged.
+  docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md — unaffected: count disclosure and learning evidence behavior unchanged.
+  docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md — updated.
+  kc-dev-flow-2/README.md — unaffected: repository maintenance commands and documented read-only lint boundary unchanged.
+  kc-dev-flow-2/skills/maintain-flow/SKILL.md — unaffected: lint invocation, budget discipline and summary command unchanged; publication and RoboRev stay FO-owned.
+  learning.md — unaffected: historical evidence retained; per-moment counts recorded for this task.
+
+### Summary
+
+Implemented all four approved fixes at `e608489c62fd387aeafaa5a1a6111ae59cd7d383` with real archived-record replay, caught reverse mutations and fresh-shell acceptance. Product bytes remain local; FO publishes the prepared Draft PR, runs RoboRev and hosted CI, and posts the issue answer after release. The 11 conditional skips and local SD plugin-root version difference remain explicit limits; this report claims implementation evidence, not delivery or merge authority.

@@ -1,0 +1,20 @@
+{
+  "base": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+  "head": "e608489c62fd387aeafaa5a1a6111ae59cd7d383",
+  "paths": [
+    "docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md",
+    "kc-dev-flow-2/references/sd/workflow.md",
+    "kc-dev-flow-2/scripts/decision_ledger.py",
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/dispatch_records.py",
+    "kc-dev-flow-2/scripts/lint-skills.py",
+    "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "kc-dev-flow-2/skills/design-director/SKILL.md",
+    "kc-dev-flow-2/skills/validation/principles.md"
+  ],
+  "scope": "passed"
+}

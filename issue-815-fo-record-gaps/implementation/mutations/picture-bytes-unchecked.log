@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_preview_sequence_refuses_second_ideation_picture_and_duplicate_keys (test_design_surfaces.BuiltScreenTests.test_preview_sequence_refuses_second_ideation_picture_and_duplicate_keys)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/issue-815/mutations/mutants-exwwgmwk/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2217, in test_preview_sequence_refuses_second_ideation_picture_and_duplicate_keys
+    self.assertTrue(any("design/validation-declines-1.yaml" in e and "ideation picture" in e for e in errors), errors)
+AssertionError: False is not true : []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.006s
+
+FAILED (failures=1)

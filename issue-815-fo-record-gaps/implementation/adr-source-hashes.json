@@ -1,0 +1,32 @@
+[
+  {
+    "path": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "commit": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+    "sha256": "a49b4da2665730f648334a0a8465bde6df3c779e9b0c42b3e61510cc96185afb",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0022-ui-ideation-design-review-binds-design.md",
+    "commit": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+    "sha256": "bd0e2029f6bdd46c4216dae8941c84d48008dc8b2b5763c9dd59ce4725509588",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0054-fo-runs-a-step-before-asking-the-captain-and-records-it.md",
+    "commit": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+    "sha256": "23cee65f32c5b92f8ae06c39a8501c24002aec045b8ebca58e22ddc7ed4d0eb4",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "commit": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+    "sha256": "c897fee1fb109d3e67eecbaee9f363f663e49e5bd4230b48a8cb3e884d35c8d9",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
+    "commit": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+    "sha256": "ab5890e1c4ad4d53fe8835bbd17c3397d588f71d7a7a9cd02d4c700e1851d9b5",
+    "status": "Accepted"
+  }
+]

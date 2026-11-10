@@ -1,0 +1,150 @@
+[
+  {
+    "doc": "docs/adr/0011-fo-decides-for-the-captain-by-a-delegation-ladder.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/decision_ledger.py"
+    ],
+    "verdict": "unaffected: ledger JSON and delegation ladder unchanged"
+  },
+  {
+    "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: budget arithmetic retained; the approved +2 step follows this ruling"
+  },
+  {
+    "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: the protected +144 step and collaboration contract unchanged"
+  },
+  {
+    "doc": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/design_surfaces.py"
+    ],
+    "verdict": "unaffected: seed fields and seed-only call unchanged"
+  },
+  {
+    "doc": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "verdict": "unaffected: reviewer summary and legacy compatibility unchanged"
+  },
+  {
+    "doc": "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_records.py"
+    ],
+    "verdict": "unaffected: validation rerun and later-ruling checks unchanged"
+  },
+  {
+    "doc": "docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_records.py"
+    ],
+    "verdict": "unaffected: Paseo completion recognition unchanged"
+  },
+  {
+    "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: agent table and effort comparison unchanged"
+  },
+  {
+    "doc": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "verdict": "unaffected: external-round-count rule unchanged"
+  },
+  {
+    "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: permission routing and extension word bound unchanged"
+  },
+  {
+    "doc": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/design_surfaces.py"
+    ],
+    "verdict": "unaffected: criterion amendment parser and added_words unchanged"
+  },
+  {
+    "doc": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/decision_ledger.py",
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "verdict": "unaffected: historical ruling remains; ADR 0073 records the narrow Captain pre-record successor; observer and merge-grant rule retained"
+  },
+  {
+    "doc": "docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "verdict": "unaffected: matching delivery record and question hold unchanged"
+  },
+  {
+    "doc": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "verdict": "unaffected: count disclosure and learning evidence behavior unchanged"
+  },
+  {
+    "doc": "docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md",
+    "state": "updated",
+    "terms": [
+      "check_reason",
+      "kc-dev-flow-2/scripts/decision_ledger.py"
+    ],
+    "verdict": "updated"
+  },
+  {
+    "doc": "kc-dev-flow-2/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: repository maintenance commands and documented read-only lint boundary unchanged"
+  },
+  {
+    "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/decision_ledger.py",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: lint invocation, budget discipline and summary command unchanged; publication and RoboRev stay FO-owned"
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_records.py",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: historical evidence retained; per-moment counts recorded for this task"
+  }
+]
