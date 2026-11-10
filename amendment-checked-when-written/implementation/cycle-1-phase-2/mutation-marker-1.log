@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_superseding_entries_need_a_criterion_with_the_amendment_phrase (test_design_surfaces.AmendmentTests.test_superseding_entries_need_a_criterion_with_the_amendment_phrase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-mutation-1u9qgz96/scripts/test_design_surfaces.py", line 517, in test_superseding_entries_need_a_criterion_with_the_amendment_phrase
+    self.assertTrue(any("supersedes AC-2 but no criterion says 'Amended by Captain, amendment 1'" in e for e in errors), errors)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.006s
+
+FAILED (failures=1)

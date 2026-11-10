@@ -1,0 +1,34 @@
+[
+  {
+    "doc": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/design_surfaces.py"
+    ],
+    "verdict": "unaffected: seed admission is unchanged; the repair changes the L4 event delta only"
+  },
+  {
+    "doc": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/design_surfaces.py"
+    ],
+    "verdict": "unaffected: criterion-word and dispatch comparisons are unchanged; design_surfaces.py is byte-identical to the preceding candidate"
+  },
+  {
+    "doc": "kc-dev-flow-2/references/sd/laws.md",
+    "state": "updated",
+    "terms": [
+      "move_defects"
+    ],
+    "verdict": "updated: the existing L4 Event section remains accurate after the repair; retained from the prior implementation, with no extra words in phase 2"
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/laws_check.py"
+    ],
+    "verdict": "unaffected: retained historical practices are followed; this repair adds no new practice or ruling"
+  }
+]

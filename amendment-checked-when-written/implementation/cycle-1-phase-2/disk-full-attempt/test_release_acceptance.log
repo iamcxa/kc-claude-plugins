@@ -1,0 +1,481 @@
+...................................................sss........EEEEEEEEEEEEEEEEEEEEEEEEEEEE...s............................
+======================================================================
+ERROR: test_task_listing_is_complete_and_errors_are_diagnostic (__main__.DueTests.test_task_listing_is_complete_and_errors_are_diagnostic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1204, in setUp
+    put(binary, "#!/bin/sh\nexit 2\n")
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 38, in put
+    path.write_text(obj if isinstance(obj, str) else json.dumps(obj, indent=2))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1008, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp50z7943o/bin/spacedock'
+
+======================================================================
+ERROR: test_task_listing_uses_selected_binary_archive_all_fields_and_no_limit (__main__.DueTests.test_task_listing_uses_selected_binary_archive_all_fields_and_no_limit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1184, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpyy8897gs'
+
+======================================================================
+ERROR: test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids (__main__.DueTests.test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1184, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmphklc9vun'
+
+======================================================================
+ERROR: test_every_row_not_reachable_is_an_environment_block_not_a_defect (__main__.EnvironmentTests.test_every_row_not_reachable_is_an_environment_block_not_a_defect)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 247, in test_every_row_not_reachable_is_an_environment_block_not_a_defect
+    self.morning()
+    ~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 244, in morning
+    self.edit_reviewer(who, fn)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 200, in edit_reviewer
+    put(path, data)
+    ~~~^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 38, in put
+    path.write_text(obj if isinstance(obj, str) else json.dumps(obj, indent=2))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1008, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp8mw8t0mk/wf/.spacedock-state/r1-acceptance/walk/reviewer-o.json'
+
+======================================================================
+ERROR: test_one_reviewer_who_operated_changes_the_count (__main__.EnvironmentTests.test_one_reviewer_who_operated_changes_the_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpv72_t8_7'
+
+======================================================================
+ERROR: test_folder_tasks_preserve_all_state_task_callers (__main__.FolderTaskTests.test_folder_tasks_preserve_all_state_task_callers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp210rmpj6'
+
+======================================================================
+ERROR: test_complaint_id_must_be_defined (__main__.MalformedTests.test_complaint_id_must_be_defined)
+----------------------------------------------------------------------
+OSError: [Errno 28] No space left on device
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 184, in setUp
+    self.wf, self.folder = build_world(self.tmp.name)
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 143, in build_world
+    put(wf / "README.md", "---\nentity-type: task\nstate: .spacedock-state\n"
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "walk-environment: staging\nproduction-environment: production\nrelease-doc: docs/releasing.md\n---\n")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 38, in put
+    path.write_text(obj if isinstance(obj, str) else json.dumps(obj, indent=2))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1008, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device
+
+======================================================================
+ERROR: test_duplicate_complaint_id_across_reviewers (__main__.MalformedTests.test_duplicate_complaint_id_across_reviewers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpwsb3l7rp'
+
+======================================================================
+ERROR: test_evidence_must_be_a_file (__main__.MalformedTests.test_evidence_must_be_a_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 184, in setUp
+    self.wf, self.folder = build_world(self.tmp.name)
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 143, in build_world
+    put(wf / "README.md", "---\nentity-type: task\nstate: .spacedock-state\n"
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "walk-environment: staging\nproduction-environment: production\nrelease-doc: docs/releasing.md\n---\n")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 38, in put
+    path.write_text(obj if isinstance(obj, str) else json.dumps(obj, indent=2))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1008, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp2hau020s/wf/README.md'
+
+======================================================================
+ERROR: test_evidence_outside_the_walk_folder_is_refused (__main__.MalformedTests.test_evidence_outside_the_walk_folder_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpth6ctgeg'
+
+======================================================================
+ERROR: test_non_works_needs_a_complaint (__main__.MalformedTests.test_non_works_needs_a_complaint)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 184, in setUp
+    self.wf, self.folder = build_world(self.tmp.name)
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 143, in build_world
+    put(wf / "README.md", "---\nentity-type: task\nstate: .spacedock-state\n"
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "walk-environment: staging\nproduction-environment: production\nrelease-doc: docs/releasing.md\n---\n")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 38, in put
+    path.write_text(obj if isinstance(obj, str) else json.dumps(obj, indent=2))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1008, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device
+
+======================================================================
+ERROR: test_not_reachable_needs_a_cause (__main__.MalformedTests.test_not_reachable_needs_a_cause)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 184, in setUp
+    self.wf, self.folder = build_world(self.tmp.name)
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 146, in build_world
+    put(state / "t-reserve.md", task_file({**base, "journey-story": "reserve-copy"},
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        validation("F1 Polish: the reserve button label is long", older=["F9 Deferred risk: an old finding"])))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 34, in put
+    path.parent.mkdir(parents=True, exist_ok=True)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1210, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpof142vst/wf/.spacedock-state'
+
+======================================================================
+ERROR: test_one_reviewer_id_reported_twice_is_refused (__main__.MalformedTests.test_one_reviewer_id_reported_twice_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6z07b_n6'
+
+======================================================================
+ERROR: test_proof_line_must_be_present (__main__.MalformedTests.test_proof_line_must_be_present)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4aaih3ig'
+
+======================================================================
+ERROR: test_report_stories_missing_duplicated_unknown (__main__.MalformedTests.test_report_stories_missing_duplicated_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp1ryi91zx'
+
+======================================================================
+ERROR: test_report_that_does_not_match_walk_json_is_refused (__main__.MalformedTests.test_report_that_does_not_match_walk_json_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpy26_bj0g'
+
+======================================================================
+ERROR: test_result_outside_the_four (__main__.MalformedTests.test_result_outside_the_four)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpcu877l8y'
+
+======================================================================
+ERROR: test_schema_string_and_consolidation_are_checked_on_the_report (__main__.MalformedTests.test_schema_string_and_consolidation_are_checked_on_the_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmputzy60wc'
+
+======================================================================
+ERROR: test_story_missing_duplicated_unknown (__main__.MalformedTests.test_story_missing_duplicated_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp9mfle3ru'
+
+======================================================================
+ERROR: test_walk_list_schema_other_than_v1_is_refused (__main__.MalformedTests.test_walk_list_schema_other_than_v1_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpznf_g6o5'
+
+======================================================================
+ERROR: test_works_needs_evidence (__main__.MalformedTests.test_works_needs_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpqudj32ko'
+
+======================================================================
+ERROR: test_a_filed_task_s_one_line_links_a_complaint_to_it (__main__.RecordTests.test_a_filed_task_s_one_line_links_a_complaint_to_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpi94q6q_k'
+
+======================================================================
+ERROR: test_a_hand_edited_row_is_refused (__main__.RecordTests.test_a_hand_edited_row_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp39_mjx9j'
+
+======================================================================
+ERROR: test_a_mutated_ruling_field_changes_the_digest (__main__.RecordTests.test_a_mutated_ruling_field_changes_the_digest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpvwuaqr9i'
+
+======================================================================
+ERROR: test_record_opens_with_one_row_per_complaint_with_task_status_and_reason (__main__.RecordTests.test_record_opens_with_one_row_per_complaint_with_task_status_and_reason)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpka1n7rld'
+
+======================================================================
+ERROR: test_render_is_deterministic_and_check_catches_one_character (__main__.RecordTests.test_render_is_deterministic_and_check_catches_one_character)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 182, in setUp
+    self.tmp = tempfile.TemporaryDirectory()
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzdjqv1i5'
+
+======================================================================
+ERROR: test_each_missing_key_holds_and_restoring_it_passes (__main__.RecordedEnvironmentTests.test_each_missing_key_holds_and_restoring_it_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 184, in setUp
+    self.wf, self.folder = build_world(self.tmp.name)
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 143, in build_world
+    put(wf / "README.md", "---\nentity-type: task\nstate: .spacedock-state\n"
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "walk-environment: staging\nproduction-environment: production\nrelease-doc: docs/releasing.md\n---\n")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 38, in put
+    path.write_text(obj if isinstance(obj, str) else json.dumps(obj, indent=2))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1008, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpnkzw7f6s/wf/README.md'
+
+======================================================================
+ERROR: test_equal_environment_names_hold_even_when_target_matches (__main__.RecordedEnvironmentTests.test_equal_environment_names_hold_even_when_target_matches)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 184, in setUp
+    self.wf, self.folder = build_world(self.tmp.name)
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 143, in build_world
+    put(wf / "README.md", "---\nentity-type: task\nstate: .spacedock-state\n"
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "walk-environment: staging\nproduction-environment: production\nrelease-doc: docs/releasing.md\n---\n")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 34, in put
+    path.parent.mkdir(parents=True, exist_ok=True)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1210, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpnslwfx00/wf'
+
+----------------------------------------------------------------------
+Ran 122 tests in 9.962s
+
+FAILED (errors=28, skipped=4)
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node or journey-accept.mjs missing, or its yaml dependency is not installed

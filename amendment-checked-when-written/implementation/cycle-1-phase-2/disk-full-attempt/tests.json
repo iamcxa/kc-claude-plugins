@@ -1,0 +1,93 @@
+[
+  {
+    "name": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "log": "test_codex_review.log",
+    "tests_run": 36,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "ae1baba3a2472dd343e8c94b9d1508b5c20b964f4cccb5d32db2409efb04ddd7"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "log": "test_copilot_review.log",
+    "tests_run": 15,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "94b31843e9f85da404b927a32300b6fbba905f289ed0697c50dd01b42aeb2ef7"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "log": "test_map_footprint.log",
+    "tests_run": 23,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "15db061edee9855493f8b302d547737adde0c4a9bc5dd4f195eb2424e16a6103"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "status": "failed",
+    "exit": 1,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "log": "test_release_acceptance.log",
+    "tests_run": 122,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "fb1c14684962abce7176b793cf47c0f8b8d6cd36487f30b9e81b0d288a1ad886",
+    "message": "================\nERROR: test_render_is_deterministic_and_check_catches_one_character (__main__.RecordTests.test_render_is_deterministic_and_check_catches_one_character)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py\", line 182, in setUp\n    self.tmp = tempfile.TemporaryDirectory()\n               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py\", line 961, in __init__\n    self.name = mkdtemp(suffix, prefix, dir)\n                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py\", line 435, in mkdtemp\n    _os.mkdir(file, 0o700)\n    ~~~~~~~~~^^^^^^^^^^^^^\nOSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzdjqv1i5'\n\n======================================================================\nERROR: test_each_missing_key_holds_and_restoring_it_passes (__main__.RecordedEnvironmentTests.test_each_missing_key_holds_and_restoring_it_passes)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py\", line 184, in setUp\n    self.wf, self.folder = build_world(self.tmp.name)\n                           ~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py\", line 143, in build_world\n    put(wf / \"README.md\", \"---\\nentity-type: task\\nstate: .spacedock-state\\n\"\n    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        \"walk-environment: staging\\nproduction-environment: production\\nrelease-doc: docs/releasing.md\\n---\\n\")\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py\", line 38, in put\n    path.write_text(obj if isinstance(obj, str) else json.dumps(obj, indent=2))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py\", line 1008, in write_text\n    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:\n         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py\", line 970, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpnkzw7f6s/wf/README.md'\n\n======================================================================\nERROR: test_equal_environment_names_hold_even_when_target_matches (__main__.RecordedEnvironmentTests.test_equal_environment_names_hold_even_when_target_matches)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py\", line 184, in setUp\n    self.wf, self.folder = build_world(self.tmp.name)\n                           ~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py\", line 143, in build_world\n    put(wf / \"README.md\", \"---\\nentity-type: task\\nstate: .spacedock-state\\n\"\n    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        \"walk-environment: staging\\nproduction-environment: production\\nrelease-doc: docs/releasing.md\\n---\\n\")\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py\", line 34, in put\n    path.parent.mkdir(parents=True, exist_ok=True)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py\", line 1210, in mkdir\n    os.mkdir(self, mode)\n    ~~~~~~~~^^^^^^^^^^^^\nOSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpnslwfx00/wf'\n\n----------------------------------------------------------------------\nRan 122 tests in 9.962s\n\nFAILED (errors=28, skipped=4)\nnot run: node, kc-journey-map dependencies or spacedock missing\nnot run: node, kc-journey-map dependencies or spacedock missing\nnot run: node, kc-journey-map dependencies or spacedock missing\nnot run: node or journey-accept.mjs missing, or its yaml dependency is not installed\n"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "log": "test_roborev_gate.log",
+    "tests_run": 5,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "16bf42bee7f7814422a63237c54d34b4c5416a469ff80d66b2658370fa972b8a"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "log": "test_adr_doc_checks.log",
+    "tests_run": 9,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "0bedb8fd43285fcbdf35c525b06344c976947226abf03a9603638c566017c8f2"
+  }
+]

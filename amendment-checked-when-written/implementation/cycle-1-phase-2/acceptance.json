@@ -1,0 +1,37 @@
+[
+  {
+    "name": "AC-1: original defect and reuse/marker controls",
+    "status": "passed",
+    "evidence": "candidate-bite.log"
+  },
+  {
+    "name": "AC-2: valid and invalid move shapes",
+    "status": "passed",
+    "evidence": "laws-tests.log"
+  },
+  {
+    "name": "AC-3: first-parent event identity",
+    "status": "passed",
+    "evidence": "mutation-parent-0.log"
+  },
+  {
+    "name": "AC-5: registry, docs and reading boundary",
+    "status": "passed",
+    "evidence": "artifact.json"
+  },
+  {
+    "name": "AC-6: shared marker predicate",
+    "status": "passed",
+    "evidence": "mutations.json"
+  },
+  {
+    "name": "AC-7: hosted activation",
+    "status": "blocked",
+    "note": "Deferred by approved D2 until release, pin approval and observed state push."
+  },
+  {
+    "name": "AC-8: seven historical events and per-entry skip",
+    "status": "passed",
+    "evidence": "corpus-reconciliation.json"
+  }
+]

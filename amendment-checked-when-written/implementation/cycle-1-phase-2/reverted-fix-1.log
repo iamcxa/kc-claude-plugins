@@ -1,0 +1,26 @@
+F
+======================================================================
+FAIL: test_growth_reports_only_the_added_id (test_laws_check.L4Test.test_growth_reports_only_the_added_id)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-f1-reverted-35lldyj7/scripts/test_laws_check.py", line 947, in test_growth_reports_only_the_added_id
+    self.assertEqual(self.l4_lines(out), [
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+        f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 reused ids: AC-3"])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['vio[50 chars] commit=733acaa142d9 amendment=1 reused ids: AC-1, AC-2, AC-3'] != ['vio[50 chars] commit=733acaa142d9 amendment=1 reused ids: AC-3']
+
+First differing element 0:
+'viol[48 chars]d commit=733acaa142d9 amendment=1 reused ids: AC-1, AC-2, AC-3'
+'viol[48 chars]d commit=733acaa142d9 amendment=1 reused ids: AC-3'
+
+  ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=733acaa142d9 '
+-  'amendment=1 reused ids: AC-1, AC-2, AC-3']
+?                          ------------
+
++  'amendment=1 reused ids: AC-3']
+
+----------------------------------------------------------------------
+Ran 1 test in 3.452s
+
+FAILED (failures=1)

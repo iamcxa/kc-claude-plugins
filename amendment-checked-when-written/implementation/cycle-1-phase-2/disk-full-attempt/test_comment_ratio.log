@@ -1,0 +1,199 @@
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE..
+======================================================================
+ERROR: test_a_line_naming_an_adr_is_exempt_and_plain_comments_pass (__main__.CliTests.test_a_line_naming_an_adr_is_exempt_and_plain_comments_pass) [// Decision 3 is ADR 0004]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 159, in test_a_line_naming_an_adr_is_exempt_and_plain_comments_pass
+    self.assertEqual(self.run_tool([comment, "const b = 2;"]).returncode, 0)
+                     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 55, in run_tool
+    git("init", "-q")
+    ~~~^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 54, in <lambda>
+    git = lambda *a: subprocess.run(["git", "-C", repo, *a], check=True, capture_output=True, text=True)
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 692, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['git', '-C', '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpsrf5duin', 'init', '-q']' returned non-zero exit status 128.
+
+======================================================================
+ERROR: test_a_line_naming_an_adr_is_exempt_and_plain_comments_pass (__main__.CliTests.test_a_line_naming_an_adr_is_exempt_and_plain_comments_pass) [// Round 2 is in docs/adr/0004-x.md]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 159, in test_a_line_naming_an_adr_is_exempt_and_plain_comments_pass
+    self.assertEqual(self.run_tool([comment, "const b = 2;"]).returncode, 0)
+                     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 55, in run_tool
+    git("init", "-q")
+    ~~~^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 54, in <lambda>
+    git = lambda *a: subprocess.run(["git", "-C", repo, *a], check=True, capture_output=True, text=True)
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 692, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['git', '-C', '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmphbi6wqf5', 'init', '-q']' returned non-zero exit status 128.
+
+======================================================================
+ERROR: test_a_line_naming_an_adr_is_exempt_and_plain_comments_pass (__main__.CliTests.test_a_line_naming_an_adr_is_exempt_and_plain_comments_pass) [// retry is idempotent]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 159, in test_a_line_naming_an_adr_is_exempt_and_plain_comments_pass
+    self.assertEqual(self.run_tool([comment, "const b = 2;"]).returncode, 0)
+                     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 55, in run_tool
+    git("init", "-q")
+    ~~~^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 54, in <lambda>
+    git = lambda *a: subprocess.run(["git", "-C", repo, *a], check=True, capture_output=True, text=True)
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 692, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['git', '-C', '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpmlxy06nx', 'init', '-q']' returned non-zero exit status 128.
+
+======================================================================
+ERROR: test_a_ratio_at_the_maximum_exits_0 (__main__.CliTests.test_a_ratio_at_the_maximum_exits_0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 86, in test_a_ratio_at_the_maximum_exits_0
+    done = self.run_tool(["// note"] + ["const x = 1;"] * 19, "--max", "5")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 55, in run_tool
+    git("init", "-q")
+    ~~~^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 54, in <lambda>
+    git = lambda *a: subprocess.run(["git", "-C", repo, *a], check=True, capture_output=True, text=True)
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 692, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['git', '-C', '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpg5fpfsjn', 'init', '-q']' returned non-zero exit status 128.
+
+======================================================================
+ERROR: test_a_ratio_over_the_maximum_exits_1 (__main__.CliTests.test_a_ratio_over_the_maximum_exits_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 81, in test_a_ratio_over_the_maximum_exits_1
+    done = self.run_tool(["// note"] * 8 + ["const x = 1;"] * 40, "--max", "5")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 53, in run_tool
+    with tempfile.TemporaryDirectory() as repo:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpz4hi1opj'
+
+======================================================================
+ERROR: test_a_readme_key_overrides_the_default_and_the_flag_overrides_the_key (__main__.CliTests.test_a_readme_key_overrides_the_default_and_the_flag_overrides_the_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 106, in test_a_readme_key_overrides_the_default_and_the_flag_overrides_the_key
+    allowed = self.run_tool(added, readme=readme)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 55, in run_tool
+    git("init", "-q")
+    ~~~^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 54, in <lambda>
+    git = lambda *a: subprocess.run(["git", "-C", repo, *a], check=True, capture_output=True, text=True)
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 692, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['git', '-C', '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6kojwr20', 'init', '-q']' returned non-zero exit status 1.
+
+======================================================================
+ERROR: test_a_readme_without_the_key_keeps_the_default (__main__.CliTests.test_a_readme_without_the_key_keeps_the_default)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 113, in test_a_readme_without_the_key_keeps_the_default
+    done = self.run_tool(added, readme="---\nstate: .spacedock-state\n---\n")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 53, in run_tool
+    with tempfile.TemporaryDirectory() as repo:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpy8jgdjcs'
+
+======================================================================
+ERROR: test_an_unreadable_readme_or_a_bad_value_exits_2 (__main__.CliTests.test_an_unreadable_readme_or_a_bad_value_exits_2) (readme='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 120, in test_an_unreadable_readme_or_a_bad_value_exits_2
+    self.assertEqual(self.run_tool(["const b = 2;"], readme=readme).returncode, 2)
+                     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 53, in run_tool
+    with tempfile.TemporaryDirectory() as repo:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzjt3pj13'
+
+======================================================================
+ERROR: test_an_unreadable_readme_or_a_bad_value_exits_2 (__main__.CliTests.test_an_unreadable_readme_or_a_bad_value_exits_2) (readme='---\ncomment-ratio-max: five\n---\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 120, in test_an_unreadable_readme_or_a_bad_value_exits_2
+    self.assertEqual(self.run_tool(["const b = 2;"], readme=readme).returncode, 2)
+                     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 53, in run_tool
+    with tempfile.TemporaryDirectory() as repo:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpc8wib_b9'
+
+======================================================================
+ERROR: test_an_unreadable_readme_or_a_bad_value_exits_2 (__main__.CliTests.test_an_unreadable_readme_or_a_bad_value_exits_2) (readme='---\ncomment-ratio-max: -1\n---\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 120, in test_an_unreadable_readme_or_a_bad_value_exits_2
+    self.assertEqual(self.run_tool(["const b = 2;"], readme=readme).returncode, 2)
+                     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 53, in run_tool
+    with tempfile.TemporaryDirectory() as repo:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 961, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py", line 435, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7r25eukp'
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py", line 168, in <module>
+    unittest.main()
+    ~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/main.py", line 104, in __init__
+    self.runTests()
+    ~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/main.py", line 270, in runTests
+    self.result = testRunner.run(self.test)
+                  ~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/runner.py", line 263, in run
+    result.printErrors()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/runner.py", line 156, in printErrors
+    self.printErrorList(f"{t.fail}ERROR{t.reset}", self.errors)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/runner.py", line 176, in printErrorList
+    self.stream.writeln("%s" % err)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/runner.py", line 27, in writeln
+    self.write(arg)
+    ~~~~~~~~~~^^^^^
+OSError: [Errno 28] No space left on device

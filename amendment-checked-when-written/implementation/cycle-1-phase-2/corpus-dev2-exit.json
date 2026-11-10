@@ -1,0 +1,21 @@
+{
+  "name": "dev2",
+  "state": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+  "before": "166c16d968305ad711481276809433a15fcf8a5e",
+  "after": "2a42fbb15e0f0509b4084370850f730e6334a983",
+  "readme": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md",
+  "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "argv": [
+    "/opt/homebrew/opt/python@3.15/bin/python3.15",
+    "-B",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/laws_check.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+    "--before",
+    "166c16d968305ad711481276809433a15fcf8a5e",
+    "--after",
+    "2a42fbb15e0f0509b4084370850f730e6334a983",
+    "--readme",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+  ],
+  "exit": 2
+}

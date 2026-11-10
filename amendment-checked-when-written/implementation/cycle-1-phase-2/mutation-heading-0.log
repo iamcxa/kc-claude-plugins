@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_laws_file_matches_registry (test_laws_check.RegistryTest.test_laws_file_matches_registry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-mutation-3pth8zbk/scripts/test_laws_check.py", line 96, in test_laws_file_matches_registry
+    self.assertEqual(registered, headings)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the first set but not the second:
+'L4 amendment-moves-use-fresh-ids'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.008s
+
+FAILED (failures=1)

@@ -1,0 +1,61 @@
+FFF
+======================================================================
+FAIL: test_partial_repair_adds_no_event (test_laws_check.L4Test.test_partial_repair_adds_no_event)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_laws_check.py", line 940, in test_partial_repair_adds_no_event
+    self.assertEqual(code, 0, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : L1 observer-before-sentinel: 0 events judged in a2ebf6b6241b..11b7b641027e, 0 violated
+L2 dispatch-record-complete: 0 events judged in a2ebf6b6241b..11b7b641027e, 0 violated
+L3 amendment-append-only: 1 events judged in a2ebf6b6241b..11b7b641027e, 0 violated
+L4 amendment-moves-use-fresh-ids: 1 events judged in a2ebf6b6241b..11b7b641027e, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=t.md commit=11b7b641027e amendment=1 reused ids: AC-2
+
+
+======================================================================
+FAIL: test_growth_reports_only_the_added_id (test_laws_check.L4Test.test_growth_reports_only_the_added_id)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_laws_check.py", line 947, in test_growth_reports_only_the_added_id
+    self.assertEqual(self.l4_lines(out), [
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+        f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 reused ids: AC-3"])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['vio[50 chars] commit=8fdaa80db8c7 amendment=1 reused ids: AC-1, AC-2, AC-3'] != ['vio[50 chars] commit=8fdaa80db8c7 amendment=1 reused ids: AC-3']
+
+First differing element 0:
+'viol[48 chars]d commit=8fdaa80db8c7 amendment=1 reused ids: AC-1, AC-2, AC-3'
+'viol[48 chars]d commit=8fdaa80db8c7 amendment=1 reused ids: AC-3'
+
+  ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=8fdaa80db8c7 '
+-  'amendment=1 reused ids: AC-1, AC-2, AC-3']
+?                          ------------
+
++  'amendment=1 reused ids: AC-3']
+
+======================================================================
+FAIL: test_mixed_repair_and_addition_reports_only_the_added_id (test_laws_check.L4Test.test_mixed_repair_and_addition_reports_only_the_added_id)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_laws_check.py", line 953, in test_mixed_repair_and_addition_reports_only_the_added_id
+    self.assertEqual(self.l4_lines(out), [
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+        f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 reused ids: AC-3"])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['vio[44 chars]k=t.md commit=a9f8f6d6c69d amendment=1 reused ids: AC-2, AC-3'] != ['vio[44 chars]k=t.md commit=a9f8f6d6c69d amendment=1 reused ids: AC-3']
+
+First differing element 0:
+'viol[42 chars]sk=t.md commit=a9f8f6d6c69d amendment=1 reused ids: AC-2, AC-3'
+'viol[42 chars]sk=t.md commit=a9f8f6d6c69d amendment=1 reused ids: AC-3'
+
+  ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=a9f8f6d6c69d '
+-  'amendment=1 reused ids: AC-2, AC-3']
+?                          ------
+
++  'amendment=1 reused ids: AC-3']
+
+----------------------------------------------------------------------
+Ran 3 tests in 68.429s
+
+FAILED (failures=3)

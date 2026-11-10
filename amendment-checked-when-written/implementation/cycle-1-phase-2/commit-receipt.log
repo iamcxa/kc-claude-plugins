@@ -1,0 +1,7 @@
+commit d7502656c765e36ce3d24be8602862ccc2551254
+Author:     Kent <iamcxa@gmail.com>
+AuthorDate: Tue Nov 10 16:25:01 2026 +0800
+Commit:     Kent <iamcxa@gmail.com>
+CommitDate: Tue Nov 10 16:25:01 2026 +0800
+
+    fix(kc-dev-flow-2): compare reused amendment ids individually

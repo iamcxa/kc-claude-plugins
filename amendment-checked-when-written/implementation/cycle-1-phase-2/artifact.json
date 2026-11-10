@@ -1,0 +1,26 @@
+{
+  "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "prior": "72216e2e947e962737a17c6e61ef3800f9d639c4",
+  "base": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written",
+  "branch": "spacedock-ensign/amendment-checked-when-written",
+  "source_sha256": {
+    "kc-dev-flow-2/scripts/laws_check.py": "49c6524ea0732df30b6a0c6c5da3135bac1c631308f52a0ee61bdd6a468d9414",
+    "kc-dev-flow-2/scripts/test_laws_check.py": "45e59cca5e6d108b9f7d0a99364a8dbc5cc60e8e2e48f889c71e0f59b5a896b0"
+  },
+  "cleared_bytecode": [
+    "kc-dev-flow-2/scripts/__pycache__/count_tokens.cpython-315.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/decision_ledger.cpython-315.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/workflow_extensions.cpython-315.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/design_surfaces.cpython-315.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/role_triggers.cpython-315.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/number_guards.cpython-315.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/delivery_gate.cpython-315.pyc"
+  ],
+  "adr": {
+    "path": "docs/adr/0017-history-laws-judge-only-the-events-a-push-adds.md",
+    "commit": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "status": "Accepted",
+    "sha256": "e1a9df13814fa88e3a30668c7c742a161126dc15c5a724c2ebd38613422f8393"
+  }
+}

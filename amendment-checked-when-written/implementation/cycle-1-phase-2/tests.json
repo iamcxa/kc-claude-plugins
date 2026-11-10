@@ -1,0 +1,409 @@
+[
+  {
+    "name": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "log": "test_codex_review.log",
+    "tests_run": 36,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "ae1baba3a2472dd343e8c94b9d1508b5c20b964f4cccb5d32db2409efb04ddd7"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "log": "test_copilot_review.log",
+    "tests_run": 15,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "94b31843e9f85da404b927a32300b6fbba905f289ed0697c50dd01b42aeb2ef7"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "log": "test_map_footprint.log",
+    "tests_run": 23,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "15db061edee9855493f8b302d547737adde0c4a9bc5dd4f195eb2424e16a6103"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "log": "test_release_acceptance.log",
+    "tests_run": 122,
+    "skipped": 4,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "fb1c14684962abce7176b793cf47c0f8b8d6cd36487f30b9e81b0d288a1ad886"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "log": "test_roborev_gate.log",
+    "tests_run": 5,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "16bf42bee7f7814422a63237c54d34b4c5416a469ff80d66b2658370fa972b8a"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "log": "test_adr_doc_checks.log",
+    "tests_run": 9,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "0bedb8fd43285fcbdf35c525b06344c976947226abf03a9603638c566017c8f2"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "log": "test_comment_ratio.log",
+    "tests_run": 14,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "667808374deb43292a882b814675a767b7bbf4bab2e503d630f7f12d397d8a34"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "log": "test_decision_ledger.log",
+    "tests_run": 19,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "9fbd8a1386f17c1e659ddc0296d25bc4a63a0161feb0f2dc5307b041ce373408"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "log": "test_delivery_gate.log",
+    "tests_run": 199,
+    "skipped": 1,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "dfabbf93bb96dddea0c652e11bdfae3239d56b33fa27ed63a55381ee7f184482"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "log": "test_design_surfaces.log",
+    "tests_run": 217,
+    "skipped": 4,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "05fb056a2f92c7de78efefa22bdb54b7e5018e1debd0749e75ea68947bd5670c"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "log": "test_dispatch_records.log",
+    "tests_run": 115,
+    "skipped": 1,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "7a439194f4a58f7f0c6822bf1dcb3debaf8f95124d2631521fe94ecfa2f0d080"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "log": "test_dispatch_stage.log",
+    "tests_run": 28,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "37c341b6efc70dfae2613f311f20ca948f58ae169c5ca3f3ce97011f398f741e"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_laws_check.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "log": "test_laws_check.log",
+    "tests_run": 79,
+    "skipped": 1,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "45e59cca5e6d108b9f7d0a99364a8dbc5cc60e8e2e48f889c71e0f59b5a896b0"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_learning.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "log": "test_learning.log",
+    "tests_run": 50,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "c623cb9f67671395d110038fe8226fad39c9b5c0277165877c95899a9bdfc479"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_lint_skills.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "log": "test_lint_skills.log",
+    "tests_run": 47,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "2d3b6d278c4d65dd401cae3a47fc8a39cf0b3282f156fe0c34089639d6cec0d5"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_merge_audit.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_merge_audit.py"
+    ],
+    "log": "test_merge_audit.log",
+    "tests_run": 17,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "ccc7f99f90e4baf2dba7b882ad9c3381ce925b264377b6a326e71a8a7ea8e839"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_number_guards.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "log": "test_number_guards.log",
+    "tests_run": 38,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "2569b6aae099a044cb0d91fda275b8dadda4c1c2b31e53d36cf92e1fb4ee39a4"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "log": "test_observer_check.log",
+    "tests_run": 19,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "994e13f3f6e24fff13fbe98c63b615e15b981131f11489eda52a8ce3fe80170a"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "log": "test_observer_recovery.log",
+    "tests_run": null,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "2f9c4e346972c85a5b0b5c934b9220f3f44adfceb3809f0f236d853041066bc3"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_package_version.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "log": "test_package_version.log",
+    "tests_run": 6,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "bc2d8e46931d03a38b784d9270e8a5c6dd93051b138906f9d24b27a1100c06fc"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "log": "test_poc_readme.log",
+    "tests_run": 9,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "d341a970b5d5c1c8fb982d8faecef7bc5911211beedd52baf8ef94176db64caa"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "log": "test_pr_watch.log",
+    "tests_run": 135,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "8cf2a0915c9ea46c20f406678c11de75ba5f7aeb47b5ea6785ffc3a02109edfe"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "log": "test_replay_dispatch.log",
+    "tests_run": 8,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "2496db9a22d159650aa60fa6723037e8a5bfc69ee34098a1818f8a65c00c7e5c"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "log": "test_role_triggers.log",
+    "tests_run": 49,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "bcc3e155dffc6865ea97673c430695f9650fe36cf7c902216ebb6ae566199479"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "log": "test_sd_dispatch.log",
+    "tests_run": null,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "d3adcbdb650674472996b94bc236320c838b24769e4f93966ca62d3111480bb6"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_validation_security.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "log": "test_validation_security.log",
+    "tests_run": 5,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "f8c691bbcfc3099ad0e3928d7605d4c6d3a626c624cc86fe1a41fda0faebf339"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "status": "passed",
+    "exit": 0,
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "log": "test_workflow_checkout.log",
+    "tests_run": 13,
+    "skipped": 0,
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "source_sha256": "a4a1fe6c1b9e292e3c0e2bea86227209a32afd9ce1c238e41ae0ab67b5d12e73"
+  }
+]

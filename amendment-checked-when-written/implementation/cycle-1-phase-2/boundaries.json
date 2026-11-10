@@ -1,0 +1,27 @@
+{
+  "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "repair_changed_files": [
+    "kc-dev-flow-2/scripts/laws_check.py",
+    "kc-dev-flow-2/scripts/test_laws_check.py"
+  ],
+  "all_changed_files": [
+    "kc-dev-flow-2/references/sd/laws.md",
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/laws_check.py",
+    "kc-dev-flow-2/scripts/test_laws_check.py"
+  ],
+  "laws_words": {
+    "base": 1345,
+    "candidate": 1587,
+    "added": 242,
+    "maximum": 250
+  },
+  "phase_2_unchanged": [
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/references/sd/laws.md"
+  ],
+  "CI_cost": "not measured; no job or trigger change",
+  "product_push": "not run",
+  "RoboRev": "delegated to FO; not run"
+}
