@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.38.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.37.0...kc-dev-flow-2-v0.38.0) (2026-11-10)
+
+
+### Features
+
+* **kc-dev-flow-2:** flag invalid criterion moves in state pushes ([#828](https://github.com/iamcxa/kc-claude-plugins/issues/828)) ([d8dbfcb](https://github.com/iamcxa/kc-claude-plugins/commit/d8dbfcb1051d7c696aca139ed9ade332ee85abaf))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** build special-role dispatch records before calls ([#827](https://github.com/iamcxa/kc-claude-plugins/issues/827)) ([9f9fdd4](https://github.com/iamcxa/kc-claude-plugins/commit/9f9fdd436a0c15a111f9f0c473ea8a7d748f198d))
+* **kc-dev-flow-2:** check four FO record gaps before handoff ([#826](https://github.com/iamcxa/kc-claude-plugins/issues/826)) ([99cb186](https://github.com/iamcxa/kc-claude-plugins/commit/99cb186238c45612fc9fa0237ebabfbcabbe4029))
+* **kc-dev-flow-2:** exclude the exact PR attribution line from step links ([#825](https://github.com/iamcxa/kc-claude-plugins/issues/825)) ([01195ae](https://github.com/iamcxa/kc-claude-plugins/commit/01195ae6cd5ff09de31ab286374f43ccceb6667e))
+
 ## [0.37.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.36.0...kc-dev-flow-2-v0.37.0) (2026-11-10)
 
 
