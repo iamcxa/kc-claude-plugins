@@ -49,7 +49,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.37.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.38.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -85,7 +85,7 @@ When requested, chief-engineer reviews the complete package/process batch before
 ## Stages
 
 Stage workers follow `<package>/references/model-roster.md`; absence retains README defaults.
-`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer`, `kc-dev-flow-2:design-director` and `kc-dev-flow-2:observer` run on its `## Model table` row, never cheaper. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
+`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer`, `kc-dev-flow-2:design-director` and `kc-dev-flow-2:observer` run on its `## Model table` row, never cheaper. Build chief-engineer and engineering-reviewer calls with `<package>/scripts/dispatch_stage.py --role <agent>`; record each under `## FO alignment` as
 `Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.
 
 `concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an
@@ -388,7 +388,7 @@ the state checkout.
 A revise asking for what FO did not recommend, and his approval of a recommendation
 FO revised after pushback, also owe one, on the task they concern. Otherwise the reason
 carries `Recommendation: followed`. Before `gate record --actor person:captain`, FO runs
-`python3 <package>/scripts/decision_ledger.py --reason <file>`; nonzero holds the record.
+`python3 <package>/scripts/decision_ledger.py --reason <file> --task <task>`; nonzero holds the record.
 
 ## Decision records
 
