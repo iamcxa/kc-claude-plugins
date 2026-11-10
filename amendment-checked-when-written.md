@@ -70,6 +70,7 @@ Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-11-10 — Amendment 1: do these amendments withdraw what the Captain approved, and what changes in the build?
 Reviewer: kc-dev-flow-2:chief-engineer not run 2026-11-10: the 4 counted passes are 4 follow-up messages to one worker (message-1 withdrawn before any work, message-2 applied the Captain's amendments 1 and 2, messages 3 and 4 are the two phases of the single Cycle 1 repair of validation-1 F1); one validation rejection so far, and the next step is its recheck at d7502656c
+Reviewer: kc-dev-flow-2:chief-engineer gpt-6-astra 2026-11-10 — what is the smallest next step, given the findings so far?
 
 ## Design
 
@@ -215,6 +216,8 @@ Design: A file whose `parse_amendments` reports structural issues is left to L2/
 
 - Cycle 1 (FO, 2026-11-10): validation-1 on #828 head 72216e2e recommended REJECTED with one finding, F1, assessed Material and owned (value-ac[AC-3]: a defect is reported once at the commit that adds it; evidence amendment-checked-when-written/validation/cycle-1/partial-repair.log, the validator's run, not re-run by FO), to fix; investigation first, then FO fix authorization, then a fresh validation recheck.
   - F1: a push that repairs only one of several reused ids reports the remaining, already reported id again, because laws_check.py compares the whole reused-id tuple.
+- Cycle 2 (FO, 2026-11-10): validation-2 on #828 head d7502656 recommended REJECTED with two findings; F1 of Cycle 1 is closed. After the chief-engineer step-back (review/chief-engineer-1.md): F3 assessed Material and owned (value-ac[AC-2]: a real unmarked move passes with exit 0 when a tilde-fenced example holds the marker; evidence validation/cycle-2/review-example-tilde.log, the validator's run, not re-run by FO), to fix; investigation first, then FO fix authorization, then a fresh validation recheck. F2 is assessed Deferred risk and FO will decline it in the validation gate summary: its trigger is the validator's constructed multi-task push with an unreadable file, no such push is in the read histories, and that path still exits non-zero; it becomes Material on an observed push that loses a diagnostic, or on the Captain's ask.
+  - F3: design_surfaces.py's live-section filter strips only backtick fences, so a tilde-fenced example can supply the 'Amended by Captain, amendment N' marker.
 
 ## Stage Report: ideation
 
