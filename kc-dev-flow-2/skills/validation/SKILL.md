@@ -16,6 +16,17 @@ Required inputs: the exact work item, recorded variant/profile, current stage,
 approved scope and the stage's available artifact/evidence. Resolve inconsistencies
 with FO rather than inferring a selection or loading another variant.
 
+Before any stage work, and again when resumed or reused, run
+`python3 <package>/scripts/role_triggers.py <dir> <slug>`: `<package>` is the
+`Package root:` line of your dispatch, else this skill's package root; `<dir>` is the
+directory holding the task's `<slug>.md` or `<slug>/index.md`. Exit 0 continues.
+On exit 1 or 2 a special-role call is owed and unrecorded, or cannot be read: change
+no code and run no check. Append a stage report marking each checklist item
+`- FAILED: <item>` with the evidence line `held: special-role call owed`, put the
+script's output and `<package>`'s version (its `.claude-plugin/plugin.json`) in the
+Summary, commit the report, and send your completion message. FO records the call
+or a decline, then dispatches again.
+
 ## Profile routes
 
 <!-- profile-routes -->

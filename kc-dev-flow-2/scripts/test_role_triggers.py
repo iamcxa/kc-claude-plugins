@@ -541,6 +541,58 @@ class SymptomRoundsTest(Fixture):
         path.write_text(f"Dispatched: {date} {'a' * 40}\nSymptom: {symptom}\n## Checklist\nwork\n")
         return path
 
+    def test_worker_start_holds_the_three_recorded_states_until_both_calls_are_committed(self):
+        amendments = [(n, "2026-11-09" if n == 6 else "2026-11-08", "AC-1" if n == 1 else "none", "revised design")
+                      for n in range(1, 7)]
+        ce, er = call(CE, "opus", "2026-11-09"), call(ER, "opus", "2026-11-09")
+        for reports, failures, rounds in ((3, 1, 3), (4, 2, 4), (5, 2, 5)):
+            for stage, count in (("implementation", rounds), ("validation", failures)):
+                for n in range(1, count + 1):
+                    self.dispatch(n, stage=stage, date="2026-11-09")
+            for extra, expected in (("", 1), (ce, 1), (ce + "\n" + er, 0),
+                                    (er + f"\nReviewer: {CE} not run 2026-11-09: the outcome is unchanged; the gap is testable now", 1)):
+                with self.subTest(reports=reports, extra=extra):
+                    body = task(reports=reports, amendments=amendments, extra=extra) + validations(*([StepBackTest.failed] * failures))
+                    self.put(body)
+                    code, out = run(self.state, SLUG)
+                    self.assertEqual(code, expected, out)
+                    if not extra:
+                        self.assertIn(f"dispatch {CE}", out)
+                        self.assertIn(f"dispatch {ER}", out)
+            misplaced = task(reports=reports, amendments=amendments).replace("## FO alignment", "## Scope\n" + ce + "\n" + er + "\n\n## FO alignment")
+            self.put(misplaced)
+            self.assertEqual(run(self.state, SLUG)[0], 1)
+            self.entity = self.state / f"{SLUG}.md"
+            self.entity.write_text(task(reports=reports, amendments=amendments, extra=ce + "\n" + er))
+            self.assertEqual(run(self.state, SLUG)[0], 1)
+
+    def test_pending_third_record_holds_and_the_committed_worker_read_agrees(self):
+        for n in (1, 2):
+            self.dispatch(n)
+        self.put(task())
+        self.assertEqual(run(self.state, SLUG)[0], 0)
+        pending = self.dispatch(3)
+        code, out = run(self.state, SLUG, "--pending", pending)
+        self.assertEqual(code, 1, out)
+        self.assertIn("3 implementation dispatches", out)
+        self.assertEqual(run(self.state, SLUG)[0], 0)
+        self.put(task())
+        self.assertEqual(run(self.state, SLUG), (code, out))
+        self.assertEqual(run(self.state, SLUG, "--pending", pending), (code, out))
+
+    def test_pending_replaces_one_record_and_does_not_read_the_task_from_disk(self):
+        for n in (1, 2, 3):
+            self.dispatch(n)
+        self.put(task())
+        pending = self.dispatch(3, symptom="another failure")
+        (self.state / f"{SLUG}.md").write_text(task(extra=call(CE, "opus", "2026-11-03")))
+        self.assertEqual(run(self.state, SLUG)[0], 1)
+        code, out = run(self.state, SLUG, "--pending", pending)
+        self.assertEqual(code, 0, out)
+        self.assertIn("2 implementation dispatches", out)
+        for bad in (pending.parent / "absent.md", pending.parent):
+            self.assertEqual(run(self.state, SLUG, "--pending", bad)[0], 2)
+
     def test_one_plain_and_two_message_records_remind_then_owe_a_dated_call(self):
         self.dispatch(2)
         self.put(task())

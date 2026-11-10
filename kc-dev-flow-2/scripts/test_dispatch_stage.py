@@ -155,6 +155,86 @@ class DispatchStageTests(unittest.TestCase):
         self.assertFalse(self.record("validation").exists())
         self.assertFalse(self.marker.exists())
 
+    def owe_reviewer(self):
+        self.entity.write_text(self.entity.read_text() + "\n## Captain amendments\n\n"
+                               "### Amendment 1 — 2026-11-09, chat\nCaptain: 「Use the revised design」 (chat)\n"
+                               "Supersedes: none\nDesign: revised design\n")
+        self.commit_task()
+        self.checklist.write_text(self.checklist.read_text() + "Apply Captain amendment 1\n")
+
+    def assert_role_hold_then_release(self, stage):
+        self.set_stage(stage)
+        self.owe_reviewer()
+        extra = ("--spacedock", self.spy, * (("--candidate", "a" * 40) if stage == "validation" else ()))
+        head = self.git(self.state, "rev-parse", "HEAD")
+        held = self.build(stage, extra, expected=1)
+        self.assertIn("dispatch not built", held.stderr)
+        self.assertIn("next:", held.stderr)
+        self.assertIn("engineering-reviewer", held.stderr)
+        self.assertEqual(held.stdout, "")
+        self.assertFalse(self.marker.exists())
+        self.assertFalse(self.record(stage).exists())
+        self.assertEqual(self.git(self.state, "status", "--porcelain"), "")
+        self.assertEqual(self.git(self.state, "rev-parse", "HEAD"), head)
+        self.entity.write_text(self.entity.read_text().replace("## FO alignment\n", "## FO alignment\n\n"
+                               "Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-11-09 — reviewed amendments\n"))
+        self.commit_task()
+        self.build(stage, extra)
+        self.assertTrue(self.marker.exists())
+        self.assert_committed(self.record(stage), f"dispatch: {self.slug} entering {stage}")
+
+    def test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it(self):
+        self.assert_role_hold_then_release("implementation")
+
+    def test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it(self):
+        self.assert_role_hold_then_release("validation")
+
+    def test_ideation_builds_even_when_a_call_is_owed(self):
+        self.owe_reviewer()
+        self.build(extra=("--spacedock", self.spy))
+        self.assertTrue(self.marker.exists())
+
+    def test_the_third_dispatch_counts_before_it_is_committed(self):
+        self.set_stage("implementation")
+        self.build("implementation", ("--symptom", "same failure"))
+        self.build("implementation", ("--symptom", "same failure", "--note", "second"))
+        held = self.build("implementation", ("--symptom", "same failure", "--note", "third",
+                                               "--spacedock", self.spy), expected=1)
+        self.assertIn("3 implementation dispatches", held.stderr)
+        self.assertIn("dispatch not built", held.stderr)
+        self.assertFalse(self.marker.exists())
+        self.assertFalse(self.record("implementation", 3).exists())
+        self.assertEqual(self.git(self.state, "status", "--porcelain"), "")
+
+    def test_an_unresolvable_committed_task_holds_on_exit_two(self):
+        self.set_stage("implementation")
+        self.git(self.state, "rm", "--cached", "--", self.entity)
+        ignore = self.state / ".gitignore"
+        ignore.write_text(self.entity.name + "\n")
+        self.git(self.state, "add", "--", ignore)
+        self.git(self.state, "commit", "-m", "test: task is absent from committed bytes")
+        held = self.build("implementation", ("--spacedock", self.spy), expected=1)
+        self.assertIn("dispatch not built", held.stderr)
+        self.assertIn("no task file", held.stderr)
+        self.assertFalse(self.marker.exists())
+        self.assertFalse(self.record("implementation").exists())
+        self.assertEqual(self.git(self.state, "status", "--porcelain"), "")
+
+    def test_a_missing_role_checker_refuses_before_build(self):
+        self.set_stage("implementation")
+        script = ("import sys; from pathlib import Path; sys.path.insert(0, sys.argv.pop(1)); "
+                  "import dispatch_stage as subject; subject.SCRIPTS = Path(sys.argv.pop(1)); "
+                  "sys.exit(subject.main())")
+        held = self.call([sys.executable, "-B", "-c", script, WRAPPER.parent, self.base / "missing-package-scripts",
+                          "--workflow-dir", self.workflow, "--entity-path", self.entity, "--stage", "implementation",
+                          "--model", "fixture-model", "--checklist-file", self.checklist,
+                          "--scope-notes-file", self.notes, "--spacedock", self.spy, "--host", "codex"], expected=1)
+        self.assertIn("dispatch not built", held.stderr)
+        self.assertIn("role_triggers.py", held.stderr)
+        self.assertFalse(self.marker.exists())
+        self.assertFalse(self.record("implementation").exists())
+        self.assertEqual(self.git(self.state, "status", "--porcelain"), "")
+
     def test_candidates_and_feedback_flags_reach_real_build(self):
         self.set_stage("validation")
         sha = self.git(self.repo, "rev-parse", "HEAD")
