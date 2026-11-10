@@ -184,6 +184,11 @@ All tests run against the real Spacedock binary in split-root fixtures, as `test
 
 ADR: 0074
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-10): validation-1 on #827 head 8574e879 recommended REJECTED with one finding, F1, assessed Material and owned (value-ac[AC-1]: the record holds the two files' bytes; the validator's CRLF inputs come back rewritten, evidence in special-role-dispatch-records-built-by-script/validation/independent-1/evidence/acceptance.log, validator's run, not re-run by FO), to fix; investigation first, then FO fix authorization, then a fresh validation recheck.
+  - F1: dispatch_stage.py normalizes CRLF in the checklist and scope-notes inputs and in the stdout read, so a role record does not hold the supplied bytes.
+
 ## Stage Report: ideation
 
 - DONE: Design how an engineering-reviewer or chief-engineer dispatch made through the package writes its complete dispatch record before the agent starts (the batch 17 hand-written dispatch/engineering-reviewer-1.md is the bite), naming the script that writes it and a falsifier that fails without it
