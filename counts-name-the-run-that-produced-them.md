@@ -1,6 +1,6 @@
 ---
 title: A count or measured number names the command and run that produced it
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 gates:
     version: 1
