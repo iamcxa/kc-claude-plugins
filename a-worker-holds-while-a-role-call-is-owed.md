@@ -317,3 +317,40 @@ Designed a worker-start hold: the implementation and validation stage skills run
 ### Summary
 
 Implemented the bounded worker-start hold and earlier dispatch refusal in local candidate 42455f093facfc96edf6cd0357f26be1c858b262, including the pending dispatch, every owed role, no in-flight exemption and hold-report counting. Local checks and the seven executable mutations pass, but the candidate is not ready to ship: AC-6 still needs an authenticated six-run replay and its behavior falsifier; no fresh worker behavior is claimed from the 401 runs. FO retains publication, independent review/validation and the next workflow decision.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design within the named files, based on origin/main.
+  Candidate 42455f093facfc96edf6cd0357f26be1c858b262; base f980a097bf15d8d1382c039949c6b9aefc5439c8; branch spacedock-ensign/a-worker-holds-while-a-role-call-is-owed; seven approved files only, no version edit; ADR 0026 amended for D1-D4; product worktree clean.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin).
+  No product push or PR opened, as assigned; queries returned no remote branch or PR. Updated title/body for FO: /tmp/impl-a-worker-holds-while-a-role-call-is-owed-pr.md.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared).
+  AC-1 to AC-5 and AC-7 have the required local evidence; the authenticated AC-6 candidate arm passes 3/3, but the control arm has only 2/3 product edits, with its remaining run stopped on missing prerequisites. Do not claim the complete ship condition.
+- DONE: AC-1 worker-start hold and committed-call release on the three recorded states.
+  Fresh state clone at ee29b0a8/27f04824/03829bf0: as-recorded and CE-only hold, CE+ER release, misplaced calls hold; mechanical.json has 15/15 including AC-2. Fixtures reconstruct the report/amendment/dispatch counts; ignoring recorded calls makes the test fail.
+- DONE: AC-2 a decline without the reason form still holds.
+  ER plus the step-back-answer decline exits 1 on all three real-state copies; generic-decline acceptance makes the fixture fail. The base includes the landed mechanism/decline change.
+- DONE: AC-3 dispatch refuses before build only for implementation and validation.
+  Both owing stages leave the fake binary uncalled and no uncommitted record/state change; committed calls release; owing ideation builds. Removing the check and widening it to ideation each fail the relevant test.
+- DONE: AC-4 the record being dispatched counts.
+  Two committed plus pending third refuse; the same committed third gives the worker-start exit 1; replacement does not double-count and uncommitted calls stay ignored. Dropping --pending makes the dispatch fixture fail.
+- DONE: AC-5 exit 2 holds at dispatch; worker instructions also hold on exit 2.
+  Missing checker and unresolvable committed task refuse without invoking the binary or leaving a record; allowing exit 2 fails the fixture. The worker exit-2 half remains instruction-text evidence, as the criterion specifies.
+- DONE: Re-run six authenticated Behaviour replays as one escalated command and record the exact results.
+  /tmp/rolehold-implementation-auth/replay-results.json and proof.json: candidate 1/2/3 each ran its installed role checker (exit 1), wrote four FAILED items with held: special-role call owed, both next: lines and version 0.36.0; product status empty and HEAD 00d1aadcac9ec93631f54fdbcdea1f35e3793dec in all three. Controls 2/3 edited apps/qnow-app/test/booking-repair.test.tsx and were stopped by captured process IDs; control 1 returned without edits or unit/type/lint checks because dependencies were absent and the pinned pnpm fetch/signature check failed; its attempted roborev_gate.py returned 3 (daemon unavailable). The six-run scorer exits 1; no 3/3 control claim.
+- SKIPPED: AC-6's required complete 3/3 control result and its full behaviour falsifier.
+  Only 2/3 controls demonstrate a product edit. Control 1 did attempt the product review gate, but it was incomplete; this report conservatively leaves the requested control condition unproved rather than counting a missing-daemon result. Candidate hold reports remain uncommitted in the nested sandbox; workers reported .git/index.lock denial, so the replay does not prove state commit.
+- DONE: Follow implementation-1-message-1's Captain-approved temporary login-link procedure.
+  Each fresh home received only an auth.json symlink immediately after creation, removed in finally on completion/failure; all six temporary entries verified absent. The harness did not copy, read, print or hash login contents. Each native dispatch path begins with its rhimpl-candidate-N or rhimpl-control-N prefix; no build wrote the shared unprefixed path. Earlier DNS/401 attempts remain evidence of failed setup and do not count.
+- DONE: AC-7 unchanged workflow and budget, one paragraph per stage skill.
+  Repository lint passes: workflow 5931/5931 words, unchanged bytes/budget; implementation 357 to 471, validation 356 to 470 (+114 each). Prototype <root> is spelled <package> for the existing script-path lint. Increasing the workflow budget content makes lint fail.
+- DONE: Required local checks, mutations, and committed candidate.
+  Role 49, dispatch 28 (real Spacedock 0.27.2), lint tests 47 passed; delivery 192 run, one existing GATE_PRESENTATION_STATE skip. Seven local mutations caught using -B and cache-free copies. Repository lint, installed adr_lint.py docs/adr --since base --require 0026, number_guards.py check with task/workflow, design_surfaces.py check exit 0; comment_ratio.py 0/146 code lines, 0%, maximum 5%. Evidence and producer exits: /tmp/rolehold-implementation.
+- DONE: Affected-document review and fresh-shell entry.
+  doc_impact.py: ADR 0049 unaffected: model ranks/floors/default efforts unchanged; ADR 0070 unaffected: write/check/build order and separate version/checkout checks retained; ADR 0026 updated. /tmp/rolehold-implementation/acceptance.sh names the candidate and local checks, and explicitly states the remaining control evidence gap.
+- SKIPPED: FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured.
+  These remain FO-owned and not run by this worker. CI cost per PR not measured; no CI trigger/topology edit. No agent message sent after the follow-up instruction; completion is by final reply.
+
+### Summary
+
+This complete report supersedes the earlier implementation report: the Captain-approved login links resolved the 401 setup failure, and the candidate now demonstrates 3/3 worker holds with unchanged product bytes; all temporary login entries are removed. The code candidate remains 42455f093facfc96edf6cd0357f26be1c858b262 with the local checks and seven mutations passing, but the strict stop condition is still unproved because only 2/3 controls edited product code and the third stopped on dependencies/incomplete review. FO owns the remaining control evidence, publication, independent review/validation and next workflow decision.
