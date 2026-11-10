@@ -1,0 +1,43 @@
+[
+  {
+    "name": "dev2",
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "previous_candidate": "72216e2e947e962737a17c6e61ef3800f9d639c4",
+    "before": "166c16d968305ad711481276809433a15fcf8a5e",
+    "after": "2a42fbb15e0f0509b4084370850f730e6334a983",
+    "same_L4_lines": true,
+    "L4_lines": [
+      "L4 amendment-moves-use-fresh-ids: 3 events judged in 166c16d96830..2a42fbb15e0f, 3 violated",
+      "violation: L4 amendment-moves-use-fresh-ids task=delivery-gate-verdict-form.md commit=7326e2a1162b amendment=2 unmarked replacement",
+      "violation: L4 amendment-moves-use-fresh-ids task=release-acceptance/index.md commit=bf8c73be99c4 amendment=2 unmarked replacement",
+      "violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 reused ids: AC-1, AC-2, AC-4",
+      "violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 unmarked replacement"
+    ]
+  },
+  {
+    "name": "qnow",
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "previous_candidate": "72216e2e947e962737a17c6e61ef3800f9d639c4",
+    "before": "4a37fda441f2eb71ff8b3c2b9886983cb46c3e5f",
+    "after": "c36650727548d893324aad22723fd530bc900570",
+    "same_L4_lines": true,
+    "L4_lines": [
+      "L4 amendment-moves-use-fresh-ids: 3 events judged in 4a37fda441f2..c36650727548, 3 violated",
+      "violation: L4 amendment-moves-use-fresh-ids task=staff-multi-branch.md commit=3a384063e44f amendment=1 unmarked replacement",
+      "violation: L4 amendment-moves-use-fresh-ids task=staff-multi-branch.md commit=4ad69292227a amendment=1 reused ids: AC-6, AC-7",
+      "violation: L4 amendment-moves-use-fresh-ids task=booking-outcomes.md commit=4993b5b603ae amendment=1 unmarked replacement"
+    ]
+  },
+  {
+    "name": "relay",
+    "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "previous_candidate": "72216e2e947e962737a17c6e61ef3800f9d639c4",
+    "before": "22a3ef1cad0677b8cc2ef3890ead67ff26cfd071",
+    "after": "fd1481da62952ed6706bb3c1db4620ee1b04b144",
+    "same_L4_lines": true,
+    "L4_lines": [
+      "L4 amendment-moves-use-fresh-ids: 1 events judged in 22a3ef1cad06..fd1481da6295, 1 violated",
+      "violation: L4 amendment-moves-use-fresh-ids task=owner-sees-all-feedback-room.md commit=06cadae7681f amendment=3 unmarked replacement"
+    ]
+  }
+]

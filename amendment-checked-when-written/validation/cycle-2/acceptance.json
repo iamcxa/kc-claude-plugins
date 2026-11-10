@@ -1,0 +1,40 @@
+[
+  {
+    "name": "AC-1: original introducing event and predicate falsifiers",
+    "status": "passed",
+    "evidence": "candidate-bite.log; base-bite.log; mutations.json"
+  },
+  {
+    "name": "AC-2: legitimate shapes and invalid unmarked move",
+    "status": "failed",
+    "note": "Original fixtures pass; F3 tilde example hides an unmarked real replacement.",
+    "evidence": "review-example-tilde.log"
+  },
+  {
+    "name": "AC-3: report a defect once at introduction",
+    "status": "failed",
+    "note": "F1 partial repair fixed; F2 loses the known introducing diagnostic when another task cannot be read.",
+    "evidence": "reverted-fix.json; review-probes.json"
+  },
+  {
+    "name": "AC-5: registry, documentation bound and FO reading",
+    "status": "passed",
+    "evidence": "artifact.json; mutation-heading-0.log; lint.log"
+  },
+  {
+    "name": "AC-6: shared marker and unchanged design-check compatibility",
+    "status": "passed",
+    "evidence": "test_design_surfaces.log; check-comparison.json; mutations.json"
+  },
+  {
+    "name": "AC-7: hosted activation",
+    "status": "blocked",
+    "note": "Deferred by approved D2 until release, Captain pin approval and observed state push.",
+    "evidence": "activation-limit.json"
+  },
+  {
+    "name": "AC-8: seven events and per-entry structural skip",
+    "status": "passed",
+    "evidence": "corpus-reconciliation.json; corpus-comparison.json; current-tail.json; mutations.json"
+  }
+]

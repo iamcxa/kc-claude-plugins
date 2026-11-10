@@ -1,0 +1,83 @@
+{
+  "unreadable_discards_known_violation": true,
+  "tilde_example_hides_unmarked_move": true,
+  "runs": [
+    {
+      "name": "review-unreadable-solo",
+      "exit": 1,
+      "before": "9303c99c10303af0aae97b358bc6fc156c2d77d6",
+      "after": "1be4eb45212a19608edbf412c0859a5cf1d02416",
+      "log": "review-unreadable-solo.log",
+      "L4_lines": [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in 9303c99c1030..1be4eb45212a, 1 violated",
+        "violation: L4 amendment-moves-use-fresh-ids task=a.md commit=1be4eb45212a amendment=1 unmarked replacement"
+      ]
+    },
+    {
+      "name": "review-unreadable-combined",
+      "exit": 2,
+      "before": "9303c99c10303af0aae97b358bc6fc156c2d77d6",
+      "after": "7e6c3eca0cc7eafc9e544f57d26c064c837cf395",
+      "log": "review-unreadable-combined.log",
+      "L4_lines": [
+        "L4 amendment-moves-use-fresh-ids: cannot judge: 7e6c3eca0cc7eafc9e544f57d26c064c837cf395:z.md: unreadable UTF-8 blob: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte"
+      ]
+    },
+    {
+      "name": "review-unreadable-repair",
+      "exit": 2,
+      "before": "7e6c3eca0cc7eafc9e544f57d26c064c837cf395",
+      "after": "a3db214c1585e6f4e65ead2ccad1af9de7b82a6b",
+      "log": "review-unreadable-repair.log",
+      "L4_lines": [
+        "L4 amendment-moves-use-fresh-ids: cannot judge: a3db214c1585e6f4e65ead2ccad1af9de7b82a6b^:z.md: unreadable UTF-8 blob: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte"
+      ]
+    },
+    {
+      "name": "review-unreadable-later",
+      "exit": 0,
+      "before": "a3db214c1585e6f4e65ead2ccad1af9de7b82a6b",
+      "after": "846354d4eac1a05afbb9cf3267dbe0fe8350d332",
+      "log": "review-unreadable-later.log",
+      "L4_lines": [
+        "L4 amendment-moves-use-fresh-ids: 0 events judged in a3db214c1585..846354d4eac1, 0 violated"
+      ]
+    },
+    {
+      "name": "review-example-backtick",
+      "exit": 1,
+      "before": "3976a6d349e351566bf9393445dc2bff44ab7990",
+      "after": "3162cce39ab115f3147f011434b9a67e3a11aafd",
+      "log": "review-example-backtick.log",
+      "L4_lines": [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in 3976a6d349e3..3162cce39ab1, 1 violated",
+        "violation: L4 amendment-moves-use-fresh-ids task=t.md commit=3162cce39ab1 amendment=1 unmarked replacement"
+      ]
+    },
+    {
+      "name": "review-example-tilde",
+      "exit": 0,
+      "before": "71bb3ffed1a23e669573d9be06f5e5c02bdb9bd9",
+      "after": "ef1013902f4db5b4fa11960d5a86d2a494539109",
+      "log": "review-example-tilde.log",
+      "L4_lines": [
+        "L4 amendment-moves-use-fresh-ids: 0 events judged in 71bb3ffed1a2..ef1013902f4d, 0 violated"
+      ]
+    }
+  ],
+  "example_helpers": {
+    "backtick": {
+      "exit": 1,
+      "defects": [
+        [
+          "unmarked",
+          1
+        ]
+      ]
+    },
+    "tilde": {
+      "exit": 0,
+      "defects": []
+    }
+  }
+}

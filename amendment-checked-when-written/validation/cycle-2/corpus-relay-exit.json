@@ -1,0 +1,21 @@
+{
+  "name": "relay",
+  "state": "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state",
+  "before": "22a3ef1cad0677b8cc2ef3890ead67ff26cfd071",
+  "after": "fd1481da62952ed6706bb3c1db4620ee1b04b144",
+  "readme": "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/README.md",
+  "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "argv": [
+    "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+    "-B",
+    "/private/tmp/opencode/pr828-validation-2/candidate/kc-dev-flow-2/scripts/laws_check.py",
+    "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state",
+    "--before",
+    "22a3ef1cad0677b8cc2ef3890ead67ff26cfd071",
+    "--after",
+    "fd1481da62952ed6706bb3c1db4620ee1b04b144",
+    "--readme",
+    "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/README.md"
+  ],
+  "exit": 2
+}

@@ -1,0 +1,5 @@
+L1 observer-before-sentinel: 0 events judged (README lists no learn)
+L2 dispatch-record-complete: 0 events judged in 9303c99c1030..1be4eb45212a, 0 violated
+L3 amendment-append-only: 1 events judged in 9303c99c1030..1be4eb45212a, 0 violated
+L4 amendment-moves-use-fresh-ids: 1 events judged in 9303c99c1030..1be4eb45212a, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=a.md commit=1be4eb45212a amendment=1 unmarked replacement

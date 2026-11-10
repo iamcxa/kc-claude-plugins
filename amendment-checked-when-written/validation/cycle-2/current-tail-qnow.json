@@ -1,0 +1,24 @@
+{
+  "name": "qnow",
+  "state": "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state",
+  "before": "c36650727548d893324aad22723fd530bc900570",
+  "after": "25ac0e8be821aa4414c726fc4fe161ce8f529d81",
+  "readme": "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/README.md",
+  "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "argv": [
+    "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+    "-B",
+    "/private/tmp/opencode/pr828-validation-2/candidate/kc-dev-flow-2/scripts/laws_check.py",
+    "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state",
+    "--before",
+    "c36650727548d893324aad22723fd530bc900570",
+    "--after",
+    "25ac0e8be821aa4414c726fc4fe161ce8f529d81",
+    "--readme",
+    "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/README.md"
+  ],
+  "exit": 0,
+  "L4_lines": [
+    "L4 amendment-moves-use-fresh-ids: 0 events judged in c36650727548..25ac0e8be821, 0 violated"
+  ]
+}

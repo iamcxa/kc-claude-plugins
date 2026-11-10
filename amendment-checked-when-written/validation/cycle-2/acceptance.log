@@ -1,0 +1,22 @@
+STEP 1 PASS: exported candidate d7502656c765 and base 6a495cb8c405
+L4 amendment-moves-use-fresh-ids: 1 events judged in b91e7434adde..a113aa3e9a3d, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 reused ids: AC-1, AC-2, AC-4
+violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 unmarked replacement
+STEP 2 PASS: candidate flags the bite; base has no L4
+...............
+----------------------------------------------------------------------
+Ran 15 tests in 22.539s
+
+OK
+STEP 3 PASS: L4 and registry tests
+65 ADR file(s) checked, 0 legacy
+STEP 4 PASS: ADR lint
+Partial repair CLI exit: 0
+L1 observer-before-sentinel: 0 events judged (README lists no learn)
+L2 dispatch-record-complete: 0 events judged in effa549d45df..6733cbd3d938, 0 violated
+L3 amendment-append-only: 1 events judged in effa549d45df..6733cbd3d938, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in effa549d45df..6733cbd3d938, 0 violated
+PASS AC-3: partial repair introduces no new defect
+STEP 5 PASS: partial repair does not repeat old debt
+Known move diagnostic retained: False
+Tilde-fenced example ignored: False

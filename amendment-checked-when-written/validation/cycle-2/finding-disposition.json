@@ -1,0 +1,20 @@
+{
+  "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "F1": {
+    "classification": "Material",
+    "status": "closed at this candidate",
+    "evidence": [
+      "reverted-fix.json",
+      "acceptance-f1-only.log",
+      "test_laws_check.log"
+    ]
+  },
+  "F2": {
+    "classification": "Material",
+    "status": "open, FO disposition required"
+  },
+  "F3": {
+    "classification": "Material",
+    "status": "open, FO disposition required"
+  }
+}

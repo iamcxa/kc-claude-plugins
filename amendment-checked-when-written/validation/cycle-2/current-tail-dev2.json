@@ -1,0 +1,24 @@
+{
+  "name": "dev2",
+  "state": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+  "before": "2a42fbb15e0f0509b4084370850f730e6334a983",
+  "after": "c4e9aae782ae7deb448592354534b350ee7697e1",
+  "readme": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md",
+  "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "argv": [
+    "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+    "-B",
+    "/private/tmp/opencode/pr828-validation-2/candidate/kc-dev-flow-2/scripts/laws_check.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+    "--before",
+    "2a42fbb15e0f0509b4084370850f730e6334a983",
+    "--after",
+    "c4e9aae782ae7deb448592354534b350ee7697e1",
+    "--readme",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+  ],
+  "exit": 0,
+  "L4_lines": [
+    "L4 amendment-moves-use-fresh-ids: 0 events judged in 2a42fbb15e0f..c4e9aae782ae, 0 violated"
+  ]
+}

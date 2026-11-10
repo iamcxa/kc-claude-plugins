@@ -1,0 +1,4 @@
+L1 observer-before-sentinel: 0 events judged (README lists no learn)
+L2 dispatch-record-complete: 0 events judged in 71bb3ffed1a2..ef1013902f4d, 0 violated
+L3 amendment-append-only: 1 events judged in 71bb3ffed1a2..ef1013902f4d, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in 71bb3ffed1a2..ef1013902f4d, 0 violated

@@ -1,0 +1,22 @@
+[
+  {
+    "path": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+    "verdict": "unaffected",
+    "reason": "Seed admission fields and functions are unchanged; 1,032 current candidate/base check and seed verdicts match at the three pinned corpus tips."
+  },
+  {
+    "path": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+    "verdict": "unaffected",
+    "reason": "Added-word comparison is unchanged; the fresh AC-8 and verbatim moved AC-4 pass the declared task and dispatch checks."
+  },
+  {
+    "path": "kc-dev-flow-2/references/sd/laws.md",
+    "verdict": "updated",
+    "reason": "Registry, per-entry structural skip, heading repair and post-push activation limits match the named controls; F2/F3 demonstrate remaining violations of the stated event and live-replacement claims."
+  },
+  {
+    "path": "learning.md",
+    "verdict": "unaffected",
+    "reason": "Historical practices remain intact; parser-output consumers, real temporary Git repositories and candidate/base verdict comparisons were exercised."
+  }
+]

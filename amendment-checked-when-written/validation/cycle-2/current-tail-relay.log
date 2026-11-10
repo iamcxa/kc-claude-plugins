@@ -1,0 +1,7 @@
+L1 observer-before-sentinel: 1 events judged in fd1481da6295..7a8e04bf780b, 1 violated
+violation: L1 observer-before-sentinel task=decision-leg-under-limit commit=f4ac4b39cbd6 observer report not committed: decision-leg-under-limit/observer.md at f4ac4b39cbd6091a48ed42e6224588fa80daa370.
+L2 dispatch-record-complete: 3 events judged in fd1481da6295..7a8e04bf780b, 2 violated
+violation: L2 dispatch-record-complete record=comment-sent-when-added-relay/dispatch/validation-1.md commit=3a14a616e083 no 'Candidate: <40-hex head>' line (line 1)
+violation: L2 dispatch-record-complete record=decision-leg-under-limit/dispatch/validation-1.md commit=413e82de977c no 'Candidate: <40-hex head>' line (line 1)
+L3 amendment-append-only: 0 events judged in fd1481da6295..7a8e04bf780b, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in fd1481da6295..7a8e04bf780b, 0 violated

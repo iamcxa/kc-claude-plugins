@@ -1,0 +1,9 @@
+...................................................sss.......................................s............................
+----------------------------------------------------------------------
+Ran 122 tests in 6.579s
+
+OK (skipped=4)
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node or journey-accept.mjs missing, or its yaml dependency is not installed

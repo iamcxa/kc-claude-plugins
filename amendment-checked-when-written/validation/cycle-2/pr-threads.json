@@ -1,0 +1,64 @@
+{
+  "review_threads": [
+    {
+      "id": "PRRT_kwDORid8-c61oUr_",
+      "is_resolved": false,
+      "is_outdated": false,
+      "path": "kc-dev-flow-2/scripts/laws_check.py",
+      "line": 382,
+      "diff_side": "RIGHT",
+      "start_line": 380,
+      "start_diff_side": "RIGHT",
+      "original_line": 382,
+      "original_start_line": 380,
+      "resolved_by": null,
+      "comments": [
+        {
+          "id": "PRRC_kwDORid8-c8AAAABDZj8Fg",
+          "database_id": 4523097110,
+          "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Preserve other L4 violations when a task cannot be read**\n\nIf a push contains an invalid criterion move and an unrelated unreadable task blob, `amendment_blob` raises `Cannot` and aborts the entire L4 run, discarding any violations already collected and skipping subsequent tasks. I reproduced this with a bad move in `a.md` followed by a non-UTF-8 `z.md`: the move is reported when checked alone, but disappears from the combined push's output. Because later pushes deliberately do not re-report existing defects, this loses the move's only diagnostic. Accumulate cannot-judge errors per task/commit and preserve known violations, as L3 already does.\n\nUseful? React with 👍 / 👎.\n\n<!-- codex-code-review-finding:v1 -->",
+          "created_at": "2026-11-10T09:18:29Z",
+          "updated_at": "2026-11-10T09:18:29Z",
+          "author": {
+            "login": "chatgpt-codex-connector",
+            "name": "chatgpt-codex-connector",
+            "email": null,
+            "avatar_url": "https://avatars.githubusercontent.com/in/1144995?v=4",
+            "id": null
+          },
+          "viewer_did_author": false
+        }
+      ]
+    },
+    {
+      "id": "PRRT_kwDORid8-c61oUsC",
+      "is_resolved": false,
+      "is_outdated": false,
+      "path": "kc-dev-flow-2/scripts/design_surfaces.py",
+      "line": 419,
+      "diff_side": "RIGHT",
+      "start_line": 419,
+      "start_diff_side": null,
+      "original_line": 419,
+      "original_start_line": null,
+      "resolved_by": null,
+      "comments": [
+        {
+          "id": "PRRC_kwDORid8-c8AAAABDZj8HA",
+          "database_id": 4523097116,
+          "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Exclude tilde-fenced examples from live criteria**\n\nWhen `## Acceptance criteria` contains a `~~~md` example with an amendment marker, this call counts the example as a live replacement because `unfenced` recognizes only backtick fences. A moved amendment with an actually unmarked replacement therefore produces no L4 violation. I reproduced the same document returning `('unmarked', 1)` with backticks but no defect with tildes. Use fence handling consistent with `parse_amendments`, which already recognizes both delimiter types, so example declarations cannot satisfy the replacement requirement or create false reused-ID reports.\n\nUseful? React with 👍 / 👎.\n\n<!-- codex-code-review-finding:v1 -->",
+          "created_at": "2026-11-10T09:18:29Z",
+          "updated_at": "2026-11-10T09:18:29Z",
+          "author": {
+            "login": "chatgpt-codex-connector",
+            "name": "chatgpt-codex-connector",
+            "email": null,
+            "avatar_url": "https://avatars.githubusercontent.com/in/1144995?v=4",
+            "id": null
+          },
+          "viewer_did_author": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+F
+======================================================================
+FAIL: test_repaired_heading_reports_previously_unjudged_defect (test_laws_check.L4Test.test_repaired_heading_reports_previously_unjudged_defect)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-mutation-o6nnrp04/scripts/test_laws_check.py", line 1038, in test_repaired_heading_reports_previously_unjudged_defect
+    self.assertEqual(self.l4_lines(out), [
+AssertionError: Lists differ: [] != ['violation: L4 amendment-moves-use-fresh-[169 chars]ent']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=2431fe27a743 amendment=1 reused ids: AC-2'
+
+- []
++ ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=2431fe27a743 '
++  'amendment=1 reused ids: AC-2',
++  'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=2431fe27a743 '
++  'amendment=1 unmarked replacement']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.851s
+
+FAILED (failures=1)

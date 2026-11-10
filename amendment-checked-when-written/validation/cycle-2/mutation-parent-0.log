@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_defect_is_reported_at_introduction_not_later_edits_or_repair (test_laws_check.L4Test.test_defect_is_reported_at_introduction_not_later_edits_or_repair)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-mutation-62pu41pd/scripts/test_laws_check.py", line 911, in test_defect_is_reported_at_introduction_not_later_edits_or_repair
+    self.assertEqual(len(self.l4_lines(out)), 1, out)
+AssertionError: 2 != 1 : L1 observer-before-sentinel: 0 events judged in 76678ab92d9a..925f0114e096, 0 violated
+L2 dispatch-record-complete: 0 events judged in 76678ab92d9a..925f0114e096, 0 violated
+L3 amendment-append-only: 2 events judged in 76678ab92d9a..925f0114e096, 0 violated
+L4 amendment-moves-use-fresh-ids: 2 events judged in 76678ab92d9a..925f0114e096, 2 violated
+violation: L4 amendment-moves-use-fresh-ids task=t.md commit=f3643a4ab9bd amendment=1 reused ids: AC-2
+violation: L4 amendment-moves-use-fresh-ids task=t.md commit=925f0114e096 amendment=1 reused ids: AC-2
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.775s
+
+FAILED (failures=1)

@@ -1,0 +1,44 @@
+[
+  {
+    "severity": "medium",
+    "title": "F2 Material: unrelated unreadable task discards a known introducing diagnostic",
+    "file": "kc-dev-flow-2/scripts/laws_check.py",
+    "line": 380,
+    "status": "open",
+    "classification": "Material",
+    "detail": "On d7502656, the same valid task move prints its unmarked violation alone, but combining its push with unreadable z.md returns only cannot-judge. Repairing z.md still cannot read its parent; the following unrelated edit is green and never reports the known defect.",
+    "released_user_and_normal_workflow": "An adopter pushes multiple state-task commits and diagnoses/repairs one unreadable task; the runner explicitly supports cannot-judge recovery for unreadable blobs.",
+    "observable_harm": "The unrelated, fully readable task's already collected move diagnostic is discarded, so its sole introducing-push report is lost permanently.",
+    "protected_boundary": "value-ac[AC-3]: a defect is reported once at the commit that adds it; contract[docs/adr/0017-history-laws-judge-only-the-events-a-push-adds.md#decision]: each push event is judged at its commit.",
+    "trigger_evidence": [
+      "review-unreadable-solo.log",
+      "review-unreadable-combined.log",
+      "review-unreadable-repair.log",
+      "review-unreadable-later.log",
+      "review-probes.json"
+    ],
+    "source": "https://github.com/iamcxa/kc-claude-plugins/pull/828#discussion_r4523097110",
+    "falsifier": "Removing the unrelated unreadable commit restores the expected diagnostic in the same valid task.",
+    "fix": "Return through FO disposition; preserve known violations while accumulating cannot-judge errors per task/commit. No repair authorized or applied."
+  },
+  {
+    "severity": "medium",
+    "title": "F3 Material: a tilde-fenced example suppresses a real unmarked replacement",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 419,
+    "status": "open",
+    "classification": "Material",
+    "detail": "A real unmarked move plus a ~~~md example with the amendment marker exits 0 with no L4 event. The identical example in backticks exits 1 and names the unmarked move. The existing gate helper also inherits this fence handling; this candidate introduces its use in L4.",
+    "released_user_and_normal_workflow": "An adopter worker moves criteria and includes a standard Markdown tilde-fenced example under Acceptance criteria; the amendment parser already recognizes tilde fences.",
+    "observable_harm": "Example text is treated as a live replacement and the invalid move passes its introducing push without a diagnostic.",
+    "protected_boundary": "value-ac[AC-2]: a move with no marked replacement yields a violation; contract[kc-dev-flow-2/references/sd/laws.md#l4-amendment-moves-use-fresh-ids]: a live criterion or another entry's moved declaration must carry the marker.",
+    "trigger_evidence": [
+      "review-example-backtick.log",
+      "review-example-tilde.log",
+      "review-probes.json"
+    ],
+    "source": "https://github.com/iamcxa/kc-claude-plugins/pull/828#discussion_r4523097116",
+    "falsifier": "Changing only the fence delimiter to backticks exposes the real unmarked move.",
+    "fix": "Return through FO disposition; exclude fenced examples consistently while preserving the accepted design-check compatibility boundary. No repair authorized or applied."
+  }
+]

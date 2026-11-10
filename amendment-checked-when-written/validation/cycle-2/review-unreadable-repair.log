@@ -1,0 +1,4 @@
+L1 observer-before-sentinel: 0 events judged (README lists no learn)
+L2 dispatch-record-complete: 0 events judged in 7e6c3eca0cc7..a3db214c1585, 0 violated
+L3 amendment-append-only: cannot judge: commit=a3db214c1585 old=z.md new=z.md a3db214c1585e6f4e65ead2ccad1af9de7b82a6b^:z.md: unreadable UTF-8 blob: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+L4 amendment-moves-use-fresh-ids: cannot judge: a3db214c1585e6f4e65ead2ccad1af9de7b82a6b^:z.md: unreadable UTF-8 blob: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte

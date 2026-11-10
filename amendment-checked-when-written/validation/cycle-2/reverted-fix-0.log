@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_partial_repair_adds_no_event (test_laws_check.L4Test.test_partial_repair_adds_no_event)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-f1-reverted-nmssxxff/scripts/test_laws_check.py", line 940, in test_partial_repair_adds_no_event
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : L1 observer-before-sentinel: 0 events judged in 7cf288faf782..daa7f8bb05aa, 0 violated
+L2 dispatch-record-complete: 0 events judged in 7cf288faf782..daa7f8bb05aa, 0 violated
+L3 amendment-append-only: 1 events judged in 7cf288faf782..daa7f8bb05aa, 0 violated
+L4 amendment-moves-use-fresh-ids: 1 events judged in 7cf288faf782..daa7f8bb05aa, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=t.md commit=daa7f8bb05aa amendment=1 reused ids: AC-2
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.168s
+
+FAILED (failures=1)

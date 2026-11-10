@@ -1,0 +1,25 @@
+{
+  "head": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "base": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+  "product_repo": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written",
+  "git_dir": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/spacedock-ensign-amendment-checked-when-written",
+  "changed_files": [
+    "kc-dev-flow-2/references/sd/laws.md",
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/laws_check.py",
+    "kc-dev-flow-2/scripts/test_laws_check.py"
+  ],
+  "laws_words": {
+    "base": 1345,
+    "candidate": 1587,
+    "added": 242
+  },
+  "source_sha256": {
+    "kc-dev-flow-2/references/sd/laws.md": "4c381e143b9849a62ba55815ba749f6d4e009b81816a1b224efec9e67b0d5e69",
+    "kc-dev-flow-2/scripts/design_surfaces.py": "bdb537ee4b62261cf550762cb26429127471327d5a43a36a6560bf1e153f2b9c",
+    "kc-dev-flow-2/scripts/laws_check.py": "49c6524ea0732df30b6a0c6c5da3135bac1c631308f52a0ee61bdd6a468d9414",
+    "kc-dev-flow-2/scripts/test_laws_check.py": "45e59cca5e6d108b9f7d0a99364a8dbc5cc60e8e2e48f889c71e0f59b5a896b0"
+  },
+  "unchanged_design_tests": true,
+  "clean_product": true
+}

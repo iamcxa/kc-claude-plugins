@@ -1,0 +1,4 @@
+L1 observer-before-sentinel: 0 events judged in 2a42fbb15e0f..c4e9aae782ae, 0 violated
+L2 dispatch-record-complete: 6 events judged in 2a42fbb15e0f..c4e9aae782ae, 0 violated
+L3 amendment-append-only: 9 events judged in 2a42fbb15e0f..c4e9aae782ae, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in 2a42fbb15e0f..c4e9aae782ae, 0 violated

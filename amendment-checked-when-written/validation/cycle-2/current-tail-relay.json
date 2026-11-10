@@ -1,0 +1,24 @@
+{
+  "name": "relay",
+  "state": "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state",
+  "before": "fd1481da62952ed6706bb3c1db4620ee1b04b144",
+  "after": "7a8e04bf780b854e1fa7de05b47958cca308c4e0",
+  "readme": "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/README.md",
+  "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "argv": [
+    "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+    "-B",
+    "/private/tmp/opencode/pr828-validation-2/candidate/kc-dev-flow-2/scripts/laws_check.py",
+    "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state",
+    "--before",
+    "fd1481da62952ed6706bb3c1db4620ee1b04b144",
+    "--after",
+    "7a8e04bf780b854e1fa7de05b47958cca308c4e0",
+    "--readme",
+    "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/README.md"
+  ],
+  "exit": 1,
+  "L4_lines": [
+    "L4 amendment-moves-use-fresh-ids: 0 events judged in fd1481da6295..7a8e04bf780b, 0 violated"
+  ]
+}
