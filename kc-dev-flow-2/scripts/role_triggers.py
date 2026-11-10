@@ -11,10 +11,13 @@ round leaves it owed. A call made earlier on the same date as that round still c
 waiver clears, as before.
 Two validations with a Material or Needs decision F bullet, or two amendments with non-none Supersedes, print
 three step-back questions without a hold, independently even when the other event has already cleared at three.
-An owed line carrying those questions suppresses a duplicate reminder. Either count at three owes chief-engineer;
+An owed findings or amendment chief-engineer line suppresses a duplicate reminder. Either count at three owes chief-engineer;
 the third amendment's date clears that event, while the validation event has no date test. Counts stay separate.
 Plain and follow-up message dispatch records count by stage and normalized Symptom: header: two remind, three owe chief-engineer.
 The third record's Dispatched: date dates that event; a qualifying call or waiver clears later rounds too.
+Failed validations and repeated symptoms ask for the single mechanism and one change that closes the class.
+Their declines require `unrelated:` and two or more semicolon-separated findings, each a name and a cause of
+two or more words, with distinct casefolded causes. This checks the form, not whether the causes are true.
 Engineering-reviewer is owed for each `### Amendment N` under `## Captain amendments` whose `Supersedes:` or
 `Design:` value does not start with `none`; one line per task, on fable when the frontmatter says `profile: prod`
 or the `Surfaces:` line under `## FO alignment` lists `db`, else on opus. Fenced blocks are skipped everywhere.
@@ -61,6 +64,8 @@ QUESTION = {
     "chief-engineer": "what is the smallest next step, given the findings so far?",
     "engineering-reviewer": "do these amendments withdraw what the Captain approved, and what changes in the build?",
 }
+MECHANISM = "what single mechanism produces these findings, and what one change closes that class?"
+UNRELATED = re.compile(r"^unrelated:(.*)$", re.I)
 STEP_BACK = ("is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; "
              "what breaks if this criterion or process is deleted?")
 DIAGNOSIS_RECORD = re.compile(r"^(implementation|validation)-([1-9][0-9]*)(?:-message-([1-9][0-9]*))?\.md$")
@@ -242,8 +247,16 @@ def step_back_events(lines):
     return failures, replacements
 
 
+def unrelated(reason):
+    """Check the decline form; the truth of each cause remains a human judgment."""
+    found = UNRELATED.match(reason.strip())
+    items = [item.split() for item in found.group(1).split(";")] if found else []
+    causes = {" ".join(item[1:]).casefold() for item in items}
+    return len(items) >= 2 and all(len(item) >= 3 for item in items) and len(causes) == len(items)
+
+
 def records(lines, agent):
-    """Return (calls, waivers): (model, date) and (date or None) for each `Reviewer:` line naming agent."""
+    """Return (calls, waivers): (model, date) and (date or None, reason) for each `Reviewer:` line naming agent."""
     name = re.escape(agent)
     call = re.compile(rf"^{MARK}{name}[ \t]+(\S+)[ \t]+({DATE.pattern})[ \t]+[—–-][ \t]+\S")
     waiver = re.compile(rf"^{MARK}{name}[ \t]+not run(?:[ \t]+({DATE.pattern}))?:[ \t]*(.*)$")
@@ -254,7 +267,7 @@ def records(lines, agent):
         if made:
             calls.append((made.group(1), made.group(2)))
         elif waived and re.sub(r"[\s()\[\]:;,.\-—–]+", "", waived.group(2)):
-            waivers.append(waived.group(1))
+            waivers.append((waived.group(1), waived.group(2)))
     return calls, waivers
 
 
@@ -274,10 +287,10 @@ def misplaced(lines, agent):
     return None
 
 
-def owed_line(slug, agent, happened, where="", model="<model>", waived="", question=None):
+def owed_line(slug, agent, happened, where="", model="<model>", waived="", question=None, reason=None):
     return (f"next: {slug} {happened}; dispatch kc-dev-flow-2:{agent} {where}with the question \"{question or QUESTION[agent]}\" "
             f"and record `Reviewer: kc-dev-flow-2:{agent} {model} <date> — <question>` under ## FO alignment; "
-            f"or, to decline, record `Reviewer: kc-dev-flow-2:{agent} not run{waived}: <reason>` instead.")
+            f"or, to decline, record `Reviewer: kc-dev-flow-2:{agent} not run{waived}: {reason or '<reason>'}` instead.")
 
 
 def hint(slug, agent, heading):
@@ -295,24 +308,27 @@ def check(state, slug, rev, rounds=None, drift=None):
     front = re.match(r"---\n(.*?)\n---\n", text, re.S)
     profile = FRONT_PROFILE.search(front.group(1)) if front else None
     strong = (profile and profile.group(1) == "prod", any(SURFACES_DB.match(line.strip()) for line in kept))
-    owed, seen = [], 0
+    owed, seen, stepped = [], 0, False
     repairs = max(reports - 1, 0)
     if (repairs >= REPAIRS or (rounds or 0) >= REVIEW_ROUNDS or max(failures, len(replacements)) >= 3
             or any(len(group) >= 3 for group in symptoms.values())):
         seen += 1
         calls, waivers = records(kept, "chief-engineer")
         calls = [(model, made) for model, made in calls if rank(model) >= RANK["opus"]]
+        reasoned = [waived for waived, reason in waivers if unrelated(reason)]
+        waivers = [waived for waived, _ in waivers]
         dated = [made for _, made in calls] + [waived for waived in waivers if waived]
+        dated_reasoned = [made for _, made in calls] + [waived for waived in reasoned if waived]
         repair_owed = repairs >= REPAIRS and not (calls or waivers)
         rounds_owed = (rounds or 0) >= REVIEW_ROUNDS and not (
             any(made >= drift for made in dated) if drift else calls or waivers)
-        failures_owed = failures >= 3 and not (calls or waivers)
+        failures_owed = failures >= 3 and not (calls or reasoned)
         third_date = replacements[2] if len(replacements) >= 3 else None
         replacements_owed = len(replacements) >= 3 and not (
             any(made >= third_date for made in dated) if third_date else calls or waivers)
         symptom_owed = [f'{len(group)} {stage} dispatches on symptom "{symptom}"'
                         for (stage, symptom), group in sorted(symptoms.items()) if len(group) >= 3 and not (
-                            any(made >= group[2][1] for made in dated) if group[2][1] else calls or waivers)]
+                            any(made >= group[2][1] for made in dated_reasoned) if group[2][1] else calls or reasoned)]
         if repair_owed or rounds_owed or failures_owed or replacements_owed or symptom_owed:
             found = [f"{repairs} repair passes"] * repair_owed + [f"{rounds} review rounds"] * rounds_owed
             if rounds_owed and drift:
@@ -320,14 +336,19 @@ def check(state, slug, rev, rounds=None, drift=None):
             found += [f"{failures} validations with a Material or Needs decision finding"] * failures_owed
             found += [f"{len(replacements)} replacing amendments"] * replacements_owed
             found += symptom_owed
+            findings = failures_owed or bool(symptom_owed)
+            # see docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md
+            stepped = findings or replacements_owed
             owed.append(owed_line(slug, "chief-engineer", "has " + " and ".join(found), "on opus or gpt-6-astra ",
-                                  waived=" <date>" if drift or replacements_owed or symptom_owed else "",
-                                  question=STEP_BACK if failures_owed or replacements_owed or symptom_owed else None))
+                                  waived=" <date>" if drift or replacements_owed or findings else "",
+                                  question=MECHANISM if findings else STEP_BACK if replacements_owed else None,
+                                  reason="unrelated: <finding> <its own cause>; <finding> <its own cause>" if findings else None))
             owed += [hint(slug, "chief-engineer", h) for h in [misplaced(lines, "chief-engineer")] if h]
     if amendments:
         seen += len(amendments)
         need = "fable" if any(strong) else "opus"
         calls, waivers = records(kept, "engineering-reviewer")
+        waivers = [waived for waived, _ in waivers]
         open_numbers = []
         for number, date in sorted(amendments):
             by_call = any(rank(model) >= RANK[need] and (date is None or made >= date) for model, made in calls)
@@ -343,8 +364,8 @@ def check(state, slug, rev, rounds=None, drift=None):
             owed += [hint(slug, "engineering-reviewer", h) for h in [misplaced(lines, "engineering-reviewer")] if h]
     reminder = [f"next: {slug} has {failures} validations with a Material or Needs decision finding and "
                 f"{len(replacements)} replacing amendments: before the next step, answer: {STEP_BACK}"] \
-        if 2 in (failures, len(replacements)) and not any(STEP_BACK in line for line in owed) else []
-    if not any(STEP_BACK in line for line in owed):
+        if 2 in (failures, len(replacements)) and not stepped else []
+    if not stepped:
         reminder += [f'next: {slug} has 2 {stage} dispatches on symptom "{symptom}": '
                      f"before the next step, answer: {STEP_BACK}"
                      for (stage, symptom), group in sorted(symptoms.items()) if len(group) == 2]
