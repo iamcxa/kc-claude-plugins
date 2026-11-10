@@ -58,6 +58,10 @@ optionally followed by a full stop or a semicolon/full stop and detail. Without 
 The summary (combined text for legacy calls) needs Captain steps: <record path>, passing steps
 against the gate text and latest validation report, at a latest dispatched Candidate.
 Both `question` and `check` print a claim-source reminder on entry, without adding a hold.
+They list count sentences without a task-folder file holding their numbers, then write
+Unchecked counts: N into the summary (legacy question: question file; check: ask text).
+Check scans the PR body too. The disclosure is automatic and never holds a count;
+an unreadable or unwritable input still exits 2.
 
 Usage: delivery_gate.py steps <record> --text-file <message>
 Reads Captain step observations without executing commands. Missing observations, unmatched steps,
@@ -83,6 +87,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from design_surfaces import FM_PROFILE, task_folder
 from number_guards import task_facts
 from role_triggers import outside_fences
+from count_tokens import count_sentences, numbers, prose_lines
 import decision_ledger
 
 ROLE_TRIGGERS = Path(__file__).resolve().parent / "role_triggers.py"
@@ -174,7 +179,7 @@ def run_gh(repo, number):
 
 
 def pr_facts(repo, number):
-    fields = "headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles"
+    fields = "headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles,body"
     return json.loads(gh("pr", "view", number, "--repo", repo, "--json", fields))
 
 
@@ -578,6 +583,11 @@ def check(args):
         required = required_checks(repo, number)
     except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
         holds.append(f"cannot read the pull request {args.pr}: {error}")
+    try:
+        gate_text = count_disclosure(task_folder(task), gate_text + "\n" + ((facts or {}).get("body") or ""), text_file, gate_text)
+    except (OSError, UnicodeDecodeError) as error:
+        emit(f"cannot write count disclosure: {error}")
+        return 2
     if facts is not None:
         full = str(facts.get("headRefOid", "")).lower()
         if head and not full.startswith(head):
@@ -781,6 +791,39 @@ def named_file(folder, value):
     return (folder.parent if path.parts[:1] == (folder.name,) else folder) / path
 
 
+def count_problems(folder, text):
+    checked, unchecked = 0, []
+    for sentence, values in count_sentences(text):
+        contents = []
+        for value in re.findall(r"(?<![\w/.-])((?:/?[\w.-]+/)*[\w.-]+\.(?:json|log|md|txt|jsonl|csv|out))\b", sentence):
+            path = named_file(folder, value).resolve()
+            if not path.is_relative_to(folder.resolve()):
+                continue
+            try:
+                contents.append(path.read_text())
+            except (OSError, UnicodeDecodeError):
+                continue
+        if contents and values <= numbers("\n".join(contents)):
+            checked += 1
+        else:
+            unchecked.append(sentence)
+    return checked, unchecked
+
+
+def count_disclosure(folder, text, destination, declared):
+    # see docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md
+    checked, unchecked = count_problems(folder, text)
+    line = f"Unchecked counts: {len(unchecked)}"
+    emit(f"counts: {checked} checked, {len(unchecked)} unchecked",
+         *("unchecked count: " + " ".join(sentence.split()[:12]) for sentence in unchecked[:8]))
+    declarations = {index for index, row in prose_lines(declared) if row.startswith("Unchecked counts:")}
+    updated = [row for index, row in enumerate(declared.splitlines()) if index not in declarations]
+    result = line + "\n" + "\n".join(updated).rstrip("\n") + "\n"
+    if result != declared:
+        destination.write_text(result)
+    return result
+
+
 def inspect_steps(record_path, message, folder, evidence=""):
     text = record_path.read_text()
     header = re.split(r"^### Step \d+[ \t]*$", text, maxsplit=1, flags=re.M)[0]
@@ -911,8 +954,11 @@ def question(args):
         reviewer_text = None
         if args.summary_file is not None:
             summary = Path(args.summary_file).read_text()
+            summary = count_disclosure(task_folder(task), gate_text + "\n" + summary, Path(args.summary_file), summary)
             reviewer_text = "\n".join(outside_fences(summary))
             gate_text += "\n" + summary
+        else:
+            gate_text = count_disclosure(task_folder(task), gate_text, Path(args.text_file), gate_text)
         found, wanted = reviewer_problems(task, task_text,
                                          gate_text if reviewer_text is None else reviewer_text, second, extensions)
         if reviewer_text is not None:

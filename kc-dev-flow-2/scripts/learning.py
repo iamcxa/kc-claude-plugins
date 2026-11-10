@@ -11,7 +11,11 @@ from pathlib import Path
 import re
 import secrets
 import subprocess
+import sys
 import tempfile
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from count_tokens import count_sentences, numbers
 
 
 class Invalid(ValueError):
@@ -90,7 +94,7 @@ def job_key(value):
     return hashlib.sha256(encoded([value["workflow"], value["task_id"]])).hexdigest()
 
 
-def evaluation(value, evidence):
+def evaluation(value, evidence, check_counts=True):
     keys(value, "schema_version decisions")
     require(type(value["schema_version"]) is int and value["schema_version"] == 1,
             "unsupported evaluation schema_version")
@@ -113,6 +117,12 @@ def evaluation(value, evidence):
         require(item not in proposal[action], "duplicate decision")
         require((item in evidence["learning"]) == (action == "remove"),
                 "remove must match existing learning; add must not duplicate it")
+        # see docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md
+        if action == "add" and check_counts:
+            referenced = numbers("\n".join(decision["evidence"]))
+            for sentence, values in count_sentences(item["Evidence"]):
+                require(values <= referenced,
+                        "entry Evidence count '" + " ".join(sentence.split()[:12]) + "' is in no referenced evidence item")
         proposal[action].append(item)
     return proposal if any(proposal.values()) else None
 
@@ -169,7 +179,7 @@ def inspect(directory):
         if record["state"] == "pending":
             require(record["evaluation"] is None and record["proposal"] is None, "pending result")
         else:
-            require(evaluation(record["evaluation"], record["input"]) == record["proposal"], "result mismatch")
+            require(evaluation(record["evaluation"], record["input"], check_counts=False) == record["proposal"], "result mismatch")
     except (ValueError, TypeError, KeyError, UnicodeError):
         record = None
     return raw, digest, record
