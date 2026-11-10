@@ -1,5 +1,5 @@
 --- a/kc-dev-flow-2/scripts/dispatch_records.py	2026-11-10 21:47:00
-+++ b/kc-dev-flow-2/scripts/dispatch_records.py	2026-11-11 00:22:53
++++ b/kc-dev-flow-2/scripts/dispatch_records.py	2026-11-11 00:34:45
 @@ -335,6 +335,9 @@
  DECISION_FINDING = re.compile(r"^[ \t]*[-*][ \t]+\*{0,2}(F[0-9]+)\*{0,2}[ \t]*[:(—–-]?[ \t]*Needs decision\b([^\n]*)", re.M)
  RECOVERY = ("For an older free-form ruling, verify its original question and reply, preserve them, and record it as a "
@@ -54,9 +54,9 @@
 +        if len(settled) != 1:
 +            raise RulingHistoryError("ambiguous-report-origin")
 +        known = next(ids for c, _, ids in versions if c == report_commit)
-+        for commit, ids in stale:
-+            if ids - known or ancestor(settled[0], commit):
-+                raise RulingHistoryError("rewritten-report-after-ruling")
++        settled_ids = next(ids for c, _, ids in versions if c == settled[0])
++        if settled_ids - known or any(ids - known or ancestor(settled[0], commit) for commit, ids in stale):
++            raise RulingHistoryError("rewritten-report-after-ruling")
 +        report_commit = settled[0]
      for key in current & committed:
          appearances = first.get(key, [])
