@@ -1,0 +1,32 @@
+{
+  "name": "gate-replay",
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "argv": [
+    "python3",
+    "-B",
+    ".context/implementation-4/replay.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+    "gate",
+    "kc-plugin-dev2|/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state|2a00a2a1e",
+    "relay|/Users/kent/conductor/workspaces/subspace-relay/dhaka/docs/dev/.spacedock-state|f85b62c65",
+    "v0|/Users/kent/conductor/repos/subspace-v0/docs/dev/.spacedock-state|77c06a14b",
+    "qnow|/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state|8207a9729"
+  ],
+  "before": {
+    "head": "4a146449de8ad43f1eb67e59599215989c327645",
+    "pattern_sha256": "0d05a7fc0c79b763cb0cc4cb4e9a276db402f950dfa694d7f074803f77510f02"
+  },
+  "started": "2026-11-10T01:05:44.217741+00:00",
+  "env": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "pid": 28194,
+  "exit": 0,
+  "after": {
+    "head": "4a146449de8ad43f1eb67e59599215989c327645",
+    "pattern_sha256": "0d05a7fc0c79b763cb0cc4cb4e9a276db402f950dfa694d7f074803f77510f02"
+  },
+  "ended": "2026-11-10T01:06:40.980591+00:00",
+  "log": "gate-replay.log",
+  "sha256": "08189680a22439b5e379f5809cb9ea097b8467d7286787a702bf4638fecd090b"
+}

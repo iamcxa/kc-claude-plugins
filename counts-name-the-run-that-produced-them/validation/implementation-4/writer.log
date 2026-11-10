@@ -1,0 +1,111 @@
+FFFFFF
+======================================================================
+FAIL: test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold (test_delivery_gate.CountDisclosureTests.test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold) (declaration='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-u4a225_p/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2930, in test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold
+    self.assertEqual(re.findall(r"^Unchecked counts:.*$", saved["summary"], re.M), ["Unchecked counts: 1"])
+AssertionError: Lists differ: [] != ['Unchecked counts: 1']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'Unchecked counts: 1'
+
+- []
++ ['Unchecked counts: 1']
+
+======================================================================
+FAIL: test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold (test_delivery_gate.CountDisclosureTests.test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold) (declaration='Unchecked counts: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-u4a225_p/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2930, in test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold
+    self.assertEqual(re.findall(r"^Unchecked counts:.*$", saved["summary"], re.M), ["Unchecked counts: 1"])
+AssertionError: Lists differ: ['Unchecked counts: 0'] != ['Unchecked counts: 1']
+
+First differing element 0:
+'Unchecked counts: 0'
+'Unchecked counts: 1'
+
+- ['Unchecked counts: 0']
+?                     ^
+
++ ['Unchecked counts: 1']
+?                     ^
+
+
+======================================================================
+FAIL: test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold (test_delivery_gate.CountDisclosureTests.test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold) (declaration='Unchecked counts: 7\nUnchecked counts: 2\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-u4a225_p/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2930, in test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold
+    self.assertEqual(re.findall(r"^Unchecked counts:.*$", saved["summary"], re.M), ["Unchecked counts: 1"])
+AssertionError: Lists differ: ['Unchecked counts: 7', 'Unchecked counts: 2'] != ['Unchecked counts: 1']
+
+First differing element 0:
+'Unchecked counts: 7'
+'Unchecked counts: 1'
+
+First list contains 1 additional elements.
+First extra element 1:
+'Unchecked counts: 2'
+
+- ['Unchecked counts: 7', 'Unchecked counts: 2']
++ ['Unchecked counts: 1']
+
+======================================================================
+FAIL: test_check_scans_pr_body_and_rewrites_ask_idempotently (test_delivery_gate.CountDisclosureTests.test_check_scans_pr_body_and_rewrites_ask_idempotently) (declaration='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-u4a225_p/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2955, in test_check_scans_pr_body_and_rewrites_ask_idempotently
+    self.assertEqual(re.findall(r"^Unchecked counts:.*$", result.text, re.M), ["Unchecked counts: 1"])
+AssertionError: Lists differ: [] != ['Unchecked counts: 1']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'Unchecked counts: 1'
+
+- []
++ ['Unchecked counts: 1']
+
+======================================================================
+FAIL: test_check_scans_pr_body_and_rewrites_ask_idempotently (test_delivery_gate.CountDisclosureTests.test_check_scans_pr_body_and_rewrites_ask_idempotently) (declaration='Unchecked counts: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-u4a225_p/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2955, in test_check_scans_pr_body_and_rewrites_ask_idempotently
+    self.assertEqual(re.findall(r"^Unchecked counts:.*$", result.text, re.M), ["Unchecked counts: 1"])
+AssertionError: Lists differ: ['Unchecked counts: 0'] != ['Unchecked counts: 1']
+
+First differing element 0:
+'Unchecked counts: 0'
+'Unchecked counts: 1'
+
+- ['Unchecked counts: 0']
+?                     ^
+
++ ['Unchecked counts: 1']
+?                     ^
+
+
+======================================================================
+FAIL: test_check_scans_pr_body_and_rewrites_ask_idempotently (test_delivery_gate.CountDisclosureTests.test_check_scans_pr_body_and_rewrites_ask_idempotently) (declaration='Unchecked counts: 99\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/counts-mutation-u4a225_p/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2955, in test_check_scans_pr_body_and_rewrites_ask_idempotently
+    self.assertEqual(re.findall(r"^Unchecked counts:.*$", result.text, re.M), ["Unchecked counts: 1"])
+AssertionError: Lists differ: ['Unchecked counts: 99'] != ['Unchecked counts: 1']
+
+First differing element 0:
+'Unchecked counts: 99'
+'Unchecked counts: 1'
+
+- ['Unchecked counts: 99']
+?                     ^^
+
++ ['Unchecked counts: 1']
+?                     ^
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.810s
+
+FAILED (failures=6)

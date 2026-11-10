@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/implementation-4/probe.py", line 32, in <module>
+    assert "Cycle 1 FO line" in result["error"], result
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'state': 'error', 'error': "entry Evidence count 'Recorded in spacedock-state/dev2:_archive/fo-lifecycle-mod.md under '### Why the cycle-2 design grew' and '###' is in no referenced evidence item"}

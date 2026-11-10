@@ -1,0 +1,11 @@
+[
+  "python3",
+  "-B",
+  "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/implementation-4/replay.py",
+  "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "gate",
+  "kc-plugin-dev2|/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state|2a00a2a1e",
+  "relay|/Users/kent/conductor/workspaces/subspace-relay/dhaka/docs/dev/.spacedock-state|f85b62c65",
+  "v0|/Users/kent/conductor/repos/subspace-v0/docs/dev/.spacedock-state|77c06a14b",
+  "qnow|/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state|8207a9729"
+]

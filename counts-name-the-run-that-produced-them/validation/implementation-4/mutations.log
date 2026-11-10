@@ -1,0 +1,32 @@
+{
+  "mutants": [
+    {
+      "name": "ordinal-exclusion-removed",
+      "exit": 1,
+      "detected": true,
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/implementation-4/probe.py",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/ordinal-exclusion-removed-4faayfun",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/validation-1/cycle-record.json"
+      ],
+      "log": "ordinal-exclusion-removed.log",
+      "sha256": "198387d624dd58ddc7da9b14f3cdaf0d0f2af99c6a6537db59f394aafb480492"
+    },
+    {
+      "name": "plain-count-scan-removed",
+      "exit": 1,
+      "detected": true,
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/implementation-4/probe.py",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/plain-count-scan-removed-3392of5f",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/validation-1/cycle-record.json"
+      ],
+      "log": "plain-count-scan-removed.log",
+      "sha256": "198beac1a7edadb1a27e15b40512ecc34cece079a9c1a6eaa8d4701a3d0fb4df"
+    }
+  ]
+}

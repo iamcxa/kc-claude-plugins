@@ -1,0 +1,33 @@
+{
+  "name": "learn-replay",
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "argv": [
+    "python3",
+    "-B",
+    ".context/implementation-4/replay.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+    "learn",
+    "kc-claude-plugins|/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git",
+    "relay|/Users/kent/conductor/repos/subspace-relay/.git",
+    "web|/Users/kent/conductor/repos/subspace-web/.git",
+    "qnow|/Users/kent/conductor/repos/qnow/.git",
+    "v0|/Users/kent/conductor/repos/subspace-v0/.git"
+  ],
+  "before": {
+    "head": "4a146449de8ad43f1eb67e59599215989c327645",
+    "pattern_sha256": "0d05a7fc0c79b763cb0cc4cb4e9a276db402f950dfa694d7f074803f77510f02"
+  },
+  "started": "2026-11-10T01:05:44.118772+00:00",
+  "env": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "pid": 28180,
+  "exit": 0,
+  "after": {
+    "head": "4a146449de8ad43f1eb67e59599215989c327645",
+    "pattern_sha256": "0d05a7fc0c79b763cb0cc4cb4e9a276db402f950dfa694d7f074803f77510f02"
+  },
+  "ended": "2026-11-10T01:05:44.586351+00:00",
+  "log": "learn-replay.log",
+  "sha256": "c7f6cac07a4399e1b512cc892957e7ba66850775039c4014225ba36e464aba14"
+}

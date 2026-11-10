@@ -1,0 +1,11 @@
+{
+  "recorded": "2026-11-10T01:22:07.537579+00:00",
+  "candidate": "4a146449de8ad43f1eb67e59599215989c327645",
+  "product_committed": true,
+  "state_committed": false,
+  "state_pushed": false,
+  "initial_error": "index.lock: Operation not permitted",
+  "escalation": "Rejected(\"rejected by user\")",
+  "reason_supplied": false,
+  "product_push_attempted": false
+}

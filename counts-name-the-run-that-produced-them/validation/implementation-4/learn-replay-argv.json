@@ -1,0 +1,12 @@
+[
+  "python3",
+  "-B",
+  "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them/.context/implementation-4/replay.py",
+  "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "learn",
+  "kc-claude-plugins|/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git",
+  "relay|/Users/kent/conductor/repos/subspace-relay/.git",
+  "web|/Users/kent/conductor/repos/subspace-web/.git",
+  "qnow|/Users/kent/conductor/repos/qnow/.git",
+  "v0|/Users/kent/conductor/repos/subspace-v0/.git"
+]

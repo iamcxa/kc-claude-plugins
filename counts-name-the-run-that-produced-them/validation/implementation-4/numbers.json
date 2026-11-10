@@ -1,0 +1,37 @@
+{
+  "name": "numbers",
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/number_guards.py",
+    "check",
+    "--repo",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+    "--workflow-dir",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+    "--base",
+    "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "--task",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them.md",
+    "--head",
+    "HEAD"
+  ],
+  "before": {
+    "head": "4a146449de8ad43f1eb67e59599215989c327645",
+    "pattern_sha256": "0d05a7fc0c79b763cb0cc4cb4e9a276db402f950dfa694d7f074803f77510f02"
+  },
+  "started": "2026-11-10T01:05:22.700750+00:00",
+  "env": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "pid": 23558,
+  "exit": 0,
+  "after": {
+    "head": "4a146449de8ad43f1eb67e59599215989c327645",
+    "pattern_sha256": "0d05a7fc0c79b763cb0cc4cb4e9a276db402f950dfa694d7f074803f77510f02"
+  },
+  "ended": "2026-11-10T01:05:31.756807+00:00",
+  "log": "numbers.log",
+  "sha256": "548992e69002739d1ff92087af540710433d617fa43b72dd3e6a9aa7582b633b"
+}

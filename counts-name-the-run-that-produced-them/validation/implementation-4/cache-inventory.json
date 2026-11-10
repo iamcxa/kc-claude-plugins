@@ -1,0 +1,50 @@
+{
+  "pre_existing": [
+    {
+      "path": "kc-dev-flow-2/scripts/__pycache__/count_tokens.cpython-311.pyc",
+      "modified": 1794239308.937105,
+      "sha256": "89e42c83f762e6209e6dd7a213ac9501e9e88111e2b3ef12006406c0063e30ec"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/__pycache__/decision_ledger.cpython-311.pyc",
+      "modified": 1794239500.670547,
+      "sha256": "9a23498b73cb0973c4d47aed105786d911cb542efa8b7c372184277829b9249e"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/__pycache__/role_triggers.cpython-311.pyc",
+      "modified": 1794239500.7040818,
+      "sha256": "81aa8c7334abbd3a1139dc618771840af69ce7a1cf4b140aeb99d3c104d6dd1d"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/__pycache__/design_surfaces.cpython-311.pyc",
+      "modified": 1794239500.6917067,
+      "sha256": "33462b5f0646d173ba6739dcaf530a329980f617b5b7db999cf3e2d9d52bba2d"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/__pycache__/workflow_extensions.cpython-311.pyc",
+      "modified": 1794239500.7095723,
+      "sha256": "cf3dc9ca845cf86de33e7be969be1abaaed5103d3f79a479e032ac8914566764"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/__pycache__/delivery_gate.cpython-311.pyc",
+      "modified": 1794240069.9791837,
+      "sha256": "854fc63733df3fd5191d8623bf05a140adb7ecbc5028deb596fbe29d544d53cb"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/__pycache__/number_guards.cpython-311.pyc",
+      "modified": 1794239327.5300963,
+      "sha256": "a22a226c64ed1dbdce399b4429e2962c9db52cc00376fb125bbb619c34ef32ab"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/__pycache__/learning.cpython-311.pyc",
+      "modified": 1794240264.9224124,
+      "sha256": "bdf720432c58c607b0e769b7e6eb44c11f101b928c6a268208eec8de1c80c851"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/__pycache__/dispatch_records.cpython-311.pyc",
+      "modified": 1794239874.2359548,
+      "sha256": "d132196bce1bb464a52c9787e8a345cd315e6f08bd1ebc8aaa020c7129fb62bc"
+    }
+  ],
+  "changed_module_cache_invalid": true
+}

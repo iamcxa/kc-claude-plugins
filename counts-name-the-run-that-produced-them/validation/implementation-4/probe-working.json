@@ -1,0 +1,28 @@
+{
+  "name": "probe-working",
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "argv": [
+    "python3",
+    "-B",
+    ".context/implementation-4/probe.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/validation-1/cycle-record.json"
+  ],
+  "before": {
+    "head": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "pattern_sha256": "0d05a7fc0c79b763cb0cc4cb4e9a276db402f950dfa694d7f074803f77510f02"
+  },
+  "started": "2026-11-10T01:03:52.552208+00:00",
+  "env": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "pid": 10924,
+  "exit": 0,
+  "after": {
+    "head": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "pattern_sha256": "0d05a7fc0c79b763cb0cc4cb4e9a276db402f950dfa694d7f074803f77510f02"
+  },
+  "ended": "2026-11-10T01:03:59.563163+00:00",
+  "log": "probe-working.log",
+  "sha256": "8e5a6b07bd49be41b44aea36e2cc7d9f039039001b766fa22574233c4f74664c"
+}

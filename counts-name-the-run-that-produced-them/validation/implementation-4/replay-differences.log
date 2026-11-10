@@ -1,0 +1,203 @@
+{
+  "explanation": "Captain amendment 2 excludes the identifier following a listed sequence label; real counts in the sentence remain.",
+  "gate": [
+    {
+      "checkout": "kc-plugin-dev2",
+      "revision": "2a00a2a1e",
+      "file": "_archive/adr-reservation-crosses-workflows/review/validation/briefing-1/index.json",
+      "sha256": "fa6734031d9a6b333c5cfece0f5b9f3aeae813dc1631fb741125f7f777145f94",
+      "changes": [
+        {
+          "sentence": "Fixed: Codex round 1 P2 comment 4495187504, a state branch deleted from origin kept its reservations;",
+          "before": [
+            "1"
+          ],
+          "after": []
+        },
+        {
+          "sentence": "Declined: Deferred risk, Codex round 2 P2 comment 4499395916, check run without --workflow-dir counts the task's own pushed reservation as another holder (every documented check call passes --workflow-dir, workflow.md Check line, and the failure blocks rather than lets two tasks share a number).",
+          "before": [
+            "2"
+          ],
+          "after": []
+        }
+      ]
+    },
+    {
+      "checkout": "kc-plugin-dev2",
+      "revision": "2a00a2a1e",
+      "file": "_archive/copilot-quota-refusal-is-not-a-review/review/validation/briefing-1/index.json",
+      "sha256": "cbb3bb9bf7051ea2e72ef177549c23587b67cabebf5bb2e87fb51a9a0d7bfc03",
+      "changes": [
+        {
+          "sentence": "round 2 comment:6140582505 clean).",
+          "before": [
+            "2"
+          ],
+          "after": []
+        }
+      ]
+    },
+    {
+      "checkout": "kc-plugin-dev2",
+      "revision": "2a00a2a1e",
+      "file": "_archive/delivery-gate-verdict-form/review/validation/briefing-1/index.json",
+      "sha256": "387b5aee509ffc4ecd01fcb41b9d44355d9ee60b7eb8c9c2b5267e09be245d0e",
+      "changes": [
+        {
+          "sentence": "round 4 comment:6187737631, clean).",
+          "before": [
+            "4"
+          ],
+          "after": []
+        }
+      ]
+    },
+    {
+      "checkout": "kc-plugin-dev2",
+      "revision": "2a00a2a1e",
+      "file": "_archive/fo-tries-what-it-asks-the-captain/review/validation/briefing-1/index.json",
+      "sha256": "c600f5069859ec3ac12e96a28e48cdac5466394e894ad55f26155a9b18c99f79",
+      "changes": [
+        {
+          "sentence": "Declined: Polish, Codex round 6 P2 comment 4457041237: a path an acceptance step deliberately removes is held as missing (a sixth-round P2, below the P1 that blocks every round).",
+          "before": [
+            "6"
+          ],
+          "after": []
+        }
+      ]
+    },
+    {
+      "checkout": "kc-plugin-dev2",
+      "revision": "2a00a2a1e",
+      "file": "_archive/idle-hook-names-merged-tasks-without-learn/review/validation/briefing-1/index.json",
+      "sha256": "510c58f194bae4a86ddb56fb5b49d7368a58f66a55cf119052a8806e8ee5b55e",
+      "changes": [
+        {
+          "sentence": "Sufficiency: pr_watch.py tasks names every archived task with a merged PR and no learn job (the replay names all 11 tasks backfilled on 2026-10-26), and under Captain amendment 2 skips a task whose frontmatter variant or profile learn rejects, with a parity test against learning.py's eligibility;",
+          "before": [
+            "11",
+            "2"
+          ],
+          "after": [
+            "11"
+          ]
+        }
+      ]
+    },
+    {
+      "checkout": "kc-plugin-dev2",
+      "revision": "2a00a2a1e",
+      "file": "_archive/rewritten-criteria-checked-against-captain-words/review/validation/briefing-1/index.json",
+      "sha256": "165f67d05e856b5c2a26e99eff30d902189aac5afdc45dd8b5c4770953a080b0",
+      "changes": [
+        {
+          "sentence": "Declined: Deferred risk, validation F1 and Codex round 3 P2 comment 4455001433: a tilde-fenced example declaring the same AC id can overwrite the live criterion (no committed acceptance section of 191 has that shape).",
+          "before": [
+            "3"
+          ],
+          "after": []
+        }
+      ]
+    },
+    {
+      "checkout": "kc-plugin-dev2",
+      "revision": "2a00a2a1e",
+      "file": "_archive/worker-completion-goes-to-main/review/validation/briefing-1/index.json",
+      "sha256": "5116108291bf2506735d07f6e7d01863e5060bf731f0e829f50fddd734545ddf",
+      "changes": [
+        {
+          "sentence": "External rounds: Codex 3 (round 1 comment:6141635842 clean;",
+          "before": [
+            "1"
+          ],
+          "after": []
+        }
+      ]
+    },
+    {
+      "checkout": "kc-plugin-dev2",
+      "revision": "2a00a2a1e",
+      "file": "_archive/worker-completion-goes-to-main/review/validation/briefing-2/index.json",
+      "sha256": "6f9db190bace3af52b395c9e0ed983bf978c765abd7918843f2f2d84bf6c2d76",
+      "changes": [
+        {
+          "sentence": "External rounds: Codex 4 (round 1 comment:6141635842 clean;",
+          "before": [
+            "1"
+          ],
+          "after": []
+        }
+      ]
+    },
+    {
+      "checkout": "relay",
+      "revision": "f85b62c65",
+      "file": "_archive/try-auto-refresh/review/validation/briefing-1/index.json",
+      "sha256": "68cd5e89bd65373673965efac883bb5e379cd1569d75b377cd61577ce74c9810",
+      "changes": [
+        {
+          "sentence": "cycle 2 fixed findings 3-4 at 1c978dc7;",
+          "before": [
+            "2"
+          ],
+          "after": []
+        }
+      ]
+    },
+    {
+      "checkout": "qnow",
+      "revision": "8207a9729",
+      "file": "_archive/qnow-migration-cutover/review/validation/briefing-1/index.json",
+      "sha256": "1f958327786d0ee74dbff7fac146d9440feaa6a9ac7f5e76113fcbda7ae2b397",
+      "changes": [
+        {
+          "sentence": "step 11 run by the FO: both legacy sites stop_builds true, legacy Supabase production INACTIVE.",
+          "before": [
+            "11"
+          ],
+          "after": []
+        }
+      ]
+    }
+  ],
+  "learn": [
+    {
+      "store": "kc-claude-plugins",
+      "snapshots_unchanged": true,
+      "no_longer_refused": [
+        "ed2d3ee114280792035b9f231a95202d61ce3360dddf3bc31a84955474b1d28e"
+      ],
+      "still_refused": [
+        "441fe280d07513b3bfa7c1cd29444490994538c6e7fe6202b76d177129a67303",
+        "d829872c2ba7e3e7ee8d4959f55d1447fe80038165a88731d5566dc460bf84b9"
+      ]
+    },
+    {
+      "store": "relay",
+      "snapshots_unchanged": true,
+      "no_longer_refused": [],
+      "still_refused": []
+    },
+    {
+      "store": "web",
+      "snapshots_unchanged": true,
+      "no_longer_refused": [],
+      "still_refused": []
+    },
+    {
+      "store": "qnow",
+      "snapshots_unchanged": true,
+      "no_longer_refused": [],
+      "still_refused": []
+    },
+    {
+      "store": "v0",
+      "snapshots_unchanged": true,
+      "no_longer_refused": [],
+      "still_refused": []
+    }
+  ],
+  "comma_defect_absent": true
+}
