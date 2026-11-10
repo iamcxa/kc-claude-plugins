@@ -226,3 +226,44 @@ Reproduced the hold on 0.37.0 (origin/main `6a495cb8`): a gate text naming `revi
 ### Summary
 
 Implemented Pilot D1 at `2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8`: `links()` drops a whitespace-normalized whole line only when it equals the single allowlisted Claude Code attribution. Both gate entrances pass the attribution-only PR body while ordinary links and attribution lines with extra content still hold; full local suite, three caught mutations and required checks pass. Product branch remains local; FO receives the prepared PR and owns publication, RoboRev, hosted CI and validation.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved Design and Acceptance criteria; D1 exempts the exact Claude Code attribution line and only the two designed code files change.
+  Candidate `2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8`, branch `spacedock-ensign/delivery-gate-pr-body-attribution-link`, fetched base `6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1`; clean code tree; `delivery_gate.py` +3/-1 and seven new tests, no version change.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins.
+  No PR opened: no push grant. FO owns product publication; title and body prepared at `/tmp/impl-delivery-gate-pr-body-attribution-link-pr.md`, retained as `implementation/pr.md` below.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared).
+  All evidence paths below are in `delivery-gate-pr-body-attribution-link/implementation/`; `prove.py <code worktree>` clears the script cache and exercises `variant_of`, and `run-suite.py <code worktree>` records the full suite.
+- DONE: AC-1 — attribution-only PR body passes `question` and `steps`, including surrounding and normalized internal whitespace, with no S5.
+  `test_pr_body_attribution_line_needs_no_recorded_link_step` and its question counterpart; `no-line-exemption.log` records the removed-filter variant failing the regression assertions, S5 on the attribution URL (also reproduced before the fix in `baseline-regressions.log`).
+- DONE: AC-2 — named Captain links hold on both routes and pass once recorded.
+  Existing `test_named_card_prose_link_matches_asked_and_holds_when_unrecorded` and `test_report_only_cards_require_fences_and_fo_named_cards_also_require_links` unchanged; new `test_question_named_captain_link_holds_until_recorded` proves the question route's paired verdicts. `captain-link-question-{base,candidate}.log` are identical holds.
+- DONE: AC-3 — attribution URL elsewhere and attribution plus other text/another link remain covered.
+  `test_attribution_url_elsewhere_needs_a_recorded_link_step` and `test_attribution_line_with_more_text_keeps_its_links`; `url-wide-exemption.log` and `substring-exemption.log` show their assertions failing under the respective overbroad variants; `mutations.json` records all three mutations caught.
+- DONE: AC-4 — PR body with attribution and another URL holds on the other URL alone.
+  `test_pr_body_other_url_still_needs_a_recorded_link_step` asserts the preview URL in S5 and attribution URL absent; removing the exemption fails it in `no-line-exemption.log`.
+- DONE: AC-5 — full suite in a complete package tree, exact two-file diff and bounded steps usage claim.
+  `suite.log` / `tests.json`: 206 run, 205 passed, one existing skip requiring GATE_PRESENTATION_STATE for five committed validation replays; `git diff --name-only <base> HEAD` lists delivery_gate.py and test_delivery_gate.py; usage clause and ATTRIBUTION membership define the exemption.
+- DONE: AC-6 — words FO reads change as designed; startup and merge-check behavior stay unchanged.
+  `words.json`, saved question/help/check outputs and `prove.py`: attribution question 60-word exit 1 → 97-word exit 0, Captain-link hold 60 = 60 byte-identical, --help 1214 → 1225 (+11); startup documents byte-identical and merge-check function/output unchanged (fixture PR provider stub, not hosted proof).
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (repository copy CI runs), package adr_lint.py docs/adr --since <base>, number_guards.py check, and design_surfaces.py check exit 0.
+  Logs: `lint-skills.log`, `adr-lint.log`, `number-guards.log`, `design-surfaces.log`; workflow 5931/5931 words. Number guard rerun with Git-metadata access after sandbox refused FETCH_HEAD; final run refreshed state refs without warning and reported no findings.
+- DONE: comment_ratio.py within its maximum; commit locally, no product push; PR text written for FO; CI cost measured or stated as not measured.
+  `comment-ratio.log`: code lines 93, comment lines 0, 0.0%, maximum 5% met at candidate; PR text as above. No CI workflow change; cost per PR not measured.
+- DONE: doc_impact.py <base> <candidate>, each listed document disposition.
+  `doc-impact.json` lists the following five ADRs; no new decision record: this bounded false-positive repair stays within ADR 0054 and approved task D1.
+- DONE: docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md — unaffected: optional summary input, reviewer placement and legacy call behavior unchanged.
+- DONE: docs/adr/0051-the-merge-ask-check-requires-the-round-count.md — unaffected: round-count form and merge-check hold unchanged.
+- DONE: docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md — unaffected: bound-question approval comparison and merge authority unchanged.
+- DONE: docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md — unaffected: delivery-record matching and merge-naming question hold unchanged.
+- DONE: docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md — unaffected: count scan/disclosure and learn reference checks unchanged.
+- SKIPPED: FO pushes, opens the Draft PR, runs RoboRev and reads CI.
+  Delegated checks not run, never claimed clean; independent validation and delivery remain FO-owned. Checked prior ideation, approved gate and named sibling tasks; sibling delivery-gate changes occupy other functions and were not modified.
+
+- SKIPPED: Push the state branch so peers see the entity/report.
+  Local state commit `a54536687` retains the report and 28 evidence files. Automatic approval review rejected the push to public iamcxa/kc-claude-plugins because internal reports, replay scripts and local paths require explicit user publication approval; no state push succeeded.
+
+### Summary
+
+This complete report supersedes the earlier implementation report. Pilot D1 is locally committed at `2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8`, the full suite and three mutation checks pass, and the prepared PR is retained at the recorded paths. State publication is blocked by automatic approval review pending explicit user approval of the 29-file public payload; product publication, RoboRev, hosted CI and independent validation remain FO-owned.
