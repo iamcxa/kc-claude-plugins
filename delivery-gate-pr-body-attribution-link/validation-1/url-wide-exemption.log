@@ -1,0 +1,26 @@
+test_attribution_url_elsewhere_needs_a_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_attribution_url_elsewhere_needs_a_recorded_link_step) ... 
+  test_attribution_url_elsewhere_needs_a_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_attribution_url_elsewhere_needs_a_recorded_link_step) (message='Read this note. Open https://claude.com/claude-code') ... FAIL
+  test_attribution_url_elsewhere_needs_a_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_attribution_url_elsewhere_needs_a_recorded_link_step) (message='Read this note. Read /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp73kup14_/card.md') ... FAIL
+
+======================================================================
+FAIL: test_attribution_url_elsewhere_needs_a_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_attribution_url_elsewhere_needs_a_recorded_link_step) (message='Read this note. Open https://claude.com/claude-code')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr825-validation.HGxY6V/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1584, in test_attribution_url_elsewhere_needs_a_recorded_link_step
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_attribution_url_elsewhere_needs_a_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_attribution_url_elsewhere_needs_a_recorded_link_step) (message='Read this note. Read /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp73kup14_/card.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr825-validation.HGxY6V/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1584, in test_attribution_url_elsewhere_needs_a_recorded_link_step
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.006s
+
+FAILED (failures=2)

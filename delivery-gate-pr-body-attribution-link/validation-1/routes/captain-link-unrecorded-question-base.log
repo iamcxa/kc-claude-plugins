@@ -1,0 +1,4 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+Captain steps record fails: message S5: unrecorded command or link 'https://preview.example.test/owner'
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.

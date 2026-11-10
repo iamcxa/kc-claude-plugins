@@ -1,0 +1,354 @@
+[
+  {
+    "case": "attribution",
+    "route": "steps",
+    "revision": "base",
+    "exit": 1,
+    "words": 56,
+    "log": "attribution-steps-base.log"
+  },
+  {
+    "case": "attribution",
+    "route": "steps",
+    "revision": "candidate",
+    "exit": 0,
+    "words": 9,
+    "log": "attribution-steps-candidate.log"
+  },
+  {
+    "case": "attribution",
+    "route": "question",
+    "revision": "base",
+    "exit": 1,
+    "words": 60,
+    "log": "attribution-question-base.log"
+  },
+  {
+    "case": "attribution",
+    "route": "question",
+    "revision": "candidate",
+    "exit": 0,
+    "words": 97,
+    "log": "attribution-question-candidate.log"
+  },
+  {
+    "case": "surrounding-spaces",
+    "route": "steps",
+    "revision": "base",
+    "exit": 1,
+    "words": 56,
+    "log": "surrounding-spaces-steps-base.log"
+  },
+  {
+    "case": "surrounding-spaces",
+    "route": "steps",
+    "revision": "candidate",
+    "exit": 0,
+    "words": 9,
+    "log": "surrounding-spaces-steps-candidate.log"
+  },
+  {
+    "case": "surrounding-spaces",
+    "route": "question",
+    "revision": "base",
+    "exit": 1,
+    "words": 60,
+    "log": "surrounding-spaces-question-base.log"
+  },
+  {
+    "case": "surrounding-spaces",
+    "route": "question",
+    "revision": "candidate",
+    "exit": 0,
+    "words": 97,
+    "log": "surrounding-spaces-question-candidate.log"
+  },
+  {
+    "case": "internal-spaces",
+    "route": "steps",
+    "revision": "base",
+    "exit": 1,
+    "words": 56,
+    "log": "internal-spaces-steps-base.log"
+  },
+  {
+    "case": "internal-spaces",
+    "route": "steps",
+    "revision": "candidate",
+    "exit": 0,
+    "words": 9,
+    "log": "internal-spaces-steps-candidate.log"
+  },
+  {
+    "case": "internal-spaces",
+    "route": "question",
+    "revision": "base",
+    "exit": 1,
+    "words": 60,
+    "log": "internal-spaces-question-base.log"
+  },
+  {
+    "case": "internal-spaces",
+    "route": "question",
+    "revision": "candidate",
+    "exit": 0,
+    "words": 97,
+    "log": "internal-spaces-question-candidate.log"
+  },
+  {
+    "case": "captain-link-unrecorded",
+    "route": "steps",
+    "revision": "base",
+    "exit": 1,
+    "words": 56,
+    "log": "captain-link-unrecorded-steps-base.log"
+  },
+  {
+    "case": "captain-link-unrecorded",
+    "route": "steps",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 56,
+    "log": "captain-link-unrecorded-steps-candidate.log"
+  },
+  {
+    "case": "captain-link-unrecorded",
+    "route": "question",
+    "revision": "base",
+    "exit": 1,
+    "words": 60,
+    "log": "captain-link-unrecorded-question-base.log"
+  },
+  {
+    "case": "captain-link-unrecorded",
+    "route": "question",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 60,
+    "log": "captain-link-unrecorded-question-candidate.log"
+  },
+  {
+    "case": "captain-link-recorded",
+    "route": "steps",
+    "revision": "base",
+    "exit": 0,
+    "words": 9,
+    "log": "captain-link-recorded-steps-base.log"
+  },
+  {
+    "case": "captain-link-recorded",
+    "route": "steps",
+    "revision": "candidate",
+    "exit": 0,
+    "words": 9,
+    "log": "captain-link-recorded-steps-candidate.log"
+  },
+  {
+    "case": "captain-link-recorded",
+    "route": "question",
+    "revision": "base",
+    "exit": 0,
+    "words": 97,
+    "log": "captain-link-recorded-question-base.log"
+  },
+  {
+    "case": "captain-link-recorded",
+    "route": "question",
+    "revision": "candidate",
+    "exit": 0,
+    "words": 97,
+    "log": "captain-link-recorded-question-candidate.log"
+  },
+  {
+    "case": "attribution-url-card",
+    "route": "steps",
+    "revision": "base",
+    "exit": 1,
+    "words": 56,
+    "log": "attribution-url-card-steps-base.log"
+  },
+  {
+    "case": "attribution-url-card",
+    "route": "steps",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 56,
+    "log": "attribution-url-card-steps-candidate.log"
+  },
+  {
+    "case": "attribution-url-card",
+    "route": "question",
+    "revision": "base",
+    "exit": 1,
+    "words": 60,
+    "log": "attribution-url-card-question-base.log"
+  },
+  {
+    "case": "attribution-url-card",
+    "route": "question",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 60,
+    "log": "attribution-url-card-question-candidate.log"
+  },
+  {
+    "case": "attribution-url-message",
+    "route": "steps",
+    "revision": "base",
+    "exit": 1,
+    "words": 56,
+    "log": "attribution-url-message-steps-base.log"
+  },
+  {
+    "case": "attribution-url-message",
+    "route": "steps",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 56,
+    "log": "attribution-url-message-steps-candidate.log"
+  },
+  {
+    "case": "attribution-url-message",
+    "route": "question",
+    "revision": "base",
+    "exit": 1,
+    "words": 60,
+    "log": "attribution-url-message-question-base.log"
+  },
+  {
+    "case": "attribution-url-message",
+    "route": "question",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 60,
+    "log": "attribution-url-message-question-candidate.log"
+  },
+  {
+    "case": "attribution-plus-link",
+    "route": "steps",
+    "revision": "base",
+    "exit": 1,
+    "words": 63,
+    "log": "attribution-plus-link-steps-base.log"
+  },
+  {
+    "case": "attribution-plus-link",
+    "route": "steps",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 63,
+    "log": "attribution-plus-link-steps-candidate.log"
+  },
+  {
+    "case": "attribution-plus-link",
+    "route": "question",
+    "revision": "base",
+    "exit": 1,
+    "words": 60,
+    "log": "attribution-plus-link-question-base.log"
+  },
+  {
+    "case": "attribution-plus-link",
+    "route": "question",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 60,
+    "log": "attribution-plus-link-question-candidate.log"
+  },
+  {
+    "case": "attribution-prefix",
+    "route": "steps",
+    "revision": "base",
+    "exit": 1,
+    "words": 56,
+    "log": "attribution-prefix-steps-base.log"
+  },
+  {
+    "case": "attribution-prefix",
+    "route": "steps",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 56,
+    "log": "attribution-prefix-steps-candidate.log"
+  },
+  {
+    "case": "attribution-prefix",
+    "route": "question",
+    "revision": "base",
+    "exit": 1,
+    "words": 60,
+    "log": "attribution-prefix-question-base.log"
+  },
+  {
+    "case": "attribution-prefix",
+    "route": "question",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 60,
+    "log": "attribution-prefix-question-candidate.log"
+  },
+  {
+    "case": "attribution-suffix",
+    "route": "steps",
+    "revision": "base",
+    "exit": 1,
+    "words": 56,
+    "log": "attribution-suffix-steps-base.log"
+  },
+  {
+    "case": "attribution-suffix",
+    "route": "steps",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 56,
+    "log": "attribution-suffix-steps-candidate.log"
+  },
+  {
+    "case": "attribution-suffix",
+    "route": "question",
+    "revision": "base",
+    "exit": 1,
+    "words": 60,
+    "log": "attribution-suffix-question-base.log"
+  },
+  {
+    "case": "attribution-suffix",
+    "route": "question",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 60,
+    "log": "attribution-suffix-question-candidate.log"
+  },
+  {
+    "case": "other-url",
+    "route": "steps",
+    "revision": "base",
+    "exit": 1,
+    "words": 63,
+    "log": "other-url-steps-base.log"
+  },
+  {
+    "case": "other-url",
+    "route": "steps",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 56,
+    "log": "other-url-steps-candidate.log"
+  },
+  {
+    "case": "other-url",
+    "route": "question",
+    "revision": "base",
+    "exit": 1,
+    "words": 60,
+    "log": "other-url-question-base.log"
+  },
+  {
+    "case": "other-url",
+    "route": "question",
+    "revision": "candidate",
+    "exit": 1,
+    "words": 60,
+    "log": "other-url-question-candidate.log"
+  }
+]

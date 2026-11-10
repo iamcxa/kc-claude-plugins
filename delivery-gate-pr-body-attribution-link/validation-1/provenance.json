@@ -1,0 +1,20 @@
+{
+  "candidate": "2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8",
+  "base": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+  "code_branch": "spacedock-ensign/delivery-gate-pr-body-attribution-link",
+  "code_status": "",
+  "state_branch": "spacedock-state/dev2",
+  "exports": "git archive, no git worktree created",
+  "role_package": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0",
+  "validation_package": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0",
+  "suite_exit": 0,
+  "proof_exit": 0,
+  "routes_exit": 0,
+  "acceptance_exit": 0,
+  "number_guards_refreshed_exit": 0,
+  "adr_required_exit": 0,
+  "source_sha256": {
+    "kc-dev-flow-2/scripts/delivery_gate.py": "1b034451d4c160e27abb49b15dca908ec3583d6e0368759c6b3962bfa3b8f22b",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "cc54081a17dd98ddb1a54a478835dde9c8b21ac5e86f476d0bda37510383f8ce"
+  }
+}

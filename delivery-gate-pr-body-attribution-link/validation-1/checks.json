@@ -1,0 +1,135 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1"
+    ],
+    "exit": 0,
+    "git_metadata": true,
+    "output": "65 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "lint-skills",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "git_metadata": false,
+    "output": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5931 of 5931 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/comment_ratio.py",
+      "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+      "2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "git_metadata": true,
+    "output": "code lines 93, comment lines 0, 0.0%\nmaximum 5% (package default) met\n"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/doc_impact.py",
+      "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+      "2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8"
+    ],
+    "exit": 0,
+    "git_metadata": true,
+    "output": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md\treview\tkc-dev-flow-2/scripts/delivery_gate.py\ndocs/adr/0051-the-merge-ask-check-requires-the-round-count.md\treview\tkc-dev-flow-2/scripts/delivery_gate.py\ndocs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md\treview\tkc-dev-flow-2/scripts/delivery_gate.py\ndocs/adr/0071-the-merge-question-carries-its-delivery-check-record.md\treview\tkc-dev-flow-2/scripts/delivery_gate.py\ndocs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md\treview\tkc-dev-flow-2/scripts/delivery_gate.py\n5 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-pr-body-attribution-link.md"
+    ],
+    "exit": 0,
+    "git_metadata": false,
+    "output": "delivery-gate-pr-body-attribution-link.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-pr-body-attribution-link"
+    ],
+    "exit": 0,
+    "git_metadata": false,
+    "output": "4 dispatch record(s) complete\n"
+  },
+  {
+    "name": "role-triggers",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/role_triggers.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "delivery-gate-pr-body-attribution-link"
+    ],
+    "exit": 0,
+    "git_metadata": false,
+    "output": "role triggers: 0 event(s) read at HEAD, each with a call or a waiver.\n"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-pr-body-attribution-link",
+      "diff",
+      "--check",
+      "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+      "2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8"
+    ],
+    "exit": 0,
+    "git_metadata": false,
+    "output": ""
+  },
+  {
+    "name": "pr",
+    "command": [
+      "gh",
+      "pr",
+      "view",
+      "825",
+      "--repo",
+      "iamcxa/kc-claude-plugins",
+      "--json",
+      "number,title,state,isDraft,headRefOid,baseRefOid,statusCheckRollup,url"
+    ],
+    "exit": 1,
+    "git_metadata": false,
+    "output": "error connecting to api.github.com\ncheck your internet connection or https://githubstatus.com\n"
+  },
+  {
+    "name": "required-checks",
+    "command": [
+      "gh",
+      "pr",
+      "checks",
+      "825",
+      "--repo",
+      "iamcxa/kc-claude-plugins",
+      "--required",
+      "--json",
+      "name,state,bucket,link"
+    ],
+    "exit": 1,
+    "git_metadata": false,
+    "output": "error connecting to api.github.com\ncheck your internet connection or https://githubstatus.com\n"
+  }
+]

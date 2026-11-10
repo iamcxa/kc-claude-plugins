@@ -318,3 +318,36 @@ This complete report supersedes the earlier implementation report. Pilot D1 is l
 ### Summary
 
 This complete report supersedes every earlier implementation report: each DONE or SKIPPED item now has its own indented evidence line, including all five document-impact items. The product candidate remains `2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8`; FO reports the previous state commits published, Draft PR #825 opened and RoboRev clean, superseding the earlier publication hold. This follow-up changes the task report only; hosted CI and independent validation remain FO-owned.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #825 head 2a72c89b against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at `2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8`, base `6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1`; fresh archive-only checks and limitation judgments in `validation-1/README.md`, `validation-1/provenance.json`; no new Review-finding disposition findings.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `validation-1/README.md` gives the exact fresh-shell command; `validation-1/acceptance.sh` has four steps, observed exit 0 in `validation-1/acceptance.log`; ADR lint exit 0 in `validation-1/adr-lint.log`, also with required ADR numbers in `validation-1/adr-lint-required.log`; loaded skill resolves the same version under the Codex cache, per its package-root rule.
+- DONE: AC-1 — attribution-only PR bodies pass both command routes with normalized whitespace and no S5.
+  `validation-1/routes/cli-matrix.json` records real CLI base 1 → candidate 0; `validation-1/routes/question-removed-exemption.log` and `validation-1/no-line-exemption.log` restore the false hold when the filter is removed.
+- DONE: AC-2 — named Captain links hold until recorded, on both command routes.
+  `validation-1/routes/cli-matrix.json` records hold/recovery; the hold bytes match base, and `validation-1/routes/captain-link-mutation.log` catches removed link coverage using the unchanged existing assertion.
+- DONE: AC-3 — the attribution URL elsewhere, or attribution with extra text/links, still holds.
+  `validation-1/routes/cli-matrix.json` covers both routes; `validation-1/url-wide-exemption.log` and `validation-1/substring-exemption.log` show overbroad exemptions failing the regression assertions; steps output retains both appended links.
+- DONE: AC-4 — a PR body with a separate real link holds on that link alone.
+  `validation-1/routes/other-url-steps-candidate.log` and `validation-1/routes/other-url-question-candidate.log` omit the attribution URL; `validation-1/routes/baseline-regressions.log` detects the prior behavior.
+- DONE: AC-5 — full suite, exact two-file scope and bounded usage wording.
+  `validation-1/suite.log` / `validation-1/tests.json`: 206 run, 205 passed, one existing optional skip, exit 0; `validation-1/candidate.diff` limits the change to the approved files; `validation-1/acceptance.log` catches an extra-file scope counterexample.
+- DONE: AC-6 — startup, question, help and merge-check observations match the accepted word changes.
+  `validation-1/words.json`: attribution question 60 → 97 words, Captain-link hold 60/60 byte-identical, help 1214 → 1225; startup bytes and check() output unchanged; `validation-1/routes/output-drift-mutation.log` detects one added output word.
+- DONE: Rerun implementation evidence commands and workflow checks at the candidate.
+  `validation-1/checks.json` records lint-skills, ADR, comment ratio, document impact, design surfaces, dispatch records, role triggers and diff-check exit 0; `validation-1/number-guards-refreshed.log` is exit 0 without the initial sandbox refresh warning; no migration check applies.
+- DONE: Verify every affected document carries a supported implementation disposition.
+  `validation-1/doc-impact.log` lists ADR 0044, 0051, 0062, 0071 and 0072; `validation-1/README.md` independently confirms each unaffected reason against the unchanged governed behavior and complete suite.
+- DONE: Assess goal sufficiency and minimal necessity on the same candidate.
+  `validation-1/README.md`: real CLI runs exercise accepted behavior and recovery; removed-filter, URL-wide, substring and lost-link variants establish why the exact line filter and boundary tests are retained; no unrelated product surface changed.
+- DONE: Verify hosted candidate identity and state while preserving delivery authority.
+  `validation-1/pr.json` and `validation-1/required-checks.json` confirm the exact head on an open Draft PR and a nonempty all-passing required-check list; docs deploy is skipped in the wider rollup, not counted as a passed check.
+- SKIPPED: Optional historical gate replays, independent RoboRev rerun, cross-family review, merge/publication and adopter installation.
+  `validation-1/README.md` judges each limit: the suite's historical replay skip is inherited and unrelated; merge-check fixtures prove local behavior only; RoboRev remains FO-reported; author and validator share the OpenAI family; FO/Captain retain delivery and cleanup.
+
+### Summary
+
+PASSED: PR #825 at `2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8` meets the accepted pilot outcome and all acceptance criteria, with no new Material, Deferred risk, Polish or Needs decision finding. The fresh-shell acceptance script and actual base/candidate CLI pairs support the verdict; evidence and limits are in `validation-1/README.md`. Product bytes remain unchanged; this report grants no gate, ready, merge, release or adoption authority, and no CI workflow changed (cost per PR not measured).

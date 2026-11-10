@@ -1,0 +1,36 @@
+test_attribution_line_with_more_text_keeps_its_links (test_delivery_gate.CaptainStepsTests.test_attribution_line_with_more_text_keeps_its_links) ... 
+  test_attribution_line_with_more_text_keeps_its_links (test_delivery_gate.CaptainStepsTests.test_attribution_line_with_more_text_keeps_its_links) (line='🤖 Generated with [Claude Code](https://claude.com/claude-code) https://preview.example.test/owner') ... FAIL
+  test_attribution_line_with_more_text_keeps_its_links (test_delivery_gate.CaptainStepsTests.test_attribution_line_with_more_text_keeps_its_links) (line='Open 🤖 Generated with [Claude Code](https://claude.com/claude-code)') ... FAIL
+  test_attribution_line_with_more_text_keeps_its_links (test_delivery_gate.CaptainStepsTests.test_attribution_line_with_more_text_keeps_its_links) (line='🤖 Generated with [Claude Code](https://claude.com/claude-code) please') ... FAIL
+
+======================================================================
+FAIL: test_attribution_line_with_more_text_keeps_its_links (test_delivery_gate.CaptainStepsTests.test_attribution_line_with_more_text_keeps_its_links) (line='🤖 Generated with [Claude Code](https://claude.com/claude-code) https://preview.example.test/owner')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr825-validation.HGxY6V/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1596, in test_attribution_line_with_more_text_keeps_its_links
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_attribution_line_with_more_text_keeps_its_links (test_delivery_gate.CaptainStepsTests.test_attribution_line_with_more_text_keeps_its_links) (line='Open 🤖 Generated with [Claude Code](https://claude.com/claude-code)')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr825-validation.HGxY6V/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1596, in test_attribution_line_with_more_text_keeps_its_links
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+======================================================================
+FAIL: test_attribution_line_with_more_text_keeps_its_links (test_delivery_gate.CaptainStepsTests.test_attribution_line_with_more_text_keeps_its_links) (line='🤖 Generated with [Claude Code](https://claude.com/claude-code) please')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr825-validation.HGxY6V/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1596, in test_attribution_line_with_more_text_keeps_its_links
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : captain steps complete: 1 steps, 0 left to him
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.006s
+
+FAILED (failures=3)

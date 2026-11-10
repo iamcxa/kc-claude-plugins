@@ -1,0 +1,2 @@
+PASS: 44 real CLI runs; base/candidate paired for every case on both routes.
+PASS: AC-1 removed-filter question, AC-2 lost-link detection, AC-4 baseline and AC-6 output-drift falsifiers caught.
