@@ -1,6 +1,6 @@
 ---
 title: A count or measured number names the command and run that produced it
-status: validation
+status: done
 variant: kc-dev-flow-2
 gates:
     version: 1
@@ -61,12 +61,15 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-10), answering 「決定：合併 #822（學習提案引用資料裡找不到的數字就擋下；合併提問裡「未查核的數字：N」改由工具自己寫進去，不擋；Cycle 1 這類編號不算數字）嗎？建議合併。 Regular merge with --match-head-commit 4a146449de8ad43f1eb67e59599215989c327645, the batch 18 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-09T04:59:15Z
 worktree: .worktrees/spacedock-ensign-counts-name-the-run-that-produced-them
 pr: pr-merge:822
 profile: pilot
 merge: pr
+verdict: PASSED
+completed: 2026-11-10T02:36:12Z
+archived: 2026-11-10T02:36:13Z
 ---
 
 ## Scope
