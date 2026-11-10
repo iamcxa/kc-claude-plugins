@@ -3,7 +3,7 @@ title: A worker holds before work while a special-role call is owed and unrecord
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-10), answering 「決定：合併 #823（修程式或驗證的工人開工先查有沒有欠的審查；欠著又沒記錄理由就停手回報，不碰程式）嗎？建議合併。 Regular merge with --match-head-commit 42455f093facfc96edf6cd0357f26be1c858b262, the batch 19 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-09T14:37:10Z
 worktree: .worktrees/spacedock-ensign-a-worker-holds-while-a-role-call-is-owed
 pr: pr-merge:823
+verdict: PASSED
+completed: 2026-11-10T01:51:09Z
+archived: 2026-11-10T01:51:09Z
 ---
 
 ## Scope
