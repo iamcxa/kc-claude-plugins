@@ -1,0 +1,21 @@
+{
+  "class": "never",
+  "head": "3567082b0ec1eeb59346b2d82887a07bc5ffc2fb",
+  "model": "not run",
+  "necessity": "ADR 0074, kc-dev-flow-2/references/sd/workflow.md, dispatch_stage.py with test_dispatch_stage.py and test_sd_dispatch.py, and lint-skills.py change (git diff --name-only, FO run 2026-11-10; judged in ",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_stage.py'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_stage.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_sd_dispatch.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#827",
+  "sufficiency": "a role dispatch writes its record, passes both record checks and commits it before any prompt is printed, a failed check or commit prints no prompt, and after the Cycle 1 repair the record holds CRLF ",
+  "time": "2026-11-10T10:59:19Z",
+  "verdict": "ask"
+}
