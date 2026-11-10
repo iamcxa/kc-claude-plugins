@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:delivery-gate-pr-body-attribution-link:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:delivery-gate-pr-body-attribution-link-backlog-1
+              briefing:
+                id: briefing:delivery-gate-pr-body-attribution-link:backlog:attempt-1:revision-1
+                digest: sha256:f99c4b53a57c195cfafe1508865745a3308c963d5bfd4c88b028ab864f1297e4
+                room-ref: ./delivery-gate-pr-body-attribution-link/review/backlog/briefing-1
 ---
 
 ## Scope

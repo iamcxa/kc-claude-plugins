@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-pr-body-attribution-link:backlog:attempt-1:revision-1",
+  "question": "決定：第 20 批這四張（FO 寫下的紀錄當下就由腳本檢查：relay 回報的四個紀錄漏洞、特別角色派工紀錄改由腳本產生、修改驗收條件時當下檢查、PR 說明的署名連結不再被誤擋）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？建議核准。核准即接受四張任務檔現在寫下的內容；要改哪張直接說。",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-pr-body-attribution-link:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f4e39a680d676b6ddfdb12b1bbb571433712665c/delivery-gate-pr-body-attribution-link.md",
+      "rev": "sha256:9ebd43b526115dddb5f2c8f6fa5444568476307087fdac9579f90e6a1a295097",
+      "mediaType": "text/markdown",
+      "summary": "Batch 20 backlog sitting: the Captain chose this theme (「主題一（建議）」, host question dialog, 2026-11-10); seed check exits 0 (design_surfaces.py check --seed, FO 2026-11-10); profile pilot; scope, budget and stop condition as written in the task file."
+    }
+  ]
+}
