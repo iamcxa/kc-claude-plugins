@@ -387,7 +387,6 @@ def check_amendments(name, lines, declared, errors, dispatched=None):
         named = supersedes_ids(value)
         if named is None:
             continue
-        waiver = NO_REPLACEMENT.search(value)
         number = entry.number
         waits = dispatched is not None and number not in dispatched
         for superseded in sorted(set() if waits else named & declared):
@@ -395,10 +394,42 @@ def check_amendments(name, lines, declared, errors, dispatched=None):
         held = {found for found, _ in moved[index]}
         if held - named:
             errors.append(f"{name}: '{title}' holds {', '.join(sorted(held - named))} but its 'Supersedes:' line does not name them")
-        marker = re.compile(rf"Amended by Captain, amendment {number}(?!\d)")
         others = [pair for i, pairs in enumerate(moved) if i != index for pair in pairs]
-        if named and not waiver and not any(marker.search(text) for _, text in live + others):
+        if unmarked(entry, live, others):
             errors.append(f"{name}: '{title}' supersedes {', '.join(sorted(named))} but no criterion says 'Amended by Captain, amendment {number}' and its 'Supersedes:' line does not say 'no replacement'")
+
+
+def unmarked(entry, live, others):
+    values = SUPERSEDES.findall(entry.prefix)
+    if len(values) == 1:
+        value = values[0]
+        named = supersedes_ids(value)
+        waiver = NO_REPLACEMENT.search(value)
+        marker = re.compile(rf"Amended by Captain, amendment {entry.number}(?!\d)")
+        if named and not waiver and not any(marker.search(text) for _, text in live + others):
+            return True
+    return False
+
+
+def move_defects(lines):
+    entries, issues = parse_amendments(lines)
+    if issues:
+        return []
+    moved = [declarations(entry.moved) for entry in entries]
+    live = declarations(section(unfenced(lines), AC_HEADING) or [])
+    declared = {ident for ident, _ in live}
+    defects = []
+    for index, entry in enumerate(entries):
+        if entry.payload is None:
+            continue
+        held = {ident for ident, _ in moved[index]}
+        reused = tuple(sorted(held & declared))
+        if reused:
+            defects.append(("reused", entry.number, reused))
+        others = [pair for i, pairs in enumerate(moved) if i != index for pair in pairs]
+        if unmarked(entry, live, others):
+            defects.append(("unmarked", entry.number))
+    return defects
 
 
 def report_severities(text, scale=SEVERITY_SCALE):

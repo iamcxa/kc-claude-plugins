@@ -371,10 +371,34 @@ def l3_amendment_append_only(ctx):
     return judged, violations, None, len(hit)
 
 
+def l4_amendment_moves_use_fresh_ids(ctx):
+    script("design_surfaces.py")
+    script("decision_ledger.py")
+    from design_surfaces import move_defects, parse_amendments
+    judged, violations = 0, []
+    for commit, changes in ctx.commits:
+        for old, new in amendment_pairs(changes):
+            before = amendment_blob(ctx, f"{commit}^", old).split("\n")
+            after = amendment_blob(ctx, commit, new).split("\n")
+            if parse_amendments(before)[1] or parse_amendments(after)[1]:
+                continue
+            previous = set(move_defects(before))
+            added = [defect for defect in move_defects(after) if defect not in previous]
+            if not added:
+                continue
+            judged += 1
+            for kind, number, *ids in added:
+                detail = f"reused ids: {', '.join(ids[0])}" if kind == "reused" else "unmarked replacement"
+                violations.append(f"violation: L4 amendment-moves-use-fresh-ids task={new} "
+                                  f"commit={commit[:12]} amendment={number} {detail}")
+    return judged, violations, None, judged
+
+
 LAWS = {
     "L1": ("observer-before-sentinel", l1_observer_before_sentinel),
     "L2": ("dispatch-record-complete", l2_dispatch_record_complete),
     "L3": ("amendment-append-only", l3_amendment_append_only),
+    "L4": ("amendment-moves-use-fresh-ids", l4_amendment_moves_use_fresh_ids),
 }
 
 
