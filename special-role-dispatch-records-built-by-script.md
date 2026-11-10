@@ -178,6 +178,10 @@ All tests run against the real Spacedock binary in split-root fixtures, as `test
 - **D2. The script refuses a role call below the model table's floor (opus, or astra).** Recommended: yes. ADR 0070 left the model FO-supplied and refused resolving it in the script; this checks the supplied value, using `role_triggers.rank`, and does not resolve one. Worse under it: a model name with no recognized word (a new family) blocks the call until `RANK` learns it. Limit: the floor is opus for every task; an engineering-reviewer call on a `profile: prod` or `Surfaces: db` task needs fable or astra, and the script does not read those task facts, so `role_triggers.py` still reports that amendment owed at the next gate.
 - **D3. Also make `role_triggers.py` keep a call owed when its `Reviewer:` line has no matching dispatch record.** Recommended: not in this task. No absent record has bitten yet (the bite was an incomplete one); a batch-wide chief-engineer review is recorded on several tasks but dispatched once, so a per-task join would mark those owed; and ADR 0026 decides that a dated call line clears a call. Worse under the recommendation: a role call FO makes entirely by hand, with no record, stays uncaught; the rule stays prose-enforced, as ADR 0070's stage rule is.
 
+## Number guards
+
+ADR: 0074
+
 ## Stage Report: ideation
 
 - DONE: Design how an engineering-reviewer or chief-engineer dispatch made through the package writes its complete dispatch record before the agent starts (the batch 17 hand-written dispatch/engineering-reviewer-1.md is the bite), naming the script that writes it and a falsifier that fails without it
