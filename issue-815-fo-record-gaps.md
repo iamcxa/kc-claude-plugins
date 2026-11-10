@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:issue-815-fo-record-gaps:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:issue-815-fo-record-gaps-backlog-1
+              briefing:
+                id: briefing:issue-815-fo-record-gaps:backlog:attempt-1:revision-1
+                digest: sha256:682708ca0576fdeef2fe8b4599a1968a87fed7c0986e18def0550ea30019102a
+                room-ref: ./issue-815-fo-record-gaps/review/backlog/briefing-1
 ---
 
 ## Scope
