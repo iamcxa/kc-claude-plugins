@@ -15,6 +15,17 @@ gates:
                 id: briefing:issue-815-fo-record-gaps:backlog:attempt-1:revision-1
                 digest: sha256:682708ca0576fdeef2fe8b4599a1968a87fed7c0986e18def0550ea30019102a
                 room-ref: ./issue-815-fo-record-gaps/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:issue-815-fo-record-gaps:backlog:1
+                briefing: briefing:issue-815-fo-record-gaps:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-10T04:56:06.182671Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-10), answering 「決定：第 20 批這四張（FO 寫下的紀錄當下就由腳本檢查：relay 回報的四個紀錄漏洞、特別角色派工紀錄改由腳本產生、修改驗收條件時當下檢查、PR 說明的署名連結不再被誤擋）都用 Pilot，照各自寫下的範圍、預算與停止條件進入構想嗎？建議核准。核准即接受四張任務檔現在寫下的內容；要改哪張直接說。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
