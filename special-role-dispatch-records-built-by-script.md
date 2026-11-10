@@ -374,3 +374,48 @@ ADRs: none: no new ruling; existing ADR 0074 is retained and required by the gua
 
 Recommend PASSED at `3567082b0ec1eeb59346b2d82887a07bc5ffc2fb`; this recheck supersedes the previous validation verdict for the repaired head, closing F1 without new findings. The bounded Pilot outcome and each retained change are supported by real commit/recovery evidence and removal controls, with raw-byte proof for both record paths and unchanged LF records. FO retains gate, remaining review and delivery ownership; the product candidate and task frontmatter are unchanged.
 ADRs: 0074
+
+
+## Stage Report: implementation
+
+- DONE: Merge origin/main into the existing branch with a merge commit, resolve the lint-skills.py conflict so both changes stand, and recount the workflow words and budget.
+  Candidate `39a76c68836f471fc0c42c18eab12641196860ed` has parents `3567082b0ec1eeb59346b2d82887a07bc5ffc2fb` and fetched main `d8dbfcb1051d7c696aca139ed9ade332ee85abaf` (includes #825, #826 and #828). The sole conflict retained both Captain-quoted +6 and +2 steps. `wc -w`/lint: main 5933, prior branch 5937, merged 5939 and budget 5939 (`word-budget.json`, `wc-words.log`); AC-8's earlier 5937 count belongs to the earlier base, with no new budget grant needed beyond the accepted joint +8.
+- DONE: Re-run all package test files, repository lint-skills.py, installed adr_lint.py and number_guards.py checks at the new head; ADR 0074 still required.
+  Final `exact-head/checks.json` has 28 exits of 0 with identical before/after head `39a76c68836f471fc0c42c18eab12641196860ed`: 1312 unittest cases including 11 optional skips, and 40 passing real-binary stage cases. Every package test file is CI-listed. Pre-commit preflight outputs are excluded from this proof; the source was unchanged when the final run began.
+- DONE: Report anything in main that changes this task's behaviour.
+  Main adds the bound-question reason check, scalar/list screenshot support, folder coverage input, numbered Captain-step path enforcement, the exact PR attribution exemption and L4 amendment-move reporting. Role records still call folder and names checks, not coverage; only `check_coverage` changed in dispatch_records.py. The writer, its 40-test file and role_triggers.py are byte-identical to the prior candidate (`integration-scope.json`); no adopted workflow pin or CI trigger was changed here.
+- DONE: One local merge commit on the existing branch, no push and no PR write; update the PR text if its word counts change.
+  `merge-identity.json` verifies one new first-parent merge commit, both prior histories retained and a clean product worktree. No rebase or force push occurred. `/tmp/impl-special-role-dispatch-records-built-by-script-pr.md` now gives 5939 words (main 5933 plus this task's six) and the new test count; no PR write or branch push was performed.
+- DONE: Append one complete `## Stage Report: implementation` naming the new candidate SHA, every item followed by its own indented evidence line, evidence kept in the task folder in the state checkout.
+  This report and `special-role-dispatch-records-built-by-script/validation/merge-main/` hold the final exact-head checks, raw outputs, merge identity, word measurements and guard results; paths below are relative to that evidence home. State report/evidence are committed locally only.
+- DONE: Installed guard checks and affected-document scan against the new main base.
+  Base `d8dbfcb1051d7c696aca139ed9ade332ee85abaf`; installed 0.37.0 ADR lint with `--require 0074` exits 0 (67 records), number guards exits 0 without findings/fetch warning, design surfaces presentable. Comment ratio 1/192, 0.5%, below 5%; repository lint 5939/5939 (`adr-lint.log`, `number-guards.log`, `design.log`, `comment-ratio.log`, `exact-head/lint-skills.log`). The PR diff against this base remains the six approved files (`pr-diff-stat.log`).
+- DONE: doc_impact disposition for `docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md`.
+  unaffected: the Captain-quoted +6 budget step follows the existing raise rule.
+- DONE: doc_impact disposition for `docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md`.
+  unaffected: worker collaboration rule and its linter remain unchanged.
+- DONE: doc_impact disposition for `docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md`.
+  unaffected: existing model ranking is reused; the model table and its linter remain unchanged.
+- DONE: doc_impact disposition for `docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md`.
+  unaffected: worker permission-answer procedure and its linter remain unchanged.
+- DONE: doc_impact disposition for `docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md`.
+  unaffected: external-review disposition and its wording pins remain unchanged.
+- DONE: doc_impact disposition for `docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md`.
+  unaffected: stage dispatch and manual follow-ups keep their existing scope; ADR 0074 adds role mode.
+- DONE: doc_impact disposition for `docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md`.
+  updated in this task relative to main; retained unchanged during this merge.
+- DONE: doc_impact disposition for `kc-dev-flow-2/README.md`.
+  unaffected: the maintenance command paths and described stage tests remain valid.
+- DONE: doc_impact disposition for `kc-dev-flow-2/references/sd/adoption.md`.
+  unaffected: the unchanged dispatch test command still exercises adoption.
+- DONE: doc_impact disposition for `kc-dev-flow-2/skills/maintain-flow/SKILL.md`.
+  unaffected: the word-budget and falsifier practices are followed without changing maintenance rules.
+- DONE: doc_impact disposition for `learning.md`.
+  unaffected: historical evidence and lifecycle measurement practice are preserved.
+- SKIPPED: FO pushes and runs RoboRev, hosted CI and a fresh independent validation of the merged candidate.
+  Delegated and not run by this worker, never clean. Local CLI is Spacedock 0.27.2 with active plugin root 0.27.3; hosted pinned-0.27.2 checks remain separate. CI cost per PR not measured; no CI trigger changed.
+
+### Summary
+
+Merged the fetched main while preserving both approved word-budget additions and the existing role/byte-preservation implementation. This complete report supersedes the previous implementation report's candidate/base, 5937-word count and test totals: the candidate is now `39a76c68836f471fc0c42c18eab12641196860ed`, based on main `d8dbfcb1051d7c696aca139ed9ade332ee85abaf`, at 5939 words with all 28 exact-head checks passing. Pilot scope and publication boundaries stand; FO owns push, RoboRev and a fresh validation decision.
+ADRs: none: no new ruling; ADR 0074 is retained, and ADR 0073 is inherited from main.

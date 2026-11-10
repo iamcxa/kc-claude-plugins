@@ -1,0 +1,20 @@
+{
+  "main": "d8dbfcb1051d7c696aca139ed9ade332ee85abaf",
+  "prior": "3567082b0ec1eeb59346b2d82887a07bc5ffc2fb",
+  "unchanged_byte_paths": [
+    "kc-dev-flow-2/scripts/dispatch_stage.py",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "kc-dev-flow-2/scripts/role_triggers.py"
+  ],
+  "dispatch_record_functions_changed": [
+    "check_coverage"
+  ],
+  "main_changes": [
+    "gate reason now binds the open task question before Captain record",
+    "preview accepts scalar or sequence",
+    "coverage accepts a task folder",
+    "Captain steps require the numbered task subdirectory",
+    "exact final PR attribution is exempt from step links",
+    "L4 reports invalid criterion moves after state push; adoption pin unchanged"
+  ]
+}

@@ -1,0 +1,7 @@
+ ...calls-are-built-by-the-stage-dispatch-script.md |  64 ++++++++
+ kc-dev-flow-2/references/sd/workflow.md            |   2 +-
+ kc-dev-flow-2/scripts/dispatch_stage.py            |  38 ++++-
+ kc-dev-flow-2/scripts/lint-skills.py               |   3 +
+ kc-dev-flow-2/scripts/test_dispatch_stage.py       | 168 +++++++++++++++++++++
+ kc-dev-flow-2/scripts/test_sd_dispatch.py          |   3 +-
+ 6 files changed, 272 insertions(+), 6 deletions(-)

@@ -1,0 +1,282 @@
+[
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/lint-skills.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/lint-skills.log",
+    "unittest_cases": 0,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_adr_doc_checks.log",
+    "unittest_cases": 9,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_poc_readme.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_poc_readme.log",
+    "unittest_cases": 9,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_comment_ratio.log",
+    "unittest_cases": 14,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_lint_skills.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_lint_skills.log",
+    "unittest_cases": 47,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_codex_review.log",
+    "unittest_cases": 36,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_roborev_gate.log",
+    "unittest_cases": 5,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_copilot_review.log",
+    "unittest_cases": 15,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_map_footprint.log",
+    "unittest_cases": 23,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_design_surfaces.log",
+    "unittest_cases": 220,
+    "unittest_skips": 4
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_release_acceptance.log",
+    "unittest_cases": 122,
+    "unittest_skips": 4
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_number_guards.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_number_guards.log",
+    "unittest_cases": 38,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_validation_security.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_validation_security.log",
+    "unittest_cases": 5,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_pr_watch.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_pr_watch.log",
+    "unittest_cases": 135,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_replay_dispatch.log",
+    "unittest_cases": 8,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_decision_ledger.log",
+    "unittest_cases": 23,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_package_version.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_package_version.log",
+    "unittest_cases": 6,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_workflow_checkout.log",
+    "unittest_cases": 13,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_dispatch_records.log",
+    "unittest_cases": 117,
+    "unittest_skips": 1
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_observer_check.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_observer_check.log",
+    "unittest_cases": 19,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_delivery_gate.log",
+    "unittest_cases": 208,
+    "unittest_skips": 1
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_merge_audit.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_merge_audit.log",
+    "unittest_cases": 17,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_learning.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_learning.log",
+    "unittest_cases": 50,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_role_triggers.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_role_triggers.log",
+    "unittest_cases": 49,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_laws_check.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_laws_check.log",
+    "unittest_cases": 84,
+    "unittest_skips": 1
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_sd_dispatch.log",
+    "unittest_cases": 0,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_observer_recovery.log",
+    "unittest_cases": 0,
+    "unittest_skips": 0
+  },
+  {
+    "head_before": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "head_after": "39a76c68836f471fc0c42c18eab12641196860ed",
+    "name": "python3 -B kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "/tmp/opencode/special-role-merge-main/exact-head/test_dispatch_stage.log",
+    "unittest_cases": 40,
+    "unittest_skips": 0
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "candidate": "39a76c68836f471fc0c42c18eab12641196860ed",
+  "parents": [
+    "3567082b0ec1eeb59346b2d82887a07bc5ffc2fb",
+    "d8dbfcb1051d7c696aca139ed9ade332ee85abaf"
+  ],
+  "one_new_first_parent_commit": true,
+  "clean": true,
+  "base": "d8dbfcb1051d7c696aca139ed9ade332ee85abaf",
+  "prior": "3567082b0ec1eeb59346b2d82887a07bc5ffc2fb"
+}
