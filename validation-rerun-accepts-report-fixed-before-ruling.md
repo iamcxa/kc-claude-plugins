@@ -46,6 +46,7 @@ gates:
 ## FO alignment
 
 Alignment: needed at ideation; which rewrites of a validation report still count as the report a ruling answered is the Captain's call under ADR 0045.
+Result: the Captain chose 「裁示前的補改都算，結論不能改（建議）」 (host question dialog, 2026-11-11), answering 「驗證報告被補改過之後，哪些補改還算同一份報告、可以繼續派驗證？我建議：你第一次裁示之前的補改都算，但不能改變報告的結論（通過或退回）；裁示之後才改的照舊拒絕。這是設計的方向，細節與證明仍在設計關卡由你核准。」.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
