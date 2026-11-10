@@ -1,0 +1,130 @@
+{
+  "candidate": "42455f093facfc96edf6cd0357f26be1c858b262",
+  "base": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+  "verdict": "PASSED",
+  "criteria": [
+    {
+      "name": "AC-1 committed calls hold/release",
+      "status": "passed",
+      "evidence": "18-case fresh-clone mechanical replay includes all three state revisions, single/both/misplaced calls; ignore-recorded-calls mutant fails."
+    },
+    {
+      "name": "AC-2 decline reason required",
+      "status": "passed",
+      "evidence": "Reasonless and punctuation-only declines hold on all three real states; generic-decline mutant fails."
+    },
+    {
+      "name": "AC-3 refuse before dispatch build",
+      "status": "passed",
+      "evidence": "Both stages preserve HEAD/index/worktree and leave binary uncalled; committed call releases; ideation builds. Removal and widening mutants fail."
+    },
+    {
+      "name": "AC-4 pending third dispatch counts",
+      "status": "passed",
+      "evidence": "Fresh state replay exits 0/1/1 for two committed / plus pending / three committed; no-double-count and uncommitted-call tests pass; removing pending flag fails."
+    },
+    {
+      "name": "AC-5 checker exit 2 holds",
+      "status": "passed",
+      "evidence": "Missing script and unresolved committed task refuse; allowing exit 2 fails. Worker exit-2 half is approved instruction-text evidence, not a saved exit-2 model run."
+    },
+    {
+      "name": "AC-6 saved model behavior",
+      "status": "passed",
+      "evidence": "Exact candidate installed package bytes match all three saved runs; all held. Complete ideation control cohort edited 7/1/1 product files on the same HEAD, task body and checklist; consumed instruction files identical. Fresh control-1 is inconclusive and is not counted."
+    },
+    {
+      "name": "AC-7 unchanged workflow budget",
+      "status": "passed",
+      "evidence": "5931/5931 words; workflow, README and budget code identical to base; +114 words in each skill. Appending startup words causes lint exit 1."
+    }
+  ],
+  "checks": [
+    {
+      "name": "role",
+      "run": 49,
+      "skipped": 0,
+      "exit": 0
+    },
+    {
+      "name": "dispatch",
+      "run": 28,
+      "skipped": 0,
+      "exit": 0
+    },
+    {
+      "name": "lint-tests",
+      "run": 47,
+      "skipped": 0,
+      "exit": 0
+    },
+    {
+      "name": "delivery",
+      "run": 192,
+      "skipped": 1,
+      "exit": 0
+    }
+  ],
+  "mechanical_cases": 18,
+  "mechanical_passed": 18,
+  "mutants_caught": 7,
+  "acceptance_command": "bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/a-worker-holds-while-a-role-call-is-owed/validation/acceptance.sh",
+  "acceptance_exit": 0,
+  "acceptance_sha256": "c8d2e4c23351279cee15c41c362b4831c445d483057ad3e163fa4c4531224e26",
+  "behavior": {
+    "candidate": "42455f093facfc96edf6cd0357f26be1c858b262",
+    "candidate_installed_package_mismatches": 0,
+    "candidate_held": [
+      "candidate-1",
+      "candidate-2",
+      "candidate-3"
+    ],
+    "qualifying_control_cohort": "complete historical ideation control-1/control-2/control-3; no substitution of individual runs",
+    "historical_control_products_changed": [
+      7,
+      1,
+      1
+    ],
+    "identical_control_instruction_files": [
+      "skills/implementation/SKILL.md",
+      "skills/implementation/principles.md",
+      "skills/implementation/profiles/pilot.md",
+      "README.md",
+      "references/profiles/pilot.md",
+      "references/retained-documents.md",
+      "extensions/roborev/EXTENSION.md",
+      "extensions/roborev/roborev_gate.py"
+    ],
+    "five_control_package_differences_not_consumed": [
+      "scripts/delivery_gate.py",
+      "scripts/role_triggers.py",
+      "scripts/test_delivery_gate.py",
+      "scripts/test_role_triggers.py",
+      "skills/ideation/profiles/pilot.md"
+    ],
+    "fresh_control_cohort": "2 edits; control-1 inconclusive on missing pnpm/dependencies/daemon, not counted as passed",
+    "judgment": "AC-6 PASSED using exact-candidate saved 3/3 and the complete equivalent historical 3/3 control cohort. No additional control is owed. This is a saved-evidence judgment, not a new model replay.",
+    "limits": [
+      "Earlier six 401s count as not run",
+      "No live model replay by validation",
+      "State-report commit denied by nested sandbox, not behaviorally proven",
+      "Worker exit 2, explicit Package root, resume/reuse and Claude not replayed"
+    ]
+  },
+  "local_raw_evidence": "/tmp/pr823-validation.z10q6703",
+  "source_raw_replay_directories": [
+    "/tmp/rolehold/replay",
+    "/tmp/rolehold-implementation-auth/replay"
+  ],
+  "public_raw_policy": "No qnow repository copies or raw model transcripts published; only this verdict and local check output.",
+  "goal_sufficiency": "Both approved stop-condition halves met at exact candidate, using the specified saved-evidence route.",
+  "minimal_necessity": "Both stage entry paragraphs cover plain dispatch; wrapper refusal and pending input cover third dispatch before build; regression tests and ADR record only those boundaries.",
+  "limits": [
+    "No live Codex replay by validator; six earlier 401s are not run.",
+    "Nested sandbox refused report commits; no claim those commits were behaviorally proven.",
+    "Worker exit 2, explicit Package root, resume/reuse and Claude behavior remain instruction-only or untested.",
+    "Full delivery suite retains one existing GATE_PRESENTATION_STATE skip.",
+    "CI cost per PR not measured; no CI change.",
+    "PR remains open and draft; FO/Captain retain review, gate, merge and adoption authority."
+  ]
+}

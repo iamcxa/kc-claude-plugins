@@ -1,0 +1,20 @@
+STEP 1 PASS: 42455f093facfc96edf6cd0357f26be1c858b262; export=/tmp/pr823-acceptance.i22799/candidate
+...
+----------------------------------------------------------------------
+Ran 3 tests in 7.768s
+
+OK
+STEP 2 PASS: hold, release, pending and committed-only reads
+......
+----------------------------------------------------------------------
+Ran 6 tests in 9.011s
+
+OK
+STEP 3 PASS: dispatch stage, pending and exit-2 boundaries
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5931 of 5931 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+STEP 4 PASS: workflow, README and budget unchanged
+64 ADR file(s) checked, 0 legacy
+STEP 5 PASS: ADR lint exit 0
+LOCAL ACCEPTANCE PASSED. Saved model-replay evidence is assessed separately in the validation report.

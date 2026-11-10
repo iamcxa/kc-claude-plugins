@@ -1,0 +1,9 @@
+[
+  {
+    "severity": "info",
+    "title": "Deferred risk: hold-report commit not proven in replay",
+    "detail": "The replay sandbox denied .git/index.lock; all three reports exist but remain uncommitted. This is an explicitly accepted harness limit, not a demonstrated failure on a supported worker host.",
+    "fix": "Becomes Material if a supported host cannot commit the hold report and FO consequently loses or advances past the hold. No candidate repair is warranted by the current evidence.",
+    "status": "confirmed"
+  }
+]
