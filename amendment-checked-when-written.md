@@ -251,3 +251,18 @@ Designed state law L4 `amendment-moves-use-fresh-ids`. It flags, at the commit t
 ### Summary
 
 Implemented L4 with the approved whole-file structural skip and the shared `unmarked` predicate; local behavior, five acceptance criteria and six mutation controls pass. AC-4 fails because two of its seven expected historical events have parser structural issues and are therefore excluded by the approved design; return this conflict to FO before further product changes/publication, while AC-7 stays open under D2.
+
+## Stage Report: implementation
+
+- FAILED: Apply Captain amendments Amendment 1: move the AC-4 block verbatim from `## Acceptance criteria` into the entry under a `Superseded text:` line, and write the replacement under a fresh id that says "Amended by Captain, amendment 1": the corpus replay prints L4 events at five commits, and the two commits the whole-file structural skip excludes (dev2 bf8c73be99c4, relay 06cadae7681f) are named as left to the existing form laws
+  held: special-role call owed
+- FAILED: Show the replacement criterion green at the unchanged candidate 71eb2ec42 with its evidence and falsifier, and keep that evidence in the task folder in the state checkout, not only under /tmp
+  held: special-role call owed
+- FAILED: Append one complete new `## Stage Report: implementation`, every DONE or SKIPPED item followed by its own indented evidence line; no product code change unless the replacement criterion needs one, and then say so and stop
+  held: special-role call owed
+
+### Summary
+
+This complete report supersedes the earlier implementation report for the follow-up's readiness; implementation is held before applying the amendment or running product checks. Package `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0`, version `0.37.0`: `role_triggers.py` exited 1 with the following output; FO must record the call or a decline and dispatch again. Product candidate remains `71eb2ec4298812d831573386324641ca6babff5d`; no criterion, amendment entry or product code was changed.
+
+next: amendment-checked-when-written has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.
