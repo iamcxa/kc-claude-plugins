@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:delivery-gate-pr-body-attribution-link:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:delivery-gate-pr-body-attribution-link-validation-1
+              briefing:
+                id: briefing:delivery-gate-pr-body-attribution-link:validation:attempt-1:revision-1
+                digest: sha256:752c1513c8e119e2bcec3b0658543062de7bc3ed2e63f2a45d5014ef93aa1348
+                room-ref: ./delivery-gate-pr-body-attribution-link/review/validation/briefing-1
 started: 2026-11-10T04:59:26Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-pr-body-attribution-link
 pr: iamcxa/kc-claude-plugins#825

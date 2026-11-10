@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-pr-body-attribution-link:validation:attempt-1:revision-1",
+  "question": "決定：合併 #825（合併提問提到 PR 說明檔時，Claude Code 自動加在最後的那一行署名不再被當成要你點的連結；其他連結照樣要記成步驟）嗎？建議合併。同意即接受：PR 說明裡只要還有別的連結，檢查仍會擋下。 Regular merge with --match-head-commit 2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8, the batch 20 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-pr-body-attribution-link:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4dac28ec6a80c90af8df7b1ac902fac5112f5d80/delivery-gate-pr-body-attribution-link.md",
+      "rev": "sha256:985945f04a379916d67bc610dc8e1ae877dc57e9b9b98912c793bdc7661e44a6",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 2\nDelivery of delivery-gate-pr-body-attribution-link, PR #825, in the batch 20 validation sitting.\nSufficiency: a gate text naming a PR body whose only link is the exact Claude Code attribution line passes both the question and the steps route, while a real Captain link in a named card, the same URL on any other line, and the attribution line with another link after it still hold (validation-1 report, Astra, 2026-11-10, PASSED at 2a72c89b9).\nNecessity: only kc-dev-flow-2/scripts/delivery_gate.py and kc-dev-flow-2/scripts/test_delivery_gate.py change (validation-1 report, Astra, 2026-11-10; file list also read by FO with git diff --name-only on 2026-11-10).\nAcceptance, run by FO in a fresh shell 2026-11-10, exit 0: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-pr-body-attribution-link/validation-1/acceptance.sh /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-pr-body-attribution-link\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/delivery-gate-pr-body-attribution-link/captain-steps/1.md\nPR link step, run by FO in a fresh shell 2026-11-10, exit 0: open https://github.com/iamcxa/kc-claude-plugins/pull/825 and check it is open, ready and at the candidate head\nExternal rounds: 1.\nExternal round sources: Codex reviewed 2a72c89b9 (codex_review.py, FO run 2026-11-10).\nSecond reviewer: Copilot because the PR changes the merge-ask check.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5840720464\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: \"Didn't find any major issues\" on 2a72c89b9 (codex_review.py, FO run 2026-11-10, evidence=summary:6761147629@2a72c89b9).\nRoboRev: clean on 2a72c89b9, evidence=roborev:1689 (FO run 2026-11-10).\nCI: every check on 2a72c89b9 finished SUCCESS or SKIPPED (gh pr view statusCheckRollup, read by FO 2026-11-10).\nValidation answered merge-readiness: it read the PR at the head and found no unaddressed review (validation-1 report, Astra, 2026-11-10).\nLimit: a PR body with any other URL still holds until that link is recorded as a step, 23 of 346 feature PR bodies so far (the ideation worker's count, not run by FO).\nMerge order: git merge-tree of this branch against each other batch 20 branch reports no conflict (FO run 2026-11-10)."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:delivery-gate-pr-body-attribution-link:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/4dac28ec6a80c90af8df7b1ac902fac5112f5d80/delivery-gate-pr-body-attribution-link/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:46630ae0cf3dc1e0da38d4b244cc6b6967c31be70d02acd611d8f888385b4afd"
+    }
+  ]
+}
