@@ -66,7 +66,7 @@ an unreadable or unwritable input still exits 2.
 Usage: delivery_gate.py steps <record> --text-file <message>
 Reads Captain step observations without executing commands. Missing observations, unmatched steps,
 unrecorded fenced commands or links (named Markdown files contribute shell or untagged fences;
-a URI right after `{` is not a link), missing absolute paths whose top-level directory exists,
+a URI right after `{` is not a link, nor is a line that is only the Claude Code attribution), missing absolute paths whose top-level directory exists,
 and Captain-only steps without a reason hold the ask (exit 1). Unreadable input is exit 2.
 Candidate may be none outside a validation gate. The check trusts recorded observations.
 Relative Markdown names resolve from the task folder, including names prefixed by its slug.
@@ -746,6 +746,7 @@ FENCE = re.compile(r"^[ \t]*(`{3,}|~{3,})([^\n]*)\n(.*?)(?:^[ \t]*\1[`~]*[ \t]*$
 URL = re.compile(r"https?://[^\s<>`\"')\]]+")
 ABS_PATH = re.compile(r'''(?<![\w:/>])(?:"(?:~/|/)[^"\n]+"|'(?:~/|/)[^'\n]+'|(?:~/|/)[^\s`"'()\[\]{}]+)''')
 SHELL = {"", "sh", "bash", "zsh", "shell", "console"}
+ATTRIBUTION = {"🤖 Generated with [Claude Code](https://claude.com/claude-code)"}
 
 
 def normalized(text):
@@ -768,6 +769,7 @@ def fenced_steps(text, shell_only=False):
 
 
 def links(text):
+    text = "\n".join("" if normalized(line) in ATTRIBUTION else line for line in text.splitlines())
     return [m[0].rstrip(".,;") for m in URL.finditer(text) if text[m.start() - 1:m.start()] != "{"]
 
 
