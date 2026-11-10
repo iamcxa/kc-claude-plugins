@@ -1,0 +1,13 @@
+# engineering-reviewer-1
+Dispatched: d7f549ee59c1c3204111dbff0c7a0d1b197e4629 (workflow checkout, role fixture)
+Model: opus
+Roster: fixture roster
+
+## Checklist
+Inspect the real dispatch seam
+Keep the received second checklist line
+
+## Scope notes
+Package root: /private/tmp/pr827-independent-2/candidate/kc-dev-flow-2
+Send your completion message to `main`.
+Keep this second scope-notes line verbatim.

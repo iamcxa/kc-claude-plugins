@@ -1,0 +1,12 @@
+# engineering-reviewer-2
+Dispatched: 6b62eb6c92868edf76531a31f134b3273346696d (workflow checkout)
+Model: gpt-6-astra (Codex via Paseo, thinking xhigh)
+
+## Checklist
+Inspect the real dispatch seam
+Keep the received second checklist line
+
+## Scope notes
+Package root: /private/tmp/pr827-independent-2/candidate/kc-dev-flow-2
+Send your completion message to `main`.
+Keep this second scope-notes line verbatim.

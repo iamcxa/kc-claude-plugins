@@ -1,0 +1,17 @@
+[
+  {
+    "path": "kc-dev-flow-2/scripts/pr_watch.py",
+    "unchanged": true,
+    "sha256": "628950666744990db1b12bc7fa01deab6760534cf52d164776e42655d33d59ae"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "unchanged": true,
+    "sha256": "bd6cfcce1000064be16d4643cbfedf545f18e8917e6429a6614036c70f275ac2"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/role_triggers.py",
+    "unchanged": true,
+    "sha256": "baaa4e033148c57564afb3a63b96446f25221ddb4644cb278fe2a704d98cdc56"
+  }
+]

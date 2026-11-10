@@ -1,0 +1,851 @@
+unit tests (python3)	Set up job	﻿2026-11-10T07:37:43.0815097Z Current runner version: '2.338.2'
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0841426Z ##[group]Runner Image Provisioner
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0842384Z Hosted Compute Agent
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0843211Z Version: 20261028.624
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0843930Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0844770Z Build Date: 2026-10-28T21:51:42Z
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0845533Z Worker ID: {322dd19f-1f92-4540-8670-ed938625e90c}
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0846248Z Region: eastus
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0846822Z Cloud: Azure
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0847369Z ##[endgroup]
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0849063Z ##[group]Operating System
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0849797Z Ubuntu
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0850355Z 26.04.1
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0850895Z LTS
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0851414Z ##[endgroup]
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0852008Z ##[group]Runner Image
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0852665Z Image: ubuntu-26.04
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0853614Z Version: 20261101.186.1
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0854795Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0856606Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0857646Z ##[endgroup]
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0858792Z ##[group]GITHUB_TOKEN Permissions
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0860964Z Contents: read
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0861620Z Metadata: read
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0862272Z ##[endgroup]
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0865018Z Secret source: Actions
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0866145Z Cache mode: write
+unit tests (python3)	Set up job	2026-11-10T07:37:43.0866878Z Prepare workflow directory
+unit tests (python3)	Set up job	2026-11-10T07:37:43.1257633Z Prepare all required actions
+unit tests (python3)	Set up job	2026-11-10T07:37:43.1306173Z Getting action download info
+unit tests (python3)	Set up job	2026-11-10T07:37:43.2620789Z Download action repository 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+unit tests (python3)	Set up job	2026-11-10T07:37:43.5336280Z Complete job name: unit tests (python3)
+unit tests (python3)	Checkout	﻿2026-11-10T07:37:43.6349981Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6351132Z with:
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6351638Z   persist-credentials: false
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6352232Z   repository: iamcxa/kc-claude-plugins
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6356397Z   token: ***
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6356873Z   ssh-strict: true
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6357345Z   ssh-user: git
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6357784Z   clean: true
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6358250Z   sparse-checkout-cone-mode: true
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6358809Z   fetch-depth: 1
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6359268Z   fetch-tags: false
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6359735Z   show-progress: true
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6360203Z   lfs: false
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6360633Z   submodules: false
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6361119Z   set-safe-directory: true
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6361859Z env:
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6362326Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6363267Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	Checkout	2026-11-10T07:37:43.6364123Z ##[endgroup]
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4107682Z Syncing repository: iamcxa/kc-claude-plugins
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4110186Z ##[group]Getting Git version info
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4111637Z Working directory is '/home/runner/work/kc-claude-plugins/kc-claude-plugins'
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4113794Z [command]/usr/bin/git version
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4211489Z git version 2.56.0
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4233493Z ##[endgroup]
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4248223Z Temporarily overriding HOME='/home/runner/work/_temp/110b94fb-384d-48ca-aef0-44ce606ebe33' before making global git config changes
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4251525Z Adding repository directory to the temporary git global config as a safe directory
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4255147Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/kc-claude-plugins/kc-claude-plugins
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4525617Z Deleting the contents of '/home/runner/work/kc-claude-plugins/kc-claude-plugins'
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4529037Z ##[group]Initializing the repository
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4534220Z [command]/usr/bin/git init /home/runner/work/kc-claude-plugins/kc-claude-plugins
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4897592Z hint: Using 'master' as the name for the initial branch. This default branch name
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4900647Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4903352Z hint: to use in all of your new repositories, which will suppress this warning,
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4905435Z hint: call:
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4906564Z hint:
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4907935Z hint: 	git config --global init.defaultBranch <name>
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4909663Z hint:
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4911280Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4914112Z hint: 'development'. The just-created branch can be renamed via this command:
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4916255Z hint:
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4917402Z hint: 	git branch -m <name>
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4918738Z hint:
+unit tests (python3)	Checkout	2026-11-10T07:37:45.4920481Z hint: Disable this message with "git config set advice.defaultBranchName false"
+unit tests (python3)	Checkout	2026-11-10T07:37:45.5003758Z Initialized empty Git repository in /home/runner/work/kc-claude-plugins/kc-claude-plugins/.git/
+unit tests (python3)	Checkout	2026-11-10T07:37:45.5014838Z [command]/usr/bin/git remote add origin https://github.com/iamcxa/kc-claude-plugins
+unit tests (python3)	Checkout	2026-11-10T07:37:45.5205716Z ##[endgroup]
+unit tests (python3)	Checkout	2026-11-10T07:37:45.5208308Z ##[group]Disabling automatic garbage collection
+unit tests (python3)	Checkout	2026-11-10T07:37:45.5210323Z [command]/usr/bin/git config --local gc.auto 0
+unit tests (python3)	Checkout	2026-11-10T07:37:45.5243783Z ##[endgroup]
+unit tests (python3)	Checkout	2026-11-10T07:37:45.5245680Z ##[group]Setting up auth
+unit tests (python3)	Checkout	2026-11-10T07:37:45.5250630Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+unit tests (python3)	Checkout	2026-11-10T07:37:45.5285172Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+unit tests (python3)	Checkout	2026-11-10T07:37:45.7022158Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+unit tests (python3)	Checkout	2026-11-10T07:37:45.7063903Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+unit tests (python3)	Checkout	2026-11-10T07:37:45.7345562Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+unit tests (python3)	Checkout	2026-11-10T07:37:45.7380062Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+unit tests (python3)	Checkout	2026-11-10T07:37:45.7651624Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+unit tests (python3)	Checkout	2026-11-10T07:37:45.7690667Z ##[endgroup]
+unit tests (python3)	Checkout	2026-11-10T07:37:45.7691266Z ##[group]Fetching the repository
+unit tests (python3)	Checkout	2026-11-10T07:37:45.7702701Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +1a4038fefda0ae133741afd4fe6617bf9cddb8e8:refs/remotes/pull/827/merge
+unit tests (python3)	Checkout	2026-11-10T07:37:46.5904584Z From https://github.com/iamcxa/kc-claude-plugins
+unit tests (python3)	Checkout	2026-11-10T07:37:46.5906587Z  * [new ref]         1a4038fefda0ae133741afd4fe6617bf9cddb8e8 -> pull/827/merge
+unit tests (python3)	Checkout	2026-11-10T07:37:46.5909296Z ##[endgroup]
+unit tests (python3)	Checkout	2026-11-10T07:37:46.5910153Z ##[group]Determining the checkout info
+unit tests (python3)	Checkout	2026-11-10T07:37:46.5911698Z ##[endgroup]
+unit tests (python3)	Checkout	2026-11-10T07:37:46.5917676Z [command]/usr/bin/git sparse-checkout disable
+unit tests (python3)	Checkout	2026-11-10T07:37:46.6063882Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+unit tests (python3)	Checkout	2026-11-10T07:37:46.6075258Z ##[group]Checking out the ref
+unit tests (python3)	Checkout	2026-11-10T07:37:46.6079025Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/827/merge
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7924861Z Note: switching to 'refs/remotes/pull/827/merge'.
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7925795Z 
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7926045Z You are in 'detached HEAD' state. You can look around, make experimental
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7926565Z changes and commit them, and you can discard any commits you make in this
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7927052Z state without impacting any branches by switching back to a branch.
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7927336Z 
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7927678Z If you want to create a new branch to retain commits you create, you may
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7928962Z do so (now or later) by using -c with the switch command. Example:
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7929235Z 
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7929348Z   git switch -c <new-branch-name>
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7929536Z 
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7929653Z Or undo this operation with:
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7929831Z 
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7929921Z   git switch -
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7930064Z 
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7930282Z Turn off this advice by setting config variable advice.detachedHead to false
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7930593Z 
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7930945Z HEAD is now at 1a4038f Merge 3567082b0ec1eeb59346b2d82887a07bc5ffc2fb into 6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1
+unit tests (python3)	Checkout	2026-11-10T07:37:46.7975499Z ##[endgroup]
+unit tests (python3)	Checkout	2026-11-10T07:37:46.8056042Z [command]/usr/bin/git log -1 --format=%H
+unit tests (python3)	Checkout	2026-11-10T07:37:46.8081720Z 1a4038fefda0ae133741afd4fe6617bf9cddb8e8
+unit tests (python3)	Checkout	2026-11-10T07:37:46.8091863Z ##[group]Removing auth
+unit tests (python3)	Checkout	2026-11-10T07:37:46.8096217Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+unit tests (python3)	Checkout	2026-11-10T07:37:46.8129359Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+unit tests (python3)	Checkout	2026-11-10T07:37:46.8403966Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+unit tests (python3)	Checkout	2026-11-10T07:37:46.8427304Z http.https://github.com/.extraheader
+unit tests (python3)	Checkout	2026-11-10T07:37:46.8435587Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+unit tests (python3)	Checkout	2026-11-10T07:37:46.8468406Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+unit tests (python3)	Checkout	2026-11-10T07:37:46.8735234Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+unit tests (python3)	Checkout	2026-11-10T07:37:46.8766388Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+unit tests (python3)	Checkout	2026-11-10T07:37:46.9027144Z ##[endgroup]
+unit tests (python3)	lint-skills.py	﻿2026-11-10T07:37:46.9287694Z ##[group]Run python3 kc-dev-flow-2/scripts/lint-skills.py
+unit tests (python3)	lint-skills.py	2026-11-10T07:37:46.9288267Z ^[[36;1mpython3 kc-dev-flow-2/scripts/lint-skills.py^[[0m
+unit tests (python3)	lint-skills.py	2026-11-10T07:37:46.9340663Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	lint-skills.py	2026-11-10T07:37:46.9340955Z env:
+unit tests (python3)	lint-skills.py	2026-11-10T07:37:46.9341162Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	lint-skills.py	2026-11-10T07:37:46.9341584Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	lint-skills.py	2026-11-10T07:37:46.9342018Z ##[endgroup]
+unit tests (python3)	lint-skills.py	2026-11-10T07:37:47.1137062Z PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+unit tests (python3)	lint-skills.py	2026-11-10T07:37:47.1138042Z references/sd/workflow.md: 5937 of 5937 words; no unlisted passage repeats it
+unit tests (python3)	lint-skills.py	2026-11-10T07:37:47.1138724Z Not checked: full Agent Skills conformance or host/workflow behavior
+unit tests (python3)	test_lint_skills.py	﻿2026-11-10T07:37:47.1261668Z ##[group]Run python3 kc-dev-flow-2/scripts/test_lint_skills.py
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:47.1262205Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_lint_skills.py^[[0m
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:47.1310625Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:47.1310902Z env:
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:47.1311118Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:47.1311537Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:47.1311988Z ##[endgroup]
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:47.4094542Z test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines (__main__.RouteMutationTests.test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:47.5474689Z test_a_chat_only_rule_the_workflow_no_longer_says_is_named (__main__.RouteMutationTests.test_a_chat_only_rule_the_workflow_no_longer_says_is_named) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:47.7989015Z test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused (__main__.RouteMutationTests.test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:48.0480389Z test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way (__main__.RouteMutationTests.test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:48.1817529Z test_a_listed_extension_that_is_not_required_is_named (__main__.RouteMutationTests.test_a_listed_extension_that_is_not_required_is_named) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:48.3157778Z test_a_passage_copied_from_the_workflow_into_another_file (__main__.RouteMutationTests.test_a_passage_copied_from_the_workflow_into_another_file) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:48.9101772Z test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment (__main__.RouteMutationTests.test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:49.0424745Z test_a_required_extension_missing_from_the_template_line_is_named (__main__.RouteMutationTests.test_a_required_extension_missing_from_the_template_line_is_named) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:49.1755813Z test_a_row_marked_required_that_the_template_omits_is_named (__main__.RouteMutationTests.test_a_row_marked_required_that_the_template_omits_is_named) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:49.6656521Z test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not (__main__.RouteMutationTests.test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:49.8010044Z test_a_synced_skill_is_checked_only_when_listed (__main__.RouteMutationTests.test_a_synced_skill_is_checked_only_when_listed) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:49.9354926Z test_a_synced_skill_still_refuses_an_unbound_package_path (__main__.RouteMutationTests.test_a_synced_skill_still_refuses_an_unbound_package_path) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:50.0688462Z test_agent_effort_cannot_drift_from_policy (__main__.RouteMutationTests.test_agent_effort_cannot_drift_from_policy) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:50.2016540Z test_bare_script_name (__main__.RouteMutationTests.test_bare_script_name) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:50.3338481Z test_brace_placeholder (__main__.RouteMutationTests.test_brace_placeholder) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:50.5251311Z test_cli_exits_one_naming_the_file (__main__.RouteMutationTests.test_cli_exits_one_naming_the_file) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:50.6587321Z test_cross_profile_route (__main__.RouteMutationTests.test_cross_profile_route) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:50.7923260Z test_cross_stage_route (__main__.RouteMutationTests.test_cross_stage_route) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:50.9258298Z test_design_director_keeps_its_declared_model (__main__.RouteMutationTests.test_design_director_keeps_its_declared_model) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:51.0540277Z test_design_director_needs_its_skill (__main__.RouteMutationTests.test_design_director_needs_its_skill) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:51.0878517Z test_documented_journey_probe_finds_regular_yaml_at_each_depth (__main__.RouteMutationTests.test_documented_journey_probe_finds_regular_yaml_at_each_depth) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:51.2242691Z test_duplicate_profile (__main__.RouteMutationTests.test_duplicate_profile) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:51.3583225Z test_existing_frontmatter_validator_is_used (__main__.RouteMutationTests.test_existing_frontmatter_validator_is_used) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:51.4917468Z test_extension_script_named_without_its_extension_path (__main__.RouteMutationTests.test_extension_script_named_without_its_extension_path) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:51.6244186Z test_external_reference_symlink (__main__.RouteMutationTests.test_external_reference_symlink) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:51.7569058Z test_machine_path_placeholder (__main__.RouteMutationTests.test_machine_path_placeholder) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:51.8899862Z test_missing_markdown_table_separator (__main__.RouteMutationTests.test_missing_markdown_table_separator) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:52.0217415Z test_missing_optional_extension_document_is_named (__main__.RouteMutationTests.test_missing_optional_extension_document_is_named) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:52.1523762Z test_missing_principles (__main__.RouteMutationTests.test_missing_principles) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:52.2858201Z test_missing_profile_reference (__main__.RouteMutationTests.test_missing_profile_reference) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:52.4207855Z test_model_table_cannot_drift_from_agent_policy (__main__.RouteMutationTests.test_model_table_cannot_drift_from_agent_policy) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:52.5567197Z test_observer_keeps_its_declared_model (__main__.RouteMutationTests.test_observer_keeps_its_declared_model) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:52.6929588Z test_old_variant_invocation (__main__.RouteMutationTests.test_old_variant_invocation) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:52.8282717Z test_package_placeholder_without_root_line (__main__.RouteMutationTests.test_package_placeholder_without_root_line) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:52.9621607Z test_poc_cannot_declare_ideation_active (__main__.RouteMutationTests.test_poc_cannot_declare_ideation_active) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:53.0972647Z test_reversed_routing_markers (__main__.RouteMutationTests.test_reversed_routing_markers) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:53.3480344Z test_role_binding_and_model_policy (__main__.RouteMutationTests.test_role_binding_and_model_policy) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:53.4821709Z test_script_named_by_link_label_only (__main__.RouteMutationTests.test_script_named_by_link_label_only) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:53.6167276Z test_the_chat_only_list_must_exist (__main__.RouteMutationTests.test_the_chat_only_list_must_exist) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:53.7510813Z test_the_chat_only_list_must_hold_a_rule (__main__.RouteMutationTests.test_the_chat_only_list_must_hold_a_rule) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:54.0018515Z test_the_known_overlap_is_listed_and_a_new_one_is_not (__main__.RouteMutationTests.test_the_known_overlap_is_listed_and_a_new_one_is_not) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:54.1354617Z test_unknown_profile (__main__.RouteMutationTests.test_unknown_profile) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:54.2683334Z test_valid_scaffold (__main__.RouteMutationTests.test_valid_scaffold) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:54.4599152Z test_workflow_equal_to_its_word_budget_passes_and_prints_the_count (__main__.RouteMutationTests.test_workflow_equal_to_its_word_budget_passes_and_prints_the_count) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:54.7106103Z test_workflow_over_its_word_budget (__main__.RouteMutationTests.test_workflow_over_its_word_budget) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:54.9609823Z test_workflow_under_its_word_budget_names_the_cut_step (__main__.RouteMutationTests.test_workflow_under_its_word_budget_names_the_cut_step) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:55.0942036Z test_wrong_shared_principle (__main__.RouteMutationTests.test_wrong_shared_principle) ... ok
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:55.0942588Z 
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:55.0943128Z ----------------------------------------------------------------------
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:55.0943935Z Ran 47 tests in 7.824s
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:55.0944291Z 
+unit tests (python3)	test_lint_skills.py	2026-11-10T07:37:55.0944458Z OK
+unit tests (python3)	test_design_surfaces.py	﻿2026-11-10T07:37:55.1116086Z ##[group]Run python3 kc-dev-flow-2/scripts/test_design_surfaces.py
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:55.1116602Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_design_surfaces.py^[[0m
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:55.1166056Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:55.1166305Z env:
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:55.1166517Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:55.1166929Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:55.1167381Z ##[endgroup]
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9476116Z .........ssss............................................................................................................................................................................................................
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9477369Z ----------------------------------------------------------------------
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9477941Z Ran 217 tests in 4.728s
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9478166Z 
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9478296Z OK (skipped=4)
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9479663Z task.md: missing required body field: Non-goals
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9480332Z task.md: missing required body field: Budget
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9480811Z task.md: missing required body field: Stop condition
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9481390Z task.md: '## FO alignment' has 2 'Surfaces:' lines, expected exactly 1
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9481990Z task.md: design surfaces presentable
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9482402Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9483153Z task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9484139Z task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9484695Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9485129Z task.md: 'Surfaces:' has unknown value(s) api
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9485576Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9486047Z task.md: 'Surfaces:' combines 'none' with other values
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9486552Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9487036Z task.md: '## FO alignment' needs a 'Visible change:' line
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9487537Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9488038Z task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9488577Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9489073Z task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9489609Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9490078Z task.md: surface 'ui' needs a 'UI proposal:' line with text
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9490577Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9491047Z task.md: surface 'ui' Preview 'missing.html' does not exist
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9491554Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9492044Z task.md: surface 'db' needs a 'Migration source:' line with a value
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9492574Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9493373Z task.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9494027Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9494457Z task.md: design surfaces presentable
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9494880Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9495319Z task.md: seed fields and FO alignment recorded
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9495810Z task.md: seed fields and FO alignment recorded
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9496281Z task.md: seed fields and FO alignment recorded
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9496796Z task.md: surface 'ui' needs a 'UI proposal:' line with text
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9497346Z task.md: surface 'ui' needs a 'Preview:' line
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9497799Z scope check not run: no frontmatter
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9498231Z task.md: missing '## FO alignment' section
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9498747Z task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9499351Z task.md: '## FO alignment' needs a 'Visible change:' line
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9499964Z task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9500689Z task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9501586Z task.md: 'Surfaces:' has unknown value(s) api
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9502153Z task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+unit tests (python3)	test_design_surfaces.py	2026-11-10T07:37:59.9502798Z task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+unit tests (python3)	test_adr_doc_checks.py	﻿2026-11-10T07:37:59.9722451Z ##[group]Run python3 kc-dev-flow-2/scripts/test_adr_doc_checks.py
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:37:59.9723247Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_adr_doc_checks.py^[[0m
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:37:59.9771585Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:37:59.9771843Z env:
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:37:59.9772041Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:37:59.9772444Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:37:59.9772873Z ##[endgroup]
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1626875Z .........
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1627410Z ----------------------------------------------------------------------
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1628175Z 1 ADR file(s) checked, 0 legacy; changed records not checked (no --since or --require)
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1629518Z required ADR 2: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1630642Z 2 ADR file(s) checked, 0 legacy
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1631014Z 1 ADR file(s) checked, 0 legacy
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1631473Z 0002-first.md: Decision needs a '**Words:**' line
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1632008Z 0002-first.md: Decision needs a '**Options considered:**' line
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1633476Z 0002-first.md: sections must be exactly Status, Context, Decision, Consequences in that order
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1634187Z 0002-first.md: section 'Context' is empty
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1634852Z 0002-first.md: status 'Done' is not Proposed, Accepted, Deprecated or 'Superseded by NNNN'
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1635553Z Ran 9 tests in 0.122s
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1635769Z 
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1635891Z OK
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1636259Z 0002-first.md: superseded by 0009, which does not exist
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1636825Z 0002-first.md: first line must be '# 2. <title>'
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1637518Z 0002-first.md: needs a 'Date: YYYY-MM-DD' line before the first section
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1638205Z 2-first.md: file name must be NNNN-short-title.md
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1638809Z 0002-second.md: number 2 is also used by 0002-first.md
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1639307Z 2 ADR file(s) checked, 1 legacy
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1639803Z required ADR 1 is a legacy record; a new ruling needs its own file
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1640370Z required ADR 3 does not exist
+unit tests (python3)	test_adr_doc_checks.py	2026-11-10T07:38:00.1640755Z 1 ADR file(s) checked, 0 legacy
+unit tests (python3)	test_poc_readme.py	﻿2026-11-10T07:38:00.1785072Z ##[group]Run python3 kc-dev-flow-2/scripts/test_poc_readme.py
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:00.1785555Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_poc_readme.py^[[0m
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:00.1835447Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:00.1835705Z env:
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:00.1835902Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:00.1836312Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:00.1836747Z ##[endgroup]
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9502423Z .........
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9503204Z ----------------------------------------------------------------------
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9503759Z Ran 9 tests in 1.687s
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9503964Z 
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9504087Z OK
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9504473Z POC README matches the five-stage README without ideation
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9504983Z --- derived
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9505312Z +++ /tmp/tmpbekoe938/poc.md
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9505700Z @@ -7,7 +7,7 @@
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9506010Z  extensions: [learn, peers]
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9506378Z  second-reviewer: ""
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9506944Z  state: .spacedock-state
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9507269Z -trunk: next
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9507540Z +trunk: main
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9507789Z  stages:
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9508030Z    defaults:
+unit tests (python3)	test_poc_readme.py	2026-11-10T07:38:01.9508294Z      worktree: false
+unit tests (python3)	test_comment_ratio.py	﻿2026-11-10T07:38:01.9666713Z ##[group]Run python3 kc-dev-flow-2/scripts/test_comment_ratio.py
+unit tests (python3)	test_comment_ratio.py	2026-11-10T07:38:01.9667221Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_comment_ratio.py^[[0m
+unit tests (python3)	test_comment_ratio.py	2026-11-10T07:38:01.9714150Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_comment_ratio.py	2026-11-10T07:38:01.9714410Z env:
+unit tests (python3)	test_comment_ratio.py	2026-11-10T07:38:01.9714602Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_comment_ratio.py	2026-11-10T07:38:01.9715010Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_comment_ratio.py	2026-11-10T07:38:01.9715442Z ##[endgroup]
+unit tests (python3)	test_comment_ratio.py	2026-11-10T07:38:04.5012161Z ..............
+unit tests (python3)	test_comment_ratio.py	2026-11-10T07:38:04.5012784Z ----------------------------------------------------------------------
+unit tests (python3)	test_comment_ratio.py	2026-11-10T07:38:04.5013564Z Ran 14 tests in 2.471s
+unit tests (python3)	test_comment_ratio.py	2026-11-10T07:38:04.5013805Z 
+unit tests (python3)	test_comment_ratio.py	2026-11-10T07:38:04.5013941Z OK
+unit tests (python3)	test_number_guards.py	﻿2026-11-10T07:38:04.5145280Z ##[group]Run python3 kc-dev-flow-2/scripts/test_number_guards.py
+unit tests (python3)	test_number_guards.py	2026-11-10T07:38:04.5145775Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_number_guards.py^[[0m
+unit tests (python3)	test_number_guards.py	2026-11-10T07:38:04.5192163Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_number_guards.py	2026-11-10T07:38:04.5192423Z env:
+unit tests (python3)	test_number_guards.py	2026-11-10T07:38:04.5192624Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_number_guards.py	2026-11-10T07:38:04.5193184Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_number_guards.py	2026-11-10T07:38:04.5193626Z ##[endgroup]
+unit tests (python3)	test_number_guards.py	2026-11-10T07:38:11.6440655Z ......................................
+unit tests (python3)	test_number_guards.py	2026-11-10T07:38:11.6441359Z ----------------------------------------------------------------------
+unit tests (python3)	test_number_guards.py	2026-11-10T07:38:11.6441786Z Ran 38 tests in 7.065s
+unit tests (python3)	test_number_guards.py	2026-11-10T07:38:11.6442137Z 
+unit tests (python3)	test_number_guards.py	2026-11-10T07:38:11.6442507Z OK
+unit tests (python3)	extensions/codex/test_codex_review.py	﻿2026-11-10T07:38:11.6577297Z ##[group]Run python3 kc-dev-flow-2/extensions/codex/test_codex_review.py
+unit tests (python3)	extensions/codex/test_codex_review.py	2026-11-10T07:38:11.6578405Z ^[[36;1mpython3 kc-dev-flow-2/extensions/codex/test_codex_review.py^[[0m
+unit tests (python3)	extensions/codex/test_codex_review.py	2026-11-10T07:38:11.6638761Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	extensions/codex/test_codex_review.py	2026-11-10T07:38:11.6639171Z env:
+unit tests (python3)	extensions/codex/test_codex_review.py	2026-11-10T07:38:11.6639483Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	extensions/codex/test_codex_review.py	2026-11-10T07:38:11.6640162Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	extensions/codex/test_codex_review.py	2026-11-10T07:38:11.6640896Z ##[endgroup]
+unit tests (python3)	extensions/codex/test_codex_review.py	2026-11-10T07:38:11.7576930Z ....................................
+unit tests (python3)	extensions/codex/test_codex_review.py	2026-11-10T07:38:11.7577715Z ----------------------------------------------------------------------
+unit tests (python3)	extensions/codex/test_codex_review.py	2026-11-10T07:38:11.7578369Z Ran 36 tests in 0.007s
+unit tests (python3)	extensions/codex/test_codex_review.py	2026-11-10T07:38:11.7578672Z 
+unit tests (python3)	extensions/codex/test_codex_review.py	2026-11-10T07:38:11.7578918Z OK
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	﻿2026-11-10T07:38:11.7733693Z ##[group]Run python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	2026-11-10T07:38:11.7734282Z ^[[36;1mpython3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py^[[0m
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	2026-11-10T07:38:11.7782130Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	2026-11-10T07:38:11.7782380Z env:
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	2026-11-10T07:38:11.7782589Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	2026-11-10T07:38:11.7783421Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	2026-11-10T07:38:11.7783868Z ##[endgroup]
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	2026-11-10T07:38:12.4655635Z .....
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	2026-11-10T07:38:12.4656131Z ----------------------------------------------------------------------
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	2026-11-10T07:38:12.4656676Z Ran 5 tests in 0.629s
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	2026-11-10T07:38:12.4656889Z 
+unit tests (python3)	extensions/roborev/test_roborev_gate.py	2026-11-10T07:38:12.4657015Z OK
+unit tests (python3)	extensions/copilot/test_copilot_review.py	﻿2026-11-10T07:38:12.4803440Z ##[group]Run python3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py
+unit tests (python3)	extensions/copilot/test_copilot_review.py	2026-11-10T07:38:12.4804511Z ^[[36;1mpython3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py^[[0m
+unit tests (python3)	extensions/copilot/test_copilot_review.py	2026-11-10T07:38:12.4873633Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	extensions/copilot/test_copilot_review.py	2026-11-10T07:38:12.4874066Z env:
+unit tests (python3)	extensions/copilot/test_copilot_review.py	2026-11-10T07:38:12.4874415Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	extensions/copilot/test_copilot_review.py	2026-11-10T07:38:12.4875152Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	extensions/copilot/test_copilot_review.py	2026-11-10T07:38:12.4875928Z ##[endgroup]
+unit tests (python3)	extensions/copilot/test_copilot_review.py	2026-11-10T07:38:12.5476878Z ...............
+unit tests (python3)	extensions/copilot/test_copilot_review.py	2026-11-10T07:38:12.5477487Z ----------------------------------------------------------------------
+unit tests (python3)	extensions/copilot/test_copilot_review.py	2026-11-10T07:38:12.5478078Z Ran 15 tests in 0.001s
+unit tests (python3)	extensions/copilot/test_copilot_review.py	2026-11-10T07:38:12.5478310Z 
+unit tests (python3)	extensions/copilot/test_copilot_review.py	2026-11-10T07:38:12.5478426Z OK
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	﻿2026-11-10T07:38:12.5590714Z ##[group]Run python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	2026-11-10T07:38:12.5591342Z ^[[36;1mpython3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py^[[0m
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	2026-11-10T07:38:12.5638109Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	2026-11-10T07:38:12.5638360Z env:
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	2026-11-10T07:38:12.5638558Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	2026-11-10T07:38:12.5638966Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	2026-11-10T07:38:12.5639404Z ##[endgroup]
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	2026-11-10T07:38:12.8985757Z .......................
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	2026-11-10T07:38:12.8986177Z ----------------------------------------------------------------------
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	2026-11-10T07:38:12.8986539Z Ran 23 tests in 0.272s
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	2026-11-10T07:38:12.8986692Z 
+unit tests (python3)	extensions/journey-map/test_map_footprint.py	2026-11-10T07:38:12.8986771Z OK
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	﻿2026-11-10T07:38:12.9149533Z ##[group]Run python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:12.9150296Z ^[[36;1mpython3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py^[[0m
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:12.9197968Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:12.9198227Z env:
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:12.9198430Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:12.9198842Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:12.9199276Z ##[endgroup]
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:17.2302300Z ...................................................sss.......................................s............................
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:17.2303706Z ----------------------------------------------------------------------
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:17.2304325Z Ran 122 tests in 4.188s
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:17.2304580Z 
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:17.2304727Z OK (skipped=4)
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:17.2305241Z not run: node, kc-journey-map dependencies or spacedock missing
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:17.2306353Z not run: node, kc-journey-map dependencies or spacedock missing
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:17.2307162Z not run: node, kc-journey-map dependencies or spacedock missing
+unit tests (python3)	extensions/release-acceptance/test_release_acceptance.py	2026-11-10T07:38:17.2307990Z not run: node or journey-accept.mjs missing, or its yaml dependency is not installed
+unit tests (python3)	test_dispatch_records.py	﻿2026-11-10T07:38:17.2570852Z ##[group]Run python3 kc-dev-flow-2/scripts/test_dispatch_records.py
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:38:17.2571388Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_dispatch_records.py^[[0m
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:38:17.2618241Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:38:17.2618495Z env:
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:38:17.2618693Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:38:17.2619109Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:38:17.2619544Z ##[endgroup]
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4788647Z .......s............./tmp/tmp5peepyd4/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4801696Z /tmp/tmp0fwco9kc/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4814494Z /tmp/tmp8afelhfr/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4845843Z ../tmp/tmplkthk1gp/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4857580Z /tmp/tmpnu6m8g1_/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4869178Z /tmp/tmpc7jrdub2/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4881180Z ./tmp/tmp4hhff_23/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4899321Z ./tmp/tmpizvmqrva/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4913676Z /tmp/tmptoblo5sc/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4927911Z /tmp/tmplgfr5kq0/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4941199Z /tmp/tmpa3rfmouw/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4953213Z /tmp/tmpmftgrlia/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4965836Z ./tmp/tmphcvcrr0q/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4978391Z ./tmp/tmpmnirw4pd/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.4990627Z /tmp/tmpeqmf4h0k/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5002667Z /tmp/tmpnpe_8rb1/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5014923Z /tmp/tmp53admrwp/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5027382Z /tmp/tmpbj00ygat/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5039771Z /tmp/tmpq3js91wa/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5052159Z ./tmp/tmpo25v03w9/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5064171Z /tmp/tmptkmknkl0/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5076504Z /tmp/tmpzwriy_01/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5088805Z ./tmp/tmp_as92v1b/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5105879Z ../tmp/tmp4_y7wgjo/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5117992Z /tmp/tmpohohoudx/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5130112Z /tmp/tmpm36t209m/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5141655Z ./tmp/tmpv_3uektc/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5155906Z ./tmp/tmpf8xkalez/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5169317Z /tmp/tmpwd0da901/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5182562Z /tmp/tmp12lbhdwm/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5196173Z /tmp/tmpnc2aybv8/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5209303Z /tmp/tmpv89nugfk/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5224459Z ./tmp/tmpsjhu7llg/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5238701Z /tmp/tmp20v_awqv/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5251929Z /tmp/tmpms_1gd56/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5264197Z /tmp/tmp8gy1d7zf/task/dispatch/ideation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5275252Z /tmp/tmp80mc7e02/task/elsewhere/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5286366Z /tmp/tmpf1ejmqj6/task/dispatch/validation-x.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5298296Z /tmp/tmpa5w5r4pd/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5312367Z /tmp/tmpj9a2lqb3/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5326572Z /tmp/tmp_dwz2jrm/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5340528Z /tmp/tmpa90io7t3/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5354349Z /tmp/tmpmpbemsws/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5368295Z /tmp/tmpod1wuslv/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5380435Z ./tmp/tmpt0f3j_w0/r.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5390172Z ./tmp/tmpgkqihf6n/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5400734Z /tmp/tmp9a0gskzz/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5411035Z /tmp/tmpv7boo5qh/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5658027Z ....../tmp/tmpy6tl54gp/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5670980Z /tmp/tmplpt301k0/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5684225Z /tmp/tmpt0op96hg/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.5717936Z .../tmp/tmpcurw4cf9/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.6397716Z ......../tmp/tmp8x1sah1f/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:01.6674004Z .../tmp/tmpv_v4qh3k/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:17.6835494Z ............................................../tmp/tmpmt950o5x/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:17.7347495Z .........../tmp/tmpkozuseym/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:17.7371322Z /tmp/tmp6o0kri9h/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:17.7452469Z ..
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:17.7453066Z ----------------------------------------------------------------------
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:17.7453605Z Ran 115 tests in 60.381s
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:17.7453770Z 
+unit tests (python3)	test_dispatch_records.py	2026-11-10T07:39:17.7453869Z OK (skipped=1)
+unit tests (python3)	test_delivery_gate.py	﻿2026-11-10T07:39:17.7652315Z ##[group]Run python3 kc-dev-flow-2/scripts/test_delivery_gate.py
+unit tests (python3)	test_delivery_gate.py	2026-11-10T07:39:17.7652828Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_delivery_gate.py^[[0m
+unit tests (python3)	test_delivery_gate.py	2026-11-10T07:39:17.7699629Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_delivery_gate.py	2026-11-10T07:39:17.7699883Z env:
+unit tests (python3)	test_delivery_gate.py	2026-11-10T07:39:17.7700079Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_delivery_gate.py	2026-11-10T07:39:17.7700491Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_delivery_gate.py	2026-11-10T07:39:17.7700925Z ##[endgroup]
+unit tests (python3)	test_delivery_gate.py	2026-11-10T07:40:22.5134631Z .....................................................................................................s.................................................................................................
+unit tests (python3)	test_delivery_gate.py	2026-11-10T07:40:22.5135564Z ----------------------------------------------------------------------
+unit tests (python3)	test_delivery_gate.py	2026-11-10T07:40:22.5136180Z Ran 199 tests in 64.616s
+unit tests (python3)	test_delivery_gate.py	2026-11-10T07:40:22.5136460Z 
+unit tests (python3)	test_delivery_gate.py	2026-11-10T07:40:22.5136609Z OK (skipped=1)
+unit tests (python3)	test_validation_security.py	﻿2026-11-10T07:40:22.5416189Z ##[group]Run python3 kc-dev-flow-2/scripts/test_validation_security.py
+unit tests (python3)	test_validation_security.py	2026-11-10T07:40:22.5416750Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_validation_security.py^[[0m
+unit tests (python3)	test_validation_security.py	2026-11-10T07:40:22.5463206Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_validation_security.py	2026-11-10T07:40:22.5463465Z env:
+unit tests (python3)	test_validation_security.py	2026-11-10T07:40:22.5463664Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_validation_security.py	2026-11-10T07:40:22.5464079Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_validation_security.py	2026-11-10T07:40:22.5464517Z ##[endgroup]
+unit tests (python3)	test_validation_security.py	2026-11-10T07:40:22.9318679Z .....
+unit tests (python3)	test_validation_security.py	2026-11-10T07:40:22.9319236Z ----------------------------------------------------------------------
+unit tests (python3)	test_validation_security.py	2026-11-10T07:40:22.9319777Z Ran 5 tests in 0.322s
+unit tests (python3)	test_validation_security.py	2026-11-10T07:40:22.9319986Z 
+unit tests (python3)	test_validation_security.py	2026-11-10T07:40:22.9320098Z OK
+unit tests (python3)	test_pr_watch.py	﻿2026-11-10T07:40:22.9457935Z ##[group]Run python3 kc-dev-flow-2/scripts/test_pr_watch.py
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:22.9458424Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_pr_watch.py^[[0m
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:22.9505190Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:22.9505446Z env:
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:22.9505646Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:22.9506045Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:22.9506480Z ##[endgroup]
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:23.3083888Z ................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:23.3084907Z                         {add,check,wait,tasks} [args ...]
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:23.3086060Z test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from add, check, wait, tasks)
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:44.4800363Z .......................................................................................................
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:44.4801017Z ----------------------------------------------------------------------
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:44.4801535Z Ran 135 tests in 21.396s
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:44.4801720Z 
+unit tests (python3)	test_pr_watch.py	2026-11-10T07:40:44.4801817Z OK
+unit tests (python3)	test_replay_dispatch.py	﻿2026-11-10T07:40:44.5018447Z ##[group]Run python3 kc-dev-flow-2/scripts/test_replay_dispatch.py
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:44.5019062Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_replay_dispatch.py^[[0m
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:44.5066768Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:44.5067088Z env:
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:44.5067340Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:44.5067783Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:44.5068266Z ##[endgroup]
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:45.3257579Z ........
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:45.3258118Z ----------------------------------------------------------------------
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:45.3258698Z Ran 8 tests in 0.743s
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:45.3258929Z 
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:45.3259056Z OK
+unit tests (python3)	test_replay_dispatch.py	2026-11-10T07:40:45.3273821Z removed /tmp/tmpt55ax2k1/runs/r1
+unit tests (python3)	test_decision_ledger.py	﻿2026-11-10T07:40:45.3414188Z ##[group]Run python3 kc-dev-flow-2/scripts/test_decision_ledger.py
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.3415008Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_decision_ledger.py^[[0m
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.3461809Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.3462070Z env:
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.3462272Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.3462683Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.3463377Z ##[endgroup]
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.4130686Z .......not a directory: /tmp/tmpowf48hvk/nope
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.4291491Z ............
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.4292010Z ----------------------------------------------------------------------
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.4292572Z Ran 19 tests in 0.025s
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.4292803Z 
+unit tests (python3)	test_decision_ledger.py	2026-11-10T07:40:45.4293108Z OK
+unit tests (python3)	test_package_version.py	﻿2026-11-10T07:40:45.4402714Z ##[group]Run python3 kc-dev-flow-2/scripts/test_package_version.py
+unit tests (python3)	test_package_version.py	2026-11-10T07:40:45.4403569Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_package_version.py^[[0m
+unit tests (python3)	test_package_version.py	2026-11-10T07:40:45.4449941Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_package_version.py	2026-11-10T07:40:45.4450194Z env:
+unit tests (python3)	test_package_version.py	2026-11-10T07:40:45.4450410Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_package_version.py	2026-11-10T07:40:45.4450832Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_package_version.py	2026-11-10T07:40:45.4451287Z ##[endgroup]
+unit tests (python3)	test_package_version.py	2026-11-10T07:40:45.5016858Z ......
+unit tests (python3)	test_package_version.py	2026-11-10T07:40:45.5017678Z ----------------------------------------------------------------------
+unit tests (python3)	test_package_version.py	2026-11-10T07:40:45.5018362Z Ran 6 tests in 0.002s
+unit tests (python3)	test_package_version.py	2026-11-10T07:40:45.5018618Z 
+unit tests (python3)	test_package_version.py	2026-11-10T07:40:45.5018890Z OK
+unit tests (python3)	test_workflow_checkout.py	﻿2026-11-10T07:40:45.5124893Z ##[group]Run python3 kc-dev-flow-2/scripts/test_workflow_checkout.py
+unit tests (python3)	test_workflow_checkout.py	2026-11-10T07:40:45.5125582Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_workflow_checkout.py^[[0m
+unit tests (python3)	test_workflow_checkout.py	2026-11-10T07:40:45.5176756Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_workflow_checkout.py	2026-11-10T07:40:45.5177098Z env:
+unit tests (python3)	test_workflow_checkout.py	2026-11-10T07:40:45.5177489Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_workflow_checkout.py	2026-11-10T07:40:45.5178004Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_workflow_checkout.py	2026-11-10T07:40:45.5178668Z ##[endgroup]
+unit tests (python3)	test_workflow_checkout.py	2026-11-10T07:40:47.1786343Z .............
+unit tests (python3)	test_workflow_checkout.py	2026-11-10T07:40:47.1787058Z ----------------------------------------------------------------------
+unit tests (python3)	test_workflow_checkout.py	2026-11-10T07:40:47.1787578Z Ran 13 tests in 1.604s
+unit tests (python3)	test_workflow_checkout.py	2026-11-10T07:40:47.1787790Z 
+unit tests (python3)	test_workflow_checkout.py	2026-11-10T07:40:47.1787980Z OK
+unit tests (python3)	test_observer_check.py	﻿2026-11-10T07:40:47.1909736Z ##[group]Run python3 kc-dev-flow-2/scripts/test_observer_check.py
+unit tests (python3)	test_observer_check.py	2026-11-10T07:40:47.1910234Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_observer_check.py^[[0m
+unit tests (python3)	test_observer_check.py	2026-11-10T07:40:47.1957767Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_observer_check.py	2026-11-10T07:40:47.1958024Z env:
+unit tests (python3)	test_observer_check.py	2026-11-10T07:40:47.1958231Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_observer_check.py	2026-11-10T07:40:47.1958651Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_observer_check.py	2026-11-10T07:40:47.1959091Z ##[endgroup]
+unit tests (python3)	test_observer_check.py	2026-11-10T07:40:48.8030968Z ...................
+unit tests (python3)	test_observer_check.py	2026-11-10T07:40:48.8033229Z ----------------------------------------------------------------------
+unit tests (python3)	test_observer_check.py	2026-11-10T07:40:48.8033893Z Ran 19 tests in 1.551s
+unit tests (python3)	test_observer_check.py	2026-11-10T07:40:48.8034146Z 
+unit tests (python3)	test_observer_check.py	2026-11-10T07:40:48.8034280Z OK
+unit tests (python3)	test_merge_audit.py	﻿2026-11-10T07:40:48.8161257Z ##[group]Run python3 kc-dev-flow-2/scripts/test_merge_audit.py
+unit tests (python3)	test_merge_audit.py	2026-11-10T07:40:48.8161747Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_merge_audit.py^[[0m
+unit tests (python3)	test_merge_audit.py	2026-11-10T07:40:48.8207846Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_merge_audit.py	2026-11-10T07:40:48.8208098Z env:
+unit tests (python3)	test_merge_audit.py	2026-11-10T07:40:48.8208297Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_merge_audit.py	2026-11-10T07:40:48.8208707Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_merge_audit.py	2026-11-10T07:40:48.8209140Z ##[endgroup]
+unit tests (python3)	test_merge_audit.py	2026-11-10T07:40:52.1631442Z .................
+unit tests (python3)	test_merge_audit.py	2026-11-10T07:40:52.1632019Z ----------------------------------------------------------------------
+unit tests (python3)	test_merge_audit.py	2026-11-10T07:40:52.1632572Z Ran 17 tests in 3.286s
+unit tests (python3)	test_merge_audit.py	2026-11-10T07:40:52.1632809Z 
+unit tests (python3)	test_merge_audit.py	2026-11-10T07:40:52.1633103Z OK
+unit tests (python3)	test_role_triggers.py	﻿2026-11-10T07:40:52.1764128Z ##[group]Run python3 kc-dev-flow-2/scripts/test_role_triggers.py
+unit tests (python3)	test_role_triggers.py	2026-11-10T07:40:52.1764629Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_role_triggers.py^[[0m
+unit tests (python3)	test_role_triggers.py	2026-11-10T07:40:52.1810830Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_role_triggers.py	2026-11-10T07:40:52.1811085Z env:
+unit tests (python3)	test_role_triggers.py	2026-11-10T07:40:52.1811285Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_role_triggers.py	2026-11-10T07:40:52.1811694Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_role_triggers.py	2026-11-10T07:40:52.1812625Z ##[endgroup]
+unit tests (python3)	test_role_triggers.py	2026-11-10T07:41:06.9852665Z .................................................
+unit tests (python3)	test_role_triggers.py	2026-11-10T07:41:06.9853460Z ----------------------------------------------------------------------
+unit tests (python3)	test_role_triggers.py	2026-11-10T07:41:06.9853837Z Ran 49 tests in 14.739s
+unit tests (python3)	test_role_triggers.py	2026-11-10T07:41:06.9854039Z 
+unit tests (python3)	test_role_triggers.py	2026-11-10T07:41:06.9854116Z OK
+unit tests (python3)	test_laws_check.py	﻿2026-11-10T07:41:06.9984134Z ##[group]Run python3 kc-dev-flow-2/scripts/test_laws_check.py
+unit tests (python3)	test_laws_check.py	2026-11-10T07:41:06.9984610Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_laws_check.py^[[0m
+unit tests (python3)	test_laws_check.py	2026-11-10T07:41:07.0030598Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_laws_check.py	2026-11-10T07:41:07.0030852Z env:
+unit tests (python3)	test_laws_check.py	2026-11-10T07:41:07.0031048Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_laws_check.py	2026-11-10T07:41:07.0031456Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_laws_check.py	2026-11-10T07:41:07.0031890Z ##[endgroup]
+unit tests (python3)	test_laws_check.py	2026-11-10T07:41:37.5968589Z ..............................................................s..
+unit tests (python3)	test_laws_check.py	2026-11-10T07:41:37.5970058Z ----------------------------------------------------------------------
+unit tests (python3)	test_laws_check.py	2026-11-10T07:41:37.5970940Z Ran 65 tests in 30.529s
+unit tests (python3)	test_laws_check.py	2026-11-10T07:41:37.5971207Z 
+unit tests (python3)	test_laws_check.py	2026-11-10T07:41:37.5971331Z OK (skipped=1)
+unit tests (python3)	test_learning.py	﻿2026-11-10T07:41:37.6177939Z ##[group]Run python3 kc-dev-flow-2/scripts/test_learning.py
+unit tests (python3)	test_learning.py	2026-11-10T07:41:37.6178416Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_learning.py^[[0m
+unit tests (python3)	test_learning.py	2026-11-10T07:41:37.6225358Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_learning.py	2026-11-10T07:41:37.6225615Z env:
+unit tests (python3)	test_learning.py	2026-11-10T07:41:37.6225819Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_learning.py	2026-11-10T07:41:37.6226234Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_learning.py	2026-11-10T07:41:37.6226667Z ##[endgroup]
+unit tests (python3)	test_learning.py	2026-11-10T07:41:38.2917826Z test_a_second_add_of_a_listed_pr_erases_the_flip_it_missed (__main__.LearningTests.test_a_second_add_of_a_listed_pr_erases_the_flip_it_missed) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:39.1976383Z test_acknowledged_open_delivery_is_found_by_notices_all_and_presented_once_settled (__main__.LearningTests.test_acknowledged_open_delivery_is_found_by_notices_all_and_presented_once_settled) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:39.8381877Z test_closed_pr_settles_and_release_of_open_delivery_is_refused (__main__.LearningTests.test_closed_pr_settles_and_release_of_open_delivery_is_refused) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:40.0459612Z test_completed_legacy_counts_remain_readable (__main__.LearningTests.test_completed_legacy_counts_remain_readable) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:40.3897596Z test_concurrent_completion_publishes_one_whole_result (__main__.LearningTests.test_concurrent_completion_publishes_one_whole_result) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:40.7242247Z test_count_pattern_thousands_derived_and_punctuation (__main__.LearningTests.test_count_pattern_thousands_derived_and_punctuation) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:41.7188955Z test_delivery_claim_race_and_interrupted_remote_response (__main__.LearningTests.test_delivery_claim_race_and_interrupted_remote_response) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:42.3308004Z test_delivery_recover_absent_refused_on_released_job (__main__.LearningTests.test_delivery_recover_absent_refused_on_released_job) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:42.7405419Z test_delivery_recover_advance_refuses_different_pr (__main__.LearningTests.test_delivery_recover_advance_refuses_different_pr) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:43.1604326Z test_delivery_recover_advance_refuses_regression_from_merged (__main__.LearningTests.test_delivery_recover_advance_refuses_regression_from_merged) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:43.5785739Z test_delivery_recover_advances_own_open_observation_to_closed (__main__.LearningTests.test_delivery_recover_advances_own_open_observation_to_closed) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:44.0017849Z test_delivery_recover_advances_own_open_observation_to_merged (__main__.LearningTests.test_delivery_recover_advances_own_open_observation_to_merged) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:44.3476642Z test_delivery_recover_already_sent_refuses_closed_observation (__main__.LearningTests.test_delivery_recover_already_sent_refuses_closed_observation) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:44.6922623Z test_delivery_recover_already_sent_refuses_different_owner (__main__.LearningTests.test_delivery_recover_already_sent_refuses_different_owner) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:45.1043631Z test_delivery_recover_already_sent_refuses_existing_observation (__main__.LearningTests.test_delivery_recover_already_sent_refuses_existing_observation) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:45.9272658Z test_delivery_recover_reconciles_already_sent_pr (__main__.LearningTests.test_delivery_recover_reconciles_already_sent_pr) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:47.2747454Z test_delivery_recovery_and_observation_boundaries (__main__.LearningTests.test_delivery_recovery_and_observation_boundaries) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:47.7480198Z test_delivery_reissue_refused_after_merged_stays_non_regressing (__main__.LearningTests.test_delivery_reissue_refused_after_merged_stays_non_regressing) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:48.1625725Z test_delivery_reissue_refused_once_anything_is_observed (__main__.LearningTests.test_delivery_reissue_refused_once_anything_is_observed) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:48.5120129Z test_delivery_reissue_requires_confirmed_absent_observation (__main__.LearningTests.test_delivery_reissue_requires_confirmed_absent_observation) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:49.1298130Z test_delivery_reissue_to_same_owner_without_stopped_attestation (__main__.LearningTests.test_delivery_reissue_to_same_owner_without_stopped_attestation) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:49.7998775Z test_distinct_jobs_cannot_both_claim (__main__.LearningTests.test_distinct_jobs_cannot_both_claim) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:49.8096419Z test_every_wait_ends_on_a_state_a_restart_can_read (__main__.LearningTests.test_every_wait_ends_on_a_state_a_restart_can_read) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:50.2038412Z test_evidence_count_refusal_leaves_pending_token_correctable (__main__.LearningTests.test_evidence_count_refusal_leaves_pending_token_correctable) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:50.2134058Z test_follow_section_leaves_merge_to_the_captain (__main__.LearningTests.test_follow_section_leaves_merge_to_the_captain) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:50.2226146Z test_follow_section_orders_ready_before_merge_ask (__main__.LearningTests.test_follow_section_orders_ready_before_merge_ask) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:50.6871023Z test_foreign_token_evidence_change_and_path_traversal_refused (__main__.LearningTests.test_foreign_token_evidence_change_and_path_traversal_refused) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:50.6967993Z test_head_check_guards_every_record_and_recovery (__main__.LearningTests.test_head_check_guards_every_record_and_recovery) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:51.3550675Z test_ineligible_and_invalid_input_create_no_claim (__main__.LearningTests.test_ineligible_and_invalid_input_create_no_claim) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:52.1454249Z test_interruption_requires_stopped_attestation_and_revokes_token (__main__.LearningTests.test_interruption_requires_stopped_attestation_and_revokes_token) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:52.7447662Z test_invalid_completion_keeps_token_repairable_and_success_immutable (__main__.LearningTests.test_invalid_completion_keeps_token_repairable_and_success_immutable) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:53.5938709Z test_linked_worktree_multiprocess_claim_race (__main__.LearningTests.test_linked_worktree_multiprocess_claim_race) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:55.3494078Z test_new_claim_held_by_in_flight_sibling (__main__.LearningTests.test_new_claim_held_by_in_flight_sibling) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:56.3452375Z test_no_applicable_checks_ends_in_a_disclosed_ask_not_a_wait (__main__.LearningTests.test_no_applicable_checks_ends_in_a_disclosed_ask_not_a_wait) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:56.9495565Z test_no_change_and_mismatched_plan_cannot_claim_delivery (__main__.LearningTests.test_no_change_and_mismatched_plan_cannot_claim_delivery) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:57.7416428Z test_notices_no_directory_creation_and_digest_ack (__main__.LearningTests.test_notices_no_directory_creation_and_digest_ack) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:58.4507547Z test_open_delivery_with_lost_token_settles_from_github (__main__.LearningTests.test_open_delivery_with_lost_token_settles_from_github) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:41:58.9604989Z test_process_crash_during_publication_preserves_uncertainty_or_prior_record (__main__.LearningTests.test_process_crash_during_publication_preserves_uncertainty_or_prior_record) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:03.7122460Z test_ready_pr_with_no_watch_entry_never_shows_the_flip_but_its_row_is_the_exit (__main__.LearningTests.test_ready_pr_with_no_watch_entry_never_shows_the_flip_but_its_row_is_the_exit) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:03.9876593Z test_reclaim_settled_job_bypasses_hold_despite_pending_sibling (__main__.LearningTests.test_reclaim_settled_job_bypasses_hold_despite_pending_sibling) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:04.4532310Z test_recorder_cannot_see_a_different_head_so_the_check_is_the_readers (__main__.LearningTests.test_recorder_cannot_see_a_different_head_so_the_check_is_the_readers) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:07.4051258Z test_release_refusals_and_irreversibility (__main__.LearningTests.test_release_refusals_and_irreversibility) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:08.7700583Z test_replay_of_the_stalled_learning_pr_ends_recorded_without_a_captain_message (__main__.LearningTests.test_replay_of_the_stalled_learning_pr_ends_recorded_without_a_captain_message) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:09.1052414Z test_same_job_reclaim_ignores_hold (__main__.LearningTests.test_same_job_reclaim_ignores_hold) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:10.1079459Z test_settle_is_split_by_actor_and_a_token_holder_needs_no_recovery (__main__.LearningTests.test_settle_is_split_by_actor_and_a_token_holder_needs_no_recovery) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:11.9041559Z test_settled_sibling_releases_hold (__main__.LearningTests.test_settled_sibling_releases_hold) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:13.6134878Z test_still_open_delivery_is_resumed_by_actor_not_left_blocking (__main__.LearningTests.test_still_open_delivery_is_resumed_by_actor_not_left_blocking) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:14.4107771Z test_three_outcomes_and_mixed_preserve_project_files (__main__.LearningTests.test_three_outcomes_and_mixed_preserve_project_files) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:15.3220730Z test_torn_and_missing_record_are_uncertain_not_automatic_retries (__main__.LearningTests.test_torn_and_missing_record_are_uncertain_not_automatic_retries) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:15.8053137Z test_torn_delivery_is_visible_and_requires_explicit_reconciliation (__main__.LearningTests.test_torn_delivery_is_visible_and_requires_explicit_reconciliation) ... ok
+unit tests (python3)	test_learning.py	2026-11-10T07:42:15.8054301Z 
+unit tests (python3)	test_learning.py	2026-11-10T07:42:15.8054603Z ----------------------------------------------------------------------
+unit tests (python3)	test_learning.py	2026-11-10T07:42:15.8055247Z Ran 50 tests in 38.112s
+unit tests (python3)	test_learning.py	2026-11-10T07:42:15.8055489Z 
+unit tests (python3)	test_learning.py	2026-11-10T07:42:15.8055619Z OK
+unit tests (python3)	Checkout pinned Spacedock plugin root	﻿2026-11-10T07:42:15.8240780Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8241172Z with:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8241387Z   repository: spacedock-dev/spacedock
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8241704Z   ref: 4d158a484ec73e184861067f8ed1e20087fdc26a
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8242004Z   persist-credentials: false
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8242251Z   path: .sd-plugin-root
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8244949Z   token: ***
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8245157Z   ssh-strict: true
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8245371Z   ssh-user: git
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8245578Z   clean: true
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8245790Z   sparse-checkout-cone-mode: true
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8246045Z   fetch-depth: 1
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8246243Z   fetch-tags: false
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8246447Z   show-progress: true
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8246649Z   lfs: false
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8246833Z   submodules: false
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8247040Z   set-safe-directory: true
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8247270Z env:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8247458Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8247849Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.8248297Z ##[endgroup]
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9098977Z Syncing repository: spacedock-dev/spacedock
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9105114Z ##[group]Getting Git version info
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9105927Z Working directory is '/home/runner/work/kc-claude-plugins/kc-claude-plugins/.sd-plugin-root'
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9140683Z [command]/usr/bin/git version
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9180784Z git version 2.56.0
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9201251Z ##[endgroup]
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9214657Z Temporarily overriding HOME='/home/runner/work/_temp/8ad76ab0-7db6-4e07-9470-55c3e0636a94' before making global git config changes
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9215969Z Adding repository directory to the temporary git global config as a safe directory
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9219690Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/kc-claude-plugins/kc-claude-plugins/.sd-plugin-root
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9255011Z ##[group]Initializing the repository
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9259869Z [command]/usr/bin/git init /home/runner/work/kc-claude-plugins/kc-claude-plugins/.sd-plugin-root
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9302298Z hint: Using 'master' as the name for the initial branch. This default branch name
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9303507Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9304474Z hint: to use in all of your new repositories, which will suppress this warning,
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9305231Z hint: call:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9305654Z hint:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9306079Z hint: 	git config --global init.defaultBranch <name>
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9306602Z hint:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9307123Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9307966Z hint: 'development'. The just-created branch can be renamed via this command:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9308441Z hint:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9308646Z hint: 	git branch -m <name>
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9308883Z hint:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9309201Z hint: Disable this message with "git config set advice.defaultBranchName false"
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9310128Z Initialized empty Git repository in /home/runner/work/kc-claude-plugins/kc-claude-plugins/.sd-plugin-root/.git/
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9316478Z [command]/usr/bin/git remote add origin https://github.com/spacedock-dev/spacedock
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9349684Z ##[endgroup]
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9350392Z ##[group]Disabling automatic garbage collection
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9354343Z [command]/usr/bin/git config --local gc.auto 0
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9385804Z ##[endgroup]
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9386386Z ##[group]Setting up auth
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9392822Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9425606Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9694162Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9726070Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:15.9988245Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.0020844Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.0294046Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.0340032Z ##[endgroup]
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.0340685Z ##[group]Fetching the repository
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.0353662Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 4d158a484ec73e184861067f8ed1e20087fdc26a
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.7320047Z From https://github.com/spacedock-dev/spacedock
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.7320611Z  * branch            4d158a484ec73e184861067f8ed1e20087fdc26a -> FETCH_HEAD
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.7327016Z ##[endgroup]
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.7327873Z ##[group]Determining the checkout info
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.7333920Z ##[endgroup]
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.7335459Z [command]/usr/bin/git sparse-checkout disable
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.7389394Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.7418259Z ##[group]Checking out the ref
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.7424209Z [command]/usr/bin/git checkout --progress --force 4d158a484ec73e184861067f8ed1e20087fdc26a
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8218249Z Note: switching to '4d158a484ec73e184861067f8ed1e20087fdc26a'.
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8218746Z 
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8219019Z You are in 'detached HEAD' state. You can look around, make experimental
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8219618Z changes and commit them, and you can discard any commits you make in this
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8220209Z state without impacting any branches by switching back to a branch.
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8220582Z 
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8220812Z If you want to create a new branch to retain commits you create, you may
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8221354Z do so (now or later) by using -c with the switch command. Example:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8221673Z 
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8221807Z   git switch -c <new-branch-name>
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8222028Z 
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8222270Z Or undo this operation with:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8222551Z 
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8223170Z   git switch -
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8223429Z 
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8223873Z Turn off this advice by setting config variable advice.detachedHead to false
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8224499Z 
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8224710Z HEAD is now at 4d158a4 release: bump version to spacedock@0.27.2
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8227688Z ##[endgroup]
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8270899Z [command]/usr/bin/git log -1 --format=%H
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8294974Z 4d158a484ec73e184861067f8ed1e20087fdc26a
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8304712Z ##[group]Removing auth
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8308282Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8339470Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8610818Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8635204Z http.https://github.com/.extraheader
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8643199Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8674802Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8944117Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.8975953Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+unit tests (python3)	Checkout pinned Spacedock plugin root	2026-11-10T07:42:16.9239872Z ##[endgroup]
+unit tests (python3)	Install pinned Spacedock	﻿2026-11-10T07:42:16.9375755Z ##[group]Run set -euo pipefail
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9376324Z ^[[36;1mset -euo pipefail^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9376928Z ^[[36;1masset="spacedock_${SPACEDOCK_VERSION#v}_linux_amd64.tar.gz"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9377651Z ^[[36;1mcurl -fsSL -o /tmp/spacedock.tar.gz \^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9378627Z ^[[36;1m  "https://github.com/spacedock-dev/spacedock/releases/download/${SPACEDOCK_VERSION}/${asset}"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9379749Z ^[[36;1mecho "${SPACEDOCK_SHA256}  /tmp/spacedock.tar.gz" | sha256sum -c -^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9380529Z ^[[36;1mtar -xzf /tmp/spacedock.tar.gz -C /tmp^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9381109Z ^[[36;1mmkdir -p "$HOME/.local/bin"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9381753Z ^[[36;1minstall -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9382475Z ^[[36;1mecho "$HOME/.local/bin" >> "$GITHUB_PATH"^[[0m
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9436623Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9436888Z env:
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9437134Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9437555Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:16.9438045Z ##[endgroup]
+unit tests (python3)	Install pinned Spacedock	2026-11-10T07:42:17.0886232Z /tmp/spacedock.tar.gz: OK
+unit tests (python3)	test_dispatch_stage.py	﻿2026-11-10T07:42:17.1223497Z ##[group]Run SPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py
+unit tests (python3)	test_dispatch_stage.py	2026-11-10T07:42:17.1224512Z ^[[36;1mSPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py^[[0m
+unit tests (python3)	test_dispatch_stage.py	2026-11-10T07:42:17.1274380Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_dispatch_stage.py	2026-11-10T07:42:17.1274640Z env:
+unit tests (python3)	test_dispatch_stage.py	2026-11-10T07:42:17.1274837Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_dispatch_stage.py	2026-11-10T07:42:17.1275243Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_dispatch_stage.py	2026-11-10T07:42:17.1275674Z ##[endgroup]
+unit tests (python3)	test_dispatch_stage.py	2026-11-10T07:43:00.2974231Z ........................................
+unit tests (python3)	test_dispatch_stage.py	2026-11-10T07:43:00.2974920Z ----------------------------------------------------------------------
+unit tests (python3)	test_dispatch_stage.py	2026-11-10T07:43:00.2975521Z Ran 40 tests in 43.105s
+unit tests (python3)	test_dispatch_stage.py	2026-11-10T07:43:00.2975772Z 
+unit tests (python3)	test_dispatch_stage.py	2026-11-10T07:43:00.2975911Z OK
+unit tests (python3)	test_sd_dispatch.py	﻿2026-11-10T07:43:00.3120610Z ##[group]Run python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$GITHUB_WORKSPACE/.sd-plugin-root"
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:00.3121477Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$GITHUB_WORKSPACE/.sd-plugin-root"^[[0m
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:00.3168912Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:00.3169172Z env:
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:00.3169373Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:00.3169780Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:00.3170217Z ##[endgroup]
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5883201Z PASS: shared extension-list callers handle inline/block forms, quotes, comments, exact names, empty/no-key controls and unchanged manifests
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5885313Z PASS: roster subprocess replay, absolute/split-root/linked roots, read-only repeatability, full schema/error controls, committed changes/deletion and candidate-author family evidence; legacy record checks do not establish roster use
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5887435Z PASS (spacedock 0.27.2): 10 route/stage/host fresh and reused dispatch handoffs; 10 Team loss controls; wrong-stage and missing-stage refusals
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5888877Z PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5890387Z PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5893991Z PASS: Dispatch facts (complete Team, Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root and the `main` completion line carried into the dispatch file ahead of the checklist beside the builder's `team-lead` block; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone; a correction without a Summary refused and named alone by the checklist read, a complete report under the exact heading accepted
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5906060Z PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the 48 wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo, approval-accepts-stated-recommendation, adr-not-recorded, consent-rules, dispatch-record, resumed-dispatch, dispatch-coverage, adr-since, applied-none, follow-up-reason, decline-settled, late-decline, repair-push-grant, asked-line, send-back, adr-lint-output, ideation-follow-up, dispatch-records-check, pr-watch, readme-keeps-delivery-rules, delivery-question-carries-merge, worker-opens-draft-pr, one-number-per-kind, status-executable, late-ruling-adr, extensions-core, codex-round, roborev-gate, override-record, package-version, second-reviewer, precedent, reviewer-record, adr-recommended, state-commits-through-sd, rework-state-commit, scope-notes-main-line, scope-notes-main-line-skill, correction-request, roster-question-prerequisites, roster-adoption-prerequisites, roster-provider-host) are each asserted present, and each reverted alone to its previous text reports only its own gaps
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5916975Z PASS: native flat/folder slug creation with omitted/matching id passes the seed check; missing Budget and all template placeholders refuse; mismatching native id refuses
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5919127Z PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5921522Z PASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5924203Z PASS: Batch gates survives POC derivation but changes no pilot/POC worker stage definition; inlining mutations reach both implementation definitions
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5926386Z PASS: four separately prepared/committed batch gates retain mapped approve/revise/hold/unanswered authority; stale-binding mutation refuses; resumed approval advances its own task without duplicate resolution
+unit tests (python3)	test_sd_dispatch.py	2026-11-10T07:43:20.5928108Z Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge
+unit tests (python3)	test_observer_recovery.py	﻿2026-11-10T07:43:20.6032329Z ##[group]Run SPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_observer_recovery.py
+unit tests (python3)	test_observer_recovery.py	2026-11-10T07:43:20.6033570Z ^[[36;1mSPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_observer_recovery.py^[[0m
+unit tests (python3)	test_observer_recovery.py	2026-11-10T07:43:20.6080251Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_observer_recovery.py	2026-11-10T07:43:20.6080506Z env:
+unit tests (python3)	test_observer_recovery.py	2026-11-10T07:43:20.6080708Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_observer_recovery.py	2026-11-10T07:43:20.6081123Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_observer_recovery.py	2026-11-10T07:43:20.6081560Z ##[endgroup]
+unit tests (python3)	test_observer_recovery.py	2026-11-10T07:43:21.2003227Z PASS: archive without observer.md detected; state commit refused for the late report; path-scoped commit then state commit published it; validate VALID; check exits 0
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	﻿2026-11-10T07:43:21.2202750Z Post job cleanup.
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	2026-11-10T07:43:21.3051572Z [command]/usr/bin/git version
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	2026-11-10T07:43:21.3090883Z git version 2.56.0
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	2026-11-10T07:43:21.3161410Z Temporarily overriding HOME='/home/runner/work/_temp/d55e87b9-3bc7-4bfb-a710-997ea90fff72' before making global git config changes
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	2026-11-10T07:43:21.3162814Z Adding repository directory to the temporary git global config as a safe directory
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	2026-11-10T07:43:21.3168205Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/kc-claude-plugins/kc-claude-plugins/.sd-plugin-root
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	2026-11-10T07:43:21.3205321Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	2026-11-10T07:43:21.3240456Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	2026-11-10T07:43:21.3516496Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	2026-11-10T07:43:21.3552307Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	2026-11-10T07:43:21.3827629Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+unit tests (python3)	Post Checkout pinned Spacedock plugin root	2026-11-10T07:43:21.3861135Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+unit tests (python3)	Post Checkout	﻿2026-11-10T07:43:21.4301586Z Post job cleanup.
+unit tests (python3)	Post Checkout	2026-11-10T07:43:21.5222713Z [command]/usr/bin/git version
+unit tests (python3)	Post Checkout	2026-11-10T07:43:21.5266500Z git version 2.56.0
+unit tests (python3)	Post Checkout	2026-11-10T07:43:21.5308837Z Temporarily overriding HOME='/home/runner/work/_temp/22e54149-c849-4be9-b5ef-e54ffab08b97' before making global git config changes
+unit tests (python3)	Post Checkout	2026-11-10T07:43:21.5310801Z Adding repository directory to the temporary git global config as a safe directory
+unit tests (python3)	Post Checkout	2026-11-10T07:43:21.5312079Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/kc-claude-plugins/kc-claude-plugins
+unit tests (python3)	Post Checkout	2026-11-10T07:43:21.5352305Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+unit tests (python3)	Post Checkout	2026-11-10T07:43:21.5389359Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+unit tests (python3)	Post Checkout	2026-11-10T07:43:21.5733240Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+unit tests (python3)	Post Checkout	2026-11-10T07:43:21.5769541Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+unit tests (python3)	Post Checkout	2026-11-10T07:43:21.6060718Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+unit tests (python3)	Post Checkout	2026-11-10T07:43:21.6096715Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+unit tests (python3)	Complete job	﻿2026-11-10T07:43:21.6521020Z Cleaning up orphan processes
+unit tests (python3)	Complete job	2026-11-10T07:43:21.6885108Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -347,3 +347,30 @@ ADRs: none: this investigation proposes enforcement of the existing byte-preserv
 
 The authorized byte-preservation repair and five integrated regressions are committed as `3567082b0ec1eeb59346b2d82887a07bc5ffc2fb`; this complete phase-2 report supersedes the phase-1 report's unfixed/waiting-authorization status. CRLF input bytes now survive both record paths and raw role stdout, while the exercised LF records remain byte-identical; full local checks and removal controls pass. Pilot scope remains bounded; FO owns publication, RoboRev and a fresh validation decision on this candidate.
 ADRs: none: no new ruling; existing ADR 0074 is retained and required by the guard.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #827 head 3567082b against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at `3567082b0ec1eeb59346b2d82887a07bc5ffc2fb`, base `6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1`; all AC-1 through AC-10 pass. Full matrix, classified finding closure and limits: `special-role-dispatch-records-built-by-script/validation/independent-2/validation.md`.
+- DONE: Recheck of the Cycle 1 repair: finding F1 of validation-1 (CRLF input bytes rewritten) is closed at this head for the role path and the stage path, and LF-only records are byte-identical to head 8574e879
+  F1 Material is closed: independent raw subprocess/Git-byte captures reproduce the old CRLF defect on both paths and prove the candidate preserves inputs, commits and role stdout; both LF records have identical old/new hashes (`special-role-dispatch-records-built-by-script/validation/independent-2/evidence/repair-bytes.json`).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four-step `special-role-dispatch-records-built-by-script/validation/independent-2/acceptance.sh` passes unchanged under `bash --noprofile --norc`; observed 2, 4 and 5 tests OK, then PASS (`evidence/acceptance.log`). The prescribed installed ADR command with base above and `--require 0074` exits 0 (`evidence/adr-lint-prescribed.log`, paths relative to that independent-2 directory).
+- DONE: Refusal, recovery, routing, floor, flag, numbering, workflow, ADR and lifecycle falsifiers remain decisive
+  Eleven criterion controls and four repair controls are caught by their intended assertions/diagnostics, including removing commit/checks, printing early, wrong build/rank/numbering, omitted instruction/budget/Words and changed idle output (`special-role-dispatch-records-built-by-script/validation/independent-2/evidence/mutations.json`, `evidence/repair-mutations.json`).
+- DONE: Full package checks, retained tests and exact repair scope
+  All 28 commands exit 0, with 1275 unittest cases including 11 optional skips and 40 real-binary stage cases; every package test file is accounted for in `special-role-dispatch-records-built-by-script/validation/independent-2/evidence/checks.json` and `evidence/summary.json`. The prior test functions are AST-identical and production repair is exactly the three authorized substitutions (`evidence/retained-test-cases.json`, `evidence/source-integrity.json`).
+- DONE: Number guards, design, dispatch records, comment measurement and affected-document dispositions
+  Required checks exit 0; live number-guard rerun has no fetch warning/findings; comments 1/192 (0.5%, below 5%); every affected document has a checked disposition (`special-role-dispatch-records-built-by-script/validation/independent-2/evidence/guards.json`, `evidence/number-guards-live.log`, `evidence/comment-ratio.log`, `evidence/doc-verdicts.json`).
+- DONE: Implementation limits and same-candidate hosted evidence assessed
+  Manual no-record calls, higher prod/database floor and unknown models match the accepted limits; real CLI 0.27.2/local plugin 0.27.3 checks are distinct from successful exact-head hosted run 42776608725 with pinned 0.27.2 (`special-role-dispatch-records-built-by-script/validation/independent-2/evidence/limits.json`, `evidence/probes.json`, `evidence/ci-refresh.json`, `evidence/ci-full.log`).
+- DONE: Current PR and product ownership boundary checked
+  PR remains OPEN/Draft at the candidate; remote Codex receipt reports no major issues on that head, inline comments were empty, and main remains the base (`special-role-dispatch-records-built-by-script/validation/independent-2/evidence/pr-final.json`, `evidence/pr-review-comments.json`, `evidence/remote-main.json`). Product branch/bytes remain unchanged and clean.
+- SKIPPED: Live reviewer dispatch, adoption, RoboRev and delivery actions
+  Native reviewer behavior and adoption remain unverified; RoboRev and delivery stay FO-owned. No product push, PR write, review request or merge was performed. CI triggers are unchanged; cost per PR was not measured.
+
+### Summary
+
+Recommend PASSED at `3567082b0ec1eeb59346b2d82887a07bc5ffc2fb`; this recheck supersedes the previous validation verdict for the repaired head, closing F1 without new findings. The bounded Pilot outcome and each retained change are supported by real commit/recovery evidence and removal controls, with raw-byte proof for both record paths and unchanged LF records. FO retains gate, remaining review and delivery ownership; the product candidate and task frontmatter are unchanged.
+ADRs: 0074

@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_role_rejects_incomplete_scope_notes_without_prompt_or_record (__main__.DispatchStageTests.test_role_rejects_incomplete_scope_notes_without_prompt_or_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-2/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 134, in test_role_rejects_incomplete_scope_notes_without_prompt_or_record
+    held = self.role(expected=1)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pr827-independent-2/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pr827-independent-2/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/pr827-independent-2/mutant/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ziyjwbdp/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ziyjwbdp/code/docs/dev2/.spacedock-state/dispatch-fixture-bc1e2b22839c4e3890cbf79697c1023c.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ziyjwbdp/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ziyjwbdp/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock'], '# engineering-reviewer-1\nDispatched: 5c1803557af367787ca61afe0380a019ab78a55f (workflow checkout)\nModel: opus\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nReview the package changes.\n', '')
+
+----------------------------------------------------------------------
+Ran 1 test in 1.053s
+
+FAILED (failures=1)

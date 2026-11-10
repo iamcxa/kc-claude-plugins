@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_role_crlf_inputs_keep_raw_bytes (__main__.DispatchStageTests.test_role_crlf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-2/repair-mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 254, in test_role_crlf_inputs_keep_raw_bytes
+    self.assert_input_bytes(True, "\r\n")
+  File "/private/tmp/pr827-independent-2/repair-mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 246, in assert_input_bytes
+    self.assertEqual(result.stdout, disk)
+AssertionError: b'# e[141 chars]ytes\n\xe4\xbf\x9d\xe7\x95\x99\xe7\xac\xac\xe4[227 chars]97\n' != b'# e[141 chars]ytes\r\n\xe4\xbf\x9d\xe7\x95\x99\xe7\xac\xac\x[237 chars]\r\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.095s
+
+FAILED (failures=1)

@@ -1,0 +1,2 @@
+Inspect the dispatch seam
+Keep these supplied line endings

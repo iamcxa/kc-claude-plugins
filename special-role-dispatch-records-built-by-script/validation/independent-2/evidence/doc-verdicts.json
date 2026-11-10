@@ -1,0 +1,103 @@
+[
+  {
+    "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: the Captain-quoted +6 budget step follows the existing raise rule",
+    "independent_verdict": "confirmed: unaffected: the Captain-quoted +6 budget step follows the existing raise rule"
+  },
+  {
+    "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: worker collaboration rule and its linter remain unchanged",
+    "independent_verdict": "confirmed: unaffected: worker collaboration rule and its linter remain unchanged"
+  },
+  {
+    "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: existing model ranking is reused; the model table and its linter remain unchanged",
+    "independent_verdict": "confirmed: unaffected: existing model ranking is reused; the model table and its linter remain unchanged"
+  },
+  {
+    "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: worker permission-answer procedure and its linter remain unchanged",
+    "independent_verdict": "confirmed: unaffected: worker permission-answer procedure and its linter remain unchanged"
+  },
+  {
+    "doc": "docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "verdict": "unaffected: external-review disposition and its wording pins remain unchanged",
+    "independent_verdict": "confirmed: unaffected: external-review disposition and its wording pins remain unchanged"
+  },
+  {
+    "doc": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_stage.py"
+    ],
+    "verdict": "unaffected: stage dispatch and manual follow-ups keep their existing scope; ADR 0074 adds role mode",
+    "independent_verdict": "confirmed: unaffected: stage dispatch and manual follow-ups keep their existing scope; ADR 0074 adds role mode"
+  },
+  {
+    "doc": "docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md",
+    "state": "updated",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_stage.py"
+    ],
+    "verdict": "updated",
+    "independent_verdict": "confirmed: updated"
+  },
+  {
+    "doc": "kc-dev-flow-2/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "verdict": "unaffected: the maintenance command paths and described stage tests remain valid",
+    "independent_verdict": "confirmed: unaffected: the maintenance command paths and described stage tests remain valid"
+  },
+  {
+    "doc": "kc-dev-flow-2/references/sd/adoption.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "verdict": "unaffected: the unchanged dispatch test command still exercises adoption",
+    "independent_verdict": "confirmed: unaffected: the unchanged dispatch test command still exercises adoption"
+  },
+  {
+    "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: the word-budget and falsifier practices are followed without changing maintenance rules",
+    "independent_verdict": "confirmed: unaffected: the word-budget and falsifier practices are followed without changing maintenance rules"
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "verdict": "unaffected: historical evidence and lifecycle measurement practice are preserved",
+    "independent_verdict": "confirmed: unaffected: historical evidence and lifecycle measurement practice are preserved"
+  }
+]

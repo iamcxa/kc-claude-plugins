@@ -1,0 +1,10 @@
+{
+  "head": "3567082b0ec1eeb59346b2d82887a07bc5ffc2fb",
+  "commands": 28,
+  "all_passed": true,
+  "cases": 1275,
+  "optional_skips": 11,
+  "package_test_files": 27,
+  "criterion_controls": 11,
+  "repair_controls": 4
+}

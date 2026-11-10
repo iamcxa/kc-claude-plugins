@@ -1,0 +1,82 @@
+[
+  {
+    "name": "previous-engineering-reviewer-lf",
+    "exit": 0,
+    "checklist_preserved": true,
+    "notes_preserved": true,
+    "record_exact": true,
+    "committed_exact": true,
+    "stdout_exact": true,
+    "sha256": "bef51f332144b2f30f666cd410d686b02ec4e206cd18cbff79941ac4ff55c938"
+  },
+  {
+    "name": "previous-engineering-reviewer-crlf",
+    "exit": 0,
+    "checklist_preserved": false,
+    "notes_preserved": false,
+    "record_exact": false,
+    "committed_exact": true,
+    "stdout_exact": true,
+    "sha256": "bef51f332144b2f30f666cd410d686b02ec4e206cd18cbff79941ac4ff55c938"
+  },
+  {
+    "name": "previous-ideation-lf",
+    "exit": 0,
+    "checklist_preserved": true,
+    "notes_preserved": true,
+    "record_exact": true,
+    "committed_exact": true,
+    "stdout_exact": null,
+    "sha256": "fd235c775fc3989040fca7614b2b1d3472c0c3d254310fe2986a5860d8aa452b"
+  },
+  {
+    "name": "previous-ideation-crlf",
+    "exit": 0,
+    "checklist_preserved": false,
+    "notes_preserved": false,
+    "record_exact": false,
+    "committed_exact": true,
+    "stdout_exact": null,
+    "sha256": "fd235c775fc3989040fca7614b2b1d3472c0c3d254310fe2986a5860d8aa452b"
+  },
+  {
+    "name": "candidate-engineering-reviewer-lf",
+    "exit": 0,
+    "checklist_preserved": true,
+    "notes_preserved": true,
+    "record_exact": true,
+    "committed_exact": true,
+    "stdout_exact": true,
+    "sha256": "bef51f332144b2f30f666cd410d686b02ec4e206cd18cbff79941ac4ff55c938"
+  },
+  {
+    "name": "candidate-engineering-reviewer-crlf",
+    "exit": 0,
+    "checklist_preserved": true,
+    "notes_preserved": true,
+    "record_exact": true,
+    "committed_exact": true,
+    "stdout_exact": true,
+    "sha256": "187d179a6ac7107ebdeeba64a700d4d69d47a0e91d7aeb6dba42a7a3ef12e938"
+  },
+  {
+    "name": "candidate-ideation-lf",
+    "exit": 0,
+    "checklist_preserved": true,
+    "notes_preserved": true,
+    "record_exact": true,
+    "committed_exact": true,
+    "stdout_exact": null,
+    "sha256": "fd235c775fc3989040fca7614b2b1d3472c0c3d254310fe2986a5860d8aa452b"
+  },
+  {
+    "name": "candidate-ideation-crlf",
+    "exit": 0,
+    "checklist_preserved": true,
+    "notes_preserved": true,
+    "record_exact": true,
+    "committed_exact": true,
+    "stdout_exact": null,
+    "sha256": "7bb1bbeb3f0f62407ec3d4ed79aa5f32b32187542e1a1789ca3ba9fad197d8b4"
+  }
+]

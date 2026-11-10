@@ -1,0 +1,26 @@
+[
+  {
+    "name": "checklist",
+    "exit": 1,
+    "caught": true,
+    "file": "repair-mutation-checklist.log"
+  },
+  {
+    "name": "scope",
+    "exit": 1,
+    "caught": true,
+    "file": "repair-mutation-scope.log"
+  },
+  {
+    "name": "stdout",
+    "exit": 1,
+    "caught": true,
+    "file": "repair-mutation-stdout.log"
+  },
+  {
+    "name": "all-three",
+    "exit": 1,
+    "caught": true,
+    "file": "repair-mutation-all-three.log"
+  }
+]

@@ -1,0 +1,379 @@
+diff --git a/docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md b/docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md
+new file mode 100644
+index 000000000..d0887f77b
+--- /dev/null
++++ b/docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md
+@@ -0,0 +1,64 @@
++# 0074. Special-role calls are built by the stage dispatch script
++
++Date: 2026-11-10
++
++## Status
++
++Accepted
++
++## Context
++
++The batch 17 observer found an engineering-reviewer record written by hand
++without its required parts. The existing dispatch-record checker rejected it,
++but ran after the reviewer had started. ADR 0070 covers stage-worker dispatches;
++Spacedock 0.27.2 has no special-role dispatch builder. The package's
++`dispatch_stage.py` already owns record writing, validation and retry selection.
++
++## Decision
++
++**Words:** 「核准（建議）」 — Captain, host question dialog, 2026-11-10,
++answering the batch 20 ideation question, whose role-record recommendation was
++「(2) 特別角色派工紀錄：由腳本寫好、檢查、提交後才交給審查者；模型低於 opus 或 astra 就拒絕派；README 多 6 個字；完全手動、沒有紀錄的審查不在這張處理。」
++and whose acceptance clause was
++「核准即接受上列每一項建議，包括 README 合計多 8 個字（5931 到 5939）；要改哪項直接說。」.
++Source: `special-role-dispatch-records-built-by-script` ideation gate,
++attempt 1, recorded at 2026-11-10T06:06:50.540718Z on `spacedock-state/dev2`.
++
++**Options considered:**
++- D1: add six README words directing FO to `dispatch_stage.py --role <agent>`
++  (chosen); leaving the instruction in CLI help retains the manual-writing gap.
++- D2: reject supplied models below the opus floor, using `role_triggers.rank`
++  (chosen); accepting any model can start a reviewer below the approved table.
++- D3: leave calls made by hand without a dispatch record outside this task
++  (chosen); joining every Reviewer line to a local record would affect batch-wide
++  calls and ADR 0026's date-based clearing rule.
++
++**Recommended:** D1 yes, D2 yes, D3 not in this task, as accepted at the gate.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/dispatch_stage.py` — `main`, the role branch
++
++For chief-engineer and engineering-reviewer calls, `--role` writes the record
++from FO-supplied checklist and scope notes, checks the model floor and the two
++record checks, then runs `spacedock state commit`. The role branch returns the
++record as the prompt after a successful commit; on commit failure it retains the
++record for reconciliation and withholds stdout. It skips stage building and the
++pending-role hold, since this call supplies the requested role review.
++
++Model and roster remain FO-supplied, as ADR 0070 requires. That record's stage
++scope and manual follow-up rule stay in force. The supplied-model check follows
++ADR 0049's ranking, without resolving a model or changing ADR 0026's clearing
++rule. The README budget rises by six words at startup and resume and at the role
++call; the other two words in the approved joint raise belong to the gate-reason
++task.
++
++## Consequences
++
++Package-built role records are checked and committed before FO receives the
++prompt. Direct manual calls without any record and live-reviewer follow-ups
++remain outside this writer. Unknown model families are refused until the rank
++table recognizes them. The opus floor does not enforce the higher prod/database
++engineering-reviewer requirement; `role_triggers.py` still checks that task fact
++at the next gate. FO commits task edits before building the role prompt, then
++records the Reviewer line after the call. A batch review uses the first named
++task's record, with the other task lines referring to it.
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index b5b3f84dd..68bdb0bfe 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -85,7 +85,7 @@ When requested, chief-engineer reviews the complete package/process batch before
+ ## Stages
+ 
+ Stage workers follow `<package>/references/model-roster.md`; absence retains README defaults.
+-`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer`, `kc-dev-flow-2:design-director` and `kc-dev-flow-2:observer` run on its `## Model table` row, never cheaper. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
++`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer`, `kc-dev-flow-2:design-director` and `kc-dev-flow-2:observer` run on its `## Model table` row, never cheaper. Build chief-engineer and engineering-reviewer calls with `<package>/scripts/dispatch_stage.py --role <agent>`; record each under `## FO alignment` as
+ `Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.
+ 
+ `concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an
+diff --git a/kc-dev-flow-2/scripts/dispatch_stage.py b/kc-dev-flow-2/scripts/dispatch_stage.py
+index baee0e833..8044fcb9e 100644
+--- a/kc-dev-flow-2/scripts/dispatch_stage.py
++++ b/kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Save and check a stage dispatch record before building its Spacedock envelope."""
++"""Save and check a stage or special-role record before returning its dispatch prompt."""
+ 
+ import argparse
+ import hashlib
+@@ -12,6 +12,7 @@ import sys
+ 
+ from design_surfaces import task_folder
+ from number_guards import Misconfigured, frontmatter
++from role_triggers import rank
+ 
+ SCRIPTS = Path(__file__).resolve().parent
+ 
+@@ -148,7 +149,9 @@ def parse_args(argv):
+     parser = argparse.ArgumentParser(description=__doc__)
+     for name in ("workflow-dir", "entity-path", "checklist-file", "scope-notes-file"):
+         parser.add_argument(f"--{name}", type=Path, required=True)
+-    parser.add_argument("--stage", required=True)
++    target = parser.add_mutually_exclusive_group(required=True)
++    target.add_argument("--stage")
++    target.add_argument("--role", choices=("chief-engineer", "engineering-reviewer"))
+     parser.add_argument("--model", required=True)
+     for name in ("roster", "symptom", "note"):
+         parser.add_argument(f"--{name}")
+@@ -161,6 +164,13 @@ def parse_args(argv):
+     mode.add_argument("--advance", action="store_true")
+     mode.add_argument("--bare-mode", action="store_true")
+     args = parser.parse_args(argv)
++    if args.role:
++        if (args.advance or args.bare_mode or args.feedback_reflow or args.candidate
++                or any(getattr(args, name) is not None for name in
++                       ("host", "symptom", "feedback_context_file"))):
++            parser.error("--role cannot use --advance, --bare-mode, --host, --candidate, --symptom, "
++                         "--feedback-context-file or --feedback-reflow")
++        args.stage = args.role
+     if not re.fullmatch(r"[a-z][a-z0-9_-]*", args.stage):
+         parser.error("--stage must be a stage name")
+     if any(not re.fullmatch(r"[0-9a-fA-F]{40}", sha) for sha in args.candidate):
+@@ -171,8 +181,8 @@ def parse_args(argv):
+             value = getattr(args, name)
+             if value is not None:
+                 setattr(args, name, value.resolve(strict=True))
+-        checklist = args.checklist_file.read_text()
+-        notes = args.scope_notes_file.read_text()
++        checklist = args.checklist_file.read_bytes().decode("utf-8")
++        notes = args.scope_notes_file.read_bytes().decode("utf-8")
+         dispatched = git(args.workflow_dir, "rev-parse", "HEAD")
+     except (OSError, UnicodeError, subprocess.CalledProcessError) as error:
+         parser.error(str(error))
+@@ -190,6 +200,11 @@ def main(argv=None):
+               "Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; "
+               "do not blindly state commit divergent data.", file=sys.stderr)
+         return 1
++    if args.role and rank(args.model) < rank("opus"):
++        remove_uncommitted(path, wrote)
++        print("dispatch_stage: dispatch not built; --role needs the opus model floor or above (astra qualifies)",
++              file=sys.stderr)
++        return 1
+     if args.stage in ("implementation", "validation"):
+         roles = subprocess.run([sys.executable, "-B", str(SCRIPTS / "role_triggers.py"),
+                                 str(folder.parent), folder.name, "--pending", str(path)], capture_output=True, text=True)
+@@ -211,6 +226,21 @@ def main(argv=None):
+     for line in dict.fromkeys(line for check in checks for line in check.stderr.splitlines(keepends=True)):
+         sys.stderr.write(line)
+     # see docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md
++    # see docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md
++    if args.role:
++        slug = args.entity_path.parent.name if args.entity_path.name == "index.md" else args.entity_path.stem
++        try:
++            commit = subprocess.run([args.spacedock, "state", "commit", slug, "--workflow-dir", str(args.workflow_dir)],
++                                    capture_output=True, text=True)
++        except OSError as error:
++            print(f"dispatch_stage: {error}", file=sys.stderr)
++            return 1
++        sys.stderr.write(commit.stderr)
++        if commit.returncode:
++            sys.stderr.write(commit.stdout)
++            return 1
++        sys.stdout.buffer.write(path.read_bytes())
++        return 0
+     command = [args.spacedock, "dispatch", "build", "--advance" if args.advance else "--stamp"]
+     for name in ("workflow_dir", "entity_path", "stage", "checklist_file", "scope_notes_file", "host", "feedback_context_file"):
+         value = getattr(args, name)
+diff --git a/kc-dev-flow-2/scripts/lint-skills.py b/kc-dev-flow-2/scripts/lint-skills.py
+index 31119fe2d..f48ddcb96 100644
+--- a/kc-dev-flow-2/scripts/lint-skills.py
++++ b/kc-dev-flow-2/scripts/lint-skills.py
+@@ -66,6 +66,9 @@ WORKFLOW_BUDGET_STEPS = [
+          captain="「准」 (Captain, chat, 2026-11-05), answering 「決定：漏寫 Override 這份設計進入實作嗎？核准即接受 D1-A（記錄裁示前先檢查理由文字）、D2-A（README 加 48 字，字數上限 5891 調到 5939）、D3-A（不加反向防護）、D4-A（不做裁示紀錄評分器）四個建議。」",
+          loaded="startup and resume of the First Officer, and before each Captain gate record"),
+     dict(delta=-2, why="dispatch_stage.py saves and checks the record; the README names the script and its flags"),
++    dict(delta=6, why="FO builds special-role calls through dispatch_stage.py before recording the Reviewer line",
++         captain="「核准（建議）」 (Captain, ideation gate, 2026-11-10), accepting 「特別角色派工紀錄：由腳本寫好、檢查、提交後才交給審查者；模型低於 opus 或 astra 就拒絕派；README 多 6 個字；完全手動、沒有紀錄的審查不在這張處理。」 in the bound batch-20 question; the joint raise is 5931 to 5939, this task adds six",
++         loaded="startup and resume of the First Officer, and before chief-engineer or engineering-reviewer dispatch"),
+ ]
+ DUPLICATE_RUN = 12
+ # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_stage.py b/kc-dev-flow-2/scripts/test_dispatch_stage.py
+index 0108f06db..4074cca7e 100644
+--- a/kc-dev-flow-2/scripts/test_dispatch_stage.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_stage.py
+@@ -108,6 +108,174 @@ class DispatchStageTests(unittest.TestCase):
+     def record(self, stage="ideation", number=1):
+         return self.folder / "dispatch" / f"{stage}-{number}.md"
+ 
++    def role(self, role="engineering-reviewer", extra=(), expected=0):
++        return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
++                          "--entity-path", self.entity, "--role", role, "--model", "opus",
++                          "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
++                          "--spacedock", BINARY, *extra], expected)
++
++    def test_role_commits_complete_record_before_printing_exact_inputs(self):
++        dispatched = self.git(self.workflow, "rev-parse", "HEAD")
++        result = self.role(extra=("--roster", "fixture roster", "--note", "role fixture"))
++        record = self.record("engineering-reviewer")
++        self.assert_committed(record, f"state: update {self.slug}")
++        text = record.read_text()
++        self.assertEqual(text, f"# engineering-reviewer-1\nDispatched: {dispatched} "
++                         "(workflow checkout, role fixture)\nModel: opus\nRoster: fixture roster\n\n"
++                         f"## Checklist\n{self.checklist.read_text()}\n## Scope notes\n{self.notes.read_text()}")
++        self.assertEqual(result.stdout.encode(), record.read_bytes())
++        self.assertEqual(result.stderr, "")
++        self.call([sys.executable, "-B", CHECKER, self.folder])
++        self.call([sys.executable, "-B", CHECKER, "--names", "--strict", record])
++
++    def test_role_rejects_incomplete_scope_notes_without_prompt_or_record(self):
++        self.notes.write_text("Review the package changes.\n")
++        head = self.git(self.state, "rev-parse", "HEAD")
++        held = self.role(expected=1)
++        self.assertEqual(held.stdout, "")
++        self.assertIn("needs a 'Package root:' line", held.stderr)
++        self.assertIn("scope-notes line naming main as the completion recipient", held.stderr)
++        self.assertEqual(self.git(self.state, "rev-parse", "HEAD"), head)
++        self.assertFalse(self.record("engineering-reviewer").exists())
++        self.assertEqual(self.git(self.state, "status", "--porcelain"), "")
++
++    def test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record(self):
++        failing = self.base / "fail-role-commit"
++        failing.write_text(f"#!{sys.executable}\nimport subprocess, sys\n"
++                           "if sys.argv[1:3] == ['state', 'commit']:\n"
++                           "    print('fixture state commit refused', file=sys.stderr)\n    sys.exit(1)\n"
++                           f"sys.exit(subprocess.call([{BINARY!r}, *sys.argv[1:]]))\n")
++        failing.chmod(0o755)
++        head = self.git(self.state, "rev-parse", "HEAD")
++        held = self.role(extra=("--spacedock", failing), expected=1)
++        self.assertEqual(held.stdout, "")
++        self.assertIn("fixture state commit refused", held.stderr)
++        record = self.record("engineering-reviewer")
++        pending = record.read_bytes()
++        self.assertEqual(self.git(self.state, "rev-parse", "HEAD"), head)
++        refused = self.role(expected=1)
++        self.assertEqual(refused.stdout, "")
++        self.assertIn(str(record), refused.stderr)
++        self.assertEqual(record.read_bytes(), pending)
++        self.call([BINARY, "state", "commit", self.slug, "--workflow-dir", self.workflow])
++        result = self.role()
++        self.assertEqual(result.stdout.encode(), pending)
++        self.assert_committed(record, f"state: update {self.slug}")
++        self.assertFalse(self.record("engineering-reviewer", 2).exists())
++
++    def test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed(self):
++        self.entity.write_text(self.entity.read_text() + "\n## Stage Report: implementation\n" * 5)
++        self.commit_task()
++        owed = self.call([sys.executable, "-B", ROOT / "scripts/role_triggers.py",
++                          self.state, self.slug], expected=1)
++        self.assertIn("chief-engineer", owed.stdout)
++        argv_log = self.base / "role-argv.jsonl"
++        self.spy.write_text(f"#!{sys.executable}\nfrom pathlib import Path\nimport json, subprocess, sys\n"
++                            f"with Path({str(argv_log)!r}).open('a') as log:\n"
++                            "    log.write(json.dumps(sys.argv[1:]) + '\\n')\n"
++                            f"sys.exit(subprocess.call([{BINARY!r}, *sys.argv[1:]]))\n")
++        result = self.role("chief-engineer", ("--spacedock", self.spy), expected=None)
++        calls = [json.loads(line) for line in argv_log.read_text().splitlines()]
++        self.assertTrue(any(args[:2] == ["state", "commit"] for args in calls), calls)
++        self.assertFalse(any(args[:2] == ["dispatch", "build"] for args in calls), calls)
++        self.assertEqual(result.returncode, 0, (result.stdout, result.stderr))
++
++    def test_role_checks_the_opus_model_floor(self):
++        head = self.git(self.state, "rev-parse", "HEAD")
++        held = self.role(extra=("--model", "sonnet"), expected=1)
++        self.assertIn("opus", held.stderr)
++        self.assertEqual(held.stdout, "")
++        self.assertFalse(self.record("engineering-reviewer").exists())
++        self.assertEqual(self.git(self.state, "rev-parse", "HEAD"), head)
++        for model in ("opus", "gpt-6-astra (Codex via Paseo, thinking xhigh)"):
++            with self.subTest(model=model):
++                result = self.role(extra=("--model", model))
++                self.assertIn(f"Model: {model}\n", result.stdout)
++
++    def test_role_rejects_stage_only_flags_and_unknown_roles(self):
++        flags = [("--stage", "implementation"), ("--advance",), ("--bare-mode",), ("--host", "codex"),
++                 ("--candidate", "a" * 40), ("--symptom", "same failure"),
++                 ("--feedback-context-file", str(self.notes)), ("--feedback-reflow",),
++                 ("--role", "design-director")]
++        before = self.scope_snapshot()
++        for extra in flags:
++            with self.subTest(extra=extra):
++                held = self.role(extra=extra, expected=2)
++                self.assertEqual(held.stdout, "")
++                self.assertEqual(self.scope_snapshot(), before)
++
++    def test_role_numbering_is_per_role_and_retries_reuse_the_latest_record(self):
++        first = self.role()
++        self.assertEqual(self.role().stdout, first.stdout)
++        self.assertFalse(self.record("engineering-reviewer", 2).exists())
++        self.role(extra=("--note", "second call"))
++        self.assertTrue(self.record("engineering-reviewer", 2).exists())
++        self.role("chief-engineer")
++        self.assertTrue(self.record("chief-engineer").exists())
++        self.assertFalse(self.record("chief-engineer", 2).exists())
++
++    def assert_input_bytes(self, role, newline):
++        checklist = "Inspect exact bytes\n保留第二行\n".replace("\n", newline).encode("utf-8")
++        notes = (f"Package root: {ROOT}\nSend your completion message to `main`.\n"
++                 "保留範圍文字\n").replace("\n", newline).encode("utf-8")
++        self.checklist.write_bytes(checklist)
++        self.notes.write_bytes(notes)
++        kind = "engineering-reviewer" if role else "ideation"
++        command = [sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
++                   "--entity-path", self.entity, "--role" if role else "--stage", kind,
++                   "--model", "opus", "--checklist-file", self.checklist,
++                   "--scope-notes-file", self.notes, "--spacedock", BINARY]
++        if not role:
++            command += ["--host", "codex"]
++        result = subprocess.run(list(map(str, command)), cwd=self.base, env=self.env,
++                                capture_output=True, timeout=30)
++        self.assertEqual(result.returncode, 0, result.stderr)
++        record = self.record(kind)
++        disk = record.read_bytes()
++        dispatched = self.git(self.workflow, "rev-parse", "HEAD")
++        expected = (f"# {kind}-1\nDispatched: {dispatched} (workflow checkout)\nModel: opus\n\n"
++                    "## Checklist\n").encode("utf-8") + checklist + b"\n## Scope notes\n" + notes
++        self.assertIn(checklist, disk)
++        self.assertIn(notes, disk)
++        self.assertEqual(disk, expected)
++        committed = subprocess.run(["git", "-C", str(self.state), "show",
++                                    f"HEAD:{record.relative_to(self.state)}"],
++                                   env=self.env, check=True, capture_output=True).stdout
++        self.assertEqual(committed, disk)
++        if role:
++            self.assertEqual(result.stdout, disk)
++            retry = subprocess.run(list(map(str, command)), cwd=self.base, env=self.env,
++                                   capture_output=True, timeout=30)
++            self.assertEqual(retry.returncode, 0, retry.stderr)
++            self.assertEqual(retry.stdout, disk)
++            self.assertFalse(self.record(kind, 2).exists())
++
++    def test_role_crlf_inputs_keep_raw_bytes(self):
++        self.assert_input_bytes(True, "\r\n")
++
++    def test_stage_crlf_inputs_keep_raw_bytes(self):
++        self.assert_input_bytes(False, "\r\n")
++
++    def test_role_lf_inputs_keep_raw_bytes(self):
++        self.assert_input_bytes(True, "\n")
++
++    def test_stage_lf_inputs_keep_raw_bytes(self):
++        self.assert_input_bytes(False, "\n")
++
++    def test_lf_record_matches_legacy_input_reading(self):
++        import dispatch_stage as subject
++
++        for role in (True, False):
++            with self.subTest(role=role):
++                argv = ["--workflow-dir", str(self.workflow), "--entity-path", str(self.entity),
++                        "--role" if role else "--stage", "engineering-reviewer" if role else "ideation",
++                        "--model", "opus", "--checklist-file", str(self.checklist),
++                        "--scope-notes-file", str(self.notes)]
++                args, dispatched, checklist, notes = subject.parse_args(argv)
++                before = subject.record_text(args, 1, dispatched, self.checklist.read_text(), self.notes.read_text())
++                after = subject.record_text(args, 1, dispatched, checklist, notes)
++                self.assertEqual(before.encode("utf-8"), after.encode("utf-8"))
++
+     def assert_committed(self, path, subject):
+         self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
+         root = Path(self.git(self.state, "rev-parse", "--show-toplevel"))
+diff --git a/kc-dev-flow-2/scripts/test_sd_dispatch.py b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+index 63f065fed..8c4783ed4 100644
+--- a/kc-dev-flow-2/scripts/test_sd_dispatch.py
++++ b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+@@ -315,7 +315,8 @@ FIXES = {
+         old=(),
+         swaps=((r"A decision an accepted ADR already settles is not asked again:.*?never a `Precedent:` line\. ", ""),)),
+     "reviewer-record": dict(
+-        need=("`Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.",
++        need=('Build chief-engineer and engineering-reviewer calls with `<package>/scripts/dispatch_stage.py --role <agent>`; record each under `## FO alignment` as',
++              "`Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.",
+               "`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer`, `kc-dev-flow-2:design-director` and `kc-dev-flow-2:observer` run on its `## Model table` row, never cheaper.",
+               "use a different family from implementation workers or ask the Captain"),
+         old=("FO never dispatches them on a cheaper model",),

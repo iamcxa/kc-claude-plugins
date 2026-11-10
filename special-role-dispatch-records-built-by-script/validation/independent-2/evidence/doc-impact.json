@@ -1,0 +1,81 @@
+[
+ {
+  "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/dispatch_stage.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md",
+  "state": "updated",
+  "terms": [
+   "kc-dev-flow-2/scripts/dispatch_stage.py"
+  ]
+ },
+ {
+  "doc": "kc-dev-flow-2/README.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py",
+   "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ]
+ },
+ {
+  "doc": "kc-dev-flow-2/references/sd/adoption.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ]
+ },
+ {
+  "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "learning.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py",
+   "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ]
+ }
+]

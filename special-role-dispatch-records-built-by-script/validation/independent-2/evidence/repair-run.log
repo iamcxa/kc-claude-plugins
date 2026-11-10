@@ -1,0 +1,5 @@
+PASS: previous CRLF failures reproduced; candidate role/stage raw bytes and LF differential pass
+Caught byte mutation: checklist
+Caught byte mutation: scope
+Caught byte mutation: stdout
+Caught byte mutation: all-three
