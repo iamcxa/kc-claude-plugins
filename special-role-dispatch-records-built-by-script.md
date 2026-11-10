@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:special-role-dispatch-records-built-by-script:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:special-role-dispatch-records-built-by-script-validation-1
+              briefing:
+                id: briefing:special-role-dispatch-records-built-by-script:validation:attempt-1:revision-1
+                digest: sha256:f55ab61d986518519b0ac0862f6f19e81fdf7ca6ac42523beb89585965adee1a
+                room-ref: ./special-role-dispatch-records-built-by-script/review/validation/briefing-1
 started: 2026-11-10T04:58:30Z
 worktree: .worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script
 pr: iamcxa/kc-claude-plugins#827
