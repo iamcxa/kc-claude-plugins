@@ -69,6 +69,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-11-10 — Amendment 1: do these amendments withdraw what the Captain approved, and what changes in the build?
+Reviewer: kc-dev-flow-2:chief-engineer not run 2026-11-10: the 4 counted passes are 4 follow-up messages to one worker (message-1 withdrawn before any work, message-2 applied the Captain's amendments 1 and 2, messages 3 and 4 are the two phases of the single Cycle 1 repair of validation-1 F1); one validation rejection so far, and the next step is its recheck at d7502656c
 
 ## Design
 
