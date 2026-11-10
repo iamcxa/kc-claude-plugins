@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-11-10T04:59:26Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-pr-body-attribution-link
+pr: iamcxa/kc-claude-plugins#825
 ---
 
 ## Scope
