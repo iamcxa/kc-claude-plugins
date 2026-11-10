@@ -34,6 +34,17 @@ gates:
                 id: briefing:delivery-gate-pr-body-attribution-link:ideation:attempt-1:revision-1
                 digest: sha256:2dd787a1d680d816196a5a0d7702e13c5bac397ccb70fd0dd31dcb9a392d82e5
                 room-ref: ./delivery-gate-pr-body-attribution-link/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-gate-pr-body-attribution-link:ideation:1
+                briefing: briefing:delivery-gate-pr-body-attribution-link:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-10T06:07:02.909118Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-10), answering 「決定：第 20 批四張設計照下列建議進實作嗎？建議核准。(1) 關卡理由沒引用關卡問題：待辦、構想、驗證三種關卡都擋下，不再只是回報；這改掉 ADR 0062 只回報的做法，所以會寫一份新的決策紀錄，README 多 2 個字。(2) 特別角色派工紀錄：由腳本寫好、檢查、提交後才交給審查者；模型低於 opus 或 astra 就拒絕派；README 多 6 個字；完全手動、沒有紀錄的審查不在這張處理。(3) 修改驗收條件的檢查：做成第四條狀態規則，每次推送狀態後檢查，所以壞的提交要推上去後才會被標出；dev2 要真的用到它，得把狀態規則釘選的版本從 0.26.0 改到新版，那一步之後另外問你，這張要等一次推送印出這條規則的結果才收。(4) PR 說明的署名連結：只放行 Claude Code 自動加在最後的那一行署名，其他連結照樣要記成步驟。核准即接受上列每一項建議，包括 README 合計多 8 個字（5931 到 5939）；要改哪項直接說。」, after asking 「補充一下這樣建議的好處是什麼」 and FO''s answer in chat. Recommendation: followed; approving accepts each listed recommendation, including the 8 README words.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-10T04:59:26Z
 ---
 
