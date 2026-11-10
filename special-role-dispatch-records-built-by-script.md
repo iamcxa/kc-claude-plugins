@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:special-role-dispatch-records-built-by-script:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:special-role-dispatch-records-built-by-script-ideation-1
+              briefing:
+                id: briefing:special-role-dispatch-records-built-by-script:ideation:attempt-1:revision-1
+                digest: sha256:a7cc60d47573cbbc3d71d1096771b8540785476e6751f43ee2ad59f9d224cd69
+                room-ref: ./special-role-dispatch-records-built-by-script/review/ideation/briefing-1
 started: 2026-11-10T04:58:30Z
 ---
 
