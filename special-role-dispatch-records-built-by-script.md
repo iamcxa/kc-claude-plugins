@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-11-10T04:58:30Z
 worktree: .worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script
-pr: iamcxa/kc-claude-plugins#827
+pr: pr-merge:827
 ---
 
 ## Scope
