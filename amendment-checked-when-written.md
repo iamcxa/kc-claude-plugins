@@ -184,13 +184,12 @@ Recommended order: no ordering is needed within batch 20. Among the `design_surf
 
 **AC-3** A defect is reported once, at the commit that adds it. Evidence: a fixture range whose first commit introduces the reuse and whose second commit only edits another section reports one event, at the first commit. A range that starts after the defect reports none, and a commit that repairs it reports none. Falsifier: judging the tip state instead of each commit against its first parent reports the defect again in the later range. Not yet verified.
 
-**AC-4** The corpus replay matches the table under "Existing-code capability check". Evidence: the candidate `laws_check.py` with `--before` at each history's root, run read-only over the dev2, qnow and relay state checkouts, prints L4 events exactly at the seven commits named there. Any extra event from history newer than the tips named there is listed with its cause. Falsifier: an L4 event on a state that the current form accepts (for example a record-only entry). Not yet verified at the candidate; the prototype reproduces the seven.
-
 **AC-5** Registry, docs and FO reading. Evidence: `laws.md` has `## L4 amendment-moves-use-fresh-ids` (Rule, Event, Judged by, Bit citing a113aa3e9, Bounds) and adds at most 250 words; `test_laws_file_matches_registry` passes; `git diff --stat origin/main...<candidate> -- kc-dev-flow-2/references/sd/workflow.md kc-dev-flow-2/scripts/dispatch_records.py kc-dev-flow-2/skills kc-dev-flow-2/references/sd/state-laws.workflow.yml` is empty; `python3 kc-dev-flow-2/scripts/lint-skills.py` passes. Falsifier: adding the registry entry without the heading fails the registry test. Not yet verified.
 
 **AC-6** One marker predicate for both checks. Evidence: `check_amendments` and `move_defects` both call the shared marker predicate, `check_amendments` still for every entry; `test_design_surfaces.py` passes unchanged; a mutation of the marker test inside `move_defects` fails at least one test in each of `test_design_surfaces.py` and `test_laws_check.py`. Falsifier: a copy of the marker logic left in `check_amendments` lets the mutation pass `test_design_surfaces.py`. Not yet verified.
 
 **AC-7** Hosted on dev2 (per D2). Evidence: after the release, the pin commit on `spacedock-state/dev2` names the published tag, and the next state push's `dev2-laws.yml` run log (`gh run view <id> --log`) prints the L4 head line. Falsifier: a run on the old pin prints no L4 line. Not yet verified; it runs after merge and on the Captain's word.
+**AC-8** Amended by Captain, amendment 1, and by amendment 2. The corpus replay matches the table under "Existing-code capability check". Evidence: the candidate `laws_check.py` with `--before` at each history's root, run read-only over the dev2, qnow and relay state checkouts, prints L4 events exactly at the seven commits named there. This includes dev2 bf8c73be99c4 and relay 06cadae7681f. Any extra event from history newer than the tips named there is listed with its cause. Only the amendment entry whose own structure is broken is skipped; valid sibling entries remain judged. A later push that only repairs a broken heading reports a move defect that was previously unjudgeable, without repeating an already reported sibling defect. Falsifier: restoring the whole-file skip fails `L4Test.test_unrelated_broken_entry_does_not_hide_valid_move`; restoring the first-parent structural skip fails `L4Test.test_repaired_heading_reports_previously_unjudged_defect`; an L4 event on a record-only entry fails `L4Test.test_record_only_marked_move_and_waived_move_are_green`. Current evidence: the latest implementation report and `amendment-checked-when-written/implementation/amendment-2/` bind the candidate, ranges, output and falsifiers.
 
 ## Captain amendments
 
@@ -198,6 +197,11 @@ Recommended order: no ordering is needed within batch 20. Among the `design_surf
 Captain: 「改成 5 次（建議）」 (host question dialog, 2026-11-10)
 Asked: 「決定：「修改驗收條件的檢查」那張的歷史重跑驗收條件，要從抓到 7 次改成 5 次嗎？建議改成 5 次。你核准的設計同時寫了「歷史重跑抓到 7 次」和「任務檔格式有問題時新規則不判，留給既有的格式規則」，兩者衝突：照後者實作只抓到 5 次，少的 2 次檔案都有格式問題（實作工人的報告，我沒重跑）。同意即把這條驗收條件改成 5 次，並寫明另外 2 次留給既有格式規則；缺點是格式壞掉的檔案裡的編號重用，要等格式修好才會被新規則看到。」
 Supersedes: AC-4
+
+Superseded text:
+
+**AC-4** The corpus replay matches the table under "Existing-code capability check". Evidence: the candidate `laws_check.py` with `--before` at each history's root, run read-only over the dev2, qnow and relay state checkouts, prints L4 events exactly at the seven commits named there. Any extra event from history newer than the tips named there is listed with its cause. Falsifier: an L4 event on a state that the current form accepts (for example a record-only entry). Not yet verified at the candidate; the prototype reproduces the seven.
+
 
 ### Amendment 2 — 2026-11-10, host question dialog
 Captain: 「這張就做到 7 次」 (host question dialog, 2026-11-10)
@@ -273,3 +277,48 @@ Implemented L4 with the approved whole-file structural skip and the shared `unma
 This complete report supersedes the earlier implementation report for the follow-up's readiness; implementation is held before applying the amendment or running product checks. Package `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0`, version `0.37.0`: `role_triggers.py` exited 1 with the following output; FO must record the call or a decline and dispatch again. Product candidate remains `71eb2ec4298812d831573386324641ca6babff5d`; no criterion, amendment entry or product code was changed.
 
 next: amendment-checked-when-written has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.
+
+## Stage Report: implementation
+
+- DONE: Apply Captain amendments Amendment 1 and Amendment 2 together; implementation-1-message-1 is withdrawn where it says five.
+  The Reviewer line is recorded under FO alignment and `role-triggers.log` exits 0 for two events; Amendment 2's 「這張就做到 7 次」 and Design line govern the per-entry skip. No original Captain metadata or withdrawn Design prose was rewritten.
+- DONE: Move the AC-4 block verbatim under Amendment 1's Superseded text and write the replacement under a fresh id naming both amendments.
+  Live AC-8 says "Amended by Captain, amendment 1, and by amendment 2"; `superseded-ac-4.md` and `criterion-move.json` prove the exact old block, unchanged amendment metadata/frontmatter and no live AC-4. `task-design.log` exits 0 and `amendment-added-words.json` is empty.
+- DONE: Narrow the product skip in only the design's named files, with tests and the whole-file-skip falsifier.
+  Candidate `72216e2e947e962737a17c6e61ef3800f9d639c4` filters entries whose own spans contain parser issues and removes L4's file-level/first-parent structural gate. Three new tests fail on prior candidate `71eb2ec42` (`red.log`) and pass now; restoring the whole-file skip fails `L4Test.test_unrelated_broken_entry_does_not_hide_valid_move` (`mutation-whole-file-entry-skip-0.log`).
+- DONE: Show that a later push repairing only a broken heading reports a never-reported defect and does not repeat a reported sibling defect.
+  `L4Test.test_repaired_heading_reports_previously_unjudged_defect` asserts both reuse/unmarked diagnostics at the heading-repair commit; restoring the first-parent gate fails it (`mutation-whole-file-parent-skip-0.log`). `test_repairing_an_unrelated_heading_does_not_repeat_reported_defect` asserts zero later L4 events; `l4-tests.log`: all 11 pass.
+- DONE: AC-8 — replay all seven capability-table events at the new candidate and keep every local acceptance criterion's evidence in the task folder.
+  Full root-to-tip CLI runs pinned at dev2 `2a42fbb15e0f`, qnow `c36650727548`, relay `fd1481da6295` report 3/3/1 L4 events, exactly the seven expected commits, no extra. `corpus-reconciliation.json` and `corpus-*.log` include ranges/output; complete CLI exits 2 on existing L3 history debt while the L4-specific verification passes. `recovered-dev2.log` and `recovered-relay.log` show both previously missed commits now reported.
+- DONE: AC-1 — the original bite and its reuse/marker falsifiers.
+  `candidate-bite.log` reports one event, reused AC-1/AC-2/AC-4 and unmarked amendment 1; the full base-package replay `base-bite.log` has no L4. Removing either predicate removes its diagnostic and fails its fixture (`mutation-reuse-bite.log`, `mutation-marker-bite.log`).
+- DONE: AC-2 and AC-3 — legitimate moves remain green and an existing defect is not re-reported.
+  `laws-tests.log`: 76 run, 75 passed, one optional environment fixture skipped; record-only, marked/waived moves, defect introductions, post-defect ranges and repair are exercised. Removing the payload gate or first-parent suppression fails its named case (`mutation-payload-0.log`, `mutation-parent-0.log`); judging the broken entry itself fails its skip case (`mutation-judge-broken-entry-0.log`).
+- DONE: AC-5 — registry, documentation word bound and FO reading boundaries.
+  `laws.md` adds 242 words (1345 to 1587, below 250); the registry test passes and deleting its L4 heading fails (`mutation-heading-0.log`). `artifact.json` lists only four approved product files; workflow, dispatch_records.py, skills, CI template and versions are unchanged.
+- DONE: AC-6 — one shared marker predicate with unchanged design-check behavior.
+  Both callers use `unmarked`; unchanged `test_design_surfaces.py` runs 217 tests, 213 passed and four optional environment fixtures skipped (`design-tests.log`). Disabling the shared marker fails one test in each suite; all nine mutation test runs reject their regressions with absent caches and python3 -B (`mutations.json`). All 1032 pinned check/seed verdicts match the base (`check-comparison.json`).
+- SKIPPED: AC-7 — hosted dev2 activation and the old-pin hosted falsifier.
+  Deferred by approved D2 until a containing release, Captain-approved pin change and one observed state-push L4 headline. This worker changed no adopter pin and claims no hosted activation; local evidence is not that proof.
+- DONE: Repository skill lint, package ADR lint, number guards and comment ratio at the new candidate.
+  All exit 0: `lint.log`, `adr-lint.log` (65 ADR records, none newly added), `number-guards.log` (no findings), `comment-ratio.log` (0/205 = 0.0%, maximum 5%); base `6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1`.
+- DONE: doc-impact — docs/adr/0041-seed-admission-enforces-required-fields.md is unaffected.
+  Seed admission remains unchanged; all pinned check/seed verdicts match the base. `doc-verdicts.json` records this disposition beside raw `doc-impact.json`.
+- DONE: doc-impact — docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md is unaffected.
+  `added_words` and its dispatch comparison remain unchanged; the replacement criterion passes that check (`amendment-added-words.json`). Disposition: `doc-verdicts.json`.
+- DONE: doc-impact — kc-dev-flow-2/references/sd/laws.md is updated.
+  L4 documents per-entry structural skips and the first-judgeable heading-repair event. Disposition: `doc-verdicts.json`; registry and heading mutation exercise its entry point.
+- DONE: doc-impact — learning.md is unaffected.
+  Historical practices still apply; the word, history-input, consumer and corpus checks were followed without rewriting the records. Disposition: `doc-verdicts.json`.
+- DONE: Keep the candidate, evidence and falsifiers durably reviewable in the task folder.
+  Evidence home: `amendment-checked-when-written/implementation/amendment-2/`; `artifact.json` binds code hashes and candidate, `manifest.json` seals the files, and `README.md` explains replay. `acceptance.json` records six local criteria passed and AC-7 deferred; the prior failed AC-4 is superseded, not reused.
+- DONE: Commit locally without product push and update the PR text for FO.
+  Branch `spacedock-ensign/amendment-checked-when-written`, base `6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1`, new candidate `72216e2e947e962737a17c6e61ef3800f9d639c4`, clean product worktree. `/tmp/impl-amendment-checked-when-written-pr.md` and evidence `pr-draft.md` carry the scoped Conventional Commit title/body; no version bump or empty commit.
+- SKIPPED: Product push, opening the Draft PR, RoboRev and hosted CI review.
+  No PR opened: no push grant; these steps remain FO-owned and not run by this worker. CI cost per PR and per state push is not measured; no trigger, job or adopter pin was changed.
+- DONE: Append one complete new Stage Report: implementation with each item followed by its own indented evidence line.
+  This complete report uses the exact heading and DONE/SKIPPED forms, with evidence per item including all four document dispositions; evidence copy: `stage-report.md`.
+
+### Summary
+
+This report supersedes every earlier implementation report: both Captain amendments are applied, the seven-event acceptance criterion is green at `72216e2e947e962737a17c6e61ef3800f9d639c4`, and restoring either structural skip fails a named test. The prior whole-file miss is repaired without hiding a previously unjudged defect on a later heading-only repair; AC-7 and FO-owned publication/reviews remain explicitly open.

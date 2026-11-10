@@ -1,0 +1,12 @@
+L1 observer-before-sentinel: 0 events judged in b91e7434adde..a113aa3e9a3d, 0 violated
+L2 dispatch-record-complete: 1 events judged in b91e7434adde..a113aa3e9a3d, 1 violated
+violation: L2 dispatch-record-complete record=worker-browser-checks-use-paseo-browser/dispatch/engineering-reviewer-1.md commit=a113aa3e9a3d needs a 'Dispatched:' line with a full 40-character SHA
+violation: L2 dispatch-record-complete record=worker-browser-checks-use-paseo-browser/dispatch/engineering-reviewer-1.md commit=a113aa3e9a3d needs a 'Model:' line
+violation: L2 dispatch-record-complete record=worker-browser-checks-use-paseo-browser/dispatch/engineering-reviewer-1.md commit=a113aa3e9a3d needs a non-empty '## Checklist' section
+violation: L2 dispatch-record-complete record=worker-browser-checks-use-paseo-browser/dispatch/engineering-reviewer-1.md commit=a113aa3e9a3d needs a non-empty '## Scope notes' section
+violation: L2 dispatch-record-complete record=worker-browser-checks-use-paseo-browser/dispatch/engineering-reviewer-1.md commit=a113aa3e9a3d needs a 'Package root:' line with an absolute path in its scope notes
+violation: L2 dispatch-record-complete record=worker-browser-checks-use-paseo-browser/dispatch/engineering-reviewer-1.md commit=a113aa3e9a3d needs a scope-notes line naming main as the completion recipient
+violation: L2 dispatch-record-complete record=worker-browser-checks-use-paseo-browser/dispatch/engineering-reviewer-1.md commit=a113aa3e9a3d Captain amendment 1 named in no dispatch checklist (line 1)
+L3 amendment-append-only: 0 events judged in b91e7434adde..a113aa3e9a3d, 0 violated
+L4 amendment-moves-use-fresh-ids: 1 events judged in b91e7434adde..a113aa3e9a3d, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 unmarked replacement

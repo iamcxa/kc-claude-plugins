@@ -1,0 +1,34 @@
+[
+  {
+    "doc": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/design_surfaces.py"
+    ],
+    "verdict": "unaffected: seed admission and all pinned check/seed verdicts are unchanged"
+  },
+  {
+    "doc": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/design_surfaces.py"
+    ],
+    "verdict": "unaffected: added_words and dispatch comparisons are unchanged; the new criterion passes the added-word check"
+  },
+  {
+    "doc": "kc-dev-flow-2/references/sd/laws.md",
+    "state": "updated",
+    "terms": [
+      "move_defects"
+    ],
+    "verdict": "updated: per-entry skip and first-judgeable heading-repair events are documented"
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/laws_check.py"
+    ],
+    "verdict": "unaffected: retained historical practices remain applicable and are followed without rewriting them"
+  }
+]

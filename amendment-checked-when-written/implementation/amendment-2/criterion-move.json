@@ -1,0 +1,19 @@
+{
+  "verbatim_block_sha256": "e8c50aaa57feda9ec0a6ca211fb76e69f096075879764d9f96fcb744e0a09857",
+  "metadata_preserved": true,
+  "frontmatter_preserved": true,
+  "live_criteria": [
+    "AC-1",
+    "AC-2",
+    "AC-3",
+    "AC-5",
+    "AC-6",
+    "AC-7",
+    "AC-8"
+  ],
+  "replacement": "AC-8",
+  "amendments": [
+    1,
+    2
+  ]
+}

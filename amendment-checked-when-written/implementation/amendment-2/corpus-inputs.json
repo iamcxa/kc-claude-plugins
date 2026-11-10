@@ -1,0 +1,26 @@
+[
+  {
+    "name": "dev2",
+    "state": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+    "before": "166c16d968305ad711481276809433a15fcf8a5e",
+    "after": "2a42fbb15e0f0509b4084370850f730e6334a983",
+    "readme": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md",
+    "candidate": "72216e2e947e962737a17c6e61ef3800f9d639c4"
+  },
+  {
+    "name": "qnow",
+    "state": "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state",
+    "before": "4a37fda441f2eb71ff8b3c2b9886983cb46c3e5f",
+    "after": "c36650727548d893324aad22723fd530bc900570",
+    "readme": "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/README.md",
+    "candidate": "72216e2e947e962737a17c6e61ef3800f9d639c4"
+  },
+  {
+    "name": "relay",
+    "state": "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state",
+    "before": "22a3ef1cad0677b8cc2ef3890ead67ff26cfd071",
+    "after": "fd1481da62952ed6706bb3c1db4620ee1b04b144",
+    "readme": "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/README.md",
+    "candidate": "72216e2e947e962737a17c6e61ef3800f9d639c4"
+  }
+]

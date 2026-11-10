@@ -1,0 +1,43 @@
+FF
+======================================================================
+FAIL: test_unrelated_broken_entry_does_not_hide_valid_move (test_laws_check.L4Test.test_unrelated_broken_entry_does_not_hide_valid_move) (label='outside')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-mutation-w5ok7646/scripts/test_laws_check.py", line 988, in test_unrelated_broken_entry_does_not_hide_valid_move
+    self.assertEqual(self.l4_lines(out), [
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+        f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 unmarked replacement"])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['violation: L4 amendment-moves-use-fresh-[63 chars]ent']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=5cf41f4740ca amendment=1 unmarked replacement'
+
+- []
++ ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=5cf41f4740ca '
++  'amendment=1 unmarked replacement']
+
+======================================================================
+FAIL: test_unrelated_broken_entry_does_not_hide_valid_move (test_laws_check.L4Test.test_unrelated_broken_entry_does_not_hide_valid_move) (label='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-mutation-w5ok7646/scripts/test_laws_check.py", line 988, in test_unrelated_broken_entry_does_not_hide_valid_move
+    self.assertEqual(self.l4_lines(out), [
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+        f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 unmarked replacement"])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != ['violation: L4 amendment-moves-use-fresh-[63 chars]ent']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=beba84ea3510 amendment=1 unmarked replacement'
+
+- []
++ ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=beba84ea3510 '
++  'amendment=1 unmarked replacement']
+
+----------------------------------------------------------------------
+Ran 1 test in 2.143s
+
+FAILED (failures=2)

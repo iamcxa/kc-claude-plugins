@@ -1,0 +1,21 @@
+{
+  "base": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+  "prior_candidate": "71eb2ec4298812d831573386324641ca6babff5d",
+  "candidate": "72216e2e947e962737a17c6e61ef3800f9d639c4",
+  "branch": "spacedock-ensign/amendment-checked-when-written",
+  "files": [
+    "kc-dev-flow-2/references/sd/laws.md",
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/laws_check.py",
+    "kc-dev-flow-2/scripts/test_laws_check.py"
+  ],
+  "sha256": {
+    "kc-dev-flow-2/references/sd/laws.md": "4c381e143b9849a62ba55815ba749f6d4e009b81816a1b224efec9e67b0d5e69",
+    "kc-dev-flow-2/scripts/design_surfaces.py": "bdb537ee4b62261cf550762cb26429127471327d5a43a36a6560bf1e153f2b9c",
+    "kc-dev-flow-2/scripts/laws_check.py": "ad3b561a6f24425ac7137f99f7a03a0dcec4e763524174a3153fdfc4a4f15c7b",
+    "kc-dev-flow-2/scripts/test_laws_check.py": "553f46c8c95fe35a55cb9d18dc72d3f21af691acd13dfed3b3aadb56943443bf"
+  },
+  "added_laws_words": 242,
+  "CI_cost_per_PR": "not measured",
+  "CI_cost_per_state_push": "not measured"
+}

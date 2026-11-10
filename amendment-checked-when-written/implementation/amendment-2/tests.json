@@ -1,0 +1,16 @@
+[
+  {
+    "name": "laws-tests.log",
+    "status": "passed",
+    "run": 76,
+    "passed": 75,
+    "skipped": 1
+  },
+  {
+    "name": "design-tests.log",
+    "status": "passed",
+    "run": 217,
+    "passed": 213,
+    "skipped": 4
+  }
+]
