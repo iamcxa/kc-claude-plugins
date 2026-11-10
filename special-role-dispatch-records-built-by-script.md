@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:special-role-dispatch-records-built-by-script:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:special-role-dispatch-records-built-by-script-backlog-1
+              briefing:
+                id: briefing:special-role-dispatch-records-built-by-script:backlog:attempt-1:revision-1
+                digest: sha256:d7ebcd15eea1d4a7bc3c69a6ea725ed24e54d7c5aac3e2c9bcc5d7aa128923f7
+                room-ref: ./special-role-dispatch-records-built-by-script/review/backlog/briefing-1
 ---
 
 ## Scope
