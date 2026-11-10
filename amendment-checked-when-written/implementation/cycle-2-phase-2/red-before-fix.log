@@ -1,0 +1,18 @@
+F....
+======================================================================
+FAIL: test_tilde_example_does_not_supply_live_marker (test_laws_check.L4Test.test_tilde_example_does_not_supply_live_marker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/test_laws_check.py", line 917, in test_tilde_example_does_not_supply_live_marker
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : L1 observer-before-sentinel: 0 events judged in aa168c9425d6..d56d9986886e, 0 violated
+L2 dispatch-record-complete: 0 events judged in aa168c9425d6..d56d9986886e, 0 violated
+L3 amendment-append-only: 1 events judged in aa168c9425d6..d56d9986886e, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in aa168c9425d6..d56d9986886e, 0 violated
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 3.128s
+
+FAILED (failures=1)

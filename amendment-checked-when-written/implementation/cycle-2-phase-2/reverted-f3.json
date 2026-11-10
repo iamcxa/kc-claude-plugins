@@ -1,0 +1,17 @@
+{
+  "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+  "reverted_to": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "reverted_source_sha256": "bdb537ee4b62261cf550762cb26429127471327d5a43a36a6560bf1e153f2b9c",
+  "bytecode_absent": true,
+  "argv": [
+    "/opt/homebrew/opt/python@3.15/bin/python3.15",
+    "-B",
+    "-m",
+    "unittest",
+    "test_laws_check.L4Test.test_tilde_example_does_not_supply_live_marker"
+  ],
+  "expected_exit": 1,
+  "actual_exit": 1,
+  "expected_assertion_failure": true,
+  "log": "reverted-f3-test.log"
+}

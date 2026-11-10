@@ -1,0 +1,1 @@
+All three regressions fail with only the runtime fix reverted; no errors, bytecode absent.

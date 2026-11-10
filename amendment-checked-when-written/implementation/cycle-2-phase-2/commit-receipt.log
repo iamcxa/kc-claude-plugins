@@ -1,0 +1,7 @@
+commit 864536d1180334fa8a10c1ec7122f2ddf0feea14
+Author:     Kent <iamcxa@gmail.com>
+AuthorDate: Tue Nov 10 18:09:03 2026 +0800
+Commit:     Kent <iamcxa@gmail.com>
+CommitDate: Tue Nov 10 18:09:03 2026 +0800
+
+    fix(kc-dev-flow-2): exclude fenced examples from L4 declarations

@@ -1,0 +1,13 @@
+{
+  "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+  "prior": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "base": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written",
+  "branch": "spacedock-ensign/amendment-checked-when-written",
+  "initial_bytecode_removed": [],
+  "source_sha256": {
+    "kc-dev-flow-2/scripts/design_surfaces.py": "e6d934d83974bf91661436d421b99be7c4cdf80897e16b2053193d03e1d05549",
+    "kc-dev-flow-2/scripts/test_laws_check.py": "1e3c814d4aca71152ff883903c3a16cfcde97fc91123ddfd31d86932c303074b",
+    "kc-dev-flow-2/scripts/laws_check.py": "49c6524ea0732df30b6a0c6c5da3135bac1c631308f52a0ee61bdd6a468d9414"
+  }
+}

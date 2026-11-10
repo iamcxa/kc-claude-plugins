@@ -1,0 +1,24 @@
+F
+======================================================================
+FAIL: test_structural_issues_are_left_to_existing_laws (test_laws_check.L4Test.test_structural_issues_are_left_to_existing_laws)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-mutation-ed4wbqf2/scripts/test_laws_check.py", line 1058, in test_structural_issues_are_left_to_existing_laws
+    self.assertEqual(self.l4_lines(out), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['violation: L4 amendment-moves-use-fresh-[169 chars]ent'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=7df75a3be0f3 amendment=1 reused ids: AC-2'
+
++ []
+- ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=7df75a3be0f3 '
+-  'amendment=1 reused ids: AC-2',
+-  'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=7df75a3be0f3 '
+-  'amendment=1 unmarked replacement']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.577s
+
+FAILED (failures=1)

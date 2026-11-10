@@ -1,0 +1,7 @@
+{
+  "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+  "same_outcome": "Keep the accepted missing-marker protection in the introducing push.",
+  "testable_now": "Yes: the promoted F3 CLI regression directly fails before/reverted and passes after the repair.",
+  "deletion_cost": "Removing the rule loses the original missing-marker diagnostic; no criterion or process is deleted.",
+  "profile": "pilot"
+}

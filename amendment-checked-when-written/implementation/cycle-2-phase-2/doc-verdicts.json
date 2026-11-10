@@ -1,0 +1,34 @@
+[
+  {
+    "doc": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/design_surfaces.py"
+    ],
+    "verdict": "unaffected: check_seed_fields and the public seed path are byte-unchanged; check/seed corpus verdicts match the pinned base"
+  },
+  {
+    "doc": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/design_surfaces.py"
+    ],
+    "verdict": "unaffected: criterion-word and dispatch comparison functions are byte-unchanged; the input filter is local to the L4-only helper"
+  },
+  {
+    "doc": "kc-dev-flow-2/references/sd/laws.md",
+    "state": "updated",
+    "terms": [
+      "move_defects"
+    ],
+    "verdict": "updated: retained from the preceding implementation; filtering examples from live L4 declarations fulfills the existing rule without adding words"
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/laws_check.py"
+    ],
+    "verdict": "unaffected: retained historical practices still apply; this repair adds no new ruling or operating practice"
+  }
+]

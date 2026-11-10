@@ -1,0 +1,17 @@
+{
+  "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/adr_lint.py",
+    "docs/adr",
+    "--since",
+    "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+    "--require",
+    "0016",
+    "0017",
+    "0041",
+    "0057"
+  ],
+  "exit": 0
+}

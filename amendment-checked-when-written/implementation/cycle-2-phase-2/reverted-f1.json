@@ -1,0 +1,50 @@
+{
+  "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+  "runner_reverted_to": "72216e2e947e962737a17c6e61ef3800f9d639c4",
+  "reverted_source_sha256": "ad3b561a6f24425ac7137f99f7a03a0dcec4e763524174a3153fdfc4a4f15c7b",
+  "bytecode_absent": true,
+  "tests": [
+    {
+      "name": "F1 revert: test_partial_repair_adds_no_event",
+      "status": "passed",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "log": "reverted-f1-0.log",
+      "argv": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "-m",
+        "unittest",
+        "test_laws_check.L4Test.test_partial_repair_adds_no_event"
+      ]
+    },
+    {
+      "name": "F1 revert: test_growth_reports_only_the_added_id",
+      "status": "passed",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "log": "reverted-f1-1.log",
+      "argv": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "-m",
+        "unittest",
+        "test_laws_check.L4Test.test_growth_reports_only_the_added_id"
+      ]
+    },
+    {
+      "name": "F1 revert: test_mixed_repair_and_addition_reports_only_the_added_id",
+      "status": "passed",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "log": "reverted-f1-2.log",
+      "argv": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "-m",
+        "unittest",
+        "test_laws_check.L4Test.test_mixed_repair_and_addition_reports_only_the_added_id"
+      ]
+    }
+  ]
+}

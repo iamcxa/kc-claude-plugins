@@ -1,0 +1,68 @@
+[
+  {
+    "repository": "dev2",
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+    "before": "2a42fbb15e0f0509b4084370850f730e6334a983",
+    "after": "8c9e946e1bbdc0fd8bdb4f139cc717e1239b97b8",
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--before",
+      "2a42fbb15e0f0509b4084370850f730e6334a983",
+      "--after",
+      "8c9e946e1bbdc0fd8bdb4f139cc717e1239b97b8",
+      "--readme",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+    ],
+    "exit": 0,
+    "L4_lines": [
+      "L4 amendment-moves-use-fresh-ids: 0 events judged in 2a42fbb15e0f..8c9e946e1bbd, 0 violated"
+    ]
+  },
+  {
+    "repository": "qnow",
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+    "before": "c36650727548d893324aad22723fd530bc900570",
+    "after": "25ac0e8be821aa4414c726fc4fe161ce8f529d81",
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state",
+      "--before",
+      "c36650727548d893324aad22723fd530bc900570",
+      "--after",
+      "25ac0e8be821aa4414c726fc4fe161ce8f529d81",
+      "--readme",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/README.md"
+    ],
+    "exit": 0,
+    "L4_lines": [
+      "L4 amendment-moves-use-fresh-ids: 0 events judged in c36650727548..25ac0e8be821, 0 violated"
+    ]
+  },
+  {
+    "repository": "relay",
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+    "before": "fd1481da62952ed6706bb3c1db4620ee1b04b144",
+    "after": "e1c57e18f331c8fc6721cb88b0cefc5068994d5d",
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-amendment-checked-when-written/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state",
+      "--before",
+      "fd1481da62952ed6706bb3c1db4620ee1b04b144",
+      "--after",
+      "e1c57e18f331c8fc6721cb88b0cefc5068994d5d",
+      "--readme",
+      "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/README.md"
+    ],
+    "exit": 1,
+    "L4_lines": [
+      "L4 amendment-moves-use-fresh-ids: 0 events judged in fd1481da6295..e1c57e18f331, 0 violated"
+    ]
+  }
+]

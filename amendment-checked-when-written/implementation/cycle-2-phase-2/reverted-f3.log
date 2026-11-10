@@ -1,0 +1,1 @@
+F3 regression fails with only its input-filter repair reverted; assertion failure, no errors, bytecode absent.
