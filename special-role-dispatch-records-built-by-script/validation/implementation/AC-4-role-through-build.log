@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed (__main__.DispatchStageTests.test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 179, in test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed
+    self.assertTrue(any(args[:2] == ["state", "commit"] for args in calls), calls)
+AssertionError: False is not true : [['dispatch', 'build', '--stamp', '--workflow-dir', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-6w9d_8o5/code/docs/dev2', '--entity-path', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-6w9d_8o5/code/docs/dev2/.spacedock-state/dispatch-fixture-1b3fc1c351f34d0bb44dcaede51e2e7b.md', '--stage', 'chief-engineer', '--checklist-file', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-6w9d_8o5/checklist.txt', '--scope-notes-file', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-6w9d_8o5/notes.txt']]
+
+----------------------------------------------------------------------
+Ran 1 test in 2.173s
+
+FAILED (failures=1)

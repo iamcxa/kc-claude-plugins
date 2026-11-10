@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_role_commits_complete_record_before_printing_exact_inputs (__main__.DispatchStageTests.test_role_commits_complete_record_before_printing_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 121, in test_role_commits_complete_record_before_printing_exact_inputs
+    self.assert_committed(record, f"state: update {self.slug}")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 217, in assert_committed
+    self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
+AssertionError: '' != 'state: update dispatch-fixture-9d8acbc425af4b08a7586d7873ab858f'
++ state: update dispatch-fixture-9d8acbc425af4b08a7586d7873ab858f
+
+----------------------------------------------------------------------
+Ran 1 test in 2.255s
+
+FAILED (failures=1)

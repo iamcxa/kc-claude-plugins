@@ -1,0 +1,62 @@
+[
+  {
+    "name": "AC-1-no-commit",
+    "status": "passed",
+    "message": "mutation exit=1; expected 'FAIL'",
+    "file": "/tmp/opencode/special-role-dispatch/AC-1-no-commit.log"
+  },
+  {
+    "name": "AC-2-no-checks",
+    "status": "passed",
+    "message": "mutation exit=1; expected 'FAIL'",
+    "file": "/tmp/opencode/special-role-dispatch/AC-2-no-checks.log"
+  },
+  {
+    "name": "AC-3-prompt-before-commit",
+    "status": "passed",
+    "message": "mutation exit=1; expected 'FAIL'",
+    "file": "/tmp/opencode/special-role-dispatch/AC-3-prompt-before-commit.log"
+  },
+  {
+    "name": "AC-4-role-through-build",
+    "status": "passed",
+    "message": "mutation exit=1; spy saw dispatch build; real Spacedock rejected the status/stage mismatch",
+    "file": "/tmp/opencode/special-role-dispatch/AC-4-role-through-build.log"
+  },
+  {
+    "name": "AC-5-no-floor",
+    "status": "passed",
+    "message": "mutation exit=1; expected 'FAIL'",
+    "file": "/tmp/opencode/special-role-dispatch/AC-5-no-floor.log"
+  },
+  {
+    "name": "AC-6-allow-advance",
+    "status": "passed",
+    "message": "mutation exit=1; expected 'FAIL'",
+    "file": "/tmp/opencode/special-role-dispatch/AC-6-allow-advance.log"
+  },
+  {
+    "name": "AC-7-global-numbering",
+    "status": "passed",
+    "message": "mutation exit=1; expected 'FAIL'",
+    "file": "/tmp/opencode/special-role-dispatch/AC-7-global-numbering.log"
+  },
+  {
+    "name": "AC-8-no-workflow-phrase",
+    "status": "passed",
+    "message": "mutation exit=1; expected 'reviewer-record'",
+    "file": "/tmp/opencode/special-role-dispatch/AC-8-no-workflow-phrase.log"
+  },
+  {
+    "name": "AC-8-no-budget-step",
+    "status": "passed",
+    "message": "mutation exit=1; expected '5937'",
+    "file": "/tmp/opencode/special-role-dispatch/AC-8-no-budget-step.log"
+  },
+  {
+    "name": "AC-9-no-words",
+    "status": "passed",
+    "message": "baseline exit=0; mutation exit=1 with only the missing Words defect",
+    "file": "/tmp/opencode/special-role-dispatch/AC-9-no-words.log"
+  }
+]

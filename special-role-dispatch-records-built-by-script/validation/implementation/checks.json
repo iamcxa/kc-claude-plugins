@@ -1,0 +1,198 @@
+[
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_lint_skills.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_lint_skills.log",
+    "unittest_cases": 47,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_design_surfaces.log",
+    "unittest_cases": 217,
+    "unittest_skips": 4
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_adr_doc_checks.log",
+    "unittest_cases": 9,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_poc_readme.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_poc_readme.log",
+    "unittest_cases": 9,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_comment_ratio.log",
+    "unittest_cases": 14,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_number_guards.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_number_guards.log",
+    "unittest_cases": 38,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_codex_review.log",
+    "unittest_cases": 36,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_roborev_gate.log",
+    "unittest_cases": 5,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_copilot_review.log",
+    "unittest_cases": 15,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_map_footprint.log",
+    "unittest_cases": 23,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_release_acceptance.log",
+    "unittest_cases": 122,
+    "unittest_skips": 4
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_delivery_gate.log",
+    "unittest_cases": 199,
+    "unittest_skips": 1
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_validation_security.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_validation_security.log",
+    "unittest_cases": 5,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_pr_watch.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_pr_watch.log",
+    "unittest_cases": 135,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_replay_dispatch.log",
+    "unittest_cases": 8,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_decision_ledger.log",
+    "unittest_cases": 19,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_package_version.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_package_version.log",
+    "unittest_cases": 6,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_workflow_checkout.log",
+    "unittest_cases": 13,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_observer_check.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_observer_check.log",
+    "unittest_cases": 19,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_merge_audit.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_merge_audit.log",
+    "unittest_cases": 17,
+    "unittest_skips": 0
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_laws_check.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_laws_check.log",
+    "unittest_cases": 65,
+    "unittest_skips": 1
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_learning.py",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/test_learning.log",
+    "unittest_cases": 50,
+    "unittest_skips": 0
+  },
+  {
+    "name": "workflow lint",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/lint.log",
+    "unittest_cases": 0,
+    "unittest_skips": 0
+  },
+  {
+    "name": "real-binary dispatch stages",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/dispatch-stage.log",
+    "unittest_cases": 35,
+    "unittest_skips": 0
+  },
+  {
+    "name": "dispatch records",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/dispatch-records.log",
+    "unittest_cases": 115,
+    "unittest_skips": 1
+  },
+  {
+    "name": "role triggers",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/role-triggers.log",
+    "unittest_cases": 49,
+    "unittest_skips": 0
+  },
+  {
+    "name": "dispatch transport integration",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/sd-dispatch.log",
+    "unittest_cases": 0,
+    "unittest_skips": 0
+  },
+  {
+    "name": "observer recovery integration",
+    "status": "passed",
+    "file": "/tmp/opencode/special-role-dispatch/observer-recovery.log",
+    "unittest_cases": 0,
+    "unittest_skips": 0
+  }
+]

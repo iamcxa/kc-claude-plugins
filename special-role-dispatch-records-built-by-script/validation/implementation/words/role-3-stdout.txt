@@ -1,0 +1,12 @@
+# engineering-reviewer-2
+Dispatched: 7576531bf84d1df7feffbf6e7af433e245a1e698 (workflow checkout)
+Model: gpt-6-astra (Codex via Paseo, thinking xhigh)
+
+## Checklist
+Inspect the real dispatch seam
+Keep the received second checklist line
+
+## Scope notes
+Package root: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/kc-dev-flow-2
+Send your completion message to `main`.
+Keep this second scope-notes line verbatim.

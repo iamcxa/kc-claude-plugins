@@ -207,3 +207,46 @@ ADR: 0074
 ### Summary
 
 Role calls reuse `dispatch_stage.py` through a new `--role` mode that writes, checks and commits the record and only then prints it as the reviewer's prompt; Spacedock cannot build role dispatches, and the existing checker already rejects the bite shape, so no checker change is needed. `design_surfaces.py check` printed `design surfaces presentable` (exit 0). Three Captain decisions: a six-word README raise, a model-floor check, and not adding a record join to `role_triggers.py` now.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria; D1 the six README words, D2 reject a model below the opus/astra floor, D3 not in this task; only the files the design names; no version bump.
+  Candidate `8574e879b85197d31239ee2d9a9af0c5d0cb5392`, branch `spacedock-ensign/special-role-dispatch-records-built-by-script`, base `6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1`; six named files, clean product worktree. A final origin fetch still has that base; neither overlapping README change landed first.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main.
+  No PR opened: no push grant. FO owns product push, Draft PR creation and reviews; all-state lookup found no existing PR for this branch. Prepared title/body: `/tmp/impl-special-role-dispatch-records-built-by-script-pr.md`.
+- DONE: ADR 0074 records the ruling the design names, quoting the Captain's words from the task file and its gate records.
+  `docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md` records D1–D3 and the 2026-11-10 ideation gate words; installed 0.37.0 `adr_lint.py docs/adr --since <base> --require 0074` exits 0, 66 records checked.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared).
+  Evidence home: `special-role-dispatch-records-built-by-script/validation/implementation/`; `checks.json`, `mutations.json`, `result.json`, and per-control logs. All ten mutations caught; mutation copies have no `__pycache__`.
+  AC-1: exact header, checkout SHA, supplied inputs, HEAD record and stdout bytes pass; bypassing state commit fails the HEAD assertion (`AC-1-no-commit.log`).
+  AC-2: missing Package root/completion parts refuse with empty stdout and no record in HEAD/worktree; bypassing both checks fails (`AC-2-no-checks.log`).
+  AC-3: failed commit withholds stdout, keeps the record, refuses retry until committed, then reuses it; early printing fails (`AC-3-prompt-before-commit.log`).
+  AC-4: a task owing chief-engineer dispatches that role with no build argv; routing it through build fails and the spy records `dispatch build` (`AC-4-role-through-build.log`). Real Spacedock first refuses the status/stage mismatch, before its unknown-stage check.
+  AC-5: sonnet refuses; opus and supplied gpt-6-astra pass; removing rank enforcement fails (`AC-5-no-floor.log`).
+  AC-6: all eight excluded flags and design-director refuse with exit 2 and unchanged state; allowing advance fails (`AC-6-allow-advance.log`).
+  AC-7: role-specific numbering and retry reuse pass; global numbering fails (`AC-7-global-numbering.log`). Existing cases retained: stage suite 35, records 115 (one optional skip), role triggers 49; all pass.
+  AC-8: reviewer-record phrase and the Captain-quoted +6 budget step pass at 5937 words; removing the phrase fails the integration check and removing the step fails lint (`AC-8-*.log`).
+  AC-9: ADR lint passes; isolated baseline exits 0, removing Words produces just the missing-Words defect and exit 1 (`AC-9-baseline.log`, `AC-9-no-words.log`).
+  AC-10: captured `wc -w` outputs in `words/`: startup 5931→5937; successful prompts 39–44 words, zero stderr; refusal stdout zero, stderr 4–49 words depending on refusal, including argument usage. `words/diff-stat.txt` and byte comparisons show pr_watch.py, delivery_gate.py and role_triggers.py unchanged; other listed lifecycle moments unchanged.
+- DONE: Repository lint-skills.py, installed adr_lint.py, number_guards.py check and comment_ratio.py pass; commit locally, no product push; PR text written for FO.
+  28 CI-listed commands exit 0: 1270 unittest cases, 11 optional skips, plus dispatch transport/observer integration checks (`checks.json`). Lint 5937/5937; number guards base 6a495cb8c405, head 8574e879b851, no findings and no fetch warning; comments 1/135 code lines, 0.7%, maximum 5%.
+- SKIPPED: FO pushes, opens the Draft PR, runs RoboRev and reads CI.
+  Delegated and not run, never clean. Local seams used Spacedock CLI 0.27.2 and active plugin root 0.27.3; hosted CI's pinned 0.27.2 plugin run remains FO-owned. CI cost per PR not measured; workflow triggers unchanged.
+- DONE: Affected-document verdicts from installed doc_impact.py <base> <candidate>.
+  `docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md` — unaffected: the quoted +6 step follows its existing raise rule.
+  `docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md` — unaffected: collaboration rule and its linter unchanged.
+  `docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md` — unaffected: existing rank reused; model table and linter unchanged.
+  `docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md` — unaffected: permission-answer procedure and linter unchanged.
+  `docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md` — unaffected: disposition and its wording pins unchanged.
+  `docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md` — unaffected: stage scope/manual follow-ups retained; 0074 adds role mode.
+  `docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md` — updated.
+  `kc-dev-flow-2/README.md` — unaffected: maintenance commands and stage-test description remain valid.
+  `kc-dev-flow-2/references/sd/adoption.md` — unaffected: the named dispatch test command remains valid.
+  `kc-dev-flow-2/skills/maintain-flow/SKILL.md` — unaffected: its budget/falsifier practices are followed without changing the practices.
+  `learning.md` — unaffected: historical evidence and lifecycle measurement practice preserved; no learning entry changed.
+
+### Summary
+
+Added bounded role dispatches that write, check and state-commit the record before returning the prompt, with model-floor refusal, commit-failure recovery and the approved six-word instruction. The existing design capability audit was reused; no new abstraction or file outside the six approved files was needed, and local checks/falsifiers passed. Pilot scope remains local preparation: FO owns product publication, independent review and hosted CI; manual missing-record calls and the higher prod/database floor remain outside this role-mode check.
+ADRs: 0074

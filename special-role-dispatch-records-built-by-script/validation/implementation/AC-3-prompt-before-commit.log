@@ -1,0 +1,26 @@
+F
+======================================================================
+FAIL: test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record (__main__.DispatchStageTests.test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 151, in test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record
+    self.assertEqual(held.stdout, "")
+AssertionError: '# engineering-reviewer-1\nDispatched: 326[497 chars]m.\n' != ''
+- # engineering-reviewer-1
+- Dispatched: 3266627312fad47ad2f586ef8376e2492c917380 (workflow checkout)
+- Model: opus
+- 
+- ## Checklist
+- Inspect the real dispatch seam
+- Keep the received second checklist line
+- 
+- ## Scope notes
+- Package root: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2
+- Send your completion message to `main`.
+- Keep this second scope-notes line verbatim.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.910s
+
+FAILED (failures=1)

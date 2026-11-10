@@ -1,0 +1,82 @@
+FFFFFFFF
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--advance',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 202, in test_role_rejects_stage_only_flags_and_unknown_roles
+    held = self.role(extra=extra, expected=2)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 2 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ovs22xsz/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ovs22xsz/code/docs/dev2/.spacedock-state/dispatch-fixture-639f9ff5c3004cab8a80204a8a6cfea5.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ovs22xsz/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ovs22xsz/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--advance'], '# engineering-reviewer-1\nDispatched: 6eeeddf7c61fbae7f8e4b6974e8625949d9c7a15 (workflow checkout)\nModel: opus\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\n', '')
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--bare-mode',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 204, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+AssertionError: {'head': 'eabc119f96c79ea9be2306aba7fd4a7e20a4519d'[2976 chars]x00'} != {'head': '6d27f179263f891ce068000ae487197239ed4cff'[947 chars]x00'}
+Diff is 6408 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--host', 'codex'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 204, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+AssertionError: {'head': 'eabc119f96c79ea9be2306aba7fd4a7e20a4519d'[2976 chars]x00'} != {'head': '6d27f179263f891ce068000ae487197239ed4cff'[947 chars]x00'}
+Diff is 6408 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 204, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+AssertionError: {'head': 'eabc119f96c79ea9be2306aba7fd4a7e20a4519d'[2976 chars]x00'} != {'head': '6d27f179263f891ce068000ae487197239ed4cff'[947 chars]x00'}
+Diff is 6408 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--symptom', 'same failure'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 204, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+AssertionError: {'head': 'eabc119f96c79ea9be2306aba7fd4a7e20a4519d'[2976 chars]x00'} != {'head': '6d27f179263f891ce068000ae487197239ed4cff'[947 chars]x00'}
+Diff is 6408 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--feedback-context-file', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-ovs22xsz/notes.txt'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 204, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+AssertionError: {'head': 'eabc119f96c79ea9be2306aba7fd4a7e20a4519d'[2976 chars]x00'} != {'head': '6d27f179263f891ce068000ae487197239ed4cff'[947 chars]x00'}
+Diff is 6408 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--feedback-reflow',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 204, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+AssertionError: {'head': 'eabc119f96c79ea9be2306aba7fd4a7e20a4519d'[2976 chars]x00'} != {'head': '6d27f179263f891ce068000ae487197239ed4cff'[947 chars]x00'}
+Diff is 6408 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--role', 'design-director'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-validation/mutation/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 204, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+AssertionError: {'head': 'eabc119f96c79ea9be2306aba7fd4a7e20a4519d'[2976 chars]x00'} != {'head': '6d27f179263f891ce068000ae487197239ed4cff'[947 chars]x00'}
+Diff is 6408 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 5.336s
+
+FAILED (failures=8)
