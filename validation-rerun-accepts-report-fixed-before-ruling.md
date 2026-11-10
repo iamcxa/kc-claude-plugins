@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-10T16:15:50Z
+worktree: .worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling
 ---
 
 ## Scope
