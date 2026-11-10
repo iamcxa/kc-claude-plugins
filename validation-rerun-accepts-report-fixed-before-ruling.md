@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:validation-rerun-accepts-report-fixed-before-ruling:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:validation-rerun-accepts-report-fixed-before-ruling-backlog-1
+              briefing:
+                id: briefing:validation-rerun-accepts-report-fixed-before-ruling:backlog:attempt-1:revision-1
+                digest: sha256:0f2dc53eb45d3deb105f1fc442ea6de505ff31dad7768a44110a66f88afd0dbf
+                room-ref: ./validation-rerun-accepts-report-fixed-before-ruling/review/backlog/briefing-1
 ---
 
 ## Scope
