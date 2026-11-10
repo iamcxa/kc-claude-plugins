@@ -1437,7 +1437,9 @@ class CaptainStepFixture(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.saved = self.root / "steps.md"
+        (self.root / "index.md").write_text("# task\n")
+        self.saved = self.root / "captain-steps/1.md"
+        self.saved.parent.mkdir()
         self.message = self.root / "message.txt"
 
     def step(self, asked, observed="worked", ran="fresh shell, 2026-11-03T00:00:00Z", only=None, number=1):
@@ -1783,9 +1785,24 @@ class CaptainStepsTests(CaptainStepFixture):
             asked = f"Read {quote}{spaced}{quote}"
             self.assertEqual(self.run_steps(self.step(asked), asked)[0], 0)
 
+    def test_steps_holds_misplaced_records_and_accepts_resolved_paths(self):
+        self.run_steps(self.step("Review this candidate."), "Review this candidate.")
+        for name in ("review/captain-steps.md", "captain-steps/notes.md", "captain-steps/0.md"):
+            target = self.root / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(self.saved.read_bytes())
+            run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", str(target),
+                                  "--text-file", str(self.message)], capture_output=True, text=True)
+            self.assertEqual(run.returncode, 1, run.stdout)
+            self.assertIn(str(self.root / "captain-steps/<N>.md"), run.stdout)
+        for path in (str(self.saved), "captain-steps/1.md"):
+            run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", path,
+                                  "--text-file", str(self.message)], cwd=self.root, capture_output=True, text=True)
+            self.assertEqual(run.returncode, 0, run.stdout)
+
     def test_relative_markdown_card_is_read_by_the_real_cli(self):
         self.saved = self.root / "captain-steps/1.md"
-        self.saved.parent.mkdir()
+        self.saved.parent.mkdir(exist_ok=True)
         card = self.root / "card.md"
         card.write_text("```sh\nprintf checked\n```\n")
         self.run_steps(self.step("Read card.md:13"), "Read card.md:13")
@@ -1811,6 +1828,7 @@ class CaptainGateTests(CaptainStepFixture):
         self.task.write_text(TASK)
         self.head = "b7732d43" + "0" * 32
         captain_record(self.task, self.head)
+        self.saved = gate.task_folder(self.task) / "captain-steps/1.md"
 
     def ask_gate(self, body=None, candidate=None, module=None, summary=False, declaration=True):
         self.saved.write_text(f"Candidate: {candidate or self.head}\n\n" + (body or self.step("Open the preview")))
@@ -2623,7 +2641,7 @@ class ReviewerDeclarationTests(unittest.TestCase):
     def run_cli(self, command, text=DECLARATION + "Copilot review:18.", source=None, config=REVIEWERS,
                 task=TASK, title="fix(x): y", module=None, folder=False, split=False, explicit=False,
                 source_error=False, missing_readme=False, readme_error=False, before_question=None, head_arg=HEAD40,
-                summary=None, summary_error=False):
+                summary=None, summary_error=False, steps_path="captain-steps/1.md"):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             readme(d, config)
@@ -2635,6 +2653,12 @@ class ReviewerDeclarationTests(unittest.TestCase):
             entry.write_text(task)
             artifacts = gate.task_folder(entry)
             captain_steps = captain_record(entry)
+            original_steps = artifacts / "captain-steps/1.md"
+            target_steps = artifacts / steps_path
+            if target_steps != original_steps:
+                target_steps.parent.mkdir(parents=True, exist_ok=True)
+                original_steps.rename(target_steps)
+                captain_steps = captain_steps.replace(str(original_steps), str(target_steps))
             dispatch = artifacts / "dispatch"
             dispatch.mkdir(parents=True, exist_ok=True)
             (dispatch / "validation-1.md").write_text(record(HEAD40))
@@ -2682,6 +2706,15 @@ class ReviewerDeclarationTests(unittest.TestCase):
             written = list((artifacts / "merge").glob("ask-*.json"))
             self.assertEqual(len(written), int(command == "check" and code == 0), out.getvalue())
             return code, out.getvalue()
+
+    def test_captain_record_path_holds_question_and_check(self):
+        for command in ("question", "check"):
+            for path in ("review/captain-steps.md", "captain-steps/notes.md", "captain-steps/0.md"):
+                with self.subTest(command=command, path=path):
+                    code, out = self.run_cli(command, steps_path=path)
+                    self.assertEqual(code, 1, out)
+                    self.assertIn("/captain-steps/<N>.md (ADR 0054)", out)
+            self.assertEqual(self.run_cli(command)[0], 0)
 
     def test_configured_declaration_matrix_on_both_commands(self):
         cases = [("", 1), ("Second reviewer: copilot triggered by review rules.", 1),

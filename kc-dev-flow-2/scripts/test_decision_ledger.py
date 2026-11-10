@@ -3,6 +3,8 @@ import importlib.util
 import contextlib
 import io
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -184,17 +186,82 @@ class LedgerTest(unittest.TestCase):
         self.assertFalse(any(r["followed"] for r in dl.ledger(self.state)))
 
 
+class OpenAttemptReasonTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        self.task = self.root / "sample.md"
+        self.reason = self.root / "reason.txt"
+        self.task.write_text(TASK.replace("              resolution:\n                type: Resolution\n                by: agent:first-officer", "              pending:\n                type: Resolution\n                by: agent:first-officer"))
+        for stage, number, question in (("backlog", 1, "X"), ("ideation", 2, "X"), ("validation", 1, "Y")):
+            room = self.root / f"sample/review/{stage}/briefing-{number}"
+            room.mkdir(parents=True)
+            (room / "index.json").write_text(json.dumps({"question": question}))
+
+    def cli(self, quote="Y", extra=None):
+        self.reason.write_text(f"Recommendation: followed; answering 「{quote}」")
+        return subprocess.run([sys.executable, "-B", dl.__file__, "--reason", str(self.reason),
+                               *(extra if extra is not None else ["--task", str(self.task)])],
+                              capture_output=True, text=True)
+
+    def test_only_the_open_attempts_question_passes(self):
+        self.assertEqual((self.cli().returncode, self.cli().stdout), (0, "reason: followed\n"))
+        run = self.cli("X")
+        self.assertEqual(run.returncode, 1, run.stderr)
+        self.assertIn("reason: does not quote the bound question\nnext:", run.stdout)
+        self.assertIn("sample/review/validation/briefing-1/index.json", run.stdout)
+
+    def test_newer_resolved_attempt_does_not_replace_the_open_question(self):
+        self.task.write_text(self.task.read_text().replace("              pending:", "              resolution:", 1)
+                             .replace("              resolution:\n                type: Resolution\n                by: person:captain", "              pending:\n                type: Resolution\n                by: person:captain", 1))
+        self.assertEqual(self.cli("X").returncode, 0)
+        self.assertEqual(self.cli("Y").returncode, 1)
+
+    def test_missing_task_zero_two_open_attempts_and_unreadable_room_are_exit_two(self):
+        run = self.cli(extra=[])
+        self.assertEqual(run.returncode, 2)
+        self.assertIn("--task", run.stderr)
+        original = self.task.read_text()
+        for text in (TASK, original.replace("              withdrawal:", "              pending:")):
+            self.task.write_text(text)
+            run = self.cli()
+            self.assertEqual(run.returncode, 2)
+            self.assertIn(str(self.task), run.stderr)
+        self.task.write_text(original)
+        index = self.root / "sample/review/validation/briefing-1/index.json"
+        for content in (None, "{", '{}', '[]', '{"question": 1}'):
+            if content is None:
+                index.unlink()
+            else:
+                index.write_text(content)
+            run = self.cli()
+            self.assertEqual(run.returncode, 2)
+            self.assertIn(str(index), run.stderr)
+
+    def test_folder_task_and_whitespace_ignored(self):
+        self.task.rename(self.root / "sample/index.md")
+        self.task = self.root / "sample/index.md"
+        self.task.write_text(self.task.read_text().replace("./sample/", "./"))
+        self.assertEqual(self.cli(" Y\n ", ["--task", str(self.task.parent)]).returncode, 0)
+
+
 class ReasonTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.path = Path(self.tmp.name) / "reason.txt"
         self.addCleanup(self.tmp.cleanup)
+        self.task = self.path.parent / "sample.md"
+        self.task.write_text(TASK.replace("              resolution:\n                type: Resolution\n                by: agent:first-officer", "              pending:\n                type: Resolution\n                by: agent:first-officer"))
+        room = self.path.parent / "sample/review/validation/briefing-1"
+        room.mkdir(parents=True)
+        (room / "index.json").write_text('{"question": "Approve?"}')
 
     def check(self, reason):
-        self.path.write_text(reason, encoding="utf-8")
+        self.path.write_text(reason + ("; answering 「Approve?」" if reason.strip() else ""), encoding="utf-8")
         out, err = io.StringIO(), io.StringIO()
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-            code = dl.main(["--reason", str(self.path)])
+            code = dl.main(["--reason", str(self.path), "--task", str(self.task)])
         return code, out.getvalue(), err.getvalue()
 
     def test_flagged_reasons_hold_and_pass_with_override(self):
@@ -234,10 +301,10 @@ class ReasonTest(unittest.TestCase):
             with self.subTest(value=value):
                 self.assertEqual(self.check(value)[0], 2)
         with contextlib.redirect_stderr(io.StringIO()):
-            self.assertEqual(dl.main(["--reason", str(self.path.parent / "missing")]), 2)
-            self.assertEqual(dl.main(["--reason", str(self.path.parent)]), 2)
+            self.assertEqual(dl.main(["--reason", str(self.path.parent / "missing"), "--task", str(self.task)]), 2)
+            self.assertEqual(dl.main(["--reason", str(self.path.parent), "--task", str(self.task)]), 2)
             self.path.write_bytes(b"\xff")
-            self.assertEqual(dl.main(["--reason", str(self.path)]), 2)
+            self.assertEqual(dl.main(["--reason", str(self.path), "--task", str(self.task)]), 2)
 
     def test_malformed_override_and_followed_typo_hold(self):
         for reason in ("Recommendation followed", "Override: recommended A; Captain chose B"):
