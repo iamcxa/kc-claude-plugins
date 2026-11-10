@@ -1562,6 +1562,74 @@ class CaptainStepsTests(CaptainStepFixture):
                                      capture_output=True, text=True)
                 self.assertEqual(run.returncode, code, run.stdout)
 
+    def test_pr_body_attribution_line_needs_no_recorded_link_step(self):
+        card = self.root / "review/pr-body.md"
+        card.parent.mkdir()
+        attribution = "🤖 Generated with [Claude Code](https://claude.com/claude-code)"
+        for line in (attribution, " \t" + attribution + "  ", attribution.replace(" ", "\t  ")):
+            with self.subTest(line=line):
+                card.write_text("A bounded fix.\n\n" + line + "\n")
+                code, out = self.run_steps(self.step("Read this note."), f"Read this note. Read {card}")
+                self.assertEqual(code, 0, out)
+                self.assertNotIn("S5", out)
+
+    def test_attribution_url_elsewhere_needs_a_recorded_link_step(self):
+        link = "https://claude.com/claude-code"
+        instruction = "Open " + link
+        card = self.root / "card.md"
+        card.write_text(instruction + "\n")
+        for message in ("Read this note. " + instruction, f"Read this note. Read {card}"):
+            with self.subTest(message=message):
+                code, out = self.run_steps(self.step("Read this note."), message)
+                self.assertEqual(code, 1, out)
+                self.assertIn(f"S5: unrecorded command or link '{link}'", out)
+
+    def test_attribution_line_with_more_text_keeps_its_links(self):
+        attribution = "🤖 Generated with [Claude Code](https://claude.com/claude-code)"
+        link = "https://preview.example.test/owner"
+        card = self.root / "review/pr-body.md"
+        card.parent.mkdir()
+        for line in (attribution + " " + link, "Open " + attribution, attribution + " please"):
+            with self.subTest(line=line):
+                card.write_text(line + "\n")
+                code, out = self.run_steps(self.step("Read this note."), f"Read this note. Read {card}")
+                self.assertEqual(code, 1, out)
+                self.assertIn("S5: unrecorded command or link 'https://claude.com/claude-code'", out)
+                if link in line:
+                    self.assertIn(f"S5: unrecorded command or link '{link}'", out)
+
+    def test_pr_body_other_url_still_needs_a_recorded_link_step(self):
+        card = self.root / "review/pr-body.md"
+        card.parent.mkdir()
+        link = "https://preview.example.test/owner"
+        card.write_text(f"Open {link}\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n")
+        code, out = self.run_steps(self.step("Read this note."), f"Read this note. Read {card}")
+        self.assertEqual(code, 1, out)
+        self.assertIn(f"S5: unrecorded command or link '{link}'", out)
+        self.assertNotIn("claude.com/claude-code", out)
+
+    def test_attribution_exemption_falsifiers(self):
+        attribution = "🤖 Generated with [Claude Code](https://claude.com/claude-code)"
+        link = "https://claude.com/claude-code"
+        card = self.root / "review/pr-body.md"
+        card.parent.mkdir()
+        filtering = '    text = "\\n".join("" if normalized(line) in ATTRIBUTION else line for line in text.splitlines())\n'
+        removed = variant_of(filtering, "")
+        for line in (attribution, " \t" + attribution + "  "):
+            card.write_text(line + "\n")
+            code, out = self.run_steps(self.step("Read this note."), f"Read this note. Read {card}", removed)
+            self.assertEqual(code, 1, out)
+            self.assertIn(f"S5: unrecorded command or link '{link}'", out)
+        url_match = variant_of(filtering, f'    text = text.replace("{link}", "")\n')
+        card.write_text("Open " + link + "\n")
+        for message in ("Read this note. Open " + link, f"Read this note. Read {card}"):
+            code, out = self.run_steps(self.step("Read this note."), message, url_match)
+            self.assertEqual(code, 0, out)
+        substring = variant_of(filtering, '    text = "\\n".join("" if any(value in normalized(line) for value in ATTRIBUTION) else line for line in text.splitlines())\n')
+        card.write_text(attribution + " https://preview.example.test/owner\n")
+        code, out = self.run_steps(self.step("Read this note."), f"Read this note. Read {card}", substring)
+        self.assertEqual(code, 0, out)
+
     def test_a_longer_closing_fence_still_requires_a_step(self):
         command = "printf unrecorded"
         for marker in ("`", "~"):
@@ -1966,6 +2034,35 @@ class TaskFolderCaptainTests(CaptainStepFixture):
         run = self.run_question("Read card.md")
         self.assertEqual(run.returncode, 1, run.stdout)
         self.assertIn(f"curl {link}", run.stdout)
+
+    def test_question_pr_body_attribution_line_needs_no_recorded_link_step(self):
+        card = self.folder / "review/pr-body.md"
+        card.parent.mkdir()
+        attribution = "🤖 Generated with [Claude Code](https://claude.com/claude-code)"
+        for line in (attribution, " \t" + attribution + "  ", attribution.replace(" ", "\t  ")):
+            with self.subTest(line=line):
+                card.write_text("A bounded fix.\n\n" + line + "\n")
+                run = self.run_question(message="Review this candidate. Read review/pr-body.md")
+                self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+                self.assertIn("gate text complete", run.stdout)
+                self.assertIn(gate.ASK_FORM, run.stdout)
+                self.assertNotIn("S5", run.stdout)
+
+    def test_question_named_captain_link_holds_until_recorded(self):
+        card = self.folder / "card.md"
+        instruction = "Open https://preview.example.test/owner"
+        card.write_text(instruction + "\n")
+        for recorded in (False, True):
+            with self.subTest(recorded=recorded):
+                body = self.step("Review this candidate.")
+                if recorded:
+                    body += self.step(instruction, ran="real browser, 2026-11-03T00:00:00Z", number=2)
+                run = self.run_question(message="Review this candidate. Read card.md", body=body)
+                self.assertEqual(run.returncode, 0 if recorded else 1, run.stdout + run.stderr)
+                if recorded:
+                    self.assertNotIn("S5", run.stdout)
+                else:
+                    self.assertIn("S5: unrecorded command or link 'https://preview.example.test/owner'", run.stdout)
 
     def test_repository_documents_are_not_read_as_task_cards(self):
         run = self.run_question("Evidence: README.md and CLAUDE.md")
