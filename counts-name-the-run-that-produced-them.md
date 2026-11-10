@@ -269,6 +269,11 @@ Falsifier: drop the number-in-file comparison, and the wrong "2 cells" counts as
 
 **AC-3** `check` scans the ask text and the PR body. Evidence: a fixture PR body (through the existing `gh` stub) holding one uncited count, with ask text that holds none. `check` exits 1 until the text carries `Unchecked counts: 1`. Falsifier: scan only `--text-file`, and the test fails. Current evidence: not yet built.
 
+### Amendment 2 — 2026-11-10, host question dialog
+Captain: 「退回修（建議）」 (host question dialog, 2026-11-10)
+Asked: 「#822（數字寫明出處）驗證發現一個要你決定的誤擋：學習提案裡引用「Cycle 1 FO line」（第一輪的 FO 紀錄）時，工具把「1 … line」當成「一行」這種數量，在引用資料裡找不到就擋下，提案完成不了（改寫成 first-cycle 就過）。我建議退回修：緊接在編號標籤後的數字（Cycle、Round、Batch、Step、Stage、Amendment、Attempt、Phase）當編號，不當數量。要退回修，還是接受為已知限制？」
+Supersedes: none
+
 ## Number guards
 
 ADR: 0072
