@@ -53,6 +53,17 @@ gates:
                 id: briefing:role-call-asks-for-the-mechanism:validation:attempt-1:revision-1
                 digest: sha256:d7ce055332c2506f722e8ed8f00ea2aa2ba9947bdb307b5aff688e2e901e7d14
                 room-ref: ./role-call-asks-for-the-mechanism/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:role-call-asks-for-the-mechanism:validation:1
+                briefing: briefing:role-call-asks-for-the-mechanism:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-10T00:27:58.961306Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-09), answering 「決定：合併 #821（總工程師被叫時改問「是什麼原因一直產生這些問題」，婉拒必須寫出各發現各自的原因）嗎？建議合併。 Regular merge with --match-head-commit ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9, the batch 19 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-09T14:37:22Z
 worktree: .worktrees/spacedock-ensign-role-call-asks-for-the-mechanism
 pr: iamcxa/kc-claude-plugins#821
