@@ -1,0 +1,13 @@
+{
+  "prior": "8574e879b85197d31239ee2d9a9af0c5d0cb5392",
+  "exact_three_line_fix": true,
+  "retained_test_functions": 35,
+  "added_test_functions": [
+    "test_lf_record_matches_legacy_input_reading",
+    "test_role_crlf_inputs_keep_raw_bytes",
+    "test_role_lf_inputs_keep_raw_bytes",
+    "test_stage_crlf_inputs_keep_raw_bytes",
+    "test_stage_lf_inputs_keep_raw_bytes"
+  ],
+  "mutation_controls": 4
+}

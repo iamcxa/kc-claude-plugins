@@ -304,3 +304,46 @@ ADRs: 0074
 
 F1 is reproduced and remains unfixed in the product; this phase-1 report supersedes the earlier implementation report's claim that AC-1 is green. The smallest proposed correction preserves input bytes through the shared reader and returns raw role-record bytes; disposable checks pass and LF-only record bytes are unchanged in both exercised paths. Pilot scope remains investigation only, awaiting FO repair authorization; no product or remote action was taken.
 ADRs: none: this investigation proposes enforcement of the existing byte-preservation contract, without a new ruling.
+
+
+## Stage Report: implementation
+
+- DONE: Phase 2 of the Cycle 1 repair, FO fix authorization for finding F1: in kc-dev-flow-2/scripts/dispatch_stage.py change the three lines your phase-1 report proposes and nothing else in that file.
+  Candidate `3567082b0ec1eeb59346b2d82887a07bc5ffc2fb`, prior `8574e879b85197d31239ee2d9a9af0c5d0cb5392`, existing branch `spacedock-ensign/special-role-dispatch-records-built-by-script`; `scope-check.json` confirms the exact three authorized substitutions and `summary.json` binds the committed source hashes. No version, workflow or other production file changed in this repair.
+- DONE: Add the raw-byte regression tests to kc-dev-flow-2/scripts/test_dispatch_stage.py: role CRLF, stage CRLF, both LF controls and the LF before/after record comparison; show each new CRLF test failing with the fix reverted (python3 -B, caches cleared).
+  Five new tests pass (`targeted.log`); original 35 test functions remain AST-identical. `revert-all-three.log` fails both CRLF tests; independent checklist, scope-note and role-stdout normalization mutations also fail the matching raw-byte assertions (`mutations.json`, four caught controls plus the positive baseline). Temporary copies run with python3 -B after cache removal; raw subprocess/Git output avoids newline-normalizing test capture.
+- DONE: All package test files pass; one local commit on the existing branch, no push and no PR write; update the PR text file if its claims change.
+  All 28 CI-listed checks exit 0, every package test file is listed, with 1275 unittest cases including 11 optional skips (`checks.json`); the real-binary stage suite has 40 passing cases. Single local repair commit `3567082b0ec1eeb59346b2d82887a07bc5ffc2fb` changes only the two named files; product worktree is clean. `/tmp/impl-special-role-dispatch-records-built-by-script-pr.md` now describes CRLF/LF preservation and these results; it was not posted.
+- DONE: Append one complete `## Stage Report: implementation` naming the new candidate SHA, every item followed by its own indented evidence line, evidence kept in the task folder in the state checkout.
+  This report and all raw outputs/metadata are under `special-role-dispatch-records-built-by-script/validation/f1-repair-phase2/`; logs cited here are relative to that evidence home. The state report/evidence are committed locally only; no branch push is performed.
+- DONE: Required guard and document checks at the repaired candidate.
+  Installed 0.37.0 ADR lint since base `6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1` with `--require 0074` exits 0 (66 records); number guards exits 0 with no findings/fetch warning at head `3567082b0ec1`; design surfaces presentable. Repository lint remains 5937/5937 words. Comment ratio is 1/192 code lines, 0.5%, under 5% (`adr-lint.log`, `number-guards.log`, `design.log`, `lint-skills.log`, `comment-ratio.log`).
+- DONE: doc_impact disposition for `docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md`.
+  unaffected: the Captain-quoted +6 budget step follows the existing raise rule.
+- DONE: doc_impact disposition for `docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md`.
+  unaffected: worker collaboration rule and its linter remain unchanged.
+- DONE: doc_impact disposition for `docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md`.
+  unaffected: existing model ranking is reused; the model table and its linter remain unchanged.
+- DONE: doc_impact disposition for `docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md`.
+  unaffected: worker permission-answer procedure and its linter remain unchanged.
+- DONE: doc_impact disposition for `docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md`.
+  unaffected: external-review disposition and its wording pins remain unchanged.
+- DONE: doc_impact disposition for `docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md`.
+  unaffected: stage dispatch and manual follow-ups keep their existing scope; ADR 0074 adds role mode.
+- DONE: doc_impact disposition for `docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md`.
+  updated in the task candidate; retained unchanged in this repair, whose byte-preservation enforcement follows its existing record/prompt contract.
+- DONE: doc_impact disposition for `kc-dev-flow-2/README.md`.
+  unaffected: the maintenance command paths and described stage tests remain valid.
+- DONE: doc_impact disposition for `kc-dev-flow-2/references/sd/adoption.md`.
+  unaffected: the unchanged dispatch test command still exercises adoption.
+- DONE: doc_impact disposition for `kc-dev-flow-2/skills/maintain-flow/SKILL.md`.
+  unaffected: the word-budget and falsifier practices are followed without changing maintenance rules.
+- DONE: doc_impact disposition for `learning.md`.
+  unaffected: historical evidence and lifecycle measurement practice are preserved.
+- SKIPPED: FO pushes and runs RoboRev; remote PR updates, hosted CI and fresh independent validation of the repaired candidate.
+  Delegated to FO and not run by this worker, never clean. Local seams use real Spacedock CLI 0.27.2 and active plugin root 0.27.3; hosted pinned-0.27.2 validation for the new candidate remains separate. No CI trigger changed; cost per PR not measured.
+
+### Summary
+
+The authorized byte-preservation repair and five integrated regressions are committed as `3567082b0ec1eeb59346b2d82887a07bc5ffc2fb`; this complete phase-2 report supersedes the phase-1 report's unfixed/waiting-authorization status. CRLF input bytes now survive both record paths and raw role stdout, while the exercised LF records remain byte-identical; full local checks and removal controls pass. Pilot scope remains bounded; FO owns publication, RoboRev and a fresh validation decision on this candidate.
+ADRs: none: no new ruling; existing ADR 0074 is retained and required by the guard.

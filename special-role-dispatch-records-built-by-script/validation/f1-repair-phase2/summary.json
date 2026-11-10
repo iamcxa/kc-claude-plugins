@@ -1,0 +1,24 @@
+{
+  "prior": "8574e879b85197d31239ee2d9a9af0c5d0cb5392",
+  "base": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+  "commands": 28,
+  "unittest_cases": 1275,
+  "unittest_skips": 11,
+  "added_tests": 5,
+  "mutations_caught": 4,
+  "product_files_changed": 2,
+  "production_lines_changed": 3,
+  "cli": "Spacedock 0.27.2",
+  "active_plugin": "Spacedock 0.27.3",
+  "ci_cost_per_pr": "not measured",
+  "roborev": "not run: FO-owned",
+  "hosted_ci": "not run on repaired candidate: FO-owned",
+  "candidate": "3567082b0ec1eeb59346b2d82887a07bc5ffc2fb",
+  "package_tree": "1f66a8309a6ff2b2dd93bce89d1654906feac5f9",
+  "branch": "spacedock-ensign/special-role-dispatch-records-built-by-script",
+  "source_sha256": {
+    "kc-dev-flow-2/scripts/dispatch_stage.py": "a2a5ef3255e22238f0309b422444b6ec1159c58113663e511151b5ad66489a8a",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py": "6b01076622af7cb8a4ebbdb1f9e537c3996d4a32f57d414b6d045870cfb94b51"
+  },
+  "product_clean": true
+}

@@ -1,0 +1,25 @@
+FF
+======================================================================
+FAIL: test_role_crlf_inputs_keep_raw_bytes (__main__.DispatchStageTests.test_role_crlf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 254, in test_role_crlf_inputs_keep_raw_bytes
+    self.assert_input_bytes(True, "\r\n")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 238, in assert_input_bytes
+    self.assertIn(checklist, disk)
+AssertionError: b'Inspect exact bytes\r\n\xe4\xbf\x9d\xe7\x95\x99\xe7\xac\xac\xe4\xba\x8c\xe8\xa1\x8c\r\n' not found in b'# engineering-reviewer-1\nDispatched: 543ec836db1bdcfe48024e7bc4117fd6471751ee (workflow checkout)\nModel: opus\n\n## Checklist\nInspect exact bytes\n\xe4\xbf\x9d\xe7\x95\x99\xe7\xac\xac\xe4\xba\x8c\xe8\xa1\x8c\n\n## Scope notes\nPackage root: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/kc-dev-flow-2\nSend your completion message to `main`.\n\xe4\xbf\x9d\xe7\x95\x99\xe7\xaf\x84\xe5\x9c\x8d\xe6\x96\x87\xe5\xad\x97\n'
+
+======================================================================
+FAIL: test_stage_crlf_inputs_keep_raw_bytes (__main__.DispatchStageTests.test_stage_crlf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 257, in test_stage_crlf_inputs_keep_raw_bytes
+    self.assert_input_bytes(False, "\r\n")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 238, in assert_input_bytes
+    self.assertIn(checklist, disk)
+AssertionError: b'Inspect exact bytes\r\n\xe4\xbf\x9d\xe7\x95\x99\xe7\xac\xac\xe4\xba\x8c\xe8\xa1\x8c\r\n' not found in b'# ideation-1\nDispatched: 291c61c0db7ea9b14ae680d928fa3723feafd227 (workflow checkout)\nModel: opus\n\n## Checklist\nInspect exact bytes\n\xe4\xbf\x9d\xe7\x95\x99\xe7\xac\xac\xe4\xba\x8c\xe8\xa1\x8c\n\n## Scope notes\nPackage root: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/kc-dev-flow-2\nSend your completion message to `main`.\n\xe4\xbf\x9d\xe7\x95\x99\xe7\xaf\x84\xe5\x9c\x8d\xe6\x96\x87\xe5\xad\x97\n'
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.995s
+
+FAILED (failures=2)
