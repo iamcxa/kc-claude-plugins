@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-11-10T04:59:02Z
 worktree: .worktrees/spacedock-ensign-amendment-checked-when-written
+pr: iamcxa/kc-claude-plugins#828
 ---
 
 ## Scope
