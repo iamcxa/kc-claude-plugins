@@ -387,7 +387,6 @@ def check_amendments(name, lines, declared, errors, dispatched=None):
         named = supersedes_ids(value)
         if named is None:
             continue
-        waiver = NO_REPLACEMENT.search(value)
         number = entry.number
         waits = dispatched is not None and number not in dispatched
         for superseded in sorted(set() if waits else named & declared):
@@ -395,10 +394,52 @@ def check_amendments(name, lines, declared, errors, dispatched=None):
         held = {found for found, _ in moved[index]}
         if held - named:
             errors.append(f"{name}: '{title}' holds {', '.join(sorted(held - named))} but its 'Supersedes:' line does not name them")
-        marker = re.compile(rf"Amended by Captain, amendment {number}(?!\d)")
         others = [pair for i, pairs in enumerate(moved) if i != index for pair in pairs]
-        if named and not waiver and not any(marker.search(text) for _, text in live + others):
+        if unmarked(entry, live, others):
             errors.append(f"{name}: '{title}' supersedes {', '.join(sorted(named))} but no criterion says 'Amended by Captain, amendment {number}' and its 'Supersedes:' line does not say 'no replacement'")
+
+
+def unmarked(entry, live, others):
+    values = SUPERSEDES.findall(entry.prefix)
+    if len(values) == 1:
+        value = values[0]
+        named = supersedes_ids(value)
+        waiver = NO_REPLACEMENT.search(value)
+        marker = re.compile(rf"Amended by Captain, amendment {entry.number}(?!\d)")
+        if named and not waiver and not any(marker.search(text) for _, text in live + others):
+            return True
+    return False
+
+
+def move_defects(lines):
+    entries, issues = parse_amendments(lines)
+    entries = [entry for entry in entries
+               if not any(entry.start < line <= entry.end for line, _ in issues)]
+    moved = [declarations(entry.moved) for entry in entries]
+    visible, fence = [], None
+    for line in lines:
+        marker = AMENDMENT_FENCE.match(line)
+        if fence:
+            if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip():
+                fence = None
+        elif marker:
+            fence = marker[1]
+        else:
+            visible.append(line)
+    live = declarations(section(visible, AC_HEADING) or [])
+    declared = {ident for ident, _ in live}
+    defects = []
+    for index, entry in enumerate(entries):
+        if entry.payload is None:
+            continue
+        held = {ident for ident, _ in moved[index]}
+        reused = tuple(sorted(held & declared))
+        if reused:
+            defects.append(("reused", entry.number, reused))
+        others = [pair for i, pairs in enumerate(moved) if i != index for pair in pairs]
+        if unmarked(entry, live, others):
+            defects.append(("unmarked", entry.number))
+    return defects
 
 
 def report_severities(text, scale=SEVERITY_SCALE):
@@ -558,7 +599,21 @@ def design_report(name, value, text, errors, on_preview):
         return None
     child = re.match(r"[ \t]*", FINDINGS_LINE.search(text).group(0)).group(0)
     block = re.search(r"^design_review:.*\n((?:[ \t].*\n|[ \t]*\n|#.*\n)*)", text + "\n", re.M).group(1)
-    on_preview(re.findall(rf"^{child}preview:[ \t]*(.*)$", block, re.M))
+    named = re.findall(rf"^{child}preview:[ \t]*(.*)$", block, re.M)
+    if len(named) > 1:
+        errors.append(f"{name}: '{value}' has {len(named)} 'preview:' lines directly under 'design_review:', expected exactly 1")
+        return None
+    if named == [""]:
+        tail = re.split(rf"^{child}preview:[ \t]*$", block, maxsplit=1, flags=re.M)[1]
+        named = []
+        for line in tail.splitlines():
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            item = re.fullmatch(rf"{child}(?:[ \t]+)?-[ \t]+(.+)", line)
+            if not item:
+                break
+            named.append(item[1])
+    on_preview(named)
     severities, problems = report_severities(text, DESIGN_SCALE)
     if problems:
         errors.extend(f"{name}: '{value}' {problem}" for problem in problems)
@@ -797,20 +852,25 @@ def check_built_screen(path, body, previews, errors):
     severities = design_report(name, value, text, errors, named.extend)
     if severities is None:
         return None
-    shot_name = named[0].strip().strip("\"'") if len(named) == 1 else ""
-    picture = folder / shot_name
-    if not shot_name or Path(shot_name).is_absolute() or ".." in Path(shot_name).parts or not picture.is_file():
-        errors.append(f"{name}: built screen review not run: '{value}' names no screenshot file inside the task folder")
-        return None
+    pictures = []
+    for shot in named or [""]:
+        shot_name = shot.strip().strip("\"'")
+        picture = folder / shot_name
+        if (not shot_name or Path(shot_name).is_absolute() or ".." in Path(shot_name).parts
+                or not picture.is_file() or not picture.resolve().is_relative_to(folder.resolve())):
+            errors.append(f"{name}: built screen review not run: '{value}' preview '{shot_name}' names no screenshot file inside the task folder")
+            return None
+        pictures.append(picture)
     task_dir, seen = path.resolve().parent, set()
     for preview in previews:
         if URL.match(preview):
             continue
         target = preview_target(task_dir, preview)
         seen.update(file_digest(p) for p in (target.rglob("*") if target.is_dir() else [target]) if p.is_file())
-    if file_digest(picture) in seen:
-        errors.append(f"{name}: built screen review not run: '{value}' names a screenshot that is an ideation picture, or has the bytes of one")
-        return None
+    for picture in pictures:
+        if file_digest(picture) in seen:
+            errors.append(f"{name}: built screen review not run: '{value}' preview '{picture.relative_to(folder)}' names a screenshot that is an ideation picture, or has the bytes of one")
+            return None
     found = len(severities)
     lines = {int(n): v.strip() for n, v in BUILT_FINDING_LINE.findall(body)}
     repeated(BUILT_FINDING_LINE.findall(body), "Built screen", name, errors)
@@ -835,7 +895,7 @@ def check_built_screen(path, body, previews, errors):
     elif any(DECLINED.match(entry) for entry in lines.values()):
         errors.append(f"{name}: a 'Built screen finding n: declined:' line needs a 'Built screen decline check:' line naming the saved ruling report")
     summary = f"built screen review {value}: {found} findings, {len(upheld)} upheld declines, {sum(len(g['numbers']) for g in groups)} decisions in {plural_groups(len(groups))}"
-    return [summary, f"preview: {picture.resolve()}", *ruling_notes("built-screen decline", lines, upheld, groups)]
+    return [summary, *(f"preview: {picture.resolve()}" for picture in pictures), *ruling_notes("built-screen decline", lines, upheld, groups)]
 
 
 def scope_lines(text):

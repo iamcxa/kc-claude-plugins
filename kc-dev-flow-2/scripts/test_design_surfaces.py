@@ -1399,7 +1399,11 @@ class DesignReviewTests(unittest.TestCase):
         self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
 
     def test_mutation_dropping_the_one_preview_rule_lets_two_direct_previews_pass(self):
-        mutant = mutated("if len(named) != 1:", "if False:")
+        source = (ROOT / "scripts/design_surfaces.py").read_text()
+        source = source.replace("if len(named) > 1:", "if False:").replace("if len(named) != 1:", "if False:")
+        mutant = types.ModuleType("design_surfaces_mutant")
+        mutant.__file__ = str(ROOT / "scripts/design_surfaces.py")
+        exec(compile(source, "design_surfaces_mutant", "exec"), mutant.__dict__)
         report = DESIGN_REPORT.replace("  preview: preview.html\n", "  preview: preview.html\n  preview: preview.html\n", 1)
         self.assertTrue(self.run_check(report=report)[0])
         self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
@@ -2195,6 +2199,24 @@ class BuiltScreenTests(MutantMixin, unittest.TestCase):
     def not_run(self, **kwargs):
         errors, _ = self.run_check(**kwargs)
         self.assertEqual(len([e for e in errors if "built screen review not run" in e]), 1, errors)
+
+    def test_preview_sequence_checks_and_prints_every_picture(self):
+        report = BUILT_REPORT.replace("preview: design/built-1.png", "preview:\n    - design/built-1.png\n    - design/built-1.png")
+        errors, notes = self.run_check(report=report)
+        self.assertEqual(errors, [])
+        self.assertEqual(len([n for n in notes if n.startswith("preview: ")]), 2)
+    def test_every_bad_second_preview_item_is_named(self):
+        report = BUILT_REPORT.replace("preview: design/built-1.png", "preview:\n    - design/built-1.png\n    - design/built-1.png")
+        for bad in ("/absolute.png", "../outside.png", "design/missing.png"):
+            errors, _ = self.run_check(report=report.replace("    - design/built-1.png\n  findings:", f"    - {bad}\n  findings:"))
+            self.assertTrue(any(bad in error for error in errors), errors)
+
+    def test_preview_sequence_refuses_second_ideation_picture_and_duplicate_keys(self):
+        report = BUILT_REPORT.replace("preview: design/built-1.png", "preview:\n    - design/built-1.png\n    - design/validation-declines-1.yaml")
+        errors, _ = self.run_check(report=report, previews="Preview: task/design/validation-declines-1.yaml\n")
+        self.assertTrue(any("design/validation-declines-1.yaml" in e and "ideation picture" in e for e in errors), errors)
+        duplicate = BUILT_REPORT.replace("  preview: design/built-1.png", "  preview: design/built-1.png\n  preview: design/built-1.png")
+        self.assertTrue(self.run_check(report=duplicate)[0])
 
     def test_a_built_screen_review_with_every_disposition_passes_and_prints_its_lines(self):
         errors, notes = self.run_check()

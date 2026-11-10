@@ -55,7 +55,7 @@ It requires the newest delivery check record to match the dispatched head, named
 With --summary-file, ordinary text checks use question plus summary; reviewer checks use only
 the summary outside fences. It requires one top-level External rounds: N (nonnegative integer),
 optionally followed by a full stop or a semicolon/full stop and detail. Without it, legacy checks apply.
-The summary (combined text for legacy calls) needs Captain steps: <record path>, passing steps
+The summary (combined text for legacy calls) needs Captain steps: <task folder>/captain-steps/<N>.md (positive N), passing steps
 against the gate text and latest validation report, at a latest dispatched Candidate.
 Both `question` and `check` print a claim-source reminder on entry, without adding a hold.
 They list count sentences without a task-folder file holding their numbers, then write
@@ -66,7 +66,7 @@ an unreadable or unwritable input still exits 2.
 Usage: delivery_gate.py steps <record> --text-file <message>
 Reads Captain step observations without executing commands. Missing observations, unmatched steps,
 unrecorded fenced commands or links (named Markdown files contribute shell or untagged fences;
-a URI right after `{` is not a link), missing absolute paths whose top-level directory exists,
+a URI right after `{` is not a link, nor is a line that is only the Claude Code attribution), missing absolute paths whose top-level directory exists,
 and Captain-only steps without a reason hold the ask (exit 1). Unreadable input is exit 2.
 Candidate may be none outside a validation gate. The check trusts recorded observations.
 Relative Markdown names resolve from the task folder, including names prefixed by its slug.
@@ -649,6 +649,8 @@ def check(args):
         nexts.append("next: hold the ask; run the validation security review at this head, or tell the Captain.")
 
     found, wanted = text_problems(task_text, gate_text)
+    for value in re.findall(r"^Captain steps:[ \t]*(.*)$", "\n".join(outside_fences(gate_text)), re.M):
+        found += captain_steps_path_problems(named_file(task_folder(task), value.strip().strip("`\"")), task_folder(task))
     problems += found
     nexts += wanted
     try:
@@ -746,6 +748,7 @@ FENCE = re.compile(r"^[ \t]*(`{3,}|~{3,})([^\n]*)\n(.*?)(?:^[ \t]*\1[`~]*[ \t]*$
 URL = re.compile(r"https?://[^\s<>`\"')\]]+")
 ABS_PATH = re.compile(r'''(?<![\w:/>])(?:"(?:~/|/)[^"\n]+"|'(?:~/|/)[^'\n]+'|(?:~/|/)[^\s`"'()\[\]{}]+)''')
 SHELL = {"", "sh", "bash", "zsh", "shell", "console"}
+ATTRIBUTION = {"🤖 Generated with [Claude Code](https://claude.com/claude-code)"}
 
 
 def normalized(text):
@@ -768,6 +771,7 @@ def fenced_steps(text, shell_only=False):
 
 
 def links(text):
+    text = "\n".join("" if normalized(line) in ATTRIBUTION else line for line in text.splitlines())
     return [m[0].rstrip(".,;") for m in URL.finditer(text) if text[m.start() - 1:m.start()] != "{"]
 
 
@@ -887,10 +891,24 @@ def inspect_steps(record_path, message, folder, evidence=""):
     return problems, candidate, len(steps), left
 
 
+def captain_steps_path_problems(record, folder=None):
+    path = record.resolve()
+    if folder is None:
+        folder = next((p for p in path.parents if (p / "index.md").is_file()
+                       or (p.parent / f"{p.name}.md").is_file()), path.parent.parent)
+    folder = folder.resolve()
+    if (path.parent != folder / "captain-steps" or not re.fullmatch(r"[1-9][0-9]*\.md", path.name)
+            or not ((folder / "index.md").is_file() or (folder.parent / f"{folder.name}.md").is_file())):
+        return [f"Captain steps record {record} is not {folder}/captain-steps/<N>.md (ADR 0054); move it there and name that path."]
+    return []
+
+
 def steps(args):
     try:
         record = Path(args.record).expanduser()
-        problems, _, count, left = inspect_steps(record, Path(args.text_file).read_text(), record.resolve().parent.parent)
+        message = Path(args.text_file).read_text()
+        problems, _, count, left = inspect_steps(record, message, record.resolve().parent.parent)
+        problems = captain_steps_path_problems(record) + problems
     except (OSError, UnicodeDecodeError) as error:
         emit(f"cannot read input: {error}")
         return 2
@@ -907,6 +925,8 @@ def captain_step_problems(task, gate_text, summary):
         return ["gate text needs one Captain steps: <record path> line"]
     folder = task_folder(task)
     path = named_file(folder, declarations[0].strip().strip("`\""))
+    if problems := captain_steps_path_problems(path, folder):
+        return problems
     report = (VALIDATION_SECTION.findall(task.read_text()) or [""])[-1]
     problems, candidate, _, _ = inspect_steps(path, gate_text, folder, report)
     if problems:

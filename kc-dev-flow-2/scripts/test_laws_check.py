@@ -860,6 +860,258 @@ class L3Test(Base):
             self.assertEqual(self.judge(repo, before)[0], 1)
 
 
+class L4Test(Base):
+    def body(self, live="", payload=False, waiver=False):
+        return task(body="\n## Acceptance criteria\n" + live +
+                    "\n## Captain amendments\n\n### Amendment 1 — 2026-11-10, chat\n"
+                    "Captain: replace the old outcome\nAsked: replace AC-2?\nSupersedes: AC-2" +
+                    (" (no replacement: moved to another task)" if waiver else "") + "\n" +
+                    ("\nSuperseded text:\n\n**AC-2**: old outcome.\n" if payload else ""))
+
+    def l4_lines(self, out):
+        return [line for line in out.splitlines() if line.startswith("violation: L4 ")]
+
+    def test_record_only_marked_move_and_waived_move_are_green(self):
+        for label, live, payload, waiver in (
+                ("record", "**AC-2**: old outcome.\n", False, False),
+                ("marked", "**AC-5**: Amended by Captain, amendment 1: new outcome.\n", True, False),
+                ("waived", "", True, True)):
+            with self.subTest(label=label):
+                repo = Repo(self.tmp / label)
+                before = repo.commit("base", t=task())
+                repo.commit(label, t=self.body(live, payload, waiver))
+                code, out = self.judge(repo, before)
+                self.assertEqual(code, 0, out)
+                self.assertEqual(self.l4_lines(out), [])
+
+    def test_reused_id_and_unmarked_replacement_each_have_their_own_line(self):
+        for label, live, expected in (
+                ("reused", "**AC-2**: Amended by Captain, amendment 1: rewritten.\n", ["reused ids: AC-2"]),
+                ("unmarked", "**AC-5**: new outcome.\n", ["unmarked replacement"]),
+                ("both", "**AC-2**: rewritten.\n", ["reused ids: AC-2", "unmarked replacement"])):
+            with self.subTest(label=label):
+                repo = Repo(self.tmp / label)
+                before = repo.commit("record", t=self.body("**AC-2**: old outcome.\n"))
+                event = repo.commit("move", t=self.body(live, True))
+                code, out = self.judge(repo, before)
+                self.assertEqual(code, 1, out)
+                self.assertRegex(out, r"L4 amendment-moves-use-fresh-ids: 1 events judged in .+, 1 violated")
+                self.assertEqual(self.l4_lines(out), [
+                    f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 {part}"
+                    for part in expected])
+
+    def example_transition(self, fence, *, marked=False, moved=True, waived=False):
+        repo = Repo(self.tmp / ("backtick" if fence == "```" else "tilde"))
+        old = "**AC-2**: old outcome.\n"
+        before = repo.commit("record", t=self.body(old, waiver=waived))
+        live = old if not moved else ("" if waived else "**AC-5**: " +
+               ("Amended by Captain, amendment 1: " if marked else "") + "replacement outcome.\n")
+        example = f"{fence}md\n**AC-9**: Amended by Captain, amendment 1: example only.\n{fence}\n"
+        event = repo.commit("worker writes example", t=self.body(live + example, moved, waived))
+        code, out = self.judge(repo, before, event)
+        self.assertRegex(out, r"L3 amendment-append-only: [^\n]+, 0 violated")
+        return code, out, event
+
+    def test_tilde_example_does_not_supply_live_marker(self):
+        code, out, event = self.example_transition("~~~")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(self.l4_lines(out), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 unmarked replacement"])
+
+    def test_backtick_example_does_not_supply_live_marker(self):
+        code, out, event = self.example_transition("```")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(self.l4_lines(out), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 unmarked replacement"])
+
+    def test_real_marked_replacement_with_example_stays_green(self):
+        for fence in ("```", "~~~"):
+            with self.subTest(fence=fence):
+                code, out, _ = self.example_transition(fence, marked=True)
+                self.assertEqual(code, 0, out)
+                self.assertEqual(self.l4_lines(out), [])
+
+    def test_waived_move_with_example_stays_green(self):
+        for fence in ("```", "~~~"):
+            with self.subTest(fence=fence):
+                code, out, _ = self.example_transition(fence, waived=True)
+                self.assertEqual(code, 0, out)
+                self.assertEqual(self.l4_lines(out), [])
+
+    def test_record_only_with_example_stays_green(self):
+        for fence in ("```", "~~~"):
+            with self.subTest(fence=fence):
+                code, out, _ = self.example_transition(fence, moved=False)
+                self.assertEqual(code, 0, out)
+                self.assertEqual(self.l4_lines(out), [])
+
+    def test_defect_is_reported_at_introduction_not_later_edits_or_repair(self):
+        repo = Repo(self.tmp / "once")
+        before = repo.commit("record", t=self.body("**AC-2**: old outcome.\n"))
+        broken = self.body("**AC-2**: Amended by Captain, amendment 1: rewritten.\n", True)
+        event = repo.commit("reuse", t=broken)
+        unrelated = repo.commit("scope only", t=broken + "\n## Scope\nAn unrelated note.\n")
+        code, out = self.judge(repo, before, unrelated)
+        self.assertEqual(code, 1, out)
+        self.assertEqual(len(self.l4_lines(out)), 1, out)
+        self.assertIn(f"commit={event[:12]}", self.l4_lines(out)[0])
+        self.assertEqual(self.judge(repo, event, unrelated)[0], 0)
+        repaired = repo.commit("fresh replacement id", t=broken.replace("**AC-2**: Amended", "**AC-5**: Amended"))
+        self.assertEqual(self.judge(repo, unrelated, repaired)[0], 0)
+        self.assertEqual(self.judge(repo, before, unrelated)[1], out)
+
+    def reuse_change(self, current_ids):
+        def body(ids, moved):
+            live = "".join(f"**AC-{n}**: live outcome.\n" for n in ids)
+            return task(body="## Acceptance criteria\n" + live +
+                        "**AC-9**: Amended by Captain, amendment 1: replacement.\n"
+                        "\n## Captain amendments\n\n### Amendment 1 — 2026-11-10, chat\n"
+                        "Captain: replace these three outcomes\nSupersedes: AC-1, AC-2, AC-3\n" +
+                        ("\nSuperseded text:\n\n**AC-1**: old one.\n**AC-2**: old two.\n**AC-3**: old three.\n"
+                         if moved else ""))
+
+        repo = Repo(self.tmp / "reuse-change")
+        before = repo.commit("record", t=body((1, 2, 3), False))
+        introduced = repo.commit("move with reused ids", t=body((1, 2), True))
+        self.assertEqual(self.l4_lines(self.judge(repo, before, introduced)[1]), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={introduced[:12]} amendment=1 reused ids: AC-1, AC-2"])
+        changed = repo.commit("edit live ids", t=body(current_ids, True))
+        code, out = self.judge(repo, introduced, changed)
+        self.assertRegex(out, r"L3 amendment-append-only: 1 events judged in .+, 0 violated")
+        return code, out, changed
+
+    def test_partial_repair_adds_no_event(self):
+        code, out, _ = self.reuse_change((2,))
+        self.assertEqual(code, 0, out)
+        self.assertEqual(self.l4_lines(out), [])
+        self.assertRegex(out, r"L4 amendment-moves-use-fresh-ids: 0 events judged in .+, 0 violated")
+
+    def test_growth_reports_only_the_added_id(self):
+        code, out, event = self.reuse_change((1, 2, 3))
+        self.assertEqual(code, 1, out)
+        self.assertEqual(self.l4_lines(out), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 reused ids: AC-3"])
+
+    def test_mixed_repair_and_addition_reports_only_the_added_id(self):
+        code, out, event = self.reuse_change((2, 3))
+        self.assertEqual(code, 1, out)
+        self.assertEqual(self.l4_lines(out), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 reused ids: AC-3"])
+
+    def test_a_later_moved_replacement_counts_but_own_payload_and_prose_do_not(self):
+        marked = "**AC-5**: Amended by Captain, amendment 1: new outcome.\n"
+        later = ("\n### Amendment 2 — 2026-11-10, chat\nCaptain: move again\n"
+                 "Supersedes: AC-5 (no replacement: moved to a new task)\n\nSuperseded text:\n\n" + marked)
+        for label, body, count in (
+                ("other", self.body("", True) + later, 0),
+                ("own", self.body("", True) + marked, 1),
+                ("prose", self.body("Verified: Amended by Captain, amendment 1.\n", True), 1),
+                ("wrong-number", self.body(marked.replace("amendment 1:", "amendment 10:"), True), 1),
+                ("fenced", self.body("```md\n" + marked + "```\n", True), 1)):
+            with self.subTest(label=label):
+                repo = Repo(self.tmp / label)
+                before = repo.commit("base", t=task())
+                repo.commit("moved", t=body)
+                code, out = self.judge(repo, before)
+                self.assertEqual(code, int(bool(count)), out)
+                self.assertEqual(len(self.l4_lines(out)), count, out)
+
+    def test_layout_archive_and_rename_keep_defect_identity(self):
+        broken = self.body("**AC-2**: Amended by Captain, amendment 1: rewritten.\n", True)
+        for n, dest in enumerate(("t/index.md", "_archive/t.md", "_archive/t/index.md", "renamed.md")):
+            with self.subTest(dest=dest):
+                repo = Repo(self.tmp / f"layout-{n}")
+                before = repo.commit("base", t=task())
+                event = repo.commit("reuse", t=broken)
+                target = repo.path / dest
+                target.parent.mkdir(parents=True, exist_ok=True)
+                git(repo.path, "mv", "t.md", dest)
+                git(repo.path, "commit", "-m", "move unchanged")
+                self.assertEqual(self.judge(repo, event)[0], 0)
+                self.assertEqual(len(self.l4_lines(self.judge(repo, before)[1])), 1)
+                target.write_text(broken + "\n## Notes\n" + "unrelated\n" * 200)
+                git(repo.path, "add", dest)
+                git(repo.path, "commit", "-m", "unrelated note")
+                self.assertEqual(self.judge(repo, event)[0], 0)
+
+    def test_delete_add_layout_pairs_compare_the_parent(self):
+        repo = Repo(self.tmp / "delete-add")
+        broken = self.body("**AC-2**: Amended by Captain, amendment 1: rewritten.\n", True)
+        before = repo.commit("existing debt", t=broken)
+        git(repo.path, "rm", "t.md")
+        moved = repo.commit("layout", t__index=broken + "\n## Notes\n" + "unrelated\n" * 200)
+        self.assertEqual(self.judge(repo, before, moved)[0], 0)
+        repo.commit("marker removed", t__index=broken.replace("Amended by Captain, amendment 1: ", ""))
+        code, out = self.judge(repo, moved)
+        self.assertEqual(code, 1, out)
+        self.assertEqual(len(self.l4_lines(out)), 1, out)
+        self.assertIn("task=t/index.md", self.l4_lines(out)[0])
+        self.assertIn("unmarked replacement", self.l4_lines(out)[0])
+
+    def test_structural_issues_are_left_to_existing_laws(self):
+        repo = Repo(self.tmp / "malformed")
+        before = repo.commit("base", t=task())
+        malformed = self.body("**AC-2**: rewritten.\n", True).replace("Amendment 1 —", "Amendment 1-")
+        repo.commit("malformed move", t=malformed)
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 2, out)
+        self.assertEqual(self.l4_lines(out), [])
+        self.assertIn("L3 amendment-append-only: cannot judge", out)
+        self.assertIn("L4 amendment-moves-use-fresh-ids: 0 events judged", out)
+
+    def test_unrelated_broken_entry_does_not_hide_valid_move(self):
+        for label, heading in (("outside", "### Amendment 2 — 2026-11-10, chat"),
+                               ("duplicate", "### Amendment 1")):
+            with self.subTest(label=label):
+                repo = Repo(self.tmp / label)
+                extra = "\n## Stage Report: implementation\n\n" + heading + "\nUnrelated report.\n"
+                before = repo.commit("record", t=self.body("**AC-2**: old outcome.\n") + extra)
+                event = repo.commit("move", t=self.body("**AC-5**: new outcome.\n", True) + extra)
+                _, out = self.judge(repo, before, event)
+                self.assertEqual(self.l4_lines(out), [
+                    f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 unmarked replacement"])
+
+    def test_repaired_heading_reports_previously_unjudged_defect(self):
+        repo = Repo(self.tmp / "heading-repair")
+        before = repo.commit("base", t=task())
+        valid = self.body("**AC-2**: rewritten.\n", True)
+        broken = valid.replace("Amendment 1 —", "Amendment 1-")
+        hidden = repo.commit("unjudgeable move", t=broken)
+        self.assertEqual(self.l4_lines(self.judge(repo, before, hidden)[1]), [])
+        repaired = repo.commit("fix heading only", t=valid)
+        _, out = self.judge(repo, hidden, repaired)
+        self.assertEqual(self.l4_lines(out), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={repaired[:12]} amendment=1 {part}"
+            for part in ("reused ids: AC-2", "unmarked replacement")])
+        later = repo.commit("unrelated note", t=valid + "\n## Notes\nNo further move.\n")
+        self.assertEqual(self.l4_lines(self.judge(repo, repaired, later)[1]), [])
+
+    def test_repairing_an_unrelated_heading_does_not_repeat_reported_defect(self):
+        repo = Repo(self.tmp / "unrelated-repair")
+        extra = "\n## Notes\n\n### Amendment 2 — 2026-11-10, chat\nUnrelated report.\n"
+        before = repo.commit("record", t=self.body("**AC-2**: old outcome.\n") + extra)
+        moved = self.body("**AC-5**: new outcome.\n", True) + extra
+        event = repo.commit("move", t=moved)
+        self.assertEqual(len(self.l4_lines(self.judge(repo, before, event)[1])), 1)
+        repaired = repo.commit("fix unrelated heading", t=moved.replace("### Amendment 2", "#### Amendment 2"))
+        self.assertEqual(self.l4_lines(self.judge(repo, event, repaired)[1]), [])
+
+    def test_unreadable_blob_and_ambiguous_layout_are_cannot_judge(self):
+        for label in ("utf8", "ambiguous"):
+            repo = Repo(self.tmp / label)
+            before = repo.commit("base", t=task())
+            if label == "utf8":
+                (repo.path / "t.md").write_bytes(b"\xff")
+                git(repo.path, "add", "t.md")
+                git(repo.path, "commit", "-m", "unreadable")
+            else:
+                git(repo.path, "rm", "t.md")
+                repo.commit("ambiguous", t__index="a" * 10000, _archive__t="b" * 10000)
+            code, out = self.judge(repo, before)
+            self.assertEqual(code, 2, out)
+            self.assertIn("L4 amendment-moves-use-fresh-ids: cannot judge", out)
+
+
 class RawAmendmentTests(Base):
     history = L3Test.history
     def test_equal_malformed_regions_do_not_call_the_parser(self):

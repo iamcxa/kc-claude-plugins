@@ -23,7 +23,7 @@ The caller's first line is `Pass: <name>`. Each pass has its own inputs and read
 | 2b | validation | as 1b, with `Pictures:` the screenshots the findings cite | a `design_decline_check` report |
 | 3 | release walk, after the last story | `Reviewer reports:` (saved JSON, named relative to `Task folder:`), `Deferred:`, `Screenshots:`, `Walk:`, `Task folder:`, `ADR folder:` | a `release_ruling` object |
 
-In 1a and 2a follow the [review brief](review-brief.md) and return its report. In 2a the screenshots are the pictures under review, each named relative to `Task folder:` (open it there, and copy the relative path as given into `preview:`), and what a screenshot cannot settle (a resize, a real vault, a Test run) goes in `limitations`.
+In 1a and 2a follow the [review brief](review-brief.md) and return its report. In 2a the screenshots are the pictures under review, each named relative to `Task folder:` (open each there, and copy each relative path as given as one `- <path>` item under `preview:`), and what a screenshot cannot settle (a resize, a real vault, a Test run) goes in `limitations`.
 
 ## ADR folder
 

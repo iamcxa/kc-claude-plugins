@@ -981,6 +981,24 @@ class CoverageTests(unittest.TestCase):
         dispatch.mkdir(parents=True, exist_ok=True)
         (dispatch / name).write_text(COMPLETE)
 
+    def test_folder_coverage_matches_file_in_both_layouts(self):
+        self.record("implementation-1.md")
+        for task in (self.task, self.folder / "index.md"):
+            task.write_text("## Stage Report: implementation\n")
+            self.assertEqual(self.run_cli(task=self.folder), self.run_cli(task=task))
+        (self.folder / "index.md").write_text("## Stage Report: implementation\n")
+        (self.folder / "dispatch/implementation-1.md").unlink()
+        self.assertEqual(self.run_cli(task=self.folder), self.run_cli(task=self.folder / "index.md"))
+        self.assertEqual(self.run_cli(task=self.folder)[0], 1)
+
+    def test_folder_without_either_task_file_names_both_paths(self):
+        self.folder.mkdir()
+        self.task.unlink()
+        code, output = self.run_cli(task=self.folder)
+        self.assertEqual(code, 2)
+        self.assertIn(str(self.folder / "index.md"), output)
+        self.assertIn(str(self.task), output)
+
     def test_historical_064e61a15_redacted_replay_stops_before_advancement_and_gate(self):
         self.task.write_text("## Stage Report: implementation\n\n## Stage Report: validation\n")
         self.record("ideation-1.md")

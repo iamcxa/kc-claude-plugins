@@ -1437,7 +1437,9 @@ class CaptainStepFixture(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.saved = self.root / "steps.md"
+        (self.root / "index.md").write_text("# task\n")
+        self.saved = self.root / "captain-steps/1.md"
+        self.saved.parent.mkdir()
         self.message = self.root / "message.txt"
 
     def step(self, asked, observed="worked", ran="fresh shell, 2026-11-03T00:00:00Z", only=None, number=1):
@@ -1561,6 +1563,74 @@ class CaptainStepsTests(CaptainStepFixture):
                 run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", str(self.saved), "--text-file", str(self.message)],
                                      capture_output=True, text=True)
                 self.assertEqual(run.returncode, code, run.stdout)
+
+    def test_pr_body_attribution_line_needs_no_recorded_link_step(self):
+        card = self.root / "review/pr-body.md"
+        card.parent.mkdir()
+        attribution = "🤖 Generated with [Claude Code](https://claude.com/claude-code)"
+        for line in (attribution, " \t" + attribution + "  ", attribution.replace(" ", "\t  ")):
+            with self.subTest(line=line):
+                card.write_text("A bounded fix.\n\n" + line + "\n")
+                code, out = self.run_steps(self.step("Read this note."), f"Read this note. Read {card}")
+                self.assertEqual(code, 0, out)
+                self.assertNotIn("S5", out)
+
+    def test_attribution_url_elsewhere_needs_a_recorded_link_step(self):
+        link = "https://claude.com/claude-code"
+        instruction = "Open " + link
+        card = self.root / "card.md"
+        card.write_text(instruction + "\n")
+        for message in ("Read this note. " + instruction, f"Read this note. Read {card}"):
+            with self.subTest(message=message):
+                code, out = self.run_steps(self.step("Read this note."), message)
+                self.assertEqual(code, 1, out)
+                self.assertIn(f"S5: unrecorded command or link '{link}'", out)
+
+    def test_attribution_line_with_more_text_keeps_its_links(self):
+        attribution = "🤖 Generated with [Claude Code](https://claude.com/claude-code)"
+        link = "https://preview.example.test/owner"
+        card = self.root / "review/pr-body.md"
+        card.parent.mkdir()
+        for line in (attribution + " " + link, "Open " + attribution, attribution + " please"):
+            with self.subTest(line=line):
+                card.write_text(line + "\n")
+                code, out = self.run_steps(self.step("Read this note."), f"Read this note. Read {card}")
+                self.assertEqual(code, 1, out)
+                self.assertIn("S5: unrecorded command or link 'https://claude.com/claude-code'", out)
+                if link in line:
+                    self.assertIn(f"S5: unrecorded command or link '{link}'", out)
+
+    def test_pr_body_other_url_still_needs_a_recorded_link_step(self):
+        card = self.root / "review/pr-body.md"
+        card.parent.mkdir()
+        link = "https://preview.example.test/owner"
+        card.write_text(f"Open {link}\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n")
+        code, out = self.run_steps(self.step("Read this note."), f"Read this note. Read {card}")
+        self.assertEqual(code, 1, out)
+        self.assertIn(f"S5: unrecorded command or link '{link}'", out)
+        self.assertNotIn("claude.com/claude-code", out)
+
+    def test_attribution_exemption_falsifiers(self):
+        attribution = "🤖 Generated with [Claude Code](https://claude.com/claude-code)"
+        link = "https://claude.com/claude-code"
+        card = self.root / "review/pr-body.md"
+        card.parent.mkdir()
+        filtering = '    text = "\\n".join("" if normalized(line) in ATTRIBUTION else line for line in text.splitlines())\n'
+        removed = variant_of(filtering, "")
+        for line in (attribution, " \t" + attribution + "  "):
+            card.write_text(line + "\n")
+            code, out = self.run_steps(self.step("Read this note."), f"Read this note. Read {card}", removed)
+            self.assertEqual(code, 1, out)
+            self.assertIn(f"S5: unrecorded command or link '{link}'", out)
+        url_match = variant_of(filtering, f'    text = text.replace("{link}", "")\n')
+        card.write_text("Open " + link + "\n")
+        for message in ("Read this note. Open " + link, f"Read this note. Read {card}"):
+            code, out = self.run_steps(self.step("Read this note."), message, url_match)
+            self.assertEqual(code, 0, out)
+        substring = variant_of(filtering, '    text = "\\n".join("" if any(value in normalized(line) for value in ATTRIBUTION) else line for line in text.splitlines())\n')
+        card.write_text(attribution + " https://preview.example.test/owner\n")
+        code, out = self.run_steps(self.step("Read this note."), f"Read this note. Read {card}", substring)
+        self.assertEqual(code, 0, out)
 
     def test_a_longer_closing_fence_still_requires_a_step(self):
         command = "printf unrecorded"
@@ -1783,9 +1853,24 @@ class CaptainStepsTests(CaptainStepFixture):
             asked = f"Read {quote}{spaced}{quote}"
             self.assertEqual(self.run_steps(self.step(asked), asked)[0], 0)
 
+    def test_steps_holds_misplaced_records_and_accepts_resolved_paths(self):
+        self.run_steps(self.step("Review this candidate."), "Review this candidate.")
+        for name in ("review/captain-steps.md", "captain-steps/notes.md", "captain-steps/0.md"):
+            target = self.root / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(self.saved.read_bytes())
+            run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", str(target),
+                                  "--text-file", str(self.message)], capture_output=True, text=True)
+            self.assertEqual(run.returncode, 1, run.stdout)
+            self.assertIn(str(self.root / "captain-steps/<N>.md"), run.stdout)
+        for path in (str(self.saved), "captain-steps/1.md"):
+            run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", path,
+                                  "--text-file", str(self.message)], cwd=self.root, capture_output=True, text=True)
+            self.assertEqual(run.returncode, 0, run.stdout)
+
     def test_relative_markdown_card_is_read_by_the_real_cli(self):
         self.saved = self.root / "captain-steps/1.md"
-        self.saved.parent.mkdir()
+        self.saved.parent.mkdir(exist_ok=True)
         card = self.root / "card.md"
         card.write_text("```sh\nprintf checked\n```\n")
         self.run_steps(self.step("Read card.md:13"), "Read card.md:13")
@@ -1811,6 +1896,7 @@ class CaptainGateTests(CaptainStepFixture):
         self.task.write_text(TASK)
         self.head = "b7732d43" + "0" * 32
         captain_record(self.task, self.head)
+        self.saved = gate.task_folder(self.task) / "captain-steps/1.md"
 
     def ask_gate(self, body=None, candidate=None, module=None, summary=False, declaration=True):
         self.saved.write_text(f"Candidate: {candidate or self.head}\n\n" + (body or self.step("Open the preview")))
@@ -1966,6 +2052,35 @@ class TaskFolderCaptainTests(CaptainStepFixture):
         run = self.run_question("Read card.md")
         self.assertEqual(run.returncode, 1, run.stdout)
         self.assertIn(f"curl {link}", run.stdout)
+
+    def test_question_pr_body_attribution_line_needs_no_recorded_link_step(self):
+        card = self.folder / "review/pr-body.md"
+        card.parent.mkdir()
+        attribution = "🤖 Generated with [Claude Code](https://claude.com/claude-code)"
+        for line in (attribution, " \t" + attribution + "  ", attribution.replace(" ", "\t  ")):
+            with self.subTest(line=line):
+                card.write_text("A bounded fix.\n\n" + line + "\n")
+                run = self.run_question(message="Review this candidate. Read review/pr-body.md")
+                self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+                self.assertIn("gate text complete", run.stdout)
+                self.assertIn(gate.ASK_FORM, run.stdout)
+                self.assertNotIn("S5", run.stdout)
+
+    def test_question_named_captain_link_holds_until_recorded(self):
+        card = self.folder / "card.md"
+        instruction = "Open https://preview.example.test/owner"
+        card.write_text(instruction + "\n")
+        for recorded in (False, True):
+            with self.subTest(recorded=recorded):
+                body = self.step("Review this candidate.")
+                if recorded:
+                    body += self.step(instruction, ran="real browser, 2026-11-03T00:00:00Z", number=2)
+                run = self.run_question(message="Review this candidate. Read card.md", body=body)
+                self.assertEqual(run.returncode, 0 if recorded else 1, run.stdout + run.stderr)
+                if recorded:
+                    self.assertNotIn("S5", run.stdout)
+                else:
+                    self.assertIn("S5: unrecorded command or link 'https://preview.example.test/owner'", run.stdout)
 
     def test_repository_documents_are_not_read_as_task_cards(self):
         run = self.run_question("Evidence: README.md and CLAUDE.md")
@@ -2623,7 +2738,7 @@ class ReviewerDeclarationTests(unittest.TestCase):
     def run_cli(self, command, text=DECLARATION + "Copilot review:18.", source=None, config=REVIEWERS,
                 task=TASK, title="fix(x): y", module=None, folder=False, split=False, explicit=False,
                 source_error=False, missing_readme=False, readme_error=False, before_question=None, head_arg=HEAD40,
-                summary=None, summary_error=False):
+                summary=None, summary_error=False, steps_path="captain-steps/1.md"):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             readme(d, config)
@@ -2635,6 +2750,12 @@ class ReviewerDeclarationTests(unittest.TestCase):
             entry.write_text(task)
             artifacts = gate.task_folder(entry)
             captain_steps = captain_record(entry)
+            original_steps = artifacts / "captain-steps/1.md"
+            target_steps = artifacts / steps_path
+            if target_steps != original_steps:
+                target_steps.parent.mkdir(parents=True, exist_ok=True)
+                original_steps.rename(target_steps)
+                captain_steps = captain_steps.replace(str(original_steps), str(target_steps))
             dispatch = artifacts / "dispatch"
             dispatch.mkdir(parents=True, exist_ok=True)
             (dispatch / "validation-1.md").write_text(record(HEAD40))
@@ -2682,6 +2803,15 @@ class ReviewerDeclarationTests(unittest.TestCase):
             written = list((artifacts / "merge").glob("ask-*.json"))
             self.assertEqual(len(written), int(command == "check" and code == 0), out.getvalue())
             return code, out.getvalue()
+
+    def test_captain_record_path_holds_question_and_check(self):
+        for command in ("question", "check"):
+            for path in ("review/captain-steps.md", "captain-steps/notes.md", "captain-steps/0.md"):
+                with self.subTest(command=command, path=path):
+                    code, out = self.run_cli(command, steps_path=path)
+                    self.assertEqual(code, 1, out)
+                    self.assertIn("/captain-steps/<N>.md (ADR 0054)", out)
+            self.assertEqual(self.run_cli(command)[0], 0)
 
     def test_configured_declaration_matrix_on_both_commands(self):
         cases = [("", 1), ("Second reviewer: copilot triggered by review rules.", 1),

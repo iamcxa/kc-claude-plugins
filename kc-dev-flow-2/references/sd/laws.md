@@ -99,3 +99,26 @@ the runner's registry differ.
   Reporting happens after commit/push; it does not block push, dispatch, gate preparation or merge guard
   and does not revert a change. Hosted enforcement requires adoption of an actually published package pin
   and an observed state-push run. This candidate changes no CI trigger or pin; CI cost per PR is unmeasured.
+
+## L4 amendment-moves-use-fresh-ids
+
+- **Rule.** Once an amendment has a `Superseded text:` payload, its moved criterion ids are absent
+  from live `## Acceptance criteria`. When `Supersedes:` names ids, a live criterion or another
+  entry's moved declaration carries "Amended by Captain, amendment N" for that entry, unless its
+  `Supersedes:` says `no replacement`. The marker predicate `unmarked` in
+  `<package>/scripts/design_surfaces.py` is shared with `check_amendments`.
+- **Event.** A changed task in the push's existing non-merge `walk()` range has a move defect absent
+  at its first parent. One event is counted per task/commit, with a line per defect kind and entry.
+  Unrelated later edits, repairs and unchanged archive moves do not re-report that defect.
+  Flat, `index.md` and `_archive/` paths use L3's correspondence rules.
+- **Judged by.** `<package>/scripts/laws_check.py` compares `move_defects` on the event and
+  first-parent blobs. Unreadable blobs or ambiguous path matches yield cannot-judge (exit 2).
+  Entries containing a structural parser issue are skipped; other entries remain judged. A heading repair
+  reports a previously unjudgeable defect at that repair commit.
+- **Bit.** State commit `a113aa3e9a3d` moved amendment 1 of
+  `worker-browser-checks-use-paseo-browser.md` while reusing AC-1, AC-2 and AC-4 and leaving its
+  replacement unmarked.
+- **Bounds.** Record-only entries without a payload are pending worker work. In-place rewrites
+  without a move, missing rulings and quote fidelity remain outside this law. Reporting follows
+  the push; activation requires a published package pin and an observed run. This change adds
+  no job, trigger or pin; CI cost per PR and per state push is unmeasured.
