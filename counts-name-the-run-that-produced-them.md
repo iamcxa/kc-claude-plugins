@@ -73,6 +73,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-10: amendment 1 is the Captain's own ideation-gate approval, whose bound question item (4) named the change to a tool-written Unchecked counts line, so it withdraws nothing he approved; validation-1 and validation-2 (Astra, 2026-11-10) checked AC-7 and AC-8 against it, and design_surfaces added_words reports no words beyond his.
 ## Design
 
 Every number below names the script and the run that produced it. The scripts and outputs are in `counts-name-the-run-that-produced-them/ideation/` (its `README.md` names each run, 2026-11-09).
