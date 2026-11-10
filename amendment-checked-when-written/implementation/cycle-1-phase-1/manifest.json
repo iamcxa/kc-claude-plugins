@@ -1,0 +1,21 @@
+{
+  "candidate": "72216e2e947e962737a17c6e61ef3800f9d639c4",
+  "files": {
+    "README.md": "035cc0c5fb5a5e69fb10acd740a45ca14450da63dbd189c0a9fcf1e58a9efa6d",
+    "analysis.log": "e1f6e4ff1073fd2c349c9bdb5e72a7b5ce5236841646e4c328a5c7ddb069ffcc",
+    "analyze.py": "323acd45f169109a94b37f00feb7b35af92d944016e885b6aa351f636e1f39a3",
+    "corpus-inputs.json": "09f462e7eb871b3a24aa43637761baeb12aca3971856d231877ef5e3bd515e06",
+    "identity.json": "d896feaf875654b2b30bfec36a83c80e48c628f3bbd894c21b15eb8d47f7aae1",
+    "investigate.py": "04f89cbeeb14326c8ea8163ac0db65d52305fbd88f047081ceb9308277b6d481",
+    "proposal.md": "7ffb5edd1a0ac3f43715aa5e1b0a0876cde7bdf112b80ea07cf131015dc5fb8f",
+    "proposed-runtime.diff": "f55cd6251e18a7cd35eb226eddc6a8c4097d8b480b5e36319cf9d058529b4fd8",
+    "run.log": "0e3d21be04a32c507baa706d4b6fc38da9029b56fa08e158bba44feb9e9a89af",
+    "scenarios.json": "2263f0dcaf23f3e9591d960906308115fbdd638e4d02fe98eddc5edda4d027a6",
+    "seven-events.json": "143e4c1c2219fc387e4dd00c46113ae07d80fcb99f9992c2f0c0f67789faa1cd",
+    "seven-events.log": "23e89da250bf980dc991209f674b53aaac07b9776d565eb42cd20fa00a63aa60",
+    "stage-report.md": "5a4f3b8d8e3a4106b2d45af6bce65eae91e6b886b89ed85e17c89eb7eac1ecd5",
+    "task-before-report.json": "c7fbd5e6c17888e0016c20ee96700056b34908e74e17c8d38d248781bfe7ff38",
+    "tests.json": "b52338e42e693815e5da250cb7e6e22d496b90246658ddd96e64926a280d3ab3",
+    "tests.log": "e88d52416dafc7bf130f7da56ac1589490f632a722b66671c1ed41d5c3d3b80e"
+  }
+}

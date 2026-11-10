@@ -1,0 +1,19 @@
+--- a/kc-dev-flow-2/scripts/laws_check.py
++++ b/kc-dev-flow-2/scripts/laws_check.py
+@@ -381,7 +381,15 @@
+             before = amendment_blob(ctx, f"{commit}^", old).split("\n")
+             after = amendment_blob(ctx, commit, new).split("\n")
+             previous = set(move_defects(before))
+-            added = [defect for defect in move_defects(after) if defect not in previous]
++            added = []
++            for defect in move_defects(after):
++                if defect[0] == "reused":
++                    prior_ids = {ident for old in previous if old[:2] == defect[:2] for ident in old[2]}
++                    fresh = tuple(ident for ident in defect[2] if ident not in prior_ids)
++                    if fresh:
++                        added.append((*defect[:2], fresh))
++                elif defect not in previous:
++                    added.append(defect)
+             if not added:
+                 continue
+             judged += 1

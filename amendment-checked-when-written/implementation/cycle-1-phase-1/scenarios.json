@@ -1,0 +1,257 @@
+[
+  {
+    "test": "__main__.ReusedIdEvents.test_complete_repair_adds_no_event",
+    "before": "60a51b35255363ecd7e1c91abd76c6edb6d0c66d",
+    "after": "74b3bb9537e3c277fc28f7edb54ed5a63ae8a227",
+    "intro_exit": 1,
+    "intro_output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 9188ccf615bc..60a51b352553, 0 violated\nL3 amendment-append-only: 1 events judged in 9188ccf615bc..60a51b352553, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in 9188ccf615bc..60a51b352553, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=60a51b352553 amendment=1 reused ids: AC-1, AC-2\n",
+    "exit": 0,
+    "output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 60a51b352553..74b3bb9537e3, 0 violated\nL3 amendment-append-only: 1 events judged in 60a51b352553..74b3bb9537e3, 0 violated\nL4 amendment-moves-use-fresh-ids: 0 events judged in 60a51b352553..74b3bb9537e3, 0 violated\n",
+    "previous_defects": [
+      [
+        "reused",
+        1,
+        [
+          "AC-1",
+          "AC-2"
+        ]
+      ]
+    ],
+    "current_defects": [],
+    "proposed_delta": []
+  },
+  {
+    "test": "__main__.ReusedIdEvents.test_growth_reports_only_the_added_id",
+    "before": "60a51b35255363ecd7e1c91abd76c6edb6d0c66d",
+    "after": "eb6cd5b138e829fae5309386ecbe67ff60ac8cc3",
+    "intro_exit": 1,
+    "intro_output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 9188ccf615bc..60a51b352553, 0 violated\nL3 amendment-append-only: 1 events judged in 9188ccf615bc..60a51b352553, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in 9188ccf615bc..60a51b352553, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=60a51b352553 amendment=1 reused ids: AC-1, AC-2\n",
+    "exit": 1,
+    "output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 60a51b352553..eb6cd5b138e8, 0 violated\nL3 amendment-append-only: 1 events judged in 60a51b352553..eb6cd5b138e8, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in 60a51b352553..eb6cd5b138e8, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=eb6cd5b138e8 amendment=1 reused ids: AC-1, AC-2, AC-3\n",
+    "previous_defects": [
+      [
+        "reused",
+        1,
+        [
+          "AC-1",
+          "AC-2"
+        ]
+      ]
+    ],
+    "current_defects": [
+      [
+        "reused",
+        1,
+        [
+          "AC-1",
+          "AC-2",
+          "AC-3"
+        ]
+      ]
+    ],
+    "proposed_delta": [
+      [
+        "reused",
+        1,
+        [
+          "AC-3"
+        ]
+      ]
+    ]
+  },
+  {
+    "test": "__main__.ReusedIdEvents.test_mixed_repair_and_addition_reports_only_the_added_id",
+    "before": "a191dbc7e479fbee19dec43c6a89de69d1e56db6",
+    "after": "b7632838bced9d3a1a7147bb971564c2874a849a",
+    "intro_exit": 1,
+    "intro_output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 9294316f9529..a191dbc7e479, 0 violated\nL3 amendment-append-only: 1 events judged in 9294316f9529..a191dbc7e479, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in 9294316f9529..a191dbc7e479, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=a191dbc7e479 amendment=1 reused ids: AC-1, AC-2\n",
+    "exit": 1,
+    "output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in a191dbc7e479..b7632838bced, 0 violated\nL3 amendment-append-only: 1 events judged in a191dbc7e479..b7632838bced, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in a191dbc7e479..b7632838bced, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=b7632838bced amendment=1 reused ids: AC-2, AC-3\n",
+    "previous_defects": [
+      [
+        "reused",
+        1,
+        [
+          "AC-1",
+          "AC-2"
+        ]
+      ]
+    ],
+    "current_defects": [
+      [
+        "reused",
+        1,
+        [
+          "AC-2",
+          "AC-3"
+        ]
+      ]
+    ],
+    "proposed_delta": [
+      [
+        "reused",
+        1,
+        [
+          "AC-3"
+        ]
+      ]
+    ]
+  },
+  {
+    "test": "__main__.ReusedIdEvents.test_new_unmarked_replacement_is_reported",
+    "before": "345532dd6771f1ac94b4186386cd3081266aa65a",
+    "after": "ac1e9aa2b0b6453f9fa4b486a49e0af926c980ca",
+    "intro_exit": 0,
+    "intro_output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 5608f4589b19..345532dd6771, 0 violated\nL3 amendment-append-only: 1 events judged in 5608f4589b19..345532dd6771, 0 violated\nL4 amendment-moves-use-fresh-ids: 0 events judged in 5608f4589b19..345532dd6771, 0 violated\n",
+    "exit": 1,
+    "output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 345532dd6771..ac1e9aa2b0b6, 0 violated\nL3 amendment-append-only: 1 events judged in 345532dd6771..ac1e9aa2b0b6, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in 345532dd6771..ac1e9aa2b0b6, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=ac1e9aa2b0b6 amendment=1 unmarked replacement\n",
+    "previous_defects": [],
+    "current_defects": [
+      [
+        "unmarked",
+        1
+      ]
+    ],
+    "proposed_delta": [
+      [
+        "unmarked",
+        1
+      ]
+    ]
+  },
+  {
+    "test": "__main__.ReusedIdEvents.test_partial_repair_adds_no_event",
+    "before": "935a30c636b620c720623ef3d4cdaf932d47ab1b",
+    "after": "d7da3393176e2e850621915c667f65e97666edb0",
+    "intro_exit": 1,
+    "intro_output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 06411002b71c..935a30c636b6, 0 violated\nL3 amendment-append-only: 1 events judged in 06411002b71c..935a30c636b6, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in 06411002b71c..935a30c636b6, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=935a30c636b6 amendment=1 reused ids: AC-1, AC-2\n",
+    "exit": 1,
+    "output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 935a30c636b6..d7da3393176e, 0 violated\nL3 amendment-append-only: 1 events judged in 935a30c636b6..d7da3393176e, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in 935a30c636b6..d7da3393176e, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=d7da3393176e amendment=1 reused ids: AC-2\n",
+    "previous_defects": [
+      [
+        "reused",
+        1,
+        [
+          "AC-1",
+          "AC-2"
+        ]
+      ]
+    ],
+    "current_defects": [
+      [
+        "reused",
+        1,
+        [
+          "AC-2"
+        ]
+      ]
+    ],
+    "proposed_delta": []
+  },
+  {
+    "test": "__main__.ReusedIdEvents.test_partial_reuse_repair_does_not_repeat_unmarked",
+    "before": "358540e05a961d71935713a14d593c6ec134fbd2",
+    "after": "c94a6ecc021e0d8686048cdb8be4f64bf26d86af",
+    "intro_exit": 1,
+    "intro_output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 3409303a3c07..358540e05a96, 0 violated\nL3 amendment-append-only: 1 events judged in 3409303a3c07..358540e05a96, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in 3409303a3c07..358540e05a96, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=358540e05a96 amendment=1 reused ids: AC-1, AC-2\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=358540e05a96 amendment=1 unmarked replacement\n",
+    "exit": 1,
+    "output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 358540e05a96..c94a6ecc021e, 0 violated\nL3 amendment-append-only: 1 events judged in 358540e05a96..c94a6ecc021e, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in 358540e05a96..c94a6ecc021e, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=c94a6ecc021e amendment=1 reused ids: AC-2\n",
+    "previous_defects": [
+      [
+        "reused",
+        1,
+        [
+          "AC-1",
+          "AC-2"
+        ]
+      ],
+      [
+        "unmarked",
+        1
+      ]
+    ],
+    "current_defects": [
+      [
+        "reused",
+        1,
+        [
+          "AC-2"
+        ]
+      ],
+      [
+        "unmarked",
+        1
+      ]
+    ],
+    "proposed_delta": []
+  },
+  {
+    "test": "__main__.ReusedIdEvents.test_persistent_unmarked_replacement_adds_no_event",
+    "before": "89736b51301ae9bfdbe933be03687034c7b8326d",
+    "after": "ae6f86d08d4cd9feba6550f77c147b663dfa86c9",
+    "intro_exit": 1,
+    "intro_output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in c271f4ee5b5b..89736b51301a, 0 violated\nL3 amendment-append-only: 1 events judged in c271f4ee5b5b..89736b51301a, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in c271f4ee5b5b..89736b51301a, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=89736b51301a amendment=1 unmarked replacement\n",
+    "exit": 0,
+    "output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 89736b51301a..ae6f86d08d4c, 0 violated\nL3 amendment-append-only: 1 events judged in 89736b51301a..ae6f86d08d4c, 0 violated\nL4 amendment-moves-use-fresh-ids: 0 events judged in 89736b51301a..ae6f86d08d4c, 0 violated\n",
+    "previous_defects": [
+      [
+        "unmarked",
+        1
+      ]
+    ],
+    "current_defects": [
+      [
+        "unmarked",
+        1
+      ]
+    ],
+    "proposed_delta": []
+  },
+  {
+    "test": "__main__.ReusedIdEvents.test_reordering_ids_adds_no_event",
+    "before": "06d9c4cce5d07c866e65a54f1951ec838edddc20",
+    "after": "ccb324e46b8e861041fc35d6e553de0968710105",
+    "intro_exit": 1,
+    "intro_output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 87b862b07acf..06d9c4cce5d0, 0 violated\nL3 amendment-append-only: 1 events judged in 87b862b07acf..06d9c4cce5d0, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in 87b862b07acf..06d9c4cce5d0, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=06d9c4cce5d0 amendment=1 reused ids: AC-1, AC-2\n",
+    "exit": 0,
+    "output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 06d9c4cce5d0..ccb324e46b8e, 0 violated\nL3 amendment-append-only: 1 events judged in 06d9c4cce5d0..ccb324e46b8e, 0 violated\nL4 amendment-moves-use-fresh-ids: 0 events judged in 06d9c4cce5d0..ccb324e46b8e, 0 violated\n",
+    "previous_defects": [
+      [
+        "reused",
+        1,
+        [
+          "AC-1",
+          "AC-2"
+        ]
+      ]
+    ],
+    "current_defects": [
+      [
+        "reused",
+        1,
+        [
+          "AC-1",
+          "AC-2"
+        ]
+      ]
+    ],
+    "proposed_delta": []
+  },
+  {
+    "test": "__main__.ReusedIdEvents.test_repaired_unmarked_replacement_adds_no_event",
+    "before": "911365c6fb8d61ea7642608ffc38720a33808807",
+    "after": "b87062476115f887f0a8ea640a8e12ab4dcc7c5d",
+    "intro_exit": 1,
+    "intro_output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 07fa1729447b..911365c6fb8d, 0 violated\nL3 amendment-append-only: 1 events judged in 07fa1729447b..911365c6fb8d, 0 violated\nL4 amendment-moves-use-fresh-ids: 1 events judged in 07fa1729447b..911365c6fb8d, 1 violated\nviolation: L4 amendment-moves-use-fresh-ids task=t.md commit=911365c6fb8d amendment=1 unmarked replacement\n",
+    "exit": 0,
+    "output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 0 events judged in 911365c6fb8d..b87062476115, 0 violated\nL3 amendment-append-only: 1 events judged in 911365c6fb8d..b87062476115, 0 violated\nL4 amendment-moves-use-fresh-ids: 0 events judged in 911365c6fb8d..b87062476115, 0 violated\n",
+    "previous_defects": [
+      [
+        "unmarked",
+        1
+      ]
+    ],
+    "current_defects": [],
+    "proposed_delta": []
+  }
+]

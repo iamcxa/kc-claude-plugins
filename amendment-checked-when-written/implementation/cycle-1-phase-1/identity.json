@@ -1,0 +1,12 @@
+{
+  "candidate": "72216e2e947e962737a17c6e61ef3800f9d639c4",
+  "tests_run": 10,
+  "failures": 3,
+  "errors": 0,
+  "product_status": "",
+  "source_sha256": {
+    "kc-dev-flow-2/scripts/laws_check.py": "ad3b561a6f24425ac7137f99f7a03a0dcec4e763524174a3153fdfc4a4f15c7b",
+    "kc-dev-flow-2/scripts/design_surfaces.py": "bdb537ee4b62261cf550762cb26429127471327d5a43a36a6560bf1e153f2b9c",
+    "kc-dev-flow-2/scripts/test_laws_check.py": "553f46c8c95fe35a55cb9d18dc72d3f21af691acd13dfed3b3aadb56943443bf"
+  }
+}

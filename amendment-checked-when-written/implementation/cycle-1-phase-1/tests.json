@@ -1,0 +1,45 @@
+[
+  {
+    "name": "__main__.ReusedIdEvents.test_complete_repair_adds_no_event",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.ReusedIdEvents.test_growth_reports_only_the_added_id",
+    "status": "failed",
+    "message": "Traceback (most recent call last):\n  File \"/tmp/opencode/amendment-checked-when-written/cycle-1-phase-1/investigate.py\", line 81, in test_growth_reports_only_the_added_id\n    self.assertEqual(lines, [f'violation: L4 amendment-moves-use-fresh-ids task=t.md commit={commit[:12]} amendment=1 reused ids: AC-3'])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['vio[50 chars] commit=eb6cd5b138e8 amendment=1 reused ids: AC-1, AC-2, AC-3'] != ['vio[50 chars] commit=eb6cd5b138e8 amendment=1 reused ids: AC-3']\n\nFirst differing element 0:\n'viol[48 chars]d commit=eb6cd5b138e8 amendment=1 reused ids: AC-1, AC-2, AC-3'\n'viol[48 chars]d commit=eb6cd5b138e8 amendment=1 reused ids: AC-3'\n\n  ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=eb6cd5b138e8 '\n-  'amendment=1 reused ids: AC-1, AC-2, AC-3']\n?                          ------------\n\n+  'amendment=1 reused ids: AC-3']\n"
+  },
+  {
+    "name": "__main__.ReusedIdEvents.test_mixed_repair_and_addition_reports_only_the_added_id",
+    "status": "failed",
+    "message": "Traceback (most recent call last):\n  File \"/tmp/opencode/amendment-checked-when-written/cycle-1-phase-1/investigate.py\", line 86, in test_mixed_repair_and_addition_reports_only_the_added_id\n    self.assertEqual(lines, [f'violation: L4 amendment-moves-use-fresh-ids task=t.md commit={commit[:12]} amendment=1 reused ids: AC-3'])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: ['vio[44 chars]k=t.md commit=b7632838bced amendment=1 reused ids: AC-2, AC-3'] != ['vio[44 chars]k=t.md commit=b7632838bced amendment=1 reused ids: AC-3']\n\nFirst differing element 0:\n'viol[42 chars]sk=t.md commit=b7632838bced amendment=1 reused ids: AC-2, AC-3'\n'viol[42 chars]sk=t.md commit=b7632838bced amendment=1 reused ids: AC-3'\n\n  ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=b7632838bced '\n-  'amendment=1 reused ids: AC-2, AC-3']\n?                          ------\n\n+  'amendment=1 reused ids: AC-3']\n"
+  },
+  {
+    "name": "__main__.ReusedIdEvents.test_new_unmarked_replacement_is_reported",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.ReusedIdEvents.test_partial_repair_adds_no_event",
+    "status": "failed",
+    "message": "Traceback (most recent call last):\n  File \"/tmp/opencode/amendment-checked-when-written/cycle-1-phase-1/investigate.py\", line 76, in test_partial_repair_adds_no_event\n    self.assertEqual((code, lines), (0, []))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (1, ['violation: L4 amendment-moves-use-fr[64 chars]-2']) != (0, [])\n\nFirst differing element 0:\n1\n0\n\n+ (0, [])\n- (1,\n-  ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=d7da3393176e '\n-   'amendment=1 reused ids: AC-2'])\n"
+  },
+  {
+    "name": "__main__.ReusedIdEvents.test_partial_reuse_repair_does_not_repeat_unmarked",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.ReusedIdEvents.test_persistent_unmarked_replacement_adds_no_event",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.ReusedIdEvents.test_reordering_ids_adds_no_event",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.ReusedIdEvents.test_repaired_unmarked_replacement_adds_no_event",
+    "status": "passed"
+  },
+  {
+    "name": "test_laws_check.L4Test.test_repaired_heading_reports_previously_unjudged_defect",
+    "status": "passed"
+  }
+]

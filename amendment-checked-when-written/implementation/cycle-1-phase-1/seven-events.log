@@ -1,0 +1,28 @@
+dev2
+L4 amendment-moves-use-fresh-ids: 1 events judged in b91e7434adde..a113aa3e9a3d, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 reused ids: AC-1, AC-2, AC-4
+violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 unmarked replacement
+
+dev2
+L4 amendment-moves-use-fresh-ids: 1 events judged in ea4fda1c01ad..7326e2a1162b, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=delivery-gate-verdict-form.md commit=7326e2a1162b amendment=2 unmarked replacement
+
+dev2
+L4 amendment-moves-use-fresh-ids: 1 events judged in aa4f5b7c8b52..bf8c73be99c4, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=release-acceptance/index.md commit=bf8c73be99c4 amendment=2 unmarked replacement
+
+qnow
+L4 amendment-moves-use-fresh-ids: 1 events judged in 78234a2a3913..3a384063e44f, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=staff-multi-branch.md commit=3a384063e44f amendment=1 unmarked replacement
+
+qnow
+L4 amendment-moves-use-fresh-ids: 1 events judged in 57fad7b4db5c..4ad69292227a, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=staff-multi-branch.md commit=4ad69292227a amendment=1 reused ids: AC-6, AC-7
+
+qnow
+L4 amendment-moves-use-fresh-ids: 1 events judged in b71589a2fc1a..4993b5b603ae, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=booking-outcomes.md commit=4993b5b603ae amendment=1 unmarked replacement
+
+relay
+L4 amendment-moves-use-fresh-ids: 1 events judged in 8a5b7f0280c8..06cadae7681f, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=owner-sees-all-feedback-room.md commit=06cadae7681f amendment=3 unmarked replacement
