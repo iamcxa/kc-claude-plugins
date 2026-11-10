@@ -3,7 +3,7 @@ title: Pilot ui ideation states the lifecycle of data kept across screens or sig
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-09), answering 「決定：合併 #820（設計階段遇到跨畫面或跨登入保留的資料時，要寫明它從哪開始、怎麼結束、誰會改）嗎？建議合併。 Regular merge with --match-head-commit 8470611d718f19aa8ef1f7ae66ba9f72c3c01422, the batch 19 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-09T14:37:26Z
 worktree: .worktrees/spacedock-ensign-kept-data-lifecycle-at-ui-ideation
 pr: pr-merge:820
+verdict: PASSED
+completed: 2026-11-10T00:35:01Z
+archived: 2026-11-10T00:35:02Z
 ---
 
 ## Scope
