@@ -1,0 +1,31 @@
+{
+  "name": "learn-replay",
+  "cwd": "/tmp/pr822-validation-20261110/candidate",
+  "argv": [
+    "python3",
+    "-B",
+    "/tmp/pr822-validation-20261110/replay.py",
+    "/tmp/pr822-validation-20261110/candidate",
+    "learn",
+    "kc-claude-plugins|/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git",
+    "relay|/Users/kent/conductor/repos/subspace-relay/.git",
+    "web|/Users/kent/conductor/repos/subspace-web/.git",
+    "qnow|/Users/kent/conductor/repos/qnow/.git",
+    "v0|/Users/kent/conductor/repos/subspace-v0/.git"
+  ],
+  "identity": {
+    "head": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "main": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+    "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "time": "2026-11-10T00:34:53.630453+00:00",
+    "merge_exit": 0,
+    "merge_tree": "f9ce811f8bd3b80bd8fbfa4b3e69cf072351ba66"
+  },
+  "started": "2026-11-10T00:35:48.813654+00:00",
+  "env": {},
+  "pid": 34604,
+  "exit": 0,
+  "ended": "2026-11-10T00:35:49.261221+00:00",
+  "log": "learn-replay.log",
+  "sha256": "045907d90a0a805f70d5e46d31f9465206a2addcd47c38c65c53cb9301c1c1c8"
+}

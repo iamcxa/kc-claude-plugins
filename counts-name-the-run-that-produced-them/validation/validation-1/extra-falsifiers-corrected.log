@@ -1,0 +1,2 @@
+{"criterion": "AC-4", "falsifier": "restore comma-swallowing number grammar", "candidate": [], "mutant": "2, round"}
+{"criterion": "AC-5/AC-6", "falsifier": "one unapproved startup word", "before": 5931, "mutated": 5932, "lint_exit": 1}

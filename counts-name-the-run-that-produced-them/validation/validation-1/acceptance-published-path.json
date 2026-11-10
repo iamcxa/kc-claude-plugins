@@ -1,0 +1,25 @@
+{
+  "name": "acceptance-published-path",
+  "cwd": "/tmp/pr822-validation-20261110",
+  "argv": [
+    "bash",
+    "--noprofile",
+    "--norc",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/validation-1/acceptance.sh"
+  ],
+  "identity": {
+    "head": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "main": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+    "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "time": "2026-11-10T00:34:53.630453+00:00",
+    "merge_exit": 0,
+    "merge_tree": "f9ce811f8bd3b80bd8fbfa4b3e69cf072351ba66"
+  },
+  "started": "2026-11-10T00:43:53.814586+00:00",
+  "env": {},
+  "pid": 21887,
+  "exit": 0,
+  "ended": "2026-11-10T00:44:04.852748+00:00",
+  "log": "acceptance-published-path.log",
+  "sha256": "4dedde3e1afc81f010dbe17e5b5e9ade7eca2bee3df4578477e327a7190bd008"
+}

@@ -1,0 +1,163 @@
+{
+  "identity": {
+    "head": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "main": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+    "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "time": "2026-11-10T00:34:53.630453+00:00",
+    "merge_exit": 0,
+    "merge_tree": "f9ce811f8bd3b80bd8fbfa4b3e69cf072351ba66"
+  },
+  "checks": [
+    {
+      "name": "suite-candidate",
+      "exit": 0,
+      "log": "suite-candidate.log",
+      "started": "2026-11-10T00:35:10.773131+00:00",
+      "ended": "2026-11-10T00:54:03.942749+00:00",
+      "sha256": "87690f5d30bfb6cebf5486813437af07bdb7605de0c43eabfca1eb8bbb40bf49"
+    },
+    {
+      "name": "suite-merged",
+      "exit": 0,
+      "log": "suite-merged.log",
+      "started": "2026-11-10T00:35:10.848441+00:00",
+      "ended": "2026-11-10T00:54:16.724439+00:00",
+      "sha256": "ae1282b80cb1db64eae8f86ceb2f89d8344f1ced03b275309b250ea82dea24f6"
+    },
+    {
+      "name": "lint",
+      "exit": 0,
+      "log": "lint.log",
+      "started": "2026-11-10T00:36:02.770576+00:00",
+      "ended": "2026-11-10T00:36:03.146225+00:00",
+      "sha256": "08575019d0a7bf55eedb28ed7824ba9f27a5f5e36d2265b0ce89d95b6ff0e16e"
+    },
+    {
+      "name": "adr",
+      "exit": 0,
+      "log": "adr.log",
+      "started": "2026-11-10T00:36:02.800161+00:00",
+      "ended": "2026-11-10T00:36:03.095590+00:00",
+      "sha256": "0146a629e05b3b85b8ca874787a9654954afcbd08049c5d63651d9d14dd88a24"
+    },
+    {
+      "name": "comments",
+      "exit": 0,
+      "log": "comments.log",
+      "started": "2026-11-10T00:36:03.963152+00:00",
+      "ended": "2026-11-10T00:36:04.130375+00:00",
+      "sha256": "951b797b22d7ec8e6b7e1c165ce4ad1aa68ce69ea541a6b703d8d1b0435da2a8"
+    },
+    {
+      "name": "design",
+      "exit": 0,
+      "log": "design.log",
+      "started": "2026-11-10T00:36:02.821305+00:00",
+      "ended": "2026-11-10T00:36:02.918769+00:00",
+      "sha256": "6fc0592c0dd5ee09e5d5fce7b445c7546ca4839115392e2c0047d9c60222f86d"
+    },
+    {
+      "name": "dispatch",
+      "exit": 0,
+      "log": "dispatch.log",
+      "started": "2026-11-10T00:36:03.838898+00:00",
+      "ended": "2026-11-10T00:36:03.950814+00:00",
+      "sha256": "fc1e6805b1de72fb7cfe4e414bbf89762e414b357f284d3abbbb2c96b460cd88"
+    },
+    {
+      "name": "numbers-refreshed",
+      "exit": 0,
+      "log": "numbers-refreshed.log",
+      "started": "2026-11-10T00:36:44.494970+00:00",
+      "ended": "2026-11-10T00:37:08.137187+00:00",
+      "sha256": "c7d2d7cb6419b3e9ad2e0e41af1afbbb373f25e300ca3610dc1a06a3533af47f"
+    },
+    {
+      "name": "words",
+      "exit": 0,
+      "log": "words.log",
+      "started": "2026-11-10T00:35:48.799000+00:00",
+      "ended": "2026-11-10T00:35:54.669952+00:00",
+      "sha256": "0aa5432a72653bf689c78ecf63404e952431c6c267a81402c88eca02a2f5dd90"
+    },
+    {
+      "name": "mutations",
+      "exit": 0,
+      "log": "mutations.log",
+      "started": "2026-11-10T00:35:48.697601+00:00",
+      "ended": "2026-11-10T00:36:04.182602+00:00",
+      "sha256": "5eaab3a73ec68e530401dde328be43c60ccdcb9d7447b10ed5bfb70d7bc85866"
+    },
+    {
+      "name": "learn-replay",
+      "exit": 0,
+      "log": "learn-replay.log",
+      "started": "2026-11-10T00:35:48.813654+00:00",
+      "ended": "2026-11-10T00:35:49.261221+00:00",
+      "sha256": "045907d90a0a805f70d5e46d31f9465206a2addcd47c38c65c53cb9301c1c1c8"
+    },
+    {
+      "name": "gate-replay",
+      "exit": 0,
+      "log": "gate-replay.log",
+      "started": "2026-11-10T00:35:49.413909+00:00",
+      "ended": "2026-11-10T00:36:56.686916+00:00",
+      "sha256": "d7d0d211cca2f4c58107cc2377a7621bc3420d3b89a9246aa4a0fc91ef481d50"
+    },
+    {
+      "name": "probes",
+      "exit": 0,
+      "log": "probes.log",
+      "started": "2026-11-10T00:37:47.346312+00:00",
+      "ended": "2026-11-10T00:37:48.513554+00:00",
+      "sha256": "ebbabe0246493e2c48a534c1a583c0ef7bdc6ba2c56a59ed2a227678f5eeffc2"
+    },
+    {
+      "name": "extra-falsifiers-corrected",
+      "exit": 0,
+      "log": "extra-falsifiers-corrected.log",
+      "started": "2026-11-10T00:39:29.736546+00:00",
+      "ended": "2026-11-10T00:39:30.685564+00:00",
+      "sha256": "af1d635349a6f0ba03eb904e56ac6dc7e783d9e0e8a062c858a25eeb1cea08a8"
+    },
+    {
+      "name": "acceptance-published-path",
+      "exit": 0,
+      "log": "acceptance-published-path.log",
+      "started": "2026-11-10T00:43:53.814586+00:00",
+      "ended": "2026-11-10T00:44:04.852748+00:00",
+      "sha256": "4dedde3e1afc81f010dbe17e5b5e9ade7eca2bee3df4578477e327a7190bd008"
+    },
+    {
+      "name": "github-pr-refreshed",
+      "exit": 0,
+      "log": "github-pr-refreshed.log",
+      "started": "2026-11-10T00:40:32.287584+00:00",
+      "ended": "2026-11-10T00:40:33.327483+00:00",
+      "sha256": "070b8f96e65b2af9769b7d06d3f585a174d8a7806b7022f4416d6a136212c13c"
+    },
+    {
+      "name": "github-comments-refreshed",
+      "exit": 0,
+      "log": "github-comments-refreshed.log",
+      "started": "2026-11-10T00:40:34.350394+00:00",
+      "ended": "2026-11-10T00:40:34.850032+00:00",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  ],
+  "suites": {
+    "suite-candidate": {
+      "tests": 1050,
+      "skipped": 7
+    },
+    "suite-merged": {
+      "tests": 1053,
+      "skipped": 7
+    }
+  },
+  "product_clean": true,
+  "candidate_bytes_unchanged": true,
+  "verdict": "REJECTED pending F1 compatibility disposition",
+  "merge_main_repair": "not needed for the inspected merged tree",
+  "findings": "findings.json"
+}

@@ -1,0 +1,39 @@
+[
+  {
+    "name": "AC-1 Learn refusal and correction",
+    "status": "passed",
+    "evidence": "acceptance-published-path.log; learn-join.log"
+  },
+  {
+    "name": "AC-4 Real-corpus replays",
+    "status": "passed",
+    "note": "Extra ordinal-reference refusal requires disposition",
+    "evidence": "gate-replay.log; learn-replay.log; probes.log"
+  },
+  {
+    "name": "AC-5 Reading cost",
+    "status": "passed",
+    "evidence": "words.log; extra-falsifiers-corrected.log"
+  },
+  {
+    "name": "AC-6 Complete suite and scope",
+    "status": "passed",
+    "note": "Both full suites exit 0; no merge-main repair indicated",
+    "evidence": "suite-candidate.json/.log; suite-merged.json/.log"
+  },
+  {
+    "name": "AC-7 Summary disclosure",
+    "status": "passed",
+    "evidence": "acceptance-published-path.log; number-in-file.log; writer.log"
+  },
+  {
+    "name": "AC-8 Ask and PR-body disclosure",
+    "status": "passed",
+    "evidence": "acceptance-published-path.log; pr-body.log; writer.log"
+  },
+  {
+    "name": "F1 Ordinal-reference compatibility",
+    "status": "blocked",
+    "note": "Needs decision; no existing explicit acceptance found"
+  }
+]

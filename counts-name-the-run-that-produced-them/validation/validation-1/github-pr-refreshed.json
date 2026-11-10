@@ -1,0 +1,29 @@
+{
+  "name": "github-pr-refreshed",
+  "cwd": "/tmp/pr822-validation-20261110",
+  "argv": [
+    "gh",
+    "pr",
+    "view",
+    "822",
+    "--repo",
+    "iamcxa/kc-claude-plugins",
+    "--json",
+    "number,state,isDraft,headRefOid,baseRefName,mergeable,statusCheckRollup,reviews,url"
+  ],
+  "identity": {
+    "head": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "main": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+    "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "time": "2026-11-10T00:34:53.630453+00:00",
+    "merge_exit": 0,
+    "merge_tree": "f9ce811f8bd3b80bd8fbfa4b3e69cf072351ba66"
+  },
+  "started": "2026-11-10T00:40:32.287584+00:00",
+  "env": {},
+  "pid": 81137,
+  "exit": 0,
+  "ended": "2026-11-10T00:40:33.327483+00:00",
+  "log": "github-pr-refreshed.log",
+  "sha256": "070b8f96e65b2af9769b7d06d3f585a174d8a7806b7022f4416d6a136212c13c"
+}

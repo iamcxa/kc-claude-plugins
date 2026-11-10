@@ -1,0 +1,27 @@
+{
+  "name": "words",
+  "cwd": "/tmp/pr822-validation-20261110/candidate",
+  "argv": [
+    "python3",
+    "-B",
+    "/tmp/pr822-validation-20261110/words.py",
+    "/tmp/pr822-validation-20261110/candidate",
+    "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "/tmp/pr822-validation-20261110"
+  ],
+  "identity": {
+    "head": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "main": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+    "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "time": "2026-11-10T00:34:53.630453+00:00",
+    "merge_exit": 0,
+    "merge_tree": "f9ce811f8bd3b80bd8fbfa4b3e69cf072351ba66"
+  },
+  "started": "2026-11-10T00:35:48.799000+00:00",
+  "env": {},
+  "pid": 34587,
+  "exit": 0,
+  "ended": "2026-11-10T00:35:54.669952+00:00",
+  "log": "words.log",
+  "sha256": "0aa5432a72653bf689c78ecf63404e952431c6c267a81402c88eca02a2f5dd90"
+}

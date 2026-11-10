@@ -1,0 +1,21 @@
+FF
+======================================================================
+FAIL: test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes (test_poc_readme.DeriveTests.test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes) (mode='valid', summary='External rounds: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr822-validation-20261110/candidate/.context/counts-mutation-4j_0r2kn/kc-dev-flow-2/scripts/test_poc_readme.py", line 71, in test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes
+    self.assertEqual(prepared, checked if expected == 0 else None)
+AssertionError: b'External rounds: 0\nCaptain steps: /var/f[76 chars]md\n' != b'Unchecked counts: 0\nExternal rounds: 0\n[97 chars]md\n'
+
+======================================================================
+FAIL: test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes (test_poc_readme.DeriveTests.test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes) (mode='valid', summary='External rounds: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr822-validation-20261110/candidate/.context/counts-mutation-4j_0r2kn/kc-dev-flow-2/scripts/test_poc_readme.py", line 71, in test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes
+    self.assertEqual(prepared, checked if expected == 0 else None)
+AssertionError: b'External rounds: 0\nCaptain steps: /var/f[76 chars]md\n' != b'Unchecked counts: 0\nExternal rounds: 0\n[97 chars]md\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 3.658s
+
+FAILED (failures=2)

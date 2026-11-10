@@ -1,0 +1,24 @@
+{
+  "name": "extra-falsifiers-corrected",
+  "cwd": "/tmp/pr822-validation-20261110/candidate",
+  "argv": [
+    "python3",
+    "-B",
+    "/tmp/pr822-validation-20261110/extra-falsifiers.py"
+  ],
+  "identity": {
+    "head": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "main": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+    "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "time": "2026-11-10T00:34:53.630453+00:00",
+    "merge_exit": 0,
+    "merge_tree": "f9ce811f8bd3b80bd8fbfa4b3e69cf072351ba66"
+  },
+  "started": "2026-11-10T00:39:29.736546+00:00",
+  "env": {},
+  "pid": 71350,
+  "exit": 0,
+  "ended": "2026-11-10T00:39:30.685564+00:00",
+  "log": "extra-falsifiers-corrected.log",
+  "sha256": "af1d635349a6f0ba03eb904e56ac6dc7e783d9e0e8a062c858a25eeb1cea08a8"
+}

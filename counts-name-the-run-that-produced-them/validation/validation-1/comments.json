@@ -1,0 +1,28 @@
+{
+  "name": "comments",
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/comment_ratio.py",
+    "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "--workflow-dir",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+  ],
+  "identity": {
+    "head": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "main": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+    "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "time": "2026-11-10T00:34:53.630453+00:00",
+    "merge_exit": 0,
+    "merge_tree": "f9ce811f8bd3b80bd8fbfa4b3e69cf072351ba66"
+  },
+  "started": "2026-11-10T00:36:03.963152+00:00",
+  "env": {},
+  "pid": 39812,
+  "exit": 0,
+  "ended": "2026-11-10T00:36:04.130375+00:00",
+  "log": "comments.log",
+  "sha256": "951b797b22d7ec8e6b7e1c165ce4ad1aa68ce69ea541a6b703d8d1b0435da2a8"
+}

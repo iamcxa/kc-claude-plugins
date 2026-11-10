@@ -1,0 +1,33 @@
+{
+  "name": "suite-candidate",
+  "cwd": "/tmp/pr822-validation-20261110/candidate",
+  "argv": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "kc-dev-flow-2/scripts",
+    "-p",
+    "test_*.py"
+  ],
+  "identity": {
+    "head": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "main": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+    "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "time": "2026-11-10T00:34:53.630453+00:00",
+    "merge_exit": 0,
+    "merge_tree": "f9ce811f8bd3b80bd8fbfa4b3e69cf072351ba66"
+  },
+  "started": "2026-11-10T00:35:10.773131+00:00",
+  "env": {
+    "SPACEDOCK_BIN": "/Users/kent/.local/bin/spacedock",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "pid": 27403,
+  "exit": 0,
+  "ended": "2026-11-10T00:54:03.942749+00:00",
+  "log": "suite-candidate.log",
+  "sha256": "87690f5d30bfb6cebf5486813437af07bdb7605de0c43eabfca1eb8bbb40bf49"
+}
