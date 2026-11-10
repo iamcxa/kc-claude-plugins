@@ -544,6 +544,12 @@ def check_coverage(args, readme):
     parser.add_argument("--stage", required=True)
     try:
         opts = parser.parse_args(args)
+        if opts.coverage.is_dir():
+            choices = (opts.coverage / "index.md", opts.coverage.parent / f"{opts.coverage.name}.md")
+            task = next((p for p in choices if p.is_file()), None)
+            if task is None:
+                raise ValueError(f"{opts.coverage}: no task file at {choices[0]} or {choices[1]}")
+            opts.coverage = task
         readme = readme or find_readme(task_folder(opts.coverage))
         if readme is None:
             raise ValueError(f"{opts.coverage}: no workflow README found")

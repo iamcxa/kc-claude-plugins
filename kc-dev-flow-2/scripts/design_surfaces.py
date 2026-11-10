@@ -558,7 +558,21 @@ def design_report(name, value, text, errors, on_preview):
         return None
     child = re.match(r"[ \t]*", FINDINGS_LINE.search(text).group(0)).group(0)
     block = re.search(r"^design_review:.*\n((?:[ \t].*\n|[ \t]*\n|#.*\n)*)", text + "\n", re.M).group(1)
-    on_preview(re.findall(rf"^{child}preview:[ \t]*(.*)$", block, re.M))
+    named = re.findall(rf"^{child}preview:[ \t]*(.*)$", block, re.M)
+    if len(named) > 1:
+        errors.append(f"{name}: '{value}' has {len(named)} 'preview:' lines directly under 'design_review:', expected exactly 1")
+        return None
+    if named == [""]:
+        tail = re.split(rf"^{child}preview:[ \t]*$", block, maxsplit=1, flags=re.M)[1]
+        named = []
+        for line in tail.splitlines():
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            item = re.fullmatch(rf"{child}(?:[ \t]+)?-[ \t]+(.+)", line)
+            if not item:
+                break
+            named.append(item[1])
+    on_preview(named)
     severities, problems = report_severities(text, DESIGN_SCALE)
     if problems:
         errors.extend(f"{name}: '{value}' {problem}" for problem in problems)
@@ -797,20 +811,25 @@ def check_built_screen(path, body, previews, errors):
     severities = design_report(name, value, text, errors, named.extend)
     if severities is None:
         return None
-    shot_name = named[0].strip().strip("\"'") if len(named) == 1 else ""
-    picture = folder / shot_name
-    if not shot_name or Path(shot_name).is_absolute() or ".." in Path(shot_name).parts or not picture.is_file():
-        errors.append(f"{name}: built screen review not run: '{value}' names no screenshot file inside the task folder")
-        return None
+    pictures = []
+    for shot in named or [""]:
+        shot_name = shot.strip().strip("\"'")
+        picture = folder / shot_name
+        if (not shot_name or Path(shot_name).is_absolute() or ".." in Path(shot_name).parts
+                or not picture.is_file() or not picture.resolve().is_relative_to(folder.resolve())):
+            errors.append(f"{name}: built screen review not run: '{value}' preview '{shot_name}' names no screenshot file inside the task folder")
+            return None
+        pictures.append(picture)
     task_dir, seen = path.resolve().parent, set()
     for preview in previews:
         if URL.match(preview):
             continue
         target = preview_target(task_dir, preview)
         seen.update(file_digest(p) for p in (target.rglob("*") if target.is_dir() else [target]) if p.is_file())
-    if file_digest(picture) in seen:
-        errors.append(f"{name}: built screen review not run: '{value}' names a screenshot that is an ideation picture, or has the bytes of one")
-        return None
+    for picture in pictures:
+        if file_digest(picture) in seen:
+            errors.append(f"{name}: built screen review not run: '{value}' preview '{picture.relative_to(folder)}' names a screenshot that is an ideation picture, or has the bytes of one")
+            return None
     found = len(severities)
     lines = {int(n): v.strip() for n, v in BUILT_FINDING_LINE.findall(body)}
     repeated(BUILT_FINDING_LINE.findall(body), "Built screen", name, errors)
@@ -835,7 +854,7 @@ def check_built_screen(path, body, previews, errors):
     elif any(DECLINED.match(entry) for entry in lines.values()):
         errors.append(f"{name}: a 'Built screen finding n: declined:' line needs a 'Built screen decline check:' line naming the saved ruling report")
     summary = f"built screen review {value}: {found} findings, {len(upheld)} upheld declines, {sum(len(g['numbers']) for g in groups)} decisions in {plural_groups(len(groups))}"
-    return [summary, f"preview: {picture.resolve()}", *ruling_notes("built-screen decline", lines, upheld, groups)]
+    return [summary, *(f"preview: {picture.resolve()}" for picture in pictures), *ruling_notes("built-screen decline", lines, upheld, groups)]
 
 
 def scope_lines(text):

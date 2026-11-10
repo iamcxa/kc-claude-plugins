@@ -3,7 +3,7 @@
 
 Reads every task file (active and `_archive/`), never writes. One JSON line per gate
 resolution or withdrawal; `--summary` prints counts per area instead.
-`--reason FILE` checks a Captain resolution reason before it is recorded.
+`--reason FILE --task TASK` checks a Captain resolution reason before it is recorded.
 """
 import argparse
 import json
@@ -19,7 +19,7 @@ KEY = re.compile(r"^(?P<indent> *)(?:- )?(?P<key>[a-z-]+):(?: (?P<value>.*))?$")
 FOLLOWED = "Recommendation: followed"
 
 
-def check_reason(path):
+def check_reason(path, task):
     try:
         reason = path.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as exc:
@@ -34,11 +34,19 @@ def check_reason(path):
         problem = "both declarations"
     elif over and over.group("rec").lstrip().startswith(("<", ".", "…")):
         problem = "placeholder recommendation"
-    elif over:
-        print(f"reason: override (area: {over.group('area').strip()})")
-        return 0
-    elif followed:
-        print("reason: followed")
+    elif over or followed:
+        try:
+            bound, index = open_question(task)
+        except (OSError, UnicodeError, ValueError) as exc:
+            print(f"reason: {exc}", file=sys.stderr)
+            return 2
+        # see docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md
+        if not quotes_bound_question({"question": bound, "reason": reason}):
+            print("reason: does not quote the bound question")
+            print(f"next: write answering 「{bound}」 with the bound question copied from {index}; "
+                  "if he answered a different question, gate withdraw and prepare again with the question he answered, then ask him.")
+            return 1
+        print(f"reason: override (area: {over.group('area').strip()})" if over else "reason: followed")
         return 0
     else:
         problem = "missing declaration"
@@ -117,13 +125,51 @@ def gate_entries(fm):
         yield entry
 
 
+def open_question(task):
+    if task.is_dir():
+        choices = (task / "index.md", task.parent / f"{task.name}.md")
+        task = next((p for p in choices if p.is_file()), choices[0])
+    fm, _ = split_task(task.read_text(encoding="utf-8"))
+    rooms, attempt, in_gates = [], None, False
+    attempt_indent = -1
+    for line in fm or []:
+        match = KEY.match(line)
+        if not match:
+            continue
+        indent = len(match["indent"]) + (2 if line.lstrip().startswith("- ") else 0)
+        key, value = match["key"], match["value"]
+        if attempt is not None and (indent < attempt_indent or (key == "id" and indent == attempt_indent)):
+            if attempt["room"] and not attempt["closed"]:
+                rooms.append(attempt["room"])
+            attempt = None
+        if indent == 0:
+            in_gates = key == "gates"
+        elif in_gates:
+            if key == "id" and (value or "").startswith("gate-attempt:"):
+                attempt, attempt_indent = {"room": None, "closed": False}, indent
+            elif attempt is not None:
+                if key == "room-ref":
+                    attempt["room"] = unquote(value or "")
+                elif key in ("resolution", "withdrawal"):
+                    attempt["closed"] = True
+    if attempt is not None and attempt["room"] and not attempt["closed"]:
+        rooms.append(attempt["room"])
+    if len(rooms) != 1:
+        raise ValueError(f"{task}: expected one open gate attempt with a room-ref, found {len(rooms)}")
+    index = task.parent / rooms[0] / "index.json"
+    bound = question(task.parent, task, rooms[0])
+    if not isinstance(bound, str) or not bound.strip():
+        raise ValueError(f"{task}: cannot read a question from {index}")
+    return bound, index
+
+
 def question(state, task_path, room):
     if not room:
         return None
     index = (task_path.parent / room / "index.json")
     try:
         return json.loads(index.read_text())["question"]
-    except (OSError, ValueError, KeyError):
+    except (OSError, ValueError, KeyError, TypeError):
         return None
 
 
@@ -197,9 +243,12 @@ def main(argv=None):
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument("--summary", action="store_true", help="counts per area instead of rows")
     mode.add_argument("--reason", type=Path, help="check a Captain resolution reason before recording")
+    ap.add_argument("--task", type=Path, help="task file or folder with the open gate attempt")
     args = ap.parse_args(argv)
     if args.reason is not None:
-        return check_reason(args.reason)
+        if args.task is None:
+            ap.error("--task is required with --reason")
+        return check_reason(args.reason, args.task)
     if args.state is None:
         ap.error("state is required unless --reason is used")
     if not args.state.is_dir():
