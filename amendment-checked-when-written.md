@@ -3,7 +3,7 @@ title: A Captain amendment and its criterion moves are checked when they are wri
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
