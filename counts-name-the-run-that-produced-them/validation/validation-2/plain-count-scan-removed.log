@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/tmp/pr822-validation-2-20261110/probe.py", line 51, in <module>
+    refused = fixture.complete(claim, fixture.result_file([plain]), code=1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pr822-validation-2-20261110/candidate/.context/plain-count-scan-removed-ikk9ueyn/kc-dev-flow-2/scripts/test_learning.py", line 89, in complete
+    return self.cli("complete", "--job", claim["job"], "--token", claim["token"], "--result", path, code=code)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pr822-validation-2-20261110/candidate/.context/plain-count-scan-removed-ikk9ueyn/kc-dev-flow-2/scripts/test_learning.py", line 70, in cli
+    self.assertEqual(result.returncode, code, result.stdout + result.stderr)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/unittest/case.py", line 873, in assertEqual
+    assertion_func(first, second, msg=msg)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/unittest/case.py", line 866, in _baseAssertEqual
+    raise self.failureException(msg)
+AssertionError: 0 != 1 : {"job": "f92c7bb8ea94e5aea4c361e0bb1c132ef63d4c074930aefadc121b4a0a97802e", "digest": "461874638f62bee92c46eca2b549e9c28c5a53e2dd6fda68a24a8f142bbba1b1", "state": "completed", "evaluation": {"decisions": [{"action": "add", "entry": {"Applicability": "Synthetic export path", "Evidence": "2 cells", "Practice": "Check header order"}, "evidence": ["3 cells"], "reason": "Synthetic schema/control input only"}], "schema_version": 1}, "input": {"closed": true, "closure_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evidence": ["3 cells"], "landed_revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "learning": [{"Applicability": "Synthetic import path", "Evidence": "Synthetic case A", "Practice": "Check encoding"}], "learning_task": false, "merged": true, "pr": "example/project#1", "profile": "pilot", "project_rules": ["No authority changes"], "schema_version": 1, "task_id": "task-1", "variant": "kc-dev-flow-2", "verdict": "passed", "workflow": "docs/dev2"}, "owner": "session-fixture", "proposal": {"add": [{"Applicability": "Synthetic export path", "Evidence": "2 cells", "Practice": "Check header order"}], "remove": []}, "recovery": null, "schema_version": 1}
+

@@ -1,0 +1,29 @@
+{
+  "name": "github-review-comments-refreshed",
+  "cwd": "/tmp/pr822-validation-2-20261110/candidate",
+  "argv": [
+    "gh",
+    "api",
+    "--paginate",
+    "repos/iamcxa/kc-claude-plugins/pulls/822/comments"
+  ],
+  "identity": {
+    "head": "4a146449de8ad43f1eb67e59599215989c327645",
+    "previous": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "main": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+    "merge_exit": 0,
+    "merge_tree": "88d466fc004a13d85cd9ed8417ef2a53b8d75068",
+    "run": "2026-11-10T01:26:31.253585+00:00",
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+    "export": "/tmp/pr822-validation-2-20261110/candidate",
+    "package": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0"
+  },
+  "started": "2026-11-10T01:45:53.096759+00:00",
+  "env": {},
+  "pid": 12642,
+  "exit": 0,
+  "ended": "2026-11-10T01:45:53.504286+00:00",
+  "log": "github-review-comments-refreshed.log",
+  "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+}

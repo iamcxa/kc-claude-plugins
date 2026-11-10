@@ -1,0 +1,32 @@
+{
+  "mutants": [
+    {
+      "name": "ordinal-exclusion-removed",
+      "exit": 1,
+      "detected": true,
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-B",
+        "/tmp/pr822-validation-2-20261110/probe.py",
+        "/tmp/pr822-validation-2-20261110/candidate/.context/ordinal-exclusion-removed-ixsli97s",
+        "/tmp/pr822-validation-2-20261110/cycle-record.json"
+      ],
+      "log": "ordinal-exclusion-removed.log",
+      "sha256": "3bde59b97e01781470525fbbb8dd8a2fcdb4bedde6fdfcc2ec89c55f0c2c98fa"
+    },
+    {
+      "name": "plain-count-scan-removed",
+      "exit": 1,
+      "detected": true,
+      "argv": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-B",
+        "/tmp/pr822-validation-2-20261110/probe.py",
+        "/tmp/pr822-validation-2-20261110/candidate/.context/plain-count-scan-removed-ikk9ueyn",
+        "/tmp/pr822-validation-2-20261110/cycle-record.json"
+      ],
+      "log": "plain-count-scan-removed.log",
+      "sha256": "b611a1fb5e5bda06e796988530ff7d298edcbdd3f072b5be636f78192ca9bb26"
+    }
+  ]
+}

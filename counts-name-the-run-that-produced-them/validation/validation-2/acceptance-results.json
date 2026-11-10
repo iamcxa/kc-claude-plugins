@@ -1,0 +1,37 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "evidence": "acceptance.log; learn-join.log"
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "evidence": "gate-replay.log; learn-replay.log; replay-differences-current.log; extra-falsifiers.log"
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "evidence": "words.log; budget-mutant.log"
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "evidence": "suite-candidate.log; suite-merged.log; lint.log; source-integrity.json"
+  },
+  {
+    "name": "AC-7",
+    "status": "passed",
+    "evidence": "probe.log; acceptance.log; number-in-file.log; writer.log"
+  },
+  {
+    "name": "AC-8",
+    "status": "passed",
+    "evidence": "acceptance.log; pr-body.log; writer.log"
+  },
+  {
+    "name": "AC-9",
+    "status": "passed",
+    "evidence": "probe.log; baseline.log; mutations.log"
+  }
+]

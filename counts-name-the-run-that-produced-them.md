@@ -456,3 +456,27 @@ Independent validation of 90f43f801be3d03ebd7d98d1a41ad78801aea54d reproduces th
 ### Summary
 
 This complete report supersedes the earlier implementation reports and resolves validation F1 under Captain amendment 2: the original ordinal citation now completes unchanged, while unsupported real counts still refuse before completion and stay correctable. The product repair is committed locally on the existing branch and its required checks and falsifiers pass at the exact candidate; the state commit/sync is held by the rejected escalation, so this is an incomplete state-publication handback to FO. Product publication, review and independent validation also remain FO-owned.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #822 head 4a146449 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states.
+  PASSED at 4a146449de8ad43f1eb67e59599215989c327645; validation/validation-2/README.md and acceptance-results.json map all current criteria to this validator's commands and falsifiers, classify validation-1 F1 as resolved under Amendment 2, and record no new findings.
+- DONE: Focused re-validation after the Amendment 2 repair: validation-1 REJECTED only on F1 (an ordinal citation refused as a count); judge the new criterion for Amendment 2 and re-run validation-1's evidence only where the repair could change it, including the ed2d3ee1 'Cycle 1 FO line' entry completing unchanged and the merge with current origin/main.
+  probe.log completes that original entry unchanged and retains unsupported-count refusal plus same-token correction; baseline.log and mutations.log detect both reversals. merge.log merges current main f980a097bf15d8d1382c039949c6b9aefc5439c8 cleanly into tree 88d466fc004a13d85cd9ed8417ef2a53b8d75068; suite-candidate.log and suite-merged.log exit 0 (respectively Ran 1050 and 1053 tests, each skipped=7), so these bytes need no merge-main repair.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition.
+  bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/validation-2/acceptance.sh exits 0 (acceptance.json/.log); README.md gives its four steps, expected output and limits. adr-dispatch.json/.log records the exact named ADR command with --since 82c9e67ae892b80647c3f6a8b6929f993e42dbc2 --require 0072, exit 0. findings.json is empty; previous F1 Needs decision is resolved, not waived.
+- DONE: AC-1, AC-7 and AC-8 retain their actual failure, correction and disclosure boundaries.
+  acceptance.log and both full suites cover learn join, pending token, legacy reads, K-shaped disclosure, derived ratios, PR body, containment, fences and write errors; retained-mutations.log requires FAIL without ERROR after removal of learn join, source comparison, writer, PR-body scan or POC forwarding write.
+- DONE: AC-4 rerun final gate/learn replays and explain every difference.
+  replay.py at this candidate, 2026-11-10 UTC: gate-replay.log has 23 of 30 recent summaries with nonzero disclosure; learn-replay.log has 28 add entries and only 441fe280/d829872c refused. replay-differences-current.log accounts for excluded sequence identifiers, the removed ed2d3ee1 refusal, unchanged old record hashes and one new no-change qnow record; extra-falsifiers.log catches the old comma grammar.
+- DONE: AC-5 reading cost and AC-6 scope, guards, dispatch records and retained documents.
+  words.log: startup 5931+48 unchanged, validation 826→848, evaluator 877→896, zero-count question 92→97 and check 84→89; budget-mutant.log rejects one extra startup word. lint/adr/design/dispatch/numbers-refreshed receipts exit 0; comments.log is 1.3% below 5%; document-verdicts.json covers every doc-impact result. source-integrity.json confirms clean product and authorized scope; no CI change, cost per PR unmeasured.
+- DONE: Judge sufficiency, necessity and all implementation limits at the exact candidate.
+  README.md binds necessity to the prior-head failure and targeted removals; accepted presence-only, derived-count, outside-scan and unavailable-adopter limits remain. No native-agent, adoption or delivery proof is claimed; GitHub review/CI observations are separately saved.
+- SKIPPED: Product repair/push, PR comments, review requests, readiness, RoboRev, merge, adoption and worktree cleanup.
+  FO/Captain own these actions. github-pr-refreshed.log observes OPEN/Draft at the exact head with successful test CI and completed Codex review; no inline findings. Source bytes, task frontmatter and prior reports are preserved.
+
+### Summary
+
+Independent validation recommends PASSED for 4a146449de8ad43f1eb67e59599215989c327645, superseding validation-1's rejection after the Captain-authorized ordinal correction. The original historical entry now completes unchanged, actual counts retain their refusal/recovery behavior, and current-main merge plus the fresh-shell acceptance pass; the remaining delivery decision belongs to FO/Captain.

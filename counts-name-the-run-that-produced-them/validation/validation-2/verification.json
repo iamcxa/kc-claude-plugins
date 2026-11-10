@@ -1,0 +1,129 @@
+{
+  "verdict": "PASSED",
+  "head": "4a146449de8ad43f1eb67e59599215989c327645",
+  "checks": [
+    {
+      "name": "probe",
+      "exit": 0,
+      "log_sha256": "8e5a6b07bd49be41b44aea36e2cc7d9f039039001b766fa22574233c4f74664c"
+    },
+    {
+      "name": "baseline",
+      "exit": 0,
+      "log_sha256": "46a085c135cd0f5cf63e6da4afd333c9ed7cff505c624489ee41ca2e7f5605ea"
+    },
+    {
+      "name": "mutations",
+      "exit": 0,
+      "log_sha256": "1b956dce29b32b10844ce0d2b22cf1462b890e327a5eba6cb728e1bfa522e4d0"
+    },
+    {
+      "name": "retained-mutations",
+      "exit": 0,
+      "log_sha256": "04909492773fb5b6a206c517ca1e9588f1c0bd2a46fdac5f99c8913bc98e5ef1"
+    },
+    {
+      "name": "suite-candidate",
+      "exit": 0,
+      "log_sha256": "06ef4cf94df45efaa643a24c6cbe19fecd62a2e859ca0164185f5138e3241a00"
+    },
+    {
+      "name": "suite-merged",
+      "exit": 0,
+      "log_sha256": "e5b6123c1557ed02a84912dec9dd94b4cc7b824d482dd2e97d44f770649d6d6d"
+    },
+    {
+      "name": "lint",
+      "exit": 0,
+      "log_sha256": "08575019d0a7bf55eedb28ed7824ba9f27a5f5e36d2265b0ce89d95b6ff0e16e"
+    },
+    {
+      "name": "adr",
+      "exit": 0,
+      "log_sha256": "0146a629e05b3b85b8ca874787a9654954afcbd08049c5d63651d9d14dd88a24"
+    },
+    {
+      "name": "adr-dispatch",
+      "exit": 0,
+      "log_sha256": "0146a629e05b3b85b8ca874787a9654954afcbd08049c5d63651d9d14dd88a24"
+    },
+    {
+      "name": "comments",
+      "exit": 0,
+      "log_sha256": "71e23c524aae0452b670b96431dfb5c063d043b46e084bb85e1e3dd7c4e07a2f"
+    },
+    {
+      "name": "doc-impact",
+      "exit": 0,
+      "log_sha256": "7ed0685d3fb4c36ede1ba044980246daa0c5e617eb8cc0d482c448c1710e9db2"
+    },
+    {
+      "name": "design",
+      "exit": 0,
+      "log_sha256": "6fc0592c0dd5ee09e5d5fce7b445c7546ca4839115392e2c0047d9c60222f86d"
+    },
+    {
+      "name": "dispatch",
+      "exit": 0,
+      "log_sha256": "f271cd97d0589169eb0e9b3ddede4093817e3021b73c8914611b1195722867e7"
+    },
+    {
+      "name": "words",
+      "exit": 0,
+      "log_sha256": "8368e512bbfe6bce3b5c9d9faa0ac21f68d28529059067aa47b8a1a6239278b4"
+    },
+    {
+      "name": "extra-falsifiers",
+      "exit": 0,
+      "log_sha256": "af1d635349a6f0ba03eb904e56ac6dc7e783d9e0e8a062c858a25eeb1cea08a8"
+    },
+    {
+      "name": "numbers-refreshed",
+      "exit": 0,
+      "log_sha256": "8b339b59c66b3205f3944704c9309cb916b48f671b73709194a415aa3ae93221"
+    },
+    {
+      "name": "github-pr-refreshed",
+      "exit": 0,
+      "log_sha256": "914329aac38961b26b3c2425cdf64bcc32a3adeb232ffd0904e1ffbbbc960812"
+    },
+    {
+      "name": "github-review-comments-refreshed",
+      "exit": 0,
+      "log_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "name": "gate-replay",
+      "exit": 0,
+      "log_sha256": "b008bd6b6439535f612b0076dede27c9e4d98d878b82deba18ca9afaed5d39a6"
+    },
+    {
+      "name": "learn-replay",
+      "exit": 0,
+      "log_sha256": "0d01991a19022cfaa7e544cd1d2a81b9a913ec016a729fdecb85f02a9cb6bb97"
+    },
+    {
+      "name": "replay-differences-current",
+      "exit": 0,
+      "log_sha256": "4ea23d7978a785a1c9bfb75d20f1b14d7543914c055ce1fc9ea5c898b84420c2"
+    },
+    {
+      "name": "acceptance",
+      "exit": 0,
+      "log_sha256": "d5f5e4403d12da1e4fe59d567ba753081f891df14ea2624071c0df7c728d0a31"
+    }
+  ],
+  "suites": {
+    "suite-candidate": [
+      "1050",
+      "7"
+    ],
+    "suite-merged": [
+      "1053",
+      "7"
+    ]
+  },
+  "prior_finding": "F1 Needs decision resolved by Captain Amendment 2 and AC-9 evidence",
+  "new_findings": [],
+  "verified_at": "2026-11-10T01:49:49.501002+00:00"
+}

@@ -1,0 +1,949 @@
+diff --git a/docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md b/docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md
+index 8eefb0235..950d71589 100644
+--- a/docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md
++++ b/docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md
+@@ -43,5 +43,3 @@ Amended 2026-11-02 (Captain: 「照建議」, answering 「決定：四件事都
+ Amended 2026-11-03 (Captain: 「可以」, answering 「決定：七張設計照建議進實作，但驗收到期提醒的 D7 改成『在 kc-journey-map 登記 journey-progress/v1，預算放寬為兩個 PR，kc-journey-map 那個先合併』，可以嗎？」 at the ideation gate of `diagnosis-rounds-count-toward-step-back`, accepting its D1 and D2 as recommended): dispatch records count diagnosis rounds by stage and normalized `Symptom:` header, trimming and collapsing spaces and casefolding; values starting with `none`, fenced lines and body lines do not count. At round two, `dispatch_records.py` prints the three step-back questions on stderr before each dispatch, following ADR 0027's placement at the write; folder mode checks each stage's highest-numbered record, and `--names` counts only through the named record. A record numbered two or higher without the header gets a stderr hint; only `--names --strict` holds it (D1). Idle and merge read committed records: round two advises without a hold, round three owes chief-engineer and holds the merge ask (D2). An opus-rank-or-above call or waiver under `## FO alignment`, dated no earlier than the third record's first `Dispatched:` date, clears that symptom's later rounds too; without that date any qualifying call or waiver clears. Other event families remain independent; an owed line carrying the questions suppresses duplicate reminders. With the replay's symptom name, measured added words are 48 per dispatch reminder, 21 per missing-header hint, 47 at idle/merge round two and 74 at round three; a clean dispatch, startup, after archive and the workflow template add zero. The workflow word budget is unchanged. Renamed symptoms and multiple browser runs inside one dispatch remain outside the count.
+ 
+ Clarified 2026-11-03 (Captain: 「照你建議」, answering 「決定：B 照原設計修，讓追加指示紀錄也算進同症狀的輪數嗎？」, Captain amendment 1 of `diagnosis-rounds-count-toward-step-back`, superseding no criterion): a supported `<stage>-N-message-M.md` follow-up is a dispatch round on its own symptom, as the approved design states. Both disk and committed-state readers count it; record number, then message number, gives numeric order, with the plain record before its messages. The third counted record dates clearing whether it is plain or a follow-up.
+-
+-Amended 2026-11-09 (Captain: 「核准（建議）」, at the ideation gate of `role-call-asks-for-the-mechanism`, accepting every recommendation in its bound question, including 「婉拒審查要寫「unrelated: 某發現 + 它自己的原因」，至少兩項且原因不同；舊的退一步提醒維持現在被壓掉的位置，並修改決策紀錄（ADR）0026 那一句，代價是那些狀態下 FO 看不到三個退一步問題」): for a chief-engineer call owed by three failed validations or three dispatches of one stage on one symptom, `role_triggers.py` asks "what single mechanism produces these findings, and what one change closes that class?". Its decline template is `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: unrelated: <finding> <its own cause>; <finding> <its own cause>`. The `unrelated()` check accepts two or more semicolon-separated items after `unrelated:`, each a finding name followed by a cause of two or more words, with no two causes equal after whitespace normalization and casefolding; it checks form, not truth, so a well-formed false claim still clears the call. Existing date and model rules remain: failed validations have no date floor, while a dated third symptom record requires a call or reasoned decline dated no earlier than that record. Repair-pass, review-round and replacing-amendment events still accept plain declines and keep their previous questions. D1 replaces the 2026-11-02 sentence "Suppress a duplicate reminder only when an emitted owed-call line already carries the three questions": suppress it whenever an owed findings or amendment chief-engineer line is emitted, whatever question it carries, preserving the former reminder states. In those states FO sees the mechanism question without the three step-back questions. The step-back questions, trigger thresholds, dispatch reminder and workflow word budget are unchanged.
+diff --git a/docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md b/docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md
+new file mode 100644
+index 000000000..fe2f8cf8d
+--- /dev/null
++++ b/docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md
+@@ -0,0 +1,82 @@
++# 0072. Counts cite saved output and learn checks referenced evidence
++
++Date: 2026-11-09
++
++## Status
++
++Accepted
++
++## Context
++
++ADR 0055 accepted the known wrong-count limit in the claim-source replay and
++named counts-name-the-run-that-produced-them as its follow-up. That task's
++ideation records distinguish the historical behavioral result from its grader's
++false pass. Issue iamcxa/kc-claude-plugins#811 reports learn Evidence quoting
++18 findings from an earlier pass after a recount said 15. The local stores do
++not contain that adopter's record; this is the reporter's account, not a
++reproduction of that record.
++
++The task's ideation/scan_replay.py and ideation/learn_replay2.py runs of
++2026-11-09 retain the corpus and counters in scan_replay.out and learn_replay.out
++on spacedock-state/dev2. The gate replay includes a correct derived "3 of 6"
++citing a file that states "1/3" and "2/3". A file-content comparison cannot
++judge that arithmetic, so holding an unchecked gate count would reject it.
++Learn has a structured evidence-reference join before completion and a pending
++claim that invalid completion leaves correctable.
++
++## Decision
++
++**Words:** 「核准（建議）」 — Captain, host question dialog, 2026-11-09,
++counts-name-the-run-that-produced-them ideation gate, attempt 1.
++
++**Asked (item 4, verbatim):** 「(4) 數字寫明出處：learn 提案完成時，證據裡的數字在它引用的資料找不到就擋下；摘要裡的「未查核的數字：N」改由工具自己寫進去，不擋、也不用我抄（工人原案是擋到我抄上那一行）。核准即接受上列每一項建議，包括 (4) 改成工具自己寫；要改哪項直接說。」
++
++**Options considered:**
++- Write the computed gate disclosure automatically and refuse an unsupported
++  learn Evidence count before completion (chosen).
++- Hold a gate until FO copies a matching disclosure line (worker's original
++  recommendation, replaced by the Captain's amendment).
++- Print the unchecked list without writing it into the text the Captain reads.
++- Add a command recorder; citing existing saved output is the observed gap.
++
++**Recommended:** The worker recommended the disclosure hold and the learn
++reference join. The Captain accepted the learn join and replaced the gate hold
++with automatic writing, as task amendment 1 records.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/count_tokens.py` — shared count pattern and sentence scan
++- `kc-dev-flow-2/scripts/delivery_gate.py` — count_disclosure writes the computed line
++- `kc-dev-flow-2/scripts/learning.py` — evaluation checks new add Evidence against its references
++
++The shared pattern recognizes numeric ratios and counts followed by the named
++units, with at most one intervening word and grouped thousands. Fenced code,
++External rounds and Unchecked counts declarations do not contribute claims.
++A gate count is checked when its sentence cites a file resolving within the
++task folder and that saved output holds its numbers. question scans question
++plus summary and writes Unchecked counts: N into the summary; legacy calls
++write into their question file. check includes the PR body and writes into
++the ask text. Missing, wrong or duplicate disclosure lines are replaced, with
++no content hold. Existing gate checks and their failure exits remain.
++
++For a new learn add completion, each Evidence count must occur in the joined
++pack items that its decision references. evaluation refuses a miss before
++writing completion, leaving the pending token usable. Reading already
++completed records retains structural validation without retroactively
++applying this new content check. This is the structured refusal ADR 0055's
++reopen condition permits; its claim-source reminder remains in force.
++
++## Consequences
++
++The Captain sees the computed disclosure without copying a line. Checking a
++number's presence establishes neither truth nor the command that produced it;
++a stale number in a cited file or referenced pack item still passes. Derived
++gate counts are disclosed rather than refused; derived learn counts must be
++stated in the referenced evidence. Gate diagnostics are bounded to eight
++unchecked sentences, twelve words each, while the disclosure counts all of them.
++
++Chat, prose-only lists such as S6/S7 not re-run, and stage reports outside the
++gate summary remain unscanned. The PR body is read but not edited, so a reader
++on GitHub alone does not see the ask's disclosure. Startup rules, versions and
++CI topology do not change. Reopen if citations fail to identify the producing
++run, or structured evidence can distinguish arithmetic without rejecting
++correct derived results.
+diff --git a/kc-dev-flow-2/scripts/count_tokens.py b/kc-dev-flow-2/scripts/count_tokens.py
+new file mode 100644
+index 000000000..45ad5e25b
+--- /dev/null
++++ b/kc-dev-flow-2/scripts/count_tokens.py
+@@ -0,0 +1,39 @@
++"""Shared count sentences and normalized numbers for gate and learn checks."""
++import re
++
++# see docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md
++NUMBER = r"\d+(?:,\d{3})*"
++NOUN = r"(?:cells?|runs?|tests?|files?|findings?|words?|lines?|PRs?|tasks?|commits?|cases?|records?|steps?|rounds?|tokens?|briefings?|attempts?|skips?|checks?|comments?)"
++COUNT = re.compile(rf"\b({NUMBER})\s*(?:of|/)\s*({NUMBER})\b|\b({NUMBER})\s+(?:\w+\s+)?{NOUN}\b", re.I)
++NUMBERS = re.compile(rf"(?<![\w,]){NUMBER}(?!\w|,\d)")
++SEQUENCE_NUMBER = re.compile(rf"\b((?:Cycle|Round|Batch|Step|Stage|Amendment|Attempt|Phase)\s+){NUMBER}\b", re.I)
++
++
++def numbers(text):
++    return {value.replace(",", "") for value in NUMBERS.findall(text)}
++
++
++def prose_lines(text):
++    fence = None
++    for index, line in enumerate(text.splitlines()):
++        match = re.match(r"^[ \t]*(`{3,}|~{3,})(.*)$", line)
++        if fence is not None:
++            if match and match[1][0] == fence[0] and len(match[1]) >= len(fence) and not match[2].strip():
++                fence = None
++            continue
++        if match:
++            fence = match[1]
++        else:
++            yield index, line
++
++
++def count_sentences(text):
++    result = []
++    for _, line in prose_lines(text):
++        if line.startswith(("Unchecked counts:", "External rounds:")):
++            continue
++        for sentence in re.split(r"(?<=[.;])\s+", line):
++            values = {n.replace(",", "") for match in COUNT.finditer(SEQUENCE_NUMBER.sub(r"\1#", sentence)) for n in match.groups() if n}
++            if values:
++                result.append((sentence, values))
++    return result
+diff --git a/kc-dev-flow-2/scripts/delivery_gate.py b/kc-dev-flow-2/scripts/delivery_gate.py
+index bf4e4c0f2..51e699e62 100644
+--- a/kc-dev-flow-2/scripts/delivery_gate.py
++++ b/kc-dev-flow-2/scripts/delivery_gate.py
+@@ -58,6 +58,10 @@ optionally followed by a full stop or a semicolon/full stop and detail. Without
+ The summary (combined text for legacy calls) needs Captain steps: <record path>, passing steps
+ against the gate text and latest validation report, at a latest dispatched Candidate.
+ Both `question` and `check` print a claim-source reminder on entry, without adding a hold.
++They list count sentences without a task-folder file holding their numbers, then write
++Unchecked counts: N into the summary (legacy question: question file; check: ask text).
++Check scans the PR body too. The disclosure is automatic and never holds a count;
++an unreadable or unwritable input still exits 2.
+ 
+ Usage: delivery_gate.py steps <record> --text-file <message>
+ Reads Captain step observations without executing commands. Missing observations, unmatched steps,
+@@ -83,6 +87,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ from design_surfaces import FM_PROFILE, task_folder
+ from number_guards import task_facts
+ from role_triggers import outside_fences
++from count_tokens import count_sentences, numbers, prose_lines
+ import decision_ledger
+ 
+ ROLE_TRIGGERS = Path(__file__).resolve().parent / "role_triggers.py"
+@@ -174,7 +179,7 @@ def run_gh(repo, number):
+ 
+ 
+ def pr_facts(repo, number):
+-    fields = "headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles"
++    fields = "headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles,body"
+     return json.loads(gh("pr", "view", number, "--repo", repo, "--json", fields))
+ 
+ 
+@@ -578,6 +583,11 @@ def check(args):
+         required = required_checks(repo, number)
+     except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
+         holds.append(f"cannot read the pull request {args.pr}: {error}")
++    try:
++        gate_text = count_disclosure(task_folder(task), gate_text + "\n" + ((facts or {}).get("body") or ""), text_file, gate_text)
++    except (OSError, UnicodeDecodeError) as error:
++        emit(f"cannot write count disclosure: {error}")
++        return 2
+     if facts is not None:
+         full = str(facts.get("headRefOid", "")).lower()
+         if head and not full.startswith(head):
+@@ -781,6 +791,39 @@ def named_file(folder, value):
+     return (folder.parent if path.parts[:1] == (folder.name,) else folder) / path
+ 
+ 
++def count_problems(folder, text):
++    checked, unchecked = 0, []
++    for sentence, values in count_sentences(text):
++        contents = []
++        for value in re.findall(r"(?<![\w/.-])((?:/?[\w.-]+/)*[\w.-]+\.(?:json|log|md|txt|jsonl|csv|out))\b", sentence):
++            path = named_file(folder, value).resolve()
++            if not path.is_relative_to(folder.resolve()):
++                continue
++            try:
++                contents.append(path.read_text())
++            except (OSError, UnicodeDecodeError):
++                continue
++        if contents and values <= numbers("\n".join(contents)):
++            checked += 1
++        else:
++            unchecked.append(sentence)
++    return checked, unchecked
++
++
++def count_disclosure(folder, text, destination, declared):
++    # see docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md
++    checked, unchecked = count_problems(folder, text)
++    line = f"Unchecked counts: {len(unchecked)}"
++    emit(f"counts: {checked} checked, {len(unchecked)} unchecked",
++         *("unchecked count: " + " ".join(sentence.split()[:12]) for sentence in unchecked[:8]))
++    declarations = {index for index, row in prose_lines(declared) if row.startswith("Unchecked counts:")}
++    updated = [row for index, row in enumerate(declared.splitlines()) if index not in declarations]
++    result = line + "\n" + "\n".join(updated).rstrip("\n") + "\n"
++    if result != declared:
++        destination.write_text(result)
++    return result
++
++
+ def inspect_steps(record_path, message, folder, evidence=""):
+     text = record_path.read_text()
+     header = re.split(r"^### Step \d+[ \t]*$", text, maxsplit=1, flags=re.M)[0]
+@@ -911,8 +954,11 @@ def question(args):
+         reviewer_text = None
+         if args.summary_file is not None:
+             summary = Path(args.summary_file).read_text()
++            summary = count_disclosure(task_folder(task), gate_text + "\n" + summary, Path(args.summary_file), summary)
+             reviewer_text = "\n".join(outside_fences(summary))
+             gate_text += "\n" + summary
++        else:
++            gate_text = count_disclosure(task_folder(task), gate_text, Path(args.text_file), gate_text)
+         found, wanted = reviewer_problems(task, task_text,
+                                          gate_text if reviewer_text is None else reviewer_text, second, extensions)
+         if reviewer_text is not None:
+diff --git a/kc-dev-flow-2/scripts/learning.py b/kc-dev-flow-2/scripts/learning.py
+index caaf7d6ed..cc20f86f4 100644
+--- a/kc-dev-flow-2/scripts/learning.py
++++ b/kc-dev-flow-2/scripts/learning.py
+@@ -11,8 +11,12 @@ from pathlib import Path
+ import re
+ import secrets
+ import subprocess
++import sys
+ import tempfile
+ 
++sys.path.insert(0, str(Path(__file__).resolve().parent))
++from count_tokens import count_sentences, numbers
++
+ 
+ class Invalid(ValueError):
+     pass
+@@ -90,7 +94,7 @@ def job_key(value):
+     return hashlib.sha256(encoded([value["workflow"], value["task_id"]])).hexdigest()
+ 
+ 
+-def evaluation(value, evidence):
++def evaluation(value, evidence, check_counts=True):
+     keys(value, "schema_version decisions")
+     require(type(value["schema_version"]) is int and value["schema_version"] == 1,
+             "unsupported evaluation schema_version")
+@@ -113,6 +117,12 @@ def evaluation(value, evidence):
+         require(item not in proposal[action], "duplicate decision")
+         require((item in evidence["learning"]) == (action == "remove"),
+                 "remove must match existing learning; add must not duplicate it")
++        # see docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md
++        if action == "add" and check_counts:
++            referenced = numbers("\n".join(decision["evidence"]))
++            for sentence, values in count_sentences(item["Evidence"]):
++                require(values <= referenced,
++                        "entry Evidence count '" + " ".join(sentence.split()[:12]) + "' is in no referenced evidence item")
+         proposal[action].append(item)
+     return proposal if any(proposal.values()) else None
+ 
+@@ -169,7 +179,7 @@ def inspect(directory):
+         if record["state"] == "pending":
+             require(record["evaluation"] is None and record["proposal"] is None, "pending result")
+         else:
+-            require(evaluation(record["evaluation"], record["input"]) == record["proposal"], "result mismatch")
++            require(evaluation(record["evaluation"], record["input"], check_counts=False) == record["proposal"], "result mismatch")
+     except (ValueError, TypeError, KeyError, UnicodeError):
+         record = None
+     return raw, digest, record
+diff --git a/kc-dev-flow-2/scripts/role_triggers.py b/kc-dev-flow-2/scripts/role_triggers.py
+index 0ee5e4aee..68dd6fd0b 100644
+--- a/kc-dev-flow-2/scripts/role_triggers.py
++++ b/kc-dev-flow-2/scripts/role_triggers.py
+@@ -11,13 +11,10 @@ round leaves it owed. A call made earlier on the same date as that round still c
+ waiver clears, as before.
+ Two validations with a Material or Needs decision F bullet, or two amendments with non-none Supersedes, print
+ three step-back questions without a hold, independently even when the other event has already cleared at three.
+-An owed findings or amendment chief-engineer line suppresses a duplicate reminder. Either count at three owes chief-engineer;
++An owed line carrying those questions suppresses a duplicate reminder. Either count at three owes chief-engineer;
+ the third amendment's date clears that event, while the validation event has no date test. Counts stay separate.
+ Plain and follow-up message dispatch records count by stage and normalized Symptom: header: two remind, three owe chief-engineer.
+ The third record's Dispatched: date dates that event; a qualifying call or waiver clears later rounds too.
+-Failed validations and repeated symptoms ask for the single mechanism and one change that closes the class.
+-Their declines require `unrelated:` and two or more semicolon-separated findings, each a name and a cause of
+-two or more words, with distinct casefolded causes. This checks the form, not whether the causes are true.
+ Engineering-reviewer is owed for each `### Amendment N` under `## Captain amendments` whose `Supersedes:` or
+ `Design:` value does not start with `none`; one line per task, on fable when the frontmatter says `profile: prod`
+ or the `Surfaces:` line under `## FO alignment` lists `db`, else on opus. Fenced blocks are skipped everywhere.
+@@ -64,8 +61,6 @@ QUESTION = {
+     "chief-engineer": "what is the smallest next step, given the findings so far?",
+     "engineering-reviewer": "do these amendments withdraw what the Captain approved, and what changes in the build?",
+ }
+-MECHANISM = "what single mechanism produces these findings, and what one change closes that class?"
+-UNRELATED = re.compile(r"^unrelated:(.*)$", re.I)
+ STEP_BACK = ("is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; "
+              "what breaks if this criterion or process is deleted?")
+ DIAGNOSIS_RECORD = re.compile(r"^(implementation|validation)-([1-9][0-9]*)(?:-message-([1-9][0-9]*))?\.md$")
+@@ -247,16 +242,8 @@ def step_back_events(lines):
+     return failures, replacements
+ 
+ 
+-def unrelated(reason):
+-    """Check the decline form; the truth of each cause remains a human judgment."""
+-    found = UNRELATED.match(reason.strip())
+-    items = [item.split() for item in found.group(1).split(";")] if found else []
+-    causes = {" ".join(item[1:]).casefold() for item in items}
+-    return len(items) >= 2 and all(len(item) >= 3 for item in items) and len(causes) == len(items)
+-
+-
+ def records(lines, agent):
+-    """Return (calls, waivers): (model, date) and (date or None, reason) for each `Reviewer:` line naming agent."""
++    """Return (calls, waivers): (model, date) and (date or None) for each `Reviewer:` line naming agent."""
+     name = re.escape(agent)
+     call = re.compile(rf"^{MARK}{name}[ \t]+(\S+)[ \t]+({DATE.pattern})[ \t]+[—–-][ \t]+\S")
+     waiver = re.compile(rf"^{MARK}{name}[ \t]+not run(?:[ \t]+({DATE.pattern}))?:[ \t]*(.*)$")
+@@ -267,7 +254,7 @@ def records(lines, agent):
+         if made:
+             calls.append((made.group(1), made.group(2)))
+         elif waived and re.sub(r"[\s()\[\]:;,.\-—–]+", "", waived.group(2)):
+-            waivers.append((waived.group(1), waived.group(2)))
++            waivers.append(waived.group(1))
+     return calls, waivers
+ 
+ 
+@@ -287,10 +274,10 @@ def misplaced(lines, agent):
+     return None
+ 
+ 
+-def owed_line(slug, agent, happened, where="", model="<model>", waived="", question=None, reason=None):
++def owed_line(slug, agent, happened, where="", model="<model>", waived="", question=None):
+     return (f"next: {slug} {happened}; dispatch kc-dev-flow-2:{agent} {where}with the question \"{question or QUESTION[agent]}\" "
+             f"and record `Reviewer: kc-dev-flow-2:{agent} {model} <date> — <question>` under ## FO alignment; "
+-            f"or, to decline, record `Reviewer: kc-dev-flow-2:{agent} not run{waived}: {reason or '<reason>'}` instead.")
++            f"or, to decline, record `Reviewer: kc-dev-flow-2:{agent} not run{waived}: <reason>` instead.")
+ 
+ 
+ def hint(slug, agent, heading):
+@@ -308,27 +295,24 @@ def check(state, slug, rev, rounds=None, drift=None):
+     front = re.match(r"---\n(.*?)\n---\n", text, re.S)
+     profile = FRONT_PROFILE.search(front.group(1)) if front else None
+     strong = (profile and profile.group(1) == "prod", any(SURFACES_DB.match(line.strip()) for line in kept))
+-    owed, seen, stepped = [], 0, False
++    owed, seen = [], 0
+     repairs = max(reports - 1, 0)
+     if (repairs >= REPAIRS or (rounds or 0) >= REVIEW_ROUNDS or max(failures, len(replacements)) >= 3
+             or any(len(group) >= 3 for group in symptoms.values())):
+         seen += 1
+         calls, waivers = records(kept, "chief-engineer")
+         calls = [(model, made) for model, made in calls if rank(model) >= RANK["opus"]]
+-        reasoned = [waived for waived, reason in waivers if unrelated(reason)]
+-        waivers = [waived for waived, _ in waivers]
+         dated = [made for _, made in calls] + [waived for waived in waivers if waived]
+-        dated_reasoned = [made for _, made in calls] + [waived for waived in reasoned if waived]
+         repair_owed = repairs >= REPAIRS and not (calls or waivers)
+         rounds_owed = (rounds or 0) >= REVIEW_ROUNDS and not (
+             any(made >= drift for made in dated) if drift else calls or waivers)
+-        failures_owed = failures >= 3 and not (calls or reasoned)
++        failures_owed = failures >= 3 and not (calls or waivers)
+         third_date = replacements[2] if len(replacements) >= 3 else None
+         replacements_owed = len(replacements) >= 3 and not (
+             any(made >= third_date for made in dated) if third_date else calls or waivers)
+         symptom_owed = [f'{len(group)} {stage} dispatches on symptom "{symptom}"'
+                         for (stage, symptom), group in sorted(symptoms.items()) if len(group) >= 3 and not (
+-                            any(made >= group[2][1] for made in dated_reasoned) if group[2][1] else calls or reasoned)]
++                            any(made >= group[2][1] for made in dated) if group[2][1] else calls or waivers)]
+         if repair_owed or rounds_owed or failures_owed or replacements_owed or symptom_owed:
+             found = [f"{repairs} repair passes"] * repair_owed + [f"{rounds} review rounds"] * rounds_owed
+             if rounds_owed and drift:
+@@ -336,19 +320,14 @@ def check(state, slug, rev, rounds=None, drift=None):
+             found += [f"{failures} validations with a Material or Needs decision finding"] * failures_owed
+             found += [f"{len(replacements)} replacing amendments"] * replacements_owed
+             found += symptom_owed
+-            findings = failures_owed or bool(symptom_owed)
+-            # see docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md
+-            stepped = findings or replacements_owed
+             owed.append(owed_line(slug, "chief-engineer", "has " + " and ".join(found), "on opus or gpt-6-astra ",
+-                                  waived=" <date>" if drift or replacements_owed or findings else "",
+-                                  question=MECHANISM if findings else STEP_BACK if replacements_owed else None,
+-                                  reason="unrelated: <finding> <its own cause>; <finding> <its own cause>" if findings else None))
++                                  waived=" <date>" if drift or replacements_owed or symptom_owed else "",
++                                  question=STEP_BACK if failures_owed or replacements_owed or symptom_owed else None))
+             owed += [hint(slug, "chief-engineer", h) for h in [misplaced(lines, "chief-engineer")] if h]
+     if amendments:
+         seen += len(amendments)
+         need = "fable" if any(strong) else "opus"
+         calls, waivers = records(kept, "engineering-reviewer")
+-        waivers = [waived for waived, _ in waivers]
+         open_numbers = []
+         for number, date in sorted(amendments):
+             by_call = any(rank(model) >= RANK[need] and (date is None or made >= date) for model, made in calls)
+@@ -364,8 +343,8 @@ def check(state, slug, rev, rounds=None, drift=None):
+             owed += [hint(slug, "engineering-reviewer", h) for h in [misplaced(lines, "engineering-reviewer")] if h]
+     reminder = [f"next: {slug} has {failures} validations with a Material or Needs decision finding and "
+                 f"{len(replacements)} replacing amendments: before the next step, answer: {STEP_BACK}"] \
+-        if 2 in (failures, len(replacements)) and not stepped else []
+-    if not stepped:
++        if 2 in (failures, len(replacements)) and not any(STEP_BACK in line for line in owed) else []
++    if not any(STEP_BACK in line for line in owed):
+         reminder += [f'next: {slug} has 2 {stage} dispatches on symptom "{symptom}": '
+                      f"before the next step, answer: {STEP_BACK}"
+                      for (stage, symptom), group in sorted(symptoms.items()) if len(group) == 2]
+diff --git a/kc-dev-flow-2/scripts/test_delivery_gate.py b/kc-dev-flow-2/scripts/test_delivery_gate.py
+index b6c779ce8..beb52747f 100644
+--- a/kc-dev-flow-2/scripts/test_delivery_gate.py
++++ b/kc-dev-flow-2/scripts/test_delivery_gate.py
+@@ -318,7 +318,8 @@ SECURITY = (f"Security review (validation): security/validation-1.yaml at {HEAD4
+             "Security finding (validation 1) 1: Needs decision: cap sessions\n"
+             "Security finding (validation 1) 2: Needs decision: add the sentence\n"
+             "Security finding (validation 1) 3: declined: stated unverified\n")
+-EQUALS = CLAIM_SOURCE + "\n" + f"PR head {HEAD40[:8]} equals dispatched candidate {HEAD40[:8]}; no second reviewer outcome is missing\n"
++EMPTY_COUNTS = "counts: 0 checked, 0 unchecked\n"
++EQUALS = CLAIM_SOURCE + "\n" + EMPTY_COUNTS + f"PR head {HEAD40[:8]} equals dispatched candidate {HEAD40[:8]}; no second reviewer outcome is missing\n"
+ PILOT_OUT = EQUALS + "class: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n"
+ 
+ 
+@@ -470,7 +471,8 @@ def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=N
+         written = {p.name: json.loads(p.read_text()) for p in sorted(Path(d, "task", "merge").glob("ask-*.json"))}
+         calls = Path(d, "stub", "calls.log").read_text() if Path(d, "stub", "calls.log").exists() else ""
+         OUTPUTS.append(out.getvalue())
+-        return types.SimpleNamespace(code=code, out=out.getvalue(), lines=out.getvalue().split("\n"), written=written, calls=calls)
++        return types.SimpleNamespace(code=code, out=out.getvalue(), lines=out.getvalue().split("\n"), written=written, calls=calls,
++                                     text=Path(d, "gate.txt").read_text())
+ 
+ 
+ def nexts(result):
+@@ -497,7 +499,7 @@ class CheckRoundCountTests(unittest.TestCase):
+             with self.subTest(text=text):
+                 result = run_check(rounds=text)
+                 self.assertEqual(result.code, 1, result.out)
+-                self.assertEqual(result.lines, [CLAIM_SOURCE, self.PROBLEM, self.NEXT, ""])
++                self.assertEqual(result.lines, [CLAIM_SOURCE, "counts: 0 checked, 0 unchecked", self.PROBLEM, self.NEXT, ""])
+                 self.assertEqual(result.written, {})
+ 
+     def test_zero_and_detail_counts_preserve_the_complete_text_output(self):
+@@ -658,7 +660,7 @@ class SettledChecksTests(unittest.TestCase):
+ 
+     def test_required_check_read_adds_one_gh_call(self):
+         base_calls = [
+-            "pr view 9 --repo o/r --json headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles",
++            "pr view 9 --repo o/r --json headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles,body",
+             "api --paginate repos/o/r/pulls/9/files",
+             f"api repos/o/r/actions/runs?head_sha={HEAD40}&per_page=100",
+             "pr checks 9 --repo o/r --required --json name,bucket",
+@@ -1108,12 +1110,12 @@ class DeclineAndAdrTests(unittest.TestCase):
+     def test_a_decline_item_names_its_first_words_and_the_hold_is_the_ask_not_a_record(self):
+         code, out = self.check(text="Declined, with reasons: Polish, a docstring wording; Deferred risk, one more (a real reason here).")
+         self.assertEqual(code, 1)
+-        self.assertEqual(out.splitlines()[1], "declined item has no reason: 'Polish, a docstring wording'")
++        self.assertEqual(out.splitlines()[2], "declined item has no reason: 'Polish, a docstring wording'")
+ 
+     def test_a_short_declined_item_is_judged_and_a_none_form_is_not_an_item(self):
+         code, out = self.check(text="Declined: Polish, typo.")
+         self.assertEqual(code, 1, out)
+-        self.assertEqual(out.splitlines()[1], "declined item has no reason: 'Polish, typo'")
++        self.assertEqual(out.splitlines()[2], "declined item has no reason: 'Polish, typo'")
+         self.assertEqual(self.check(text="Declined: Polish (wording only, no behavior change).")[0], 0)
+         for text in ("Declined: none.", "FO declines: n/a.", "Declined: nothing"):
+             self.assertEqual(self.check(text=text)[0], 0, text)
+@@ -1829,13 +1831,13 @@ class CaptainGateTests(CaptainStepFixture):
+         for summary in (False, True):
+             code, out = self.ask_gate(summary=summary, declaration=False)
+             self.assertEqual(code, 1, out)
+-            self.assertEqual(len(out.splitlines()), 3, out)
++            self.assertEqual(len(out.splitlines()), 4, out)
+             self.assertIn("Captain steps:", out)
+-            self.assertTrue(out.splitlines()[2].startswith("next:"))
++            self.assertTrue(out.splitlines()[-1].startswith("next:"))
+             code, out = self.ask_gate(candidate="e623efd2" + "0" * 32, summary=summary)
+             self.assertEqual(code, 1, out)
+             self.assertIn("differs from latest dispatched Candidate", out)
+-            self.assertEqual(self.ask_gate(summary=summary), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
++            self.assertEqual(self.ask_gate(summary=summary), (0, CLAIM_SOURCE + "\n" + EMPTY_COUNTS + "gate text complete\n" + gate.ASK_FORM + "\n"))
+         no_clause = variant_of('missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)', 'missing = []')
+         self.assertEqual(self.ask_gate(declaration=False, module=no_clause)[0], 0)
+         no_binding = variant_of('if candidate not in candidates:', 'if False:')
+@@ -2231,7 +2233,7 @@ class QuestionTests(unittest.TestCase):
+         self.assertEqual(code, 2)
+         self.assertIn(CLAIM_SOURCE, out.getvalue().splitlines())
+ 
+-    def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False, summary=None, cards=None, cli=False):
++    def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False, summary=None, cards=None, cli=False, saved=None):
+         with tempfile.TemporaryDirectory() as d:
+             readme(d)
+             if as_folder:
+@@ -2260,10 +2262,16 @@ class QuestionTests(unittest.TestCase):
+                                                necessity=gate.clause(CLAUSES, "Necessity")))
+             if cli:
+                 run = subprocess.run([sys.executable, "-B", gate.__file__, *argv], capture_output=True, text=True)
++                if saved is not None:
++                    saved.update(text=Path(d, "gate.txt").read_text(),
++                                 summary=Path(d, "summary.txt").read_text() if summary is not None else None)
+                 return run.returncode, run.stdout + run.stderr
+             out = io.StringIO()
+             with contextlib.redirect_stdout(out):
+                 code = (module or gate).main(argv)
++            if saved is not None:
++                saved.update(text=Path(d, "gate.txt").read_text(),
++                             summary=Path(d, "summary.txt").read_text() if summary is not None else None)
+             return code, out.getvalue()
+ 
+     def test_question_accepts_site_and_elided_paths(self):
+@@ -2361,7 +2369,7 @@ class QuestionTests(unittest.TestCase):
+ 
+     def test_legacy_combined_text_still_accepts_no_round_count(self):
+         self.assertNotIn("External rounds:", CLAUSES)
+-        self.assertEqual(self.ask("Deliver it."), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
++        self.assertEqual(self.ask("Deliver it."), (0, CLAIM_SOURCE + "\n" + EMPTY_COUNTS + "gate text complete\n" + gate.ASK_FORM + "\n"))
+ 
+     def test_a_question_that_names_the_merge_without_the_hold_out_clause_is_refused(self):
+         code, out = self.ask(MERGE_ASK.format(tail="."))
+@@ -2375,9 +2383,9 @@ class QuestionTests(unittest.TestCase):
+             with self.subTest(label):
+                 code, out = self.ask(MERGE_ASK.format(tail=tail))
+                 self.assertEqual(code, 0, out)
+-                self.assertTrue(out.startswith(CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"), out)
++                self.assertTrue(out.startswith(CLAIM_SOURCE + "\n" + EMPTY_COUNTS + "gate text complete\n" + gate.ASK_FORM + "\n"), out)
+                 self.assertIn("--reference ", out.splitlines()[-1])
+-        self.assertEqual(self.ask("Admit the sample task?"), (0, CLAIM_SOURCE + "\ngate text complete\n" + gate.ASK_FORM + "\n"))
++        self.assertEqual(self.ask("Admit the sample task?"), (0, CLAIM_SOURCE + "\n" + EMPTY_COUNTS + "gate text complete\n" + gate.ASK_FORM + "\n"))
+         self.assertEqual(self.ask(MERGE_ASK.format(tail="."), as_folder=True)[0], 1)
+ 
+     def test_the_other_text_checks_run_and_an_unreadable_input_exits_2(self):
+@@ -2452,7 +2460,7 @@ class OwedRoleCallTests(unittest.TestCase):
+         result = run_check(task=ALIGNED, records={**RECORDS, **dispatches}, setup=setup, roles=True)
+         self.assertEqual(result.code, 1, result.out)
+         self.assertIn('3 implementation dispatches on symptom "page freeze"', result.out)
+-        self.assertIn("what single mechanism produces these findings, and what one change closes that class?", result.out)
++        self.assertIn("what breaks if this criterion or process is deleted?", result.out)
+         self.assertNotIn(gate.ASK, result.out)
+         self.assertEqual(result.written, {})
+ 
+@@ -2483,7 +2491,7 @@ class OwedRoleCallTests(unittest.TestCase):
+             self.assertEqual(gate.ASK in result.out, not expected, result.out)
+             if expected:
+                 self.assertIn("dispatch kc-dev-flow-2:chief-engineer", result.out)
+-                self.assertIn("what single mechanism produces these findings, and what one change closes that class?", result.out)
++                self.assertIn("what breaks if this criterion or process is deleted?", result.out)
+                 self.assertNotIn("before the next step", result.out)
+ 
+     def test_a_committed_amendment_with_no_call_holds_with_the_scripts_next_line(self):
+@@ -2907,5 +2915,94 @@ class SummaryTests(unittest.TestCase):
+             self.ask(None, module=legacy_broken)
+ 
+ 
++class CountDisclosureTests(unittest.TestCase):
++    ask = QuestionTests.ask
++
++    def test_question_writes_wrong_missing_and_duplicate_disclosures_without_hold(self):
++        for declaration in ("", "Unchecked counts: 0\n", "Unchecked counts: 7\nUnchecked counts: 2\n"):
++            with self.subTest(declaration=declaration):
++                saved = {}
++                code, out = self.ask("Admit it?", summary="2 cells not re-run (validation/validation-1/cells.txt).\n" + declaration,
++                                     cards={"validation/validation-1/cells.txt": "S6\nS7\nS8\n"}, saved=saved, cli=True)
++                self.assertEqual(code, 0, out)
++                self.assertIn("counts: 0 checked, 1 unchecked", out)
++                self.assertEqual(out.count("unchecked count:"), 1)
++                self.assertEqual(re.findall(r"^Unchecked counts:.*$", saved["summary"], re.M), ["Unchecked counts: 1"])
++                self.assertNotIn("Unchecked counts:", saved["text"])
++
++    def test_question_checked_and_derived_counts_and_legacy_write(self):
++        for summary, body, expected in (("3 cells (validation/cells.txt).", "3", 0),
++                                        ("3 of 6 (validation/cells.txt).", "1/3\n2/3", 1)):
++            for folder in (False, True):
++                with self.subTest(summary=summary, folder=folder):
++                    saved = {}
++                    code, out = self.ask("Admit it?", summary=summary, cards={"validation/cells.txt": body},
++                                         as_folder=folder, saved=saved)
++                    self.assertEqual(code, 0, out)
++                    self.assertIn(f"Unchecked counts: {expected}\n", saved["summary"])
++        saved = {}
++        code, out = self.ask("2 tests passed.", saved=saved)
++        self.assertEqual(code, 0, out)
++        self.assertIn("Unchecked counts: 1\n", saved["text"])
++
++    def test_check_scans_pr_body_and_rewrites_ask_idempotently(self):
++        for declaration in ("", "Unchecked counts: 0\n", "Unchecked counts: 99\n"):
++            with self.subTest(declaration=declaration):
++                result = run_check(text=declaration, facts={"body": "18 findings remain."})
++                self.assertEqual(result.code, 0, result.out)
++                self.assertIn("counts: 0 checked, 1 unchecked", result.out)
++                self.assertIn("unchecked count: 18 findings remain.", result.out)
++                self.assertEqual(re.findall(r"^Unchecked counts:.*$", result.text, re.M), ["Unchecked counts: 1"])
++                self.assertIn("body", result.calls)
++                self.assertTrue(result.written)
++
++    def test_file_content_boundary_and_fences(self):
++        saved = {}
++        summary = ("2 tests (validation/cells.txt).\n3 tests (../outside.txt).\n"
++                   "1,000 tests (task/validation/thousand.out).\n"
++                   "```text\n99 tests\n```\n~~~text\n88 tests\n~~~\n")
++        code, out = self.ask("Admit it?", summary=summary,
++                             cards={"validation/cells.txt": "12 tests", "validation/thousand.out": "1000", "../outside.txt": "3"}, saved=saved)
++        self.assertEqual(code, 1, out)
++        self.assertIn("message S5", out)
++        self.assertIn("counts: 1 checked, 2 unchecked", out)
++        self.assertIn("Unchecked counts: 2\n", saved["summary"])
++
++    def test_disclosure_does_not_clear_other_holds_and_cuts_diagnostics(self):
++        code, out = self.ask("18 findings remain.\n", clauses=False)
++        self.assertEqual(code, 1, out)
++        self.assertIn("Sufficiency", out)
++        result = run_check(text="\n".join(f"{i} tests " + "word " * 20 for i in range(10)))
++        self.assertEqual(result.code, 0, result.out)
++        lines = [line for line in result.lines if line.startswith("unchecked count:")]
++        self.assertEqual(len(lines), 8)
++        self.assertTrue(all(len(line.removeprefix("unchecked count: ").split()) <= 12 for line in lines))
++
++    def test_rewrite_is_idempotent_and_preserves_fenced_examples(self):
++        with tempfile.TemporaryDirectory() as directory:
++            path = Path(directory, "summary.txt")
++            example = "```text\nUnchecked counts: 7\n```\n"
++            path.write_text("Unchecked counts: 7\n" + example + "Unchecked counts: wrong\n2 tests passed.\n")
++            with contextlib.redirect_stdout(io.StringIO()):
++                first = gate.count_disclosure(Path(directory), path.read_text(), path, path.read_text())
++                second = gate.count_disclosure(Path(directory), path.read_text(), path, path.read_text())
++            self.assertEqual(first, second)
++            self.assertEqual(path.read_text(), first)
++            self.assertIn(example, first)
++            self.assertTrue(first.startswith("Unchecked counts: 1\n"))
++
++    def test_disclosure_write_error_is_input_failure(self):
++        write = Path.write_text
++        def unwritable(path, *args, **kwargs):
++            if path.name == "gate.txt" and str(args[0]).startswith("Unchecked counts:"):
++                raise PermissionError("summary read-only")
++            return write(path, *args, **kwargs)
++        with mock.patch.object(Path, "write_text", unwritable):
++            result = run_check()
++        self.assertEqual(result.code, 2, result.out)
++        self.assertIn("cannot write count disclosure", result.out)
++        self.assertFalse(result.written)
++
++
+ if __name__ == "__main__":
+     unittest.main()
+diff --git a/kc-dev-flow-2/scripts/test_learning.py b/kc-dev-flow-2/scripts/test_learning.py
+index 12c26e61e..d7c25c1ad 100644
+--- a/kc-dev-flow-2/scripts/test_learning.py
++++ b/kc-dev-flow-2/scripts/test_learning.py
+@@ -118,6 +118,47 @@ class LearningTests(unittest.TestCase):
+         self.assertEqual((self.repo / "learning.md").read_text(), "existing rules\n")
+         self.assertEqual((self.repo / "AGENTS.md").read_text(), "existing authority\n")
+ 
++    def test_evidence_count_refusal_leaves_pending_token_correctable(self):
++        primary = "recount 2026-11-08: 15 findings (20 overall)"
++        self.pack["evidence"] = [primary, "Earlier pass: 18 findings"]
++        self.write_pack()
++        claim = self.claim()
++        item = dict(NEW, Evidence="18 findings")
++        decision = dict(self.decision("add", item), evidence=[primary])
++        refused = self.complete(claim, self.result_file([decision]), code=1)
++        self.assertIn("18 findings", refused["error"])
++        self.assertIn("in no referenced evidence item", refused["error"])
++        pending = self.cli("read", "--job", claim["job"])
++        self.assertEqual(pending["state"], "pending")
++        self.assertEqual(self.claim()["state"], "pending")
++        item["Evidence"] = "15 findings"
++        done = self.complete(claim, self.result_file([decision]))
++        self.assertEqual(done["state"], "completed")
++        self.assertEqual(self.cli("read", "--job", claim["job"])["proposal"]["add"], [item])
++
++    def test_count_pattern_thousands_derived_and_punctuation(self):
++        primary = "recount: 1000 tests; 3 cells; 6 runs"
++        self.pack["evidence"] = [primary]
++        self.write_pack()
++        claim = self.claim()
++        for evidence in ("1,001 tests", "3 of 7", "12 cells"):
++            with self.subTest(evidence=evidence):
++                decision = dict(self.decision("add", dict(NEW, Evidence=evidence)), evidence=[primary])
++                self.complete(claim, self.result_file([decision]), code=1)
++        item = dict(NEW, Evidence="1,000 tests; 3/6 runs (cycle 2, round 2).")
++        decision = dict(self.decision("add", item), evidence=[primary])
++        self.assertEqual(self.complete(claim, self.result_file([decision]))["state"], "completed")
++
++    def test_completed_legacy_counts_remain_readable(self):
++        claim = self.claim()
++        self.complete(claim, self.result_file([self.decision("add", NEW)]))
++        path = self.record_path(claim["job"])
++        stored = json.loads(path.read_text())
++        for item in (stored["evaluation"]["decisions"][0]["entry"], stored["proposal"]["add"][0]):
++            item["Evidence"] = "18 findings"
++        path.write_text(json.dumps(stored))
++        self.assertEqual(self.cli("read", "--job", claim["job"])["state"], "completed")
++
+     def test_linked_worktree_multiprocess_claim_race(self):
+         other = self.base / "other"
+         subprocess.run(["git", "-C", self.repo, "worktree", "add", "--detach", other], capture_output=True, check=True)
+diff --git a/kc-dev-flow-2/scripts/test_poc_readme.py b/kc-dev-flow-2/scripts/test_poc_readme.py
+index 903abb651..bae856bdb 100644
+--- a/kc-dev-flow-2/scripts/test_poc_readme.py
++++ b/kc-dev-flow-2/scripts/test_poc_readme.py
+@@ -56,7 +56,8 @@ class DeriveTests(unittest.TestCase):
+             script = command + "\ncode=$?\n" + ("" if ignore else 'test "$code" -eq 0 || exit "$code"\n')
+             script += shlex.join([sys.executable, "-B", str(recorder), str(forward), str(prepared)])
+             done = subprocess.run(["/bin/sh", "-c", script], cwd=d, capture_output=True, text=True)
+-            return done.returncode, prepared.read_bytes() if prepared.exists() else None, done.stdout, checked
++            expected = b"Unchecked counts: 0\n" + checked if not omit else checked
++            return done.returncode, prepared.read_bytes() if prepared.exists() else None, done.stdout, expected
+ 
+     def test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes(self):
+         for source in (SOURCE, poc.derive(SOURCE)):
+diff --git a/kc-dev-flow-2/scripts/test_role_triggers.py b/kc-dev-flow-2/scripts/test_role_triggers.py
+index fdf2dd517..08d5a3c53 100644
+--- a/kc-dev-flow-2/scripts/test_role_triggers.py
++++ b/kc-dev-flow-2/scripts/test_role_triggers.py
+@@ -15,8 +15,6 @@ IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NA
+             "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull}
+ SLUG = "some-task"
+ CE, ER = "kc-dev-flow-2:chief-engineer", "kc-dev-flow-2:engineering-reviewer"
+-MECHANISM = "what single mechanism produces these findings, and what one change closes that class?"
+-UNRELATED = "unrelated: F1 explicit home exit keeps the draft; F2 late 201 response after Back"
+ 
+ 
+ def git(where, *args):
+@@ -71,17 +69,6 @@ def call(agent, model, date, question="q"):
+ 
+ 
+ class RoleTriggersTest(Fixture):
+-    def test_repair_and_review_only_events_keep_the_smallest_next_step_question(self):
+-        for repairs, rounds in ((4, 0), (0, 2)):
+-            self.put(task(repairs=repairs))
+-            code, out = run(self.state, SLUG, "--review-rounds", rounds)
+-            self.assertEqual(code, 1, out)
+-            self.assertIn('with the question "what is the smallest next step, given the findings so far?"', out)
+-            self.assertNotIn(MECHANISM, out)
+-            self.assertNotIn("unrelated:", out)
+-            self.put(task(repairs=repairs, extra=f"Reviewer: {CE} not run: Captain ordered it"))
+-            self.assertEqual(run(self.state, SLUG, "--review-rounds", rounds)[0], 0)
+-
+     def test_four_repair_passes_owe_chief_engineer_in_every_record_shape(self):
+         self.put(task(repairs=3))
+         self.assertEqual(self.owed()[0], 0)
+@@ -392,15 +379,12 @@ class StepBackTest(Fixture):
+             if expected:
+                 self.assert_questions(out)
+ 
+-    def test_third_failure_owes_one_mechanism_call_even_with_repairs_and_rounds(self):
++    def test_third_failure_owes_one_call_with_the_questions_even_with_repairs_and_rounds(self):
+         self.put(task(repairs=4) + validations(*([self.failed] * 3)))
+         code, out = run(self.state, SLUG, "--review-rounds", 2)
+         self.assertEqual((code, len(out.splitlines())), (1, 1), out)
+         self.assertIn("4 repair passes and 2 review rounds and 3 validations", out)
+-        self.assertIn(MECHANISM, out)
+-        self.assertIn("not run <date>: unrelated: <finding> <its own cause>; <finding> <its own cause>", out)
+-        for question in self.questions:
+-            self.assertNotIn(question, out)
++        self.assert_questions(out)
+         self.assertNotIn("before the next step", out)
+ 
+     def test_two_replacements_still_remind_after_validation_event_is_cleared(self):
+@@ -423,20 +407,13 @@ class StepBackTest(Fixture):
+             self.assertIn("before the next step", out)
+             self.assert_questions(out)
+ 
+-    def test_a_third_findings_or_amendment_call_suppresses_the_second_event_reminder(self):
++    def test_a_third_event_deduplicates_only_a_call_line_carrying_the_three_questions(self):
+         for failures, replacements in ((3, 2), (2, 3)):
+             self.put(task(amendments=self.amendments[:replacements], extra=call(ER, "opus", "2026-10-20"))
+                      + validations(*([self.failed] * failures)))
+             code, out = run(self.state, SLUG)
+             self.assertEqual((code, len(out.splitlines())), (1, 1), out)
+-            if failures == 3:
+-                self.assertIn(MECHANISM, out)
+-                for question in self.questions:
+-                    self.assertNotIn(question, out)
+-            else:
+-                self.assert_questions(out)
+-                self.assertNotIn(MECHANISM, out)
+-                self.assertIn("not run <date>: <reason>", out)
++            self.assert_questions(out)
+             self.assertIn(f"dispatch {CE}", out)
+             self.assertNotIn("before the next step", out)
+         self.put(task(repairs=4) + validations(self.failed, self.failed))
+@@ -446,17 +423,16 @@ class StepBackTest(Fixture):
+         self.assertIn("before the next step", out)
+         self.assertEqual(out.count(self.questions[0]), 1, out)
+ 
+-    def test_failure_calls_need_the_model_floor_but_no_date_floor_and_reasoned_waivers_clear(self):
++    def test_failure_calls_need_the_model_floor_but_no_date_floor_and_waivers_clear(self):
+         for extra, expected in (("", 1), (call(CE, "sonnet", "2026-10-20"), 1),
+                 (call(CE, "gpt-6-astra", "2026-01-01"), 0), (call(CE, "opus", "2026-01-01"), 0),
+-                (f"Reviewer: {CE} not run: Captain waived", 1), (f"Reviewer: {CE} not run 2026-01-01: waived", 1),
+-                (f"Reviewer: {CE} not run: {UNRELATED}", 0), (f"Reviewer: {CE} not run 2026-01-01: {UNRELATED}", 0)):
++                (f"Reviewer: {CE} not run: Captain waived", 0), (f"Reviewer: {CE} not run 2026-01-01: waived", 0)):
+             self.put(task(extra=extra) + validations(*([self.failed] * 3)))
+             code, out = run(self.state, SLUG)
+             self.assertEqual(code, expected, out)
+             if expected:
+-                self.assertIn(MECHANISM, out)
+-                self.assertLessEqual(len(out.split()), 77)
++                self.assert_questions(out)
++                self.assertLessEqual(len(out.split()), 73)
+ 
+     def test_third_replacement_dates_the_call_or_waiver_and_fourth_owes_no_second_call(self):
+         er = call(ER, "opus", "2026-10-20") + "\n"
+@@ -556,7 +532,7 @@ class SymptomRoundsTest(Fixture):
+         code, out = run(self.state, SLUG)
+         self.assertEqual(code, 1, out)
+         self.assertIn('3 implementation dispatches on symptom "page freeze"', out)
+-        self.assertIn(MECHANISM, out)
++        self.assertIn("what breaks if this criterion or process is deleted?", out)
+         self.put(task(extra=call(CE, "opus", "2026-11-04")))
+         self.assertEqual(run(self.state, SLUG)[0], 1)
+         self.put(task(extra=call(CE, "opus", "2026-11-05")))
+@@ -586,8 +562,7 @@ class SymptomRoundsTest(Fixture):
+         code, out = run(self.state, SLUG)
+         self.assertEqual((code, out.count("next:")), (1, 1))
+         self.assertIn('3 implementation dispatches on symptom "page freeze"', out)
+-        self.assertIn(MECHANISM, out)
+-        self.assertIn("not run <date>: unrelated: <finding> <its own cause>; <finding> <its own cause>", out)
++        self.assertIn("what breaks if this criterion or process is deleted?", out)
+         self.assertEqual(run(self.state, SLUG, "--rev", "HEAD~1")[0], 0)
+         for path in (self.state / SLUG / "dispatch").iterdir():
+             path.unlink()
+@@ -600,17 +575,14 @@ class SymptomRoundsTest(Fixture):
+                                (call(CE, "opus", "2026-11-03"), 0), (call(CE, "gpt-6-astra", "2026-11-04"), 0),
+                                (f"Reviewer: {CE} not run: reason", 1),
+                                (f"Reviewer: {CE} not run 2026-11-02: reason", 1),
+-                               (f"Reviewer: {CE} not run 2026-11-03: reason", 1),
+-                               (f"Reviewer: {CE} not run: {UNRELATED}", 1),
+-                               (f"Reviewer: {CE} not run 2026-11-02: {UNRELATED}", 1),
+-                               (f"Reviewer: {CE} not run 2026-11-03: {UNRELATED}", 0)):
++                               (f"Reviewer: {CE} not run 2026-11-03: reason", 0)):
+             with self.subTest(line=line):
+                 self.put(task(extra=line))
+                 self.assertEqual(run(self.state, SLUG)[0], expected)
+                 if not expected:
+                     self.assertNotIn("next:", run(self.state, SLUG)[1])
+         self.dispatch(4, date="")
+-        self.put(task(extra=f"Reviewer: {CE} not run: {UNRELATED}"))
++        self.put(task(extra=f"Reviewer: {CE} not run: reason"))
+         self.assertEqual(run(self.state, SLUG)[0], 0)
+ 
+     def test_groups_normalize_but_keep_stages_and_symptoms_separate(self):
+@@ -653,54 +625,7 @@ class SymptomRoundsTest(Fixture):
+         self.assertIn('2 implementation dispatches on symptom "new failure"', run(self.state, SLUG)[1])
+         self.put(task() + report * 2)
+         out = run(self.state, SLUG)[1]
+-        self.assertEqual(out.count(MECHANISM), 1)
+-        for question in StepBackTest.questions:
+-            self.assertEqual(out.count(question), 0)
+-
+-    def test_both_findings_events_require_distinct_causes_in_the_decline(self):
+-        reasons = ((UNRELATED, 0),
+-                   ("Unrelated: F1 home exit; F2 late response; F3 slot removed", 0),
+-                   ("the outcome is unchanged; the gap is testable now", 1),
+-                   ("unrelated: F1 home exit", 1),
+-                   ("unrelated: F1 exit; F2 late response", 1),
+-                   ("unrelated: F1 late async write; F2 late async write", 1),
+-                   ("unrelated: F1 LATE  async WRITE; F2 late async write", 1),
+-                   ("unrelated: F1 home exit; F2 late response;", 1))
+-        for event in ("failures", "symptom"):
+-            if event == "symptom":
+-                for n in (1, 2, 3):
+-                    self.dispatch(n)
+-            for reason, expected in reasons:
+-                with self.subTest(event=event, reason=reason):
+-                    body = task(extra=f"Reviewer: {CE} not run 2026-11-03: {reason}")
+-                    if event == "failures":
+-                        body += validations(*([StepBackTest.failed] * 3))
+-                    self.put(body)
+-                    code, out = run(self.state, SLUG)
+-                    self.assertEqual(code, expected, out)
+-                    if expected:
+-                        self.assertIn(MECHANISM, out)
+-
+-    def test_recorded_outcome_answers_leave_both_findings_calls_owed(self):
+-        answers = (
+-            "My answer is yes. The original problem is fixed: a first-time owner chooses the car only once, can see the plate-number step, and has a back button. The last few rounds dealt with smaller defects found in review, not a drift in direction.",
+-            "These two bugs are in the booking draft we're delivering. Tests can reproduce them now, and if we deleted those two acceptance criteria, the release would ship data loss.",
+-            "The goal is still the original one: an owner picks the car once and can always see how to finish the booking. The remaining gaps can all be tested now.",
+-            "the outcome is unchanged; the gap is testable now",
+-        )
+-        for event in ("failures", "symptom"):
+-            if event == "symptom":
+-                for n in (1, 2, 3):
+-                    self.dispatch(n)
+-            for answer in answers:
+-                with self.subTest(event=event, answer=answer):
+-                    body = task(extra=f"Reviewer: {CE} not run 2026-11-09: {answer}")
+-                    if event == "failures":
+-                        body += validations(*([StepBackTest.failed] * 3))
+-                    self.put(body)
+-                    code, out = run(self.state, SLUG)
+-                    self.assertEqual(code, 1, out)
+-                    self.assertIn(MECHANISM, out)
++        self.assertEqual(out.count("what breaks if this criterion or process is deleted?"), 1)
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/kc-dev-flow-2/skills/evaluate-learning/SKILL.md b/kc-dev-flow-2/skills/evaluate-learning/SKILL.md
+index 2775c480d..f7e52d394 100644
+--- a/kc-dev-flow-2/skills/evaluate-learning/SKILL.md
++++ b/kc-dev-flow-2/skills/evaluate-learning/SKILL.md
+@@ -94,6 +94,7 @@ item). Remove must match a supplied existing entry; add must
+ not duplicate one. The helper checks schema/identity, not whether the reasoning
+ is sound. An all-no-change result has a null proposal, not an empty proposal.
+ A completed receipt remains a proposal record; it has no activation authority.
++Each count in an entry's Evidence must appear in an evidence item the decision references; `complete` refuses it otherwise.
+ 
+ Pending means an owner has the claim, not that it is alive or stopped. Check its
+ actual session before recovery; a PID alone is insufficient. Missing/torn records
+diff --git a/kc-dev-flow-2/skills/ideation/profiles/pilot.md b/kc-dev-flow-2/skills/ideation/profiles/pilot.md
+index ec4840103..548115047 100644
+--- a/kc-dev-flow-2/skills/ideation/profiles/pilot.md
++++ b/kc-dev-flow-2/skills/ideation/profiles/pilot.md
+@@ -3,12 +3,3 @@
+ Define the smallest useful end-to-end slice, who will use it, its real seams,
+ acceptance evidence and explicit non-goals. Identify any new obligation that
+ would require a profile change; leave that decision with the user.
+-
+-## Data kept across screens or sign-in
+-
+-When a `ui` design keeps something a person typed or chose while they move between
+-screens or through sign-in, add `### Kept data` to the design. For each item, state
+-where it starts; every way it ends: sent, abandoned by back or another tab, replaced
+-by a newer choice, a different person or session, a reload; and every writer,
+-including a reply that lands after the person has moved on, and what that reply may
+-still change. Give each end and each late writer an acceptance criterion.
+diff --git a/kc-dev-flow-2/skills/validation/principles.md b/kc-dev-flow-2/skills/validation/principles.md
+index 012e56ea9..04f194ac7 100644
+--- a/kc-dev-flow-2/skills/validation/principles.md
++++ b/kc-dev-flow-2/skills/validation/principles.md
+@@ -9,6 +9,7 @@ profile's depth, and does the without-it observation justify each retained chang
+ or removal? Check that remaining surfaces map to the goal, a named falsifier,
+ safety boundary or required lifecycle obligation; a deletion earns its place by
+ the same standard as retention. Use existing evidence, not a new proof harness.
++Report each count with the task-folder path of the saved output that shows it; `<package>/scripts/delivery_gate.py` counts a count without one as unchecked.
+ 
+ Read every comment the candidate adds. A comment that narrates the change, restates
+ the code beside it, cites a line number or marks a section is a repair finding.

@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/tmp/pr822-validation-2-20261110/probe.py", line 28, in <module>
+    result = fixture.complete(claim, fixture.result_file([decision]), code=1 if baseline else 0)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pr822-validation-2-20261110/candidate/.context/ordinal-exclusion-removed-ixsli97s/kc-dev-flow-2/scripts/test_learning.py", line 89, in complete
+    return self.cli("complete", "--job", claim["job"], "--token", claim["token"], "--result", path, code=code)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pr822-validation-2-20261110/candidate/.context/ordinal-exclusion-removed-ixsli97s/kc-dev-flow-2/scripts/test_learning.py", line 70, in cli
+    self.assertEqual(result.returncode, code, result.stdout + result.stderr)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/unittest/case.py", line 873, in assertEqual
+    assertion_func(first, second, msg=msg)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/unittest/case.py", line 866, in _baseAssertEqual
+    raise self.failureException(msg)
+AssertionError: 1 != 0 : {"state": "error", "error": "entry Evidence count 'Recorded in spacedock-state/dev2:_archive/fo-lifecycle-mod.md under '### Why the cycle-2 design grew' and '###' is in no referenced evidence item"}
+

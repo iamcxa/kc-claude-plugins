@@ -1,0 +1,7 @@
+{
+  "0044": "unaffected: optional separate-summary review facts and legacy combined calls retain their checks.",
+  "0051": "unaffected: External rounds remains independently required by check; count disclosure does not clear holds.",
+  "0062": "unaffected: quoted bound-question approval and merge authority are unchanged.",
+  "0071": "unaffected: newest matching delivery record and reference binding are unchanged.",
+  "0072": "updated in original PR: automatic disclosure and learn reference join match runtime. The bounded sequence exception has its ruling home in task Amendment 2 and AC-9, with no new decision or ADR rewrite."
+}

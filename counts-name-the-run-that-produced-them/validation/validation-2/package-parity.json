@@ -1,0 +1,12 @@
+[
+  {
+    "path": "skills/validation/SKILL.md",
+    "equal": true,
+    "sha256": "50b745fa305edf8bf3b66761bfafc54e74d5b05d91848ac6fe8f1b3d133a1169"
+  },
+  {
+    "path": "scripts/adr_lint.py",
+    "equal": true,
+    "sha256": "7313e02238830471138d23508c1106bf4ff15ab8b166c060ec1d6e5a160e719f"
+  }
+]

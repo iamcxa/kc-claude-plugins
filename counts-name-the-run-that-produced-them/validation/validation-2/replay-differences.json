@@ -1,0 +1,30 @@
+{
+  "name": "replay-differences",
+  "cwd": "/tmp/pr822-validation-2-20261110/candidate",
+  "argv": [
+    "python3",
+    "-B",
+    "/tmp/pr822-validation-2-20261110/replay-differences.py",
+    "/tmp/pr822-validation-2-20261110/candidate",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them/validation/validation-1"
+  ],
+  "identity": {
+    "head": "4a146449de8ad43f1eb67e59599215989c327645",
+    "previous": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "main": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+    "merge_exit": 0,
+    "merge_tree": "88d466fc004a13d85cd9ed8417ef2a53b8d75068",
+    "run": "2026-11-10T01:26:31.253585+00:00",
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+    "export": "/tmp/pr822-validation-2-20261110/candidate",
+    "package": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0"
+  },
+  "started": "2026-11-10T01:46:47.372685+00:00",
+  "env": {},
+  "pid": 19201,
+  "exit": 1,
+  "ended": "2026-11-10T01:46:55.338774+00:00",
+  "log": "replay-differences.log",
+  "sha256": "c737a62f6487103811489a7b519c297fe67c26068e89ac3b1bb2e7ae8d3c369e"
+}

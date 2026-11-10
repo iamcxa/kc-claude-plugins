@@ -1,0 +1,37 @@
+{
+  "name": "numbers-refreshed",
+  "cwd": "/tmp/pr822-validation-2-20261110/candidate",
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0/scripts/number_guards.py",
+    "check",
+    "--repo",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+    "--workflow-dir",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/..",
+    "--task",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/counts-name-the-run-that-produced-them.md"
+  ],
+  "identity": {
+    "head": "4a146449de8ad43f1eb67e59599215989c327645",
+    "previous": "90f43f801be3d03ebd7d98d1a41ad78801aea54d",
+    "base": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+    "main": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+    "merge_exit": 0,
+    "merge_tree": "88d466fc004a13d85cd9ed8417ef2a53b8d75068",
+    "run": "2026-11-10T01:26:31.253585+00:00",
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-counts-name-the-run-that-produced-them",
+    "export": "/tmp/pr822-validation-2-20261110/candidate",
+    "package": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.36.0"
+  },
+  "started": "2026-11-10T01:45:22.499064+00:00",
+  "env": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "pid": 2644,
+  "exit": 0,
+  "ended": "2026-11-10T01:45:30.151911+00:00",
+  "log": "numbers-refreshed.log",
+  "sha256": "8b339b59c66b3205f3944704c9309cb916b48f671b73709194a415aa3ae93221"
+}

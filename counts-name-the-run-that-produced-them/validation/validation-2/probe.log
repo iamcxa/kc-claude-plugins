@@ -1,0 +1,57 @@
+{
+  "fixture_sha256": "6a1a3e0502b907aaf1d262caedc5b92b3635906c81a251c41834a0400c2baed6",
+  "mode": "amended",
+  "tests": [
+    {
+      "name": "ed2d3ee1 historical entry unchanged",
+      "status": "passed",
+      "completion_exit": 0,
+      "state": "completed",
+      "evidence_sha256": "c561eec8c25655e8bdc636b03ee0a88ae8449e7460b2d00482d0fc654eeff177"
+    },
+    {
+      "name": "unsupported 2 cells refused; same token correctable",
+      "status": "passed",
+      "refusal_exit": 1,
+      "refusal_state": "pending",
+      "correction_exit": 0,
+      "correction_state": "completed"
+    },
+    {
+      "name": "Cycle identifiers and adjacent real count",
+      "status": "passed"
+    },
+    {
+      "name": "Round identifiers and adjacent real count",
+      "status": "passed"
+    },
+    {
+      "name": "Batch identifiers and adjacent real count",
+      "status": "passed"
+    },
+    {
+      "name": "Step identifiers and adjacent real count",
+      "status": "passed"
+    },
+    {
+      "name": "Stage identifiers and adjacent real count",
+      "status": "passed"
+    },
+    {
+      "name": "Amendment identifiers and adjacent real count",
+      "status": "passed"
+    },
+    {
+      "name": "Attempt identifiers and adjacent real count",
+      "status": "passed"
+    },
+    {
+      "name": "Phase identifiers and adjacent real count",
+      "status": "passed"
+    },
+    {
+      "name": "gate source check and automatic disclosure preserved",
+      "status": "passed"
+    }
+  ]
+}
