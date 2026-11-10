@@ -1,0 +1,23 @@
+[
+  {
+    "file": "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "base_tests": 28,
+    "candidate_tests": 35,
+    "removed": [],
+    "changed": []
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "base_tests": 115,
+    "candidate_tests": 115,
+    "removed": [],
+    "changed": []
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "base_tests": 49,
+    "candidate_tests": 49,
+    "removed": [],
+    "changed": []
+  }
+]

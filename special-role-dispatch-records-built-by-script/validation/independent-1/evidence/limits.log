@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Manual call without a record clears",
+    "role_trigger_exit": 0,
+    "stdout": "role triggers: 1 event(s) read at HEAD, each with a call or a waiver.\n",
+    "dispatch_record_exists": false
+  },
+  {
+    "name": "Higher prod floor remains owed",
+    "role_trigger_exit": 1,
+    "stdout": "next: dispatch-fixture-5c239ffca30e471ba4369403a2dd4b70 has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (profile prod) with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\n",
+    "dispatch_record_exists": true
+  }
+]

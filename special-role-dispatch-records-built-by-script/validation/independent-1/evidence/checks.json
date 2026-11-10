@@ -1,0 +1,226 @@
+[
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/lint-skills.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/lint-skills.log",
+    "cases": 0,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_lint_skills.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_lint_skills.log",
+    "cases": 47,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_design_surfaces.log",
+    "cases": 217,
+    "skipped": 4
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_adr_doc_checks.log",
+    "cases": 9,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_poc_readme.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_poc_readme.log",
+    "cases": 9,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_comment_ratio.log",
+    "cases": 14,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_number_guards.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_number_guards.log",
+    "cases": 38,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_codex_review.log",
+    "cases": 36,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_roborev_gate.log",
+    "cases": 5,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_copilot_review.log",
+    "cases": 15,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_map_footprint.log",
+    "cases": 23,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_release_acceptance.log",
+    "cases": 122,
+    "skipped": 4
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_dispatch_records.log",
+    "cases": 115,
+    "skipped": 1
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_delivery_gate.log",
+    "cases": 199,
+    "skipped": 1
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_validation_security.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_validation_security.log",
+    "cases": 5,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_pr_watch.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_pr_watch.log",
+    "cases": 135,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_replay_dispatch.log",
+    "cases": 8,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_decision_ledger.log",
+    "cases": 19,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_package_version.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_package_version.log",
+    "cases": 6,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_workflow_checkout.log",
+    "cases": 13,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_observer_check.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_observer_check.log",
+    "cases": 19,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_merge_audit.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_merge_audit.log",
+    "cases": 17,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_role_triggers.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_role_triggers.log",
+    "cases": 49,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_laws_check.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_laws_check.log",
+    "cases": 65,
+    "skipped": 1
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_learning.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_learning.log",
+    "cases": 50,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_sd_dispatch.log",
+    "cases": 0,
+    "skipped": 0
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_observer_recovery.log",
+    "cases": 0,
+    "skipped": 0
+  },
+  {
+    "name": "SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock python3 -B kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "status": "passed",
+    "exit": 0,
+    "file": "validation/independent-1/evidence/test_dispatch_stage.log",
+    "cases": 35,
+    "skipped": 0
+  }
+]

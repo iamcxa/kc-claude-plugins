@@ -1,0 +1,12 @@
+# engineering-reviewer-1
+Dispatched: dfa1a8aed2759ccb72a6f3ebfd5952cf00954d0e (workflow checkout)
+Model: opus
+
+## Checklist
+Inspect the real dispatch seam
+Keep the received second checklist line
+
+## Scope notes
+Package root: /private/tmp/pr827-validation/candidate/kc-dev-flow-2
+Send your completion message to `main`.
+Keep this second scope-notes line verbatim.

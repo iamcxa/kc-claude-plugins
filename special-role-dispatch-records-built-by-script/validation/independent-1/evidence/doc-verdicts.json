@@ -1,0 +1,103 @@
+[
+  {
+    "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected",
+    "reason": "The new +6 step records the approved Captain quote and loaded moment; the existing equality rule is unchanged."
+  },
+  {
+    "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected",
+    "reason": "The worker collaboration clause and its enforcement are untouched."
+  },
+  {
+    "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected",
+    "reason": "The existing rank function is reused; the model table, family rule and higher prod/db floor are unchanged."
+  },
+  {
+    "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected",
+    "reason": "Worker permission response procedure and its lint pins are unchanged."
+  },
+  {
+    "doc": "docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "verdict": "unaffected",
+    "reason": "Review disposition text and its checks are unchanged."
+  },
+  {
+    "doc": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_stage.py"
+    ],
+    "verdict": "unaffected",
+    "reason": "Stage dispatch and manual follow-up behavior are unchanged; the separate ADR 0074 extends role dispatch."
+  },
+  {
+    "doc": "docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md",
+    "state": "updated",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_stage.py"
+    ],
+    "verdict": "updated",
+    "reason": "New record matches the gate words for D1-D3, with the required code pointer and explicit limits."
+  },
+  {
+    "doc": "kc-dev-flow-2/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "verdict": "unaffected",
+    "reason": "Its maintenance commands and stage-test description remain accurate; this change extends the same named test."
+  },
+  {
+    "doc": "kc-dev-flow-2/references/sd/adoption.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "verdict": "unaffected",
+    "reason": "Its transport command still runs both graphs and the described synthetic boundaries."
+  },
+  {
+    "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected",
+    "reason": "Its retained budget and falsifier practices are followed, without changing the practices."
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "verdict": "unaffected",
+    "reason": "The lifecycle-reading measurement practice and historical evidence are retained; no claimed learning is rewritten."
+  }
+]

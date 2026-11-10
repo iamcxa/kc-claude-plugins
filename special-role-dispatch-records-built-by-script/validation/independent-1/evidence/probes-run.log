@@ -1,0 +1,4 @@
+{"name": "CRLF supplied inputs", "exit": 0, "checklist_bytes_preserved": false, "notes_bytes_preserved": false, "stdout_matches_record": true, "input_crlf": 2, "record_crlf": 0}
+{"name": "Missing fields independently", "results": [{"missing": "package", "exit": 1, "stderr": "dispatch_stage: dispatch not built; repair the dispatch record:\nengineering-reviewer-1.md: needs a 'Package root:' line with an absolute path in its scope notes\n"}, {"missing": "completion", "exit": 1, "stderr": "dispatch_stage: dispatch not built; repair the dispatch record:\nengineering-reviewer-1.md: needs a scope-notes line naming main as the completion recipient\n"}]}
+{"name": "Folder task layout", "exit": 0, "committed": true}
+{"name": "Unknown model limit", "exit": 1, "stderr": "dispatch_stage: dispatch not built; --role needs the opus model floor or above (astra qualifies)\n"}

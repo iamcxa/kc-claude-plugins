@@ -251,3 +251,30 @@ Role calls reuse `dispatch_stage.py` through a new `--role` mode that writes, ch
 
 Added bounded role dispatches that write, check and state-commit the record before returning the prompt, with model-floor refusal, commit-failure recovery and the approved six-word instruction. The existing design capability audit was reused; no new abstraction or file outside the six approved files was needed, and local checks/falsifiers passed. Pilot scope remains local preparation: FO owns product publication, independent review and hosted CI; manual missing-record calls and the higher prod/database floor remain outside this role-mode check.
 ADRs: 0074
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #827 head 8574e879 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at `8574e879b85197d31239ee2d9a9af0c5d0cb5392`, base `6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1`; AC-1 fails the supplied-byte boundary below. Full matrix, limits and document verdicts: `special-role-dispatch-records-built-by-script/validation/independent-1/validation.md`.
+- FAILED: AC-1 preserves the supplied checklist and scope-note bytes in the committed record
+  Valid UTF-8 CRLF inputs return 0 but both byte-preservation checks are false; fresh-shell reproduction and original bytes: `special-role-dispatch-records-built-by-script/validation/independent-1/evidence/acceptance.log` and `evidence/crlf-*`.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four-step `special-role-dispatch-records-built-by-script/validation/independent-1/acceptance.sh`, run unchanged with `bash --noprofile --norc`: steps 1–3 pass, step 4 exits 1 (F1); the prescribed installed ADR command with base above and `--require 0074` exits 0 (`evidence/adr-lint-prescribed.log`).
+- DONE: AC-2 and AC-3 refuse incomplete records and withhold prompts on commit failure
+  Missing fields individually and together leave no prompt/record; failed commit retains the record and retry recovers only after reconciliation. Skipping checks and printing early fail the assertions (`special-role-dispatch-records-built-by-script/validation/independent-1/evidence/AC-2-no-checks.log`, `evidence/AC-3-early-prompt.log`).
+- DONE: AC-4 through AC-7 preserve role routing, model floor, option exclusions, numbering and existing stage cases
+  Real Spacedock 0.27.2 tests pass; build-path, floor, advance and global-number mutations are caught. Original cases are unchanged; details and full outputs: `special-role-dispatch-records-built-by-script/validation/independent-1/evidence/retained-test-cases.json`, `evidence/test_dispatch_stage.log`, `evidence/checks.json`, `evidence/mutations.json`.
+- DONE: AC-8 through AC-10 preserve the approved instruction, ADR, word budget and other lifecycle readers
+  Removing the instruction, budget step or Words line fails its check; modifying an idle reader fails the unchanged-file control. Startup is 5931→5937 words; role outputs and all captures: `special-role-dispatch-records-built-by-script/validation/independent-1/evidence/wc-words.log`, `evidence/words.json`, `evidence/diff-stat.log`.
+- DONE: Required package replay, number guards, comment measurement, dispatch records, design checks and affected-document verdicts
+  Independent command exits and suite totals are saved in `special-role-dispatch-records-built-by-script/validation/independent-1/evidence/checks.json`; number guards have no findings, and comments are 1/135 (0.7%, under 5%) in `evidence/comment-ratio.log`. Every listed document has a checked verdict in `evidence/doc-verdicts.json`.
+- DONE: Implementation limits and hosted evidence assessed at the same candidate
+  Manual calls without records still clear; prod Opus calls still leave the higher-floor review owed; unknown models refuse (`special-role-dispatch-records-built-by-script/validation/independent-1/evidence/limits.json`, `evidence/probes.json`). Exact-head hosted run 42769870457 succeeds with pinned 0.27.2 (`evidence/ci.json`, `evidence/ci-full.log`); local plugin integration uses active 0.27.3.
+- SKIPPED: Live model dispatch, adoption, RoboRev and delivery actions
+  Native reviewer behavior is outside this bounded script proof; RoboRev remains FO-owned and unclaimed. PR remains OPEN/Draft at the candidate; reviews/comments were empty when read. CI triggers are unchanged and cost per PR was not measured.
+- F1 Material: `dispatch_stage.py:184-185` normalizes CRLF source inputs and line 242 normalizes stdout reads. User/workflow: FO supplies valid UTF-8 checklist/scope files through the documented role command. Harm: successful committed dispatch loses the promised input-byte identity. Boundary: `value-ac[AC-1]` requires both files' bytes; no LF-only restriction exists. Trigger: `special-role-dispatch-records-built-by-script/validation/independent-1/evidence/acceptance.log`, with original byte files and raw record in the same evidence folder. Repair is recommended through FO disposition; no product repair was applied.
+
+### Summary
+
+The role commit/refusal/recovery path and all specified removal controls were independently exercised from pinned exports. Recommend REJECTED solely for F1; existing LF-only tests and green hosted CI do not prove the accepted input-byte boundary. Product HEAD and bytes remain unchanged; FO owns disposition, any repair authorization, and delivery.
+ADRs: 0074

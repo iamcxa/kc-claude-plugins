@@ -1,0 +1,16 @@
+Candidate: 8574e879b85197d31239ee2d9a9af0c5d0cb5392
+Export: /tmp/pr827-acceptance.OoZmFJ
+..
+----------------------------------------------------------------------
+Ran 2 tests in 4.212s
+
+OK
+....
+----------------------------------------------------------------------
+Ran 4 tests in 10.395s
+
+OK
+role exit=0; checklist bytes preserved=False; scope bytes preserved=False
+Traceback (most recent call last):
+  File "<stdin>", line 15, in <module>
+AssertionError: AC-1: supplied CRLF input bytes were rewritten

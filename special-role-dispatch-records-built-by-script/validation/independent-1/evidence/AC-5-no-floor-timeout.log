@@ -1,0 +1,30 @@
+E
+======================================================================
+ERROR: test_role_checks_the_opus_model_floor (__main__.DispatchStageTests.test_role_checks_the_opus_model_floor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-validation/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 185, in test_role_checks_the_opus_model_floor
+    held = self.role(extra=("--model", "sonnet"), expected=1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pr827-validation/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pr827-validation/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 71, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 2116, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1253, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', '/private/tmp/pr827-validation/mutant/kc-dev-flow-2/scripts/dispatch_stage.py', '--workflow-dir', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-r8nbymep/code/docs/dev2', '--entity-path', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-r8nbymep/code/docs/dev2/.spacedock-state/dispatch-fixture-a07c3baeed514a2c98f99e1b4474376c.md', '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-r8nbymep/checklist.txt', '--scope-notes-file', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-r8nbymep/notes.txt', '--spacedock', '/Users/kent/.local/bin/spacedock', '--model', 'sonnet']' timed out after 30 seconds
+
+----------------------------------------------------------------------
+Ran 1 test in 35.446s
+
+FAILED (errors=1)

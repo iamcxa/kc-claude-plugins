@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_role_numbering_is_per_role_and_retries_reuse_the_latest_record (__main__.DispatchStageTests.test_role_numbering_is_per_role_and_retries_reuse_the_latest_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-validation/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 214, in test_role_numbering_is_per_role_and_retries_reuse_the_latest_record
+    self.assertTrue(self.record("chief-engineer").exists())
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 12.079s
+
+FAILED (failures=1)

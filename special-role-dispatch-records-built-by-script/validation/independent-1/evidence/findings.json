@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "medium",
+    "title": "CRLF input bytes are rewritten despite a successful role dispatch",
+    "file": "kc-dev-flow-2/scripts/dispatch_stage.py",
+    "line": 184,
+    "detail": "Material: FO passes valid UTF-8 checklist and scope-note files with CRLF line endings through --role. read_text() normalizes both to LF; exit 0 and the committed record no longer contains the supplied bytes. value-ac[AC-1] requires both input files' bytes. Reproduced by acceptance.sh step 4 and probes.json; both preservation checks are false. Existing test reads expected inputs with read_text() too, masking this case.",
+    "fix": "Preserve source newline bytes through record creation, retry comparison and stdout, and compare raw bytes in the role regression test.",
+    "status": "open"
+  }
+]

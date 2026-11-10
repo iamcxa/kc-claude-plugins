@@ -1,0 +1,16 @@
+[
+  {
+    "task": "adr-required-statement",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/adr-required-statement.md",
+    "status": "validation",
+    "pr": null,
+    "worktree": ".worktrees/spacedock-ensign-adr-required-statement"
+  },
+  {
+    "task": "issue-815-fo-record-gaps",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/issue-815-fo-record-gaps.md",
+    "status": "validation",
+    "pr": "iamcxa/kc-claude-plugins#826",
+    "worktree": ".worktrees/spacedock-ensign-issue-815-fo-record-gaps"
+  }
+]

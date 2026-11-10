@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_role_checks_the_opus_model_floor (__main__.DispatchStageTests.test_role_checks_the_opus_model_floor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-validation/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 185, in test_role_checks_the_opus_model_floor
+    held = self.role(extra=("--model", "sonnet"), expected=1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pr827-validation/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pr827-validation/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/pr827-validation/mutant/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0ihhy6mo/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0ihhy6mo/code/docs/dev2/.spacedock-state/dispatch-fixture-8ddaa3a689714743b9cf61a6c7c9a05f.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0ihhy6mo/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0ihhy6mo/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--model', 'sonnet'], '# engineering-reviewer-1\nDispatched: e41c86f9e7ec145308b7662aeb954d878a3b2ecf (workflow checkout)\nModel: sonnet\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: /private/tmp/pr827-validation/mutant/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\n', '')
+
+----------------------------------------------------------------------
+Ran 1 test in 1.982s
+
+FAILED (failures=1)

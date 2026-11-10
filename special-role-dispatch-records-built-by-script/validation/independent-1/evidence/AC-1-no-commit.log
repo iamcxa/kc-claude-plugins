@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_role_commits_complete_record_before_printing_exact_inputs (__main__.DispatchStageTests.test_role_commits_complete_record_before_printing_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-validation/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 121, in test_role_commits_complete_record_before_printing_exact_inputs
+    self.assert_committed(record, f"state: update {self.slug}")
+  File "/private/tmp/pr827-validation/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 218, in assert_committed
+    self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
+AssertionError: '' != 'state: update dispatch-fixture-46230c77b40248b887cfd79e7727816d'
++ state: update dispatch-fixture-46230c77b40248b887cfd79e7727816d
+
+----------------------------------------------------------------------
+Ran 1 test in 1.266s
+
+FAILED (failures=1)

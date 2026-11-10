@@ -1,0 +1,15 @@
+AC-1-no-commit 1
+AC-2-no-checks 1
+AC-3-early-prompt 1
+AC-4-build-path 1
+AC-5-no-floor 1
+AC-6-allow-advance 1
+AC-7-global-numbers 1
+AC-8-no-instruction 1
+Traceback (most recent call last):
+  File "/tmp/pr827-validation/run_mutations.py", line 47, in <module>
+    run('AC-8-no-budget', lint, re.sub(r'    dict\(delta=6,\n.*?this task adds six",\n.*?\),\n', '', before, flags=re.S), [sys.executable, '-B', str(lint)])
+  File "/tmp/pr827-validation/run_mutations.py", line 28, in run
+    assert before != mutated, name
+           ^^^^^^^^^^^^^^^^^
+AssertionError: AC-8-no-budget

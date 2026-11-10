@@ -1,0 +1,3 @@
+Package root: /private/tmp/pr827-validation/candidate/kc-dev-flow-2
+Send your completion message to `main`.
+Keep this second scope-notes line verbatim.
