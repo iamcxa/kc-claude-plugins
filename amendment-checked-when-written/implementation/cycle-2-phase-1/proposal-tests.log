@@ -1,0 +1,10 @@
+test_backtick_example_does_not_supply_live_marker (__main__.F3Tests.test_backtick_example_does_not_supply_live_marker) ... ok
+test_real_marked_replacement_stays_green (__main__.F3Tests.test_real_marked_replacement_stays_green) ... ok
+test_record_only_stays_green (__main__.F3Tests.test_record_only_stays_green) ... ok
+test_tilde_example_does_not_supply_live_marker (__main__.F3Tests.test_tilde_example_does_not_supply_live_marker) ... ok
+test_waived_move_stays_green (__main__.F3Tests.test_waived_move_stays_green) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 4.988s
+
+OK

@@ -1,0 +1,28 @@
+test_backtick_example_does_not_supply_live_marker (__main__.F3Tests.test_backtick_example_does_not_supply_live_marker) ... ok
+test_real_marked_replacement_stays_green (__main__.F3Tests.test_real_marked_replacement_stays_green) ... ok
+test_record_only_stays_green (__main__.F3Tests.test_record_only_stays_green) ... ok
+test_tilde_example_does_not_supply_live_marker (__main__.F3Tests.test_tilde_example_does_not_supply_live_marker) ... FAIL
+test_waived_move_stays_green (__main__.F3Tests.test_waived_move_stays_green) ... ok
+
+======================================================================
+FAIL: test_tilde_example_does_not_supply_live_marker (__main__.F3Tests.test_tilde_example_does_not_supply_live_marker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opencode/amendment-checked-when-written/cycle-2-phase-1/investigate.py", line 85, in test_tilde_example_does_not_supply_live_marker
+    self.assertEqual((code, lines), (1, [f'violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 unmarked replacement']))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0, []) != (1, ['violation: L4 amendment-moves-use-fr[68 chars]nt'])
+
+First differing element 0:
+0
+1
+
+- (0, [])
++ (1,
++  ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=509f7633a490 '
++   'amendment=1 unmarked replacement'])
+
+----------------------------------------------------------------------
+Ran 5 tests in 5.092s
+
+FAILED (failures=1)

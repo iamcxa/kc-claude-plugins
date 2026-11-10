@@ -1,0 +1,24 @@
+{
+  "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "product_status": "clean",
+  "product_tree": "b95b7c9adbd0c67b0a682574f4c10af694aca673",
+  "results": {
+    "candidate": {
+      "tests": 5,
+      "failures": 1,
+      "errors": 0
+    },
+    "proposal": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "proposal_existing_l4_exit": 0,
+  "source_sha256": {
+    "kc-dev-flow-2/scripts/design_surfaces.py": "bdb537ee4b62261cf550762cb26429127471327d5a43a36a6560bf1e153f2b9c",
+    "kc-dev-flow-2/scripts/laws_check.py": "49c6524ea0732df30b6a0c6c5da3135bac1c631308f52a0ee61bdd6a468d9414",
+    "kc-dev-flow-2/scripts/test_laws_check.py": "45e59cca5e6d108b9f7d0a99364a8dbc5cc60e8e2e48f889c71e0f59b5a896b0"
+  },
+  "proposal_applied_to_product": false
+}

@@ -1,0 +1,172 @@
+[
+  {
+    "repository": "dev2",
+    "before": "b91e7434adde0f215e0a222af4efdb2ed42506f0",
+    "after": "a113aa3e9a3dad8f16e4a6d8ba638acfe3b3dd96",
+    "candidate_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in b91e7434adde..a113aa3e9a3d, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 reused ids: AC-1, AC-2, AC-4",
+        "violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 unmarked replacement"
+      ]
+    ],
+    "unapplied_proposal_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in b91e7434adde..a113aa3e9a3d, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 reused ids: AC-1, AC-2, AC-4",
+        "violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 unmarked replacement"
+      ]
+    ],
+    "unchanged": true
+  },
+  {
+    "repository": "dev2",
+    "before": "ea4fda1c01ad8b6c1b3a11764537f464e515b4dd",
+    "after": "7326e2a1162b68bf968e3319cd527c965255ce12",
+    "candidate_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in ea4fda1c01ad..7326e2a1162b, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=delivery-gate-verdict-form.md commit=7326e2a1162b amendment=2 unmarked replacement"
+      ]
+    ],
+    "unapplied_proposal_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in ea4fda1c01ad..7326e2a1162b, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=delivery-gate-verdict-form.md commit=7326e2a1162b amendment=2 unmarked replacement"
+      ]
+    ],
+    "unchanged": true
+  },
+  {
+    "repository": "dev2",
+    "before": "aa4f5b7c8b52fe27031851c399fda7346da87b1d",
+    "after": "bf8c73be99c4f0a569a15ce1ee7426578ae7ce85",
+    "candidate_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in aa4f5b7c8b52..bf8c73be99c4, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=release-acceptance/index.md commit=bf8c73be99c4 amendment=2 unmarked replacement"
+      ]
+    ],
+    "unapplied_proposal_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in aa4f5b7c8b52..bf8c73be99c4, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=release-acceptance/index.md commit=bf8c73be99c4 amendment=2 unmarked replacement"
+      ]
+    ],
+    "unchanged": true
+  },
+  {
+    "repository": "qnow",
+    "before": "78234a2a39131c3b9bff123a94001776a3085713",
+    "after": "3a384063e44fd1e8ce128c4a4eea968026cd542a",
+    "candidate_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in 78234a2a3913..3a384063e44f, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=staff-multi-branch.md commit=3a384063e44f amendment=1 unmarked replacement"
+      ]
+    ],
+    "unapplied_proposal_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in 78234a2a3913..3a384063e44f, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=staff-multi-branch.md commit=3a384063e44f amendment=1 unmarked replacement"
+      ]
+    ],
+    "unchanged": true
+  },
+  {
+    "repository": "qnow",
+    "before": "57fad7b4db5cc28132cd4d9a84f9f0986ef501aa",
+    "after": "4ad69292227ae4a2dff0540f0936e18a278cb2cf",
+    "candidate_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in 57fad7b4db5c..4ad69292227a, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=staff-multi-branch.md commit=4ad69292227a amendment=1 reused ids: AC-6, AC-7"
+      ]
+    ],
+    "unapplied_proposal_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in 57fad7b4db5c..4ad69292227a, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=staff-multi-branch.md commit=4ad69292227a amendment=1 reused ids: AC-6, AC-7"
+      ]
+    ],
+    "unchanged": true
+  },
+  {
+    "repository": "qnow",
+    "before": "b71589a2fc1a7d1e3a4ce5f6aa97ce005e808b69",
+    "after": "4993b5b603aead90bb2738873ba5b6c6c67d10e3",
+    "candidate_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in b71589a2fc1a..4993b5b603ae, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=booking-outcomes.md commit=4993b5b603ae amendment=1 unmarked replacement"
+      ]
+    ],
+    "unapplied_proposal_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in b71589a2fc1a..4993b5b603ae, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=booking-outcomes.md commit=4993b5b603ae amendment=1 unmarked replacement"
+      ]
+    ],
+    "unchanged": true
+  },
+  {
+    "repository": "relay",
+    "before": "8a5b7f0280c87cad390a80712a4051ba18b53730",
+    "after": "06cadae7681fe3425bb47f66efa3d17e8de837ea",
+    "candidate_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in 8a5b7f0280c8..06cadae7681f, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=owner-sees-all-feedback-room.md commit=06cadae7681f amendment=3 unmarked replacement"
+      ]
+    ],
+    "unapplied_proposal_result": [
+      1,
+      [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in 8a5b7f0280c8..06cadae7681f, 1 violated"
+      ],
+      [
+        "violation: L4 amendment-moves-use-fresh-ids task=owner-sees-all-feedback-room.md commit=06cadae7681f amendment=3 unmarked replacement"
+      ]
+    ],
+    "unchanged": true
+  }
+]

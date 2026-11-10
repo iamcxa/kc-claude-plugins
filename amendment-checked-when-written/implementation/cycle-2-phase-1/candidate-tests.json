@@ -1,0 +1,23 @@
+[
+  {
+    "name": "__main__.F3Tests.test_backtick_example_does_not_supply_live_marker",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.F3Tests.test_real_marked_replacement_stays_green",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.F3Tests.test_record_only_stays_green",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.F3Tests.test_tilde_example_does_not_supply_live_marker",
+    "status": "failed",
+    "message": "Traceback (most recent call last):\n  File \"/tmp/opencode/amendment-checked-when-written/cycle-2-phase-1/investigate.py\", line 85, in test_tilde_example_does_not_supply_live_marker\n    self.assertEqual((code, lines), (1, [f'violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 unmarked replacement']))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Tuples differ: (0, []) != (1, ['violation: L4 amendment-moves-use-fr[68 chars]nt'])\n\nFirst differing element 0:\n0\n1\n\n- (0, [])\n+ (1,\n+  ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=509f7633a490 '\n+   'amendment=1 unmarked replacement'])\n"
+  },
+  {
+    "name": "__main__.F3Tests.test_waived_move_stays_green",
+    "status": "passed"
+  }
+]

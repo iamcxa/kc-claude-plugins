@@ -1,0 +1,546 @@
+[
+  {
+    "test": "__main__.F3Tests.test_backtick_example_does_not_supply_live_marker",
+    "variant": "candidate",
+    "fence": "```",
+    "marked": false,
+    "moved": true,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_real_marked_replacement_stays_green",
+    "variant": "candidate",
+    "fence": "```",
+    "marked": true,
+    "moved": true,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_real_marked_replacement_stays_green",
+    "variant": "candidate",
+    "fence": "~~~",
+    "marked": true,
+    "moved": true,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_record_only_stays_green",
+    "variant": "candidate",
+    "fence": "```",
+    "marked": false,
+    "moved": false,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_record_only_stays_green",
+    "variant": "candidate",
+    "fence": "~~~",
+    "marked": false,
+    "moved": false,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_tilde_example_does_not_supply_live_marker",
+    "variant": "candidate",
+    "fence": "~~~",
+    "marked": false,
+    "moved": true,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_waived_move_stays_green",
+    "variant": "candidate",
+    "fence": "```",
+    "marked": false,
+    "moved": true,
+    "waived": true,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_waived_move_stays_green",
+    "variant": "candidate",
+    "fence": "~~~",
+    "marked": false,
+    "moved": true,
+    "waived": true,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_backtick_example_does_not_supply_live_marker",
+    "variant": "proposal",
+    "fence": "```",
+    "marked": false,
+    "moved": true,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_real_marked_replacement_stays_green",
+    "variant": "proposal",
+    "fence": "```",
+    "marked": true,
+    "moved": true,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_real_marked_replacement_stays_green",
+    "variant": "proposal",
+    "fence": "~~~",
+    "marked": true,
+    "moved": true,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_record_only_stays_green",
+    "variant": "proposal",
+    "fence": "```",
+    "marked": false,
+    "moved": false,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_record_only_stays_green",
+    "variant": "proposal",
+    "fence": "~~~",
+    "marked": false,
+    "moved": false,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_tilde_example_does_not_supply_live_marker",
+    "variant": "proposal",
+    "fence": "~~~",
+    "marked": false,
+    "moved": true,
+    "waived": false,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_waived_move_stays_green",
+    "variant": "proposal",
+    "fence": "```",
+    "marked": false,
+    "moved": true,
+    "waived": true,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  },
+  {
+    "test": "__main__.F3Tests.test_waived_move_stays_green",
+    "variant": "proposal",
+    "fence": "~~~",
+    "marked": false,
+    "moved": true,
+    "waived": true,
+    "verdicts": [
+      {
+        "implementation": "candidate",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "candidate",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "check",
+        "exit": 0,
+        "output": "t.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+      },
+      {
+        "implementation": "proposal",
+        "mode": "seed",
+        "exit": 0,
+        "output": "t.md: seed fields and FO alignment recorded\n"
+      }
+    ]
+  }
+]

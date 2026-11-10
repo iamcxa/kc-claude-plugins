@@ -1,0 +1,5 @@
+{
+  "same_outcome": "Yes: a moved amendment lacking a real marked replacement must be flagged in its introducing push.",
+  "testable_now": "Yes: the paired tilde/backtick CLI fixture directly exposes the false green; no external state is required.",
+  "deletion_cost": "Removing the marker requirement would lose the original bite diagnostic and accepted ADR 0016 protection; no criterion or process is deleted."
+}

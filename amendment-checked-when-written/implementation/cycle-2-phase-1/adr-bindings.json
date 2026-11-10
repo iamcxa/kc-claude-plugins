@@ -1,0 +1,14 @@
+[
+  {
+    "path": "docs/adr/0016-the-amendment-check-refuses-an-unnamed-move-and-an-unmarked-replacement.md",
+    "commit": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "status": "Accepted",
+    "sha256": "3eb8e39aaa0be288f2d9370f1ed829623a757c4b417e031945070528c5001994"
+  },
+  {
+    "path": "docs/adr/0017-history-laws-judge-only-the-events-a-push-adds.md",
+    "commit": "d7502656c765e36ce3d24be8602862ccc2551254",
+    "status": "Accepted",
+    "sha256": "e1a9df13814fa88e3a30668c7c742a161126dc15c5a724c2ebd38613422f8393"
+  }
+]

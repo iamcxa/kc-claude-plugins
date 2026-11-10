@@ -1,0 +1,32 @@
+{
+  "candidate": "d7502656c765e36ce3d24be8602862ccc2551254",
+  "files": {
+    "README.md": "8efde73cae068d5d0dfee6d238e1f99e1444dbc4a635c45629c4581c5867aedd",
+    "adr-bindings.json": "e7e6c5289a19d6a885ce4251e5b39a76fb4c328680cac3d23c3acf6163339b17",
+    "append-identity.json": "38b60fe63f60ae0ca361270cb5bc8987e577f85a7dbd7c72f1488a28c52b5040",
+    "candidate-tests.json": "bdb721334e9ce48e26b8a9880133953ecda926bdf8a5fb302f2ca87b969236b1",
+    "candidate-tests.log": "8bcda0394fde8a5f7f3e2ebb4d5fcc7486fbe1f02edf994ec5bfe89dd470a7a6",
+    "corpus-helper-comparison.json": "ecc7f5891a1aaaf87a02eb5e3570b18631b3503e003f5809fdb07e1f4fd880e6",
+    "corpus-inputs.json": "9616c95370a9d99d4bf855dd71f2e5221da6bd8ffb4f377f2fe27b216ef47153",
+    "gate-comparison.json": "1e6cced0a2ddcfc0742905ddbd78c097bb35efcb094d94759323bfa07586741a",
+    "identity.json": "25597a13c53732dd6ebffcef653c6fe355232f1f16b2198e909dd963302c5929",
+    "impact.log": "e3a15f1a6849e5625a06dd986b88f4151d19ef36770d74a348057031bb4c5455",
+    "impact.py": "2699698471adeb7e589e29301b2a5cfcea64d27f9c4674eede483ded348b5e8f",
+    "investigate.log": "f6c0d0a51793624aa10d3600e423b30c4e359267219252e3ae19194a80a89e5f",
+    "investigate.py": "309dde51e50cb60355f976ad37a908209bece4bba48b0e517b7c0b3b80456d04",
+    "probes.json": "501c4a22cf802c2172cf330b314d2f8fe377adfd718a51809dfba43e021d5c17",
+    "proposal-existing-l4.log": "14c28639bca287a0867d7ed2dbcb703d7964a3a10ca6a915caebe2db34011655",
+    "proposal-tests.json": "6e7f62e84c67dc2eeee7d72b685e6cc0cf08be77b53c013cd97312daedf8a3e8",
+    "proposal-tests.log": "989ea2c1f3e3f985c34c0f60f7372da08ac7d4778a29fec2a8996751b91fdcc3",
+    "proposal.md": "68b8211294b7d3bec6da284cb1eccaa067b41ec1ce6a07331dcc96cc0ae5f243",
+    "proposal.py": "936b234811bf45d64b20b2d61877b4a506b80e657278cf6c6e2d22f2abdcaed0",
+    "proposed-input.diff": "cd5c9b48cd4c8107565bda65647de7d5f2639138a07b878116c7e01cb6799ced",
+    "role-triggers.log": "a28d5a99c0a82f0380467380942d0a27d92b3f237bb3076d2f43a550ebcccd58",
+    "seven-events.json": "1443d071abc8b80baf3883b7ff9e5853a86aea41c7a6bfaf5f3117f6e35c1420",
+    "seven-events.log": "23e89da250bf980dc991209f674b53aaac07b9776d565eb42cd20fa00a63aa60",
+    "source-boundary.json": "25cf55365f1c75b620d147aa608a6ff6ae7b2d577d5e6151ca7a515138779330",
+    "stage-report.md": "be795a9fcb47c611335085c1c3785902ce25248e1b12274dd188f2873d8b86aa",
+    "step-back-answers.json": "d169ead73e3ed041d19889e05a9841b77fc8e8258b58f3c0ede202aa13a9d771",
+    "task-before-report.json": "eb7d907e87df072f99a8c9faf997c64b3ed5a0678d935c00b6ac8fbb45f052ff"
+  }
+}
