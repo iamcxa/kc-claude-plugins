@@ -174,7 +174,7 @@ Files this design would change: `kc-dev-flow-2/scripts/decision_ledger.py` (`che
 | step-back-answer-has-a-record-line, seed-check-requires-alignment-result, dispatch-carries-reserved-adr-number, adoption-asks-which-extensions (ideation) | `dispatch_records.py` `--names`/folder modes, not `check_coverage` | file only |
 | ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (implementation); journey-server-host-pilot (validation); adr-silent-undo-probe, journey-canvas-hosted-poc, picky-reviewers-may-run-on-gemini (ideation) | none of these files or checks (they run `design_surfaces.py check` only) | none |
 
-Recommended order: adr-required-statement and validation-reads-pr-review-comments first; this task's `delivery_gate.py` and `design_surfaces.py` changes after fo-write-checks-parse-top-level settles its parser; special-role-dispatch-records-built-by-script and this task recount the README budget in whichever order they land.
+Recommended order: adr-required-statement and validation-reads-pr-review-comments first; this task's `design_surfaces.py` change after fo-write-checks-parse-top-level only if that task's approved design changes `report_shape`, else either order; special-role-dispatch-records-built-by-script and this task recount the README budget in whichever order they land.
 
 ## Acceptance criteria
 
@@ -182,7 +182,7 @@ Recommended order: adr-required-statement and validation-reads-pr-review-comment
 
 **AC-2** With `--reason` and no `--task`, or a task with zero or two open attempts, or an unreadable room `index.json`, the command exits 2 naming the task or room path and records nothing. Verified by: CLI tests per case. Falsifier: treating a missing question as a pass turns an exit-2 test into exit 0.
 
-**AC-3** On real records the comparison matches the measurement: the relay dev2 state (read-only, the commit recorded at run time) gives 11 refused of 12 Captain resolutions on the four issue tasks, and this workflow's state gives the refused count since 2026-11-06 recorded with its commit. Verified by: a replay script in the implementation evidence feeding each resolution's reason and bound question through the new check function. Limit: proves the comparison on real strings, not the open-attempt lookup (AC-1, AC-2 cover that).
+**AC-3** On real records the comparison matches the measurement: the relay dev2 state (read-only, the commit recorded at run time) gives 11 refused of 12 Captain resolutions on the four issue tasks, and this workflow's state gives the refused count since 2026-11-06 recorded with its commit. Verified by: a replay script in the implementation evidence feeding each resolution's reason and bound question through the quote step alone (`quotes_bound_question`), not the whole `check_reason`: reasons recorded before the 2026-11-05 declaration rule would fail its declaration step first. Limit: proves the comparison on real strings, not the open-attempt lookup (AC-1, AC-2 cover that).
 
 **AC-4** `references/sd/workflow.md` § Captain rulings names `--reason <file> --task <task>`; `python3 kc-dev-flow-2/scripts/lint-skills.py` passes with one +2 `WORKFLOW_BUDGET_STEPS` step whose `captain` quotes the Captain's D1 words. Verified by: lint run and `wc -w` (5933 unless another task lands first). Falsifier: removing the step makes lint report the README over budget.
 
