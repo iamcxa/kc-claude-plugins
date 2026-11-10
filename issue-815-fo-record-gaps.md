@@ -221,6 +221,10 @@ Recommended order: adr-required-statement and validation-reads-pr-review-comment
 
 **AC-12** Issue #815 is answered with the drafted text, filled for the Captain's D1 choice, after his approval and the release. Verified by: the comment URL recorded in this task; the issue stays open for items 2 and 3 unless their tasks have closed them.
 
+## Number guards
+
+ADR: 0073
+
 ## Stage Report: ideation
 
 - DONE: Design a fix or a reasoned decline for each of issue #815 items 1, 4, 5 and 6 (a gate reason that does not quote the bound question; several preview: paths in kc-dev-flow-2/scripts/design_surfaces.py; kc-dev-flow-2/scripts/dispatch_records.py --coverage on an archived task folder; the README's Captain steps path versus kc-dev-flow-2/scripts/delivery_gate.py), each fix with a falsifier, and draft the answer to issue #815 that FO posts after the Captain's approval
