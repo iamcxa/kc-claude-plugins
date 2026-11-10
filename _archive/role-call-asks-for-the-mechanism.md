@@ -3,7 +3,7 @@ title: The owed chief-engineer call asks for the mechanism, and a decline names 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-09), answering 「決定：合併 #821（總工程師被叫時改問「是什麼原因一直產生這些問題」，婉拒必須寫出各發現各自的原因）嗎？建議合併。 Regular merge with --match-head-commit ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9, the batch 19 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-09T14:37:22Z
 worktree: .worktrees/spacedock-ensign-role-call-asks-for-the-mechanism
 pr: pr-merge:821
+verdict: PASSED
+completed: 2026-11-10T00:37:27Z
+archived: 2026-11-10T00:37:27Z
 ---
 
 ## Scope
