@@ -48,3 +48,123 @@ Alignment: not needed; a gate-check false positive found during batch 18 ideatio
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+## Design
+
+**Press line.** When FO names the PR body (`review/pr-body.md`) in a gate text, `delivery_gate.py` no longer holds the ask on the body's closing attribution line, `🤖 Generated with [Claude Code](https://claude.com/claude-code)`; a link the Captain is asked to open in a named card still holds until FO records it as a step.
+
+**FAQ.**
+- What changes? `links()` blanks a line that equals, after whitespace is normalized, the one attribution line in an `ATTRIBUTION` set, before it finds URLs. One constant, one line in `links()`, one clause in the `steps` usage paragraph (`ideation/prototype.diff`, +3 −1).
+- Why the line and not the URL or the file? The same URL on any other line still holds (case E: `Open https://claude.com/claude-code`), and so does the attribution line with anything else on it (case F). Exempting the whole PR body would also drop links the Captain may be asked to open there: 23 of 346 feature PR bodies carry another URL, among them a docs-site link (#776) and a workspace link (#511) (`ideation/pr-body-survey.txt`). That is D1.
+- Why only one line in the set? It is the only form in 400 PR bodies: 264 of 346 feature bodies carry it and no other line contains `claude.com/claude-code` (`ideation/pr-body-survey.txt`). The Release Please line never reaches a Captain-steps message in this workflow, so adding it now has no bite.
+- Which routes? `links()` serves `inspect_steps`, which both `steps` and `question` (through `captain_step_problems`) call; `check` never calls it, so the merge ask is unchanged.
+- What stays? Fences in the PR body: a shell or untagged fence in a named card still holds, as delivery-gate-ignores-url-paths-and-data-fences left it. A prose URL in the PR body still holds (case D); FO records it as a step or describes the body without its path.
+
+```mermaid
+flowchart TD
+  A[FO writes the gate text naming review/pr-body.md] --> B[FO runs delivery_gate.py question or steps]
+  B --> C[inspect_steps reads the message and each FO-named Markdown card]
+  C --> D{line equals the Claude Code attribution line?}
+  D -->|yes| E[line contributes no link]
+  D -->|no| F[each URL on the line needs a recorded Asked step]
+  F -->|recorded| G[no S5 problem]
+  F -->|not recorded| H[S5 unrecorded command or link: ask held]
+  E --> G
+  G --> I[gate text complete]
+```
+
+### Reproduction on 0.37.0 and the prototype
+
+Installed 0.37.0 `delivery_gate.py` is byte-identical to origin/main `6a495cb8` (`diff`, 2026-11-10). `delivery_gate.py steps` on a scratch task folder, base vs prototype, exit codes (`ideation/repro-matrix.log`):
+
+| Case | Named card or message | 0.37.0 | Prototype |
+| --- | --- | --- | --- |
+| A | PR body ending in the attribution line | 1, S5 on `claude.com/claude-code` | 0 |
+| C | card `Open https://preview.example.test/owner` | 1 | 1, same link |
+| D | PR body with a prose PR link and the attribution line | 1, both links | 1, PR link only |
+| E | card `Open https://claude.com/claude-code` | 1 | 1 |
+| F | attribution line followed by another link | 1, both | 1, both |
+| G | attribution line with surrounding spaces | 1 | 0 |
+| H | FO message `Open https://claude.com/claude-code` | 1 | 1 |
+
+`question` route through the suite's `TaskFolderCaptainTests` fixture: PR-body case 1 → 0, Captain-link card 1 → 1 (`ideation/question-route-base.log`, `ideation/question-route-proto.log`). Full `test_delivery_gate.py` in a complete 0.37.0 package copy: 198 passed, 1 skipped on both base and prototype (`ideation/suite.txt`; a copy of `scripts/` alone fails 7 tests that load `extensions/copilot/copilot_review.py`).
+
+Mutations the tests must catch: dropping the `links()` line flips A and G back to 1; matching the URL instead of the line flips E and H to 0; a substring match on the line flips F to 0 on the attribution URL.
+
+### Upstream and existing code
+
+- Spacedock 0.27.3: owns gate records, not Captain-step coverage; no equivalent check.
+- kc-dev-flow-2 origin/main `6a495cb8` (0.37.0): the rule is `inspect_steps`'s `link_texts`, from 629cf7326 (#799, 2026-11-07), which resolves card names from the task folder and so opened `review/pr-body.md` (0.35.0 did not). Pinned by `test_report_only_cards_require_fences_and_fo_named_cards_also_require_links` and `test_named_card_prose_link_matches_asked_and_holds_when_unrecorded`; both stay unchanged. Repair in place; no replacement mechanism.
+- Adopters: `git ls-files | grep -c delivery_gate` is 0 in subspace-relay, subspace-web and qnow (2026-11-10); no local copy.
+- ADR 0054 (FO runs a step before asking the Captain): the rule covers steps the Captain is asked to run or look at; the attribution line is neither, so the change stays inside it. No `Override:` line in gate records concerns link coverage (`git grep 'Override:'`, 2026-11-10). No ADR lands.
+
+### Words FO reads
+
+| Moment | Before | After |
+| --- | --- | --- |
+| Startup (README, workflow.md) | unchanged | unchanged, 0 |
+| `question` on a gate text naming the PR body | 60 words, exit 1: `Captain steps record fails: message S5: unrecorded command or link 'https://claude.com/claude-code'` and the `next: hold preparation` line | 97 words, exit 0: the ordinary pass output (`gate text complete` and `ASK_FORM`) |
+| `question` with an unrecorded Captain link in a named card | 60 words, exit 1 | 60 words, exit 1, identical |
+| Merge ask (`check`) | unchanged | unchanged (does not call `inspect_steps`) |
+| `delivery_gate.py --help`, when read | 1214 words | 1225 words (+11) |
+
+### Non-goals
+
+The five inputs of delivery-gate-ignores-url-paths-and-data-fences; other URLs and fences in a PR body; other attribution forms; `check`.
+
+### Batch overlap
+
+| Task | Shared file or check | Conflict |
+| --- | --- | --- |
+| issue-815-fo-record-gaps (batch 20) | `decision_ledger.py` and gate records; not `delivery_gate.py` | none |
+| special-role-dispatch-records-built-by-script (batch 20) | its AC-10 requires no `delivery_gate.py` change in its own diff | none |
+| amendment-checked-when-written (batch 20) | no `delivery_gate.py` mention | none |
+| merge-guard-stops-unasked-merges (validation) | `delivery_gate.py`, `test_delivery_gate.py`: the `ASK`/`ASK_UNQUOTED` closing sentence | same files, different constants; textual merge only |
+| comment-check-reaches-delivery-gate (ideation) | `delivery_gate.py check`, `test_delivery_gate.py` | same files, `check` route only; textual merge only |
+| fo-write-checks-parse-top-level (ideation) | `delivery_gate.py` `declined_items`, `test_delivery_gate.py` | same files, different function; textual merge only |
+| gate-summary-names-each-decline (ideation) | `delivery_gate.py` decline parsing and its docstring paragraph | same files; a different docstring paragraph from the `steps` one changed here |
+| step-back-answer-has-a-record-line (ideation) | states `delivery_gate.py` unchanged | none |
+| archive-waits-for-observer-report, validation-reads-pr-review-comments, adoption-asks-which-extensions, captain-ruling-sources-checked (each names `delivery_gate.py` only as unchanged or read) | none | none |
+| adr-required-statement, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot, adr-silent-undo-probe, dispatch-carries-reserved-adr-number, journey-canvas-hosted-poc, picky-reviewers-may-run-on-gemini, seed-check-requires-alignment-result | no `delivery_gate.py` or link-rule change | none |
+
+Recommended order: any order; this change touches `links()`, one constant beside `SHELL` and one `steps` usage clause, none of which another task edits. Whichever lands second rebases its `test_delivery_gate.py` additions.
+
+### Decisions
+
+**D1 (Captain): what the PR body stops contributing.** Recommended: only the exact Claude Code attribution line stops being a link; every other URL in a named PR body still needs a recorded step. What gets worse: a PR body with another URL (23 of 346 feature bodies so far) still holds, and FO records that link or describes the body without its path. The other option, exempting a file named `pr-body.md` from link coverage, clears those too but drops any link FO asks the Captain to open from the PR body, and relies on a file name no package rule fixes.
+
+## Acceptance criteria
+
+**AC-1** A `question` gate text and a `steps` message that name `review/pr-body.md`, whose only link is on the attribution line (also with surrounding spaces), exit 0 with no S5 line. Evidence: new tests in `test_delivery_gate.py` on both routes; falsifier: a `variant_of` that removes the `links()` line holds on `https://claude.com/claude-code`. Current: reproduced as exit 1 on 0.37.0 and 0 on the prototype (`ideation/repro-matrix.log` A and G, `ideation/question-route-*.log`).
+
+**AC-2** A named card with an unrecorded Captain link still holds on that link on both routes, and passes once the link is a recorded step. Evidence: `test_named_card_prose_link_matches_asked_and_holds_when_unrecorded` and `test_report_only_cards_require_fences_and_fo_named_cards_also_require_links` pass unchanged. Current: case C exit 1 on both versions; both tests in the 198 passing on the prototype (`ideation/suite.txt`).
+
+**AC-3** The attribution URL on any other line holds: in a named card (`Open https://claude.com/claude-code`), in FO's own message, and on the attribution line with another link after it (both links held). Evidence: new tests; falsifiers: a variant matching the URL instead of the line passes the first two, a substring line match passes the third. Current: cases E, H and F exit 1 on the prototype.
+
+**AC-4** A PR body with the attribution line and one other URL holds on the other URL only. Evidence: a new test asserting the other URL in S5 and `claude.com/claude-code` absent. Current: case D on the prototype.
+
+**AC-5** `test_delivery_gate.py` passes in full in a complete package tree, and the diff touches only `delivery_gate.py` and `test_delivery_gate.py`, with the `steps` usage paragraph naming the exemption as a bounded claim. Evidence: the suite run and `git diff --stat` at the candidate. Current: not yet verified at a candidate; the prototype passes 198, 1 skipped.
+
+**AC-6** The words FO reads change only as `### Words FO reads` states: startup and `check` 0, the PR-body `question` hold replaced by the pass output, the Captain-link hold identical. Evidence: the same fixture run at the candidate. Current: measured on the prototype only.
+
+## Stage Report: ideation
+
+- DONE: Design how kc-dev-flow-2/scripts/delivery_gate.py stops holding a gate text that names the PR body (review/pr-body.md) on that body's attribution link while a real Captain link in a named card still holds, each with a falsifier reproduced on 0.37.0 first
+  `## Design`: `links()` blanks the exact attribution line; 0.37.0 holds A/G and C, prototype passes A/G and holds C, D, E, F, H (`delivery-gate-pr-body-attribution-link/ideation/repro-matrix.log`, `question-route-*.log`).
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (issue-815-fo-record-gaps, special-role-dispatch-records-built-by-script, amendment-checked-when-written, delivery-gate-pr-body-attribution-link) and live task of other sessions (adr-required-statement, journey-server-host-pilot, merge-guard-stops-unasked-merges, archive-waits-for-observer-report, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot, validation-reads-pr-review-comments, adoption-asks-which-extensions, adr-silent-undo-probe, captain-ruling-sources-checked, comment-check-reaches-delivery-gate, dispatch-carries-reserved-adr-number, fo-write-checks-parse-top-level, gate-summary-names-each-decline, journey-canvas-hosted-poc, picky-reviewers-may-run-on-gemini, seed-check-requires-alignment-result, step-back-answer-has-a-record-line (in flight or parked; read only)) that changes the same file or check, so FO can order implementation
+  Four tasks share `delivery_gate.py`/`test_delivery_gate.py` in other functions; none edits `links()`; Recommended order: any.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  `### Words FO reads`: startup and `check` 0; PR-body `question` 60-word hold becomes the 97-word pass output; Captain-link hold 60 = 60; `--help` +11.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-1 to AC-6, each with a falsifier; D1 (Captain) recommends the exact-line exemption, cost: 23 of 346 PR bodies with other URLs still hold.
+- DONE: AC-1 (PR body with only the attribution link passes, both routes): prototype only; A and G exit 1 → 0, question route 1 → 0; not yet verified at a candidate.
+- DONE: AC-2 (real Captain link in a named card still holds): case C exit 1 on both; the two pinning tests pass unchanged in the prototype run (198 passed, 1 skipped).
+- DONE: AC-3 (the attribution URL on any other line holds): cases E, H, F exit 1 on the prototype; tests not yet written.
+- DONE: AC-4 (other URL in the PR body holds alone): case D holds on the PR link only on the prototype; test not yet written.
+- DONE: AC-5 (full suite, two-file diff, bounded docstring claim): not yet verified at a candidate; prototype `ideation/suite.txt` 198 passed both.
+- DONE: AC-6 (words FO reads as tabled): measured on the prototype only (`ideation/question-route-*.log`); not yet verified at a candidate.
+- DONE: `design_surfaces.py check`: "design surfaces presentable", exit 0 (Surfaces: none).
+
+### Summary
+
+Reproduced the hold on 0.37.0 (origin/main `6a495cb8`): a gate text naming `review/pr-body.md` holds on `https://claude.com/claude-code`, the only attribution form in 400 PR bodies. The design blanks that one exact line in `links()` (+3 −1, scratch prototype), so the same URL elsewhere, the line with anything else on it, and any real Captain link in a named card still hold; the 198-test suite stays green. D1 asks the Captain to confirm the line exemption over exempting the whole PR body file.

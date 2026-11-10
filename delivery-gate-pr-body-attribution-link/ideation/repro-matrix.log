@@ -1,0 +1,16 @@
+# delivery_gate.py steps <task>/captain-steps/record.md --text-file msg.txt, 2026-11-10, base = installed 0.37.0 (byte-identical to origin/main 6a495cb8), proto = base + prototype.diff
+# A attribution only | C card 'Open https://preview.example.test/owner' | D prose PR link + attribution | E card 'Open https://claude.com/claude-code' | F attribution line with a second link on it | G attribution with surrounding spaces | H FO message 'Open https://claude.com/claude-code'
+A base exit=1 :: S5: unrecorded command or link 'https://claude.com/claude-code' 
+A proto exit=0 :: captain steps complete: 1 steps, 0 left to him
+C base exit=1 :: S5: unrecorded command or link 'https://preview.example.test/owner' 
+C proto exit=1 :: S5: unrecorded command or link 'https://preview.example.test/owner' 
+D base exit=1 :: S5: unrecorded command or link 'https://github.com/iamcxa/kc-claude-plugins/pull/773' S5: unrecorded command or link 'https://claude.com/claude-code' 
+D proto exit=1 :: S5: unrecorded command or link 'https://github.com/iamcxa/kc-claude-plugins/pull/773' 
+E base exit=1 :: S5: unrecorded command or link 'https://claude.com/claude-code' 
+E proto exit=1 :: S5: unrecorded command or link 'https://claude.com/claude-code' 
+F base exit=1 :: S5: unrecorded command or link 'https://claude.com/claude-code' S5: unrecorded command or link 'https://preview.example.test/x' 
+F proto exit=1 :: S5: unrecorded command or link 'https://claude.com/claude-code' S5: unrecorded command or link 'https://preview.example.test/x' 
+G base exit=1 :: S5: unrecorded command or link 'https://claude.com/claude-code' 
+G proto exit=0 :: captain steps complete: 1 steps, 0 left to him
+H base exit=1 :: S5: unrecorded command or link 'https://claude.com/claude-code' 
+H proto exit=1 :: S5: unrecorded command or link 'https://claude.com/claude-code' 

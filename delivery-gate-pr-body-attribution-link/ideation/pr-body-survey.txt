@@ -1,0 +1,5 @@
+# gh pr list -R iamcxa/kc-claude-plugins --state all --limit 400 --json number,body, 2026-11-10
+PR bodies: 400 feature (non-Release-Please): 346
+feature bodies carrying the attribution line: 264
+distinct lines containing claude.com/claude-code: ['🤖 Generated with [Claude Code](https://claude.com/claude-code)']
+feature bodies with any other URL: 23 [822, 776, 692, 653, 635, 608, 511, 508, 473, 442, 426, 425, 422, 420, 419, 417, 416, 415, 412, 407, 394, 390, 385]
