@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-10T04:59:02Z
+worktree: .worktrees/spacedock-ensign-amendment-checked-when-written
 ---
 
 ## Scope
