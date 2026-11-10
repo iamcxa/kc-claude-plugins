@@ -43,6 +43,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:counts-name-the-run-that-produced-them:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:counts-name-the-run-that-produced-them-validation-1
+              briefing:
+                id: briefing:counts-name-the-run-that-produced-them:validation:attempt-1:revision-1
+                digest: sha256:f308ab125abc196cb39e9e71807e3efe80d565b470682531d56453838cdd4b60
+                room-ref: ./counts-name-the-run-that-produced-them/review/validation/briefing-1
 started: 2026-11-09T04:59:15Z
 worktree: .worktrees/spacedock-ensign-counts-name-the-run-that-produced-them
 pr: iamcxa/kc-claude-plugins#822
