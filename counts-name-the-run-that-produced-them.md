@@ -46,6 +46,8 @@ gates:
 started: 2026-11-09T04:59:15Z
 worktree: .worktrees/spacedock-ensign-counts-name-the-run-that-produced-them
 pr: iamcxa/kc-claude-plugins#822
+profile: pilot
+merge: pr
 ---
 
 ## Scope
