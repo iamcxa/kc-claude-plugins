@@ -1,0 +1,11 @@
+STEP 1 PASS: exact candidate and base exported.
+PASS: 44 real CLI runs; base/candidate paired for every case on both routes.
+PASS: AC-1 removed-filter question, AC-2 lost-link detection, AC-4 baseline and AC-6 output-drift falsifiers caught.
+STEP 2 PASS: attribution allowed; unrecorded Captain links held; recorded links allowed.
+----------------------------------------------------------------------
+Ran 9 tests in 1.038s
+
+OK
+STEP 3 PASS: nine regression and boundary tests.
+STEP 4 PASS: exactly two files; startup bytes unchanged; help 1214 -> 1225 words; extra-file falsifier caught.
+ACCEPTANCE PASSED at 2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8
