@@ -1,0 +1,20 @@
+{
+  "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+  "test_files": 27,
+  "failed_files": [],
+  "unittest_cases": 1282,
+  "skipped_cases": 11,
+  "bytecode_absent_at_start_and_exit": true,
+  "generated_bytecode_removed": [
+    "kc-dev-flow-2/scripts/__pycache__/count_tokens.cpython-311.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/decision_ledger.cpython-311.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/role_triggers.cpython-311.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/design_surfaces.cpython-311.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/workflow_extensions.cpython-311.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/delivery_gate.cpython-311.pyc",
+    "kc-dev-flow-2/scripts/__pycache__/number_guards.cpython-311.pyc"
+  ],
+  "finalized_existing_receipts": false,
+  "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+  "sd_plugin_root": "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+}

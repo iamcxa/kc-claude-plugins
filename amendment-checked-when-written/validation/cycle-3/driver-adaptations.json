@@ -1,0 +1,26 @@
+[
+  {
+    "file": "run-tests.py",
+    "change": "Read-only git identity/source queries target declared product repository; execution still uses export."
+  },
+  {
+    "file": "reverted-f3.py",
+    "change": "Read-only git identity/source queries target declared product repository; execution still uses export."
+  },
+  {
+    "file": "reverted-f1.py",
+    "change": "Read-only git identity/source queries target declared product repository; execution still uses export."
+  },
+  {
+    "file": "compare-checks.py",
+    "change": "Read-only git identity/source queries target declared product repository; execution still uses export."
+  },
+  {
+    "file": "run-corpus.py",
+    "change": "Read-only git identity/source queries target declared product repository; execution still uses export."
+  },
+  {
+    "file": "checks.py",
+    "change": "Read-only git identity/source queries target declared product repository; execution still uses export."
+  }
+]

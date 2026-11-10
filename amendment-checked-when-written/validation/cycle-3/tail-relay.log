@@ -1,0 +1,10 @@
+L1 observer-before-sentinel: 2 events judged in fd1481da6295..82a8cb1d26de, 2 violated
+violation: L1 observer-before-sentinel task=decision-leg-under-limit commit=f4ac4b39cbd6 observer report not committed: decision-leg-under-limit/observer.md at f4ac4b39cbd6091a48ed42e6224588fa80daa370.
+violation: L1 observer-before-sentinel task=decision-leg-split commit=7cc0b851b8d0 observer report not committed: decision-leg-split/observer.md at 7cc0b851b8d011040ba2639d2c4281f4f2f2a20c.
+L2 dispatch-record-complete: 6 events judged in fd1481da6295..82a8cb1d26de, 4 violated
+violation: L2 dispatch-record-complete record=comment-sent-when-added-relay/dispatch/validation-1.md commit=3a14a616e083 no 'Candidate: <40-hex head>' line (line 1)
+violation: L2 dispatch-record-complete record=decision-leg-split/dispatch/implementation-1.md commit=fa066b73987f roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'
+violation: L2 dispatch-record-complete record=decision-leg-split/dispatch/validation-1.md commit=e1c57e18f331 no 'Candidate: <40-hex head>' line (line 1)
+violation: L2 dispatch-record-complete record=decision-leg-under-limit/dispatch/validation-1.md commit=413e82de977c no 'Candidate: <40-hex head>' line (line 1)
+L3 amendment-append-only: 0 events judged in fd1481da6295..82a8cb1d26de, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in fd1481da6295..82a8cb1d26de, 0 violated

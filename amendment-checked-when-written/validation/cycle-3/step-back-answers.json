@@ -1,0 +1,7 @@
+{
+  "same_outcome": "Yes: flag introducing state commit for reused ids or absent real marker.",
+  "testable_now": "Yes: CLI fence probes, legitimate controls and reverted repairs.",
+  "deletion_cost": "Loss of write-time reporting and original diagnostic; ADR 0016 protection.",
+  "profile": "pilot",
+  "boundary": "Read-only candidate export validation; state evidence publication only."
+}

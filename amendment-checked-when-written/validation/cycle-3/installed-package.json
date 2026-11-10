@@ -1,0 +1,32 @@
+[
+  {
+    "script": "role_triggers.py",
+    "sha256": "baaa4e033148c57564afb3a63b96446f25221ddb4644cb278fe2a704d98cdc56",
+    "declared_and_skill_install_identical": true
+  },
+  {
+    "script": "adr_lint.py",
+    "sha256": "7313e02238830471138d23508c1106bf4ff15ab8b166c060ec1d6e5a160e719f",
+    "declared_and_skill_install_identical": true
+  },
+  {
+    "script": "number_guards.py",
+    "sha256": "bf395410b8f1e17edd08352d1013b6754ad90811a99e0880e0f24c1250d95d9b",
+    "declared_and_skill_install_identical": true
+  },
+  {
+    "script": "comment_ratio.py",
+    "sha256": "b01e2f61e64b0a3666964e54dd4b14e308345359445d78d6ab68bbcce638a3a0",
+    "declared_and_skill_install_identical": true
+  },
+  {
+    "script": "doc_impact.py",
+    "sha256": "2af123dbeeeb0912da30bd1f1c9241c7d3692615e920d5958a1cca33ca7026cd",
+    "declared_and_skill_install_identical": true
+  },
+  {
+    "script": "dispatch_records.py",
+    "sha256": "e63d488a83427854363f02eab398541bdfebb59c10fa526ceca07d37a8269155",
+    "declared_and_skill_install_identical": true
+  }
+]

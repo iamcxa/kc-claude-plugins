@@ -1,0 +1,38 @@
+FF
+======================================================================
+FAIL: test_reused_id_and_unmarked_replacement_each_have_their_own_line (test_laws_check.L4Test.test_reused_id_and_unmarked_replacement_each_have_their_own_line) (label='reused')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-mutation-6ubaqj05/scripts/test_laws_check.py", line 897, in test_reused_id_and_unmarked_replacement_each_have_their_own_line
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : L1 observer-before-sentinel: 0 events judged in b9425845e8b4..818c2a5f612c, 0 violated
+L2 dispatch-record-complete: 0 events judged in b9425845e8b4..818c2a5f612c, 0 violated
+L3 amendment-append-only: 1 events judged in b9425845e8b4..818c2a5f612c, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in b9425845e8b4..818c2a5f612c, 0 violated
+
+
+======================================================================
+FAIL: test_reused_id_and_unmarked_replacement_each_have_their_own_line (test_laws_check.L4Test.test_reused_id_and_unmarked_replacement_each_have_their_own_line) (label='both')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-mutation-6ubaqj05/scripts/test_laws_check.py", line 899, in test_reused_id_and_unmarked_replacement_each_have_their_own_line
+    self.assertEqual(self.l4_lines(out), [
+AssertionError: Lists differ: ['vio[78 chars]nt=1 unmarked replacement'] != ['vio[78 chars]nt=1 reused ids: AC-2', 'violation: L4 amendme[82 chars]ent']
+
+First differing element 0:
+'viol[40 chars]task=t.md commit=ae4c8047fb29 amendment=1 unmarked replacement'
+'viol[40 chars]task=t.md commit=ae4c8047fb29 amendment=1 reused ids: AC-2'
+
+Second list contains 1 additional elements.
+First extra element 1:
+'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=ae4c8047fb29 amendment=1 unmarked replacement'
+
+  ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=ae4c8047fb29 '
++  'amendment=1 reused ids: AC-2',
++  'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=ae4c8047fb29 '
+   'amendment=1 unmarked replacement']
+
+----------------------------------------------------------------------
+Ran 1 test in 1.335s
+
+FAILED (failures=2)

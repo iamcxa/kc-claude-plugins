@@ -1,0 +1,65 @@
+[
+  {
+    "name": "reuse",
+    "test": "test_laws_check.L4Test.test_reused_id_and_unmarked_replacement_each_have_their_own_line",
+    "exit": 1,
+    "status": "passed",
+    "log": "/private/tmp/acw-validation3-huv9pkv0/mutation-reuse-0.log"
+  },
+  {
+    "name": "marker",
+    "test": "test_laws_check.L4Test.test_reused_id_and_unmarked_replacement_each_have_their_own_line",
+    "exit": 1,
+    "status": "passed",
+    "log": "/private/tmp/acw-validation3-huv9pkv0/mutation-marker-0.log"
+  },
+  {
+    "name": "marker",
+    "test": "test_design_surfaces.AmendmentTests.test_superseding_entries_need_a_criterion_with_the_amendment_phrase",
+    "exit": 1,
+    "status": "passed",
+    "log": "/private/tmp/acw-validation3-huv9pkv0/mutation-marker-1.log"
+  },
+  {
+    "name": "payload",
+    "test": "test_laws_check.L4Test.test_record_only_marked_move_and_waived_move_are_green",
+    "exit": 1,
+    "status": "passed",
+    "log": "/private/tmp/acw-validation3-huv9pkv0/mutation-payload-0.log"
+  },
+  {
+    "name": "parent",
+    "test": "test_laws_check.L4Test.test_defect_is_reported_at_introduction_not_later_edits_or_repair",
+    "exit": 1,
+    "status": "passed",
+    "log": "/private/tmp/acw-validation3-huv9pkv0/mutation-parent-0.log"
+  },
+  {
+    "name": "heading",
+    "test": "test_laws_check.RegistryTest.test_laws_file_matches_registry",
+    "exit": 1,
+    "status": "passed",
+    "log": "/private/tmp/acw-validation3-huv9pkv0/mutation-heading-0.log"
+  },
+  {
+    "name": "whole-file-entry-skip",
+    "test": "test_laws_check.L4Test.test_unrelated_broken_entry_does_not_hide_valid_move",
+    "exit": 1,
+    "status": "passed",
+    "log": "/private/tmp/acw-validation3-huv9pkv0/mutation-whole-file-entry-skip-0.log"
+  },
+  {
+    "name": "whole-file-parent-skip",
+    "test": "test_laws_check.L4Test.test_repaired_heading_reports_previously_unjudged_defect",
+    "exit": 1,
+    "status": "passed",
+    "log": "/private/tmp/acw-validation3-huv9pkv0/mutation-whole-file-parent-skip-0.log"
+  },
+  {
+    "name": "judge-broken-entry",
+    "test": "test_laws_check.L4Test.test_structural_issues_are_left_to_existing_laws",
+    "exit": 1,
+    "status": "passed",
+    "log": "/private/tmp/acw-validation3-huv9pkv0/mutation-judge-broken-entry-0.log"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "path": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+    "verdict": "unaffected",
+    "reason": "Shared check/seed functions remain byte-identical to prior; 1032 verdicts match base."
+  },
+  {
+    "path": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+    "verdict": "unaffected",
+    "reason": "added_words and dispatch_records.py unchanged; no changed sentence comparison."
+  },
+  {
+    "path": "kc-dev-flow-2/references/sd/laws.md",
+    "verdict": "updated",
+    "reason": "L4 event, predicate, per-entry skip and heading-repair behavior documented within +242 words. New filter implements the already promised live-declaration rule."
+  },
+  {
+    "path": "learning.md",
+    "verdict": "unaffected",
+    "reason": "Historical practices remain true and used: fresh exports, declared inputs, unchanged gate verdicts, exact candidate and bounded event reporting."
+  }
+]

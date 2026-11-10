@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_record_only_marked_move_and_waived_move_are_green (test_laws_check.L4Test.test_record_only_marked_move_and_waived_move_are_green) (label='record')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-mutation-jd6xvdx2/scripts/test_laws_check.py", line 884, in test_record_only_marked_move_and_waived_move_are_green
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : L1 observer-before-sentinel: 0 events judged in ce18b901d53f..346a508cf0e3, 0 violated
+L2 dispatch-record-complete: 0 events judged in ce18b901d53f..346a508cf0e3, 0 violated
+L3 amendment-append-only: 0 events judged in ce18b901d53f..346a508cf0e3, 0 violated
+L4 amendment-moves-use-fresh-ids: 1 events judged in ce18b901d53f..346a508cf0e3, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=t.md commit=346a508cf0e3 amendment=1 unmarked replacement
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.360s
+
+FAILED (failures=1)

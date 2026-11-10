@@ -1,0 +1,66 @@
+[
+  {
+    "name": "candidate",
+    "argv": [
+      "python3",
+      "-B",
+      "/tmp/acw-validation3-huv9pkv0/candidate/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--before",
+      "b91e7434adde",
+      "--after",
+      "a113aa3e9",
+      "--readme",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+    ],
+    "exit": 1
+  },
+  {
+    "name": "base",
+    "argv": [
+      "python3",
+      "-B",
+      "/tmp/acw-validation3-huv9pkv0/base/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--before",
+      "b91e7434adde",
+      "--after",
+      "a113aa3e9",
+      "--readme",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+    ],
+    "exit": 1
+  },
+  {
+    "name": "dev2",
+    "argv": [
+      "python3",
+      "-B",
+      "/tmp/acw-validation3-huv9pkv0/candidate/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--before",
+      "bf8c73be99c4^",
+      "--after",
+      "bf8c73be99c4",
+      "--readme",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+    ],
+    "exit": 2
+  },
+  {
+    "name": "relay",
+    "argv": [
+      "python3",
+      "-B",
+      "/tmp/acw-validation3-huv9pkv0/candidate/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state",
+      "--before",
+      "06cadae7681f^",
+      "--after",
+      "06cadae7681f",
+      "--readme",
+      "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/README.md"
+    ],
+    "exit": 1
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "repository": "dev2",
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+    "before": "2a42fbb15e0f0509b4084370850f730e6334a983",
+    "after": "1b4a052805289587072fa543ca7d6b7779162a36",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/acw-validation3-huv9pkv0/candidate/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--before",
+      "2a42fbb15e0f0509b4084370850f730e6334a983",
+      "--after",
+      "1b4a052805289587072fa543ca7d6b7779162a36",
+      "--readme",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+    ],
+    "exit": 0,
+    "L4_lines": [
+      "L4 amendment-moves-use-fresh-ids: 0 events judged in 2a42fbb15e0f..1b4a05280528, 0 violated"
+    ]
+  },
+  {
+    "repository": "qnow",
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+    "before": "c36650727548d893324aad22723fd530bc900570",
+    "after": "1c96340e27fa402d7db9ad30ab3359dd68eb64bd",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/acw-validation3-huv9pkv0/candidate/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state",
+      "--before",
+      "c36650727548d893324aad22723fd530bc900570",
+      "--after",
+      "1c96340e27fa402d7db9ad30ab3359dd68eb64bd",
+      "--readme",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/README.md"
+    ],
+    "exit": 0,
+    "L4_lines": [
+      "L4 amendment-moves-use-fresh-ids: 0 events judged in c36650727548..1c96340e27fa, 0 violated"
+    ]
+  },
+  {
+    "repository": "relay",
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+    "before": "fd1481da62952ed6706bb3c1db4620ee1b04b144",
+    "after": "82a8cb1d26deed6ece2f207d9ef4d35046b03956",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/acw-validation3-huv9pkv0/candidate/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state",
+      "--before",
+      "fd1481da62952ed6706bb3c1db4620ee1b04b144",
+      "--after",
+      "82a8cb1d26deed6ece2f207d9ef4d35046b03956",
+      "--readme",
+      "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/README.md"
+    ],
+    "exit": 1,
+    "L4_lines": [
+      "L4 amendment-moves-use-fresh-ids: 0 events judged in fd1481da6295..82a8cb1d26de, 0 violated"
+    ]
+  }
+]

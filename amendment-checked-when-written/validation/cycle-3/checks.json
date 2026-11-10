@@ -1,0 +1,119 @@
+[
+  {
+    "name": "lint",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/acw-validation3-huv9pkv0/candidate/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14"
+  },
+  {
+    "name": "adr-lint",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1"
+    ],
+    "exit": 0,
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14"
+  },
+  {
+    "name": "number-guards",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/amendment-checked-when-written.md"
+    ],
+    "exit": 0,
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14"
+  },
+  {
+    "name": "comment-ratio",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/comment_ratio.py",
+      "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+      "HEAD",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14"
+  },
+  {
+    "name": "task-design",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/acw-validation3-huv9pkv0/candidate/kc-dev-flow-2/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/amendment-checked-when-written.md"
+    ],
+    "exit": 0,
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14"
+  },
+  {
+    "name": "role-triggers",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/role_triggers.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "amendment-checked-when-written"
+    ],
+    "exit": 0,
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14"
+  },
+  {
+    "name": "dispatch-records",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/amendment-checked-when-written"
+    ],
+    "exit": 0,
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14"
+  },
+  {
+    "name": "adr-explicit",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+      "--require",
+      "0016",
+      "0017",
+      "0041",
+      "0057"
+    ],
+    "exit": 0,
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14"
+  },
+  {
+    "name": "doc-impact",
+    "argv": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/doc_impact.py",
+      "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+      "864536d1180334fa8a10c1ec7122f2ddf0feea14"
+    ],
+    "exit": 0,
+    "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14"
+  }
+]

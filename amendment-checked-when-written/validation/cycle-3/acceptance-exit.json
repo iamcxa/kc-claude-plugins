@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "bash",
+    "--noprofile",
+    "--norc",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/amendment-checked-when-written/validation/cycle-3/acceptance.sh"
+  ],
+  "exit": 0,
+  "log": "acceptance-durable.log",
+  "candidate": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+  "six_steps_passed": true
+}

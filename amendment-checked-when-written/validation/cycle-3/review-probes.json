@@ -1,0 +1,47 @@
+{
+  "tilde_example_hides_unmarked_move": false,
+  "runs": [
+    {
+      "name": "review-example-backtick",
+      "exit": 1,
+      "before": "92553d5ff5cfa15d89ea99c7a5fccfdc6d8d333e",
+      "after": "303cdb6b314d89de1854e4b83836e4ee14a8a8ac",
+      "log": "review-example-backtick.log",
+      "L4_lines": [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in 92553d5ff5cf..303cdb6b314d, 1 violated",
+        "violation: L4 amendment-moves-use-fresh-ids task=t.md commit=303cdb6b314d amendment=1 unmarked replacement"
+      ]
+    },
+    {
+      "name": "review-example-tilde",
+      "exit": 1,
+      "before": "92553d5ff5cfa15d89ea99c7a5fccfdc6d8d333e",
+      "after": "e1530ab9a7fe9db3569d79baf8e8f04ff109d013",
+      "log": "review-example-tilde.log",
+      "L4_lines": [
+        "L4 amendment-moves-use-fresh-ids: 1 events judged in 92553d5ff5cf..e1530ab9a7fe, 1 violated",
+        "violation: L4 amendment-moves-use-fresh-ids task=t.md commit=e1530ab9a7fe amendment=1 unmarked replacement"
+      ]
+    }
+  ],
+  "example_helpers": {
+    "backtick": {
+      "exit": 1,
+      "defects": [
+        [
+          "unmarked",
+          1
+        ]
+      ]
+    },
+    "tilde": {
+      "exit": 1,
+      "defects": [
+        [
+          "unmarked",
+          1
+        ]
+      ]
+    }
+  }
+}

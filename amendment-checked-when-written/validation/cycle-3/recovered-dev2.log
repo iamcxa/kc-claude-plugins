@@ -1,0 +1,5 @@
+L1 observer-before-sentinel: 0 events judged in aa4f5b7c8b52..bf8c73be99c4, 0 violated
+L2 dispatch-record-complete: 0 events judged in aa4f5b7c8b52..bf8c73be99c4, 0 violated
+L4 amendment-moves-use-fresh-ids: 1 events judged in aa4f5b7c8b52..bf8c73be99c4, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=release-acceptance/index.md commit=bf8c73be99c4 amendment=2 unmarked replacement
+L3 amendment-append-only: cannot judge: commit=bf8c73be99c4 old=release-acceptance/index.md new=release-acceptance/index.md bf8c73be99c4f0a569a15ce1ee7426578ae7ce85^:release-acceptance/index.md: ambiguous protected spans: line 323: malformed amendment heading; expected '### Amendment N — YYYY-MM-DD'; line 323: duplicate amendment number 1

@@ -1,0 +1,17 @@
+F
+======================================================================
+FAIL: test_tilde_example_does_not_supply_live_marker (test_laws_check.L4Test.test_tilde_example_does_not_supply_live_marker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-f3-reverted-nzxqberv/scripts/test_laws_check.py", line 917, in test_tilde_example_does_not_supply_live_marker
+    self.assertEqual(code, 1, out)
+AssertionError: 0 != 1 : L1 observer-before-sentinel: 0 events judged in 979e3d2787dc..db6fa669f907, 0 violated
+L2 dispatch-record-complete: 0 events judged in 979e3d2787dc..db6fa669f907, 0 violated
+L3 amendment-append-only: 1 events judged in 979e3d2787dc..db6fa669f907, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in 979e3d2787dc..db6fa669f907, 0 violated
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.458s
+
+FAILED (failures=1)

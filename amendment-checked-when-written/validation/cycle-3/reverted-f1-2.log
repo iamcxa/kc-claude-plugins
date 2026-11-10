@@ -1,0 +1,23 @@
+F
+======================================================================
+FAIL: test_mixed_repair_and_addition_reports_only_the_added_id (test_laws_check.L4Test.test_mixed_repair_and_addition_reports_only_the_added_id)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/amendment-f1-reverted-xavt94jb/scripts/test_laws_check.py", line 998, in test_mixed_repair_and_addition_reports_only_the_added_id
+    self.assertEqual(self.l4_lines(out), [
+AssertionError: Lists differ: ['vio[44 chars]k=t.md commit=ed8350ee167d amendment=1 reused ids: AC-2, AC-3'] != ['vio[44 chars]k=t.md commit=ed8350ee167d amendment=1 reused ids: AC-3']
+
+First differing element 0:
+'viol[42 chars]sk=t.md commit=ed8350ee167d amendment=1 reused ids: AC-2, AC-3'
+'viol[42 chars]sk=t.md commit=ed8350ee167d amendment=1 reused ids: AC-3'
+
+  ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=ed8350ee167d '
+-  'amendment=1 reused ids: AC-2, AC-3']
+?                          ------
+
++  'amendment=1 reused ids: AC-3']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.800s
+
+FAILED (failures=1)

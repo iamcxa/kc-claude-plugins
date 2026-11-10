@@ -1,0 +1,11 @@
+{
+  "F1": "Closed: all three existing regressions pass; reverted runner fails each.",
+  "F3": "Closed: full CLI rejects tilde and backtick false markers; reverted helper fails promoted test.",
+  "F2": "Settled Deferred risk by FO Feedback Cycles 2. Exception path unchanged; no new observed material trigger. Not re-reported or repaired.",
+  "new_findings": [],
+  "remote": "Exact head matches PR. Two historical threads unresolved, F3 outdated; exact-head review receipt says no major issues, summary still preserves unresolved findings.",
+  "delivery_limits": [
+    "PR body and RoboRev line cite 72216e2e; FO must refresh before delivery.",
+    "AC-7 release, authorized adoption and observed hosted push remain open."
+  ]
+}
