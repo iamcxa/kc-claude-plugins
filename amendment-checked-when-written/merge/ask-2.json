@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+  "model": "not run",
+  "necessity": "only kc-dev-flow-2/scripts/laws_check.py, design_surfaces.py, test_laws_check.py and kc-dev-flow-2/references/sd/laws.md change (validation-3 report, Astra, 2026-11-10).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- DONE: Recheck of the Cycle'",
+    "point: deferred: '`test_laws_check.log`, `acceptance-durable.log` step 5 and `reverted-f1.json`'",
+    "point: deferred: 'Cycle 3 independently recommends PASSED for'",
+    "point: deferred: 'Chief engineer: run by gpt-6-astra on'",
+    "point: deferred: 'FO declines: F2 of validation-2, which'",
+    "point: deferred: 'Fixed, not declined: F3 of validation-2,'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 1 dated 2026-11-10'",
+    "point: amendment: 'Amendment 2 dated 2026-11-10'",
+    "point: path: 'kc-dev-flow-2/references/sd/laws.md'",
+    "point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/scripts/laws_check.py'",
+    "point: more: 2 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#828",
+  "sufficiency": "state law L4 reports a reused criterion id or an unmarked replacement once, at the commit that adds it, on all seven named historical commits, skips only the amendment entry whose own structure is bro",
+  "time": "2026-11-10T10:59:48Z",
+  "verdict": "ask"
+}
