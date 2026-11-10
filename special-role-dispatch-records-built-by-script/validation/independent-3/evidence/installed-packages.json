@@ -1,0 +1,13 @@
+{
+  "codex": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0",
+  "dispatch": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0",
+  "identical_scripts": {
+    "adr_lint.py": true,
+    "number_guards.py": true,
+    "role_triggers.py": true,
+    "comment_ratio.py": true,
+    "doc_impact.py": true,
+    "design_surfaces.py": false,
+    "dispatch_records.py": false
+  }
+}

@@ -1,0 +1,11 @@
+usage: dispatch_stage.py [-h] --workflow-dir WORKFLOW_DIR
+                         --entity-path ENTITY_PATH
+                         --checklist-file CHECKLIST_FILE
+                         --scope-notes-file SCOPE_NOTES_FILE (--stage STAGE |
+                         --role {chief-engineer,engineering-reviewer})
+                         --model MODEL [--roster ROSTER] [--symptom SYMPTOM]
+                         [--note NOTE] [--candidate CANDIDATE]
+                         [--spacedock SPACEDOCK] [--host {claude,codex,pi}]
+                         [--feedback-context-file FEEDBACK_CONTEXT_FILE]
+                         [--feedback-reflow] [--advance | --bare-mode]
+dispatch_stage.py: error: --role cannot use --advance, --bare-mode, --host, --candidate, --symptom, --feedback-context-file or --feedback-reflow

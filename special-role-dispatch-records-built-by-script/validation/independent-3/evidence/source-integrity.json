@@ -1,0 +1,18 @@
+{
+  "head": "39a76c68836f471fc0c42c18eab12641196860ed",
+  "base": "d8dbfcb1051d7c696aca139ed9ade332ee85abaf",
+  "prior": "8574e879b85197d31239ee2d9a9af0c5d0cb5392",
+  "repair_files": [
+    "kc-dev-flow-2/scripts/dispatch_stage.py",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+  ],
+  "exact_three_substitutions": true,
+  "sha256": {
+    "docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md": "5459f7ac3ab1cd228f8b9b49aef5bb8c957ac3f5ccdbc50020daa71a3c4629f8",
+    "kc-dev-flow-2/references/sd/workflow.md": "f9158aac075b2b0235a499910f64ee6e7d13d0f8ca90ca907b438f0365e70bfa",
+    "kc-dev-flow-2/scripts/dispatch_stage.py": "a2a5ef3255e22238f0309b422444b6ec1159c58113663e511151b5ad66489a8a",
+    "kc-dev-flow-2/scripts/lint-skills.py": "3aa3e5d2d685d8ab2a4224cd2c6f9bed20b75b90a74ed56f2cac2c6a65278483",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py": "6b01076622af7cb8a4ebbdb1f9e537c3996d4a32f57d414b6d045870cfb94b51",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py": "aa5436ab9ca19ef0e1d557ccd8dc6b45d4016578dd877db3f5c8d51325ab77ce"
+  }
+}

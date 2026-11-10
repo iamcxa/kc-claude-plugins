@@ -1,0 +1,13 @@
+{
+  "head": "39a76c68836f471fc0c42c18eab12641196860ed",
+  "base": "d8dbfcb1051d7c696aca139ed9ade332ee85abaf",
+  "commands": 28,
+  "all_passed": true,
+  "cases": 1312,
+  "optional_skips": 11,
+  "package_test_files": 27,
+  "criterion_controls": 11,
+  "repair_controls": 4,
+  "workflow_words": 5939,
+  "workflow_budget": 5939
+}

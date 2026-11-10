@@ -1,0 +1,96 @@
+{
+  "startup_base": 5933,
+  "startup_candidate": 5939,
+  "captures": [
+    {
+      "exit": 0,
+      "stdout": 44,
+      "stderr": 0
+    },
+    {
+      "exit": 1,
+      "stdout": 0,
+      "stderr": 4
+    },
+    {
+      "exit": 1,
+      "stdout": 0,
+      "stderr": 28
+    },
+    {
+      "exit": 0,
+      "stdout": 39,
+      "stderr": 0
+    },
+    {
+      "exit": 1,
+      "stdout": 0,
+      "stderr": 33
+    },
+    {
+      "exit": 0,
+      "stdout": 39,
+      "stderr": 0
+    },
+    {
+      "exit": 1,
+      "stdout": 0,
+      "stderr": 14
+    },
+    {
+      "exit": 0,
+      "stdout": 39,
+      "stderr": 0
+    },
+    {
+      "exit": 0,
+      "stdout": 44,
+      "stderr": 0
+    },
+    {
+      "exit": 2,
+      "stdout": 0,
+      "stderr": 45
+    },
+    {
+      "exit": 2,
+      "stdout": 0,
+      "stderr": 49
+    },
+    {
+      "exit": 2,
+      "stdout": 0,
+      "stderr": 49
+    },
+    {
+      "exit": 2,
+      "stdout": 0,
+      "stderr": 49
+    },
+    {
+      "exit": 2,
+      "stdout": 0,
+      "stderr": 49
+    },
+    {
+      "exit": 2,
+      "stdout": 0,
+      "stderr": 49
+    },
+    {
+      "exit": 2,
+      "stdout": 0,
+      "stderr": 49
+    },
+    {
+      "exit": 2,
+      "stdout": 0,
+      "stderr": 49
+    },
+    {
+      "exit": 2,
+      "stdout": 0,
+      "stderr": 47
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+F
+======================================================================
+FAIL: test_role_checks_the_opus_model_floor (__main__.DispatchStageTests.test_role_checks_the_opus_model_floor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 185, in test_role_checks_the_opus_model_floor
+    held = self.role(extra=("--model", "sonnet"), expected=1)
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--entity-path", self.entity, "--role", role, "--model", "opus",
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--spacedock", BINARY, *extra], expected)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-i1efvl0m/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-i1efvl0m/code/docs/dev2/.spacedock-state/dispatch-fixture-6610fd8ee93343bb8a9da8d1a86c8140.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-i1efvl0m/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-i1efvl0m/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--model', 'sonnet'], '# engineering-reviewer-1\nDispatched: a9f2802f7d1cb700182324a26edf984555147ec4 (workflow checkout)\nModel: sonnet\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: /private/tmp/pr827-independent-3/mutant/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\n', '')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.826s
+
+FAILED (failures=1)

@@ -1,0 +1,103 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "d8dbfcb1051d7c696aca139ed9ade332ee85abaf",
+      "--require",
+      "0074"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "adr-lint-prescribed",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "d8dbfcb1051d7c696aca139ed9ade332ee85abaf",
+      "--require",
+      "0074"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-role-dispatch-records-built-by-script.md",
+      "--base",
+      "d8dbfcb1051d7c696aca139ed9ade332ee85abaf",
+      "--head",
+      "39a76c68836f471fc0c42c18eab12641196860ed"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "design",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-role-dispatch-records-built-by-script.md"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/special-role-dispatch-records-built-by-script"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/comment_ratio.py",
+      "d8dbfcb1051d7c696aca139ed9ade332ee85abaf",
+      "39a76c68836f471fc0c42c18eab12641196860ed",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0/scripts/doc_impact.py",
+      "d8dbfcb1051d7c696aca139ed9ade332ee85abaf",
+      "39a76c68836f471fc0c42c18eab12641196860ed",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script",
+      "--json"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "number-guards-live",
+    "exit": 0,
+    "file": "number-guards-live.log"
+  },
+  {
+    "name": "adr-lint-candidate",
+    "exit": 0,
+    "file": "adr-lint-candidate.log"
+  }
+]

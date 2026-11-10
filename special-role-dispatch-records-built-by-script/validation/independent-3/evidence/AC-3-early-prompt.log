@@ -1,0 +1,27 @@
+F
+======================================================================
+FAIL: test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record (__main__.DispatchStageTests.test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 151, in test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record
+    self.assertEqual(held.stdout, "")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: '# engineering-reviewer-1\nDispatched: 483[330 chars]m.\n' != ''
+- # engineering-reviewer-1
+- Dispatched: 483bd479ab5cda0710d2bccf8f836a097e0ec413 (workflow checkout)
+- Model: opus
+- 
+- ## Checklist
+- Inspect the real dispatch seam
+- Keep the received second checklist line
+- 
+- ## Scope notes
+- Package root: /private/tmp/pr827-independent-3/mutant/kc-dev-flow-2
+- Send your completion message to `main`.
+- Keep this second scope-notes line verbatim.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.934s
+
+FAILED (failures=1)

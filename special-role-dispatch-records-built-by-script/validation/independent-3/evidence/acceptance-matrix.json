@@ -1,0 +1,72 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "claim": "The record has the workflow HEAD, model, exact supplied inputs, commit and identical stdout. Raw CRLF/LF captures also pass.",
+    "evidence": "test_dispatch_stage.log; repair-bytes.json",
+    "falsifier": "AC-1-no-commit.log: removing commit fails the HEAD assertion"
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "claim": "Missing Package root or completion recipient refuses, with empty stdout, checker diagnostics, unchanged HEAD and no leftover record. Both missing fields also exercised separately.",
+    "evidence": "test_dispatch_stage.log; probes.json",
+    "falsifier": "AC-2-no-checks.log: removing record checks makes the expected refusal fail"
+  },
+  {
+    "name": "AC-3",
+    "status": "passed",
+    "claim": "Commit refusal keeps the pending disk record and withholds stdout; dirty retry refuses; manual commit then retry reuses record 1.",
+    "evidence": "test_dispatch_stage.log",
+    "falsifier": "AC-3-early-prompt.log: printing before commit violates empty stdout"
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "claim": "An owed chief-engineer call dispatches successfully; the spy sees state commit and no dispatch build.",
+    "evidence": "test_dispatch_stage.log",
+    "falsifier": "AC-4-build-path.log: removing the role branch routes to dispatch build and fails"
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "claim": "Sonnet refuses with the opus-floor diagnostic and no record; opus and supplied Astra pass.",
+    "evidence": "test_dispatch_stage.log; probes.json",
+    "falsifier": "AC-5-no-floor.log: removing rank check admits Sonnet"
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "claim": "Every excluded stage-only flag and design-director refuses with exit 2 and unchanged scope.",
+    "evidence": "test_dispatch_stage.log",
+    "falsifier": "AC-6-allow-advance.log: relaxing the advance exclusion makes refusal assertions fail"
+  },
+  {
+    "name": "AC-7",
+    "status": "passed",
+    "claim": "New calls use independent per-role sequence numbers, unchanged retries reuse; all base tests are AST-identical and pass.",
+    "evidence": "test_dispatch_stage.log; test_dispatch_records.log; test_role_triggers.log; retained-test-cases.json",
+    "falsifier": "AC-7-global-numbers.log: counting other roles loses chief-engineer-1"
+  },
+  {
+    "name": "AC-8",
+    "status": "passed",
+    "claim": "Workflow directs role calls through the script; reviewer-record pin and quoted +6 step pass. The merged total is 5939 with both accepted +6/+2 steps.",
+    "evidence": "lint-skills.log; test_sd_dispatch.log; integration-audit.json",
+    "falsifier": "AC-8-no-instruction.log: pin catches missing instruction; AC-8-no-budget.log: 5939 exceeds 5933"
+  },
+  {
+    "name": "AC-9",
+    "status": "passed",
+    "claim": "ADR 0074 preserves the original D1-D3 ruling and reserved number; candidate and both installed ADR commands exit 0.",
+    "evidence": "adr-lint.log; adr-lint-prescribed.log; adr-lint-candidate.log",
+    "falsifier": "AC-9-no-words.log: removing Words yields precisely its missing-Words defect"
+  },
+  {
+    "name": "AC-10",
+    "status": "passed",
+    "claim": "Startup rises from current main 5933 to 5939 (+6). Captured prompts contain 39-44 words and empty stderr; refusals have empty stdout and 4-49 stderr words. Other named lifecycle code is byte-identical to main.",
+    "evidence": "words.json; wc-words.log; integration-audit.json; candidate.patch",
+    "falsifier": "AC-10-changed-idle.log: altered idle code breaks the byte-equivalence check"
+  }
+]

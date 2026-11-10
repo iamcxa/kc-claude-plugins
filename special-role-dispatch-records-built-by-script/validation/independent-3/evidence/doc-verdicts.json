@@ -1,0 +1,68 @@
+[
+  {
+    "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "implementation_disposition_present": true,
+    "verdict": "unaffected",
+    "reason": "The +6 step follows the existing quoted-ruling budget rule; the inherited +2 is retained."
+  },
+  {
+    "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "implementation_disposition_present": true,
+    "verdict": "unaffected",
+    "reason": "Worker collaboration wording and its linter are unchanged."
+  },
+  {
+    "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "implementation_disposition_present": true,
+    "verdict": "unaffected",
+    "reason": "The existing model rank is reused; the model table and effort checks are unchanged."
+  },
+  {
+    "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "implementation_disposition_present": true,
+    "verdict": "unaffected",
+    "reason": "Worker permission procedure and its linter are unchanged."
+  },
+  {
+    "doc": "docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md",
+    "implementation_disposition_present": true,
+    "verdict": "unaffected",
+    "reason": "External-review disposition and ROUND_RULE/follow-up pins are unchanged."
+  },
+  {
+    "doc": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
+    "implementation_disposition_present": true,
+    "verdict": "unaffected",
+    "reason": "Stage scope and manual follow-ups remain; ADR 0074 extends only role mode."
+  },
+  {
+    "doc": "docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md",
+    "implementation_disposition_present": true,
+    "verdict": "updated",
+    "reason": "Updated in this task; the Captain quote matches the ideation gate and D1-D3."
+  },
+  {
+    "doc": "kc-dev-flow-2/README.md",
+    "implementation_disposition_present": true,
+    "verdict": "unaffected",
+    "reason": "Maintenance commands and real-binary stage test description remain correct."
+  },
+  {
+    "doc": "kc-dev-flow-2/references/sd/adoption.md",
+    "implementation_disposition_present": true,
+    "verdict": "unaffected",
+    "reason": "Existing integration command remains valid; synthetic tests do not execute reviewers."
+  },
+  {
+    "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "implementation_disposition_present": true,
+    "verdict": "unaffected",
+    "reason": "Word-budget and falsifier practices remain valid and were followed."
+  },
+  {
+    "doc": "learning.md",
+    "implementation_disposition_present": true,
+    "verdict": "unaffected",
+    "reason": "Historical evidence and per-moment measurement practice are unchanged."
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "path": "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "retained": 28,
+    "added": 12,
+    "all_existing_ast_identical": true
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "retained": 117,
+    "added": 0,
+    "all_existing_ast_identical": true
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "retained": 49,
+    "added": 0,
+    "all_existing_ast_identical": true
+  }
+]

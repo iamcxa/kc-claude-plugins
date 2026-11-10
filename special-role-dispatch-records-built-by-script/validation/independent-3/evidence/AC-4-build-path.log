@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed (__main__.DispatchStageTests.test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 179, in test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed
+    self.assertTrue(any(args[:2] == ["state", "commit"] for args in calls), calls)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : [['dispatch', 'build', '--stamp', '--workflow-dir', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-e94t2ejl/code/docs/dev2', '--entity-path', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-e94t2ejl/code/docs/dev2/.spacedock-state/dispatch-fixture-fb17bbc4041f447f8770cc435129da10.md', '--stage', 'chief-engineer', '--checklist-file', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-e94t2ejl/checklist.txt', '--scope-notes-file', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-e94t2ejl/notes.txt']]
+
+----------------------------------------------------------------------
+Ran 1 test in 1.099s
+
+FAILED (failures=1)

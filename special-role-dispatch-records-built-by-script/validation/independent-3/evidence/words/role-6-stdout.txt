@@ -1,0 +1,12 @@
+# chief-engineer-1
+Dispatched: 819421105fbf216f233fd43e7aff3f864c9a5bc5 (workflow checkout)
+Model: opus
+
+## Checklist
+Inspect the real dispatch seam
+Keep the received second checklist line
+
+## Scope notes
+Package root: /private/tmp/pr827-acceptance.VlquPm/kc-dev-flow-2
+Send your completion message to `main`.
+Keep this second scope-notes line verbatim.

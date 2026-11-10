@@ -1,0 +1,117 @@
+[
+  {
+    "module": "decision_ledger",
+    "name": "split_task",
+    "ast_identical": true
+  },
+  {
+    "module": "decision_ledger",
+    "name": "gate_entries",
+    "ast_identical": true
+  },
+  {
+    "module": "delivery_gate",
+    "name": "CANDIDATE",
+    "ast_identical": true
+  },
+  {
+    "module": "delivery_gate",
+    "name": "RECORD",
+    "ast_identical": true
+  },
+  {
+    "module": "design_surfaces",
+    "name": "added_words",
+    "ast_identical": true
+  },
+  {
+    "module": "design_surfaces",
+    "name": "AMENDMENTS_HEADING",
+    "ast_identical": true
+  },
+  {
+    "module": "design_surfaces",
+    "name": "AMENDMENT_HEADER",
+    "ast_identical": true
+  },
+  {
+    "module": "design_surfaces",
+    "name": "amendment_form",
+    "ast_identical": true
+  },
+  {
+    "module": "design_surfaces",
+    "name": "parse_amendments",
+    "ast_identical": true
+  },
+  {
+    "module": "design_surfaces",
+    "name": "alignment_owes_result",
+    "ast_identical": true
+  },
+  {
+    "module": "design_surfaces",
+    "name": "dispatched_amendments",
+    "ast_identical": true
+  },
+  {
+    "module": "design_surfaces",
+    "name": "escaped_amendment_lines",
+    "ast_identical": true
+  },
+  {
+    "module": "design_surfaces",
+    "name": "task_folder",
+    "ast_identical": true
+  },
+  {
+    "module": "role_triggers",
+    "name": "DIAGNOSIS_RECORD",
+    "ast_identical": true
+  },
+  {
+    "module": "role_triggers",
+    "name": "STEP_BACK",
+    "ast_identical": true
+  },
+  {
+    "module": "role_triggers",
+    "name": "diagnosis_order",
+    "ast_identical": true
+  },
+  {
+    "module": "role_triggers",
+    "name": "outside_fences",
+    "ast_identical": true
+  },
+  {
+    "module": "role_triggers",
+    "name": "symptom_name",
+    "ast_identical": true
+  },
+  {
+    "module": "role_triggers",
+    "name": "symptom_rounds",
+    "ast_identical": true
+  },
+  {
+    "module": "number_guards",
+    "name": "Misconfigured",
+    "ast_identical": true
+  },
+  {
+    "module": "number_guards",
+    "name": "frontmatter",
+    "ast_identical": true
+  },
+  {
+    "module": "number_guards",
+    "name": "task_facts",
+    "ast_identical": true
+  },
+  {
+    "module": "workflow_extensions",
+    "name": "readme_extensions",
+    "ast_identical": true
+  }
+]

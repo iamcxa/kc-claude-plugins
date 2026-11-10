@@ -1,0 +1,3 @@
+dispatch_stage: dispatch not built; repair the dispatch record:
+engineering-reviewer-1.md: needs a 'Package root:' line with an absolute path in its scope notes
+engineering-reviewer-1.md: needs a scope-notes line naming main as the completion recipient

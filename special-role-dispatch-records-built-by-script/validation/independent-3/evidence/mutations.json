@@ -1,0 +1,68 @@
+[
+  {
+    "name": "AC-1-no-commit",
+    "exit": 1,
+    "caught": true,
+    "file": "/tmp/pr827-independent-3/evidence/AC-1-no-commit.log"
+  },
+  {
+    "name": "AC-2-no-checks",
+    "exit": 1,
+    "caught": true,
+    "file": "/tmp/pr827-independent-3/evidence/AC-2-no-checks.log"
+  },
+  {
+    "name": "AC-3-early-prompt",
+    "exit": 1,
+    "caught": true,
+    "file": "/tmp/pr827-independent-3/evidence/AC-3-early-prompt.log"
+  },
+  {
+    "name": "AC-4-build-path",
+    "exit": 1,
+    "caught": true,
+    "file": "/tmp/pr827-independent-3/evidence/AC-4-build-path.log"
+  },
+  {
+    "name": "AC-5-no-floor",
+    "exit": 1,
+    "caught": true,
+    "file": "/tmp/pr827-independent-3/evidence/AC-5-no-floor.log"
+  },
+  {
+    "name": "AC-6-allow-advance",
+    "exit": 1,
+    "caught": true,
+    "file": "/tmp/pr827-independent-3/evidence/AC-6-allow-advance.log"
+  },
+  {
+    "name": "AC-7-global-numbers",
+    "exit": 1,
+    "caught": true,
+    "file": "/tmp/pr827-independent-3/evidence/AC-7-global-numbers.log"
+  },
+  {
+    "name": "AC-8-no-instruction",
+    "exit": 1,
+    "caught": true,
+    "file": "/tmp/pr827-independent-3/evidence/AC-8-no-instruction.log"
+  },
+  {
+    "name": "AC-8-no-budget",
+    "exit": 1,
+    "caught": true,
+    "file": "/tmp/pr827-independent-3/evidence/AC-8-no-budget.log"
+  },
+  {
+    "name": "AC-9-no-words",
+    "exit": 1,
+    "caught": true,
+    "file": "/tmp/pr827-independent-3/evidence/AC-9-no-words.log"
+  },
+  {
+    "name": "AC-10-changed-idle",
+    "exit": 1,
+    "caught": true,
+    "file": "/tmp/pr827-independent-3/evidence/AC-10-changed-idle.log"
+  }
+]

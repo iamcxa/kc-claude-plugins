@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from pathlib import Path; assert Path('kc-dev-flow-2/scripts/pr_watch.py').read_bytes() == Path('/tmp/pr827-independent-3/candidate/kc-dev-flow-2/scripts/pr_watch.py').read_bytes(), 'idle surface changed'
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: idle surface changed

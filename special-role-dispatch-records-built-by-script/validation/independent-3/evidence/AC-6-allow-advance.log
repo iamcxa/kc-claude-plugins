@@ -1,0 +1,95 @@
+FFFFFFFF
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--advance',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 203, in test_role_rejects_stage_only_flags_and_unknown_roles
+    held = self.role(extra=extra, expected=2)
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--entity-path", self.entity, "--role", role, "--model", "opus",
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--spacedock", BINARY, *extra], expected)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-b65hhp2s/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-b65hhp2s/code/docs/dev2/.spacedock-state/dispatch-fixture-665e6bfc7e964a3380d568da5e0cdfa3.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-b65hhp2s/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-b65hhp2s/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--advance'], '# engineering-reviewer-1\nDispatched: a9f2802f7d1cb700182324a26edf984555147ec4 (workflow checkout)\nModel: opus\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: /private/tmp/pr827-independent-3/mutant/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\n', '')
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--bare-mode',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 205, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'head': '048723dcf95b97dfcd25d8d0da799bf32daf7eed'[2642 chars]x00'} != {'head': 'ad2b45c7e7574130a101595a9b80e9829fb7f5de'[947 chars]x00'}
+Diff is 6074 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--host', 'codex'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 205, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'head': '048723dcf95b97dfcd25d8d0da799bf32daf7eed'[2642 chars]x00'} != {'head': 'ad2b45c7e7574130a101595a9b80e9829fb7f5de'[947 chars]x00'}
+Diff is 6074 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 205, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'head': '048723dcf95b97dfcd25d8d0da799bf32daf7eed'[2642 chars]x00'} != {'head': 'ad2b45c7e7574130a101595a9b80e9829fb7f5de'[947 chars]x00'}
+Diff is 6074 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--symptom', 'same failure'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 205, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'head': '048723dcf95b97dfcd25d8d0da799bf32daf7eed'[2642 chars]x00'} != {'head': 'ad2b45c7e7574130a101595a9b80e9829fb7f5de'[947 chars]x00'}
+Diff is 6074 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--feedback-context-file', '/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-b65hhp2s/notes.txt'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 205, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'head': '048723dcf95b97dfcd25d8d0da799bf32daf7eed'[2642 chars]x00'} != {'head': 'ad2b45c7e7574130a101595a9b80e9829fb7f5de'[947 chars]x00'}
+Diff is 6074 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--feedback-reflow',))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 205, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'head': '048723dcf95b97dfcd25d8d0da799bf32daf7eed'[2642 chars]x00'} != {'head': 'ad2b45c7e7574130a101595a9b80e9829fb7f5de'[947 chars]x00'}
+Diff is 6074 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_role_rejects_stage_only_flags_and_unknown_roles (__main__.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles) (extra=('--role', 'design-director'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/pr827-independent-3/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 205, in test_role_rejects_stage_only_flags_and_unknown_roles
+    self.assertEqual(self.scope_snapshot(), before)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'head': '048723dcf95b97dfcd25d8d0da799bf32daf7eed'[2642 chars]x00'} != {'head': 'ad2b45c7e7574130a101595a9b80e9829fb7f5de'[947 chars]x00'}
+Diff is 6074 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 1.887s
+
+FAILED (failures=8)

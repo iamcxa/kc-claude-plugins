@@ -1,0 +1,9 @@
+{
+  "head": "39a76c68836f471fc0c42c18eab12641196860ed",
+  "code_worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script",
+  "branch": "spacedock-ensign/special-role-dispatch-records-built-by-script",
+  "product_status": "",
+  "state_branch": "spacedock-state/dev2",
+  "task_frontmatter_sha256": "51a3d337a7fb6adc182e72d028f12f34187fdebf6d5fcdb3e1a7ffc06b23cb3b",
+  "task_pre_append_sha256": "379b875eda8ce86ed2a11cbbc99f9852f7d579ff9a87366042931f045b62df36"
+}

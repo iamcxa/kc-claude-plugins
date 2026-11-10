@@ -1,0 +1,58 @@
+{
+  "head": "39a76c68836f471fc0c42c18eab12641196860ed",
+  "base": "d8dbfcb1051d7c696aca139ed9ade332ee85abaf",
+  "parents": [
+    "3567082b0ec1eeb59346b2d82887a07bc5ffc2fb",
+    "d8dbfcb1051d7c696aca139ed9ade332ee85abaf"
+  ],
+  "changed": [
+    "docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md",
+    "kc-dev-flow-2/references/sd/workflow.md",
+    "kc-dev-flow-2/scripts/dispatch_stage.py",
+    "kc-dev-flow-2/scripts/lint-skills.py",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ],
+  "sha256": {
+    "docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md": "5459f7ac3ab1cd228f8b9b49aef5bb8c957ac3f5ccdbc50020daa71a3c4629f8",
+    "kc-dev-flow-2/references/sd/workflow.md": "f9158aac075b2b0235a499910f64ee6e7d13d0f8ca90ca907b438f0365e70bfa",
+    "kc-dev-flow-2/scripts/dispatch_stage.py": "a2a5ef3255e22238f0309b422444b6ec1159c58113663e511151b5ad66489a8a",
+    "kc-dev-flow-2/scripts/lint-skills.py": "3aa3e5d2d685d8ab2a4224cd2c6f9bed20b75b90a74ed56f2cac2c6a65278483",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py": "6b01076622af7cb8a4ebbdb1f9e537c3996d4a32f57d414b6d045870cfb94b51",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py": "aa5436ab9ca19ef0e1d557ccd8dc6b45d4016578dd877db3f5c8d51325ab77ce"
+  },
+  "role_files_identical_to_prior": [
+    "kc-dev-flow-2/scripts/dispatch_stage.py",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "kc-dev-flow-2/scripts/role_triggers.py"
+  ],
+  "unchanged_vs_main": [
+    "kc-dev-flow-2/scripts/pr_watch.py",
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/role_triggers.py",
+    ".github/workflows/kc-dev-flow-2-tests.yml"
+  ],
+  "dispatch_records_changed_functions": [
+    "check_coverage"
+  ],
+  "workflow_words": {
+    "base": 5933,
+    "prior": 5937,
+    "candidate": 5939
+  },
+  "budget": 5939,
+  "budget_steps": [
+    {
+      "delta": 6,
+      "why": "FO builds special-role calls through dispatch_stage.py before recording the Reviewer line",
+      "captain": "「核准（建議）」 (Captain, ideation gate, 2026-11-10), accepting 「特別角色派工紀錄：由腳本寫好、檢查、提交後才交給審查者；模型低於 opus 或 astra 就拒絕派；README 多 6 個字；完全手動、沒有紀錄的審查不在這張處理。」 in the bound batch-20 question; the joint raise is 5931 to 5939, this task adds six",
+      "loaded": "startup and resume of the First Officer, and before chief-engineer or engineering-reviewer dispatch"
+    },
+    {
+      "delta": 2,
+      "why": "the Captain reason check also binds the task's open gate question",
+      "captain": "「核准（建議）」 (Captain, ideation gate of issue-815-fo-record-gaps, 2026-11-10), answering 「決定：第 20 批四張設計照下列建議進實作嗎？建議核准。(1) 關卡理由沒引用關卡問題：待辦、構想、驗證三種關卡都擋下，不再只是回報；這改掉 ADR 0062 只回報的做法，所以會寫一份新的決策紀錄，README 多 2 個字。(2) 特別角色派工紀錄：由腳本寫好、檢查、提交後才交給審查者；模型低於 opus 或 astra 就拒絕派；README 多 6 個字；完全手動、沒有紀錄的審查不在這張處理。(3) 修改驗收條件的檢查：做成第四條狀態規則，每次推送狀態後檢查，所以壞的提交要推上去後才會被標出；dev2 要真的用到它，得把狀態規則釘選的版本從 0.26.0 改到新版，那一步之後另外問你，這張要等一次推送印出這條規則的結果才收。(4) PR 說明的署名連結：只放行 Claude Code 自動加在最後的那一行署名，其他連結照樣要記成步驟。核准即接受上列每一項建議，包括 README 合計多 8 個字（5931 到 5939）；要改哪項直接說。」",
+      "loaded": "startup and resume of the First Officer, and before each Captain gate record"
+    }
+  ]
+}

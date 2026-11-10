@@ -1,0 +1,3 @@
+d8dbfcb10 feat(kc-dev-flow-2): flag invalid criterion moves in state pushes (#828)
+99cb18623 fix(kc-dev-flow-2): check four FO record gaps before handoff (#826)
+01195ae6c fix(kc-dev-flow-2): exclude the exact PR attribution line from step links (#825)
