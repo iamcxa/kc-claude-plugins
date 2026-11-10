@@ -15,6 +15,17 @@ gates:
                 id: briefing:validation-rerun-accepts-report-fixed-before-ruling:backlog:attempt-1:revision-1
                 digest: sha256:0f2dc53eb45d3deb105f1fc442ea6de505ff31dad7768a44110a66f88afd0dbf
                 room-ref: ./validation-rerun-accepts-report-fixed-before-ruling/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:validation-rerun-accepts-report-fixed-before-ruling:backlog:1
+                briefing: briefing:validation-rerun-accepts-report-fixed-before-ruling:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-10T16:08:06.012701Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要讓「驗證報告在你裁示前被補改過，仍可再派驗證」這張任務進入設計階段。我建議核准：它修的是 qnow 回報、我已在套件程式碼查證的擋路問題。核准代表接受這張任務的範圍與停止條件，並派一個設計工人；不代表接受任何設計或修法。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
