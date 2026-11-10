@@ -900,6 +900,51 @@ class L4Test(Base):
                     f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 {part}"
                     for part in expected])
 
+    def example_transition(self, fence, *, marked=False, moved=True, waived=False):
+        repo = Repo(self.tmp / ("backtick" if fence == "```" else "tilde"))
+        old = "**AC-2**: old outcome.\n"
+        before = repo.commit("record", t=self.body(old, waiver=waived))
+        live = old if not moved else ("" if waived else "**AC-5**: " +
+               ("Amended by Captain, amendment 1: " if marked else "") + "replacement outcome.\n")
+        example = f"{fence}md\n**AC-9**: Amended by Captain, amendment 1: example only.\n{fence}\n"
+        event = repo.commit("worker writes example", t=self.body(live + example, moved, waived))
+        code, out = self.judge(repo, before, event)
+        self.assertRegex(out, r"L3 amendment-append-only: [^\n]+, 0 violated")
+        return code, out, event
+
+    def test_tilde_example_does_not_supply_live_marker(self):
+        code, out, event = self.example_transition("~~~")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(self.l4_lines(out), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 unmarked replacement"])
+
+    def test_backtick_example_does_not_supply_live_marker(self):
+        code, out, event = self.example_transition("```")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(self.l4_lines(out), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 unmarked replacement"])
+
+    def test_real_marked_replacement_with_example_stays_green(self):
+        for fence in ("```", "~~~"):
+            with self.subTest(fence=fence):
+                code, out, _ = self.example_transition(fence, marked=True)
+                self.assertEqual(code, 0, out)
+                self.assertEqual(self.l4_lines(out), [])
+
+    def test_waived_move_with_example_stays_green(self):
+        for fence in ("```", "~~~"):
+            with self.subTest(fence=fence):
+                code, out, _ = self.example_transition(fence, waived=True)
+                self.assertEqual(code, 0, out)
+                self.assertEqual(self.l4_lines(out), [])
+
+    def test_record_only_with_example_stays_green(self):
+        for fence in ("```", "~~~"):
+            with self.subTest(fence=fence):
+                code, out, _ = self.example_transition(fence, moved=False)
+                self.assertEqual(code, 0, out)
+                self.assertEqual(self.l4_lines(out), [])
+
     def test_defect_is_reported_at_introduction_not_later_edits_or_repair(self):
         repo = Repo(self.tmp / "once")
         before = repo.commit("record", t=self.body("**AC-2**: old outcome.\n"))

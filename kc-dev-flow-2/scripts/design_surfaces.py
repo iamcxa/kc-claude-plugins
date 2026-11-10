@@ -416,7 +416,17 @@ def move_defects(lines):
     entries = [entry for entry in entries
                if not any(entry.start < line <= entry.end for line, _ in issues)]
     moved = [declarations(entry.moved) for entry in entries]
-    live = declarations(section(unfenced(lines), AC_HEADING) or [])
+    visible, fence = [], None
+    for line in lines:
+        marker = AMENDMENT_FENCE.match(line)
+        if fence:
+            if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip():
+                fence = None
+        elif marker:
+            fence = marker[1]
+        else:
+            visible.append(line)
+    live = declarations(section(visible, AC_HEADING) or [])
     declared = {ident for ident, _ in live}
     defects = []
     for index, entry in enumerate(entries):
