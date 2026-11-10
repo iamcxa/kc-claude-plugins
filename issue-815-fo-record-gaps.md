@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-11-10T04:57:46Z
 worktree: .worktrees/spacedock-ensign-issue-815-fo-record-gaps
+pr: iamcxa/kc-claude-plugins#826
 ---
 
 ## Scope
