@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:issue-815-fo-record-gaps:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:issue-815-fo-record-gaps-ideation-1
+              briefing:
+                id: briefing:issue-815-fo-record-gaps:ideation:attempt-1:revision-1
+                digest: sha256:5c386ffe8ca6dd76f44111a53973a5636e052af366d408f47ef3a4f9da966144
+                room-ref: ./issue-815-fo-record-gaps/review/ideation/briefing-1
 started: 2026-11-10T04:57:46Z
 ---
 
