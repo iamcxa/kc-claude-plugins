@@ -915,6 +915,44 @@ class L4Test(Base):
         self.assertEqual(self.judge(repo, unrelated, repaired)[0], 0)
         self.assertEqual(self.judge(repo, before, unrelated)[1], out)
 
+    def reuse_change(self, current_ids):
+        def body(ids, moved):
+            live = "".join(f"**AC-{n}**: live outcome.\n" for n in ids)
+            return task(body="## Acceptance criteria\n" + live +
+                        "**AC-9**: Amended by Captain, amendment 1: replacement.\n"
+                        "\n## Captain amendments\n\n### Amendment 1 — 2026-11-10, chat\n"
+                        "Captain: replace these three outcomes\nSupersedes: AC-1, AC-2, AC-3\n" +
+                        ("\nSuperseded text:\n\n**AC-1**: old one.\n**AC-2**: old two.\n**AC-3**: old three.\n"
+                         if moved else ""))
+
+        repo = Repo(self.tmp / "reuse-change")
+        before = repo.commit("record", t=body((1, 2, 3), False))
+        introduced = repo.commit("move with reused ids", t=body((1, 2), True))
+        self.assertEqual(self.l4_lines(self.judge(repo, before, introduced)[1]), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={introduced[:12]} amendment=1 reused ids: AC-1, AC-2"])
+        changed = repo.commit("edit live ids", t=body(current_ids, True))
+        code, out = self.judge(repo, introduced, changed)
+        self.assertRegex(out, r"L3 amendment-append-only: 1 events judged in .+, 0 violated")
+        return code, out, changed
+
+    def test_partial_repair_adds_no_event(self):
+        code, out, _ = self.reuse_change((2,))
+        self.assertEqual(code, 0, out)
+        self.assertEqual(self.l4_lines(out), [])
+        self.assertRegex(out, r"L4 amendment-moves-use-fresh-ids: 0 events judged in .+, 0 violated")
+
+    def test_growth_reports_only_the_added_id(self):
+        code, out, event = self.reuse_change((1, 2, 3))
+        self.assertEqual(code, 1, out)
+        self.assertEqual(self.l4_lines(out), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 reused ids: AC-3"])
+
+    def test_mixed_repair_and_addition_reports_only_the_added_id(self):
+        code, out, event = self.reuse_change((2, 3))
+        self.assertEqual(code, 1, out)
+        self.assertEqual(self.l4_lines(out), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 reused ids: AC-3"])
+
     def test_a_later_moved_replacement_counts_but_own_payload_and_prose_do_not(self):
         marked = "**AC-5**: Amended by Captain, amendment 1: new outcome.\n"
         later = ("\n### Amendment 2 — 2026-11-10, chat\nCaptain: move again\n"
