@@ -1,0 +1,6 @@
+  ref: ec2bae0d6b9c4cedc5fc67adfc99d7043143c5de
+  ref: main
+L1 observer-before-sentinel: 0 events judged in 7a5e517b0b9c..b062fabaeea5, 0 violated
+L2 dispatch-record-complete: 0 events judged in 7a5e517b0b9c..b062fabaeea5, 0 violated
+L3 amendment-append-only: 0 events judged in 7a5e517b0b9c..b062fabaeea5, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in 7a5e517b0b9c..b062fabaeea5, 0 violated
