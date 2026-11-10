@@ -53,6 +53,17 @@ gates:
                 id: briefing:amendment-checked-when-written:validation:attempt-1:revision-1
                 digest: sha256:755fd5d622a71955ef0d59a6e1b16878dab0f5cff380c174496e108b5ead12eb
                 room-ref: ./amendment-checked-when-written/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:amendment-checked-when-written:validation:1
+                briefing: briefing:amendment-checked-when-written:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-10T11:08:28.119602Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-10), answering 「決定：合併 #828（新增第四條狀態規則：每次推送狀態後，標出修改驗收條件時重用編號或缺少修改標記的提交）嗎？建議合併。同意即接受：壞的提交要推上去後才會被標出；dev2 要等發布並由你同意更新釘選版本後才真的啟用，這張任務到那時才收；一次推送裡有任務檔讀不了時，其他任務的違規可能不被回報，這一項我判定先不修。 Regular merge with --match-head-commit 864536d1180334fa8a10c1ec7122f2ddf0feea14, the batch 20 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-10T04:59:02Z
 worktree: .worktrees/spacedock-ensign-amendment-checked-when-written
 pr: iamcxa/kc-claude-plugins#828
