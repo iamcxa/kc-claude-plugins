@@ -60,6 +60,8 @@ reason, without a withdrawal; amendments use the shared numbered-entry grammar.
 Editing an older entry does not make it later. Same-commit records do not clear
 the finding. Missing, shallow or ambiguous required history is an evidence hold.
 
+Amended 2026-11-11 (Captain: 「裁示前的補改都算，結論不能改（建議）」, answering 「驗證報告被補改過之後，哪些補改還算同一份報告、可以繼續派驗證？我建議：你第一次裁示之前的補改都算，但不能改變報告的結論（通過或退回）；裁示之後才改的照舊拒絕。這是設計的方向，細節與證明仍在設計關卡由你核准。」 in the host question dialog; then 「核准（建議）」, answering 「決定：要不要核准「驗證報告在你裁示前被補改過，仍可再派驗證」的設計並開始實作。我建議核准：設計照你選的方向做，用 qnow 的真實歷史重放過三種情況，結果都符合預期。核准即接受設計裡兩項建議：一、「結論沒變」的判法是每一版報告裡 PASSED 與 REJECTED 這兩個字的出現順序完全相同；二、把這次改動記成 ADR 0045（驗證重跑前必須有你之後的裁示）的一段原地增補，不開新編號。核准後我派實作工人。」 at the ideation gate): a validation report edited in place still counts as the report a later ruling answers when every correction, including the commit that first carries the final text, precedes the first Captain record or gate entry recorded after the report appeared, and every version carries the same ordered, non-empty list of whole-word `PASSED` and `REJECTED` tokens. The later supported ruling must first appear strictly after the commit where the final text first appears. Otherwise the check holds with `rewritten-report-after-ruling`, `rewritten-report-verdict-changed` or `rewritten-report-verdict-unreadable`. The check still runs only while the newest report has an open Needs decision finding.
+
 This predicate runs through `--names`, not `--newest` or the historical snapshot
 caller. Passing establishes structure and order; the First Officer still checks
 the original question and reply, per-finding coverage and permission for the
