@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Save and check a stage dispatch record before building its Spacedock envelope."""
+"""Save and check a stage or special-role record before returning its dispatch prompt."""
 
 import argparse
 import hashlib
@@ -12,6 +12,7 @@ import sys
 
 from design_surfaces import task_folder
 from number_guards import Misconfigured, frontmatter
+from role_triggers import rank
 
 SCRIPTS = Path(__file__).resolve().parent
 
@@ -148,7 +149,9 @@ def parse_args(argv):
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("workflow-dir", "entity-path", "checklist-file", "scope-notes-file"):
         parser.add_argument(f"--{name}", type=Path, required=True)
-    parser.add_argument("--stage", required=True)
+    target = parser.add_mutually_exclusive_group(required=True)
+    target.add_argument("--stage")
+    target.add_argument("--role", choices=("chief-engineer", "engineering-reviewer"))
     parser.add_argument("--model", required=True)
     for name in ("roster", "symptom", "note"):
         parser.add_argument(f"--{name}")
@@ -161,6 +164,13 @@ def parse_args(argv):
     mode.add_argument("--advance", action="store_true")
     mode.add_argument("--bare-mode", action="store_true")
     args = parser.parse_args(argv)
+    if args.role:
+        if (args.advance or args.bare_mode or args.feedback_reflow or args.candidate
+                or any(getattr(args, name) is not None for name in
+                       ("host", "symptom", "feedback_context_file"))):
+            parser.error("--role cannot use --advance, --bare-mode, --host, --candidate, --symptom, "
+                         "--feedback-context-file or --feedback-reflow")
+        args.stage = args.role
     if not re.fullmatch(r"[a-z][a-z0-9_-]*", args.stage):
         parser.error("--stage must be a stage name")
     if any(not re.fullmatch(r"[0-9a-fA-F]{40}", sha) for sha in args.candidate):
@@ -171,8 +181,8 @@ def parse_args(argv):
             value = getattr(args, name)
             if value is not None:
                 setattr(args, name, value.resolve(strict=True))
-        checklist = args.checklist_file.read_text()
-        notes = args.scope_notes_file.read_text()
+        checklist = args.checklist_file.read_bytes().decode("utf-8")
+        notes = args.scope_notes_file.read_bytes().decode("utf-8")
         dispatched = git(args.workflow_dir, "rev-parse", "HEAD")
     except (OSError, UnicodeError, subprocess.CalledProcessError) as error:
         parser.error(str(error))
@@ -189,6 +199,11 @@ def main(argv=None):
         print(f"dispatch_stage: dispatch not built; {error}. "
               "Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; "
               "do not blindly state commit divergent data.", file=sys.stderr)
+        return 1
+    if args.role and rank(args.model) < rank("opus"):
+        remove_uncommitted(path, wrote)
+        print("dispatch_stage: dispatch not built; --role needs the opus model floor or above (astra qualifies)",
+              file=sys.stderr)
         return 1
     if args.stage in ("implementation", "validation"):
         roles = subprocess.run([sys.executable, "-B", str(SCRIPTS / "role_triggers.py"),
@@ -211,6 +226,21 @@ def main(argv=None):
     for line in dict.fromkeys(line for check in checks for line in check.stderr.splitlines(keepends=True)):
         sys.stderr.write(line)
     # see docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md
+    # see docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md
+    if args.role:
+        slug = args.entity_path.parent.name if args.entity_path.name == "index.md" else args.entity_path.stem
+        try:
+            commit = subprocess.run([args.spacedock, "state", "commit", slug, "--workflow-dir", str(args.workflow_dir)],
+                                    capture_output=True, text=True)
+        except OSError as error:
+            print(f"dispatch_stage: {error}", file=sys.stderr)
+            return 1
+        sys.stderr.write(commit.stderr)
+        if commit.returncode:
+            sys.stderr.write(commit.stdout)
+            return 1
+        sys.stdout.buffer.write(path.read_bytes())
+        return 0
     command = [args.spacedock, "dispatch", "build", "--advance" if args.advance else "--stamp"]
     for name in ("workflow_dir", "entity_path", "stage", "checklist_file", "scope_notes_file", "host", "feedback_context_file"):
         value = getattr(args, name)

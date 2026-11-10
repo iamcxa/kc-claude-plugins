@@ -108,6 +108,174 @@ class DispatchStageTests(unittest.TestCase):
     def record(self, stage="ideation", number=1):
         return self.folder / "dispatch" / f"{stage}-{number}.md"
 
+    def role(self, role="engineering-reviewer", extra=(), expected=0):
+        return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+                          "--entity-path", self.entity, "--role", role, "--model", "opus",
+                          "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                          "--spacedock", BINARY, *extra], expected)
+
+    def test_role_commits_complete_record_before_printing_exact_inputs(self):
+        dispatched = self.git(self.workflow, "rev-parse", "HEAD")
+        result = self.role(extra=("--roster", "fixture roster", "--note", "role fixture"))
+        record = self.record("engineering-reviewer")
+        self.assert_committed(record, f"state: update {self.slug}")
+        text = record.read_text()
+        self.assertEqual(text, f"# engineering-reviewer-1\nDispatched: {dispatched} "
+                         "(workflow checkout, role fixture)\nModel: opus\nRoster: fixture roster\n\n"
+                         f"## Checklist\n{self.checklist.read_text()}\n## Scope notes\n{self.notes.read_text()}")
+        self.assertEqual(result.stdout.encode(), record.read_bytes())
+        self.assertEqual(result.stderr, "")
+        self.call([sys.executable, "-B", CHECKER, self.folder])
+        self.call([sys.executable, "-B", CHECKER, "--names", "--strict", record])
+
+    def test_role_rejects_incomplete_scope_notes_without_prompt_or_record(self):
+        self.notes.write_text("Review the package changes.\n")
+        head = self.git(self.state, "rev-parse", "HEAD")
+        held = self.role(expected=1)
+        self.assertEqual(held.stdout, "")
+        self.assertIn("needs a 'Package root:' line", held.stderr)
+        self.assertIn("scope-notes line naming main as the completion recipient", held.stderr)
+        self.assertEqual(self.git(self.state, "rev-parse", "HEAD"), head)
+        self.assertFalse(self.record("engineering-reviewer").exists())
+        self.assertEqual(self.git(self.state, "status", "--porcelain"), "")
+
+    def test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record(self):
+        failing = self.base / "fail-role-commit"
+        failing.write_text(f"#!{sys.executable}\nimport subprocess, sys\n"
+                           "if sys.argv[1:3] == ['state', 'commit']:\n"
+                           "    print('fixture state commit refused', file=sys.stderr)\n    sys.exit(1)\n"
+                           f"sys.exit(subprocess.call([{BINARY!r}, *sys.argv[1:]]))\n")
+        failing.chmod(0o755)
+        head = self.git(self.state, "rev-parse", "HEAD")
+        held = self.role(extra=("--spacedock", failing), expected=1)
+        self.assertEqual(held.stdout, "")
+        self.assertIn("fixture state commit refused", held.stderr)
+        record = self.record("engineering-reviewer")
+        pending = record.read_bytes()
+        self.assertEqual(self.git(self.state, "rev-parse", "HEAD"), head)
+        refused = self.role(expected=1)
+        self.assertEqual(refused.stdout, "")
+        self.assertIn(str(record), refused.stderr)
+        self.assertEqual(record.read_bytes(), pending)
+        self.call([BINARY, "state", "commit", self.slug, "--workflow-dir", self.workflow])
+        result = self.role()
+        self.assertEqual(result.stdout.encode(), pending)
+        self.assert_committed(record, f"state: update {self.slug}")
+        self.assertFalse(self.record("engineering-reviewer", 2).exists())
+
+    def test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed(self):
+        self.entity.write_text(self.entity.read_text() + "\n## Stage Report: implementation\n" * 5)
+        self.commit_task()
+        owed = self.call([sys.executable, "-B", ROOT / "scripts/role_triggers.py",
+                          self.state, self.slug], expected=1)
+        self.assertIn("chief-engineer", owed.stdout)
+        argv_log = self.base / "role-argv.jsonl"
+        self.spy.write_text(f"#!{sys.executable}\nfrom pathlib import Path\nimport json, subprocess, sys\n"
+                            f"with Path({str(argv_log)!r}).open('a') as log:\n"
+                            "    log.write(json.dumps(sys.argv[1:]) + '\\n')\n"
+                            f"sys.exit(subprocess.call([{BINARY!r}, *sys.argv[1:]]))\n")
+        result = self.role("chief-engineer", ("--spacedock", self.spy), expected=None)
+        calls = [json.loads(line) for line in argv_log.read_text().splitlines()]
+        self.assertTrue(any(args[:2] == ["state", "commit"] for args in calls), calls)
+        self.assertFalse(any(args[:2] == ["dispatch", "build"] for args in calls), calls)
+        self.assertEqual(result.returncode, 0, (result.stdout, result.stderr))
+
+    def test_role_checks_the_opus_model_floor(self):
+        head = self.git(self.state, "rev-parse", "HEAD")
+        held = self.role(extra=("--model", "sonnet"), expected=1)
+        self.assertIn("opus", held.stderr)
+        self.assertEqual(held.stdout, "")
+        self.assertFalse(self.record("engineering-reviewer").exists())
+        self.assertEqual(self.git(self.state, "rev-parse", "HEAD"), head)
+        for model in ("opus", "gpt-6-astra (Codex via Paseo, thinking xhigh)"):
+            with self.subTest(model=model):
+                result = self.role(extra=("--model", model))
+                self.assertIn(f"Model: {model}\n", result.stdout)
+
+    def test_role_rejects_stage_only_flags_and_unknown_roles(self):
+        flags = [("--stage", "implementation"), ("--advance",), ("--bare-mode",), ("--host", "codex"),
+                 ("--candidate", "a" * 40), ("--symptom", "same failure"),
+                 ("--feedback-context-file", str(self.notes)), ("--feedback-reflow",),
+                 ("--role", "design-director")]
+        before = self.scope_snapshot()
+        for extra in flags:
+            with self.subTest(extra=extra):
+                held = self.role(extra=extra, expected=2)
+                self.assertEqual(held.stdout, "")
+                self.assertEqual(self.scope_snapshot(), before)
+
+    def test_role_numbering_is_per_role_and_retries_reuse_the_latest_record(self):
+        first = self.role()
+        self.assertEqual(self.role().stdout, first.stdout)
+        self.assertFalse(self.record("engineering-reviewer", 2).exists())
+        self.role(extra=("--note", "second call"))
+        self.assertTrue(self.record("engineering-reviewer", 2).exists())
+        self.role("chief-engineer")
+        self.assertTrue(self.record("chief-engineer").exists())
+        self.assertFalse(self.record("chief-engineer", 2).exists())
+
+    def assert_input_bytes(self, role, newline):
+        checklist = "Inspect exact bytes\n保留第二行\n".replace("\n", newline).encode("utf-8")
+        notes = (f"Package root: {ROOT}\nSend your completion message to `main`.\n"
+                 "保留範圍文字\n").replace("\n", newline).encode("utf-8")
+        self.checklist.write_bytes(checklist)
+        self.notes.write_bytes(notes)
+        kind = "engineering-reviewer" if role else "ideation"
+        command = [sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+                   "--entity-path", self.entity, "--role" if role else "--stage", kind,
+                   "--model", "opus", "--checklist-file", self.checklist,
+                   "--scope-notes-file", self.notes, "--spacedock", BINARY]
+        if not role:
+            command += ["--host", "codex"]
+        result = subprocess.run(list(map(str, command)), cwd=self.base, env=self.env,
+                                capture_output=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        record = self.record(kind)
+        disk = record.read_bytes()
+        dispatched = self.git(self.workflow, "rev-parse", "HEAD")
+        expected = (f"# {kind}-1\nDispatched: {dispatched} (workflow checkout)\nModel: opus\n\n"
+                    "## Checklist\n").encode("utf-8") + checklist + b"\n## Scope notes\n" + notes
+        self.assertIn(checklist, disk)
+        self.assertIn(notes, disk)
+        self.assertEqual(disk, expected)
+        committed = subprocess.run(["git", "-C", str(self.state), "show",
+                                    f"HEAD:{record.relative_to(self.state)}"],
+                                   env=self.env, check=True, capture_output=True).stdout
+        self.assertEqual(committed, disk)
+        if role:
+            self.assertEqual(result.stdout, disk)
+            retry = subprocess.run(list(map(str, command)), cwd=self.base, env=self.env,
+                                   capture_output=True, timeout=30)
+            self.assertEqual(retry.returncode, 0, retry.stderr)
+            self.assertEqual(retry.stdout, disk)
+            self.assertFalse(self.record(kind, 2).exists())
+
+    def test_role_crlf_inputs_keep_raw_bytes(self):
+        self.assert_input_bytes(True, "\r\n")
+
+    def test_stage_crlf_inputs_keep_raw_bytes(self):
+        self.assert_input_bytes(False, "\r\n")
+
+    def test_role_lf_inputs_keep_raw_bytes(self):
+        self.assert_input_bytes(True, "\n")
+
+    def test_stage_lf_inputs_keep_raw_bytes(self):
+        self.assert_input_bytes(False, "\n")
+
+    def test_lf_record_matches_legacy_input_reading(self):
+        import dispatch_stage as subject
+
+        for role in (True, False):
+            with self.subTest(role=role):
+                argv = ["--workflow-dir", str(self.workflow), "--entity-path", str(self.entity),
+                        "--role" if role else "--stage", "engineering-reviewer" if role else "ideation",
+                        "--model", "opus", "--checklist-file", str(self.checklist),
+                        "--scope-notes-file", str(self.notes)]
+                args, dispatched, checklist, notes = subject.parse_args(argv)
+                before = subject.record_text(args, 1, dispatched, self.checklist.read_text(), self.notes.read_text())
+                after = subject.record_text(args, 1, dispatched, checklist, notes)
+                self.assertEqual(before.encode("utf-8"), after.encode("utf-8"))
+
     def assert_committed(self, path, subject):
         self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
         root = Path(self.git(self.state, "rev-parse", "--show-toplevel"))
