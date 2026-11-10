@@ -3,7 +3,7 @@ title: delivery_gate.py stops holding a gate text that names the PR body for its
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-10), answering 「決定：合併 #825（合併提問提到 PR 說明檔時，Claude Code 自動加在最後的那一行署名不再被當成要你點的連結；其他連結照樣要記成步驟）嗎？建議合併。同意即接受：PR 說明裡只要還有別的連結，檢查仍會擋下。 Regular merge with --match-head-commit 2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8, the batch 20 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-10T04:59:26Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-pr-body-attribution-link
 pr: pr-merge:825
+verdict: PASSED
+completed: 2026-11-10T11:15:50Z
+archived: 2026-11-10T11:15:50Z
 ---
 
 ## Scope
