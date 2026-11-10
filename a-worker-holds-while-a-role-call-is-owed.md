@@ -282,3 +282,38 @@ Recommended order: role-call-asks-for-the-mechanism first (this task reads its d
 ### Summary
 
 Designed a worker-start hold: the implementation and validation stage skills run `role_triggers.py` first and, on exit 1 or 2, return a hold report without touching code; `dispatch_stage.py` refuses the same dispatch earlier, counting the record it is writing. On the bite task every dispatch from implementation-1 on was made while a call was owed (the engineering-reviewer call from the start), and the Codex replay held 3 of 3 on the candidate skill against 3 of 3 proceeding on 0.36.0, so the stop condition's behaviour half passes. The "decline without a reason holds" half does not pass on 0.36.0 and waits on role-call-asks-for-the-mechanism. The Captain decides D1 (count the dispatch being built), D2 (hold on engineering-reviewer too, from implementation-1), D3 (no grandfathering: 8 in-flight tasks would hold at release) and D4 (a hold report counts as a repair pass). One harness note for FO: all seven replay builds wrote `/tmp/spacedock-dispatch/spacedock-ensign-owner-vehicle-kept-after-name-implementation.md`, a path qnow builds also use (an un-prefixed `...-validation.md` there is dated 22:42 today); six were moved out at once, the trial one after about two minutes. An earlier qnow implementation file at that path, if one existed, was overwritten; a worker reads its file at start and a redispatch rebuilds it.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria within the named files, based on origin/main.
+  Candidate 42455f093facfc96edf6cd0357f26be1c858b262; base f980a097bf15d8d1382c039949c6b9aefc5439c8; branch spacedock-ensign/a-worker-holds-while-a-role-call-is-owed; seven approved files only, no version edit; ADR 0026 amended for D1-D4.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin).
+  Publication is explicitly FO-owned: no product push or PR opened; remote branch query and PR query were empty. Prepared title/body: /tmp/impl-a-worker-holds-while-a-role-call-is-owed-pr.md.
+- FAILED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared).
+  AC-1 to AC-5 and AC-7 pass below; AC-6 and its skill-removal control could not execute an authenticated worker, so the complete ship condition is not met.
+- DONE: AC-1 worker-start hold and committed-call release on the three recorded states.
+  Fresh scratch clone, ee29b0a8/27f04824/03829bf0: as-recorded and CE-only hold, CE+ER release, misplaced calls hold; /tmp/rolehold-implementation/mechanical.json, 15/15 cases including AC-2. The fixture reconstructs their report/amendment/dispatch counts; ignoring recorded calls makes it fail.
+- DONE: AC-2 a decline without the reason form still holds.
+  All three real-state clones with ER plus the step-back-answer decline exit 1 against the candidate based on the landed mechanism change; accepting generic declines makes the fixture fail.
+- DONE: AC-3 dispatch refuses before build only for implementation and validation.
+  test_dispatch_stage.py: both owing stages leave the fake binary uncalled, no record or state change; a committed call releases; owing ideation builds. Removing the check and widening it to ideation each make the respective test fail.
+- DONE: AC-4 the record being dispatched counts.
+  Two committed records plus pending third refuse; the same third committed gives the worker-start exit 1; replacing the same filename does not double-count, and uncommitted calls stay ignored. Dropping --pending makes the dispatch fixture fail.
+- DONE: AC-5 exit 2 holds at dispatch; worker instructions also hold on exit 2.
+  Missing checker and unresolvable committed task both refuse without calling the binary or leaving a record; allowing exit 2 makes the fixture fail. The worker half is instruction text, not fresh behavioral proof.
+- FAILED: AC-6 Behaviour replay on Codex, 3 candidate holds and 3 controls proceeding.
+  /tmp/rolehold-implementation/replay.py built each plain Codex dispatch under a per-run agent prefix (rhimpl-candidate-N / rhimpl-control-N), never the shared unprefixed path. Sandbox attempt: DNS failure; authorized host attempt: all six returned 401 missing authentication before task work, zero new hold reports. Logs/results: /tmp/rolehold-implementation-host/replay-results.json; historical ideation 3/3 vs 3/3 evidence is not claimed as a fresh candidate pass.
+- DONE: AC-7 unchanged workflow and budget, one paragraph per stage skill.
+  Repository lint-skills.py exits 0: workflow 5931/5931 words, unchanged bytes and budget; implementation 357 to 471 words, validation 356 to 470 (+114 each). Only the prototype's <root> placeholder is spelled <package> for the existing script-path lint. A workflow-budget increase fails lint.
+- DONE: Required local checks, mutations and committed candidate.
+  Role 49, dispatch 28 (real Spacedock 0.27.2), lint tests 47 passed; delivery gate 192 run, one existing skip; seven mutations caught with -B and cache-free copies. Logs: /tmp/rolehold-implementation; check-exits.json records producer exits. adr_lint.py docs/adr --since base, number_guards.py check with task/workflow, design_surfaces.py check and repository lint exit 0; comment_ratio.py: 0 comments/146 code lines, 0%, maximum 5%.
+- DONE: Affected-document review.
+  doc_impact.py: ADR 0049 unaffected: model ranks/floors and default efforts unchanged; ADR 0070 unaffected: write/check/build order and separate version/checkout checks retained. ADR 0026 updated with the approved amendment.
+- DONE: Commit locally and prepare the reviewable handoff.
+  Product worktree clean at the candidate; /tmp/rolehold-implementation/acceptance.sh is a fresh-shell local check entry, with the missing AC-6 proof stated explicitly; PR title/body prepared. No configuration or remote URL writes in a shared worktree.
+- SKIPPED: FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured.
+  All remain FO-owned and not run by this worker. CI cost per PR not measured; no CI trigger/topology edit. Direct FO notification tool was rejected, so this final-reply handback carries the evidence gap.
+
+### Summary
+
+Implemented the bounded worker-start hold and earlier dispatch refusal in local candidate 42455f093facfc96edf6cd0357f26be1c858b262, including the pending dispatch, every owed role, no in-flight exemption and hold-report counting. Local checks and the seven executable mutations pass, but the candidate is not ready to ship: AC-6 still needs an authenticated six-run replay and its behavior falsifier; no fresh worker behavior is claimed from the 401 runs. FO retains publication, independent review/validation and the next workflow decision.
