@@ -190,6 +190,14 @@ def main(argv=None):
               "Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; "
               "do not blindly state commit divergent data.", file=sys.stderr)
         return 1
+    if args.stage in ("implementation", "validation"):
+        roles = subprocess.run([sys.executable, "-B", str(SCRIPTS / "role_triggers.py"),
+                                str(folder.parent), folder.name, "--pending", str(path)], capture_output=True, text=True)
+        if roles.returncode:
+            remove_uncommitted(path, wrote)
+            print(f"dispatch_stage: dispatch not built; {folder.name} owes a special-role call:", file=sys.stderr)
+            sys.stderr.write(roles.stdout + roles.stderr)
+            return 1
     checks = [subprocess.run([sys.executable, "-B", str(SCRIPTS / "dispatch_records.py"), *map(str, flags)],
                              capture_output=True, text=True)
               for flags in ((task_folder(args.entity_path),), ("--names", "--strict", path))]

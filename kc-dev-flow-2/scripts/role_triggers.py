@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """List the chief-engineer and engineering-reviewer calls a committed task state owes.
 
-Usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--review-rounds N [--drift-date YYYY-MM-DD]]
-Reads the task at REV (default HEAD) from committed bytes, never the disk; live or archived, flat or folder.
+Usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--pending RECORD] [--review-rounds N [--drift-date YYYY-MM-DD]]
+Reads the task at REV (default HEAD) from committed bytes; live or archived, flat or folder.
+--pending adds one on-disk dispatch record, replacing a committed record of the same name; other inputs stay committed.
 Chief-engineer is owed at four repair passes: the `## Stage Report: implementation` headings minus one (or, given
 --review-rounds, N >= 2 review ids that left inline findings on the open PR).
 --drift-date is the UTC date of the newest review round (`review_facts`); given it, a call or waiver clears the
@@ -95,7 +96,7 @@ def review_facts(comments):
 
 
 def parse(args):
-    options = {"--rev": "HEAD", "--review-rounds": None, "--drift-date": None}
+    options = {"--rev": "HEAD", "--review-rounds": None, "--drift-date": None, "--pending": None}
     for name in options:
         if name in args:
             at = args.index(name)
@@ -110,8 +111,8 @@ def parse(args):
     if drift is not None and not re.fullmatch(DATE.pattern, drift):
         raise Unverifiable("usage: --drift-date needs YYYY-MM-DD")
     if len(args) != 2 or "/" in args[1] or args[1] in ("", ".", ".."):
-        raise Unverifiable("usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--review-rounds N [--drift-date YYYY-MM-DD]]")
-    return Path(args[0]), args[1], options["--rev"], None if rounds is None else int(rounds), drift
+        raise Unverifiable("usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--pending RECORD] [--review-rounds N [--drift-date YYYY-MM-DD]]")
+    return Path(args[0]), args[1], options["--rev"], None if rounds is None else int(rounds), drift, options["--pending"]
 
 
 def read_task(state, slug, rev):
@@ -298,12 +299,19 @@ def hint(slug, agent, heading):
             "move it under ## FO alignment.")
 
 
-def check(state, slug, rev, rounds=None, drift=None):
+def check(state, slug, rev, rounds=None, drift=None, pending=None):
     text = read_task(state, slug, rev)
     lines = list(outside_fences(text))
     reports, amendments = events(lines)
     failures, replacements = step_back_events(lines)
-    symptoms = symptom_rounds(read_records(state, slug, rev))
+    dispatches = read_records(state, slug, rev)
+    if pending is not None:
+        pending = Path(pending)
+        try:
+            dispatches = [(name, body) for name, body in dispatches if name != pending.name] + [(pending.name, pending.read_text())]
+        except (OSError, UnicodeError) as error:
+            raise Unverifiable(f"cannot read pending dispatch record {pending}: {error}") from error
+    symptoms = symptom_rounds(dispatches)
     kept = list(alignment(lines))
     front = re.match(r"---\n(.*?)\n---\n", text, re.S)
     profile = FRONT_PROFILE.search(front.group(1)) if front else None
@@ -377,8 +385,8 @@ def check(state, slug, rev, rounds=None, drift=None):
 def main(argv=None):
     args = sys.argv[1:] if argv is None else list(argv)
     try:
-        state, slug, rev, rounds, drift = parse(args)
-        code, message = check(state, slug, rev, rounds, drift)
+        state, slug, rev, rounds, drift, pending = parse(args)
+        code, message = check(state, slug, rev, rounds, drift, pending)
     except Unverifiable as err:
         print(f"cannot tell whether a chief-engineer or engineering-reviewer call is owed: {err}. Hold and report the cause.")
         return 2
