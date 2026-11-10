@@ -1,0 +1,34 @@
+[
+  {
+    "name": "dev2",
+    "argv": [
+      "python3",
+      "-B",
+      "/tmp/opencode/pr828-validation/candidate/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--before",
+      "bf8c73be99c4^",
+      "--after",
+      "bf8c73be99c4",
+      "--readme",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+    ],
+    "exit": 2
+  },
+  {
+    "name": "relay",
+    "argv": [
+      "python3",
+      "-B",
+      "/tmp/opencode/pr828-validation/candidate/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state",
+      "--before",
+      "06cadae7681f^",
+      "--after",
+      "06cadae7681f",
+      "--readme",
+      "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/README.md"
+    ],
+    "exit": 1
+  }
+]

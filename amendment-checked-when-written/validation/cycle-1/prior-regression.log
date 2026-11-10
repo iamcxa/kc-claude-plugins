@@ -1,0 +1,63 @@
+FFFF
+======================================================================
+FAIL: test_unrelated_broken_entry_does_not_hide_valid_move (test_laws_check.L4Test.test_unrelated_broken_entry_does_not_hide_valid_move) (label='outside')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/pr828-validation/prior/kc-dev-flow-2/scripts/test_laws_check.py", line 988, in test_unrelated_broken_entry_does_not_hide_valid_move
+    self.assertEqual(self.l4_lines(out), [
+AssertionError: Lists differ: [] != ['violation: L4 amendment-moves-use-fresh-[63 chars]ent']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=9a1a76cfc5e9 amendment=1 unmarked replacement'
+
+- []
++ ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=9a1a76cfc5e9 '
++  'amendment=1 unmarked replacement']
+
+======================================================================
+FAIL: test_unrelated_broken_entry_does_not_hide_valid_move (test_laws_check.L4Test.test_unrelated_broken_entry_does_not_hide_valid_move) (label='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/pr828-validation/prior/kc-dev-flow-2/scripts/test_laws_check.py", line 988, in test_unrelated_broken_entry_does_not_hide_valid_move
+    self.assertEqual(self.l4_lines(out), [
+AssertionError: Lists differ: [] != ['violation: L4 amendment-moves-use-fresh-[63 chars]ent']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=710155f78c6d amendment=1 unmarked replacement'
+
+- []
++ ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=710155f78c6d '
++  'amendment=1 unmarked replacement']
+
+======================================================================
+FAIL: test_repaired_heading_reports_previously_unjudged_defect (test_laws_check.L4Test.test_repaired_heading_reports_previously_unjudged_defect)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/pr828-validation/prior/kc-dev-flow-2/scripts/test_laws_check.py", line 1000, in test_repaired_heading_reports_previously_unjudged_defect
+    self.assertEqual(self.l4_lines(out), [
+AssertionError: Lists differ: [] != ['violation: L4 amendment-moves-use-fresh-[169 chars]ent']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=9fde041d1892 amendment=1 reused ids: AC-2'
+
+- []
++ ['violation: L4 amendment-moves-use-fresh-ids task=t.md commit=9fde041d1892 '
++  'amendment=1 reused ids: AC-2',
++  'violation: L4 amendment-moves-use-fresh-ids task=t.md commit=9fde041d1892 '
++  'amendment=1 unmarked replacement']
+
+======================================================================
+FAIL: test_repairing_an_unrelated_heading_does_not_repeat_reported_defect (test_laws_check.L4Test.test_repairing_an_unrelated_heading_does_not_repeat_reported_defect)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/pr828-validation/prior/kc-dev-flow-2/scripts/test_laws_check.py", line 1012, in test_repairing_an_unrelated_heading_does_not_repeat_reported_defect
+    self.assertEqual(len(self.l4_lines(self.judge(repo, before, event)[1])), 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.194s
+
+FAILED (failures=4)

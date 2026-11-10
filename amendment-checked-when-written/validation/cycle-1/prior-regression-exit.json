@@ -1,0 +1,14 @@
+{
+  "candidate": "71eb2ec4298812d831573386324641ca6babff5d",
+  "test_source": "72216e2e947e962737a17c6e61ef3800f9d639c4",
+  "argv": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "test_laws_check.L4Test.test_unrelated_broken_entry_does_not_hide_valid_move",
+    "test_laws_check.L4Test.test_repaired_heading_reports_previously_unjudged_defect",
+    "test_laws_check.L4Test.test_repairing_an_unrelated_heading_does_not_repeat_reported_defect"
+  ],
+  "exit": 1
+}

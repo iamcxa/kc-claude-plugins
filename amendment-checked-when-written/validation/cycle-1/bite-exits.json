@@ -1,0 +1,34 @@
+[
+  {
+    "name": "candidate",
+    "argv": [
+      "python3",
+      "-B",
+      "/tmp/opencode/pr828-validation/candidate/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--before",
+      "b91e7434adde",
+      "--after",
+      "a113aa3e9",
+      "--readme",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+    ],
+    "exit": 1
+  },
+  {
+    "name": "base",
+    "argv": [
+      "python3",
+      "-B",
+      "/tmp/opencode/pr828-validation/base/kc-dev-flow-2/scripts/laws_check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--before",
+      "b91e7434adde",
+      "--after",
+      "a113aa3e9",
+      "--readme",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+    ],
+    "exit": 1
+  }
+]

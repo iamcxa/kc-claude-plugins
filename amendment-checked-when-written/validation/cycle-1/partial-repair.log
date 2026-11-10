@@ -1,0 +1,17 @@
+introduced 1 L1 observer-before-sentinel: 0 events judged (README lists no learn)
+L2 dispatch-record-complete: 0 events judged in f40e785fe047..206d39e2b88c, 0 violated
+L3 amendment-append-only: 1 events judged in f40e785fe047..206d39e2b88c, 0 violated
+L4 amendment-moves-use-fresh-ids: 1 events judged in f40e785fe047..206d39e2b88c, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=t.md commit=206d39e2b88c amendment=1 reused ids: AC-1, AC-2
+
+partial_repair 1 L1 observer-before-sentinel: 0 events judged (README lists no learn)
+L2 dispatch-record-complete: 0 events judged in 206d39e2b88c..dc2ff6a67925, 0 violated
+L3 amendment-append-only: 1 events judged in 206d39e2b88c..dc2ff6a67925, 0 violated
+L4 amendment-moves-use-fresh-ids: 1 events judged in 206d39e2b88c..dc2ff6a67925, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=t.md commit=dc2ff6a67925 amendment=1 reused ids: AC-2
+
+complete_repair 0 L1 observer-before-sentinel: 0 events judged (README lists no learn)
+L2 dispatch-record-complete: 0 events judged in dc2ff6a67925..b18b18d56f6c, 0 violated
+L3 amendment-append-only: 1 events judged in dc2ff6a67925..b18b18d56f6c, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in dc2ff6a67925..b18b18d56f6c, 0 violated
+

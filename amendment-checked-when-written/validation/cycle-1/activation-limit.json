@@ -1,0 +1,18 @@
+{
+  "pin": "22219a3e4bc48a69a893bd757923e8c034d1ba6e",
+  "argv": [
+    "python3",
+    "-B",
+    "/tmp/opencode/pr828-validation/old-pin/kc-dev-flow-2/scripts/laws_check.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+    "--before",
+    "b91e7434adde",
+    "--after",
+    "a113aa3e9",
+    "--readme",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+  ],
+  "exit": 1,
+  "L4_present": false,
+  "scope": "Local old-pin falsifier only; no hosted activation or hosted old-pin run observed"
+}

@@ -1,0 +1,1 @@
+{"command": ["python3", "-B", "verify-corpus.py"], "exit": 0}

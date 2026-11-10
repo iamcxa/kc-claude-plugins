@@ -1,0 +1,38 @@
+[
+  {
+    "name": "AC-1: original defect and predicate falsifiers",
+    "status": "passed",
+    "evidence": "candidate-bite.log; mutations.json"
+  },
+  {
+    "name": "AC-2: legitimate shapes and payload falsifier",
+    "status": "passed",
+    "evidence": "laws-tests.log; mutation-payload-0.log"
+  },
+  {
+    "name": "AC-3: report each defect once",
+    "status": "failed",
+    "evidence": "partial-repair.log; acceptance.log step 5",
+    "note": "F1 Material: partial repair re-reports unchanged AC-2."
+  },
+  {
+    "name": "AC-5: registry and reading boundary",
+    "status": "passed",
+    "evidence": "artifact.json; mutation-heading-0.log"
+  },
+  {
+    "name": "AC-6: shared marker and unchanged check/seed behavior",
+    "status": "passed",
+    "evidence": "design-tests.log; check-comparison.json; mutation-marker-*.log"
+  },
+  {
+    "name": "AC-7: hosted activation",
+    "status": "untested",
+    "note": "Open under D2: needs released pin, Captain approval and observed hosted run; local old-pin negative control only."
+  },
+  {
+    "name": "AC-8: seven historical events and heading recovery",
+    "status": "passed",
+    "evidence": "corpus-reconciliation.json; laws-tests.log; mutation-whole-file-*.log"
+  }
+]

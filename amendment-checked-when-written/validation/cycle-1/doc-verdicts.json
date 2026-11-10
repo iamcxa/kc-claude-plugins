@@ -1,0 +1,6 @@
+[
+  {"path":"docs/adr/0041-seed-admission-enforces-required-fields.md","disposition":"unaffected","reason":"Seed admission is unchanged and all saved check/seed comparisons match the base."},
+  {"path":"docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md","disposition":"unaffected","reason":"The added_words implementation is unchanged; the replacement criterion produces no inserted-word findings."},
+  {"path":"kc-dev-flow-2/references/sd/laws.md","disposition":"updated","reason":"New L4 entry describes per-entry skipping and heading repair. The new-event and no-repeat promise is not met for partial repair: F1."},
+  {"path":"learning.md","disposition":"unaffected","reason":"The historical practices remain intact; input boundaries, newer history and checker consumers were independently exercised."}
+]

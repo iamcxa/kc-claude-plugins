@@ -1,0 +1,22 @@
+[
+  {
+    "name": "laws",
+    "run": 76,
+    "passed": 75,
+    "skipped": 1,
+    "seconds": 196.774,
+    "status": "passed",
+    "log": "laws-tests.log",
+    "exit": 0
+  },
+  {
+    "name": "design",
+    "run": 217,
+    "passed": 213,
+    "skipped": 4,
+    "seconds": 23.538,
+    "status": "passed",
+    "log": "design-tests.log",
+    "exit": 0
+  }
+]

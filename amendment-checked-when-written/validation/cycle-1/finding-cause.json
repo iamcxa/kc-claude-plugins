@@ -1,0 +1,16 @@
+{
+  "source": "kc-dev-flow-2/scripts/design_surfaces.py",
+  "reused_representation": "        held = {ident for ident, _ in moved[index]}\n        reused = tuple(sorted(held & declared))\n        if reused:\n            defects.append((\"reused\", entry.number, reused))\n",
+  "history_comparison": "            previous = set(move_defects(before))\n            added = [defect for defect in move_defects(after) if defect not in previous]\n            if not added:\n                continue\n",
+  "observed_old_ids": [
+    "AC-1",
+    "AC-2"
+  ],
+  "observed_after_partial_repair": [
+    "AC-2"
+  ],
+  "new_ids": [],
+  "observed_event_count": 1,
+  "expected_event_count": 0,
+  "claim": "F1 is tied to an unchanged existing id, not a newly introduced violation."
+}

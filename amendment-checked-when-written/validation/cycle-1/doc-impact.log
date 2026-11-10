@@ -1,0 +1,5 @@
+docs/adr/0041-seed-admission-enforces-required-fields.md	review	kc-dev-flow-2/scripts/design_surfaces.py
+docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md	review	kc-dev-flow-2/scripts/design_surfaces.py
+kc-dev-flow-2/references/sd/laws.md	updated	move_defects
+learning.md	review	kc-dev-flow-2/scripts/laws_check.py
+4 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

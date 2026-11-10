@@ -1,0 +1,16 @@
+[
+  {
+    "severity": "medium",
+    "title": "部分修正編號重用會把剩下的舊缺陷再報成新事件",
+    "file": "kc-dev-flow-2/scripts/laws_check.py",
+    "line": 383,
+    "detail": "Material. A moved amendment first reports reused AC-1 and AC-2. A later commit changes only the live AC-1 to fresh AC-3; AC-2 is unchanged. Comparing entire defect tuples treats ('reused', 1, ('AC-2',)) as new, so the later push exits 1 and attributes old AC-2 to the repair commit. The L3 amendment check reports zero violations. This contradicts AC-3 and ADR 0017's new-event-only rule. Reproduced with real temporary Git commits and the unmodified candidate CLI; not a hosted incident claim.",
+    "fix": "Return through implementation feedback. Compare reused ids individually within the same amendment so a strict decrease emits no event, while genuinely added ids and a first-judgeable heading repair remain reported.",
+    "status": "open",
+    "classification": "Material",
+    "released_user_and_normal_workflow": "An adopter's FO/worker repairs an already reported multi-id criterion move in successive state commits, then pushes those commits through the normal laws runner.",
+    "observable_harm": "A push adding no new reused id fails and names the repair commit as a new violation; existing debt is reported twice.",
+    "affected_boundary": "value-ac[AC-3] A defect is reported once at the commit that adds it; contract[docs/adr/0017-history-laws-judge-only-the-events-a-push-adds.md#decision] Only newly added events are judged.",
+    "trigger_evidence": "partial-repair.log and acceptance.log step 5. Exact candidate 72216e2e947e962737a17c6e61ef3800f9d639c4; full repair control exits 0. No change to product bytes."
+  }
+]

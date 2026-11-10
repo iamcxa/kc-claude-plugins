@@ -1,0 +1,5 @@
+L1 observer-before-sentinel: 0 events judged in 8a5b7f0280c8..06cadae7681f, 0 violated
+L2 dispatch-record-complete: 0 events judged in 8a5b7f0280c8..06cadae7681f, 0 violated
+L3 amendment-append-only: 1 events judged in 8a5b7f0280c8..06cadae7681f, 0 violated
+L4 amendment-moves-use-fresh-ids: 1 events judged in 8a5b7f0280c8..06cadae7681f, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=owner-sees-all-feedback-room.md commit=06cadae7681f amendment=3 unmarked replacement

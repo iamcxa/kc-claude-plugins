@@ -1,0 +1,22 @@
+{
+  "name": "qnow",
+  "state": "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state",
+  "before": "4a37fda441f2eb71ff8b3c2b9886983cb46c3e5f",
+  "after": "b58e96c49062834266acda51726ae2692b66a653",
+  "readme": "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/README.md",
+  "candidate": "72216e2e947e962737a17c6e61ef3800f9d639c4",
+  "implementation_tip": "c36650727548d893324aad22723fd530bc900570",
+  "argv": [
+    "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+    "-B",
+    "/private/tmp/opencode/pr828-validation/candidate/kc-dev-flow-2/scripts/laws_check.py",
+    "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state",
+    "--before",
+    "4a37fda441f2eb71ff8b3c2b9886983cb46c3e5f",
+    "--after",
+    "b58e96c49062834266acda51726ae2692b66a653",
+    "--readme",
+    "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/README.md"
+  ],
+  "exit": 2
+}

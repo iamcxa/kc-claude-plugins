@@ -1,0 +1,22 @@
+{
+  "name": "dev2",
+  "state": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+  "before": "166c16d968305ad711481276809433a15fcf8a5e",
+  "after": "5f92880d43819ba0d2a108cb4939b199604d7a8f",
+  "readme": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md",
+  "candidate": "72216e2e947e962737a17c6e61ef3800f9d639c4",
+  "implementation_tip": "2a42fbb15e0f0509b4084370850f730e6334a983",
+  "argv": [
+    "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+    "-B",
+    "/private/tmp/opencode/pr828-validation/candidate/kc-dev-flow-2/scripts/laws_check.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+    "--before",
+    "166c16d968305ad711481276809433a15fcf8a5e",
+    "--after",
+    "5f92880d43819ba0d2a108cb4939b199604d7a8f",
+    "--readme",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md"
+  ],
+  "exit": 2
+}

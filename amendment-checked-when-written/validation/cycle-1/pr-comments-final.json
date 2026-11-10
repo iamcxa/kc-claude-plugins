@@ -1,0 +1,16 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Action completed."
+    }
+  ],
+  "structuredContent": {
+    "comments": [],
+    "url": "https://github.com/iamcxa/kc-claude-plugins/pull/828",
+    "title": "iamcxa/kc-claude-plugins PR #828 comments",
+    "display_url": "https://github.com/iamcxa/kc-claude-plugins/pull/828",
+    "display_title": "iamcxa/kc-claude-plugins PR #828 comments"
+  },
+  "isError": false
+}

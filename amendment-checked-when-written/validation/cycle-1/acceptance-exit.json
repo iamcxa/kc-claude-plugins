@@ -1,0 +1,7 @@
+{
+  "command": "bash --noprofile --norc acceptance.sh",
+  "cwd": "evidence directory",
+  "exit": 1,
+  "steps_1_to_4": "passed",
+  "step_5": "failed AC-3: existing AC-2 re-reported after partial repair"
+}

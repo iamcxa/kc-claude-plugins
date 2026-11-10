@@ -1,0 +1,20 @@
+STEP 1 PASS: exported candidate 72216e2e947e and base 6a495cb8c405
+L4 amendment-moves-use-fresh-ids: 1 events judged in b91e7434adde..a113aa3e9a3d, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 reused ids: AC-1, AC-2, AC-4
+violation: L4 amendment-moves-use-fresh-ids task=worker-browser-checks-use-paseo-browser.md commit=a113aa3e9a3d amendment=1 unmarked replacement
+STEP 2 PASS: candidate flags the bite; base has no L4
+............
+----------------------------------------------------------------------
+Ran 12 tests in 27.382s
+
+OK
+STEP 3 PASS: L4 and registry tests
+65 ADR file(s) checked, 0 legacy
+STEP 4 PASS: ADR lint
+Partial repair CLI exit: 1
+L1 observer-before-sentinel: 0 events judged (README lists no learn)
+L2 dispatch-record-complete: 0 events judged in 842f92d59ff6..186c7051f63f, 0 violated
+L3 amendment-append-only: 1 events judged in 842f92d59ff6..186c7051f63f, 0 violated
+L4 amendment-moves-use-fresh-ids: 1 events judged in 842f92d59ff6..186c7051f63f, 1 violated
+violation: L4 amendment-moves-use-fresh-ids task=t.md commit=186c7051f63f amendment=1 reused ids: AC-2
+FAIL AC-3: a repair with no new reused id re-reports the existing AC-2 defect
