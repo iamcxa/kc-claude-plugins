@@ -3,7 +3,7 @@ title: A worker holds before work while a special-role call is owed and unrecord
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
