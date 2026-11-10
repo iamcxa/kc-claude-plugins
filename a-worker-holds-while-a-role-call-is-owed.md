@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:a-worker-holds-while-a-role-call-is-owed:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:a-worker-holds-while-a-role-call-is-owed-validation-1
+              briefing:
+                id: briefing:a-worker-holds-while-a-role-call-is-owed:validation:attempt-1:revision-1
+                digest: sha256:2e1127d85c0b22e85824a7e95afefec35469981dfe921348a602d392bd15f921
+                room-ref: ./a-worker-holds-while-a-role-call-is-owed/review/validation/briefing-1
 started: 2026-11-09T14:37:10Z
 worktree: .worktrees/spacedock-ensign-a-worker-holds-while-a-role-call-is-owed
 pr: iamcxa/kc-claude-plugins#823
