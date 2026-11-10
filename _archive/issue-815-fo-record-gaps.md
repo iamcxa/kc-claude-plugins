@@ -3,7 +3,7 @@ title: Four FO-record gaps from issue #815 that no existing task covers
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-10), answering 「決定：合併 #826（relay 回報的四個紀錄漏洞：關卡理由沒引用關卡問題就擋下、建好的畫面可以附多張截圖、封存任務的資料夾也能查派工涵蓋、確認步驟紀錄固定放在 captain-steps）嗎？建議合併。同意即接受：三種關卡的理由都要引用問題，打錯字也會被擋；workflow 說明多 2 個字；issue #815 的回覆等合併並發布後再另外請你看草稿。 Regular merge with --match-head-commit e608489c62fd387aeafaa5a1a6111ae59cd7d383, the batch 20 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-10T04:57:46Z
 worktree: .worktrees/spacedock-ensign-issue-815-fo-record-gaps
 pr: pr-merge:826
+verdict: PASSED
+completed: 2026-11-10T11:18:35Z
+archived: 2026-11-10T11:18:35Z
 ---
 
 ## Scope
