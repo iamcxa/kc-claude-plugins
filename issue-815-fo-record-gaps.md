@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:issue-815-fo-record-gaps:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:issue-815-fo-record-gaps-validation-1
+              briefing:
+                id: briefing:issue-815-fo-record-gaps:validation:attempt-1:revision-1
+                digest: sha256:c5e691dbbc1f0c167ffb292d8d560b27abf76b9137cd0d36e18e6fca73b4deec
+                room-ref: ./issue-815-fo-record-gaps/review/validation/briefing-1
 started: 2026-11-10T04:57:46Z
 worktree: .worktrees/spacedock-ensign-issue-815-fo-record-gaps
 pr: iamcxa/kc-claude-plugins#826

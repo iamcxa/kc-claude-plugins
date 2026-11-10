@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:issue-815-fo-record-gaps:validation:attempt-1:revision-1",
+  "question": "決定：合併 #826（relay 回報的四個紀錄漏洞：關卡理由沒引用關卡問題就擋下、建好的畫面可以附多張截圖、封存任務的資料夾也能查派工涵蓋、確認步驟紀錄固定放在 captain-steps）嗎？建議合併。同意即接受：三種關卡的理由都要引用問題，打錯字也會被擋；workflow 說明多 2 個字；issue #815 的回覆等合併並發布後再另外請你看草稿。 Regular merge with --match-head-commit e608489c62fd387aeafaa5a1a6111ae59cd7d383, the batch 20 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:issue-815-fo-record-gaps:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f35f3ac8dbc3717f7fa26efc4256e3e128bb0ea3/issue-815-fo-record-gaps.md",
+      "rev": "sha256:cb289e6b88230304e754ed54f9849f2145e4289ddc662dbd877f2a774579e032",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 2\nDelivery of issue-815-fo-record-gaps, PR #826, in the batch 20 validation sitting.\nSufficiency: AC-1 to AC-11 pass, covering a Captain gate reason held when it does not quote the open attempt's bound question, several preview paths in the built-screen check, the coverage check on a task folder, and the Captain steps record path of ADR 0054 (validation-1 report, Astra, 2026-11-10, PASSED at e608489c6).\nNecessity: ADR 0073, kc-dev-flow-2/references/sd/workflow.md, the four scripts decision_ledger.py, delivery_gate.py, design_surfaces.py and dispatch_records.py with their tests, lint-skills.py, the design-director skill and validation principles change (git diff --name-only, FO run 2026-11-10; judged against the design in the validation-1 report, Astra, 2026-11-10).\nAcceptance, run by FO in a fresh shell 2026-11-10, exit 0: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/issue-815-fo-record-gaps/validation-1/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/issue-815-fo-record-gaps/captain-steps/1.md\nPR link step, run by FO in a fresh shell 2026-11-10, exit 0: open https://github.com/iamcxa/kc-claude-plugins/pull/826 and check it is open, ready and at the candidate head\nExternal rounds: 1.\nExternal round sources: Codex reviewed e608489c6 (codex_review.py, FO run 2026-11-10).\nSecond reviewer: Copilot because the PR changes approval and merge rules.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5840721217\nCopilot retry: available when the Captain confirms quota is back.\nCodex review: \"Didn't find any major issues\" on e608489c6 (codex_review.py, FO run 2026-11-10, evidence=summary:6761312822@e608489c6).\nRoboRev: clean on e608489c6, evidence=roborev:1690 (FO run 2026-11-10).\nCI: every check on e608489c6 finished SUCCESS or SKIPPED (gh pr view statusCheckRollup, read by FO 2026-11-10).\nValidation answered merge-readiness: it read the PR at the head and found no unaddressed review (validation-1 report, Astra, 2026-11-10).\nADR: 0073 is in the PR (number reserved by FO 2026-11-10).\nWords: the workflow README grows by 2 words, 5931 to 5933 (the implementation worker's count, checked by the validator, not run by FO).\nLimit: AC-12 stays open after merge, because issue 815 is answered only after the release and the Captain's approval of the drafted text (task file, Answer to issue section).\nLimit: relay's next validation gate will hold once until its steps record moves under captain-steps (the ideation worker's statement, not run by FO).\nMerge order: this PR merges before PR 827, because git merge-tree of the two branches reports a content conflict in kc-dev-flow-2/scripts/lint-skills.py (FO run 2026-11-10); the other batch 20 branches merge cleanly with this one."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:issue-815-fo-record-gaps:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/f35f3ac8dbc3717f7fa26efc4256e3e128bb0ea3/issue-815-fo-record-gaps/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:65df978a4fe9e2767c74949bdfe70da975cddc3f646312e2cb6b0736686b9255"
+    }
+  ]
+}
