@@ -1,0 +1,21 @@
+Candidate: 39a76c68836f471fc0c42c18eab12641196860ed
+Export: /tmp/pr827-acceptance.vnPkGP
+..
+----------------------------------------------------------------------
+Ran 2 tests in 2.762s
+
+OK
+....
+----------------------------------------------------------------------
+Ran 4 tests in 4.458s
+
+OK
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 4.006s
+
+OK
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+PASS: committed role prompt, refusals, recovery, CRLF/LF bytes and merged 5939-word budget
