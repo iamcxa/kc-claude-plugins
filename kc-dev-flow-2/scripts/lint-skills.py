@@ -66,6 +66,9 @@ WORKFLOW_BUDGET_STEPS = [
          captain="「准」 (Captain, chat, 2026-11-05), answering 「決定：漏寫 Override 這份設計進入實作嗎？核准即接受 D1-A（記錄裁示前先檢查理由文字）、D2-A（README 加 48 字，字數上限 5891 調到 5939）、D3-A（不加反向防護）、D4-A（不做裁示紀錄評分器）四個建議。」",
          loaded="startup and resume of the First Officer, and before each Captain gate record"),
     dict(delta=-2, why="dispatch_stage.py saves and checks the record; the README names the script and its flags"),
+    dict(delta=6, why="FO builds special-role calls through dispatch_stage.py before recording the Reviewer line",
+         captain="「核准（建議）」 (Captain, ideation gate, 2026-11-10), accepting 「特別角色派工紀錄：由腳本寫好、檢查、提交後才交給審查者；模型低於 opus 或 astra 就拒絕派；README 多 6 個字；完全手動、沒有紀錄的審查不在這張處理。」 in the bound batch-20 question; the joint raise is 5931 to 5939, this task adds six",
+         loaded="startup and resume of the First Officer, and before chief-engineer or engineering-reviewer dispatch"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
