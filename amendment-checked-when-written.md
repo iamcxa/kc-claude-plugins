@@ -191,6 +191,13 @@ Recommended order: no ordering is needed within batch 20. Among the `design_surf
 
 **AC-7** Hosted on dev2 (per D2). Evidence: after the release, the pin commit on `spacedock-state/dev2` names the published tag, and the next state push's `dev2-laws.yml` run log (`gh run view <id> --log`) prints the L4 head line. Falsifier: a run on the old pin prints no L4 line. Not yet verified; it runs after merge and on the Captain's word.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-10, host question dialog
+Captain: 「改成 5 次（建議）」 (host question dialog, 2026-11-10)
+Asked: 「決定：「修改驗收條件的檢查」那張的歷史重跑驗收條件，要從抓到 7 次改成 5 次嗎？建議改成 5 次。你核准的設計同時寫了「歷史重跑抓到 7 次」和「任務檔格式有問題時新規則不判，留給既有的格式規則」，兩者衝突：照後者實作只抓到 5 次，少的 2 次檔案都有格式問題（實作工人的報告，我沒重跑）。同意即把這條驗收條件改成 5 次，並寫明另外 2 次留給既有格式規則；缺點是格式壞掉的檔案裡的編號重用，要等格式修好才會被新規則看到。」
+Supersedes: AC-4
+
 ## Stage Report: ideation
 
 - DONE: Design the check that refuses or flags, at the commit that writes it, a task amendment that reuses an acceptance-criterion id or lacks the 'Amended by Captain, amendment N' marker (the batch 17 in-place AC rewrite is the bite); name where it runs at commit time, what kc-dev-flow-2/scripts/design_surfaces.py already catches, and the falsifier
