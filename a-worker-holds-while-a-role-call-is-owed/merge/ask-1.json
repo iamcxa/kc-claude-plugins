@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "42455f093facfc96edf6cd0357f26be1c858b262",
+  "model": "not run",
+  "necessity": "only the implementation and validation stage skills, kc-dev-flow-2/scripts/dispatch_stage.py, kc-dev-flow-2/scripts/role_triggers.py, their tests and ADR 0026 change (validation report, Astra, 2026-11",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F1 Deferred risk: replay report'",
+    "point: deferred: 'Declined: F1 hold-report commit unproved in'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-c'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_stage.py'",
+    "point: path: 'kc-dev-flow-2/scripts/role_triggers.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_stage.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_role_triggers.py'",
+    "point: path: 'kc-dev-flow-2/skills/implementation/SKILL.md'",
+    "point: path: 'kc-dev-flow-2/skills/validation/SKILL.md'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#823",
+  "sufficiency": "implementation and validation workers run role_triggers.py first and stop with a hold report while a call is owed and unrecorded; in the Codex replay at qnow state ee29b0a8 the candidate held in 3 of ",
+  "time": "2026-11-10T01:26:03Z",
+  "verdict": "ask"
+}
