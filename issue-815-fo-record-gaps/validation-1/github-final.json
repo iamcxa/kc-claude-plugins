@@ -1,0 +1,422 @@
+{
+  "pr": {
+    "status": "fulfilled",
+    "value": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "url": "https://github.com/iamcxa/kc-claude-plugins/pull/826",
+        "number": 826,
+        "state": "open",
+        "merged": false,
+        "mergeable": true,
+        "draft": true,
+        "body": "\nCaptain gate reasons could pass without quoting the bound question, built-screen reports accepted one screenshot, folder-form dispatch coverage errored, and Captain steps could be stored outside the documented location. This binds the reason preflight to the single open attempt, accepts and checks each screenshot in a block sequence, resolves coverage folders, and enforces numbered Captain steps records. ADR 0073 records the approved pre-record hold and the two-word README budget increase.\n\nRefs #815; addresses items 1, 4, 5 and 6. Items 2 and 3 remain separate tasks, so this does not close the issue.\n\nValidation:\n- All 28 repository CI commands exited 0 locally, with 11 conditional fixture skips; final design suite: 220 tests, four conditional skips. Native Spacedock CLI 0.27.2 checks used installed plugin root 0.27.3; exact CI plugin-root 0.27.2 parity remains for hosted CI.\n- Ten reverse mutations were caught; fresh-shell acceptance passed.\n- Real committed relay records: 11 of 12 Captain resolutions refused; this workflow since 2026-11-06: 8 of 63. The archived 14-picture report fails at base and passes at the candidate; archived folder coverage changes exit 2 to exit 0.\n- Repository lint: README 5933/5933 words; ADR 0073 lint and number guards passed; added comment ratio 0.4%, below 5%.\n\nroborev not run: FO runs RoboRev after this local handoff; the worker sandbox cannot reach the local daemon.\nCI cost per PR not measured. No workflow or trigger change. Product branch push, Draft PR creation, hosted CI and review are FO-owned; no version bump.\n\nRoboRev: run by FO: `clean on e608489c6; evidence=roborev:1690`.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n",
+        "title": "fix(kc-dev-flow-2): close four FO record gaps",
+        "base": "main",
+        "base_sha": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+        "head": "spacedock-ensign/issue-815-fo-record-gaps",
+        "head_sha": "e608489c62fd387aeafaa5a1a6111ae59cd7d383",
+        "head_repo_id": 1176993017,
+        "head_repo_full_name": "iamcxa/kc-claude-plugins",
+        "merge_commit_sha": "099debf0840f1e4a385752a096869130fc112940",
+        "user": {
+          "login": "iamcxa",
+          "name": "iamcxa",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/1522808?v=4",
+          "id": 1522808
+        },
+        "requested_reviewers": null,
+        "requested_team_reviewers": null,
+        "diff": null,
+        "comments": null,
+        "created_at": "2026-11-10T06:36:50Z",
+        "updated_at": "2026-11-10T06:36:50Z",
+        "closed_at": null,
+        "merged_at": null,
+        "commits": 1,
+        "changed_files": 13,
+        "additions": 323,
+        "deletions": 36,
+        "display_url": "https://github.com/iamcxa/kc-claude-plugins/pull/826",
+        "display_title": "fix(kc-dev-flow-2): close four FO record gaps"
+      },
+      "isError": false
+    }
+  },
+  "runs": {
+    "status": "fulfilled",
+    "value": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "workflow_runs": [
+          {
+            "id": 42769688272,
+            "name": "kc-dev-flow-2 tests",
+            "status": "completed",
+            "conclusion": "success",
+            "run_number": 686,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688272/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688272/logs",
+            "workflow_id": 365763085
+          },
+          {
+            "id": 42769688231,
+            "name": "marketplace version parity",
+            "status": "completed",
+            "conclusion": "success",
+            "run_number": 2233,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688231/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688231/logs",
+            "workflow_id": 286621000
+          },
+          {
+            "id": 42769688559,
+            "name": "kc-dev-flow release gate",
+            "status": "completed",
+            "conclusion": "success",
+            "run_number": 1551,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688559/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688559/logs",
+            "workflow_id": 340605043
+          },
+          {
+            "id": 42769688318,
+            "name": "docs site",
+            "status": "completed",
+            "conclusion": "success",
+            "run_number": 123,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688318/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688318/logs",
+            "workflow_id": 405868116
+          },
+          {
+            "id": 42769688161,
+            "name": "adr-path-check",
+            "status": "completed",
+            "conclusion": "success",
+            "run_number": 112,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688161/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688161/logs",
+            "workflow_id": 392075364
+          },
+          {
+            "id": 42769688178,
+            "name": "journey-dev2 loop smoke",
+            "status": "completed",
+            "conclusion": "success",
+            "run_number": 13,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688178/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688178/logs",
+            "workflow_id": 382833752
+          }
+        ]
+      },
+      "isError": false
+    }
+  },
+  "jobs": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Action completed."
+      }
+    ],
+    "structuredContent": {
+      "jobs": [
+        {
+          "id": 129674315245,
+          "name": "unit tests (python3)",
+          "status": "completed",
+          "conclusion": "success",
+          "run_id": 42769688272,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "lint-skills.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "test_lint_skills.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "test_design_surfaces.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "test_adr_doc_checks.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "test_poc_readme.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "test_comment_ratio.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "test_number_guards.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "extensions/codex/test_codex_review.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "extensions/roborev/test_roborev_gate.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "extensions/copilot/test_copilot_review.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12
+            },
+            {
+              "name": "extensions/journey-map/test_map_footprint.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 13
+            },
+            {
+              "name": "extensions/release-acceptance/test_release_acceptance.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 14
+            },
+            {
+              "name": "test_dispatch_records.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15
+            },
+            {
+              "name": "test_delivery_gate.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "test_validation_security.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            },
+            {
+              "name": "test_pr_watch.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 18
+            },
+            {
+              "name": "test_replay_dispatch.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 19
+            },
+            {
+              "name": "test_decision_ledger.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20
+            },
+            {
+              "name": "test_package_version.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21
+            },
+            {
+              "name": "test_workflow_checkout.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22
+            },
+            {
+              "name": "test_observer_check.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23
+            },
+            {
+              "name": "test_merge_audit.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 24
+            },
+            {
+              "name": "test_role_triggers.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 25
+            },
+            {
+              "name": "test_laws_check.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 26
+            },
+            {
+              "name": "test_learning.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 27
+            },
+            {
+              "name": "Checkout pinned Spacedock plugin root",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 28
+            },
+            {
+              "name": "Install pinned Spacedock",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 29
+            },
+            {
+              "name": "test_dispatch_stage.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 30
+            },
+            {
+              "name": "test_sd_dispatch.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 31
+            },
+            {
+              "name": "test_observer_recovery.py",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 32
+            },
+            {
+              "name": "Post Checkout pinned Spacedock plugin root",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 63
+            },
+            {
+              "name": "Post Checkout",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 64
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 65
+            }
+          ]
+        }
+      ]
+    },
+    "isError": false
+  },
+  "issue": {
+    "status": "fulfilled",
+    "value": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "issue": {
+          "url": "https://github.com/iamcxa/kc-claude-plugins/issues/815",
+          "title": "kc-dev-flow-2: six FO-record rules no script refuses (subspace-relay observer and learn runs, 2026-11-09)",
+          "issue_number": 815,
+          "body": "Six kc-dev-flow-2 0.35.0 gaps surfaced by observer and learn runs on four subspace-relay tasks (2026-11-09: theme-switch-keeps-draft, room-result-skips-legacy-retraction, signed-in-job-split, pair-pages-favicon). Each is a rule stated in the workflow README or a stage skill that no script refuses, or a script that contradicts its own rule. Not covered by #684.\n\n1. **`gate record` accepts a reason that does not quote the bound question.** `decision_ledger.quotes_bound_question` exists, and every observer flagged it (11 of 12 gates across the four tasks recorded the FO's chat paraphrase, not `answering 「<bound question>」`). Nothing refuses at `gate record` time, so the mismatch is found only after archive. Candidate home: `spacedock gate record` or a pre-record check in `delivery_gate.py`.\n2. **Merge guard archives a task with no committed observer report when `learn` is listed.** README Delivery authority: \"Where `learn` is listed, the sentinel waits for a committed observer report.\" Three tasks were sentinel-recorded and archived without `observer.md`; `observer_check.py` caught it only because the FO ran it by hand on the fourth. Candidate: `merge guard` refuses, or `status --set pr=pr-merge:N` refuses, while `observer_check.py` would print a `next:`.\n3. **No refusal when a merge ask has no `merge/ask-N.json`.** README: \"Before merging or asking, FO runs `delivery_gate.py check`.\" Three of four tasks have no ask record; `merge_audit.py` reports it afterwards as `no ask record:`. Same candidate home as item 2.\n4. **`design_surfaces.py` built-screen check accepts exactly one `preview:` path**, while design-director pass 2a reviews several screenshots and validation needs several sizes. The FO had to narrow the saved report's `preview:` line to one file and keep the reviewed list in a comment (subspace-relay state, `theme-switch-keeps-draft/design/validation-1.yaml`). Candidate: accept a list, each path inside the task folder.\n5. **`dispatch_records.py --coverage` errors on an archived task directory** (observers of two tasks could not run it), so per-stage coverage is unchecked after archive.\n6. **Captain-steps record path disagrees between README and script.** README Captain steps: \"records it in `<task>/captain-steps/<N>.md`\"; `delivery_gate.py` accepts a single `review/captain-steps.md` named on the summary's `Captain steps:` line, which is what every relay task uses. One of them should change.\n\nEvidence: the four observer reports are committed in subspace-relay `spacedock-state/dev2` at `_archive/<task>/observer.md`; the learn jobs (all no-change) are 5e9bc181, b0886821, 2f7f8161, c3f50625 in that repo's local learning store.\n\nFiled at the Captain's request (「同意跑審查，且也同意回報問題」, 2026-11-09).\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n",
+          "state": "open",
+          "user": {
+            "login": "iamcxa",
+            "name": "iamcxa",
+            "email": null,
+            "avatar_url": "https://avatars.githubusercontent.com/u/1522808?v=4",
+            "id": 1522808
+          },
+          "assignees": null,
+          "labels": null,
+          "milestone": null,
+          "state_reason": null,
+          "comments": 0,
+          "created_at": "2026-11-09T06:15:43Z",
+          "updated_at": "2026-11-09T06:15:43Z",
+          "closed_at": null,
+          "display_url": "https://github.com/iamcxa/kc-claude-plugins/issues/815",
+          "display_title": "kc-dev-flow-2: six FO-record rules no script refuses (subspace-relay observer and learn runs, 2026-11-09)"
+        },
+        "url": "https://github.com/iamcxa/kc-claude-plugins/issues/815",
+        "title": "kc-dev-flow-2: six FO-record rules no script refuses (subspace-relay observer and learn runs, 2026-11-09)",
+        "display_url": "https://github.com/iamcxa/kc-claude-plugins/issues/815",
+        "display_title": "kc-dev-flow-2: six FO-record rules no script refuses (subspace-relay observer and learn runs, 2026-11-09)"
+      },
+      "isError": false
+    }
+  },
+  "issueComments": {
+    "status": "fulfilled",
+    "value": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "comments": [],
+        "url": "https://github.com/iamcxa/kc-claude-plugins/issues/815",
+        "title": "iamcxa/kc-claude-plugins Issue #815 comments",
+        "display_url": "https://github.com/iamcxa/kc-claude-plugins/issues/815",
+        "display_title": "iamcxa/kc-claude-plugins Issue #815 comments"
+      },
+      "isError": false
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "documents": [
+    "docs/adr/0011-fo-decides-for-the-captain-by-a-delegation-ladder.md",
+    "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "docs/adr/0041-seed-admission-enforces-required-fields.md",
+    "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+    "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md",
+    "docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md",
+    "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+    "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md",
+    "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+    "docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md",
+    "kc-dev-flow-2/README.md",
+    "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "learning.md"
+  ],
+  "all_present_in_implementation_report": true,
+  "new_adr": "updated",
+  "other_dispositions": "unaffected reasons agree with unchanged protected behavior and historical source retention"
+}

@@ -1,0 +1,645 @@
+diff --git a/docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md b/docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md
+new file mode 100644
+index 000000000..8fbadc603
+--- /dev/null
++++ b/docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md
+@@ -0,0 +1,52 @@
++# 0073. A Captain gate record quotes its bound question before it is written
++
++Date: 2026-11-10
++
++## Status
++
++Accepted
++
++## Context
++
++Issue #815 reported eleven of twelve Captain resolutions on four relay tasks
++without the complete bound question. ADR 0062 D2 left backlog and ideation
++mismatches report-only. The existing declaration check already runs before FO
++writes a Captain record, where a correction is still possible.
++
++## Decision
++
++**Words:** 「核准（建議）」 — Captain, ideation gate attempt 1 of
++issue-815-fo-record-gaps, 2026-11-10.
++
++**Asked:** 「決定：第 20 批四張設計照下列建議進實作嗎？建議核准。(1) 關卡理由沒引用關卡問題：待辦、構想、驗證三種關卡都擋下，不再只是回報；這改掉 ADR 0062 只回報的做法，所以會寫一份新的決策紀錄，README 多 2 個字。(2) 特別角色派工紀錄：由腳本寫好、檢查、提交後才交給審查者；模型低於 opus 或 astra 就拒絕派；README 多 6 個字；完全手動、沒有紀錄的審查不在這張處理。(3) 修改驗收條件的檢查：做成第四條狀態規則，每次推送狀態後檢查，所以壞的提交要推上去後才會被標出；dev2 要真的用到它，得把狀態規則釘選的版本從 0.26.0 改到新版，那一步之後另外問你，這張要等一次推送印出這條規則的結果才收。(4) PR 說明的署名連結：只放行 Claude Code 自動加在最後的那一行署名，其他連結照樣要記成步驟。核准即接受上列每一項建議，包括 README 合計多 8 個字（5931 到 5939）；要改哪項直接說。」
++
++**Options considered:**
++- Hold unquoted Captain reasons before recording at backlog, ideation and
++  validation, with two more workflow README words (chosen).
++- Hold validation reasons alone; leave backlog and ideation report-only.
++- Retain ADR 0062 D2 without the new check.
++
++**Recommended:** Hold at every gate, with the two README words and this ADR,
++as accepted by the Captain's ideation gate answer.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/decision_ledger.py` — `check_reason` before its pass line
++
++This replaces ADR 0062 D2's report-only treatment for Captain records only.
++Before `gate record --actor person:captain`, FO runs `decision_ledger.py --reason
++<file> --task <task>`. The declaration check also requires the reason to contain
++`answering 「<bound question>」`, ignoring whitespace, using the single unresolved,
++non-withdrawn attempt's briefing. Missing or ambiguous state holds with exit 2;
++a missing quote holds with exit 1. A different question requires withdrawal,
++preparation with the question answered, and asking the Captain again.
++
++ADR 0062's `ASK_UNQUOTED` merge-grant rule and after-archive observer remain.
++FO-delegated records are outside this check. The workflow README budget rises
++by two words, read at startup, resume and before each Captain record.
++
++## Consequences
++
++A typo now stops a record while it can still be repaired. A shorter chat ask
++can cost a withdrawal and another question. This comparison proves recorded
++strings, not what the Captain read, and FO can skip the command. Reopen if the
++open-attempt lookup cannot identify the question the Captain answered.
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index b5b3f84dd..881bf89a6 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -388,7 +388,7 @@ the state checkout.
+ A revise asking for what FO did not recommend, and his approval of a recommendation
+ FO revised after pushback, also owe one, on the task they concern. Otherwise the reason
+ carries `Recommendation: followed`. Before `gate record --actor person:captain`, FO runs
+-`python3 <package>/scripts/decision_ledger.py --reason <file>`; nonzero holds the record.
++`python3 <package>/scripts/decision_ledger.py --reason <file> --task <task>`; nonzero holds the record.
+ 
+ ## Decision records
+ 
+diff --git a/kc-dev-flow-2/scripts/decision_ledger.py b/kc-dev-flow-2/scripts/decision_ledger.py
+index 5862bcbd2..1b4136d48 100644
+--- a/kc-dev-flow-2/scripts/decision_ledger.py
++++ b/kc-dev-flow-2/scripts/decision_ledger.py
+@@ -3,7 +3,7 @@
+ 
+ Reads every task file (active and `_archive/`), never writes. One JSON line per gate
+ resolution or withdrawal; `--summary` prints counts per area instead.
+-`--reason FILE` checks a Captain resolution reason before it is recorded.
++`--reason FILE --task TASK` checks a Captain resolution reason before it is recorded.
+ """
+ import argparse
+ import json
+@@ -19,7 +19,7 @@ KEY = re.compile(r"^(?P<indent> *)(?:- )?(?P<key>[a-z-]+):(?: (?P<value>.*))?$")
+ FOLLOWED = "Recommendation: followed"
+ 
+ 
+-def check_reason(path):
++def check_reason(path, task):
+     try:
+         reason = path.read_text(encoding="utf-8")
+     except (OSError, UnicodeError) as exc:
+@@ -34,11 +34,19 @@ def check_reason(path):
+         problem = "both declarations"
+     elif over and over.group("rec").lstrip().startswith(("<", ".", "…")):
+         problem = "placeholder recommendation"
+-    elif over:
+-        print(f"reason: override (area: {over.group('area').strip()})")
+-        return 0
+-    elif followed:
+-        print("reason: followed")
++    elif over or followed:
++        try:
++            bound, index = open_question(task)
++        except (OSError, UnicodeError, ValueError) as exc:
++            print(f"reason: {exc}", file=sys.stderr)
++            return 2
++        # see docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md
++        if not quotes_bound_question({"question": bound, "reason": reason}):
++            print("reason: does not quote the bound question")
++            print(f"next: write answering 「{bound}」 with the bound question copied from {index}; "
++                  "if he answered a different question, gate withdraw and prepare again with the question he answered, then ask him.")
++            return 1
++        print(f"reason: override (area: {over.group('area').strip()})" if over else "reason: followed")
+         return 0
+     else:
+         problem = "missing declaration"
+@@ -117,13 +125,51 @@ def gate_entries(fm):
+         yield entry
+ 
+ 
++def open_question(task):
++    if task.is_dir():
++        choices = (task / "index.md", task.parent / f"{task.name}.md")
++        task = next((p for p in choices if p.is_file()), choices[0])
++    fm, _ = split_task(task.read_text(encoding="utf-8"))
++    rooms, attempt, in_gates = [], None, False
++    attempt_indent = -1
++    for line in fm or []:
++        match = KEY.match(line)
++        if not match:
++            continue
++        indent = len(match["indent"]) + (2 if line.lstrip().startswith("- ") else 0)
++        key, value = match["key"], match["value"]
++        if attempt is not None and (indent < attempt_indent or (key == "id" and indent == attempt_indent)):
++            if attempt["room"] and not attempt["closed"]:
++                rooms.append(attempt["room"])
++            attempt = None
++        if indent == 0:
++            in_gates = key == "gates"
++        elif in_gates:
++            if key == "id" and (value or "").startswith("gate-attempt:"):
++                attempt, attempt_indent = {"room": None, "closed": False}, indent
++            elif attempt is not None:
++                if key == "room-ref":
++                    attempt["room"] = unquote(value or "")
++                elif key in ("resolution", "withdrawal"):
++                    attempt["closed"] = True
++    if attempt is not None and attempt["room"] and not attempt["closed"]:
++        rooms.append(attempt["room"])
++    if len(rooms) != 1:
++        raise ValueError(f"{task}: expected one open gate attempt with a room-ref, found {len(rooms)}")
++    index = task.parent / rooms[0] / "index.json"
++    bound = question(task.parent, task, rooms[0])
++    if not isinstance(bound, str) or not bound.strip():
++        raise ValueError(f"{task}: cannot read a question from {index}")
++    return bound, index
++
++
+ def question(state, task_path, room):
+     if not room:
+         return None
+     index = (task_path.parent / room / "index.json")
+     try:
+         return json.loads(index.read_text())["question"]
+-    except (OSError, ValueError, KeyError):
++    except (OSError, ValueError, KeyError, TypeError):
+         return None
+ 
+ 
+@@ -197,9 +243,12 @@ def main(argv=None):
+     mode = ap.add_mutually_exclusive_group()
+     mode.add_argument("--summary", action="store_true", help="counts per area instead of rows")
+     mode.add_argument("--reason", type=Path, help="check a Captain resolution reason before recording")
++    ap.add_argument("--task", type=Path, help="task file or folder with the open gate attempt")
+     args = ap.parse_args(argv)
+     if args.reason is not None:
+-        return check_reason(args.reason)
++        if args.task is None:
++            ap.error("--task is required with --reason")
++        return check_reason(args.reason, args.task)
+     if args.state is None:
+         ap.error("state is required unless --reason is used")
+     if not args.state.is_dir():
+diff --git a/kc-dev-flow-2/scripts/delivery_gate.py b/kc-dev-flow-2/scripts/delivery_gate.py
+index 51e699e62..ac9c85109 100644
+--- a/kc-dev-flow-2/scripts/delivery_gate.py
++++ b/kc-dev-flow-2/scripts/delivery_gate.py
+@@ -55,7 +55,7 @@ It requires the newest delivery check record to match the dispatched head, named
+ With --summary-file, ordinary text checks use question plus summary; reviewer checks use only
+ the summary outside fences. It requires one top-level External rounds: N (nonnegative integer),
+ optionally followed by a full stop or a semicolon/full stop and detail. Without it, legacy checks apply.
+-The summary (combined text for legacy calls) needs Captain steps: <record path>, passing steps
++The summary (combined text for legacy calls) needs Captain steps: <task folder>/captain-steps/<N>.md (positive N), passing steps
+ against the gate text and latest validation report, at a latest dispatched Candidate.
+ Both `question` and `check` print a claim-source reminder on entry, without adding a hold.
+ They list count sentences without a task-folder file holding their numbers, then write
+@@ -649,6 +649,8 @@ def check(args):
+         nexts.append("next: hold the ask; run the validation security review at this head, or tell the Captain.")
+ 
+     found, wanted = text_problems(task_text, gate_text)
++    for value in re.findall(r"^Captain steps:[ \t]*(.*)$", "\n".join(outside_fences(gate_text)), re.M):
++        found += captain_steps_path_problems(named_file(task_folder(task), value.strip().strip("`\"")), task_folder(task))
+     problems += found
+     nexts += wanted
+     try:
+@@ -887,10 +889,24 @@ def inspect_steps(record_path, message, folder, evidence=""):
+     return problems, candidate, len(steps), left
+ 
+ 
++def captain_steps_path_problems(record, folder=None):
++    path = record.resolve()
++    if folder is None:
++        folder = next((p for p in path.parents if (p / "index.md").is_file()
++                       or (p.parent / f"{p.name}.md").is_file()), path.parent.parent)
++    folder = folder.resolve()
++    if (path.parent != folder / "captain-steps" or not re.fullmatch(r"[1-9][0-9]*\.md", path.name)
++            or not ((folder / "index.md").is_file() or (folder.parent / f"{folder.name}.md").is_file())):
++        return [f"Captain steps record {record} is not {folder}/captain-steps/<N>.md (ADR 0054); move it there and name that path."]
++    return []
++
++
+ def steps(args):
+     try:
+         record = Path(args.record).expanduser()
+-        problems, _, count, left = inspect_steps(record, Path(args.text_file).read_text(), record.resolve().parent.parent)
++        message = Path(args.text_file).read_text()
++        problems, _, count, left = inspect_steps(record, message, record.resolve().parent.parent)
++        problems = captain_steps_path_problems(record) + problems
+     except (OSError, UnicodeDecodeError) as error:
+         emit(f"cannot read input: {error}")
+         return 2
+@@ -907,6 +923,8 @@ def captain_step_problems(task, gate_text, summary):
+         return ["gate text needs one Captain steps: <record path> line"]
+     folder = task_folder(task)
+     path = named_file(folder, declarations[0].strip().strip("`\""))
++    if problems := captain_steps_path_problems(path, folder):
++        return problems
+     report = (VALIDATION_SECTION.findall(task.read_text()) or [""])[-1]
+     problems, candidate, _, _ = inspect_steps(path, gate_text, folder, report)
+     if problems:
+diff --git a/kc-dev-flow-2/scripts/design_surfaces.py b/kc-dev-flow-2/scripts/design_surfaces.py
+index 9ae26fc24..b81abc10a 100644
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -558,7 +558,21 @@ def design_report(name, value, text, errors, on_preview):
+         return None
+     child = re.match(r"[ \t]*", FINDINGS_LINE.search(text).group(0)).group(0)
+     block = re.search(r"^design_review:.*\n((?:[ \t].*\n|[ \t]*\n|#.*\n)*)", text + "\n", re.M).group(1)
+-    on_preview(re.findall(rf"^{child}preview:[ \t]*(.*)$", block, re.M))
++    named = re.findall(rf"^{child}preview:[ \t]*(.*)$", block, re.M)
++    if len(named) > 1:
++        errors.append(f"{name}: '{value}' has {len(named)} 'preview:' lines directly under 'design_review:', expected exactly 1")
++        return None
++    if named == [""]:
++        tail = re.split(rf"^{child}preview:[ \t]*$", block, maxsplit=1, flags=re.M)[1]
++        named = []
++        for line in tail.splitlines():
++            if not line.strip() or line.lstrip().startswith("#"):
++                continue
++            item = re.fullmatch(rf"{child}(?:[ \t]+)?-[ \t]+(.+)", line)
++            if not item:
++                break
++            named.append(item[1])
++    on_preview(named)
+     severities, problems = report_severities(text, DESIGN_SCALE)
+     if problems:
+         errors.extend(f"{name}: '{value}' {problem}" for problem in problems)
+@@ -797,20 +811,25 @@ def check_built_screen(path, body, previews, errors):
+     severities = design_report(name, value, text, errors, named.extend)
+     if severities is None:
+         return None
+-    shot_name = named[0].strip().strip("\"'") if len(named) == 1 else ""
+-    picture = folder / shot_name
+-    if not shot_name or Path(shot_name).is_absolute() or ".." in Path(shot_name).parts or not picture.is_file():
+-        errors.append(f"{name}: built screen review not run: '{value}' names no screenshot file inside the task folder")
+-        return None
++    pictures = []
++    for shot in named or [""]:
++        shot_name = shot.strip().strip("\"'")
++        picture = folder / shot_name
++        if (not shot_name or Path(shot_name).is_absolute() or ".." in Path(shot_name).parts
++                or not picture.is_file() or not picture.resolve().is_relative_to(folder.resolve())):
++            errors.append(f"{name}: built screen review not run: '{value}' preview '{shot_name}' names no screenshot file inside the task folder")
++            return None
++        pictures.append(picture)
+     task_dir, seen = path.resolve().parent, set()
+     for preview in previews:
+         if URL.match(preview):
+             continue
+         target = preview_target(task_dir, preview)
+         seen.update(file_digest(p) for p in (target.rglob("*") if target.is_dir() else [target]) if p.is_file())
+-    if file_digest(picture) in seen:
+-        errors.append(f"{name}: built screen review not run: '{value}' names a screenshot that is an ideation picture, or has the bytes of one")
+-        return None
++    for picture in pictures:
++        if file_digest(picture) in seen:
++            errors.append(f"{name}: built screen review not run: '{value}' preview '{picture.relative_to(folder)}' names a screenshot that is an ideation picture, or has the bytes of one")
++            return None
+     found = len(severities)
+     lines = {int(n): v.strip() for n, v in BUILT_FINDING_LINE.findall(body)}
+     repeated(BUILT_FINDING_LINE.findall(body), "Built screen", name, errors)
+@@ -835,7 +854,7 @@ def check_built_screen(path, body, previews, errors):
+     elif any(DECLINED.match(entry) for entry in lines.values()):
+         errors.append(f"{name}: a 'Built screen finding n: declined:' line needs a 'Built screen decline check:' line naming the saved ruling report")
+     summary = f"built screen review {value}: {found} findings, {len(upheld)} upheld declines, {sum(len(g['numbers']) for g in groups)} decisions in {plural_groups(len(groups))}"
+-    return [summary, f"preview: {picture.resolve()}", *ruling_notes("built-screen decline", lines, upheld, groups)]
++    return [summary, *(f"preview: {picture.resolve()}" for picture in pictures), *ruling_notes("built-screen decline", lines, upheld, groups)]
+ 
+ 
+ def scope_lines(text):
+diff --git a/kc-dev-flow-2/scripts/dispatch_records.py b/kc-dev-flow-2/scripts/dispatch_records.py
+index ae9da4d76..c51ce7c2a 100755
+--- a/kc-dev-flow-2/scripts/dispatch_records.py
++++ b/kc-dev-flow-2/scripts/dispatch_records.py
+@@ -544,6 +544,12 @@ def check_coverage(args, readme):
+     parser.add_argument("--stage", required=True)
+     try:
+         opts = parser.parse_args(args)
++        if opts.coverage.is_dir():
++            choices = (opts.coverage / "index.md", opts.coverage.parent / f"{opts.coverage.name}.md")
++            task = next((p for p in choices if p.is_file()), None)
++            if task is None:
++                raise ValueError(f"{opts.coverage}: no task file at {choices[0]} or {choices[1]}")
++            opts.coverage = task
+         readme = readme or find_readme(task_folder(opts.coverage))
+         if readme is None:
+             raise ValueError(f"{opts.coverage}: no workflow README found")
+diff --git a/kc-dev-flow-2/scripts/lint-skills.py b/kc-dev-flow-2/scripts/lint-skills.py
+index 31119fe2d..5a4ad52a6 100644
+--- a/kc-dev-flow-2/scripts/lint-skills.py
++++ b/kc-dev-flow-2/scripts/lint-skills.py
+@@ -66,6 +66,9 @@ WORKFLOW_BUDGET_STEPS = [
+          captain="「准」 (Captain, chat, 2026-11-05), answering 「決定：漏寫 Override 這份設計進入實作嗎？核准即接受 D1-A（記錄裁示前先檢查理由文字）、D2-A（README 加 48 字，字數上限 5891 調到 5939）、D3-A（不加反向防護）、D4-A（不做裁示紀錄評分器）四個建議。」",
+          loaded="startup and resume of the First Officer, and before each Captain gate record"),
+     dict(delta=-2, why="dispatch_stage.py saves and checks the record; the README names the script and its flags"),
++    dict(delta=2, why="the Captain reason check also binds the task's open gate question",
++         captain='「核准（建議）」 (Captain, ideation gate of issue-815-fo-record-gaps, 2026-11-10), answering 「決定：第 20 批四張設計照下列建議進實作嗎？建議核准。(1) 關卡理由沒引用關卡問題：待辦、構想、驗證三種關卡都擋下，不再只是回報；這改掉 ADR 0062 只回報的做法，所以會寫一份新的決策紀錄，README 多 2 個字。(2) 特別角色派工紀錄：由腳本寫好、檢查、提交後才交給審查者；模型低於 opus 或 astra 就拒絕派；README 多 6 個字；完全手動、沒有紀錄的審查不在這張處理。(3) 修改驗收條件的檢查：做成第四條狀態規則，每次推送狀態後檢查，所以壞的提交要推上去後才會被標出；dev2 要真的用到它，得把狀態規則釘選的版本從 0.26.0 改到新版，那一步之後另外問你，這張要等一次推送印出這條規則的結果才收。(4) PR 說明的署名連結：只放行 Claude Code 自動加在最後的那一行署名，其他連結照樣要記成步驟。核准即接受上列每一項建議，包括 README 合計多 8 個字（5931 到 5939）；要改哪項直接說。」',
++         loaded="startup and resume of the First Officer, and before each Captain gate record"),
+ ]
+ DUPLICATE_RUN = 12
+ # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
+diff --git a/kc-dev-flow-2/scripts/test_decision_ledger.py b/kc-dev-flow-2/scripts/test_decision_ledger.py
+index 88ed986b6..3c4395222 100644
+--- a/kc-dev-flow-2/scripts/test_decision_ledger.py
++++ b/kc-dev-flow-2/scripts/test_decision_ledger.py
+@@ -3,6 +3,8 @@ import importlib.util
+ import contextlib
+ import io
+ import json
++import subprocess
++import sys
+ import tempfile
+ import unittest
+ from pathlib import Path
+@@ -184,17 +186,82 @@ class LedgerTest(unittest.TestCase):
+         self.assertFalse(any(r["followed"] for r in dl.ledger(self.state)))
+ 
+ 
++class OpenAttemptReasonTests(unittest.TestCase):
++    def setUp(self):
++        self.tmp = tempfile.TemporaryDirectory()
++        self.addCleanup(self.tmp.cleanup)
++        self.root = Path(self.tmp.name)
++        self.task = self.root / "sample.md"
++        self.reason = self.root / "reason.txt"
++        self.task.write_text(TASK.replace("              resolution:\n                type: Resolution\n                by: agent:first-officer", "              pending:\n                type: Resolution\n                by: agent:first-officer"))
++        for stage, number, question in (("backlog", 1, "X"), ("ideation", 2, "X"), ("validation", 1, "Y")):
++            room = self.root / f"sample/review/{stage}/briefing-{number}"
++            room.mkdir(parents=True)
++            (room / "index.json").write_text(json.dumps({"question": question}))
++
++    def cli(self, quote="Y", extra=None):
++        self.reason.write_text(f"Recommendation: followed; answering 「{quote}」")
++        return subprocess.run([sys.executable, "-B", dl.__file__, "--reason", str(self.reason),
++                               *(extra if extra is not None else ["--task", str(self.task)])],
++                              capture_output=True, text=True)
++
++    def test_only_the_open_attempts_question_passes(self):
++        self.assertEqual((self.cli().returncode, self.cli().stdout), (0, "reason: followed\n"))
++        run = self.cli("X")
++        self.assertEqual(run.returncode, 1, run.stderr)
++        self.assertIn("reason: does not quote the bound question\nnext:", run.stdout)
++        self.assertIn("sample/review/validation/briefing-1/index.json", run.stdout)
++
++    def test_newer_resolved_attempt_does_not_replace_the_open_question(self):
++        self.task.write_text(self.task.read_text().replace("              pending:", "              resolution:", 1)
++                             .replace("              resolution:\n                type: Resolution\n                by: person:captain", "              pending:\n                type: Resolution\n                by: person:captain", 1))
++        self.assertEqual(self.cli("X").returncode, 0)
++        self.assertEqual(self.cli("Y").returncode, 1)
++
++    def test_missing_task_zero_two_open_attempts_and_unreadable_room_are_exit_two(self):
++        run = self.cli(extra=[])
++        self.assertEqual(run.returncode, 2)
++        self.assertIn("--task", run.stderr)
++        original = self.task.read_text()
++        for text in (TASK, original.replace("              withdrawal:", "              pending:")):
++            self.task.write_text(text)
++            run = self.cli()
++            self.assertEqual(run.returncode, 2)
++            self.assertIn(str(self.task), run.stderr)
++        self.task.write_text(original)
++        index = self.root / "sample/review/validation/briefing-1/index.json"
++        for content in (None, "{", '{}', '[]', '{"question": 1}'):
++            if content is None:
++                index.unlink()
++            else:
++                index.write_text(content)
++            run = self.cli()
++            self.assertEqual(run.returncode, 2)
++            self.assertIn(str(index), run.stderr)
++
++    def test_folder_task_and_whitespace_ignored(self):
++        self.task.rename(self.root / "sample/index.md")
++        self.task = self.root / "sample/index.md"
++        self.task.write_text(self.task.read_text().replace("./sample/", "./"))
++        self.assertEqual(self.cli(" Y\n ", ["--task", str(self.task.parent)]).returncode, 0)
++
++
+ class ReasonTest(unittest.TestCase):
+     def setUp(self):
+         self.tmp = tempfile.TemporaryDirectory()
+         self.path = Path(self.tmp.name) / "reason.txt"
+         self.addCleanup(self.tmp.cleanup)
++        self.task = self.path.parent / "sample.md"
++        self.task.write_text(TASK.replace("              resolution:\n                type: Resolution\n                by: agent:first-officer", "              pending:\n                type: Resolution\n                by: agent:first-officer"))
++        room = self.path.parent / "sample/review/validation/briefing-1"
++        room.mkdir(parents=True)
++        (room / "index.json").write_text('{"question": "Approve?"}')
+ 
+     def check(self, reason):
+-        self.path.write_text(reason, encoding="utf-8")
++        self.path.write_text(reason + ("; answering 「Approve?」" if reason.strip() else ""), encoding="utf-8")
+         out, err = io.StringIO(), io.StringIO()
+         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+-            code = dl.main(["--reason", str(self.path)])
++            code = dl.main(["--reason", str(self.path), "--task", str(self.task)])
+         return code, out.getvalue(), err.getvalue()
+ 
+     def test_flagged_reasons_hold_and_pass_with_override(self):
+@@ -234,10 +301,10 @@ class ReasonTest(unittest.TestCase):
+             with self.subTest(value=value):
+                 self.assertEqual(self.check(value)[0], 2)
+         with contextlib.redirect_stderr(io.StringIO()):
+-            self.assertEqual(dl.main(["--reason", str(self.path.parent / "missing")]), 2)
+-            self.assertEqual(dl.main(["--reason", str(self.path.parent)]), 2)
++            self.assertEqual(dl.main(["--reason", str(self.path.parent / "missing"), "--task", str(self.task)]), 2)
++            self.assertEqual(dl.main(["--reason", str(self.path.parent), "--task", str(self.task)]), 2)
+             self.path.write_bytes(b"\xff")
+-            self.assertEqual(dl.main(["--reason", str(self.path)]), 2)
++            self.assertEqual(dl.main(["--reason", str(self.path), "--task", str(self.task)]), 2)
+ 
+     def test_malformed_override_and_followed_typo_hold(self):
+         for reason in ("Recommendation followed", "Override: recommended A; Captain chose B"):
+diff --git a/kc-dev-flow-2/scripts/test_delivery_gate.py b/kc-dev-flow-2/scripts/test_delivery_gate.py
+index 067e59ccf..7582fb696 100644
+--- a/kc-dev-flow-2/scripts/test_delivery_gate.py
++++ b/kc-dev-flow-2/scripts/test_delivery_gate.py
+@@ -1437,7 +1437,9 @@ class CaptainStepFixture(unittest.TestCase):
+         self.temp = tempfile.TemporaryDirectory()
+         self.addCleanup(self.temp.cleanup)
+         self.root = Path(self.temp.name)
+-        self.saved = self.root / "steps.md"
++        (self.root / "index.md").write_text("# task\n")
++        self.saved = self.root / "captain-steps/1.md"
++        self.saved.parent.mkdir()
+         self.message = self.root / "message.txt"
+ 
+     def step(self, asked, observed="worked", ran="fresh shell, 2026-11-03T00:00:00Z", only=None, number=1):
+@@ -1783,9 +1785,24 @@ class CaptainStepsTests(CaptainStepFixture):
+             asked = f"Read {quote}{spaced}{quote}"
+             self.assertEqual(self.run_steps(self.step(asked), asked)[0], 0)
+ 
++    def test_steps_holds_misplaced_records_and_accepts_resolved_paths(self):
++        self.run_steps(self.step("Review this candidate."), "Review this candidate.")
++        for name in ("review/captain-steps.md", "captain-steps/notes.md", "captain-steps/0.md"):
++            target = self.root / name
++            target.parent.mkdir(parents=True, exist_ok=True)
++            target.write_bytes(self.saved.read_bytes())
++            run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", str(target),
++                                  "--text-file", str(self.message)], capture_output=True, text=True)
++            self.assertEqual(run.returncode, 1, run.stdout)
++            self.assertIn(str(self.root / "captain-steps/<N>.md"), run.stdout)
++        for path in (str(self.saved), "captain-steps/1.md"):
++            run = subprocess.run([sys.executable, "-B", gate.__file__, "steps", path,
++                                  "--text-file", str(self.message)], cwd=self.root, capture_output=True, text=True)
++            self.assertEqual(run.returncode, 0, run.stdout)
++
+     def test_relative_markdown_card_is_read_by_the_real_cli(self):
+         self.saved = self.root / "captain-steps/1.md"
+-        self.saved.parent.mkdir()
++        self.saved.parent.mkdir(exist_ok=True)
+         card = self.root / "card.md"
+         card.write_text("```sh\nprintf checked\n```\n")
+         self.run_steps(self.step("Read card.md:13"), "Read card.md:13")
+@@ -1811,6 +1828,7 @@ class CaptainGateTests(CaptainStepFixture):
+         self.task.write_text(TASK)
+         self.head = "b7732d43" + "0" * 32
+         captain_record(self.task, self.head)
++        self.saved = gate.task_folder(self.task) / "captain-steps/1.md"
+ 
+     def ask_gate(self, body=None, candidate=None, module=None, summary=False, declaration=True):
+         self.saved.write_text(f"Candidate: {candidate or self.head}\n\n" + (body or self.step("Open the preview")))
+@@ -2623,7 +2641,7 @@ class ReviewerDeclarationTests(unittest.TestCase):
+     def run_cli(self, command, text=DECLARATION + "Copilot review:18.", source=None, config=REVIEWERS,
+                 task=TASK, title="fix(x): y", module=None, folder=False, split=False, explicit=False,
+                 source_error=False, missing_readme=False, readme_error=False, before_question=None, head_arg=HEAD40,
+-                summary=None, summary_error=False):
++                summary=None, summary_error=False, steps_path="captain-steps/1.md"):
+         with tempfile.TemporaryDirectory() as d:
+             root = Path(d)
+             readme(d, config)
+@@ -2635,6 +2653,12 @@ class ReviewerDeclarationTests(unittest.TestCase):
+             entry.write_text(task)
+             artifacts = gate.task_folder(entry)
+             captain_steps = captain_record(entry)
++            original_steps = artifacts / "captain-steps/1.md"
++            target_steps = artifacts / steps_path
++            if target_steps != original_steps:
++                target_steps.parent.mkdir(parents=True, exist_ok=True)
++                original_steps.rename(target_steps)
++                captain_steps = captain_steps.replace(str(original_steps), str(target_steps))
+             dispatch = artifacts / "dispatch"
+             dispatch.mkdir(parents=True, exist_ok=True)
+             (dispatch / "validation-1.md").write_text(record(HEAD40))
+@@ -2683,6 +2707,15 @@ class ReviewerDeclarationTests(unittest.TestCase):
+             self.assertEqual(len(written), int(command == "check" and code == 0), out.getvalue())
+             return code, out.getvalue()
+ 
++    def test_captain_record_path_holds_question_and_check(self):
++        for command in ("question", "check"):
++            for path in ("review/captain-steps.md", "captain-steps/notes.md", "captain-steps/0.md"):
++                with self.subTest(command=command, path=path):
++                    code, out = self.run_cli(command, steps_path=path)
++                    self.assertEqual(code, 1, out)
++                    self.assertIn("/captain-steps/<N>.md (ADR 0054)", out)
++            self.assertEqual(self.run_cli(command)[0], 0)
++
+     def test_configured_declaration_matrix_on_both_commands(self):
+         cases = [("", 1), ("Second reviewer: copilot triggered by review rules.", 1),
+                  ("Second reviewer: codex because review rules. Codex review:18.", 1),
+diff --git a/kc-dev-flow-2/scripts/test_design_surfaces.py b/kc-dev-flow-2/scripts/test_design_surfaces.py
+index 223e846ec..8e79c7579 100644
+--- a/kc-dev-flow-2/scripts/test_design_surfaces.py
++++ b/kc-dev-flow-2/scripts/test_design_surfaces.py
+@@ -1399,7 +1399,11 @@ class DesignReviewTests(unittest.TestCase):
+         self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+ 
+     def test_mutation_dropping_the_one_preview_rule_lets_two_direct_previews_pass(self):
+-        mutant = mutated("if len(named) != 1:", "if False:")
++        source = (ROOT / "scripts/design_surfaces.py").read_text()
++        source = source.replace("if len(named) > 1:", "if False:").replace("if len(named) != 1:", "if False:")
++        mutant = types.ModuleType("design_surfaces_mutant")
++        mutant.__file__ = str(ROOT / "scripts/design_surfaces.py")
++        exec(compile(source, "design_surfaces_mutant", "exec"), mutant.__dict__)
+         report = DESIGN_REPORT.replace("  preview: preview.html\n", "  preview: preview.html\n  preview: preview.html\n", 1)
+         self.assertTrue(self.run_check(report=report)[0])
+         self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+@@ -2196,6 +2200,24 @@ class BuiltScreenTests(MutantMixin, unittest.TestCase):
+         errors, _ = self.run_check(**kwargs)
+         self.assertEqual(len([e for e in errors if "built screen review not run" in e]), 1, errors)
+ 
++    def test_preview_sequence_checks_and_prints_every_picture(self):
++        report = BUILT_REPORT.replace("preview: design/built-1.png", "preview:\n    - design/built-1.png\n    - design/built-1.png")
++        errors, notes = self.run_check(report=report)
++        self.assertEqual(errors, [])
++        self.assertEqual(len([n for n in notes if n.startswith("preview: ")]), 2)
++    def test_every_bad_second_preview_item_is_named(self):
++        report = BUILT_REPORT.replace("preview: design/built-1.png", "preview:\n    - design/built-1.png\n    - design/built-1.png")
++        for bad in ("/absolute.png", "../outside.png", "design/missing.png"):
++            errors, _ = self.run_check(report=report.replace("    - design/built-1.png\n  findings:", f"    - {bad}\n  findings:"))
++            self.assertTrue(any(bad in error for error in errors), errors)
++
++    def test_preview_sequence_refuses_second_ideation_picture_and_duplicate_keys(self):
++        report = BUILT_REPORT.replace("preview: design/built-1.png", "preview:\n    - design/built-1.png\n    - design/validation-declines-1.yaml")
++        errors, _ = self.run_check(report=report, previews="Preview: task/design/validation-declines-1.yaml\n")
++        self.assertTrue(any("design/validation-declines-1.yaml" in e and "ideation picture" in e for e in errors), errors)
++        duplicate = BUILT_REPORT.replace("  preview: design/built-1.png", "  preview: design/built-1.png\n  preview: design/built-1.png")
++        self.assertTrue(self.run_check(report=duplicate)[0])
++
+     def test_a_built_screen_review_with_every_disposition_passes_and_prints_its_lines(self):
+         errors, notes = self.run_check()
+         self.assertEqual(errors, [])
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_records.py b/kc-dev-flow-2/scripts/test_dispatch_records.py
+index a9a968dd7..d39de643b 100644
+--- a/kc-dev-flow-2/scripts/test_dispatch_records.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_records.py
+@@ -981,6 +981,24 @@ class CoverageTests(unittest.TestCase):
+         dispatch.mkdir(parents=True, exist_ok=True)
+         (dispatch / name).write_text(COMPLETE)
+ 
++    def test_folder_coverage_matches_file_in_both_layouts(self):
++        self.record("implementation-1.md")
++        for task in (self.task, self.folder / "index.md"):
++            task.write_text("## Stage Report: implementation\n")
++            self.assertEqual(self.run_cli(task=self.folder), self.run_cli(task=task))
++        (self.folder / "index.md").write_text("## Stage Report: implementation\n")
++        (self.folder / "dispatch/implementation-1.md").unlink()
++        self.assertEqual(self.run_cli(task=self.folder), self.run_cli(task=self.folder / "index.md"))
++        self.assertEqual(self.run_cli(task=self.folder)[0], 1)
++
++    def test_folder_without_either_task_file_names_both_paths(self):
++        self.folder.mkdir()
++        self.task.unlink()
++        code, output = self.run_cli(task=self.folder)
++        self.assertEqual(code, 2)
++        self.assertIn(str(self.folder / "index.md"), output)
++        self.assertIn(str(self.task), output)
++
+     def test_historical_064e61a15_redacted_replay_stops_before_advancement_and_gate(self):
+         self.task.write_text("## Stage Report: implementation\n\n## Stage Report: validation\n")
+         self.record("ideation-1.md")
+diff --git a/kc-dev-flow-2/skills/design-director/SKILL.md b/kc-dev-flow-2/skills/design-director/SKILL.md
+index 53e772a57..249d585eb 100644
+--- a/kc-dev-flow-2/skills/design-director/SKILL.md
++++ b/kc-dev-flow-2/skills/design-director/SKILL.md
+@@ -23,7 +23,7 @@ The caller's first line is `Pass: <name>`. Each pass has its own inputs and read
+ | 2b | validation | as 1b, with `Pictures:` the screenshots the findings cite | a `design_decline_check` report |
+ | 3 | release walk, after the last story | `Reviewer reports:` (saved JSON, named relative to `Task folder:`), `Deferred:`, `Screenshots:`, `Walk:`, `Task folder:`, `ADR folder:` | a `release_ruling` object |
+ 
+-In 1a and 2a follow the [review brief](review-brief.md) and return its report. In 2a the screenshots are the pictures under review, each named relative to `Task folder:` (open it there, and copy the relative path as given into `preview:`), and what a screenshot cannot settle (a resize, a real vault, a Test run) goes in `limitations`.
++In 1a and 2a follow the [review brief](review-brief.md) and return its report. In 2a the screenshots are the pictures under review, each named relative to `Task folder:` (open each there, and copy each relative path as given as one `- <path>` item under `preview:`), and what a screenshot cannot settle (a resize, a real vault, a Test run) goes in `limitations`.
+ 
+ ## ADR folder
+ 
+diff --git a/kc-dev-flow-2/skills/validation/principles.md b/kc-dev-flow-2/skills/validation/principles.md
+index 04f194ac7..b004ac01a 100644
+--- a/kc-dev-flow-2/skills/validation/principles.md
++++ b/kc-dev-flow-2/skills/validation/principles.md
+@@ -37,10 +37,10 @@ seeing it.
+ When the task's `Surfaces:` include `ui` and it has a `Design review:` line, dispatch
+ `kc-dev-flow-2:design-director` with that screenshot (pass 2a: `Screenshots:`,
+ `Criteria:` naming the criteria whose text names the running screen, `ADR folder:` as
+-in [design-review.md](../ideation/design-review.md)). Give `Screenshots:` as the path relative to the task folder (for example
+-`design/built-1.png`) and add `Task folder:` with its absolute path so the director can open it;
+-the report's `preview:` copies that relative path, which is the form the check resolves and
+-the only one it accepts. Save its report as
++in [design-review.md](../ideation/design-review.md)). Give `Screenshots:` as paths relative to the task folder (for example
++`design/built-1.png`) and add `Task folder:` with its absolute path so the director can open them;
++the report's `preview:` copies one relative path as a scalar, or several as a YAML
++block sequence, one `- <path>` per screenshot. Save its report as
+ `design/validation-<N>.yaml` and write `Built screen review: design/validation-<N>.yaml`
+ in your validation Stage Report (the check reads the last one) with one `Built screen finding <n>:` line per finding: `F<N>` for a MAJOR, naming
+ its bullet in your report, and `declined: <reason>` or `Needs decision: <text>` for a

@@ -1,0 +1,40 @@
+{
+  "relay": {
+    "sha": "39cc7eef5c711fc5c05df74a95b6fe30d008febb",
+    "total": 12,
+    "refused": 11
+  },
+  "screen": {
+    "base": {
+      "exit": 1,
+      "preview_lines": 0,
+      "stdout": "theme-switch-keeps-draft.md: built screen review not run: 'design/validation-1.yaml' names no screenshot file inside the task folder\nscope check not run: stage is validation, not ideation\n",
+      "stderr": ""
+    },
+    "candidate": {
+      "exit": 0,
+      "preview_lines": 14,
+      "stdout": "theme-switch-keeps-draft.md: design surfaces presentable\nbuilt screen review design/validation-1.yaml: 8 findings, 3 upheld declines, 5 decisions in 4 groups\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/390x844-dark-saved-composer-before.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/390x844-dark-saved-composer-after.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/390x844-light-503-overall-after.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/360x800-light-saved-touch-after.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/768x1024-dark-503-touch-after.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/844x390-light-503-composer-replacement.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/844x390-light-503-composer-dismissed.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/1280x844-dark-503-composer-replacement.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/1280x844-dark-503-composer-dismissed.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/1280x844-light-saved-overall-before.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/1280x844-light-saved-overall-after.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/extras-390-dark-comment-added.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/extras-390-dark-failure-replaces-notice.png\npreview: /private/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft/design/built/extras-390-dark-touch-after.png\nupheld built-screen decline 1: the director re-ruled it MINOR, labelling only, once shown the run's request log (validation-1/hosted-notices-results.json): 844x390-light-503-composer-replacement.png starts light, press 1 asks dark (refused), press 2 asks light (refused), its notice replaces press 1's; 1280x844-dark-503-composer-replacement.png starts dark, press 1 light, press 2 dark, likewise. 390x844-light-503-overall-after.png and 768x1024-dark-503-touch-after.png are first-press pictures. No picture contradicts AC-2.\nupheld built-screen decline 2: upheld; AC-5 states with no picture in the review set: 360 dark start, 768 and 844 saved, 1280 dark-to-light saved, the phone sheet collapsed after a switch or refusal, the lights control's accessible name and pressed state, spoken screen-reader output. The run's 81 captures are listed in validation-1/capture-manifest.json.\nupheld built-screen decline 4: upheld; focus stays on the pressed control while the note, card and reading place are kept.\ndecision other-task, owner the subspace-web task that owns the shell phone composer layout (findings 3): The subspace-web owner of the shell phone composer layout decides whether lights should be reachable there; the validation report keeps labelling the open-composer cases callback-only.\ndecision other-task, owner the subspace-web task that owns the review shell controls (findings 5): The subspace-web owner of the shell controls decides on 44px hit areas; this report cites the 44px lights tile and says the others are not shown.\ndecision other-task, owner the subspace-web task that owns the shell snackbar (findings 6, 8): The subspace-web owner of the snackbar decides whether it should avoid the composer and panel buttons in landscape.\ndecision other-task, owner the subspace-web task that owns the shell composer (findings 7): The subspace-web owner of the shell composer decides whether the pair should match the card composer.\nscope check not run: stage is validation, not ideation\n",
+      "stderr": ""
+    }
+  },
+  "coverage": {
+    "base": {
+      "exit": 2,
+      "preview_lines": 0,
+      "stdout": "dispatch coverage error: [Errno 21] Is a directory: '/tmp/opencode/issue815-validation/replay/relay/_archive/theme-switch-keeps-draft'\n",
+      "stderr": ""
+    },
+    "candidate": {
+      "exit": 0,
+      "preview_lines": 0,
+      "stdout": "dispatch coverage complete: validation\n",
+      "stderr": ""
+    }
+  },
+  "own": {
+    "sha": "7de71379c7b4606fc4c194203f413047d4ff880d",
+    "total": 63,
+    "refused": 8
+  }
+}

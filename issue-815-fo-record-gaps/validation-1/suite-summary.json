@@ -1,0 +1,11 @@
+{
+  "candidate": "e608489c62fd387aeafaa5a1a6111ae59cd7d383",
+  "base": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+  "commands": 28,
+  "all_exit_zero": true,
+  "unittest_count": 1274,
+  "conditional_skips": 11,
+  "product_worktree_clean": true,
+  "product_bytes_unchanged": true,
+  "completed_utc": "2026-11-10T07:05:52.948780+00:00"
+}

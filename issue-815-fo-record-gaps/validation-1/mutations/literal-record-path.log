@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_steps_holds_misplaced_records_and_accepts_resolved_paths (test_delivery_gate.CaptainStepsTests.test_steps_holds_misplaced_records_and_accepts_resolved_paths)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/issue815-validation/mutations/mutants-qi7k6fri/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1801, in test_steps_holds_misplaced_records_and_accepts_resolved_paths
+    self.assertEqual(run.returncode, 0, run.stdout)
+AssertionError: 1 != 0 : Captain steps record /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6896p7vn/captain-steps/1.md is not /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6896p7vn/captain-steps/<N>.md (ADR 0054); move it there and name that path.
+Candidate: <40-hex head, or none>\n\n### Step 1\nAsked: <the step exactly as the message states it>\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\nObserved: <the output, or a path in the task folder holding it>\nOnly he can: <what is left> — <why: his credential, account, device or judgment>
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.543s
+
+FAILED (failures=1)

@@ -1,0 +1,12 @@
+{
+  "own": {
+    "task_count": 222,
+    "checks": 444,
+    "changed": 0
+  },
+  "relay": {
+    "task_count": 130,
+    "checks": 260,
+    "changed": 0
+  }
+}

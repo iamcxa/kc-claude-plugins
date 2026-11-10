@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_only_the_open_attempts_question_passes (test_decision_ledger.OpenAttemptReasonTests.test_only_the_open_attempts_question_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/issue815-validation/mutations/mutants-qi7k6fri/kc-dev-flow-2/scripts/test_decision_ledger.py", line 211, in test_only_the_open_attempts_question_passes
+    self.assertEqual(run.returncode, 1, run.stderr)
+AssertionError: 0 != 1 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.127s
+
+FAILED (failures=1)

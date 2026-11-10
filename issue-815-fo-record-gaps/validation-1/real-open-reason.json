@@ -1,0 +1,59 @@
+{
+  "source": {
+    "corpus": "relay",
+    "task": "/tmp/opencode/issue815-validation/replay/relay/decision-leg-under-limit.md",
+    "question": "「擁有者做決定」CI 工作搬測試那張照設計開工嗎？要你決定：搬家後各工作跑多久，接受合併後看主線第一次 CI 再驗（建議），還是要求合併前另外拿到一次有跑登入測試的結果？",
+    "index": "/tmp/opencode/issue815-validation/replay/relay/decision-leg-under-limit/review/ideation/briefing-1/index.json"
+  },
+  "unchanged_sha256": [
+    "9b81b5114b3335a3b36b32f15bb3ef8688e094a16b8a0b74001090d4ac98d544",
+    "eaf0f469dae062faf9c3683f86794532d1702059aebdea88b35b672a002507e0"
+  ],
+  "cases": [
+    {
+      "name": "correct",
+      "command": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-B",
+        "/tmp/opencode/issue815-validation/candidate/kc-dev-flow-2/scripts/decision_ledger.py",
+        "--reason",
+        "/tmp/opencode/issue815-validation/real-reason-correct.txt",
+        "--task",
+        "/tmp/opencode/issue815-validation/replay/relay/decision-leg-under-limit.md"
+      ],
+      "exit": 0,
+      "stdout": "reason: followed\n",
+      "stderr": ""
+    },
+    {
+      "name": "whitespace",
+      "command": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-B",
+        "/tmp/opencode/issue815-validation/candidate/kc-dev-flow-2/scripts/decision_ledger.py",
+        "--reason",
+        "/tmp/opencode/issue815-validation/real-reason-whitespace.txt",
+        "--task",
+        "/tmp/opencode/issue815-validation/replay/relay/decision-leg-under-limit.md"
+      ],
+      "exit": 0,
+      "stdout": "reason: followed\n",
+      "stderr": ""
+    },
+    {
+      "name": "wrong",
+      "command": [
+        "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+        "-B",
+        "/tmp/opencode/issue815-validation/candidate/kc-dev-flow-2/scripts/decision_ledger.py",
+        "--reason",
+        "/tmp/opencode/issue815-validation/real-reason-wrong.txt",
+        "--task",
+        "/tmp/opencode/issue815-validation/replay/relay/decision-leg-under-limit.md"
+      ],
+      "exit": 1,
+      "stdout": "reason: does not quote the bound question\nnext: write answering 「「擁有者做決定」CI 工作搬測試那張照設計開工嗎？要你決定：搬家後各工作跑多久，接受合併後看主線第一次 CI 再驗（建議），還是要求合併前另外拿到一次有跑登入測試的結果？」 with the bound question copied from /tmp/opencode/issue815-validation/replay/relay/decision-leg-under-limit/review/ideation/briefing-1/index.json; if he answered a different question, gate withdraw and prepare again with the question he answered, then ask him.\n",
+      "stderr": ""
+    }
+  ]
+}

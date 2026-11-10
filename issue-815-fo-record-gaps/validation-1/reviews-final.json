@@ -1,0 +1,56 @@
+{
+  "checkedAt": {
+    "current_time": "2026-11-10 06:56:08 UTC"
+  },
+  "results": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "comments": [],
+          "url": "https://github.com/iamcxa/kc-claude-plugins/pull/826",
+          "title": "iamcxa/kc-claude-plugins PR #826 comments",
+          "display_url": "https://github.com/iamcxa/kc-claude-plugins/pull/826",
+          "display_title": "iamcxa/kc-claude-plugins PR #826 comments"
+        },
+        "isError": false
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "review_threads": []
+        },
+        "isError": false
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "reviews": []
+        },
+        "isError": false
+      }
+    }
+  ]
+}

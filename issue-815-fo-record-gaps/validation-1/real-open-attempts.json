@@ -1,0 +1,8 @@
+[
+  {
+    "corpus": "relay",
+    "task": "/tmp/opencode/issue815-validation/replay/relay/decision-leg-under-limit.md",
+    "question": "「擁有者做決定」CI 工作搬測試那張照設計開工嗎？要你決定：搬家後各工作跑多久，接受合併後看主線第一次 CI 再驗（建議），還是要求合併前另外拿到一次有跑登入測試的結果？",
+    "index": "/tmp/opencode/issue815-validation/replay/relay/decision-leg-under-limit/review/ideation/briefing-1/index.json"
+  }
+]

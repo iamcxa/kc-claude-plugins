@@ -1,0 +1,70 @@
+[
+  {
+    "name": "quote-skipped",
+    "status": "passed",
+    "message": "mutated product causes the acceptance test to fail",
+    "exit": 1,
+    "log": "/tmp/opencode/issue815-validation/mutations/quote-skipped.log"
+  },
+  {
+    "name": "latest-room-instead-of-open",
+    "status": "passed",
+    "message": "mutated product causes the acceptance test to fail",
+    "exit": 1,
+    "log": "/tmp/opencode/issue815-validation/mutations/latest-room-instead-of-open.log"
+  },
+  {
+    "name": "missing-question-passes",
+    "status": "passed",
+    "message": "mutated product causes the acceptance test to fail",
+    "exit": 1,
+    "log": "/tmp/opencode/issue815-validation/mutations/missing-question-passes.log"
+  },
+  {
+    "name": "only-first-picture",
+    "status": "passed",
+    "message": "mutated product causes the acceptance test to fail",
+    "exit": 1,
+    "log": "/tmp/opencode/issue815-validation/mutations/only-first-picture.log"
+  },
+  {
+    "name": "picture-bytes-unchecked",
+    "status": "passed",
+    "message": "mutated product causes the acceptance test to fail",
+    "exit": 1,
+    "log": "/tmp/opencode/issue815-validation/mutations/picture-bytes-unchecked.log"
+  },
+  {
+    "name": "folder-resolution-removed",
+    "status": "passed",
+    "message": "mutated product causes the acceptance test to fail",
+    "exit": 1,
+    "log": "/tmp/opencode/issue815-validation/mutations/folder-resolution-removed.log"
+  },
+  {
+    "name": "literal-record-path",
+    "status": "passed",
+    "message": "mutated product causes the acceptance test to fail",
+    "exit": 1,
+    "log": "/tmp/opencode/issue815-validation/mutations/literal-record-path.log"
+  },
+  {
+    "name": "record-path-unchecked",
+    "status": "passed",
+    "message": "mutated product causes the acceptance test to fail",
+    "exit": 1,
+    "log": "/tmp/opencode/issue815-validation/mutations/record-path-unchecked.log"
+  },
+  {
+    "name": "budget-step-removed",
+    "status": "passed",
+    "exit": 1,
+    "message": "README above budget without the +2 step"
+  },
+  {
+    "name": "required-adr-removed",
+    "status": "passed",
+    "exit": 1,
+    "message": "missing required ADR is refused"
+  }
+]

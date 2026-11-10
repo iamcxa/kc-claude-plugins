@@ -1,0 +1,15 @@
+{
+  "docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md": "9a42f5c1e6c36c140198710e1fb7436906ff8646ae87d575fc60f91ab3d493f8",
+  "kc-dev-flow-2/references/sd/workflow.md": "bddb47965e759af61f2d64d77aaa01949ad632114515dfe0e2e833cb554b6256",
+  "kc-dev-flow-2/scripts/decision_ledger.py": "d6cbedb4c8f7b3fafa07f14afb92079ff0139adfd2b87a82a1067079b68512f3",
+  "kc-dev-flow-2/scripts/delivery_gate.py": "3ea6ec15ce3b5cd4a95142770b2de8c0cfe65602e89d66d123842ceb6d2b03b6",
+  "kc-dev-flow-2/scripts/design_surfaces.py": "bbcbb9d2885b0ce483189b014ebc002aea7fa04320ba56d7c351aa4b46d79a1b",
+  "kc-dev-flow-2/scripts/dispatch_records.py": "696686e29c471d706fd9a762a26f89ec61a45dbbd907112918e7b91ac12370bd",
+  "kc-dev-flow-2/scripts/lint-skills.py": "21be4feef0c33ba27741a7aa5471f374efabe26fda97aa8b8eaca23a558d856d",
+  "kc-dev-flow-2/scripts/test_decision_ledger.py": "93c4c2c2e8f3e9433ee47bda9095d4ea4c54d15fcf3661dd7a8ae960066346e1",
+  "kc-dev-flow-2/scripts/test_delivery_gate.py": "447fc3bc25b94ff187672da84124316033ba53b3b95f32ef3fdbffe8ab3dcb79",
+  "kc-dev-flow-2/scripts/test_design_surfaces.py": "c32d23287befd5e7928d3fbb636ec231ef2c8ac6639d1ec71140b76f1350ff4f",
+  "kc-dev-flow-2/scripts/test_dispatch_records.py": "de320b2b081d11070470dbe68e323798de2a4bcf055e30cf22f198946b249b26",
+  "kc-dev-flow-2/skills/design-director/SKILL.md": "7f0ef15124e60a945fec722eb3db362937242372b37be1d25f025cbe79edb716",
+  "kc-dev-flow-2/skills/validation/principles.md": "b57e99a80181484ee8183d09b49cc53ccdd5f1710680203d5cdccd85abce0934"
+}

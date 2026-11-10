@@ -1,0 +1,50 @@
+{
+  "changed": [
+    "docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md",
+    "kc-dev-flow-2/references/sd/workflow.md",
+    "kc-dev-flow-2/scripts/decision_ledger.py",
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/dispatch_records.py",
+    "kc-dev-flow-2/scripts/lint-skills.py",
+    "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "kc-dev-flow-2/skills/design-director/SKILL.md",
+    "kc-dev-flow-2/skills/validation/principles.md"
+  ],
+  "allowed": [
+    "docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-written.md",
+    "kc-dev-flow-2/references/sd/workflow.md",
+    "kc-dev-flow-2/scripts/lint-skills.py",
+    "kc-dev-flow-2/skills/validation/principles.md",
+    "kc-dev-flow-2/skills/design-director/SKILL.md",
+    "kc-dev-flow-2/scripts/decision_ledger.py",
+    "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/scripts/dispatch_records.py",
+    "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py"
+  ],
+  "scope_pass": true,
+  "extra_path_falsifier_rejected": true,
+  "ideation_callback_ast_unchanged": true,
+  "obsolete_guidance_falsifier_rejected": true,
+  "reading": {
+    "kc-dev-flow-2/references/sd/workflow.md": {
+      "base": 5931,
+      "candidate": 5933
+    },
+    "kc-dev-flow-2/skills/validation/principles.md": {
+      "base": 848,
+      "candidate": 849
+    },
+    "kc-dev-flow-2/skills/design-director/SKILL.md": {
+      "base": 1211,
+      "candidate": 1216
+    }
+  }
+}

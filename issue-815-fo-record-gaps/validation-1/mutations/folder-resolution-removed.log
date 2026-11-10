@@ -1,0 +1,22 @@
+F
+======================================================================
+FAIL: test_folder_coverage_matches_file_in_both_layouts (test_dispatch_records.CoverageTests.test_folder_coverage_matches_file_in_both_layouts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/issue815-validation/mutations/mutants-qi7k6fri/kc-dev-flow-2/scripts/test_dispatch_records.py", line 988, in test_folder_coverage_matches_file_in_both_layouts
+    self.assertEqual(self.run_cli(task=self.folder), self.run_cli(task=task))
+AssertionError: Tuples differ: (2, "dispatch coverage error: [Errno 21] I[81 chars]'\n") != (0, 'dispatch coverage complete: implementation\n')
+
+First differing element 0:
+2
+0
+
++ (0, 'dispatch coverage complete: implementation\n')
+- (2,
+-  'dispatch coverage error: [Errno 21] Is a directory: '
+-  "'/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp29w2w0c0/task'\n")
+
+----------------------------------------------------------------------
+Ran 1 test in 0.340s
+
+FAILED (failures=1)

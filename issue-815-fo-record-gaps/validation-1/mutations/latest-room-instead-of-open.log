@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_newer_resolved_attempt_does_not_replace_the_open_question (test_decision_ledger.OpenAttemptReasonTests.test_newer_resolved_attempt_does_not_replace_the_open_question)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/issue815-validation/mutations/mutants-qi7k6fri/kc-dev-flow-2/scripts/test_decision_ledger.py", line 218, in test_newer_resolved_attempt_does_not_replace_the_open_question
+    self.assertEqual(self.cli("X").returncode, 0)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.076s
+
+FAILED (failures=1)

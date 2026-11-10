@@ -1,0 +1,177 @@
+{
+  "0": {
+    "status": "fulfilled",
+    "value": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "url": "https://github.com/iamcxa/kc-claude-plugins/pull/826",
+        "number": 826,
+        "state": "open",
+        "merged": false,
+        "mergeable": true,
+        "draft": true,
+        "body": "\nCaptain gate reasons could pass without quoting the bound question, built-screen reports accepted one screenshot, folder-form dispatch coverage errored, and Captain steps could be stored outside the documented location. This binds the reason preflight to the single open attempt, accepts and checks each screenshot in a block sequence, resolves coverage folders, and enforces numbered Captain steps records. ADR 0073 records the approved pre-record hold and the two-word README budget increase.\n\nRefs #815; addresses items 1, 4, 5 and 6. Items 2 and 3 remain separate tasks, so this does not close the issue.\n\nValidation:\n- All 28 repository CI commands exited 0 locally, with 11 conditional fixture skips; final design suite: 220 tests, four conditional skips. Native Spacedock CLI 0.27.2 checks used installed plugin root 0.27.3; exact CI plugin-root 0.27.2 parity remains for hosted CI.\n- Ten reverse mutations were caught; fresh-shell acceptance passed.\n- Real committed relay records: 11 of 12 Captain resolutions refused; this workflow since 2026-11-06: 8 of 63. The archived 14-picture report fails at base and passes at the candidate; archived folder coverage changes exit 2 to exit 0.\n- Repository lint: README 5933/5933 words; ADR 0073 lint and number guards passed; added comment ratio 0.4%, below 5%.\n\nroborev not run: FO runs RoboRev after this local handoff; the worker sandbox cannot reach the local daemon.\nCI cost per PR not measured. No workflow or trigger change. Product branch push, Draft PR creation, hosted CI and review are FO-owned; no version bump.\n\nRoboRev: run by FO: `clean on e608489c6; evidence=roborev:1690`.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n",
+        "title": "fix(kc-dev-flow-2): close four FO record gaps",
+        "base": "main",
+        "base_sha": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+        "head": "spacedock-ensign/issue-815-fo-record-gaps",
+        "head_sha": "e608489c62fd387aeafaa5a1a6111ae59cd7d383",
+        "head_repo_id": 1176993017,
+        "head_repo_full_name": "iamcxa/kc-claude-plugins",
+        "merge_commit_sha": "099debf0840f1e4a385752a096869130fc112940",
+        "user": {
+          "login": "iamcxa",
+          "name": "iamcxa",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/1522808?v=4",
+          "id": 1522808
+        },
+        "requested_reviewers": null,
+        "requested_team_reviewers": null,
+        "diff": null,
+        "comments": null,
+        "created_at": "2026-11-10T06:36:50Z",
+        "updated_at": "2026-11-10T06:36:50Z",
+        "closed_at": null,
+        "merged_at": null,
+        "commits": 1,
+        "changed_files": 13,
+        "additions": 323,
+        "deletions": 36,
+        "display_url": "https://github.com/iamcxa/kc-claude-plugins/pull/826",
+        "display_title": "fix(kc-dev-flow-2): close four FO record gaps"
+      },
+      "isError": false
+    }
+  },
+  "1": {
+    "status": "fulfilled",
+    "value": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "comments": [],
+        "url": "https://github.com/iamcxa/kc-claude-plugins/pull/826",
+        "title": "iamcxa/kc-claude-plugins PR #826 comments",
+        "display_url": "https://github.com/iamcxa/kc-claude-plugins/pull/826",
+        "display_title": "iamcxa/kc-claude-plugins PR #826 comments"
+      },
+      "isError": false
+    }
+  },
+  "2": {
+    "status": "fulfilled",
+    "value": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "reviews": []
+      },
+      "isError": false
+    }
+  },
+  "3": {
+    "status": "fulfilled",
+    "value": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "review_threads": []
+      },
+      "isError": false
+    }
+  },
+  "4": {
+    "status": "fulfilled",
+    "value": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "workflow_runs": [
+          {
+            "id": 42769688272,
+            "name": "kc-dev-flow-2 tests",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_number": 686,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688272/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688272/logs",
+            "workflow_id": 365763085
+          },
+          {
+            "id": 42769688559,
+            "name": "kc-dev-flow release gate",
+            "status": "completed",
+            "conclusion": "success",
+            "run_number": 1551,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688559/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688559/logs",
+            "workflow_id": 340605043
+          },
+          {
+            "id": 42769688318,
+            "name": "docs site",
+            "status": "completed",
+            "conclusion": "success",
+            "run_number": 123,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688318/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688318/logs",
+            "workflow_id": 405868116
+          },
+          {
+            "id": 42769688231,
+            "name": "marketplace version parity",
+            "status": "completed",
+            "conclusion": "success",
+            "run_number": 2233,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688231/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688231/logs",
+            "workflow_id": 286621000
+          },
+          {
+            "id": 42769688161,
+            "name": "adr-path-check",
+            "status": "completed",
+            "conclusion": "success",
+            "run_number": 112,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688161/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688161/logs",
+            "workflow_id": 392075364
+          },
+          {
+            "id": 42769688178,
+            "name": "journey-dev2 loop smoke",
+            "status": "completed",
+            "conclusion": "success",
+            "run_number": 13,
+            "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688178/jobs",
+            "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/42769688178/logs",
+            "workflow_id": 382833752
+          }
+        ]
+      },
+      "isError": false
+    }
+  }
+}

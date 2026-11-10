@@ -1,0 +1,74 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "evidence": "OpenAttemptReasonTests plus real-open-reason.json: the one open question passes, resolved/newer question fails, whitespace ignored.",
+    "falsifier": "mutations/latest-room-instead-of-open.log and quote-skipped.log: each exits 1 with an acceptance-test failure."
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "evidence": "Missing --task, zero/two open attempts and unreadable/invalid room input return 2, identifying task/room.",
+    "falsifier": "mutations/missing-question-passes.log: returning an invented question causes failure."
+  },
+  {
+    "name": "AC-3",
+    "status": "passed",
+    "evidence": "replay/replay.json pins relay 39cc7eef5c711fc5c05df74a95b6fe30d008febb: 11/12 refused; own 7de71379c7b4606fc4c194203f413047d4ff880d since 2026-11-06: 8/63.",
+    "falsifier": "replay-falsifier.json: an always-accept comparator returns 0 refused instead of 11; detected. Strings only, lookup separately tested."
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "evidence": "scope-docs-reading.json: workflow 5931 to 5933 words; command includes --task; lint pass. Captain budget quote matches the task approval.",
+    "falsifier": "mutations/budget-step-removed.log: removing only the +2 step fails the word budget."
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "evidence": "adr.log and adr-dispatch-package.log: --since base --require 0073 exits 0; ADR 0073 preserves Captain words and narrowly supersedes 0062 D2.",
+    "falsifier": "mutations/adr-removed.log: missing required 0073 exits 1."
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "evidence": "BuiltScreenTests: scalar and all sequence items checked; absolute, traversal, missing, symlink-outside and ideation-equal pictures refused. Symlink containment and its reverse mutation are in symlink-probe.json.",
+    "falsifier": "mutations/only-first-picture.log and picture-bytes-unchecked.log fail when the second item or digest comparison is bypassed."
+  },
+  {
+    "name": "AC-7",
+    "status": "passed",
+    "evidence": "replay/screen-candidate.log: temporary real archived report with 14 pictures passes with 14 preview lines; no source writes.",
+    "falsifier": "replay/screen-base.log: same rewritten report fails at base, exit 1 with zero preview lines."
+  },
+  {
+    "name": "AC-8",
+    "status": "passed",
+    "evidence": "scope-docs-reading.json plus candidate.diff: both instructions document sequence form, obsolete only-scalar wording gone; ideation callback AST unchanged.",
+    "falsifier": "scope-docs-reading.json: baseline wording fails the documentation predicate; existing ideation and built-screen suites retain the cardinality behavior."
+  },
+  {
+    "name": "AC-9",
+    "status": "passed",
+    "evidence": "CoverageTests cover both folder layouts, absent files and incomplete coverage; replay/coverage-candidate.log returns complete validation coverage.",
+    "falsifier": "mutations/folder-resolution-removed.log fails; replay/coverage-base.log exits 2 on the same archived folder."
+  },
+  {
+    "name": "AC-10",
+    "status": "passed",
+    "evidence": "TaskFolderCaptainTests and ReviewerDeclarationTests exercise question/check/steps: relative or absolute numbered paths pass; wrong folder/name/zero fails.",
+    "falsifier": "mutations/literal-record-path.log and record-path-unchecked.log fail when resolution or checking is removed."
+  },
+  {
+    "name": "AC-11",
+    "status": "passed",
+    "evidence": "scope-docs-reading.json: exactly the approved 13 paths; candidate hashes unchanged. Complete suite results in suite-results.json and hosted run in github-final.json.",
+    "falsifier": "scope-docs-reading.json: an extra unrelated path is rejected; corpus-results.json compares check and seed modes without unintended verdict changes."
+  },
+  {
+    "name": "AC-12",
+    "status": "untested",
+    "evidence": "Post-release FO-owned action is pending. github-final.json records issue 815 OPEN with zero comments; filled draft is implementation/issue-answer.md.",
+    "falsifier": "No posted-comment URL or release exists. This directly falsifies a claim that AC-12 or whole-task delivery is already complete."
+  }
+]

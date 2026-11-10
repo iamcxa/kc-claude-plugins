@@ -1,0 +1,7 @@
+{
+  "candidate_errors": [
+    "task.md: built screen review not run: 'design/validation-1.yaml' preview 'design/built-1.png' names no screenshot file inside the task folder"
+  ],
+  "mutated_errors": [],
+  "containment_mutation_detected": true
+}

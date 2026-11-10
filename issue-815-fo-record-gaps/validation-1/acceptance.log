@@ -1,0 +1,17 @@
+Step 1 PASS: exported e608489c62fd387aeafaa5a1a6111ae59cd7d383
+................................
+----------------------------------------------------------------------
+Ran 32 tests in 14.277s
+
+OK
+Step 2 PASS: four record boundaries
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5933 of 5933 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+Step 3 PASS: package lint
+66 ADR file(s) checked, 0 legacy
+Step 4 PASS: decision record
+code lines 248, comment lines 1, 0.4%
+   1/  56 kc-dev-flow-2/scripts/decision_ledger.py
+maximum 5% (package default) met
+Step 5 PASS: comment and whitespace checks

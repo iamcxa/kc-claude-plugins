@@ -1,0 +1,33 @@
+{
+  "python": "3.11.14",
+  "spacedock_cli": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+  "local_spacedock_plugin": "0.27.3",
+  "packages": [
+    {
+      "root": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0",
+      "version": "0.37.0",
+      "helpers": {
+        "adr_lint.py": "7313e02238830471138d23508c1106bf4ff15ab8b166c060ec1d6e5a160e719f",
+        "comment_ratio.py": "b01e2f61e64b0a3666964e54dd4b14e308345359445d78d6ab68bbcce638a3a0",
+        "number_guards.py": "bf395410b8f1e17edd08352d1013b6754ad90811a99e0880e0f24c1250d95d9b",
+        "doc_impact.py": "2af123dbeeeb0912da30bd1f1c9241c7d3692615e920d5958a1cca33ca7026cd",
+        "role_triggers.py": "baaa4e033148c57564afb3a63b96446f25221ddb4644cb278fe2a704d98cdc56",
+        "dispatch_records.py": "e63d488a83427854363f02eab398541bdfebb59c10fa526ceca07d37a8269155",
+        "design_surfaces.py": "a5b5e821455d769924559e5176e1233d6bf1546e958124e9d2b53681016cac49"
+      }
+    },
+    {
+      "root": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.37.0",
+      "version": "0.37.0",
+      "helpers": {
+        "adr_lint.py": "7313e02238830471138d23508c1106bf4ff15ab8b166c060ec1d6e5a160e719f",
+        "comment_ratio.py": "b01e2f61e64b0a3666964e54dd4b14e308345359445d78d6ab68bbcce638a3a0",
+        "number_guards.py": "bf395410b8f1e17edd08352d1013b6754ad90811a99e0880e0f24c1250d95d9b",
+        "doc_impact.py": "2af123dbeeeb0912da30bd1f1c9241c7d3692615e920d5958a1cca33ca7026cd",
+        "role_triggers.py": "baaa4e033148c57564afb3a63b96446f25221ddb4644cb278fe2a704d98cdc56",
+        "dispatch_records.py": "e63d488a83427854363f02eab398541bdfebb59c10fa526ceca07d37a8269155",
+        "design_surfaces.py": "a5b5e821455d769924559e5176e1233d6bf1546e958124e9d2b53681016cac49"
+      }
+    }
+  ]
+}
