@@ -1,0 +1,48 @@
+test_pr_body_attribution_line_needs_no_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_pr_body_attribution_line_needs_no_recorded_link_step) ... 
+  test_pr_body_attribution_line_needs_no_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_pr_body_attribution_line_needs_no_recorded_link_step) (line='🤖 Generated with [Claude Code](https://claude.com/claude-code)') ... FAIL
+  test_pr_body_attribution_line_needs_no_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_pr_body_attribution_line_needs_no_recorded_link_step) (line=' \t🤖 Generated with [Claude Code](https://claude.com/claude-code)  ') ... FAIL
+  test_pr_body_attribution_line_needs_no_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_pr_body_attribution_line_needs_no_recorded_link_step) (line='🤖\t  Generated\t  with\t  [Claude\t  Code](https://claude.com/claude-code)') ... FAIL
+test_pr_body_other_url_still_needs_a_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_pr_body_other_url_still_needs_a_recorded_link_step) ... FAIL
+
+======================================================================
+FAIL: test_pr_body_attribution_line_needs_no_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_pr_body_attribution_line_needs_no_recorded_link_step) (line='🤖 Generated with [Claude Code](https://claude.com/claude-code)')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-pr-body-attribution-link/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1573, in test_pr_body_attribution_line_needs_no_recorded_link_step
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : message S5: unrecorded command or link 'https://claude.com/claude-code'
+Candidate: <40-hex head, or none>\n\n### Step 1\nAsked: <the step exactly as the message states it>\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\nObserved: <the output, or a path in the task folder holding it>\nOnly he can: <what is left> — <why: his credential, account, device or judgment>
+
+
+======================================================================
+FAIL: test_pr_body_attribution_line_needs_no_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_pr_body_attribution_line_needs_no_recorded_link_step) (line=' \t🤖 Generated with [Claude Code](https://claude.com/claude-code)  ')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-pr-body-attribution-link/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1573, in test_pr_body_attribution_line_needs_no_recorded_link_step
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : message S5: unrecorded command or link 'https://claude.com/claude-code'
+Candidate: <40-hex head, or none>\n\n### Step 1\nAsked: <the step exactly as the message states it>\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\nObserved: <the output, or a path in the task folder holding it>\nOnly he can: <what is left> — <why: his credential, account, device or judgment>
+
+
+======================================================================
+FAIL: test_pr_body_attribution_line_needs_no_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_pr_body_attribution_line_needs_no_recorded_link_step) (line='🤖\t  Generated\t  with\t  [Claude\t  Code](https://claude.com/claude-code)')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-pr-body-attribution-link/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1573, in test_pr_body_attribution_line_needs_no_recorded_link_step
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : message S5: unrecorded command or link 'https://claude.com/claude-code'
+Candidate: <40-hex head, or none>\n\n### Step 1\nAsked: <the step exactly as the message states it>\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\nObserved: <the output, or a path in the task folder holding it>\nOnly he can: <what is left> — <why: his credential, account, device or judgment>
+
+
+======================================================================
+FAIL: test_pr_body_other_url_still_needs_a_recorded_link_step (test_delivery_gate.CaptainStepsTests.test_pr_body_other_url_still_needs_a_recorded_link_step)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-delivery-gate-pr-body-attribution-link/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1609, in test_pr_body_other_url_still_needs_a_recorded_link_step
+    self.assertNotIn("claude.com/claude-code", out)
+AssertionError: 'claude.com/claude-code' unexpectedly found in "message S5: unrecorded command or link 'https://preview.example.test/owner'\nmessage S5: unrecorded command or link 'https://claude.com/claude-code'\nCandidate: <40-hex head, or none>\\n\\n### Step 1\\nAsked: <the step exactly as the message states it>\\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\\nObserved: <the output, or a path in the task folder holding it>\\nOnly he can: <what is left> — <why: his credential, account, device or judgment>\n"
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.092s
+
+FAILED (failures=4)

@@ -1,0 +1,38 @@
+[
+  {
+    "moment": "pr-body question",
+    "before": 60,
+    "after": 97,
+    "before_exit": 1,
+    "after_exit": 0
+  },
+  {
+    "moment": "pr-body-spaces question",
+    "before": 60,
+    "after": 97,
+    "before_exit": 1,
+    "after_exit": 0
+  },
+  {
+    "moment": "captain-link question",
+    "before": 60,
+    "after": 60,
+    "before_exit": 1,
+    "after_exit": 1
+  },
+  {
+    "moment": "--help",
+    "before": 1214,
+    "after": 1225
+  },
+  {
+    "moment": "startup kc-dev-flow-2/README.md",
+    "before": 3132,
+    "after": 3132
+  },
+  {
+    "moment": "startup kc-dev-flow-2/references/sd/workflow.md",
+    "before": 5931,
+    "after": 5931
+  }
+]

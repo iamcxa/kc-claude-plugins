@@ -1,0 +1,83 @@
+usage: delivery_gate.py [-h] {check,question,steps} ...
+
+Check what FO is about to ask the Captain to merge.
+
+Usage: delivery_gate.py check <task file or task folder> --pr <owner/repo>#<N> --text-file <file> [--head <sha>] [--sibling-pr <owner/repo>#<N>]... [--workflow-dir <dir>]
+
+A task is `<slug>.md` or `<slug>/index.md`; a folder argument means its `index.md`. Records are read and saved in the task's own folder `<slug>/`.
+
+The dispatched heads are the whole `Candidate: <40-hex head>` lines above the first `## ` heading of the
+highest-numbered `<task folder>/dispatch/validation-<N>.md` record; the check reads no validation verdict.
+A task whose frontmatter says `profile: prod` must also pass `validation_security.py` (saved security review at
+the dispatched head the PR head equals, every finding disposed); a profile that cannot be read as poc, pilot or prod holds.
+The PR head is compared, as a prefix, with each line; it passes when it matches one (--head, else `gh pr view --json headRefOid`).
+--text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each,
+at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
+or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token; `answer=review:<id>` is no review.
+The gate text also needs one top-level `External rounds: N` line outside fences, using the summary count form below.
+Both commands require exactly one configured second-reviewer declaration, including `not triggered` when applicable.
+Prod/db cannot claim `not triggered`. Listed Copilot refusals must copy the quote/id from
+`<task>/review/copilot-not-run.txt` and offer `Copilot retry: available when the Captain confirms quota is back.`
+Missing/unreadable source is exit 2, malformed/different content exit 1; configuration errors need a reason only.
+Unsupported Copilot PR types may be skipped; `check` compares that type to the PR title.
+Each `;`-separated item after `Declined...:` or
+`FO declines...:` (up to the next sentence that opens with a label and a colon, a blank line, or a line that opens a new decline; a label
+after `e.g.` or `i.e.`, or inside the item, does not start another) needs a bracket, `( )` or `[ ]`, of two or more words holding its reason; this proves a bracket exists, not that
+it is a reason. When the newest `## Stage Report: validation` lists `- F<N> Deferred risk:` or `- F<N> Polish:` bullets, fewer
+declined items than those bullets holds; a report with no such bullets is not joined.
+The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files`. Exit 1 holds the ask when the head differs,
+a confirmation clause is missing, a second reviewer has no stated outcome, a declined item has no bracketed reason, an `ADR: NNNN` the task reserves under
+`## Number guards` has no `<adr-path>/NNNN-*.md` in the directory at the PR head (README `adr-path:`, default `docs/adr`;
+the directory is read, not the PR's file list; a `--sibling-pr` whose head is a dispatched Candidate and not closed supplies the file instead, and
+is recorded as `siblings`), a prod task's security review fails, a check on the head is not finished or finished
+other than SUCCESS, SKIPPED or NEUTRAL, no check on the head finished SUCCESS
+(an empty rollup, or only skipped and neutral checks), a workflow run on the head is not completed and successful
+(a completed skipped run settles when the required-check list is non-empty), a required check name has no pass entry,
+the PR is a draft or not mergeable, its base is not the README's
+`trunk:`, or the file list is shorter than `changedFiles`. Exit 2 when the record has no Candidate line, a head, the PR or the
+README cannot be read, or an input is unusable. Every problem is printed.
+A task whose committed state owes a chief-engineer or engineering-reviewer call also holds: `role_triggers.py` runs on the task folder and stem
+(no --review-rounds), reading the task as committed at HEAD of its state checkout, so an edit not yet state-committed is not seen; exit 1 from it
+adds one problem line and its `next:` lines, exit 2 holds with its message.
+Exit 0 from it forwards advisory `next:` lines before the record and ASK, without holding the ask.
+Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
+one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
+and one last `next:` line: `ASK_UNQUOTED` when a non-pending validation attempt has no effective Captain approval
+quoting its bound question as `answering 「…」` (whitespace ignored), else `ASK`. Withdrawn attempts supply neither
+an approval nor a resolution; an unanswered, non-withdrawn attempt keeps the pre-ask line. The `class:` line ends
+`(verdict ask)` when the saved verdict is `ask`.
+
+Usage: delivery_gate.py question <task file or task folder> --text-file <file> [--summary-file <file>] [--workflow-dir <dir>]
+Runs the text checks of `check` on the validation gate question before `gate prepare`, and also refuses text that names the merge with
+`--match-head-commit` and has no sentence of the form "unless he says he merges or holds" (`unless` or `if`, then `he`, `you`, `the Captain` or `Captain`, then `say`, then `merge` or `hold`). Exit 0
+prints `gate text complete` then `ASK_FORM`; exit 1 prints each problem; exit 2 when an input cannot be read. `check` does not judge either clause.
+Merge-naming text also needs the question file to name removing its clean, pushed worktree, in one sentence.
+It requires the newest delivery check record to match the dispatched head, named merge head and clauses, and prints its --reference path.
+With --summary-file, ordinary text checks use question plus summary; reviewer checks use only
+the summary outside fences. It requires one top-level External rounds: N (nonnegative integer),
+optionally followed by a full stop or a semicolon/full stop and detail. Without it, legacy checks apply.
+The summary (combined text for legacy calls) needs Captain steps: <record path>, passing steps
+against the gate text and latest validation report, at a latest dispatched Candidate.
+Both `question` and `check` print a claim-source reminder on entry, without adding a hold.
+They list count sentences without a task-folder file holding their numbers, then write
+Unchecked counts: N into the summary (legacy question: question file; check: ask text).
+Check scans the PR body too. The disclosure is automatic and never holds a count;
+an unreadable or unwritable input still exits 2.
+
+Usage: delivery_gate.py steps <record> --text-file <message>
+Reads Captain step observations without executing commands. Missing observations, unmatched steps,
+unrecorded fenced commands or links (named Markdown files contribute shell or untagged fences;
+a URI right after `{` is not a link), missing absolute paths whose top-level directory exists,
+and Captain-only steps without a reason hold the ask (exit 1). Unreadable input is exit 2.
+Candidate may be none outside a validation gate. The check trusts recorded observations.
+Relative Markdown names resolve from the task folder, including names prefixed by its slug.
+Report-only Markdown files contribute fenced commands; missing-path checks cover FO's text and Asked lines.
+Prose asks, inline code, fences inside a > quote, fences starting on a list-marker line,
+and 4-space indented code blocks stay undetected. An unclosed fence in a named Markdown
+file becomes one large required step, through the end of the file.
+
+positional arguments:
+  {check,question,steps}
+
+options:
+  -h, --help            show this help message and exit
