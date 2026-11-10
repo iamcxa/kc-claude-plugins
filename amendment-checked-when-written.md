@@ -205,3 +205,42 @@ Recommended order: no ordering is needed within batch 20. Among the `design_surf
 ### Summary
 
 Designed state law L4 `amendment-moves-use-fresh-ids`. It flags, at the commit that writes it, a move that redeclares a moved id or leaves the replacement unmarked. The marker test is shared with `design_surfaces.py check` through one predicate, so the two cannot drift. Measurement: on three adopter histories a prototype fires at 7 commits. Each is a known form break or a defect repaired in the next push. 6 of the 7 added no dispatch record, which is why the check goes at the push and not at dispatch. The material risk is D2: dev2's laws run pins 0.26.0, so L4 does nothing on dev2 until the Captain approves moving the pin.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved Pilot design within the named product files, based on origin/main.
+  Branch `spacedock-ensign/amendment-checked-when-written`; base `6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1`; candidate `71eb2ec4298812d831573386324641ca6babff5d`; four approved files only, clean worktree; artifact manifest `/tmp/opencode/amendment-checked-when-written/artifact.json`.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main implementing the approved design and acceptance criteria; decisions as approved at the ideation gate; only the files the design names.
+  No PR opened: no push grant. Product publication belongs to FO; local candidate preserves D1 per-push L4 and D2's unchanged adopter pin. AC-4 remains a specification hold, so this is not a publication recommendation.
+- FAILED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared).
+  AC-4 expects seven historical events, but the approved whole-file structural skip excludes dev2 `bf8c73be99c4` and relay `06cadae7681f`: both have unrelated amendment headings outside the amendment section; the former is also malformed and duplicate. Details and source lines: `/tmp/opencode/amendment-checked-when-written/seven-events.json`; both per-commit CLI counterexample logs are beside it. FO must resolve expected corpus versus skip scope; candidate and accepted criteria were not changed to hide the conflict.
+- DONE: AC-1 — reproduce the original defect and its two falsifiers.
+  Candidate CLI on `b91e7434adde..a113aa3e9` reports one L4 event with reused AC-1, AC-2, AC-4 and an unmarked replacement; base prints no L4. Disabling each check removes its corresponding line and fails the L4 fixture: `candidate-bite.log`, `base-bite.log`, `mutation-{reuse,marker}-bite.log` under `/tmp/opencode/amendment-checked-when-written/`.
+- DONE: AC-2 and AC-3 — legitimate shapes pass and defects belong to their introducing commit.
+  `test_laws_check.py`: 73 run, 72 passed, 1 optional environment fixture skipped; covers record-only, marked/waived moves, each defect, later unrelated edits, post-defect ranges and repair. Removing the payload gate or first-parent suppression fails its named case; `laws-tests.log`, `mutation-payload-0.log`, `mutation-parent-0.log` in the evidence directory.
+- DONE: Complete the read-only three-adopter history replay required by AC-4, including current tips.
+  Pinned dev2 `5254e465b7a3`, qnow `69ac9bed19ab`, relay `e6751812e914`: L4 reports 2/3/0 events, no extra event. Full CLI and final-candidate L4 replay agree; full CLI exits 2 on existing L3 history debt. `corpus-inputs.json`, `corpus-reconciliation.json`, `corpus-{dev2,qnow,relay}.log` retain ranges/results; the seven-event assertion fails with exactly the two missing commits above.
+- DONE: AC-5 — registry, docs and FO reading remain within the approved boundary.
+  Registry test passes and removing the L4 heading fails it; `laws.md` grows 1345 to 1570 words (+225, below 250). Workflow, dispatch_records.py, skills, CI template and versions are byte-unchanged from base, preserving lifecycle reading; `mutation-heading-0.log` and `artifact.json` in the evidence directory.
+- DONE: AC-6 — share one marker predicate while preserving existing checks.
+  Both callers use `unmarked`; unchanged `test_design_surfaces.py`: 217 run, 213 passed, 4 optional environment fixtures skipped. Disabling the shared marker fails one test in each suite; six mutation controls reject their regressions with absent caches and python3 -B. Three pinned tips produce 1032 identical base/candidate check/seed verdicts; `mutations.json`, `design-tests.log`, `check-comparison.json` in the evidence directory.
+- SKIPPED: AC-7 — hosted dev2 activation and its old-pin falsifier.
+  Deferred by approved D2 until a containing release, Captain-approved pin change and one observed state-push L4 headline; no adopter file or pin was changed, and no hosted activation/run is claimed.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), package adr_lint.py docs/adr --since <base>, number_guards.py check, and comment_ratio.py within its maximum.
+  All exit 0 at candidate; ADR lint checks 65 records with no new ADR; number guards show no findings; comment ratio is 0/173 = 0.0%, maximum 5%. Logs `lint.log`, `adr-lint.log`, `number-guards.log`, `comment-ratio.log` are under `/tmp/opencode/amendment-checked-when-written/`.
+- DONE: doc-impact — docs/adr/0041-seed-admission-enforces-required-fields.md is unaffected.
+  Seed admission is unchanged; pinned check/seed verdicts match the base. Recorded in `doc-verdicts.json` beside the raw `doc-impact.json` output.
+- DONE: doc-impact — docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md is unaffected.
+  `added_words` and its dispatch comparison are unchanged; the shared replacement-marker predicate preserves check output. Recorded in `doc-verdicts.json`.
+- DONE: doc-impact — kc-dev-flow-2/references/sd/laws.md is updated.
+  Added L4 Rule, Event, Judged by, Bit and Bounds; the registry and heading mutation exercise its entry point. Recorded in `doc-verdicts.json`.
+- DONE: doc-impact — learning.md is unaffected.
+  Historical practices remain applicable; this task follows the word, history-input and corpus checks without rewriting those records. Recorded in `doc-verdicts.json`.
+- DONE: Commit locally, no product push; write the PR title and body for FO.
+  Local candidate is `71eb2ec4298812d831573386324641ca6babff5d`; `/tmp/impl-amendment-checked-when-written-pr.md` contains the scoped Conventional Commit title, body, checks and explicit AC-4 hold; no version bump or empty commit.
+- SKIPPED: FO pushes, opens the Draft PR, runs RoboRev and reads hosted CI.
+  Delegated and not run by this worker; no clean review or hosted delivery claimed. CI cost per PR and per state push is not measured; no trigger, job or adopter pin changes.
+
+### Summary
+
+Implemented L4 with the approved whole-file structural skip and the shared `unmarked` predicate; local behavior, five acceptance criteria and six mutation controls pass. AC-4 fails because two of its seven expected historical events have parser structural issues and are therefore excluded by the approved design; return this conflict to FO before further product changes/publication, while AC-7 stays open under D2.
