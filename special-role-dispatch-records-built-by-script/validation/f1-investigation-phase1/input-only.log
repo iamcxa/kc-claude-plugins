@@ -1,0 +1,20 @@
+test_role_crlf (__main__.ByteBoundaryTests.test_role_crlf) ... FAIL
+test_stage_crlf (__main__.ByteBoundaryTests.test_stage_crlf) ... ok
+test_role_lf (__main__.ByteBoundaryTests.test_role_lf) ... ok
+test_stage_lf (__main__.ByteBoundaryTests.test_stage_lf) ... ok
+test_lf_record_renderer_is_identical (__main__.ByteBoundaryTests.test_lf_record_renderer_is_identical) ... ok
+
+======================================================================
+FAIL: test_role_crlf (__main__.ByteBoundaryTests.test_role_crlf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-f1-phase1/test_bytes.py", line 71, in test_role_crlf
+    self.dispatch_bytes(True, '\r\n')
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-f1-phase1/test_bytes.py", line 64, in dispatch_bytes
+    self.assertEqual(result.stdout, disk, facts)
+AssertionError: b'# e[141 chars]ytes\n\xe4\xbf\x9d\xe7\x95\x99\xe7\xac\xac\xe4[384 chars]97\n' != b'# e[141 chars]ytes\r\n\xe4\xbf\x9d\xe7\x95\x99\xe7\xac\xac\x[394 chars]\r\n' : {'role': True, 'newline': "'\\r\\n'", 'command_exit': 0, 'checklist_bytes_kept': True, 'scope_bytes_kept': True, 'record_bytes_exact': True, 'committed_bytes_exact': True, 'stdout_matches_record': False}
+
+----------------------------------------------------------------------
+Ran 5 tests in 12.585s
+
+FAILED (failures=1)

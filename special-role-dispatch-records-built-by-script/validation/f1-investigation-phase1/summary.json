@@ -1,0 +1,26 @@
+{
+  "candidate": "8574e879b85197d31239ee2d9a9af0c5d0cb5392",
+  "source_sha256": "4f7ca8b0fab600276e0104604238c027b86defa5495e7f02acd20cd402a64e64",
+  "product_unchanged": true,
+  "scope": "phase 1: investigate only",
+  "baseline": {
+    "tests": 5,
+    "failures": 2,
+    "crlf_role": "rewritten",
+    "crlf_stage": "rewritten"
+  },
+  "input_only": {
+    "tests": 5,
+    "failures": 1,
+    "crlf_role_stdout": "rewritten after record is preserved"
+  },
+  "proposal": {
+    "tests": 5,
+    "failures": 0,
+    "production_applied": false,
+    "source_lines_changed": 3
+  },
+  "lf_record_change": "none; direct byte comparison for both paths",
+  "test_script": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-f1-phase1/test_bytes.py",
+  "proposal_patch": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script/.context/special-role-f1-phase1/proposal.patch"
+}

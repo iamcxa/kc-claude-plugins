@@ -1,0 +1,22 @@
+[
+  {
+    "name": "__main__.ByteBoundaryTests.test_role_crlf",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.ByteBoundaryTests.test_stage_crlf",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.ByteBoundaryTests.test_role_lf",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.ByteBoundaryTests.test_stage_lf",
+    "status": "passed"
+  },
+  {
+    "name": "__main__.ByteBoundaryTests.test_lf_record_renderer_is_identical",
+    "status": "passed"
+  }
+]

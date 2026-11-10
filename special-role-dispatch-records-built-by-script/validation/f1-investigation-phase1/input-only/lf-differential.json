@@ -1,0 +1,12 @@
+[
+  {
+    "role": true,
+    "equal": true,
+    "byte_count": 527
+  },
+  {
+    "role": false,
+    "equal": true,
+    "byte_count": 515
+  }
+]

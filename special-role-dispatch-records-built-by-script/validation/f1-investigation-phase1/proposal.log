@@ -1,0 +1,10 @@
+test_role_crlf (__main__.ByteBoundaryTests.test_role_crlf) ... ok
+test_stage_crlf (__main__.ByteBoundaryTests.test_stage_crlf) ... ok
+test_role_lf (__main__.ByteBoundaryTests.test_role_lf) ... ok
+test_stage_lf (__main__.ByteBoundaryTests.test_stage_lf) ... ok
+test_lf_record_renderer_is_identical (__main__.ByteBoundaryTests.test_lf_record_renderer_is_identical) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 14.929s
+
+OK

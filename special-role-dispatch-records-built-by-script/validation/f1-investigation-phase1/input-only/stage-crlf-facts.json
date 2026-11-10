@@ -1,0 +1,10 @@
+{
+  "role": false,
+  "newline": "'\\r\\n'",
+  "command_exit": 0,
+  "checklist_bytes_kept": true,
+  "scope_bytes_kept": true,
+  "record_bytes_exact": true,
+  "committed_bytes_exact": true,
+  "stdout_matches_record": null
+}

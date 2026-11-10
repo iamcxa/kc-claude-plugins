@@ -283,3 +283,24 @@ ADRs: 0074
 
 The role commit/refusal/recovery path and all specified removal controls were independently exercised from pinned exports. Recommend REJECTED solely for F1; existing LF-only tests and green hosted CI do not prove the accepted input-byte boundary. Product HEAD and bytes remain unchanged; FO owns disposition, any repair authorization, and delivery.
 ADRs: 0074
+
+
+## Stage Report: implementation
+
+- DONE: Phase 1 only of the Cycle 1 repair: reproduce finding F1 as a failing test at head 8574e879, propose the smallest fix, and stop with no product commit or push until FO authorizes the fix.
+  Exact candidate `8574e879b85197d31239ee2d9a9af0c5d0cb5392` exported under the assigned worktree; source bytes match the commit. Five raw-byte tests: role CRLF and stage CRLF fail while both LF controls and the LF renderer comparison pass (`validation/f1-investigation-phase1/baseline.log`, `baseline/tests.json`); commands return 0 yet neither CRLF source byte sequence survives in either saved record.
+- DONE: Propose the smallest fix for F1, without applying it to the product.
+  Diagnostic copy changes three existing lines in `dispatch_stage.py`: decode each input from `read_bytes()` as UTF-8, then emit role stdout with `sys.stdout.buffer.write(path.read_bytes())`; record construction and the existing encoded-byte retry comparison need no change. Five tests pass on that disposable proposal, including raw HEAD/disk/stdout identity and role retry reuse (`proposal.log`, `proposal/tests.json`); reverting just the stdout change leaves preserved disk/HEAD bytes but one failing stdout test (`input-only.log`).
+- DONE: Say whether the same newline rewriting touches the existing stage path (non-role dispatches).
+  Yes: `parse_args` shares both normalizing `read_text()` calls across stage and role modes; the native `--stage ideation --host codex` fixture independently commits rewritten CRLF bytes at the current candidate (`baseline/stage-crlf-facts.json`). The proposed shared input-read correction also preserves CRLF in stage records; only the raw stdout change is role-specific, and the stage builder still receives the original source-file paths.
+- DONE: Say whether the fix changes any byte of an LF-only record.
+  No in the exercised role and stage paths: both candidate and disposable proposal match an exact raw-byte expected record; direct before/after `parse_args`→`record_text` comparison on identical LF inputs yields identical bytes for both paths (`proposal/lf-differential.json`). The proposal adds no header, delimiter or numbering change and does not edit existing records.
+- DONE: Append one complete `## Stage Report: implementation`, every item followed by its own indented evidence line.
+  This complete phase-1 report and `special-role-dispatch-records-built-by-script/validation/f1-investigation-phase1/` preserve the raw bytes, test outcomes and summary; the reproducer and proposed diff remain under the assigned worktree's ignored `.context/special-role-f1-phase1/` (`summary.json` names their absolute paths).
+- SKIPPED: Product repair, product commit, full package rerun, PR writes and all pushes.
+  Investigation-only dispatch; product HEAD remains `8574e879b85197d31239ee2d9a9af0c5d0cb5392` with clean tracked status. FO must authorize the shared three-line correction and regression-test integration before implementation; state evidence/report are committed locally only, respecting the no-push instruction.
+
+### Summary
+
+F1 is reproduced and remains unfixed in the product; this phase-1 report supersedes the earlier implementation report's claim that AC-1 is green. The smallest proposed correction preserves input bytes through the shared reader and returns raw role-record bytes; disposable checks pass and LF-only record bytes are unchanged in both exercised paths. Pilot scope remains investigation only, awaiting FO repair authorization; no product or remote action was taken.
+ADRs: none: this investigation proposes enforcement of the existing byte-preservation contract, without a new ruling.

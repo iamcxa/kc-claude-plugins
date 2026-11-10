@@ -1,0 +1,12 @@
+{
+  "schema_version": 2,
+  "subagent_type": "spacedock:ensign",
+  "description": "Synthetic dispatch: ideation",
+  "fetch_commands": [
+    "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-nbsqroki/code/docs/dev2 --stage ideation"
+  ],
+  "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-d65f5e5e1a5041-ideation.md",
+  "prompt": "$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-d65f5e5e1a5041-ideation.md and treat its content as your assignment.",
+  "model": null,
+  "name": "spacedock-ensign-dispatch-fixture-d65f5e5e1a5041-ideation"
+}
