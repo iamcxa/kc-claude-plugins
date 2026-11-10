@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.37.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.36.0...kc-dev-flow-2-v0.37.0) (2026-11-10)
+
+
+### Features
+
+* **kc-dev-flow-2:** define kept data in pilot ui ideation ([#820](https://github.com/iamcxa/kc-claude-plugins/issues/820)) ([f980a09](https://github.com/iamcxa/kc-claude-plugins/commit/f980a097bf15d8d1382c039949c6b9aefc5439c8))
+* **kc-dev-flow-2:** disclose unchecked counts and validate learn evidence ([#822](https://github.com/iamcxa/kc-claude-plugins/issues/822)) ([c5f2bf9](https://github.com/iamcxa/kc-claude-plugins/commit/c5f2bf9f43f6c25ee249e35e8424d01b73edf316))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** ask for the shared mechanism in owed role calls ([#821](https://github.com/iamcxa/kc-claude-plugins/issues/821)) ([6a07ecb](https://github.com/iamcxa/kc-claude-plugins/commit/6a07ecbe70cd10a2395236ca22b5eb7b0763ab24))
+* **kc-dev-flow-2:** bind delivery check records before merge questions ([#817](https://github.com/iamcxa/kc-claude-plugins/issues/817)) ([8c83138](https://github.com/iamcxa/kc-claude-plugins/commit/8c8313823f353f631e2b7cca4559dd3e643f30a5))
+* **kc-dev-flow-2:** distinguish gate data from Captain steps ([#818](https://github.com/iamcxa/kc-claude-plugins/issues/818)) ([82c9e67](https://github.com/iamcxa/kc-claude-plugins/commit/82c9e67ae892b80647c3f6a8b6929f993e42dbc2))
+* **kc-dev-flow-2:** hold workers while a role call is owed ([#823](https://github.com/iamcxa/kc-claude-plugins/issues/823)) ([19a3a86](https://github.com/iamcxa/kc-claude-plugins/commit/19a3a8619bee89957d0bc10470429163440b544b))
+
 ## [0.36.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.35.0...kc-dev-flow-2-v0.36.0) (2026-11-08)
 
 
