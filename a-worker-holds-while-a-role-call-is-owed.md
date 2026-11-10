@@ -53,6 +53,17 @@ gates:
                 id: briefing:a-worker-holds-while-a-role-call-is-owed:validation:attempt-1:revision-1
                 digest: sha256:2e1127d85c0b22e85824a7e95afefec35469981dfe921348a602d392bd15f921
                 room-ref: ./a-worker-holds-while-a-role-call-is-owed/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:a-worker-holds-while-a-role-call-is-owed:validation:1
+                briefing: briefing:a-worker-holds-while-a-role-call-is-owed:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-10T01:45:23.241261Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-10), answering 「決定：合併 #823（修程式或驗證的工人開工先查有沒有欠的審查；欠著又沒記錄理由就停手回報，不碰程式）嗎？建議合併。 Regular merge with --match-head-commit 42455f093facfc96edf6cd0357f26be1c858b262, the batch 19 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-09T14:37:10Z
 worktree: .worktrees/spacedock-ensign-a-worker-holds-while-a-role-call-is-owed
 pr: iamcxa/kc-claude-plugins#823
