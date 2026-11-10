@@ -1,0 +1,18 @@
+Candidate: 3567082b0ec1eeb59346b2d82887a07bc5ffc2fb
+Export: /tmp/pr827-acceptance.ezij4s
+..
+----------------------------------------------------------------------
+Ran 2 tests in 2.654s
+
+OK
+....
+----------------------------------------------------------------------
+Ran 4 tests in 4.629s
+
+OK
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 4.258s
+
+OK
+PASS: committed role prompt, refusals, recovery and CRLF/LF input bytes
