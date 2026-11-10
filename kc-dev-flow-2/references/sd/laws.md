@@ -113,7 +113,8 @@ the runner's registry differ.
   Flat, `index.md` and `_archive/` paths use L3's correspondence rules.
 - **Judged by.** `<package>/scripts/laws_check.py` compares `move_defects` on the event and
   first-parent blobs. Unreadable blobs or ambiguous path matches yield cannot-judge (exit 2).
-  Structural parser issues are left to L2/L3.
+  Entries containing a structural parser issue are skipped; other entries remain judged. A heading repair
+  reports a previously unjudgeable defect at that repair commit.
 - **Bit.** State commit `a113aa3e9a3d` moved amendment 1 of
   `worker-browser-checks-use-paseo-browser.md` while reusing AC-1, AC-2 and AC-4 and leaving its
   replacement unmarked.

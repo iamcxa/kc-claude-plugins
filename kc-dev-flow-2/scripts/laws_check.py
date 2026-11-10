@@ -374,14 +374,12 @@ def l3_amendment_append_only(ctx):
 def l4_amendment_moves_use_fresh_ids(ctx):
     script("design_surfaces.py")
     script("decision_ledger.py")
-    from design_surfaces import move_defects, parse_amendments
+    from design_surfaces import move_defects
     judged, violations = 0, []
     for commit, changes in ctx.commits:
         for old, new in amendment_pairs(changes):
             before = amendment_blob(ctx, f"{commit}^", old).split("\n")
             after = amendment_blob(ctx, commit, new).split("\n")
-            if parse_amendments(before)[1] or parse_amendments(after)[1]:
-                continue
             previous = set(move_defects(before))
             added = [defect for defect in move_defects(after) if defect not in previous]
             if not added:

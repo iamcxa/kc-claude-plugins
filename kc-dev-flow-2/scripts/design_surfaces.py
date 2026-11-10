@@ -413,8 +413,8 @@ def unmarked(entry, live, others):
 
 def move_defects(lines):
     entries, issues = parse_amendments(lines)
-    if issues:
-        return []
+    entries = [entry for entry in entries
+               if not any(entry.start < line <= entry.end for line, _ in issues)]
     moved = [declarations(entry.moved) for entry in entries]
     live = declarations(section(unfenced(lines), AC_HEADING) or [])
     declared = {ident for ident, _ in live}

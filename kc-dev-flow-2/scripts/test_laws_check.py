@@ -976,6 +976,43 @@ class L4Test(Base):
         self.assertIn("L3 amendment-append-only: cannot judge", out)
         self.assertIn("L4 amendment-moves-use-fresh-ids: 0 events judged", out)
 
+    def test_unrelated_broken_entry_does_not_hide_valid_move(self):
+        for label, heading in (("outside", "### Amendment 2 — 2026-11-10, chat"),
+                               ("duplicate", "### Amendment 1")):
+            with self.subTest(label=label):
+                repo = Repo(self.tmp / label)
+                extra = "\n## Stage Report: implementation\n\n" + heading + "\nUnrelated report.\n"
+                before = repo.commit("record", t=self.body("**AC-2**: old outcome.\n") + extra)
+                event = repo.commit("move", t=self.body("**AC-5**: new outcome.\n", True) + extra)
+                _, out = self.judge(repo, before, event)
+                self.assertEqual(self.l4_lines(out), [
+                    f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={event[:12]} amendment=1 unmarked replacement"])
+
+    def test_repaired_heading_reports_previously_unjudged_defect(self):
+        repo = Repo(self.tmp / "heading-repair")
+        before = repo.commit("base", t=task())
+        valid = self.body("**AC-2**: rewritten.\n", True)
+        broken = valid.replace("Amendment 1 —", "Amendment 1-")
+        hidden = repo.commit("unjudgeable move", t=broken)
+        self.assertEqual(self.l4_lines(self.judge(repo, before, hidden)[1]), [])
+        repaired = repo.commit("fix heading only", t=valid)
+        _, out = self.judge(repo, hidden, repaired)
+        self.assertEqual(self.l4_lines(out), [
+            f"violation: L4 amendment-moves-use-fresh-ids task=t.md commit={repaired[:12]} amendment=1 {part}"
+            for part in ("reused ids: AC-2", "unmarked replacement")])
+        later = repo.commit("unrelated note", t=valid + "\n## Notes\nNo further move.\n")
+        self.assertEqual(self.l4_lines(self.judge(repo, repaired, later)[1]), [])
+
+    def test_repairing_an_unrelated_heading_does_not_repeat_reported_defect(self):
+        repo = Repo(self.tmp / "unrelated-repair")
+        extra = "\n## Notes\n\n### Amendment 2 — 2026-11-10, chat\nUnrelated report.\n"
+        before = repo.commit("record", t=self.body("**AC-2**: old outcome.\n") + extra)
+        moved = self.body("**AC-5**: new outcome.\n", True) + extra
+        event = repo.commit("move", t=moved)
+        self.assertEqual(len(self.l4_lines(self.judge(repo, before, event)[1])), 1)
+        repaired = repo.commit("fix unrelated heading", t=moved.replace("### Amendment 2", "#### Amendment 2"))
+        self.assertEqual(self.l4_lines(self.judge(repo, event, repaired)[1]), [])
+
     def test_unreadable_blob_and_ambiguous_layout_are_cannot_judge(self):
         for label in ("utf8", "ambiguous"):
             repo = Repo(self.tmp / label)
