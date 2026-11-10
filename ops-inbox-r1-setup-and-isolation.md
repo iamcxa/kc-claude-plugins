@@ -177,6 +177,16 @@ Superseded text:
 **AC-13**: The inbox core imports only node:crypto and its tests pass under the Netlify adapter. Amended by Captain, amendment 2.
 Verified by: `grep -h '^import' kc-ops-inbox/core/*.mjs` printing only `node:crypto`, and the core's test run under the Netlify adapter with zero failures.
 
+### Amendment 4 — 2026-11-10, chat
+Captain: 「F1 照 fork 做法：開 SRE 帳號，fork relay，agent 只推 fork、PR 到上游；fork PR 的 CI 要人核准才跑」 (chat, 2026-11-10, session Paseo 0a411d01), after proposing it himself: 「是否其實就讓整個機制針對專案 repo fork 一份就好了？等於開一個新賬號給 sre flow，讓它 clone main project 且每次跑都要確保最新，然後直接在它的 repo 提交修復，pr 到上游」.
+Asked: 「F1，它擋著 inbox 派 agent 這條路：day-2 agent 拿到的 GitHub token 推得到 relay 的 main，現在只靠提示詞禁止。要怎麼擋？」
+Supersedes: AC-7
+
+### Amendment 5 — 2026-11-10, chat
+Captain: 「第 1 題照建議：inbox 只收要處理的事，用量走 PostHog，新增 ops.metric.limit-changed」 (chat, 2026-11-09) and 「照建議：先不做自動調高，保留 limit.refused、limit.caller.refused 和越線通知；自動調低可以」 (chat, 2026-11-10), both in session Paseo 0a411d01.
+Asked: 「inbox 只收需要有人處理的事，用量一律送 PostHog，並新增一種「額度改了」的事件，可以嗎？」 and 「自動調高額度要不要做？」
+Supersedes: none
+
 ## Design
 
 Cycle 2 (2026-10-23), after amendment 1. Kept from attempt 1, as the Captain asked: contract v1, the trigger-repository isolation, the state-branch gate record. Redone: everything else, ordered by the confirmed axis (`asked-day2-axis-2026-10-23.md`). `## Scope`, the title and `Visible change:` are not edited here; the re-cut below is the proposal for the next ideation gate.
