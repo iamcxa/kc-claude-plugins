@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:amendment-checked-when-written:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:amendment-checked-when-written-validation-1
+              briefing:
+                id: briefing:amendment-checked-when-written:validation:attempt-1:revision-1
+                digest: sha256:755fd5d622a71955ef0d59a6e1b16878dab0f5cff380c174496e108b5ead12eb
+                room-ref: ./amendment-checked-when-written/review/validation/briefing-1
 started: 2026-11-10T04:59:02Z
 worktree: .worktrees/spacedock-ensign-amendment-checked-when-written
 pr: iamcxa/kc-claude-plugins#828
