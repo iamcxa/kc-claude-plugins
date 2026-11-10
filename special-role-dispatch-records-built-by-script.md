@@ -53,6 +53,17 @@ gates:
                 id: briefing:special-role-dispatch-records-built-by-script:validation:attempt-1:revision-1
                 digest: sha256:f55ab61d986518519b0ac0862f6f19e81fdf7ca6ac42523beb89585965adee1a
                 room-ref: ./special-role-dispatch-records-built-by-script/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:special-role-dispatch-records-built-by-script:validation:1
+                briefing: briefing:special-role-dispatch-records-built-by-script:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-10T13:19:59.972631Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-10), answering 「決定：合併 #827（叫總工程師或工程審查員時，由腳本先寫好、檢查、提交派工紀錄才交出任務；派工紀錄原封不動保留輸入檔的換行）嗎？建議合併。同意即接受：模型低於 opus 或 astra 會被拒絕；完全手動、沒留紀錄的審查仍然抓不到；workflow 說明比現在的 main 多 6 個字；Copilot 因額度不足沒有審過這個版本。 Regular merge with --match-head-commit 39a76c68836f471fc0c42c18eab12641196860ed, the batch 20 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-10T04:58:30Z
 worktree: .worktrees/spacedock-ensign-special-role-dispatch-records-built-by-script
 pr: iamcxa/kc-claude-plugins#827
