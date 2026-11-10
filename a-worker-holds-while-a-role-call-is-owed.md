@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-11-09T14:37:10Z
 worktree: .worktrees/spacedock-ensign-a-worker-holds-while-a-role-call-is-owed
-pr: iamcxa/kc-claude-plugins#823
+pr: pr-merge:823
 ---
 
 ## Scope
