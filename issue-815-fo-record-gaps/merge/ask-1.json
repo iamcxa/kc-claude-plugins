@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "e608489c62fd387aeafaa5a1a6111ae59cd7d383",
+  "model": "not run",
+  "necessity": "ADR 0073, kc-dev-flow-2/references/sd/workflow.md, the four scripts decision_ledger.py, delivery_gate.py, design_surfaces.py and dispatch_records.py with their tests, lint-skills.py, the design-direct",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'PASSED for candidate `e608489c62fd387aeafaa5a1a6111ae59cd7d383`, base `6a495cb8c'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'docs/adr/0073-a-captain-gate-record-quotes-its-bound-question-before-it-is-writt'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/decision_ledger.py'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_decision_ledger.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_design_surfaces.py'",
+    "point: more: 4 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#826",
+  "sufficiency": "AC-1 to AC-11 pass, covering a Captain gate reason held when it does not quote the open attempt's bound question, several preview paths in the built-screen check, the coverage check on a task folder, ",
+  "time": "2026-11-10T10:59:14Z",
+  "verdict": "ask"
+}
