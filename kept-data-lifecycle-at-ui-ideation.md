@@ -53,6 +53,17 @@ gates:
                 id: briefing:kept-data-lifecycle-at-ui-ideation:validation:attempt-1:revision-1
                 digest: sha256:a0c0b26515b29c9f9b1941d6cb77b2e61f293b93798db2fa6ad6251b0cafbc4a
                 room-ref: ./kept-data-lifecycle-at-ui-ideation/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kept-data-lifecycle-at-ui-ideation:validation:1
+                briefing: briefing:kept-data-lifecycle-at-ui-ideation:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-10T00:28:07.111033Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-09), answering 「決定：合併 #820（設計階段遇到跨畫面或跨登入保留的資料時，要寫明它從哪開始、怎麼結束、誰會改）嗎？建議合併。 Regular merge with --match-head-commit 8470611d718f19aa8ef1f7ae66ba9f72c3c01422, the batch 19 validation sitting, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-09T14:37:26Z
 worktree: .worktrees/spacedock-ensign-kept-data-lifecycle-at-ui-ideation
 pr: iamcxa/kc-claude-plugins#820
