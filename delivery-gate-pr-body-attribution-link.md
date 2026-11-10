@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:delivery-gate-pr-body-attribution-link:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:delivery-gate-pr-body-attribution-link-ideation-1
+              briefing:
+                id: briefing:delivery-gate-pr-body-attribution-link:ideation:attempt-1:revision-1
+                digest: sha256:2dd787a1d680d816196a5a0d7702e13c5bac397ccb70fd0dd31dcb9a392d82e5
+                room-ref: ./delivery-gate-pr-body-attribution-link/review/ideation/briefing-1
 started: 2026-11-10T04:59:26Z
 ---
 
