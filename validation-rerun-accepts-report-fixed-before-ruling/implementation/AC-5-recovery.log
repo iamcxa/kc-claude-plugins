@@ -1,0 +1,85 @@
+FFFFFFFF
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: validation\n      attempts:\n        - id: gate-attempt:task-validation-1\n          resolution:\n            by: person:captain\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-5-recovery/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1250, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpimmpxrxu/state-2/task/dispatch/validation-2.md:1: validation report 1 changed after a Captain ruling or gate entry (rewritten-report-after-ruling at dc38b8f4de7506f8c386df7b4e0fca8a41bdb558); hold dispatch and report the missing history to FO
+
+
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: ideation\n      attempts:\n        - id: gate-attempt:task-ideation-1\n          resolution:\n            by: person:captain\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-5-recovery/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1250, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpimmpxrxu/state-3/task/dispatch/validation-2.md:1: validation report 1 changed after a Captain ruling or gate entry (rewritten-report-after-ruling at e2d030dab94405a9aa381dc05c9a1462ab23dad8); hold dispatch and report the missing history to FO
+
+
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: validation\n      attempts:\n        - id: gate-attempt:task-validation-1\n          resolution:\n            by: agent:first-officer\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-5-recovery/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1250, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpimmpxrxu/state-4/task/dispatch/validation-2.md:1: validation report 1 changed after a Captain ruling or gate entry (rewritten-report-after-ruling at 5ba9a339e2004e5890187275784073dce90da2db); hold dispatch and report the missing history to FO
+
+
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: validation\n      attempts:\n        - id: gate-attempt:task-validation-1\n          withdrawal:\n            by: person:captain\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-5-recovery/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1250, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpimmpxrxu/state-5/task/dispatch/validation-2.md:1: validation report 1 changed after a Captain ruling or gate entry (rewritten-report-after-ruling at 76528f9b98329743ed300ddcef3b5c3bed5de40d); hold dispatch and report the missing history to FO
+
+
+======================================================================
+FAIL: test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused (__main__.LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused) (before='REJECTED', after='PASSED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-5-recovery/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1275, in test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused
+    self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpp0xjigdv/state-2/task/dispatch/validation-2.md:1: validation report 1 changed its PASSED or REJECTED words (rewritten-report-verdict-changed at a5a7fdceba0989734346f1dd8b477a12061a5a52); hold dispatch and report the missing history to FO
+
+
+======================================================================
+FAIL: test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused (__main__.LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused) (before='REJECTED', after='REJECTED PASSED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-5-recovery/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1275, in test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused
+    self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpp0xjigdv/state-3/task/dispatch/validation-2.md:1: validation report 1 changed its PASSED or REJECTED words (rewritten-report-verdict-changed at b573c680ead655e8b1780eb3d8b89e512b672c69); hold dispatch and report the missing history to FO
+
+
+======================================================================
+FAIL: test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused (__main__.LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused) (before='REJECTED PASSED', after='PASSED REJECTED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-5-recovery/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1275, in test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused
+    self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpp0xjigdv/state-4/task/dispatch/validation-2.md:1: validation report 1 changed its PASSED or REJECTED words (rewritten-report-verdict-changed at cc4553f6cca9d8d2beb58abeae16b519f2d4cb40); hold dispatch and report the missing history to FO
+
+
+======================================================================
+FAIL: test_rewritten_report_without_verdict_word_is_refused (__main__.LiveValidationRulingTests.test_rewritten_report_without_verdict_word_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-5-recovery/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1282, in test_rewritten_report_without_verdict_word_is_refused
+    self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpafizfyte/state-1/task/dispatch/validation-2.md:1: validation report 1 was rewritten and has no PASSED or REJECTED word (rewritten-report-verdict-unreadable at 377f5a8139d23c647a02876b687e9467320f5a6a); hold dispatch and report the missing history to FO
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 4.014s
+
+FAILED (failures=8)

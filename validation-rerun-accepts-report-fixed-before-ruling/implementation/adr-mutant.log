@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/opencode/validation-rerun-implementation/adr-source-check.py", line 10, in <module>
+    assert adr.count('Amended 2026-11-11') == 1
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

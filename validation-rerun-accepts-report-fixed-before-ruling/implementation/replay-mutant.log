@@ -1,0 +1,6 @@
+qnow-recorded-history tag exit=2 owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+qnow-recorded-history candidate exit=2 owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+rewrite-after-ruling tag exit=2 owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+rewrite-after-ruling candidate exit=2 owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+pre-ruling-verdict-flip tag exit=2 owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+pre-ruling-verdict-flip candidate exit=2 owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO

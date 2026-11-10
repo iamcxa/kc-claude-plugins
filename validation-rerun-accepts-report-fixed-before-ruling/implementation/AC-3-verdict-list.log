@@ -1,0 +1,38 @@
+FFF
+======================================================================
+FAIL: test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused (__main__.LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused) (before='REJECTED', after='PASSED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-3-verdict-list/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1273, in test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused
+    out = self.assert_hold(2)
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-3-verdict-list/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused (__main__.LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused) (before='REJECTED', after='REJECTED PASSED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-3-verdict-list/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1273, in test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused
+    out = self.assert_hold(2)
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-3-verdict-list/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused (__main__.LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused) (before='REJECTED PASSED', after='PASSED REJECTED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-3-verdict-list/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1273, in test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused
+    out = self.assert_hold(2)
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-3-verdict-list/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 1.779s
+
+FAILED (failures=3)

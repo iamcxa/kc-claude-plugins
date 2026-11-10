@@ -241,3 +241,36 @@ The full `python3 -B kc-dev-flow-2/scripts/test_dispatch_records.py` passes. Fal
 ### Summary
 
 The 0.38.0 refusal is reproduced on qnow's real state history. The design repairs `later_captain_ruling` in place. A rewrite counts only if it lands strictly before the first new Captain record or gate resolution/withdrawal (a same-commit correction is refused) and keeps its PASSED/REJECTED words. Clearing then needs a ruling after the final text. A throwaway prototype gives the three intended outcomes on the real history. Across four state branches it changes only tasks the tag refused for `rewritten-report` (10 of 26). Two decisions remain for the Captain: D1, the verdict-word proxy, and D2, amending ADR 0045 in place. The scripts and diff saved under `ideation/` contain no qnow content beyond SHAs and two short anchor phrases.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria using only the files the design names; D1 and D2 as approved at the ideation gate.
+  Candidate `7d75d65ef317fc5c426eb7b0975d93a72d50acaa`, base `8c714a370867eccb0d26a589c5149ad3e0c911b4`, branch `spacedock-ensign/validation-rerun-accepts-report-fixed-before-ruling`; only dispatch_records.py, test_dispatch_records.py and ADR 0045 change. Ordered non-empty whole-word verdict lists and one in-place Amended paragraph; no new number or version bump. `implementation/metadata.json` pins the three file hashes.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared).
+  `implementation/assert-evidence.log` verifies AC-1 to AC-6 against saved runs. `mutations.py` uses fresh package copies excluding __pycache__/pyc and python3 -B; all eight assertion mutants fail. The real-history, corpus and ADR counterexamples below also fail as intended.
+- DONE: AC-1 The recorded qnow history dispatches at the candidate and is refused at the tag.
+  `replay-as-designed.log` runs the original ideation helper; `replay.log` widens only its output filter so the new refusal reasons remain visible: recorded tag exit 2 / candidate exit 0. Restoring the blanket rewrite raise returns candidate exit 2 rewritten-report (`replay-mutant.log`).
+- DONE: AC-2 A correction after a ruling, nonclearing gate entry, or beside an amendment remains refused.
+  `test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused` covers Captain validation, ideation, FO resolution and withdrawal; `test_correction_committed_beside_amendment_is_refused` covers same-commit correction. Both assert rewritten-report-after-ruling and the Captain recovery tail; identity and final-text-snapshot mutants fail (`AC-2-*.log`).
+- DONE: AC-3 Verdict flips, added/reordered verdict words and unreadable rewritten verdicts are refused.
+  `test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused` and `test_rewritten_report_without_verdict_word_is_refused` assert their reason and recovery words. Removing the ordered-list comparison or empty-list guard fails (`AC-3-*.log`); real qnow flip remains exit 2.
+- DONE: AC-4 Corrected-report timing and old-text reappearance remain enforced.
+  `test_correction_before_later_ruling_clears` gives exit 0; `test_corrected_report_without_ruling_names_final_text_commit` gives exit 1 naming final-text SHA; `test_old_text_returning_after_final_text_cannot_reset_clock` and the between-corrections ruling case give exit 2. Origin-clock and old-text-ancestry mutants fail (`AC-4-*.log`). Full suite: 125 tests, one native-builder skip; that fixture then passes separately with explicit binary/root (`tests-green.log`, `test-real-builder.log`).
+- DONE: AC-5 Rewrite refusals explain the hold; no other task outcome changes.
+  `corpus.log` replays four frozen revisions (`sources.json`): 26 tasks, 10 changes, all from rewritten-report (8 clear, 1 needs-ruling, 1 verdict-unreadable). Replacing the recovery tail fails three assertion groups (`AC-5-recovery.log`); disabling supported clearing exposes previously cleared tasks in `corpus-mutant.log`. Other callers: dispatch_stage propagates output/status; laws_check uses non-git exports and keeps this live predicate skipped. Dispatch-entry suite: 40 tests pass; historical-law suite: 84 tests with one optional external-source skip (`test-dispatch-stage.log`, `test-laws-check.log`).
+- DONE: AC-6 ADR 0045 carries both decisions without a new ADR number.
+  `adr-source-check.log` binds both complete questions and replies to the task and ideation briefing; removing the paragraph fails (`adr-mutant.log`). Installed 0.38.0 adr_lint.py --since base --require 0045 exits 0 (`adr-lint.log`).
+- DONE: Run repository skill lint, package number guards, design-surface and comment-ratio checks.
+  Repository lint-skills.py exits 0; installed 0.38.0 number_guards.py check exits 0 at base/candidate above; design_surfaces.py check exits 0; comment_ratio.py reports 136 code lines, 0 comment lines, 0.0% within 5%. See corresponding implementation/*.log files.
+- DONE: Affected documents and lifecycle reading costs are recorded.
+  `doc-impact.json`: ADR 0045 updated; ADR 0048 unaffected because completion/publication ownership is unchanged; learning.md unaffected because its output-consumer and evidence practices still apply. `word-counts.json`: boot +0 words, qnow refusal 15 to 0; ADR grows 489 to 612 words (+123, including both exact questions), read only when opened. No workflow budget change.
+- DONE: Commit locally and prepare the Conventional Commit PR title and body for FO.
+  Product worktree is clean after the named-file commit above. `/tmp/impl-validation-rerun-accepts-report-fixed-before-ruling-pr.md` and `implementation/pr.md` contain the title first, then the body. Prior reports, six linked sibling task scopes and the current four open PRs were checked; none claims these three files.
+- SKIPPED: One Draft PR and product branch publication.
+  no PR opened: no push grant. The dispatch explicitly assigns product push and Draft PR creation to FO; no product push, PR comment, review request, ready marking or merge was performed.
+- SKIPPED: FO-owned RoboRev and hosted CI.
+  roborev not run: FO runs the committed candidate review because this Codex sandbox cannot reach the local daemon. Hosted CI not run; FO publishes first. CI cost per PR was not measured; no CI trigger or configuration changes.
+
+### Summary
+
+Pilot implementation is locally complete at the pinned candidate: pre-ruling corrections retain one report only while the ordered verdict words stay unchanged, and the clearing ruling must follow the final text. The real qnow replay, frozen four-branch corpus, package tests and falsifiers support that boundary; FO still owns publication, RoboRev, hosted CI and independent validation. This is the first implementation report and supersedes no earlier implementation report.

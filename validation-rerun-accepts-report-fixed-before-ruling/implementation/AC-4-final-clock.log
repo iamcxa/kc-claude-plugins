@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_corrected_report_without_ruling_names_final_text_commit (__main__.LiveValidationRulingTests.test_corrected_report_without_ruling_names_final_text_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-4-final-clock/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1235, in test_corrected_report_without_ruling_names_final_text_commit
+    self.assertIn(f"report 1 at {final} findings F1;", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'report 1 at dda1d5675653b4040fd3a2d0ed1f840b5b71e198 findings F1;' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp1v0d18cw/state-2/task/dispatch/validation-2.md:1: validation rerun needs a later Captain ruling for report 1 at a89c8e027bcdb6faaee3e23f8549faf58855243f findings F1; hold dispatch, record the ruling, then run this check again\nFor an older free-form ruling, verify its original question and reply, preserve them, and record it as a native gate or Captain amendment before rerunning; if unavailable, hold for the Captain.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.540s
+
+FAILED (failures=1)

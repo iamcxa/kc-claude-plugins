@@ -1,0 +1,6 @@
+qnow-recorded-history tag exit=2 owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+qnow-recorded-history candidate exit=0 <no ruling line>
+rewrite-after-ruling tag exit=2 owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+rewrite-after-ruling candidate exit=2 owner-cancels-booking/dispatch/validation-2.md:1: validation report 1 changed after a Captain ruling or gate entry (rewritten-report-after-ruling at fe33914c2b3ae62c4b64d515f5664c8df9de561d); hold dispatch and bring it to the Captain
+pre-ruling-verdict-flip tag exit=2 owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+pre-ruling-verdict-flip candidate exit=2 owner-cancels-booking/dispatch/validation-2.md:1: validation report 1 changed its PASSED or REJECTED words (rewritten-report-verdict-changed at 72dbd8e8cdcb79f0877bc0ca60d9766090b94181); hold dispatch and bring it to the Captain

@@ -1,0 +1,167 @@
+FFF..........FFF..FFF..FFFFFF....
+======================================================================
+FAIL: test_corrected_report_without_ruling_names_final_text_commit (__main__.LiveValidationRulingTests.test_corrected_report_without_ruling_names_final_text_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1234, in test_corrected_report_without_ruling_names_final_text_commit
+    out = self.assert_hold()
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3n6n5qia/state-2/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+
+
+======================================================================
+FAIL: test_correction_before_later_ruling_clears (__main__.LiveValidationRulingTests.test_correction_before_later_ruling_clears)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1223, in test_correction_before_later_ruling_clears
+    self.assert_hold()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpbg49zaju/state-2/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+
+
+======================================================================
+FAIL: test_correction_committed_beside_amendment_is_refused (__main__.LiveValidationRulingTests.test_correction_committed_beside_amendment_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1259, in test_correction_committed_beside_amendment_is_refused
+    self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'rewritten-report-after-ruling at 939ab6a96202cf4bea0c35f86558ae7e99027d21' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdql1elrc/state-2/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n'
+
+======================================================================
+FAIL: test_old_gate_and_prepared_briefing_allow_pre_ruling_correction (__main__.LiveValidationRulingTests.test_old_gate_and_prepared_briefing_allow_pre_ruling_correction) (native='gates:\n  records:\n    - stage: ideation\n      attempts:\n        - id: gate-attempt:task-ideation-1\n          resolution:\n            by: person:captain\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1324, in test_old_gate_and_prepared_briefing_allow_pre_ruling_correction
+    self.assertEqual(self.cli(), (0, ""))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (2, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8n[171 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpbnz6gy7l/state-2/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: rewritten-report; hold dispatch and '
+-  'report the missing history to FO\n')
+
+======================================================================
+FAIL: test_old_gate_and_prepared_briefing_allow_pre_ruling_correction (__main__.LiveValidationRulingTests.test_old_gate_and_prepared_briefing_allow_pre_ruling_correction) (native='gates:\n  records:\n    - stage: validation\n      attempts:\n        - id: gate-attempt:task-validation-1\n          briefing:\n            id: waiting\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1324, in test_old_gate_and_prepared_briefing_allow_pre_ruling_correction
+    self.assertEqual(self.cli(), (0, ""))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (2, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8n[171 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpbnz6gy7l/state-3/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: rewritten-report; hold dispatch and '
+-  'report the missing history to FO\n')
+
+======================================================================
+FAIL: test_old_text_returning_after_final_text_cannot_reset_clock (__main__.LiveValidationRulingTests.test_old_text_returning_after_final_text_cannot_reset_clock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1297, in test_old_text_returning_after_final_text_cannot_reset_clock
+    self.assertIn(f"rewritten-report-after-ruling at {reverted}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'rewritten-report-after-ruling at beb7515b7b021b17721bc41c03e9b26274bd55f8' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp_7wew9hm/state-2/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n'
+
+======================================================================
+FAIL: test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused (__main__.LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused) (before='REJECTED', after='PASSED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1274, in test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused
+    self.assertIn(f"rewritten-report-verdict-changed at {changed}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'rewritten-report-verdict-changed at 67389fbe7155e5d0fbc53e4d26014446597ce1a7' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp0y_0tgvi/state-2/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n'
+
+======================================================================
+FAIL: test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused (__main__.LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused) (before='REJECTED', after='REJECTED PASSED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1274, in test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused
+    self.assertIn(f"rewritten-report-verdict-changed at {changed}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'rewritten-report-verdict-changed at 9a52741cf05136bc1d3edef83dc619d8a2b411c5' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp0y_0tgvi/state-3/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n'
+
+======================================================================
+FAIL: test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused (__main__.LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused) (before='REJECTED PASSED', after='PASSED REJECTED')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1274, in test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused
+    self.assertIn(f"rewritten-report-verdict-changed at {changed}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'rewritten-report-verdict-changed at 07e48746d522eed75cdecf9e8acf1d9dffc0fb8e' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp0y_0tgvi/state-4/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n'
+
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: validation\n      attempts:\n        - id: gate-attempt:task-validation-1\n          resolution:\n            by: person:captain\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1249, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'rewritten-report-after-ruling at 9879cc5b488b58e36407d08b52744f02c1172106' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpqyvg8zjl/state-2/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n'
+
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: ideation\n      attempts:\n        - id: gate-attempt:task-ideation-1\n          resolution:\n            by: person:captain\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1249, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'rewritten-report-after-ruling at c6f9f97dd1737251c938c845ddac2b4ff805c712' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpqyvg8zjl/state-3/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n'
+
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: validation\n      attempts:\n        - id: gate-attempt:task-validation-1\n          resolution:\n            by: agent:first-officer\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1249, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'rewritten-report-after-ruling at 0cda08d45566d05e52f47a7c21ca273f1686a921' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpqyvg8zjl/state-4/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n'
+
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: validation\n      attempts:\n        - id: gate-attempt:task-validation-1\n          withdrawal:\n            by: person:captain\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1249, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'rewritten-report-after-ruling at aee20e108b079cc952cb95b10715ee60edef4ee0' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpqyvg8zjl/state-5/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n'
+
+======================================================================
+FAIL: test_rewritten_report_without_verdict_word_is_refused (__main__.LiveValidationRulingTests.test_rewritten_report_without_verdict_word_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1281, in test_rewritten_report_without_verdict_word_is_refused
+    self.assertIn(f"rewritten-report-verdict-unreadable at {changed}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'rewritten-report-verdict-unreadable at 12e0bd5e42cd4f6fbfa1ea761174b39e86e722bc' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjucdhso9/state-1/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n'
+
+======================================================================
+FAIL: test_ruling_between_two_corrections_still_refuses (__main__.LiveValidationRulingTests.test_ruling_between_two_corrections_still_refuses)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1310, in test_ruling_between_two_corrections_still_refuses
+    self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'rewritten-report-after-ruling at 7654521559c00cabc7f5f98d487fbd4b2d70c756' not found in '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp458szqqy/state-2/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n'
+
+----------------------------------------------------------------------
+Ran 27 tests in 28.208s
+
+FAILED (failures=15)

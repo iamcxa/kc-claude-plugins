@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_correction_before_later_ruling_clears (__main__.LiveValidationRulingTests.test_correction_before_later_ruling_clears)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-1-any-rewrite/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1223, in test_correction_before_later_ruling_clears
+    self.assert_hold()
+    ~~~~~~~~~~~~~~~~^^
+  File "/private/tmp/opencode/validation-rerun-implementation/mutants/AC-1-any-rewrite/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdp45dfzi/state-2/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.440s
+
+FAILED (failures=1)
