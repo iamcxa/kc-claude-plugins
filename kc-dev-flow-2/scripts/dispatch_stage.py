@@ -181,8 +181,8 @@ def parse_args(argv):
             value = getattr(args, name)
             if value is not None:
                 setattr(args, name, value.resolve(strict=True))
-        checklist = args.checklist_file.read_text()
-        notes = args.scope_notes_file.read_text()
+        checklist = args.checklist_file.read_bytes().decode("utf-8")
+        notes = args.scope_notes_file.read_bytes().decode("utf-8")
         dispatched = git(args.workflow_dir, "rev-parse", "HEAD")
     except (OSError, UnicodeError, subprocess.CalledProcessError) as error:
         parser.error(str(error))
@@ -239,7 +239,7 @@ def main(argv=None):
         if commit.returncode:
             sys.stderr.write(commit.stdout)
             return 1
-        sys.stdout.write(path.read_text())
+        sys.stdout.buffer.write(path.read_bytes())
         return 0
     command = [args.spacedock, "dispatch", "build", "--advance" if args.advance else "--stamp"]
     for name in ("workflow_dir", "entity_path", "stage", "checklist_file", "scope_notes_file", "host", "feedback_context_file"):

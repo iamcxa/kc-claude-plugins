@@ -214,6 +214,68 @@ class DispatchStageTests(unittest.TestCase):
         self.assertTrue(self.record("chief-engineer").exists())
         self.assertFalse(self.record("chief-engineer", 2).exists())
 
+    def assert_input_bytes(self, role, newline):
+        checklist = "Inspect exact bytes\n保留第二行\n".replace("\n", newline).encode("utf-8")
+        notes = (f"Package root: {ROOT}\nSend your completion message to `main`.\n"
+                 "保留範圍文字\n").replace("\n", newline).encode("utf-8")
+        self.checklist.write_bytes(checklist)
+        self.notes.write_bytes(notes)
+        kind = "engineering-reviewer" if role else "ideation"
+        command = [sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+                   "--entity-path", self.entity, "--role" if role else "--stage", kind,
+                   "--model", "opus", "--checklist-file", self.checklist,
+                   "--scope-notes-file", self.notes, "--spacedock", BINARY]
+        if not role:
+            command += ["--host", "codex"]
+        result = subprocess.run(list(map(str, command)), cwd=self.base, env=self.env,
+                                capture_output=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        record = self.record(kind)
+        disk = record.read_bytes()
+        dispatched = self.git(self.workflow, "rev-parse", "HEAD")
+        expected = (f"# {kind}-1\nDispatched: {dispatched} (workflow checkout)\nModel: opus\n\n"
+                    "## Checklist\n").encode("utf-8") + checklist + b"\n## Scope notes\n" + notes
+        self.assertIn(checklist, disk)
+        self.assertIn(notes, disk)
+        self.assertEqual(disk, expected)
+        committed = subprocess.run(["git", "-C", str(self.state), "show",
+                                    f"HEAD:{record.relative_to(self.state)}"],
+                                   env=self.env, check=True, capture_output=True).stdout
+        self.assertEqual(committed, disk)
+        if role:
+            self.assertEqual(result.stdout, disk)
+            retry = subprocess.run(list(map(str, command)), cwd=self.base, env=self.env,
+                                   capture_output=True, timeout=30)
+            self.assertEqual(retry.returncode, 0, retry.stderr)
+            self.assertEqual(retry.stdout, disk)
+            self.assertFalse(self.record(kind, 2).exists())
+
+    def test_role_crlf_inputs_keep_raw_bytes(self):
+        self.assert_input_bytes(True, "\r\n")
+
+    def test_stage_crlf_inputs_keep_raw_bytes(self):
+        self.assert_input_bytes(False, "\r\n")
+
+    def test_role_lf_inputs_keep_raw_bytes(self):
+        self.assert_input_bytes(True, "\n")
+
+    def test_stage_lf_inputs_keep_raw_bytes(self):
+        self.assert_input_bytes(False, "\n")
+
+    def test_lf_record_matches_legacy_input_reading(self):
+        import dispatch_stage as subject
+
+        for role in (True, False):
+            with self.subTest(role=role):
+                argv = ["--workflow-dir", str(self.workflow), "--entity-path", str(self.entity),
+                        "--role" if role else "--stage", "engineering-reviewer" if role else "ideation",
+                        "--model", "opus", "--checklist-file", str(self.checklist),
+                        "--scope-notes-file", str(self.notes)]
+                args, dispatched, checklist, notes = subject.parse_args(argv)
+                before = subject.record_text(args, 1, dispatched, self.checklist.read_text(), self.notes.read_text())
+                after = subject.record_text(args, 1, dispatched, checklist, notes)
+                self.assertEqual(before.encode("utf-8"), after.encode("utf-8"))
+
     def assert_committed(self, path, subject):
         self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
         root = Path(self.git(self.state, "rev-parse", "--show-toplevel"))
