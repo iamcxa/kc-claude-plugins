@@ -23,3 +23,7 @@ steps:
             ask: 「B的話sot在哪裡？」 — Kent, chat, 2026-11-09
             status: answered
             answer: 「SoT 依擁有者分兩個：個人一個、［公司］一個；跨界由我同意後手動複製」 — Kent, chat, 2026-11-10
+          - id: q4
+            ask: 「把「AGENTS.md 加那一行指向」列為採用 B 的必要步驟嗎？」 — asked of Kent, chat, 2026-11-10, after a run with no pointer where Codex read the gitignored note in 1 of 5 runs
+            status: answered
+            answer: 「列為必要步驟。」 — Kent, chat, 2026-11-10
