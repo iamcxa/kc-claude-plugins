@@ -3,7 +3,7 @@ title: Special-role dispatch records are written by the package dispatch script
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
