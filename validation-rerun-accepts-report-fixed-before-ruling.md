@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:validation-rerun-accepts-report-fixed-before-ruling:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:validation-rerun-accepts-report-fixed-before-ruling-ideation-1
+              briefing:
+                id: briefing:validation-rerun-accepts-report-fixed-before-ruling:ideation:attempt-1:revision-1
+                digest: sha256:a3ccfa5f1eef5cd633a8cda3f2de4f090554649af6592e564eb9d76e46041698
+                room-ref: ./validation-rerun-accepts-report-fixed-before-ruling/review/ideation/briefing-1
 started: 2026-11-10T16:15:50Z
 ---
 

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-rerun-accepts-report-fixed-before-ruling:ideation:attempt-1:revision-1",
+  "question": "決定：要不要核准「驗證報告在你裁示前被補改過，仍可再派驗證」的設計並開始實作。我建議核准：設計照你選的方向做，用 qnow 的真實歷史重放過三種情況，結果都符合預期。核准即接受設計裡兩項建議：一、「結論沒變」的判法是每一版報告裡 PASSED 與 REJECTED 這兩個字的出現順序完全相同；二、把這次改動記成 ADR 0045（驗證重跑前必須有你之後的裁示）的一段原地增補，不開新編號。核准後我派實作工人。",
+  "artifacts": [
+    {
+      "id": "artifact:validation-rerun-accepts-report-fixed-before-ruling:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3141c3c5e14964e89ee689dc08fcd51d3916f154/validation-rerun-accepts-report-fixed-before-ruling.md",
+      "rev": "sha256:e30a84ca198731770dd7c5d772c458a90664aa97faa6cd781ca40b5f8a7025b9",
+      "mediaType": "text/markdown",
+      "summary": "Ideation report committed at 3141c3c5e (state branch, 2026-11-11). FO ran design_surfaces.py check: exit 0, design surfaces presentable (2026-11-11). Worker's report, not re-run by FO: replay.sh on a copy of qnow history shows the 0.38.0 tag refusing all three cases and the prototype dispatching the recorded history while refusing a post-ruling rewrite and a pre-ruling verdict flip; corpus.py over four state branches shows 10 of 26 tasks change outcome (8 clear, 1 needs a later ruling, 1 stays refused for no verdict word) and none the tag cleared changes; 117 existing tests pass with the prototype and one test must be split (AC-4). No criterion is verified against a candidate yet. Decisions: D1 verdict unchanged means the same ordered list of PASSED/REJECTED words in every version; D2 an in-place Amended paragraph in ADR 0045, no new number. Files the design changes: kc-dev-flow-2/scripts/dispatch_records.py, its test file, docs/adr/0045. FO note: ideation/replay.sh on this public state branch quotes two short phrases of workflow wording from a private qnow report and names qnow commits; no customer or account data (FO read the file, 2026-11-11)."
+    }
+  ]
+}
