@@ -210,6 +210,11 @@ Asked: 「決定：「修改驗收條件的檢查」這張，要維持 5 次先�
 Supersedes: none
 Design: A file whose `parse_amendments` reports structural issues is left to L2/L3 and not judged by L4.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-10): validation-1 on #828 head 72216e2e recommended REJECTED with one finding, F1, assessed Material and owned (value-ac[AC-3]: a defect is reported once at the commit that adds it; evidence amendment-checked-when-written/validation/cycle-1/partial-repair.log, the validator's run, not re-run by FO), to fix; investigation first, then FO fix authorization, then a fresh validation recheck.
+  - F1: a push that repairs only one of several reused ids reports the remaining, already reported id again, because laws_check.py compares the whole reused-id tuple.
+
 ## Stage Report: ideation
 
 - DONE: Design the check that refuses or flags, at the commit that writes it, a task amendment that reuses an acceptance-criterion id or lacks the 'Amended by Captain, amendment N' marker (the batch 17 in-place AC rewrite is the bite); name where it runs at commit time, what kc-dev-flow-2/scripts/design_surfaces.py already catches, and the falsifier
