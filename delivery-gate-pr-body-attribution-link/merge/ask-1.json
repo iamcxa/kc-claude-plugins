@@ -1,0 +1,18 @@
+{
+  "class": "never",
+  "head": "2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8",
+  "model": "not run",
+  "necessity": "only kc-dev-flow-2/scripts/delivery_gate.py and kc-dev-flow-2/scripts/test_delivery_gate.py change (validation-1 report, Astra, 2026-11-10; file list also read by FO with git diff --name-only on 2026-",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'PASSED: PR #825 at `2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8` meets'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#825",
+  "sufficiency": "a gate text naming a PR body whose only link is the exact Claude Code attribution line passes both the question and the steps route, while a real Captain link in a named card, the same URL on any othe",
+  "time": "2026-11-10T10:59:09Z",
+  "verdict": "ask"
+}
