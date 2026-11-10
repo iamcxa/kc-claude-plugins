@@ -56,7 +56,7 @@ Release review: not needed: workflow maintenance, on no journey map.
 **FAQ.**
 - What changes? `links()` blanks a line that equals, after whitespace is normalized, the one attribution line in an `ATTRIBUTION` set, before it finds URLs. One constant, one line in `links()`, one clause in the `steps` usage paragraph (`ideation/prototype.diff`, +3 −1).
 - Why the line and not the URL or the file? The same URL on any other line still holds (case E: `Open https://claude.com/claude-code`), and so does the attribution line with anything else on it (case F). Exempting the whole PR body would also drop links the Captain may be asked to open there: 23 of 346 feature PR bodies carry another URL, among them a docs-site link (#776) and a workspace link (#511) (`ideation/pr-body-survey.txt`). That is D1.
-- Why only one line in the set? It is the only form in 400 PR bodies: 264 of 346 feature bodies carry it and no other line contains `claude.com/claude-code` (`ideation/pr-body-survey.txt`). The Release Please line never reaches a Captain-steps message in this workflow, so adding it now has no bite.
+- Why only one line in the set? It is the only form in 400 PR bodies: 264 of 346 feature bodies carry it and no other line contains `claude.com/claude-code` (`ideation/pr-body-survey.txt`). A Release PR has no task file, so no `question` or `steps` run names its body; adding the Release Please line now has no bite.
 - Which routes? `links()` serves `inspect_steps`, which both `steps` and `question` (through `captain_step_problems`) call; `check` never calls it, so the merge ask is unchanged.
 - What stays? Fences in the PR body: a shell or untagged fence in a named card still holds, as delivery-gate-ignores-url-paths-and-data-fences left it. A prose URL in the PR body still holds (case D); FO records it as a step or describes the body without its path.
 
@@ -75,7 +75,7 @@ flowchart TD
 
 ### Reproduction on 0.37.0 and the prototype
 
-Installed 0.37.0 `delivery_gate.py` is byte-identical to origin/main `6a495cb8` (`diff`, 2026-11-10). `delivery_gate.py steps` on a scratch task folder, base vs prototype, exit codes (`ideation/repro-matrix.log`):
+Installed 0.37.0 `delivery_gate.py` is byte-identical to origin/main `6a495cb8` (`diff`, 2026-11-10). `delivery_gate.py steps` on a scratch task folder, base vs prototype, exit codes (`ideation/repro-matrix.log`; rerun with `ideation/repro.sh <kc-claude-plugins checkout> [ref]`, which builds both package trees from `git archive` and applies `ideation/prototype.diff` with `patch -p2`):
 
 | Case | Named card or message | 0.37.0 | Prototype |
 | --- | --- | --- | --- |
@@ -112,6 +112,10 @@ Mutations the tests must catch: dropping the `links()` line flips A and G back t
 
 The five inputs of delivery-gate-ignores-url-paths-and-data-fences; other URLs and fences in a PR body; other attribution forms; `check`.
 
+### Decisions
+
+**D1 (Captain): what the PR body stops contributing.** Recommended: only the exact Claude Code attribution line stops being a link; every other URL in a named PR body still needs a recorded step. What gets worse: a PR body with another URL (23 of 346 feature bodies so far) still holds, and FO records that link or describes the body without its path. The other option, exempting a file named `pr-body.md` from link coverage, clears those too but drops any link FO asks the Captain to open from the PR body, and relies on a file name no package rule fixes.
+
 ### Batch overlap
 
 | Task | Shared file or check | Conflict |
@@ -128,10 +132,6 @@ The five inputs of delivery-gate-ignores-url-paths-and-data-fences; other URLs a
 | adr-required-statement, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot, adr-silent-undo-probe, dispatch-carries-reserved-adr-number, journey-canvas-hosted-poc, picky-reviewers-may-run-on-gemini, seed-check-requires-alignment-result | no `delivery_gate.py` or link-rule change | none |
 
 Recommended order: any order; this change touches `links()`, one constant beside `SHELL` and one `steps` usage clause, none of which another task edits. Whichever lands second rebases its `test_delivery_gate.py` additions.
-
-### Decisions
-
-**D1 (Captain): what the PR body stops contributing.** Recommended: only the exact Claude Code attribution line stops being a link; every other URL in a named PR body still needs a recorded step. What gets worse: a PR body with another URL (23 of 346 feature bodies so far) still holds, and FO records that link or describes the body without its path. The other option, exempting a file named `pr-body.md` from link coverage, clears those too but drops any link FO asks the Captain to open from the PR body, and relies on a file name no package rule fixes.
 
 ## Acceptance criteria
 
