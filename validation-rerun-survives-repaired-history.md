@@ -3,7 +3,7 @@ title: A validation rerun is dispatched when the task's history holds a form err
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要讓「任務歷史裡有已修好的格式錯誤時，仍可再派驗證」這張任務插隊進入設計階段。我建議核准：我已在 qnow 的歷史上重現這個問題，42 個歷史版本裡有 4 個會讓套件永久拒絕這張任務的驗證派工。核准代表接受這張任務檔寫的範圍、預算（實作一輪、驗證一輪）與停止條件，並派一個設計工人；設計要清點同一個檢查還有哪些同類情況。不代表接受任何設計或修法。它標了方向要先對齊，派工前我會再問你一題。」. Recommendation: followed.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
