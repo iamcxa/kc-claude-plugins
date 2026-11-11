@@ -1,8 +1,24 @@
 {
-  "phase": "awaiting evidence commit before final cleanup",
+  "evidence_commit": "ad25c7f96fcb416677d7215473ad9668acd346cc",
+  "phase": "complete",
   "directories": [
-    "/tmp/val844-0a5c37f0",
-    "/tmp/val844-acceptance.MIj7KE"
+    {
+      "path": "/tmp/val844-0a5c37f0",
+      "removed": true,
+      "method": "exact-path recursive deletion after evidence commit; includes candidate and baseline exports, every state clone and mutation/test fixture"
+    },
+    {
+      "path": "/tmp/val844-acceptance.MIj7KE",
+      "removed": true,
+      "method": "acceptance EXIT trap; absence independently checked"
+    },
+    {
+      "path": "/tmp/val844-0a5c37f0/tmp/val844-acceptance.tyEyXg",
+      "removed": true,
+      "method": "initial acceptance EXIT trap; absence independently checked before parent removal"
+    }
   ],
-  "removed": false
+  "all_owned_test_sessions_completed": true,
+  "retained_temporary_copies": false,
+  "state_commit_environment": "Initial shared index.lock sandbox denial; identical task-scoped state helper succeeded with authorized access."
 }
