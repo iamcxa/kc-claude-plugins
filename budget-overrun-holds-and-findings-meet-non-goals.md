@@ -15,6 +15,17 @@ gates:
                 id: briefing:budget-overrun-holds-and-findings-meet-non-goals:backlog:attempt-1:revision-1
                 digest: sha256:bbf8876b9320ba4494fa6be7f4b921e4caa1951ace37a9a08e67bc99211a9ad9
                 room-ref: ./budget-overrun-holds-and-findings-meet-non-goals/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:budget-overrun-holds-and-findings-meet-non-goals:backlog:1
+                briefing: briefing:budget-overrun-holds-and-findings-meet-non-goals:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-11T01:18:41.244618Z"
+                decision: approve
+                reason: 'The Captain chose 「五張都核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：第 21 批這五張要不要進設計階段。我建議五張都核准：故事做完回報切片進度、發版後鋪開到採用 repo 與法規檢查、超預算要停與重大發現先對照不做清單、工人收到的推送說明與狀態提交工具一致、拒絕一個指令不等於全停。核准代表接受每張任務檔寫的範圍、預算與停止條件，並各派一個設計工人；不代表接受任何設計或修法。前三張標了方向要先對齊，派工前我會各問你一題。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
