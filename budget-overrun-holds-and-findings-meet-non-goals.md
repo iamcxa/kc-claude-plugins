@@ -3,7 +3,7 @@ title: A task that exceeds its Budget holds for the Captain, and a Material find
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
