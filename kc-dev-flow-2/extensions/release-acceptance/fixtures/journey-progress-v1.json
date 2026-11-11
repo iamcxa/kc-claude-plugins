@@ -15,7 +15,12 @@
       "doneTasks": 1,
       "taskIds": [
         "build-reserve-copy"
-      ]
+      ],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": []
+      }
     },
     {
       "journey": "book-pickup",
@@ -26,7 +31,12 @@
       "doneTasks": 1,
       "taskIds": [
         "build-choose-pickup-day"
-      ]
+      ],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": []
+      }
     },
     {
       "journey": "book-pickup",
@@ -37,7 +47,12 @@
       "doneTasks": 1,
       "taskIds": [
         "build-check-ready"
-      ]
+      ],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": []
+      }
     },
     {
       "journey": "book-pickup",
@@ -48,7 +63,12 @@
       "doneTasks": 1,
       "taskIds": [
         "build-receive-reminder"
-      ]
+      ],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": []
+      }
     },
     {
       "journey": "book-pickup",
@@ -59,7 +79,12 @@
       "doneTasks": 1,
       "taskIds": [
         "build-collect-book"
-      ]
+      ],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": []
+      }
     }
   ],
   "releases": [
@@ -70,7 +95,12 @@
       "requiredTasks": 3,
       "doneTasks": 3,
       "status": "exists",
-      "acceptance": "pending delivery acceptance"
+      "acceptance": "pending delivery acceptance",
+      "members": {
+        "storiesDone": 3,
+        "storiesOpen": 0,
+        "storiesEmpty": 0
+      }
     },
     {
       "release": "r2",
@@ -79,7 +109,12 @@
       "requiredTasks": 2,
       "doneTasks": 2,
       "status": "exists",
-      "acceptance": "pending delivery acceptance"
+      "acceptance": "pending delivery acceptance",
+      "members": {
+        "storiesDone": 2,
+        "storiesOpen": 0,
+        "storiesEmpty": 0
+      }
     }
   ]
 }
