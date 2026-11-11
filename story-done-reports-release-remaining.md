@@ -51,6 +51,11 @@ gates:
                 at: "2026-11-11T02:30:26.001623Z"
                 decision: revise
                 reason: 'The Captain chose 「退回補上「任務必須標故事」（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要核准「故事做完回報切片進度」的設計並開始實作。我建議照設計的建議核准：每張有切片的任務歸檔時，我在對話裡回報這個切片完成與剩餘的故事和每個完成故事的 PR，不自動重畫畫布；PR 連結現算、只出現在回報裡，畫布和地圖檔不變；不做故事宣告，回報裡改列「已建檔任務」的計數。核准即接受這三項；要畫布上顯示 PR 或要做故事宣告，請選對應的選項。」. Override: recommended approving the design as written; Captain chose sending it back to add that each task records its story or none; area: journey progress. After his questions 「故事宣告為何數量差異那麼大？」 and 「我確定一下故事宣告的意思，是每張任務都要宣告它屬於哪張故事是嗎？如果不強制宣告（也可能沒有對應故事）那這樣怎麼算出切片都完成了？」 FO changed its recommendation in chat to the option he chose. Ask of the ideation worker: keep the design and add one step, each task at the backlog gate records the story it belongs to or that it belongs to none with the reason, and say where it is checked.'
+            - id: gate-attempt:story-done-reports-release-remaining-ideation-3
+              briefing:
+                id: briefing:story-done-reports-release-remaining:ideation:attempt-3:revision-1
+                digest: sha256:3a29ce7da3ecda8b80495ac30c372aec0e93f20a01b1f7b181549c50b31e7091
+                room-ref: ./story-done-reports-release-remaining/review/ideation/briefing-3
 started: 2026-11-11T01:22:31Z
 ---
 
