@@ -4,6 +4,7 @@ import io
 import os
 import json
 import re
+import shutil
 import sys
 from pathlib import Path
 import subprocess
@@ -253,6 +254,43 @@ class DesignSurfacesTests(unittest.TestCase):
 
 
 class WorthQuestionsTests(unittest.TestCase):
+    @unittest.skipUnless(shutil.which(os.environ.get("SPACEDOCK_BIN") or "spacedock"), "requires the real Spacedock CLI")
+    def test_frontmatter_requires_worth_questions_before_the_design_gate(self):
+        for stage, design in (("ideation", False), ("ideation", True),
+                              ("backlog", True), ("", True), (None, True)):
+            with self.subTest(stage=stage, design=design), tempfile.TemporaryDirectory() as d:
+                status = f"status: {stage}\n" if stage is not None else ""
+                text = ("---\ntitle: Task\n" + status + "---\n"
+                        "## FO alignment\nSurfaces: none\nVisible change: none\n"
+                        + ("## Design\nBody\n" if design else "")
+                        + "## Acceptance criteria\n**AC-1** bounded\n")
+                errors = ds.check_task(write_task(d, text))
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn("design needs '### Worth questions'", errors[0])
+
+    @unittest.skipUnless(shutil.which(os.environ.get("SPACEDOCK_BIN") or "spacedock"), "requires the real Spacedock CLI")
+    def test_frontmatter_past_the_design_gate_does_not_require_worth_questions(self):
+        for stage in ("implementation", "validation", '"validation" # approved', "done"):
+            with self.subTest(stage=stage), tempfile.TemporaryDirectory() as d:
+                text = (f"---\ntitle: Task\nstatus: {stage}\n---\n"
+                        "## FO alignment\nSurfaces: none\nVisible change: none\n"
+                        "## Design\nBody\n## Acceptance criteria\n**AC-1** bounded\n")
+                self.assertEqual(ds.check_task(write_task(d, text)), [])
+
+    def test_unreadable_stage_refuses_with_one_reader_error_and_no_worth_line(self):
+        from unittest import mock
+
+        with tempfile.TemporaryDirectory() as d:
+            reader = Path(d, "failed-spacedock")
+            reader.write_text("#!/bin/sh\nexit 23\n")
+            reader.chmod(0o755)
+            text = ("---\ntitle: Task\nstatus: validation\n---\n"
+                    "## FO alignment\nSurfaces: none\nVisible change: none\n"
+                    "## Design\nBody\n## Acceptance criteria\n**AC-1** bounded\n")
+            with mock.patch.dict(os.environ, {"SPACEDOCK_BIN": str(reader)}):
+                self.assertEqual(ds.check_task(write_task(d, text)),
+                                 ["task.md: cannot read stage for Worth questions: Spacedock read exited 23"])
+
     def test_html_comments_cannot_supply_the_worth_heading(self):
         base = (BASE.split("## PRFAQ")[0] + "## Design\n\n{heading}\n"
                 "## Acceptance criteria\n**AC-1** bounded\n")
