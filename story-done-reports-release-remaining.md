@@ -615,6 +615,10 @@ The same seed without a `Story:` line under a README that does not list `journey
 
 **AC-14** — The ADR lands with the rule. Evidence: the kc-dev-flow-2 PR adds `docs/adr/<reserved number>-a-journey-workflows-new-seed-records-its-story-or-none.md` with the Captain's words from this task's ideation resolution and `Protects:` naming `design_surfaces.py`, and the repository's ADR lint exits 0 on it. Falsifier: the rule merged without that file fails the ADR check the PR runs.
 
+## Number guards
+
+ADR: 0076
+
 ## Stage Report: ideation
 
 - DONE: Per the Captain's Result line, compare the choices side by side for him to pick at the gate, each with what gets worse: (a) what FO reports after a story task is archived and whether the canvas is redrawn then; (b) progress and story-to-PR links derived from task state versus written into the map file; (c) taking the story declaration step (a task joins its story's journey-required-tasks when approved into the story) into this task versus leaving it to journey-map-progress-and-provenance. Measure today's declared and undeclared stories on subspace-relay, qnow and this repository read-only, and run the progress reader on at least one real map
