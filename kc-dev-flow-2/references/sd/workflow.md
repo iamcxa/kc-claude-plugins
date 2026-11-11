@@ -273,11 +273,8 @@ Each number or factual claim in a gate summary or PR body names the command that
   sources, findings, attempts and the specific question. With a mid-run FO
   channel, pause dependent work and continue safe independent work; without
   one, end your turn with that handback instead of waiting. Never answer your
-  own or your reviewers' permission requests; route them to FO. A command
-  refused by anyone, with or without a reason, is refused alone: do not work
-  around it; continue the steps it does not block, and report it and what it
-  left unchecked. FO coordinates peers and decisions; do not message peers or
-  change others' work.
+  own or your reviewers' permission requests; route them to FO. FO coordinates
+  peers and decisions; do not message peers or change others' work.
 - **Signal:** send the completion message once, to the first officer by the name
   your session lists as addressable (`main` under Claude Code dispatch). The
   completion block's `team-lead` is Spacedock's default and is not registered
