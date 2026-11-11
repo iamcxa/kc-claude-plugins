@@ -3,7 +3,7 @@ title: main's kc-dev-flow-2 tests pass again with the Worth questions check and 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
