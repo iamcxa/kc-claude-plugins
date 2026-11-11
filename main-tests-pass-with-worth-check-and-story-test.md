@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:main-tests-pass-with-worth-check-and-story-test:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:main-tests-pass-with-worth-check-and-story-test-validation-1
+              briefing:
+                id: briefing:main-tests-pass-with-worth-check-and-story-test:validation:attempt-1:revision-1
+                digest: sha256:96e358f28a3990409190caad592a1600363704b808f3bfbc8218af16b91950e0
+                room-ref: ./main-tests-pass-with-worth-check-and-story-test/review/validation/briefing-1
 started: 2026-11-11T09:02:13Z
 worktree: .worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test
 pr: iamcxa/kc-claude-plugins#846

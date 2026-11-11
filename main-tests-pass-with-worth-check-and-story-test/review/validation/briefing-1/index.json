@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:main-tests-pass-with-worth-check-and-story-test:validation:attempt-1:revision-1",
+  "question": "決定：合併 #846（修好 main 上壞掉的那一項測試：只在一個測試檔的假任務裡補上「值不值得」那一節）嗎？建議合併。同意即接受：只改測試資料，檢查本身和「讀不到階段就擋下」的規則沒有動；合併後 main 的測試應該恢復通過，我會在合併後確認，沒過就立刻回報；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit 9b9be172c7cb2453ae74a79f10322344bf9ab32f, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:main-tests-pass-with-worth-check-and-story-test:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9d1ad57ec92173eefda6e9e4269eaadc12e9e84e/main-tests-pass-with-worth-check-and-story-test.md",
+      "rev": "sha256:c2c5d63e0323b5f1843b58ba6c35fcf3ea092aa68d645a672933b4bbe31d94b0",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 1\nUnchecked counts: 1\nDelivery of main-tests-pass-with-worth-check-and-story-test, PR #846, batch 21 priority exception.\nSufficiency: the Story test that failed on main passes at the candidate with and without a spacedock program on PATH, the full design-surfaces suite passes, and the refusal when a stage cannot be read is unchanged (validation report, Astra, 2026-11-11, PASSED at 9b9be172c; acceptance script run by FO 2026-11-11, exit 0).\nNecessity: kc-dev-flow-2/scripts/test_design_surfaces.py changes against origin/main, fixture text only (impl_ship.sh file list, FO run 2026-11-11; assertion equality judged in the validation report, Astra, 2026-11-11).\nAcceptance, run by FO in a fresh shell 2026-11-11, exit 0: /bin/bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/main-tests-pass-with-worth-check-and-story-test/validation/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/main-tests-pass-with-worth-check-and-story-test/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-11, exit 0: gh pr view 846 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nMerge result, the task's stop condition: git merge-tree --write-tree origin/main 9b9be172c7cb2453ae74a79f10322344bf9ab32f gives tree 67b75a024, the candidate's own tree, with origin/main at 571a7bd8a (FO run 2026-11-11); FO ran test_design_surfaces.py on that tree with no spacedock program on PATH, 226 tests OK with 4 skipped, exit 0 (/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/main-tests-pass-with-worth-check-and-story-test/captain-steps/3-output.log, finished 2026-11-11T10:04:39Z); the other suites on that tree are the PR's hosted run, not rerun by FO.\nExternal rounds: 1.\nExternal round sources: Codex code review of 9b9be172c completed with no finding (codex_review.py, FO run 2026-11-11, evidence=summary:6792868831@9b9be172c).\nSecond reviewer: Copilot because the PR is the fix a red main and a held release wait on.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5857010805\nCopilot retry: available when the Captain confirms quota is back.\nRoboRev: clean on 9b9be172c, evidence=roborev:1757 (FO run 2026-11-11).\nCI: six checks on 9b9be172c finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr view statusCheckRollup, read by FO 2026-11-11).\nValidation rounds: 1. PASSED at 9b9be172c.\nCaptain amendments: 0.\nNot verified: the kc-dev-flow-2 tests workflow on main after the merge, which FO reads once it has run.\nHosted run on the head, read by FO in a fresh shell 2026-11-11, conclusion success: https://github.com/iamcxa/kc-claude-plugins/actions/runs/42996427762"
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:main-tests-pass-with-worth-check-and-story-test:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/9d1ad57ec92173eefda6e9e4269eaadc12e9e84e/main-tests-pass-with-worth-check-and-story-test/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:6eb0470954669af3952d92f8926a569584f73f752d35363e4d0de8f1e8ba9b3d"
+    }
+  ]
+}
