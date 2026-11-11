@@ -1,0 +1,51 @@
+01d23393ebe5bfd63d8bcafc01859c3b146021d2
+dependencies ready
+✔ filed membership counts undeclared tasks and formats completed task pull requests (1.67525ms)
+✔ archive report uses filed counts without changing declarations, acceptance, or source bytes (1546.638125ms)
+✔ report separates release-only tasks and unknown stories and bounds lists (1915.160333ms)
+✔ journey-progress registers its printed table and refuses an unversioned shape edit (92.543125ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3575.086375
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.039s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 1.302s
+
+OK
+..........................................................................................................................
+----------------------------------------------------------------------
+Ran 122 tests in 10.717s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.585s
+
+OK
+journey progress: spacedock-review/owner-account after inbox-home (backlog)
+story inbox-home: 0 of 1 filed tasks done; declared: gap
+pull requests: none recorded
+release owner-account: 0 of 4 stories have every filed task done; 2 in progress; 2 have no task
+done: none
+in progress: inbox-home 0/1, switch-any-account 0/1
+canvas: not redrawn; draw it with kc-journey-progress
+journey progress: spacedock-review/owner-account after inbox-home (done)
+story inbox-home: 1 of 1 filed tasks done; declared: exists
+pull requests: spacedock-dev/subspace-relay#999
+release owner-account: 1 of 4 stories have every filed task done; 1 in progress; 2 have no task
+done: inbox-home (spacedock-dev/subspace-relay#999)
+in progress: switch-any-account 0/1
+canvas: not redrawn; draw it with kc-journey-progress
+68 ADR file(s) checked, 0 legacy
+acceptance complete: /tmp/story-progress-captain-v2.P7v0ZV
+exit=0

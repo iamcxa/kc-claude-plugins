@@ -1,0 +1,21 @@
+{
+  "class": "never",
+  "head": "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+  "model": "not run",
+  "necessity": "kc-journey-map/lib/contract-versions.json, journey-progress.mjs, progress.mjs, progress.test.mjs, schemas.mjs, schemas.test.mjs and kc-journey-map/skills/kc-journey-progress/SKILL.md change against or",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 1 dated 2026-11-11'",
+    "point: amendment: 'Amendment 2 dated 2026-11-11'",
+    "point: path: 'kc-journey-map/skills/kc-journey-progress/SKILL.md'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#839",
+  "siblings": [
+    "sibling: reserved ADR 0076 is at iamcxa/kc-claude-plugins#843 head 01d23393ebe5, a dispatched candidate of this task"
+  ],
+  "sufficiency": "the progress tool reports, for one story and its release, how many filed tasks are done, which stories are done or in progress, and the pull requests that finished each, in a short report, with schema",
+  "time": "2026-11-11T07:40:35Z",
+  "verdict": "ask"
+}
