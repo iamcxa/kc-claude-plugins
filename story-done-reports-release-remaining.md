@@ -628,6 +628,11 @@ Captain: 「更新樣本檔，測試不動（建議）」 (host question dialog,
 Asked: 「「故事回報進度」的實作要不要多改一個設計沒列的檔案？進度工具的輸出多了欄位後，dev2 切片驗收擴充裡那個「實跑進度工具並和樣本檔逐字比對」的測試會失敗。我建議：同意多改，但改的是那份樣本檔（加入新欄位），測試本身不動、維持逐字比對；不採用工人提議的「把測試改成容許多出來的欄位」。」
 Supersedes: none
 
+### Amendment 2 — 2026-11-11, host question dialog
+Captain: 「照做，重新驗證（建議）」 (host question dialog, 2026-11-11)
+Asked: 「「故事做完回報切片進度」第一次驗證留了一個待裁示的發現（第二半要登記成候選版並重新驗證），要不要照做？我建議照做：把 #839 和疊在它上面的 #843 都登記成候選版，重新派一次獨立驗證，驗證要把 CI 會跑的每個指令都跑過並列出結果，因為第一次驗證漏跑了一組後來失敗 9 項的測試。」
+Supersedes: none
+
 ## Stage Report: ideation
 
 - DONE: Per the Captain's Result line, compare the choices side by side for him to pick at the gate, each with what gets worse: (a) what FO reports after a story task is archived and whether the canvas is redrawn then; (b) progress and story-to-PR links derived from task state versus written into the map file; (c) taking the story declaration step (a task joins its story's journey-required-tasks when approved into the story) into this task versus leaving it to journey-map-progress-and-provenance. Measure today's declared and undeclared stories on subspace-relay, qnow and this repository read-only, and run the progress reader on at least one real map
