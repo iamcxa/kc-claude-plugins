@@ -1,0 +1,62 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  },
+  {
+    "name": "AC-3",
+    "status": "passed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  },
+  {
+    "name": "AC-8",
+    "status": "passed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  },
+  {
+    "name": "AC-9",
+    "status": "failed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  },
+  {
+    "name": "AC-10",
+    "status": "passed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  },
+  {
+    "name": "AC-11",
+    "status": "passed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  },
+  {
+    "name": "AC-12",
+    "status": "passed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  },
+  {
+    "name": "AC-13",
+    "status": "passed",
+    "evidence": "README.md#criterion-evidence-and-falsifiers"
+  }
+]

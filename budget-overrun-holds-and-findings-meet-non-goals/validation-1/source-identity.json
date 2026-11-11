@@ -1,0 +1,7 @@
+{
+  "head": "5bf7cf78866a2f0f6376c15b59fc400519c5ffeb",
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "origin_main": "546a136386c94c58e430c91a6f3457b38bd73880",
+  "task_sha256": "c2fd8b7cdb79eec4b1e2904f00d2dbd530d2e8d2905e53f3d047c213b2c482d0",
+  "harness": "implementation scripts reused with independent output destinations; final-checks Git reads pinned to source repo, not mutable working-tree diff"
+}

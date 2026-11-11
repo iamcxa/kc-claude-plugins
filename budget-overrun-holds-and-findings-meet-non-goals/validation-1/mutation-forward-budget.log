@@ -1,0 +1,24 @@
+test_budget_line_and_spent_cycles_are_printed_before_build (test_dispatch_stage.DispatchStageTests.test_budget_line_and_spent_cycles_are_printed_before_build) ... 
+  test_budget_line_and_spent_cycles_are_printed_before_build (test_dispatch_stage.DispatchStageTests.test_budget_line_and_spent_cycles_are_printed_before_build) (value='One cycle per stage.') ... FAIL
+test_uncountable_budget_stdout_is_forwarded (test_dispatch_stage.DispatchStageTests.test_uncountable_budget_stdout_is_forwarded) ... FAIL
+
+======================================================================
+FAIL: test_budget_line_and_spent_cycles_are_printed_before_build (test_dispatch_stage.DispatchStageTests.test_budget_line_and_spent_cycles_are_printed_before_build) (value='One cycle per stage.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/budget-validation-841/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 123, in test_budget_line_and_spent_cycles_are_printed_before_build
+    self.assertIn(f"budget: Budget: {value}; spent implementation 1, validation 0{suffix}", result.stderr)
+AssertionError: 'budget: Budget: One cycle per stage.; spent implementation 1, validation 0' not found in "[build] declared model 'sonnet' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+
+======================================================================
+FAIL: test_uncountable_budget_stdout_is_forwarded (test_dispatch_stage.DispatchStageTests.test_uncountable_budget_stdout_is_forwarded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/budget-validation-841/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 131, in test_uncountable_budget_stdout_is_forwarded
+    self.assertIn("budget: Budget: at most 3 days; spent implementation 0, validation 1; states no cycles", result.stderr)
+AssertionError: 'budget: Budget: at most 3 days; spent implementation 0, validation 1; states no cycles' not found in "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+
+----------------------------------------------------------------------
+Ran 2 tests in 4.814s
+
+FAILED (failures=2)

@@ -1,0 +1,11 @@
+{
+  "command": [
+    "bash",
+    "--noprofile",
+    "--norc",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-overrun-holds-and-findings-meet-non-goals/validation-1/acceptance.sh"
+  ],
+  "exit": 1,
+  "elapsed_seconds": 23.903,
+  "expected": "exit 1 on this candidate: both AC-9 counterexamples incorrectly pass; steps 1-4 pass"
+}

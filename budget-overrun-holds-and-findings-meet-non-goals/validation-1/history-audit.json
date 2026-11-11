@@ -1,0 +1,13 @@
+{
+  "relay_first": "42317d0c14d24228ddf08b6dd51f6575fc139bf4",
+  "base_first_hold": "d85ce1527cbaa44d285e89e0c4f99a211e4ba964",
+  "no_earlier_base_hold": true,
+  "amendment4_prior_revision": "e4e16fda1e100e555490527acb1a0582cf9fa6d8",
+  "ac7_moved_verbatim": true,
+  "fresh_replacement_ids": [
+    10,
+    11,
+    12,
+    13
+  ]
+}

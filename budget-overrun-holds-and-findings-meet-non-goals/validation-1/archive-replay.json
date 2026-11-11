@@ -1,0 +1,269 @@
+{
+  "dev2": {
+    "tasks": 58,
+    "broad_countable": 0,
+    "broad_held": 0,
+    "fixed_countable": 0,
+    "fixed_held": 0,
+    "differences": []
+  },
+  "qnow": {
+    "tasks": 7,
+    "broad_countable": 7,
+    "broad_held": 7,
+    "fixed_countable": 0,
+    "fixed_held": 0,
+    "differences": [
+      {
+        "task": "booking-attempt-identity.md",
+        "budget": "one ideation pass and two implementation passes in one PR. This is FO's proposal; the Captain did not state a budget.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "owner-cancels-booking.md",
+        "budget": "one ideation pass and one implementation pass in one PR. This is FO's proposal; the Captain did not state a budget.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/agents-md-rules-refresh.md",
+        "budget": "one ideation pass and one implementation pass, delivered in one docs PR. This is FO's proposal; the Captain did not state a budget.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/journey-edits-after-merge.md",
+        "budget": "one implementation dispatch editing `docs/journey/qnow.yaml` only, applying the draft plus the Captain's rulings on D1 to D6, with AC-1 to AC-10 as its checks. No product code, no task frontmatter, no re-render of the live room `qnow` (that room has hand edits; re-rendering it is the Captain's call after merge). Stop: the rulings are recorded and AC-3 exits 0. Return to the first officer instead if a ruling reorders releases beyond the list in AC-4 or needs a product change.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/landing-page-and-trial-requests.md",
+        "budget": "Proposed for backlog approval on 2026-11-03: one ideation cycle (design, copy draft, screenshots from staging, and one real Netlify Forms submission through a `uat` branch deploy, booked with the other FO first), then one implementation and one independent validation pass on the pilot route. No paid resource, new Netlify site, production deploy, or new dependency beyond what `packages/qnow-client` and `apps/qnow-site` already use. A Netlify hosted setting (form detection, email notification) is a Captain action named at the ideation gate, not done by a worker.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/landing-visual-polish.md",
+        "budget": "one ideation cycle (design review of the built page plus the Captain's pick), one implementation and one independent validation pass on the pilot route; screenshots taken headed on a PR deploy preview; no paid resource.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/owner-vehicle-kept-after-name.md",
+        "budget": "one ideation pass and one implementation pass in one PR. This is FO's proposal; the Captain did not state a budget.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      }
+    ]
+  },
+  "relay": {
+    "tasks": 32,
+    "broad_countable": 23,
+    "broad_held": 11,
+    "fixed_countable": 21,
+    "fixed_held": 10,
+    "differences": [
+      {
+        "task": "_archive/llms-teaches-versions.md",
+        "budget": "one implementation round and one validation round, inside the continuity release window before the 0.3.32-rc release.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/review-keyword-invocations.md",
+        "budget": "one ideation, one implementation and one validation cycle. Stop and return to the Captain if #852 needs a Subspace change, or if the live tests cannot run on this machine.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      }
+    ]
+  },
+  "web": {
+    "tasks": 24,
+    "broad_countable": 20,
+    "broad_held": 5,
+    "fixed_countable": 0,
+    "fixed_held": 0,
+    "differences": [
+      {
+        "task": "_archive/account-menu-offers-paired-computers.md",
+        "budget": "One short ideation, one implementation, one validation round.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/account-menu-stays-above-the-composer.md",
+        "budget": "One implementation and one validation round; ideation only to reproduce it and name the stacking rule.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/browser-tests-fit-their-time-limit-on-any-runner.md",
+        "budget": "One short ideation from existing CI logs, one implementation, one validation.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/ci-browser-suite-on-four-workers.md",
+        "budget": "One short ideation (runner cores, the shared-build race, a few repeated local runs), one implementation, one validation that reads at least three CI runs.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/comment-sent-when-added.md",
+        "budget": "One ideation round with pictures, paired with relay's design.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/copy-button-is-an-icon.md",
+        "budget": "One small ideation round with pictures.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/diagram-opens-larger-to-zoom.md",
+        "budget": "One ideation round of options with pictures before any build.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/earlier-version-comments-read-only.md",
+        "budget": "One ideation round with pictures at 320, 360 and desktop widths, one implementation, one validation on the real relay page once relay sends earlier cards.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/floating-layers-make-room.md",
+        "budget": "One ideation round of options with pictures before any build.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/link-confirm-can-be-remembered.md",
+        "budget": "One ideation round of options with pictures before any build.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/outside-click-closes-empty-box-and-help-links.md",
+        "budget": "One ideation, one implementation, one validation round; stop and ask if a second design cycle is needed.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/peer-cards-past-200-are-not-called-missing.md",
+        "budget": "One ideation round that starts with the reproduction.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/phone-waiting-dot-reads-in-dark.md",
+        "budget": "One short ideation with pictures, one implementation, one validation round.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/requester-name-is-safe-and-fits.md",
+        "budget": "One ideation round, one implementation, one validation; no relay change.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/revision-reads-as-the-documents.md",
+        "budget": "One ideation, one implementation, one validation round; stop and ask if a second design cycle is needed.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/send-on-add-joint-fixes.md",
+        "budget": "One small ideation round, one implementation round.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/sidebar-head-stays-level-after-send.md",
+        "budget": "One ideation, one implementation, one validation round; stop and ask if a second design cycle is needed.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/sidebar-style-has-no-stray-brace.md",
+        "budget": "One implementation and one validation round; no ideation pictures.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/signed-out-card-shows-sign-in.md",
+        "budget": "One ideation round with pictures of the real page, signed out and signed in, desktop and phone; one implementation and one validation.",
+        "broad_countable": true,
+        "broad_held": true,
+        "fixed_countable": false,
+        "fixed_held": false
+      },
+      {
+        "task": "_archive/web-release-builds-production-once.md",
+        "budget": "One short ideation, one implementation, one validation that watches one real release.",
+        "broad_countable": true,
+        "broad_held": false,
+        "fixed_countable": false,
+        "fixed_held": false
+      }
+    ]
+  }
+}

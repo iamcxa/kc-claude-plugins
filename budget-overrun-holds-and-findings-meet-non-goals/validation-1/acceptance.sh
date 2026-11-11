@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Step 1: Export the exact candidate; no repository worktree is created or changed.
+BUDGET_REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals
+BUDGET_HEAD=5bf7cf78866a2f0f6376c15b59fc400519c5ffeb
+BUDGET_TMP=$(mktemp -d /tmp/budget-841-acceptance.XXXXXX)
+git -C "$BUDGET_REPO" archive "$BUDGET_HEAD" | tar -x -C "$BUDGET_TMP"
+export SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock
+export PYTHONDONTWRITEBYTECODE=1
+printf 'STEP 1: exported %s\n' "$BUDGET_HEAD"
+# Step 2: Allow the cap; hold cap+1; count named repairs once; ignore invented amendments.
+(
+  cd "$BUDGET_TMP/kc-dev-flow-2/scripts"
+  python3 -B -m unittest -v test_role_triggers.BudgetTest.test_total_dispatch_cap_counts_stages_and_named_followups_once test_role_triggers.BudgetTest.test_total_cap_counts_only_messages_with_a_named_header_symptom test_role_triggers.BudgetTest.test_amendment_needs_the_same_entry_verbatim_words
+)
+printf 'STEP 2: 3 budget boundary tests passed\n'
+# Step 3: Exercise real dispatch: remove the held record, preserve results, resume only after an amendment.
+(
+  cd "$BUDGET_TMP/kc-dev-flow-2/scripts"
+  python3 -B -m unittest -v test_dispatch_stage.DispatchStageTests.test_budget_hold_removes_record_and_skips_build_until_amended test_dispatch_stage.DispatchStageTests.test_total_cap_holds_before_build_and_keeps_existing_results
+)
+printf 'STEP 3: 2 real dispatch tests passed\n'
+# Step 4: Reject missing Worth questions and check the 6008-word workflow with ADR 0077 present.
+(
+  cd "$BUDGET_TMP/kc-dev-flow-2/scripts"
+  python3 -B -m unittest -v test_design_surfaces.WorthQuestionsTests.test_design_without_worth_questions_is_refused_even_with_fenced_example
+)
+(
+  cd "$BUDGET_TMP"
+  python3 -B kc-dev-flow-2/scripts/lint-skills.py
+  python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py docs/adr --require 0077
+)
+printf 'STEP 4: missing-section rejection, workflow lint and ADR checks passed\n'
+# Step 5: Both missing-section variants must exit 1; this candidate currently exits 0 for both.
+python3 -B - "$BUDGET_TMP" <<'PY_CHECK'
+from pathlib import Path
+import subprocess,sys,tempfile
+root=Path(sys.argv[1]);base="""---
+title: Synthetic worth check
+variant: kc-dev-flow-2
+profile: pilot
+status: {status}
+---
+## FO alignment
+Surfaces: none
+Visible change: none
+## PRFAQ
+Bounded CLI result.
+{section}
+## Acceptance criteria
+**AC-1** Bounded result. Evidence: one CLI run.
+"""
+failed=0
+with tempfile.TemporaryDirectory(prefix='worth-acceptance-') as directory:
+    for name,status,section in [('commented-status','ideation # ready for review',''),('hidden-heading','ideation','<!--\n### Worth questions\n-->')]:
+        task=Path(directory)/(name+'.md');task.write_text(base.format(status=status,section=section))
+        r=subprocess.run([sys.executable,'-B',str(root/'kc-dev-flow-2/scripts/design_surfaces.py'),'check',str(task)],capture_output=True,text=True)
+        good=r.returncode==1 and 'Worth questions' in r.stdout
+        print(f"{name}: expected exit 1 / missing Worth questions; observed exit {r.returncode}; {'PASS' if good else 'FAIL'}")
+        print(r.stdout.strip())
+        failed+=not good
+sys.exit(bool(failed))
+PY_CHECK
+printf 'PASS: candidate %s; export retained at %s\n' "$BUDGET_HEAD" "$BUDGET_TMP"

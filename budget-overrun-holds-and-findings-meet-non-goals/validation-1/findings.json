@@ -1,0 +1,18 @@
+[
+  {
+    "severity": "high",
+    "title": "YAML status comment skips the required Worth section",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 1104,
+    "detail": "The real Spacedock reader reports status ideation for status: ideation # ready for review; the candidate reports stage unknown and exits 0 on a PRFAQ with no Worth questions. Control with plain status exits 1. AC-9.",
+    "fix": "Read the status with the producer-compatible YAML semantics and retain the missing-section refusal."
+  },
+  {
+    "severity": "high",
+    "title": "An HTML comment counts as the required Worth section",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 1102,
+    "detail": "A missing Worth questions section exits 1; inserting only <!--\\n### Worth questions\\n--> makes the exact candidate exit 0. The rendered design still contains no such section. AC-9.",
+    "fix": "Ignore HTML comments when determining whether the required design section exists."
+  }
+]

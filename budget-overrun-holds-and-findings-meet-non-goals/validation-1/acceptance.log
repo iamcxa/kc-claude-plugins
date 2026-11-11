@@ -1,0 +1,36 @@
+STEP 1: exported 5bf7cf78866a2f0f6376c15b59fc400519c5ffeb
+test_total_dispatch_cap_counts_stages_and_named_followups_once (test_role_triggers.BudgetTest.test_total_dispatch_cap_counts_stages_and_named_followups_once) ... ok
+test_total_cap_counts_only_messages_with_a_named_header_symptom (test_role_triggers.BudgetTest.test_total_cap_counts_only_messages_with_a_named_header_symptom) ... ok
+test_amendment_needs_the_same_entry_verbatim_words (test_role_triggers.BudgetTest.test_amendment_needs_the_same_entry_verbatim_words) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 12.033s
+
+OK
+STEP 2: 3 budget boundary tests passed
+test_budget_hold_removes_record_and_skips_build_until_amended (test_dispatch_stage.DispatchStageTests.test_budget_hold_removes_record_and_skips_build_until_amended) ... ok
+test_total_cap_holds_before_build_and_keeps_existing_results (test_dispatch_stage.DispatchStageTests.test_total_cap_holds_before_build_and_keeps_existing_results) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 8.659s
+
+OK
+STEP 3: 2 real dispatch tests passed
+test_design_without_worth_questions_is_refused_even_with_fenced_example (test_design_surfaces.WorthQuestionsTests.test_design_without_worth_questions_is_refused_even_with_fenced_example) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.374s
+
+OK
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 6008 of 6008 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+68 ADR file(s) checked, 0 legacy
+STEP 4: missing-section rejection, workflow lint and ADR checks passed
+commented-status: expected exit 1 / missing Worth questions; observed exit 0; FAIL
+commented-status.md: design surfaces presentable
+scope check not run: stage is unknown, not ideation
+hidden-heading: expected exit 1 / missing Worth questions; observed exit 0; FAIL
+hidden-heading.md: design surfaces presentable
+scope check not run: no closed backlog approval
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.

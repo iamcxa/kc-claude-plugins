@@ -1,0 +1,162 @@
+[
+  {
+    "name": "missing",
+    "text": "---\ntitle: Synthetic dispatch\nvariant: kc-dev-flow-2\nprofile: pilot\nstatus: ideation\n---\n\n## FO alignment\n\nSurfaces: none\nVisible change: none\n\n## PRFAQ\nA bounded CLI result.\n\n\n```mermaid\nflowchart LR\n A[Input] --> B[Result]\n```\n\n## Acceptance criteria\n**AC-1** Bounded result. Evidence: one CLI run.\n",
+    "native": {
+      "command": "read",
+      "path": "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-h0k2fxfi/code/docs/dev2/.spacedock-state/dispatch-fixture-8489af9b79c64eafb7fe757e820d5d56.md",
+      "total_lines": "23",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Synthetic dispatch",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "8",
+          "lines": "5"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "13",
+          "lines": "9"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "22",
+          "lines": "2"
+        }
+      ]
+    },
+    "checker_exit": 1,
+    "checker_output": "dispatch-fixture-8489af9b79c64eafb7fe757e820d5d56.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\nscope check not run: no closed backlog approval\n"
+  },
+  {
+    "name": "commented-status",
+    "text": "---\ntitle: Synthetic dispatch\nvariant: kc-dev-flow-2\nprofile: pilot\nstatus: ideation # ready for review\n---\n\n## FO alignment\n\nSurfaces: none\nVisible change: none\n\n## PRFAQ\nA bounded CLI result.\n\n\n```mermaid\nflowchart LR\n A[Input] --> B[Result]\n```\n\n## Acceptance criteria\n**AC-1** Bounded result. Evidence: one CLI run.\n",
+    "native": {
+      "command": "read",
+      "path": "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-h0k2fxfi/code/docs/dev2/.spacedock-state/dispatch-fixture-8489af9b79c64eafb7fe757e820d5d56.md",
+      "total_lines": "23",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Synthetic dispatch",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "8",
+          "lines": "5"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "13",
+          "lines": "9"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "22",
+          "lines": "2"
+        }
+      ]
+    },
+    "checker_exit": 0,
+    "checker_output": "dispatch-fixture-8489af9b79c64eafb7fe757e820d5d56.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n"
+  },
+  {
+    "name": "hidden-heading",
+    "text": "---\ntitle: Synthetic dispatch\nvariant: kc-dev-flow-2\nprofile: pilot\nstatus: ideation\n---\n\n## FO alignment\n\nSurfaces: none\nVisible change: none\n\n## PRFAQ\nA bounded CLI result.\n<!--\n### Worth questions\n-->\n\n\n```mermaid\nflowchart LR\n A[Input] --> B[Result]\n```\n\n## Acceptance criteria\n**AC-1** Bounded result. Evidence: one CLI run.\n",
+    "native": {
+      "command": "read",
+      "path": "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-h0k2fxfi/code/docs/dev2/.spacedock-state/dispatch-fixture-8489af9b79c64eafb7fe757e820d5d56.md",
+      "total_lines": "26",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Synthetic dispatch",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "8",
+          "lines": "5"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "13",
+          "lines": "12"
+        },
+        {
+          "text": "Worth questions",
+          "level": "3",
+          "offset": "16",
+          "lines": "9"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "25",
+          "lines": "2"
+        }
+      ]
+    },
+    "checker_exit": 0,
+    "checker_output": "dispatch-fixture-8489af9b79c64eafb7fe757e820d5d56.md: design surfaces presentable\nscope check not run: no closed backlog approval\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  },
+  {
+    "name": "visible-heading",
+    "text": "---\ntitle: Synthetic dispatch\nvariant: kc-dev-flow-2\nprofile: pilot\nstatus: ideation\n---\n\n## FO alignment\n\nSurfaces: none\nVisible change: none\n\n## PRFAQ\nA bounded CLI result.\n### Worth questions\nAsked: bounded result; without: unavailable; premise: needed, test CLI.\n\n\n```mermaid\nflowchart LR\n A[Input] --> B[Result]\n```\n\n## Acceptance criteria\n**AC-1** Bounded result. Evidence: one CLI run.\n",
+    "native": {
+      "command": "read",
+      "path": "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-h0k2fxfi/code/docs/dev2/.spacedock-state/dispatch-fixture-8489af9b79c64eafb7fe757e820d5d56.md",
+      "total_lines": "25",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Synthetic dispatch",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "8",
+          "lines": "5"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "13",
+          "lines": "11"
+        },
+        {
+          "text": "Worth questions",
+          "level": "3",
+          "offset": "15",
+          "lines": "9"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "24",
+          "lines": "2"
+        }
+      ]
+    },
+    "checker_exit": 0,
+    "checker_output": "dispatch-fixture-8489af9b79c64eafb7fe757e820d5d56.md: design surfaces presentable\nscope check not run: no closed backlog approval\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n"
+  }
+]

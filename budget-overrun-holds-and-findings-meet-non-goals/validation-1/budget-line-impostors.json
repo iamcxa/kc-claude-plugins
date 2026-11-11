@@ -1,0 +1,10 @@
+[
+  {
+    "task": "_archive/release-acceptance/index.md",
+    "old_value": "Captain decision 7 approved two PRs; if the enforcement half is split out as a third (it is independent of the walk), that changes an approved budget and needs his word."
+  },
+  {
+    "task": "_archive/seed-check-requires-schema-fields.md",
+    "old_value": "<approved bound>"
+  }
+]
