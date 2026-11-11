@@ -79,6 +79,7 @@ pr: iamcxa/kc-claude-plugins#838
 Alignment: needed at ideation; whether the laws check is installed by default, whether its pin follows each release, and who may open an adopter's sync PR are the Captain's call.
 Result: the Captain chose 「先報落後，預設與否等數字（建議）」 (host question dialog, 2026-11-11), answering 「「發版後鋪開到採用 repo 與法規檢查」這張任務的設計方向要怎麼定？我建議：設計先做「每次發版列出每個採用 repo 的說明檔版本和法規釘選、落後的報出來」，法規檢查要不要預設安裝、釘選要不要自動跟著發版走，等 qnow 的費用量出來、在設計關卡用數字讓你選。這是設計的方向，細節與證明仍在設計關卡由你核准。」.
 Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-11: amendment 1 moves the adopter list out of the repository to the maintainer's machine, which removes a committed file and changes no check; the command already takes the list as a path argument.
+Reviewer: kc-dev-flow-2:chief-engineer not run: the five implementation reports are one build, two RoboRev findings (job 1725 settled by Captain amendment 2, job 1727 judged against GitHub's documentation and FO's own read, with two real partial-read gaps fixed), one record of amendment 1 and one rewording of AC-10 with no product change; RoboRev job 1728 is clean on 61529999e, no finding repeats an earlier one, and the next step is the independent validation this dispatch builds.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
