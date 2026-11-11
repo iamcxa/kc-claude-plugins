@@ -47,6 +47,7 @@ gates:
 ## FO alignment
 
 Alignment: needed at ideation; how a past version that does not parse is read, and what that does to the first appearance of a ruling under ADR 0045, are the Captain's call.
+Result: the Captain chose 「能證明不影響才放行（建議）」 (host question dialog, 2026-11-11), answering 「驗證重跑的檢查回頭讀任務歷史時，碰到讀不懂的舊版本（例如修正案曾經寫錯位置）要怎麼處理？我建議：只有在能證明讀不懂的版本不影響結論時才放行，也就是用來放行的那筆裁示，它第一次出現的版本本身讀得懂、而且排在所有讀不懂的版本之後；其他情況照舊拒絕。設計要量出這樣在各 repo 解開幾張、還擋幾張。這是設計的方向，細節與證明仍在設計關卡由你核准。」.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
