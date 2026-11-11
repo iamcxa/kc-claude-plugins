@@ -1,0 +1,27 @@
+[
+  {
+    "first_record_has_header": false,
+    "exit": 0,
+    "out": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nPR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing\nclass: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n",
+    "written": {
+      "ask-1.json": {
+        "class": "docs-only",
+        "head": "40c714a600000000000000000000000000000000",
+        "model": "not run",
+        "necessity": "the relay adopter reads it at each merge ask.",
+        "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+        "points": [],
+        "pr": "o/r#9",
+        "sufficiency": "every acceptance criterion in the validation report was met.",
+        "time": "2026-11-11T04:53:54Z",
+        "verdict": "merge"
+      }
+    }
+  },
+  {
+    "first_record_has_header": true,
+    "exit": 1,
+    "out": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ntask owes a special-role call (role_triggers.py reads the task as committed)\nnext: task budget exceeded; hold for the Captain. Symptom: a different gap. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 1\n",
+    "written": {}
+  }
+]

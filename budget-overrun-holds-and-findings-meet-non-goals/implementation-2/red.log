@@ -1,0 +1,76 @@
+FFFFFFF
+======================================================================
+FAIL: test_total_dispatch_cap_counts_stages_and_each_followup_once (test_role_triggers.BudgetTest.test_total_dispatch_cap_counts_stages_and_each_followup_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 794, in test_total_dispatch_cap_counts_stages_and_each_followup_once
+    self.assertIn("total dispatches 4", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'total dispatches 4' not found in 'budget: Budget: at most 4 dispatches total; spent implementation 1, validation 1; states no cycles\n'
+
+======================================================================
+FAIL: test_total_cap_uses_record_count_not_the_highest_cycle_number (test_role_triggers.BudgetTest.test_total_cap_uses_record_count_not_the_highest_cycle_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 809, in test_total_cap_uses_record_count_not_the_highest_cycle_number
+    self.assertIn("total dispatches 2", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'total dispatches 2' not found in 'budget: Budget: 最多 2 次派工，含一輪修正; spent implementation 9, validation 4; states no cycles\n'
+
+======================================================================
+FAIL: test_total_cap_ignores_special_role_records_and_legacy_tasks_stay_exempt (test_role_triggers.BudgetTest.test_total_cap_ignores_special_role_records_and_legacy_tasks_stay_exempt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 821, in test_total_cap_ignores_special_role_records_and_legacy_tasks_stay_exempt
+    self.assertIn("total dispatches 2", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'total dispatches 2' not found in 'budget: Budget: at most one dispatch total; spent implementation 2, validation 0; states no cycles\n'
+
+======================================================================
+FAIL: test_countable_part_survives_an_explicit_minutes_clause (test_role_triggers.BudgetTest.test_countable_part_survives_an_explicit_minutes_clause)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 834, in test_countable_part_survives_an_explicit_minutes_clause
+    self.assertIn("total dispatches 2", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'total dispatches 2' not found in 'budget: Budget: 240 cumulative agent-minutes, at most 2 dispatches total; spent implementation 1, validation 1; states no cycles\n'
+
+======================================================================
+FAIL: test_hold_states_the_preserve_report_stop_default_and_captain_override (test_role_triggers.BudgetTest.test_hold_states_the_preserve_report_stop_default_and_captain_override)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 845, in test_hold_states_the_preserve_report_stop_default_and_captain_override
+    self.assertIn("keep the results, report the remaining work and stop adding", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'keep the results, report the remaining work and stop adding' not found in 'next: some-task budget exceeded; hold for the Captain. Symptom: failure 2. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 0\n'
+
+======================================================================
+FAIL: test_total_dispatch_forms_are_countable_seeds_including_minutes (test_design_surfaces.WorthQuestionsTests.test_total_dispatch_forms_are_countable_seeds_including_minutes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 270, in test_total_dispatch_forms_are_countable_seeds_including_minutes
+    self.assertEqual(ds.check_task(write_task(d, text), seed=True), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: Budget must start with 'N cycle[55 chars]es'"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: Budget must start with 'N cycles per stage' or 'N implementation and M validation cycles'"
+
++ []
+- ["task.md: Budget must start with 'N cycles per stage' or 'N implementation "
+-  "and M validation cycles'"]
+
+======================================================================
+FAIL: test_total_cap_holds_before_build_and_keeps_existing_results (test_dispatch_stage.DispatchStageTests.test_total_cap_holds_before_build_and_keeps_existing_results)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 158, in test_total_cap_holds_before_build_and_keeps_existing_results
+    self.assertIn("total dispatches 1", first.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'total dispatches 1' not found in "budget: Budget: 240 累計代理分鐘、最多 1 次派工，含一輪修正; spent implementation 1, validation 0; states no cycles\n[build] declared model 'sonnet' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+
+----------------------------------------------------------------------
+Ran 7 tests in 5.060s
+
+FAILED (failures=7)

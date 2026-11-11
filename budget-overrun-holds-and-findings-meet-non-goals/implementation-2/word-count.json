@@ -1,0 +1,54 @@
+{
+  "measurement": "wc -w independently agrees with regex nonspace token count",
+  "rows": [
+    {
+      "name": "FO startup/resume workflow",
+      "before": 5939,
+      "after": 6008
+    },
+    {
+      "name": "Countable dispatch budget output",
+      "before": 0,
+      "after": 11
+    },
+    {
+      "name": "Uncountable dispatch budget output",
+      "before": 0,
+      "after": 14
+    },
+    {
+      "name": "Overrun hold output (failure 2 symptom)",
+      "before": 0,
+      "after": 88
+    },
+    {
+      "name": "Idle/merge forwarded reminder, countable task",
+      "before": 51,
+      "after": 0
+    },
+    {
+      "name": "Ideation worker principles",
+      "before": 643,
+      "after": 687
+    },
+    {
+      "name": "Total dispatch budget output",
+      "before": 0,
+      "after": 15
+    },
+    {
+      "name": "Mixed minutes and total budget output",
+      "before": 0,
+      "after": 17
+    }
+  ],
+  "samples": {
+    "at": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0\n",
+    "uncountable": "budget: Budget: at most 3 days; spent implementation 2, validation 0; states no cycles\n",
+    "hold": "next: some-task budget exceeded; hold for the Captain. Symptom: failure 2. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 0\n",
+    "old_idle": "next: some-task has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?",
+    "new_idle": "budget: Budget: ten cycles per stage; spent implementation 2, validation 0\n",
+    "total": "budget: Budget: at most 4 dispatches total; spent implementation 2, validation 0; total dispatches 2\n",
+    "mixed": "budget: Budget: 240 \u7d2f\u8a08\u4ee3\u7406\u5206\u9418\u3001\u6700\u591a 4 \u6b21\u6d3e\u5de5\uff0c\u542b\u4e00\u8f2a\u4fee\u6b63; spent implementation 2, validation 0; total dispatches 2; minutes not counted\n"
+  }
+}

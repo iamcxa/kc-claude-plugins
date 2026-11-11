@@ -1,0 +1,14 @@
+test_total_dispatch_cap_counts_stages_and_named_followups_once (test_role_triggers.BudgetTest.test_total_dispatch_cap_counts_stages_and_named_followups_once) ... FAIL
+
+======================================================================
+FAIL: test_total_dispatch_cap_counts_stages_and_named_followups_once (test_role_triggers.BudgetTest.test_total_dispatch_cap_counts_stages_and_named_followups_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 794, in test_total_dispatch_cap_counts_stages_and_named_followups_once
+    self.assertIn("total dispatches 4", out)
+AssertionError: 'total dispatches 4' not found in 'budget: Budget: at most 4 dispatches total; spent implementation 1, validation 1; states no cycles\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.884s
+
+FAILED (failures=1)

@@ -1,0 +1,211 @@
+[
+  {
+    "name": "forward-budget",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_budget_line_and_spent_cycles_are_printed_before_build",
+      "test_uncountable_budget_stdout_is_forwarded"
+    ],
+    "failures": 2
+  },
+  {
+    "name": "off-by-one",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_pending_overrun_holds_and_an_amendment_clears_it"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "ignore-amendment",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_pending_overrun_holds_and_an_amendment_clears_it"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "ignore-first-header",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_old_first_stage_record_never_opts_in_with_later_headers"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "keep-countable-reminder",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_countable_budget_removes_advisory_but_preserves_role_calls"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "lose-uncountable-reminder",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_two_failed_reports_count_once_each_and_passing_reports_do_not_count"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "invent-amendment-bound",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_amendment_needs_the_same_entry_verbatim_words"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "optional-worth",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_design_without_worth_questions_is_refused_even_with_fenced_example"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "optional-seed-bound",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_new_seed_budget_needs_a_fixed_form_and_cannot_borrow_an_amendment"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "ignore-total-form",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_total_dispatch_cap_counts_stages_and_named_followups_once"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "total-off-by-one",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_total_dispatch_cap_counts_stages_and_named_followups_once"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "count-all-messages",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_total_cap_counts_only_messages_with_a_named_header_symptom"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "none-prefix-is-none",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_total_cap_counts_only_messages_with_a_named_header_symptom"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "count-no-messages",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_total_dispatch_cap_counts_stages_and_named_followups_once"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "body-symptom-counts",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_total_cap_counts_only_messages_with_a_named_header_symptom"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "highest-cycle-is-total",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_total_cap_uses_record_count_not_the_highest_cycle_number"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "minutes-prefix-ignored",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_countable_part_survives_an_explicit_minutes_clause"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "minutes-notice-lost",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_countable_part_survives_an_explicit_minutes_clause"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "default-outcome-lost",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_hold_states_the_preserve_report_stop_default_and_captain_override"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "captain-override-lost",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_hold_states_the_preserve_report_stop_default_and_captain_override"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "pending-double-counted",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_total_dispatch_cap_counts_stages_and_named_followups_once"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "ideation-not-counted",
+    "status": "passed",
+    "detail": "mutant failed the named acceptance test",
+    "tests": [
+      "test_total_dispatch_cap_counts_stages_and_named_followups_once"
+    ],
+    "failures": 1
+  },
+  {
+    "name": "workflow-count--1",
+    "status": "passed",
+    "detail": "references/sd/workflow.md: 6007 words is 1 under the budget of 6008; add a cut step of -1 with a 'why' to WORKFLOW_BUDGET_STEPS"
+  },
+  {
+    "name": "workflow-count-+1",
+    "status": "passed",
+    "detail": "references/sd/workflow.md: 6009 words exceeds the budget of 6008; move the added text out of the README, or add a raise step of 1 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS"
+  }
+]

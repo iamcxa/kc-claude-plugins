@@ -1,0 +1,66 @@
+[
+  {
+    "name": "lint-at-commit",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "adr-at-commit",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "--require",
+      "0077"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--base",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "--head",
+      "HEAD",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-overrun-holds-and-findings-meet-non-goals.md"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "fresh_state_fetch": true,
+    "rerun": "same command rerun with authorized sandbox escalation; no stale-reference warning"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/comment_ratio.py",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "HEAD",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "status": "passed"
+  }
+]

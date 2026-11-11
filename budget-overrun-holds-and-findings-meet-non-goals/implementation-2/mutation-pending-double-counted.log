@@ -1,0 +1,20 @@
+test_total_dispatch_cap_counts_stages_and_named_followups_once (test_role_triggers.BudgetTest.test_total_dispatch_cap_counts_stages_and_named_followups_once) ... FAIL
+
+======================================================================
+FAIL: test_total_dispatch_cap_counts_stages_and_named_followups_once (test_role_triggers.BudgetTest.test_total_dispatch_cap_counts_stages_and_named_followups_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 801, in test_total_dispatch_cap_counts_stages_and_named_followups_once
+    self.assertEqual(run(self.state, SLUG, "--pending", pending), run(self.state, SLUG))
+AssertionError: Tuples differ: (1, '[510 chars]l; spent implementation 2, validation 1; total dispatches 6\n') != (1, '[510 chars]l; spent implementation 2, validation 1; total dispatches 5\n')
+
+First differing element 1:
+'next[505 chars]al; spent implementation 2, validation 1; total dispatches 6\n'
+'next[505 chars]al; spent implementation 2, validation 1; total dispatches 5\n'
+
+Diff is 749 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 2.955s
+
+FAILED (failures=1)

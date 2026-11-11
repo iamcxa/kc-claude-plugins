@@ -1,0 +1,410 @@
+[
+  {
+    "rev": "9aec33e8aadaa7fd78ff4c38591114f6ab9689f1",
+    "pending": null,
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 9aec33e8aadaa7fd78ff4c38591114f6ab9689f1, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 0, validation 0"
+  },
+  {
+    "rev": "3f323f6cfd127e1354a383dfd370a61958c1d378",
+    "pending": null,
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 3f323f6cfd127e1354a383dfd370a61958c1d378, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 0, validation 0"
+  },
+  {
+    "rev": "812adc9215fc21052a0e7edef68ba529dd5c660f",
+    "pending": null,
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 812adc9215fc21052a0e7edef68ba529dd5c660f, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 0, validation 0"
+  },
+  {
+    "rev": "883a858df5d6043a1f1a2b271a789f7faf8babe5",
+    "pending": null,
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 883a858df5d6043a1f1a2b271a789f7faf8babe5, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 0, validation 0"
+  },
+  {
+    "rev": "bd766b138a43078f6666151af939abce19409723",
+    "pending": null,
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at bd766b138a43078f6666151af939abce19409723, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 0, validation 0"
+  },
+  {
+    "rev": "c9b05ef890bed6a596a1f3d7d45d1fad07f934b6",
+    "pending": null,
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at c9b05ef890bed6a596a1f3d7d45d1fad07f934b6, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 0, validation 0"
+  },
+  {
+    "rev": "bdcdb23b7319993418ef2050f8749ae7902524cf",
+    "pending": null,
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at bdcdb23b7319993418ef2050f8749ae7902524cf, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 0, validation 0"
+  },
+  {
+    "rev": "b1c251e5aaea64e28f0e052ab1deaba518304497",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at b1c251e5aaea64e28f0e052ab1deaba518304497, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "1b5d4674863ccc745756dcba5d2ef2bf7302b577",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 1b5d4674863ccc745756dcba5d2ef2bf7302b577, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "f89289300f69ac18b5d91ceb9ecd54ce277afed4",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at f89289300f69ac18b5d91ceb9ecd54ce277afed4, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "f32149591d19d5d0dbb6ccc130725614948884e3",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at f32149591d19d5d0dbb6ccc130725614948884e3, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "499cf740aca60ff37e7be29d0d55c07d67183fe2",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 499cf740aca60ff37e7be29d0d55c07d67183fe2, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "b0cda858c391e2e0d0cdf1f85ea3f66ecf0e5867",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at b0cda858c391e2e0d0cdf1f85ea3f66ecf0e5867, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "2b95e64498ee4e38fdde8bf3723c3e9e6ec8538a",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 2b95e64498ee4e38fdde8bf3723c3e9e6ec8538a, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "e803a06a1c12f7685c4d1008a9501d134c6bfb70",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at e803a06a1c12f7685c4d1008a9501d134c6bfb70, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "c60a4f1d7b170855fe717f89c0dd4af138630586",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at c60a4f1d7b170855fe717f89c0dd4af138630586, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "d2ec29bb724bb4a016eaa1978fe370f7c05a3df4",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at d2ec29bb724bb4a016eaa1978fe370f7c05a3df4, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "e4c81154841ee8286b9b090f413d62076f1e6ede",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at e4c81154841ee8286b9b090f413d62076f1e6ede, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "efcc6cdde51e80b5fce2b4a6d2a977d9adfb09a0",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-1.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at efcc6cdde51e80b5fce2b4a6d2a977d9adfb09a0, each with a call or a waiver.",
+    "candidate_exit": 0,
+    "candidate": "budget: Budget: One cycle per stage.; spent implementation 1, validation 0"
+  },
+  {
+    "rev": "42317d0c14d24228ddf08b6dd51f6575fc139bf4",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-2.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 42317d0c14d24228ddf08b6dd51f6575fc139bf4, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: PR #491 CI red at 20b316da plus contract additions since implementation-1. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 0"
+  },
+  {
+    "rev": "cd227cd646515190faee075ba2c5f8a03ab80941",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-2.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at cd227cd646515190faee075ba2c5f8a03ab80941, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: PR #491 CI red at 20b316da plus contract additions since implementation-1. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 0"
+  },
+  {
+    "rev": "722b9c6779949c7f70915ffa82442d3811e15b54",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-2.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 722b9c6779949c7f70915ffa82442d3811e15b54, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: PR #491 CI red at 20b316da plus contract additions since implementation-1. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 0"
+  },
+  {
+    "rev": "48b48a4cf0a2bf8ce9a403fa81be6d65de0e666a",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-2.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 48b48a4cf0a2bf8ce9a403fa81be6d65de0e666a, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: PR #491 CI red at 20b316da plus contract additions since implementation-1. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 0"
+  },
+  {
+    "rev": "3a14a616e083777afd5d10544edc2241daad4ebd",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-2.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 3a14a616e083777afd5d10544edc2241daad4ebd, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: PR #491 CI red at 20b316da plus contract additions since implementation-1. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 1"
+  },
+  {
+    "rev": "81eb484c309cb682113f17b637dc8ad827a3dafc",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-2.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 81eb484c309cb682113f17b637dc8ad827a3dafc, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: PR #491 CI red at 20b316da plus contract additions since implementation-1. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 1"
+  },
+  {
+    "rev": "bc2a7917cb56ea63da2228d88cc660f83f1d4eca",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-2.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at bc2a7917cb56ea63da2228d88cc660f83f1d4eca, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: PR #491 CI red at 20b316da plus contract additions since implementation-1. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 1"
+  },
+  {
+    "rev": "d399002eea6bd0ebd6c2b2700a5998d543b7b74e",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-2.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at d399002eea6bd0ebd6c2b2700a5998d543b7b74e, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: PR #491 CI red at 20b316da plus contract additions since implementation-1. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 1"
+  },
+  {
+    "rev": "4cc3aaf9bc52b9ca1dcf87dd46e82b6061c91cb2",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-3.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 4cc3aaf9bc52b9ca1dcf87dd46e82b6061c91cb2, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-1 REJECTED on findings F1, F2 and F5 (duplicate card after reload, focus lost after Escape, contradictory status at first Add). Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 3, validation 1"
+  },
+  {
+    "rev": "7f0ab44c1a9eabe3e57215f2cb61745e62340df0",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-3.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 7f0ab44c1a9eabe3e57215f2cb61745e62340df0, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-1 REJECTED on findings F1, F2 and F5 (duplicate card after reload, focus lost after Escape, contradictory status at first Add). Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 3, validation 1"
+  },
+  {
+    "rev": "d2faf4724ec397b10a8eccc5cab0fe3857b8cf21",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-3.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at d2faf4724ec397b10a8eccc5cab0fe3857b8cf21, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-1 REJECTED on findings F1, F2 and F5 (duplicate card after reload, focus lost after Escape, contradictory status at first Add). Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 3, validation 1"
+  },
+  {
+    "rev": "f734d3b81a74005c187f86ccb2d62f403c52fe23",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-3.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at f734d3b81a74005c187f86ccb2d62f403c52fe23, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-1 REJECTED on findings F1, F2 and F5 (duplicate card after reload, focus lost after Escape, contradictory status at first Add). Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 3, validation 1"
+  },
+  {
+    "rev": "15b1023911713d1f50d9340db7b4bfd4e8d5f6ad",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-3.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 15b1023911713d1f50d9340db7b4bfd4e8d5f6ad, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-1 REJECTED on findings F1, F2 and F5 (duplicate card after reload, focus lost after Escape, contradictory status at first Add). Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 3, validation 1"
+  },
+  {
+    "rev": "372463eba98fff5c04582f491d5b83c16000a7a5",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-4.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 372463eba98fff5c04582f491d5b83c16000a7a5, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-1 findings F7 and F10 need two additive H11 values agreed with Web. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 4, validation 1"
+  },
+  {
+    "rev": "150320ca52d6b64c0ec0bca20dfb0fd196a157f5",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-4.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 150320ca52d6b64c0ec0bca20dfb0fd196a157f5, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-1 findings F7 and F10 need two additive H11 values agreed with Web. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 4, validation 1"
+  },
+  {
+    "rev": "a6843c4257681a6b3c5e42bf39479cfdfa943ea2",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-4.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at a6843c4257681a6b3c5e42bf39479cfdfa943ea2, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-1 findings F7 and F10 need two additive H11 values agreed with Web. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 4, validation 1"
+  },
+  {
+    "rev": "ca81daafd34e646e8174aeca213c8dc0a6fb597c",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-4.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at ca81daafd34e646e8174aeca213c8dc0a6fb597c, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-1 findings F7 and F10 need two additive H11 values agreed with Web. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 4, validation 1"
+  },
+  {
+    "rev": "15f30cc1006491cb18b64cdcb76853fb99e844f8",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-4.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 15f30cc1006491cb18b64cdcb76853fb99e844f8, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-1 findings F7 and F10 need two additive H11 values agreed with Web. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 4, validation 1"
+  },
+  {
+    "rev": "46adf6b441ccda47ef255a87c658a88f1d5d49f0",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-5.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 46adf6b441ccda47ef255a87c658a88f1d5d49f0, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: hosted job browser fails room-route.spec.ts MODALS AC-1 on heads 6b4e9fe8 and 75161be9; the batch-mode question line was changed with the send-on-add one. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 5, validation 1"
+  },
+  {
+    "rev": "d85ce1527cbaa44d285e89e0c4f99a211e4ba964",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-5.md",
+    "base_exit": 1,
+    "base": "next: comment-sent-when-added-relay has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: hosted job browser fails room-route.spec.ts MODALS AC-1 on heads 6b4e9fe8 and 75161be9; the batch-mode question line was changed with the send-on-add one. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 5, validation 1"
+  },
+  {
+    "rev": "24f4dfa6317b040346dd3bad231e7b1928258cc0",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-5.md",
+    "base_exit": 1,
+    "base": "next: comment-sent-when-added-relay has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: hosted job browser fails room-route.spec.ts MODALS AC-1 on heads 6b4e9fe8 and 75161be9; the batch-mode question line was changed with the send-on-add one. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 5, validation 1"
+  },
+  {
+    "rev": "51b4400c385fd607b32e6bac0cfdb897efcb8e11",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-5.md",
+    "base_exit": 1,
+    "base": "next: comment-sent-when-added-relay has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: hosted job browser fails room-route.spec.ts MODALS AC-1 on heads 6b4e9fe8 and 75161be9; the batch-mode question line was changed with the send-on-add one. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 5, validation 2"
+  },
+  {
+    "rev": "d476aa219450cf37e9d56efc7b88d0856eac89d5",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-5.md",
+    "base_exit": 1,
+    "base": "next: comment-sent-when-added-relay has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.\nnext: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: hosted job browser fails room-route.spec.ts MODALS AC-1 on heads 6b4e9fe8 and 75161be9; the batch-mode question line was changed with the send-on-add one. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 5, validation 2"
+  },
+  {
+    "rev": "770f3ce5520f81e0d8838c6d41b5958b008265af",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-5.md",
+    "base_exit": 0,
+    "base": "role triggers: 1 event(s) read at 770f3ce5520f81e0d8838c6d41b5958b008265af, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: hosted job browser fails room-route.spec.ts MODALS AC-1 on heads 6b4e9fe8 and 75161be9; the batch-mode question line was changed with the send-on-add one. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 5, validation 2"
+  },
+  {
+    "rev": "a9e9cbd741cea639b2d75f5e8be6c78e4e2ef78e",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-5.md",
+    "base_exit": 0,
+    "base": "role triggers: 1 event(s) read at a9e9cbd741cea639b2d75f5e8be6c78e4e2ef78e, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: hosted job browser fails room-route.spec.ts MODALS AC-1 on heads 6b4e9fe8 and 75161be9; the batch-mode question line was changed with the send-on-add one. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 5, validation 3"
+  },
+  {
+    "rev": "af6dc1c0808bd40438819ec3ecb10041f7996156",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-5.md",
+    "base_exit": 0,
+    "base": "role triggers: 1 event(s) read at af6dc1c0808bd40438819ec3ecb10041f7996156, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: hosted job browser fails room-route.spec.ts MODALS AC-1 on heads 6b4e9fe8 and 75161be9; the batch-mode question line was changed with the send-on-add one. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 5, validation 3"
+  },
+  {
+    "rev": "45902a307f616a8cb3efdfdb0487616e895401eb",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-5.md",
+    "base_exit": 0,
+    "base": "next: comment-sent-when-added-relay has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: hosted job browser fails room-route.spec.ts MODALS AC-1 on heads 6b4e9fe8 and 75161be9; the batch-mode question line was changed with the send-on-add one. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 5, validation 3"
+  },
+  {
+    "rev": "7baa371f17dde72a71e932530efd81f08d878069",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-5.md",
+    "base_exit": 0,
+    "base": "next: comment-sent-when-added-relay has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: hosted job browser fails room-route.spec.ts MODALS AC-1 on heads 6b4e9fe8 and 75161be9; the batch-mode question line was changed with the send-on-add one. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 5, validation 3"
+  },
+  {
+    "rev": "97ff63cd6864f944277ff68367b853d7c763c6ad",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-6.md",
+    "base_exit": 0,
+    "base": "next: comment-sent-when-added-relay has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-2 REJECTED on F1 and F2, both in the restore after a replaced Room session. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 6, validation 3"
+  },
+  {
+    "rev": "c0a7caa4311368ca08492339516285e6375e4427",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-6.md",
+    "base_exit": 0,
+    "base": "next: comment-sent-when-added-relay has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-2 REJECTED on F1 and F2, both in the restore after a replaced Room session. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 6, validation 3"
+  },
+  {
+    "rev": "af0bab373ddc60db7dee1846efd98e0f935d6a41",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-6.md",
+    "base_exit": 0,
+    "base": "next: comment-sent-when-added-relay has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; what breaks if this criterion or process is deleted?",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-2 REJECTED on F1 and F2, both in the restore after a replaced Room session. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 6, validation 4"
+  },
+  {
+    "rev": "13ef35675e1a1150fe480e71a0e747a7b37cfa87",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-6.md",
+    "base_exit": 0,
+    "base": "role triggers: 1 event(s) read at 13ef35675e1a1150fe480e71a0e747a7b37cfa87, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: validation-2 REJECTED on F1 and F2, both in the restore after a replaced Room session. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 6, validation 4"
+  }
+]

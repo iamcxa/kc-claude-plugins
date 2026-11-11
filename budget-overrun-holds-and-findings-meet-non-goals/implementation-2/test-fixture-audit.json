@@ -1,0 +1,85 @@
+[
+  {
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "existing_functions": 253,
+    "existing_assertions": 431,
+    "assertions_retained": true,
+    "changed_hunks": [
+      "@@ -86 +86 @@ Non-goals: migrations",
+      "@@ -95,0 +96,3 @@ Visible change: a driver sees seats remaining per slot.",
+      "@@ -153,0 +157,3 @@ FENCED_EXAMPLE = \"\"\"",
+      "@@ -248,0 +255,25 @@ class DesignSurfacesTests(unittest.TestCase):",
+      "@@ -298 +329 @@ class SeedBoundsTests(unittest.TestCase):",
+      "@@ -323,2 +354,2 @@ class SeedBoundsTests(unittest.TestCase):",
+      "@@ -330 +361 @@ class SeedBoundsTests(unittest.TestCase):",
+      "@@ -333,10 +364,10 @@ class SeedBoundsTests(unittest.TestCase):",
+      "@@ -344 +375 @@ class SeedBoundsTests(unittest.TestCase):",
+      "@@ -348 +379 @@ class SeedBoundsTests(unittest.TestCase):",
+      "@@ -363 +394 @@ class SeedBoundsTests(unittest.TestCase):",
+      "@@ -375 +406 @@ class SeedBoundsTests(unittest.TestCase):",
+      "@@ -404,2 +435,2 @@ class SeedBoundsTests(unittest.TestCase):",
+      "@@ -725,0 +757,3 @@ Visible change: none",
+      "@@ -1198,0 +1233,3 @@ Visible change: a person sees a panel.",
+      "@@ -1508 +1545 @@ gates:",
+      "@@ -1515,0 +1553,5 @@ Visible change: none",
+      "@@ -2137,0 +2180,3 @@ Visible change: a person sees a panel."
+    ]
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "existing_functions": 60,
+    "existing_assertions": 180,
+    "assertions_retained": true,
+    "changed_hunks": [
+      "@@ -116,0 +117,52 @@ class DispatchStageTests(unittest.TestCase):",
+      "@@ -236 +288,2 @@ class DispatchStageTests(unittest.TestCase):",
+      "@@ -295 +348 @@ class DispatchStageTests(unittest.TestCase):",
+      "@@ -462,3 +515,2 @@ class DispatchStageTests(unittest.TestCase):"
+    ]
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "existing_functions": 64,
+    "existing_assertions": 183,
+    "assertions_retained": true,
+    "changed_hunks": [
+      "@@ -355,2 +355,2 @@ class StepBackTest(Fixture):",
+      "@@ -376 +376 @@ class StepBackTest(Fixture):",
+      "@@ -757,0 +758,197 @@ class SymptomRoundsTest(Fixture):"
+    ]
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "existing_functions": 200,
+    "existing_assertions": 451,
+    "assertions_retained": true,
+    "changed_hunks": [
+      "@@ -756 +756 @@ class TasksTests(unittest.TestCase):",
+      "@@ -1583 +1583 @@ class TasksTests(unittest.TestCase):",
+      "@@ -1779 +1779 @@ class TasksTests(unittest.TestCase):",
+      "@@ -1798 +1798 @@ class TasksTests(unittest.TestCase):"
+    ]
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "existing_functions": 268,
+    "existing_assertions": 691,
+    "assertions_retained": true,
+    "changed_hunks": [
+      "@@ -2587 +2587 @@ class OwedRoleCallTests(unittest.TestCase):"
+    ]
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "existing_functions": 24,
+    "existing_assertions": 171,
+    "assertions_retained": true,
+    "changed_hunks": [
+      "@@ -819 +819 @@ def exercise(base, binary, sd_root):",
+      "@@ -989 +989 @@ def exercise(base, binary, sd_root):",
+      "@@ -994 +994 @@ def exercise(base, binary, sd_root):",
+      "@@ -1049 +1049 @@ def exercise(base, binary, sd_root):",
+      "@@ -1063 +1063 @@ def exercise(base, binary, sd_root):"
+    ]
+  }
+]

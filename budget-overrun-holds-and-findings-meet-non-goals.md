@@ -444,3 +444,99 @@ Saved the bounded Pilot candidate at 0243d34829634a218c3ba3302f3f6def7ea87b62, o
 ### Summary
 
 This complete report supersedes the earlier implementation report for the handback: candidate 0243d34829634a218c3ba3302f3f6def7ea87b62 and the saved evidence establish only the prior fixed-cycle implementation, with no product push, PR or delivery claim. Scope-held consumer fixture updates, AC-7's gate-location conflict, and newly recorded Captain amendment 3 remain unfinished; the new amendment adds total dispatch limits and the default preserve/report/stop result, leaving agent minutes separate, and has not been implemented.
+
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (e8664a72b0f904e5dda3c391d52ab3abaca876b4) implementing the approved design and acceptance criteria in the task file; D1, D2 and D3 as recommended and approved at the ideation gate, with Captain amendments 1 and 2 already carried by the design; denied-command-denies-only-that-command is implemented in parallel and also changes kc-dev-flow-2/references/sd/workflow.md and the word budget steps, so keep your changes to the sections the design names and expect FO to ask for a merge of main later; story-done-reports-release-remaining has a local candidate that also changes kc-dev-flow-2/scripts/design_surfaces.py seed rules, in a different function; only the files the design names
+  Local implementation complete at 5bf7cf78866a2f0f6376c15b59fc400519c5ffeb, base e8664a72b0f904e5dda3c391d52ab3abaca876b4, assigned branch; product push/Draft PR delegated to FO. Prepared title/body: /tmp/impl-budget-overrun-holds-and-findings-meet-non-goals-pr.md and implementation-2/prepared-pr.md.
+- DONE: ADR 0077 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  ADR 0077 quotes the gate and amendments 3–5; ADR 0026 links the amendment. Installed 0.38.1 adr_lint.py --since <base> --require 0077 exits 0, 68 records (implementation-2/adr-at-commit.log).
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  All 28 local CI Python commands exit 0 on the identical committed patch; documented skips retained. Twenty-four actual assertion-failing mutants caught with -B/bytecode disabled, no mutant errors counted (implementation-2/final/, mutations.json and mutation-*.log).
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py docs/adr --since <base> --require 0077 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured
+  Required four checks exit 0: workflow 6008/6008; comments 12/422=2.8%, max 5%; final number guard has a fresh state fetch, no stale-ref warning. Committed locally, no product push; CI cost not measured, workflow/triggers unchanged (implementation-2/required-checks.json, identity-at-commit.json).
+- DONE: Continue from 0243d3482 in the same worktree and branch; apply Captain amendments 3–6
+  Candidate 5bf7cf788 is a child of 0243d3482; root/branch verified before edits and commit; no version, remote/config or unrelated-path edits. The new report and prepared PR text supersede the held round.
+- DONE: AC-1 and AC-2 — visible Budget, spent cycles, first-overrun removal-before-build, covering amendment recovery
+  Real dispatch fixtures cover countable/uncountable Budget output and retained record headers; forwarding, inclusive-bound, ignored-amendment and invented-amendment mutants fail their named assertions (final/test_dispatch_stage log; mutations.json).
+- DONE: AC-3 — relay first hold at implementation-2, naming its Symptom before d85ce152
+  Pinned history replay with synthetic admission headers and pending overlay holds at 42317d0c14d24228ddf08b6dd51f6575fc139bf4; base exits 0 there (implementation-2/relay-replay.json, replay.py).
+- DONE: AC-4 — four archived replays recounted after the new Budget forms, all differences explained
+  Fixed held/countable qnow 0/0 vs broad 7/7, relay 10/21 vs 11/23, web 0/0 vs 5/20; this workflow zero/58 real Budget tasks vs survey zero/60 (two false Budget matches). Every excluded task/form is named (implementation-2/archive-replay.json, README.md).
+- DONE: AC-5 — countable reminder removed, uncountable reminder and role events retained; consumers green
+  Full role, pr_watch and delivery_gate suites pass; countable-reminder and lost-uncountable-reminder mutants fail. Consumer product modules are unchanged (implementation-2/final/ and mutation-{keep-countable-reminder,lose-uncountable-reminder}.log).
+- DONE: AC-6 — legacy first-record admission at dispatch and merge ask
+  Real delivery_gate provider-stub probe passes the same overrun at merge ask with an old first header, and holds without writing an ask with a new header. Ignoring first-header admission fails the fixture (implementation-2/merge-transition-probe.json, mutation-ignore-first-header.log).
+- DONE: AC-9 — required ideation Worth section, three per-part questions and same-entry verbatim Budget authority
+  Missing/fenced Worth, uncountable seed and invented amendment bounds are refused; mutants removing these checks fail (implementation-2/final/, mutation-{optional-worth,optional-seed-bound,invent-amendment-bound}.log).
+- DONE: AC-10 — amendment 4 replaces AC-7 at the ideation gate; backlog presents Budget
+  AC-7 moved verbatim under amendment 4 Superseded text; fresh AC-10 changes only the Captain/Asked-authorized words. One +69 workflow raise quotes the rulings/load moments; independent wc and token counts agree, off-by-one counts fail (implementation-2/word-count.json, mutation workflow-count entries).
+- DONE: AC-8 — reserved ADR 0077 and amendment line pass the required linter
+  ADR and number checks pass at committed candidate; no migration change (implementation-2/{adr-at-commit,number-guards}.log).
+- DONE: AC-11 — fresh amendment-3 criterion, exact English/Chinese total cap, mixed minutes, cap and cap+1
+  Ordinary records count once and pending replacement keeps its slot. Total-form, inclusive-bound, duplicate-pending, highest-cycle-as-total, omitted-ideation and minutes/notice mutants fail (implementation-2/mutations.json); real CLI fixture keeps results when holding before build.
+- DONE: AC-12 — fresh amendment-3 default preserve/report/stop outcome with Captain replacement
+  Hold output states the default and replacement authority; actual dispatch leaves an existing results file intact while deleting only pending record. Removing either clause fails its fixture (implementation-2/final/test_dispatch_stage log, mutation-{default-outcome-lost,captain-override-lost}.log).
+- DONE: AC-13 — fresh amendment-5 named-symptom message criterion, fixtures, falsifier and both requested counts
+  Missing/empty/none/body/fenced headers do not name symptoms; a named repair counts. At 40cfa1ae archived count is 5 (two special roles excluded), live count 7; at ba7d022e live count 8 after validation-1. FO informed of its earlier 7-vs-5 discrepancy; all/no/body/prefix message-count mutants fail (implementation-2/message-counts-*.json, mutations.json).
+- DONE: Amendments 4 and 6 — permitted synthetic data/expected-text updates, retain every assertion and negative case, list each file and lines
+  README.md lists exact lines/reasons in test_pr_watch.py, test_delivery_gate.py, test_sd_dispatch.py and the three already-owned test files; test-fixture-audit.json preserves original assertion counts/kinds and every diff hunk. No assertions weakened/removed, no negative case dropped.
+- DONE: Amendment 6 — import deferral inside design_surfaces.py; laws suite green and unchanged
+  The new imports load only inside the checks that use them; test_laws_check.py has zero diff and its full 84-test suite exits 0 with its existing one skip (implementation-2/final/kc-dev-flow-2__scripts__test_laws_check.py.log).
+- DONE: Affected retained documents and fresh compatibility evidence
+  All fourteen doc-impact rows have updated/unaffected reasons; four pinned corpora lose no prior checker diagnostics, adding only approved Worth/fixed-Budget diagnostics (implementation-2/doc-impact-verdicts.jsonl, corpus-check.json).
+- SKIPPED: RoboRev, product branch push, Draft PR creation, hosted CI, merge and release
+  FO-owned and not run. Local binary is 0.27.2 with plugin-root 0.27.3; CI pins both to 0.27.2. Local pass is not hosted CI, external provider execution or adopter delivery evidence.
+
+### Summary
+
+This complete report supersedes both earlier implementation reports: candidate 5bf7cf78866a2f0f6376c15b59fc400519c5ffeb completes the approved implementation and Captain amendments 3–6 locally, with all 28 local command exits green and the tested patch identical to the commit. Total-cap, message-count, hold-default and gate-location acceptance evidence is preserved in implementation-2; product publication, independent validation, RoboRev and hosted CI remain with FO.
+
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (e8664a72b0f904e5dda3c391d52ab3abaca876b4) implementing the approved design and acceptance criteria in the task file; D1, D2 and D3 as recommended and approved at the ideation gate, with Captain amendments 1 and 2 already carried by the design; denied-command-denies-only-that-command is implemented in parallel and also changes kc-dev-flow-2/references/sd/workflow.md and the word budget steps, so keep your changes to the sections the design names and expect FO to ask for a merge of main later; story-done-reports-release-remaining has a local candidate that also changes kc-dev-flow-2/scripts/design_surfaces.py seed rules, in a different function; only the files the design names
+  Local implementation complete at 5bf7cf78866a2f0f6376c15b59fc400519c5ffeb, base e8664a72b0f904e5dda3c391d52ab3abaca876b4, assigned branch; product push/Draft PR delegated to FO. Prepared title/body: /tmp/impl-budget-overrun-holds-and-findings-meet-non-goals-pr.md and implementation-2/prepared-pr.md.
+- DONE: ADR 0077 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  ADR 0077 quotes the gate and amendments 3–5; ADR 0026 links the amendment. Installed 0.38.1 adr_lint.py --since <base> --require 0077 exits 0, 68 records (implementation-2/adr-at-commit.log).
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  All 28 local CI Python commands exit 0 on the identical committed patch; documented skips retained. Twenty-four actual assertion-failing mutants caught with -B/bytecode disabled, no mutant errors counted (implementation-2/final/, mutations.json and mutation-*.log).
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py docs/adr --since <base> --require 0077 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured
+  Required four checks exit 0: workflow 6008/6008; comments 12/422=2.8%, max 5%; final number guard has a fresh state fetch, no stale-ref warning. Committed locally, no product push; CI cost not measured, workflow/triggers unchanged (implementation-2/required-checks.json, identity-at-commit.json).
+- DONE: Continue from 0243d3482 in the same worktree and branch; apply Captain amendments 3–6
+  Candidate 5bf7cf788 is a child of 0243d3482; root/branch verified before edits and commit; no version, remote/config or unrelated-path edits. The new report and prepared PR text supersede the held round.
+- DONE: AC-1 and AC-2 — visible Budget, spent cycles, first-overrun removal-before-build, covering amendment recovery
+  Real dispatch fixtures cover countable/uncountable Budget output and retained record headers; forwarding, inclusive-bound, ignored-amendment and invented-amendment mutants fail their named assertions (final/test_dispatch_stage log; mutations.json).
+- DONE: AC-3 — relay first hold at implementation-2, naming its Symptom before d85ce152
+  Pinned history replay with synthetic admission headers and pending overlay holds at 42317d0c14d24228ddf08b6dd51f6575fc139bf4; base exits 0 there (implementation-2/relay-replay.json, replay.py).
+- DONE: AC-4 — four archived replays recounted after the new Budget forms, all differences explained
+  Fixed held/countable qnow 0/0 vs broad 7/7, relay 10/21 vs 11/23, web 0/0 vs 5/20; this workflow zero/58 real Budget tasks vs survey zero/60 (two false Budget matches). Every excluded task/form is named (implementation-2/archive-replay.json, README.md).
+- DONE: AC-5 — countable reminder removed, uncountable reminder and role events retained; consumers green
+  Full role, pr_watch and delivery_gate suites pass; countable-reminder and lost-uncountable-reminder mutants fail. Consumer product modules are unchanged (implementation-2/final/ and mutation-{keep-countable-reminder,lose-uncountable-reminder}.log).
+- DONE: AC-6 — legacy first-record admission at dispatch and merge ask
+  Real delivery_gate provider-stub probe passes the same overrun at merge ask with an old first header, and holds without writing an ask with a new header. Ignoring first-header admission fails the fixture (implementation-2/merge-transition-probe.json, mutation-ignore-first-header.log).
+- DONE: AC-9 — required ideation Worth section, three per-part questions and same-entry verbatim Budget authority
+  Missing/fenced Worth, uncountable seed and invented amendment bounds are refused; mutants removing these checks fail (implementation-2/final/, mutation-{optional-worth,optional-seed-bound,invent-amendment-bound}.log).
+- DONE: AC-10 — amendment 4 replaces AC-7 at the ideation gate; backlog presents Budget
+  AC-7 moved verbatim under amendment 4 Superseded text; fresh AC-10 changes only the Captain/Asked-authorized words. One +69 workflow raise quotes the rulings/load moments; independent wc and token counts agree, off-by-one counts fail (implementation-2/word-count.json, mutation workflow-count entries).
+- DONE: AC-8 — reserved ADR 0077 and amendment line pass the required linter
+  ADR and number checks pass at committed candidate; no migration change (implementation-2/{adr-at-commit,number-guards}.log).
+- DONE: AC-11 — fresh amendment-3 criterion, exact English/Chinese total cap, mixed minutes, cap and cap+1
+  Ordinary records count once and pending replacement keeps its slot. Total-form, inclusive-bound, duplicate-pending, highest-cycle-as-total, omitted-ideation and minutes/notice mutants fail (implementation-2/mutations.json); real CLI fixture keeps results when holding before build.
+- DONE: AC-12 — fresh amendment-3 default preserve/report/stop outcome with Captain replacement
+  Hold output states the default and replacement authority; actual dispatch leaves an existing results file intact while deleting only pending record. Removing either clause fails its fixture (implementation-2/final/test_dispatch_stage log, mutation-{default-outcome-lost,captain-override-lost}.log).
+- DONE: AC-13 — fresh amendment-5 named-symptom message criterion, fixtures, falsifier and both requested counts
+  Missing/empty/none/body/fenced headers do not name symptoms; a named repair counts. At 40cfa1ae archived count is 5 (two special roles excluded), live count 7; at ba7d022e live count 8 after validation-1. FO informed of its earlier 7-vs-5 discrepancy; all/no/body/prefix message-count mutants fail (implementation-2/message-counts-*.json, mutations.json).
+- DONE: Amendments 4 and 6 — permitted synthetic data/expected-text updates, retain every assertion and negative case, list each file and lines
+  README.md lists exact lines/reasons in test_pr_watch.py, test_delivery_gate.py, test_sd_dispatch.py and the three already-owned test files; test-fixture-audit.json preserves original assertion counts/kinds and every diff hunk. No assertions weakened/removed, no negative case dropped.
+- DONE: Amendment 6 — import deferral inside design_surfaces.py; laws suite green and unchanged
+  The new imports load only inside the checks that use them; test_laws_check.py has zero diff and its full 84-test suite exits 0 with its existing one skip (implementation-2/final/kc-dev-flow-2__scripts__test_laws_check.py.log).
+- DONE: Affected retained documents and fresh compatibility evidence
+  All fourteen doc-impact rows have updated/unaffected reasons; four pinned corpora lose no prior checker diagnostics, adding only approved Worth/fixed-Budget diagnostics. Installed checker passes this task; candidate refuses its historical missing Worth heading, an observed compatibility limit, not a pass (implementation-2/{doc-impact-verdicts.jsonl,corpus-check.json,task-check-candidate.log}).
+- SKIPPED: RoboRev, product branch push, Draft PR creation, hosted CI, merge and release
+  FO-owned and not run. Local binary is 0.27.2 with plugin-root 0.27.3; CI pins both to 0.27.2. Local pass is not hosted CI, external provider execution or adopter delivery evidence.
+
+### Summary
+
+This complete report supersedes all earlier implementation reports: candidate 5bf7cf78866a2f0f6376c15b59fc400519c5ffeb completes the approved implementation and Captain amendments 3–6 locally, with all 28 local command exits green and the tested patch identical to the commit. Total-cap, message-count, hold-default and gate-location acceptance evidence is preserved in implementation-2; product publication, independent validation, RoboRev and hosted CI remain with FO. The candidate design checker refuses this pre-change task's missing Worth heading; no historical design backfill was assigned, and this observed limit is reported rather than counted as a pass.

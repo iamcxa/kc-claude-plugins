@@ -1,0 +1,14 @@
+test_countable_budget_removes_advisory_but_preserves_role_calls (test_role_triggers.BudgetTest.test_countable_budget_removes_advisory_but_preserves_role_calls) ... FAIL
+
+======================================================================
+FAIL: test_countable_budget_removes_advisory_but_preserves_role_calls (test_role_triggers.BudgetTest.test_countable_budget_removes_advisory_but_preserves_role_calls)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 947, in test_countable_budget_removes_advisory_but_preserves_role_calls
+    self.assertNotIn("before the next step", out)
+AssertionError: 'before the next step' unexpectedly found in 'next: some-task has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now?\nbudget: Budget: ten cycles per stage; spent implementation 0, validation 0\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.509s
+
+FAILED (failures=1)

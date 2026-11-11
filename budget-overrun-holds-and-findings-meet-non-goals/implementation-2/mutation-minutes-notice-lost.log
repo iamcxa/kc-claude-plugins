@@ -1,0 +1,14 @@
+test_countable_part_survives_an_explicit_minutes_clause (test_role_triggers.BudgetTest.test_countable_part_survives_an_explicit_minutes_clause) ... FAIL
+
+======================================================================
+FAIL: test_countable_part_survives_an_explicit_minutes_clause (test_role_triggers.BudgetTest.test_countable_part_survives_an_explicit_minutes_clause)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 858, in test_countable_part_survives_an_explicit_minutes_clause
+    self.assertIn("minutes not counted", out)
+AssertionError: 'minutes not counted' not found in 'budget: Budget: 240 cumulative agent-minutes, at most 2 dispatches total; spent implementation 1, validation 1; total dispatches 2\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.701s
+
+FAILED (failures=1)
