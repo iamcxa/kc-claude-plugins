@@ -549,3 +549,33 @@ Verdict: PASSED for PR #842 head cdb99da0e52e8b5cad3a7be04658dc282432b644 under 
 ### Summary
 
 This complete report supersedes the earlier implementation reports for the current candidate. One sentence now defaults to sending denial reasons, with a named source-confirmed Claude exception and explicit handling of unconfirmed providers, while preserving the tested Codex send mechanism and all historical evidence. The code is locally committed, source/runtime limits and fresh criterion ids are recorded, and FO retains product publication and new-head review/validation.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #842 head d22a01d5 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at d22a01d5e8d334f6f4e8a2c5853f8f6abeddc89a; active AC-11/AC-9/AC-12 pass; F1 Polish open, no Material or Needs decision. Full evidence: denied-command-denies-only-that-command/validation-amendment-2/verdict.md.
+- DONE: Re-review after the Captain's revise at the validation gate, recorded as Captain amendment 2 (his words are in the validation gate resolution reason and in that entry): the head moved from cdb99da0 to d22a01d5e8d334f6f4e8a2c5853f8f6abeddc89a, one reworded sentence in kc-dev-flow-2/extensions/paseo/EXTENSION.md making sending the reason the default and a provider confirmed to deliver the denial message the exception. Judge the new sentence against his words and the restated criteria, check that the amendment entry holds only his words and question, say which claims rest on the six FO-operated runs and which on reading Paseo's source (Claude) or on nothing yet (other providers), and do not start replay workers; placement: the Captain approved dispatching workers from the First Officer's workspace until the task-workspace sandbox is repaired (host question dialog, 2026-11-11)
+  New wording matches the ruling; six Codex logs support only the unchanged send mechanism, Claude rests on freshly read source, other providers have no runtime proof. Quotations/moved text match; extra Design explanation is F1 (amendment-review.json, claude-source.json).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation-amendment-2/acceptance.md and acceptance.sh: four steps, fresh Bash exit 0 (checks/captain-acceptance.log). Required ADR command --since e8664a72b0f904e5dda3c391d52ab3abaca876b4 exits 0 (checks/dispatch-adr-lint.log).
+- DONE: AC-11 — default sending and unchanged same-turn mechanism.
+  Source review rejects preceding Codex-only wording; four native candidate sequences remain in one turn, new-turn corruption rejected (native/derived.json, checks/falsifier-new-turn.log); no new reader proof.
+- DONE: AC-9 — exact reason reaches every valid candidate worker.
+  Four incoming bodies/message IDs match frozen reasons (native/*-row-excerpts.json); changed-reason and queued-without-receipt corruptions rejected (falsifiers.json).
+- DONE: AC-12 — directed audit bytes, correct summary, no retry.
+  Six live result files match, four audit files match exact bytes, six outside targets absent (live-readback.json); wrong bytes and retry rejected (falsifiers.json).
+- DONE: Required checks, scope, implementation limits and reading cost.
+  checks/checks.json: lint 5939/5939, 67 ADRs and other applicable checks pass; initial number-guard configuration error 2 preserved, identical pinned-base rerun 0. Dispatch/role checks 0; step-back.md answers reminder; wc-w reading cost +19 this revision, +40 over base (reading-cost.json).
+- DONE: Goal sufficiency and minimal necessity.
+  summary.json preserves four received-and-applied reasons versus two controls that still completed summaries. Without the correction the rule remains Codex-only; no whole-task-stop or original-qnow reproduction claim.
+- F1 Polish: Amendment 2 Design adds agent explanation beyond Captain words/question and an overridden-design pointer.
+  findings.json contains four evidence fields. No new permission or accepted behavior found; reduce Design to the Change item 3 pointer and relocate rationale at the next authorized state edit. Validator did not repair it.
+- SKIPPED: New provider/reader/runtime-falsifier runs, product publication, independent hosted CI/RoboRev reruns and gate advancement.
+  Twelve-attempt cap is spent; dispatch forbids replay workers. Old reader proof belongs to cdb99da0, not the rewording. CI triggers unchanged; per-PR cost not measured; state-only synchronization authorized.
+- DONE: Record exact owned scratch paths for cleanup after evidence commit.
+  validation-amendment-2/cleanup.json names this run's two scratch directories and pre-existing replay inputs retained for ownership/reproducibility; observed deletion is committed separately.
+
+### Summary
+
+Cycle 2 verdict: PASSED at d22a01d5e8d334f6f4e8a2c5853f8f6abeddc89a within the accepted source/runtime limits, with F1 Polish open. Independent native-log reread, live bytes, five evidence falsifiers and four-step acceptance pass; extra amendment prose is disclosed without a demonstrated value or authority loss. Product and prior reports remain unchanged; FO retains Captain-step rerun, record-form disposition and delivery.

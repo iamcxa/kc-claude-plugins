@@ -1,0 +1,50 @@
+[
+  {
+    "name": "AC-11/AC-9/AC-12: unchanged-evidence",
+    "status": "passed",
+    "exit": 0,
+    "message": "unchanged evidence accepted",
+    "log": "unchanged-evidence.log",
+    "assertion": null
+  },
+  {
+    "name": "AC-11: new-turn",
+    "status": "passed",
+    "exit": 1,
+    "message": "corrupted evidence rejected at the intended assertion",
+    "log": "new-turn.log",
+    "assertion": "kinds[kind][0][\"turn_id\"] == req[\"turnId\"]"
+  },
+  {
+    "name": "AC-9: changed-reason",
+    "status": "passed",
+    "exit": 1,
+    "message": "corrupted evidence rejected at the intended assertion",
+    "log": "changed-reason.log",
+    "assertion": "incoming[\"text\"] == reason"
+  },
+  {
+    "name": "AC-9: queued-without-receipt",
+    "status": "passed",
+    "exit": 1,
+    "message": "corrupted evidence rejected at the intended assertion",
+    "log": "queued-without-receipt.log",
+    "assertion": "KeyError: 'exact_reason_user_message'"
+  },
+  {
+    "name": "AC-12: wrong-audit-bytes",
+    "status": "passed",
+    "exit": 1,
+    "message": "corrupted evidence rejected at the intended assertion",
+    "log": "wrong-audit-bytes.log",
+    "assertion": "candidate == score[\"reason_applied\"]"
+  },
+  {
+    "name": "AC-12: post-denial-retry",
+    "status": "passed",
+    "exit": 1,
+    "message": "corrupted evidence rejected at the intended assertion",
+    "log": "post-denial-retry.log",
+    "assertion": "len(attempts) == proof[\"outside_creation_attempt_count\"] == 1"
+  }
+]

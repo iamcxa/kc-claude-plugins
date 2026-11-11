@@ -1,0 +1,22 @@
+[
+  {
+    "name": "AC-11: default send and confirmed-provider exception",
+    "status": "passed",
+    "note": "Candidate matches Captain/Asked; unknown Gemini included, Claude source-only, steer unchanged. Previous Codex-only sentence is a direct source counterexample; new-turn evidence corruption rejected."
+  },
+  {
+    "name": "AC-9: exact reason reaches Codex worker",
+    "status": "passed",
+    "note": "Four native received reasons match frozen text and message IDs; changed-reason and queued-without-receipt corruptions rejected."
+  },
+  {
+    "name": "AC-12: directed write and correct summary",
+    "status": "passed",
+    "note": "Four native writes and live audit bytes match; all six summaries correct and outside targets absent. Wrong bytes and retry corruptions rejected."
+  },
+  {
+    "name": "Amendment entry restricted to quotation and allowed structural fields",
+    "status": "failed",
+    "note": "Additional agent explanation in Design: F1 Polish. No new accepted behavior or authority found."
+  }
+]

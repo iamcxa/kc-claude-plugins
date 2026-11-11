@@ -1,0 +1,7 @@
+AC-7/AC-9/AC-10 unchanged-evidence: PASS (scorer exit 0)
+AC-7 new-turn: PASS (scorer exit 1)
+AC-9 changed-reason: PASS (scorer exit 1)
+AC-9 queued-without-receipt: PASS (scorer exit 1)
+AC-10 wrong-audit-bytes: PASS (scorer exit 1)
+AC-10 post-denial-retry: PASS (scorer exit 1)
+PASS: unchanged evidence accepted; 5 evidence falsifiers rejected. No runtime replay started.

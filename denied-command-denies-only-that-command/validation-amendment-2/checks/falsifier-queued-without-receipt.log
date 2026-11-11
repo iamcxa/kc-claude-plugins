@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/validate-denial-amendment2-1hc9zlqz/falsifiers/queued-without-receipt/score-evidence.py", line 131, in <module>
+    incoming = kinds["exact_reason_user_message"]
+               ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'exact_reason_user_message'

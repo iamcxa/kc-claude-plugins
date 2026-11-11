@@ -1,0 +1,9 @@
+{
+  "head": "d22a01d5e8d334f6f4e8a2c5853f8f6abeddc89a",
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "origin_main": "546a136386c94c58e430c91a6f3457b38bd73880",
+  "scratch": "/tmp/validate-denial-amendment2-1hc9zlqz",
+  "export": "/tmp/validate-denial-amendment2-1hc9zlqz/candidate",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-denied-command-denies-only-that-command",
+  "initial_scratch_moved_from": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/validate-denial-amendment2-1hc9zlqz"
+}

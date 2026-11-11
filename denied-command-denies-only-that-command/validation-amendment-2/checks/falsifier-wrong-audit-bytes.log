@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/validate-denial-amendment2-1hc9zlqz/falsifiers/wrong-audit-bytes/score-evidence.py", line 175, in <module>
+    assert candidate == score["reason_applied"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/validate-denial-amendment2-1hc9zlqz/falsifiers/post-denial-retry/score-evidence.py", line 77, in <module>
+    assert len(attempts) == proof["outside_creation_attempt_count"] == 1
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

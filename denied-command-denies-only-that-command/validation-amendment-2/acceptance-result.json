@@ -1,0 +1,12 @@
+{
+  "command": [
+    "bash",
+    "--noprofile",
+    "--norc",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/denied-command-denies-only-that-command/validation-amendment-2/acceptance.sh"
+  ],
+  "exit": 0,
+  "steps": 4,
+  "scratch": "/tmp/denial-amendment2-acceptance.Q1lWQB",
+  "log": "checks/captain-acceptance.log"
+}

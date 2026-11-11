@@ -1,0 +1,31 @@
+{
+  "normalized_words": {
+    "base": {
+      "extension": 1127,
+      "callback": 275
+    },
+    "previous": {
+      "extension": 1149,
+      "callback": 297
+    },
+    "candidate": {
+      "extension": 1167,
+      "callback": 315
+    }
+  },
+  "wc_w": {
+    "base": {
+      "extension_wc_w": 1112,
+      "callback_wc_w": 270
+    },
+    "previous": {
+      "extension_wc_w": 1133,
+      "callback_wc_w": 291
+    },
+    "candidate": {
+      "extension_wc_w": 1152,
+      "callback_wc_w": 310
+    }
+  },
+  "report_measurement": "wc -w; normalized token counts differ by design"
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "run": "r01",
+    "live_result_matches": true,
+    "live_audit_matches": null,
+    "outside_absent": true,
+    "result_sha256": "a670e6a175e608091f46b9ef72b580f11d83833c212e54a0497705e284ed0734"
+  },
+  {
+    "run": "r02",
+    "live_result_matches": true,
+    "live_audit_matches": true,
+    "outside_absent": true,
+    "result_sha256": "d4409d6a09628c6d84bf7ffa9af573785d60fc086f1b0d068d2a223f4290494c"
+  },
+  {
+    "run": "r03",
+    "live_result_matches": true,
+    "live_audit_matches": null,
+    "outside_absent": true,
+    "result_sha256": "dc56e417be9f763dbeb628096068c1eba9aff12b3c71edaf6d77879390945f54"
+  },
+  {
+    "run": "r04",
+    "live_result_matches": true,
+    "live_audit_matches": true,
+    "outside_absent": true,
+    "result_sha256": "8258e6f7deaf6538bb8bef94b39120181fd3026b02fbc425eb4ef1f8c8d752e9"
+  },
+  {
+    "run": "r05",
+    "live_result_matches": true,
+    "live_audit_matches": true,
+    "outside_absent": true,
+    "result_sha256": "1f85425a587117fdd9cf24099e28ee8db9745edcc85f07d191da84b65e09d338"
+  },
+  {
+    "run": "r06",
+    "live_result_matches": true,
+    "live_audit_matches": true,
+    "outside_absent": true,
+    "result_sha256": "060f2e2c75017d53beb80221a122e806f0bc861beb20454c97848dd1c4077373"
+  }
+]

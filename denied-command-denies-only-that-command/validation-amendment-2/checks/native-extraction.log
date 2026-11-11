@@ -1,0 +1,65 @@
+[
+  {
+    "run": "r01",
+    "same_turn": null,
+    "forbidden_retry": false,
+    "order": [
+      20
+    ],
+    "task_turn": "01a1c8f7-ef0e-7652-9642-4139e242b925"
+  },
+  {
+    "run": "r02",
+    "same_turn": true,
+    "forbidden_retry": false,
+    "order": [
+      22,
+      26,
+      41
+    ],
+    "task_turn": "01a1c8f9-8277-7cf2-8649-3793d58ff7b3"
+  },
+  {
+    "run": "r03",
+    "same_turn": null,
+    "forbidden_retry": false,
+    "order": [
+      29
+    ],
+    "task_turn": "01a1c8fb-153e-7352-88c3-c4b39084b08b"
+  },
+  {
+    "run": "r04",
+    "same_turn": true,
+    "forbidden_retry": false,
+    "order": [
+      21,
+      25,
+      32
+    ],
+    "task_turn": "01a1c8fc-581f-7720-8bc4-5eca7ce5a5e2"
+  },
+  {
+    "run": "r05",
+    "same_turn": true,
+    "forbidden_retry": false,
+    "order": [
+      22,
+      26,
+      40
+    ],
+    "task_turn": "01a1c8fe-16cf-7c40-99ba-28060736f614"
+  },
+  {
+    "run": "r06",
+    "same_turn": true,
+    "forbidden_retry": false,
+    "order": [
+      22,
+      26,
+      32
+    ],
+    "task_turn": "01a1c8ff-7628-7ef1-a63b-caba68ea195d"
+  }
+]
+Exported allowlisted excerpts and hashes only; no raw rollout file copied.

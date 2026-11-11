@@ -1,0 +1,625 @@
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 5c821df3b..d5e5bcec3 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -68,7 +68,6 @@ release-please owns versioning + tagging in the cloud, but it **cannot touch you
+ |--------|-----|
+ | Local install rsync (`~/.claude/plugins/local/<plugin>`) | Subagents read references from local install; stale local = agents see old state. |
+ | Codex local install (`~/.codex/local-plugins/<plugin>`) | Codex CLI parallel of the above. See **Codex install conventions** below. |
+-| kc-dev-flow-2 adopter rollout | After its release, follow `kc-dev-flow-2:maintain-flow` § Observe adopters for the report and Captain-directed sync. |
+ 
+ Run `Skill: kc-plugin-forge:kc-plugin-release` from the main workspace
+ (`$KC_WORKSPACE` on this machine; wherever you cloned `kc-claude-plugins`
+diff --git a/docs/adr/0075-release-rollout-reports-adopters-and-laws-pin.md b/docs/adr/0075-release-rollout-reports-adopters-and-laws-pin.md
+deleted file mode 100644
+index c206791e3..000000000
+--- a/docs/adr/0075-release-rollout-reports-adopters-and-laws-pin.md
++++ /dev/null
+@@ -1,57 +0,0 @@
+-# 0075. Release rollout reports adopters and the laws pin follows each merged README
+-
+-Date: 2026-11-11
+-
+-## Status
+-
+-Accepted
+-
+-## Context
+-
+-The package reached 0.38.0 while this repository's state laws workflow remained
+-pinned to 0.26.0. No release step reported the gap. The design's read-only private-adopter
+-trial found 14 state pushes, 15 rounded runner minutes and one real violation;
+-installing on every private adopter could exceed the owner's included allowance.
+-The task release-rollout-reaches-adopters-and-laws-pin records that measurement,
+-the alternatives and the Captain's ideation gate of 2026-11-11.
+-
+-## Decision
+-
+-**Words:** 「照建議核准（建議）」 — Captain, host question dialog, 2026-11-11.
+-
+-**Asked:** 「決定：要不要核准「發版後鋪開到採用 repo 與法規檢查」的設計並開始實作。我建議照設計的建議核准：每次發版後跑一個唯讀指令，列出每個採用 repo 的說明檔和法規釘選要不要動；法規檢查維持你點名才裝，釘選在每次說明檔同步合併後跟著移；採用 repo 的清單放在這個 repo 狀態分支的一個檔案，只列已經公開提過的；由我在你每次發版說一聲後派同步 PR，你合併後我移釘選。核准即接受這三項。」
+-
+-The Captain amended the list's home later that day:
+-
+-**Words:** 「這個清單列在本地就好了，那是因為我是作者同時又是這些 repo 的維護者，放進去 dev2 repo 不是很怪嗎」 — Captain, host question dialog, 2026-11-11 (task amendment 1).
+-
+-**Options considered:**
+-- B: install on the Captain's word; the installed pin follows README sync merges (chosen).
+-- A: install on every adopter by default; pins follow sync merges, with private runner costs.
+-- C: install and every pin move each need a separate Captain instruction, leaving silent drift.
+-- A local list committed nowhere (chosen by amendment 1), instead of a package, trunk or state-branch file.
+-- Keep release sync dispatch in off-package prompts instead of a named package step.
+-
+-**Recommended:** B and package FO dispatch/pin ownership as approved. The original
+-state-branch list recommendation was superseded by the Captain's local-only ruling;
+-the maintainer supplies an explicit path outside any repository.
+-
+-**Protects:**
+-- `kc-dev-flow-2/scripts/package_version.py` — an absent laws install reports no installation debt.
+-
+-`package_version.py rollout <list>` reads and reports against published tag
+-commits. Workflow text differences, excluding the release marker, owe a README
+-sync; differences in the three laws files owe a pin move. Unreadable rows cannot
+-be called current. An unrecognised pin owes a move. Search supplements the
+-Captain-approved list and grants no authority to publish a discovered repository.
+-The execution step lives in maintain-flow § Observe adopters; installation and
+-pin sequencing live in adoption.md § State laws check.
+-
+-## Consequences
+-
+-Adopters not chosen for installation have no hosted laws report. The command
+-neither writes adopters nor grants merge authority. Pins wait for merged README
+-rules, so the package FO writes one disjoint path on adopters' shared state
+-branches after their sync merges. Search can miss adopters or be unavailable;
+-the explicit list remains the reporting boundary. Reopen when a pin falls behind
+-a merged README or private laws minutes exceed the included allowance.
+diff --git a/kc-dev-flow-2/extensions/paseo/EXTENSION.md b/kc-dev-flow-2/extensions/paseo/EXTENSION.md
+index 7bdb3f7de..c5667654e 100644
+--- a/kc-dev-flow-2/extensions/paseo/EXTENSION.md
++++ b/kc-dev-flow-2/extensions/paseo/EXTENSION.md
+@@ -24,7 +24,7 @@ FO reconciles the local candidate and any existing PR, then under an applicable
+ 
+ ## Worker permission requests
+ 
+-A permission callback from a worker FO spawned for an open dispatch is FO's to answer; any other agent's follows peers. Read the request first. Allow only what FO could do itself in the task's scope and authority; deny an out-of-scope request with its reason; never pass updatedPermissions. Hold for the Captain a push to a repository he does not own, a merge or close, reading or printing a secret value (running through the secrets wrapper without reading or printing a value is allowed), a deletion beyond task-owned temporary files or another irreversible change, a message to a person or other outward write, spending money, a question asking for his judgment, and anything FO's own host refuses.
++A permission callback from a worker FO spawned for an open dispatch is FO's to answer; any other agent's follows peers. Read the request first. Allow only what FO could do itself in the task's scope and authority; deny an out-of-scope request with its reason. After denial, send the worker the reason with send_agent_prompt (activeTurnBehavior steer) unless its provider is confirmed to deliver denial messages (Claude: Paseo source, not a run; Codex omits them in six FO-operated runs); unconfirmed providers, including Gemini, get the message. Never pass updatedPermissions. Hold for the Captain a push to a repository he does not own, a merge or close, reading or printing a secret value (running through the secrets wrapper without reading or printing a value is allowed), a deletion beyond task-owned temporary files or another irreversible change, a message to a person or other outward write, spending money, a question asking for his judgment, and anything FO's own host refuses.
+ 
+ Copy agentId and requestId together from that request's block and answer each block once; never type, recall or adapt an id. After a refusal, or with no block in this turn, call get_agent_status for that worker. Read any returned pending request and decide it afresh under the same scope, authority and Captain holds; answer only its returned id. Never apply an approval or denial to a different requestId. If none is pending, the request is gone. Paseo refuses an id not pending for that agent.
+ 
+diff --git a/kc-dev-flow-2/references/sd/adoption.md b/kc-dev-flow-2/references/sd/adoption.md
+index bec282e86..c225adb17 100644
+--- a/kc-dev-flow-2/references/sd/adoption.md
++++ b/kc-dev-flow-2/references/sd/adoption.md
+@@ -118,12 +118,10 @@ run that says `cannot judge`. To audit old history once, run the same command by
+ the root commit; it reports old violations and gates nothing. The run detects after the push; it does not stop
+ `merge guard`, a dispatch or a push, and it adds no word to what FO reads.
+ 
+-Install on the Captain's word, not by default (ADR 0075). FO copies the template to
+-`.github/workflows/dev2-laws.yml` on the state branch with its branch name, trunk workflow directory
+-and the published tag commit the merged README names; commit and push that one path with
+-path-scoped staging and `git commit -- <path>`. After a README sync merges, its installed laws pin
+-follows that tag when laws changed; it does not move ahead of the README. A workflow with inline
+-state has no state branch to trigger on. The package release step is in maintain-flow § Observe adopters.
++Roll it out once per adopter, on the Captain's word: FO copies the template to `.github/workflows/dev2-laws.yml`
++on the state branch with the branch name, trunk workflow directory and a package commit that a
++published `kc-dev-flow-2-vX.Y.Z` tag points at, and commits that one path with a path-scoped `git add` and
++`git commit -- <path>`, then pushes. A workflow whose state is inline in trunk has no state branch to trigger on.
+ 
+ Verified on a throwaway branch of this repository's state branch: GitHub runs a push workflow committed on that
+ branch, hands it `github.event.before` and `github.event.after`, and runs one workflow per push. Not
+diff --git a/kc-dev-flow-2/scripts/package_version.py b/kc-dev-flow-2/scripts/package_version.py
+index 4d930f34d..aee9893ad 100644
+--- a/kc-dev-flow-2/scripts/package_version.py
++++ b/kc-dev-flow-2/scripts/package_version.py
+@@ -6,12 +6,9 @@ Exit 0 when they match, when the README is behind the package (re-sync it), or w
+ README carries no release line. Exit 1 when the loaded package is older than the README:
+ the session must load the newer package before it dispatches. Exit 2 on a usage error.
+ """
+-import base64
+ import json
+ import re
+-import subprocess
+ import sys
+-from urllib.parse import quote
+ from pathlib import Path
+ 
+ PACKAGE = Path(__file__).resolve().parents[1]
+@@ -23,185 +20,8 @@ def loaded():
+     return tuple(int(n) for n in version.split("."))
+ 
+ 
+-UPSTREAM = "iamcxa/kc-claude-plugins"
+-LAWS = ("kc-dev-flow-2/scripts/laws_check.py", "kc-dev-flow-2/references/sd/laws.md",
+-        "kc-dev-flow-2/references/sd/state-laws.workflow.yml")
+-WORKFLOW = "kc-dev-flow-2/references/sd/workflow.md"
+-
+-
+-class Unreadable(Exception):
+-    pass
+-
+-
+-class Github:
+-    def __init__(self):
+-        self.cache = {}
+-
+-    def run(self, *args):
+-        if args not in self.cache:
+-            try:
+-                run = subprocess.run(["gh", *args], capture_output=True, text=True, timeout=45)
+-            except (OSError, subprocess.TimeoutExpired) as error:
+-                raise Unreadable(str(error)) from error
+-            if run.returncode:
+-                raise Unreadable(run.stderr.strip() or run.stdout.strip() or f"gh exit {run.returncode}")
+-            try:
+-                self.cache[args] = json.loads(run.stdout)
+-            except ValueError as error:
+-                raise Unreadable("gh returned invalid JSON") from error
+-        return self.cache[args]
+-
+-    def content(self, repo, path, ref):
+-        data = self.run("api", f"repos/{repo}/contents/{quote(path, safe='/')}?ref={quote(ref, safe='')}")
+-        try:
+-            if not isinstance(data, dict) or data.get("encoding") != "base64":
+-                raise Unreadable(f"content omitted for {path}")
+-            return base64.b64decode(data["content"]).decode("utf-8")
+-        except (KeyError, TypeError, ValueError, UnicodeError) as error:
+-            raise Unreadable(f"cannot decode {path}") from error
+-
+-    def readme(self, repo, directory):
+-        default = self.run("api", f"repos/{repo}")["default_branch"]
+-        path = directory + "/README.md"
+-        text = self.content(repo, path, default)
+-        front = re.match(r"---\s*\n(.*?)\n---(?:\n|$)", text, re.S)
+-        trunk = re.search(r"^trunk:\s*(.+?)\s*$", front[1], re.M) if front else None
+-        if trunk:
+-            ref = trunk[1].split(" #", 1)[0].strip().strip("\"'")
+-            if ref != default:
+-                text = self.content(repo, path, ref)
+-        return text
+-
+-    def search(self):
+-        query = quote("x-release-please-version filename:README.md user:iamcxa user:spacedock-dev", safe="")
+-        found = []
+-        for page in range(1, 11):
+-            data = self.run("api", f"search/code?q={query}&per_page=100&page={page}")
+-            if data["incomplete_results"]:
+-                raise Unreadable("code search returned incomplete results")
+-            total = data["total_count"]
+-            if total > 1000:
+-                raise Unreadable("code search exceeds GitHub's 1000-result limit")
+-            items = data["items"]
+-            found.extend(items)
+-            if len(found) >= total:
+-                return found
+-            if len(items) < 100:
+-                raise Unreadable(f"code search stopped at {len(found)} of {total} results")
+-        raise Unreadable("code search reached GitHub's 1000-result limit")
+-
+-    def releases(self):
+-        refs = self.run("api", f"repos/{UPSTREAM}/git/matching-refs/tags/kc-dev-flow-2-v")
+-        tags = {}
+-        for ref in refs:
+-            match = re.fullmatch(r"refs/tags/kc-dev-flow-2-v(\d+)\.(\d+)\.(\d+)", ref["ref"])
+-            if match:
+-                obj = ref["object"]
+-                seen = set()
+-                while obj["type"] == "tag":
+-                    if obj["sha"] in seen:
+-                        raise Unreadable("tag cycle")
+-                    seen.add(obj["sha"])
+-                    obj = self.run("api", f"repos/{UPSTREAM}/git/tags/{obj['sha']}")["object"]
+-                if obj["type"] != "commit":
+-                    raise Unreadable("release tag does not name a commit")
+-                tags[tuple(map(int, match.groups()))] = obj["sha"]
+-        if not tags:
+-            raise Unreadable("no published kc-dev-flow-2 tag")
+-        return tags
+-
+-
+-def diagnostic(error):
+-    return json.dumps(" ".join(str(error).split()), ensure_ascii=False)
+-
+-
+-def workflow_text(text):
+-    return "".join(line for line in text.splitlines(keepends=True) if not MARK.search(line))
+-
+-
+-def laws_status(gh, repo, branch, released, commits):
+-    try:
+-        text = gh.content(repo, ".github/workflows/dev2-laws.yml", branch)
+-    except Unreadable as error:
+-        if "HTTP 404" not in str(error):
+-            raise
+-        gh.run("api", f"repos/{repo}/branches/{quote(branch, safe='')}")
+-        # see docs/adr/0075-release-rollout-reports-adopters-and-laws-pin.md
+-        return "not installed", False
+-    checkout = re.search(r"repository:\s*['\"]?iamcxa/kc-claude-plugins['\"]?\s*\n(.*?)(?=\n\s*- |\Z)", text, re.S)
+-    pin = re.search(r"^\s*ref:\s*['\"]?([^'\"\s#]+)['\"]?\s*(?:#.*)?$", checkout[1], re.M) if checkout else None
+-    if not pin or pin[1].lower() not in commits:
+-        return (pin[1] if pin else "missing") + " pin unrecognised", True
+-    sha = pin[1].lower()
+-    owed = any(gh.content(UPSTREAM, path, sha) != gh.content(UPSTREAM, path, released) for path in LAWS)
+-    return sha + (" pin owed" if owed else " no pin owed"), owed
+-
+-
+-def rollout(listing):
+-    try:
+-        rows = []
+-        for number, line in enumerate(Path(listing).read_text().splitlines(), 1):
+-            line = line.split("#", 1)[0].strip()
+-            if not line:
+-                continue
+-            fields = line.split()
+-            if (len(fields) not in (2, 3) or not re.fullmatch(r"[\w.-]+/[\w.-]+", fields[0])
+-                    or fields[1].startswith("/") or ".." in fields[1].split("/")):
+-                raise ValueError(f"invalid adopter row {number}: expected owner/repo workflow-dir [state-branch]")
+-            rows.append(fields)
+-        if not rows:
+-            raise ValueError("adopter list has no rows")
+-    except (OSError, ValueError) as error:
+-        print(f"rollout: unreadable {diagnostic(error)}")
+-        return 1
+-    gh = Github()
+-    try:
+-        tags = gh.releases()
+-        version = max(tags)
+-        released = tags[version]
+-    except (Unreadable, KeyError, TypeError) as error:
+-        for repo, directory, *_ in rows:
+-            print(f"{repo} {directory} unreadable: {diagnostic(error)}")
+-        return 1
+-    failed = False
+-    known = {(row[0], row[1] + "/README.md") for row in rows}
+-    for repo, directory, *state in rows:
+-        try:
+-            text = gh.readme(repo, directory)
+-            marker = MARK.search(text)
+-            if not marker:
+-                raise Unreadable("README carries no kc-dev-flow-2 release line")
+-            have = tuple(map(int, marker.groups()))
+-            if have not in tags:
+-                raise Unreadable("README release has no published tag")
+-            owed = workflow_text(gh.content(UPSTREAM, WORKFLOW, tags[have])) != workflow_text(gh.content(UPSTREAM, WORKFLOW, released))
+-            branch = state[0] if state else "spacedock-state/" + Path(directory).name
+-            laws, pin_owed = laws_status(gh, repo, branch, released, set(tags.values()))
+-            order = "; sync README, merge, then move pin" if owed and pin_owed else ""
+-            print(f"{repo} {directory} README:{'.'.join(marker.groups())} released:{'.'.join(map(str, version))} "
+-                  f"{'sync owed' if owed else 'no sync owed'}; laws: {laws}{order}")
+-            failed |= owed or pin_owed
+-        except (Unreadable, KeyError, TypeError) as error:
+-            print(f"{repo} {directory} unreadable: {diagnostic(error)}")
+-            failed = True
+-    try:
+-        found = gh.search()
+-        seen = set(known)
+-        for item in found:
+-            repo, path = item["repository"]["full_name"], item["path"]
+-            if (repo, path) not in seen and path.endswith("/README.md"):
+-                if MARK.search(gh.readme(repo, path.rsplit("/", 1)[0])):
+-                    print(f"unlisted: {repo} {path}")
+-                    seen.add((repo, path))
+-    except (Unreadable, KeyError, TypeError) as error:
+-        print(f"search: unavailable {diagnostic(error)}")
+-    return int(failed)
+-
+-
+ def main(argv=None):
+     args = sys.argv[1:] if argv is None else argv
+-    if len(args) == 2 and args[0] == "rollout":
+-        return rollout(args[1])
+     if len(args) != 1 or not Path(args[0]).is_file():
+         print(__doc__.strip())
+         return 2
+diff --git a/kc-dev-flow-2/scripts/test_package_version.py b/kc-dev-flow-2/scripts/test_package_version.py
+index d47b97f03..a37b91a4f 100644
+--- a/kc-dev-flow-2/scripts/test_package_version.py
++++ b/kc-dev-flow-2/scripts/test_package_version.py
+@@ -1,12 +1,7 @@
+ #!/usr/bin/env python3
+-import base64
+ import contextlib
+ import importlib.util
+ import io
+-import json
+-import os
+-import subprocess
+-import sys
+ import tempfile
+ import unittest
+ from pathlib import Path
+@@ -64,274 +59,5 @@ class PackageVersionTest(unittest.TestCase):
+             self.assertEqual(pv.main(["/no/such/README.md"]), 2)
+ 
+ 
+-class RolloutTest(unittest.TestCase):
+-    repo = "iamcxa/kc-claude-plugins"
+-    old = "1" * 40
+-    latest = "2" * 40
+-    workflow = "kc-dev-flow-2/references/sd/workflow.md"
+-    laws = ("kc-dev-flow-2/scripts/laws_check.py", "kc-dev-flow-2/references/sd/laws.md",
+-            "kc-dev-flow-2/references/sd/state-laws.workflow.yml")
+-
+-    def setUp(self):
+-        self.tmp = tempfile.TemporaryDirectory()
+-        self.addCleanup(self.tmp.cleanup)
+-        self.root = Path(self.tmp.name)
+-        self.responses = {}
+-        self.rows = []
+-        self.reply(["api", f"repos/{self.repo}/git/matching-refs/tags/kc-dev-flow-2-v"], [
+-            {"ref": "refs/tags/kc-dev-flow-2-v0.38.0", "object": {"sha": self.old, "type": "commit"}},
+-            {"ref": "refs/tags/kc-dev-flow-2-v0.38.1", "object": {"sha": self.latest, "type": "commit"}}])
+-        for ref, version in ((self.old, "0.38.0"), (self.latest, "0.38.1")):
+-            self.content(self.repo, self.workflow, ref, self.readme(version) + "A rule.\n")
+-            for path in self.laws:
+-                self.content(self.repo, path, ref, "same laws\n")
+-        self.search([])
+-        fake = self.root / "gh"
+-        fake.write_text("#!" + sys.executable + "\n" +
+-                        "import json, os, sys\n" +
+-                        "data=json.load(open(os.environ['GH_FIXTURE']))\n" +
+-                        "key=json.dumps(sys.argv[1:])\n" +
+-                        "result=data.get(key, {'code': 97, 'stderr': 'unexpected gh: '+key})\n" +
+-                        "sys.stdout.write(json.dumps(result.get('data')) if 'data' in result else '')\n" +
+-                        "sys.stderr.write(result.get('stderr', ''))\n" +
+-                        "sys.exit(result.get('code', 0))\n")
+-        fake.chmod(0o755)
+-
+-    def readme(self, version, trunk="main"):
+-        return f"---\ntrunk: {trunk}\n---\n<!-- kc-dev-flow-2 {version} x-release-please-version -->\n"
+-
+-    def reply(self, args, data=None, error=None):
+-        self.responses[json.dumps(args)] = ({"code": 1, "stderr": error} if error else {"data": data})
+-
+-    def content(self, repo, path, ref, text=None, error=None):
+-        from urllib.parse import quote
+-        endpoint = f"repos/{repo}/contents/{quote(path, safe='/')}?ref={quote(ref, safe='')}"
+-        data = {"encoding": "base64", "content": base64.b64encode((text or "").encode()).decode()}
+-        self.reply(["api", endpoint], data, error)
+-
+-    def search(self, data=None, error=None, *, page=1, total=None, incomplete=False):
+-        from urllib.parse import quote
+-        cli = ["search", "code", "x-release-please-version", "--owner", "iamcxa",
+-               "--owner", "spacedock-dev", "--filename", "README.md", "--limit", "1000",
+-               "--json", "repository,path"]
+-        if page == 1 or error:
+-            self.reply(cli, data, error)
+-        else:
+-            self.responses[json.dumps(cli)]["data"].extend(data or [])
+-        items = [{**item, "repository": {"full_name": item["repository"]["nameWithOwner"]}}
+-                 for item in data or []]
+-        query = quote("x-release-please-version filename:README.md user:iamcxa user:spacedock-dev", safe="")
+-        self.reply(["api", f"search/code?q={query}&per_page=100&page={page}"],
+-                   {"total_count": len(items) if total is None else total,
+-                    "incomplete_results": incomplete, "items": items[:100]}, error)
+-
+-    def row(self, name, version="0.38.0", pin=None, directory="docs/dev2", branch=None, trunk="main"):
+-        repo = f"fleet/{name}"
+-        self.rows.append(f"{repo} {directory}" + (f" {branch}" if branch else ""))
+-        self.reply(["api", f"repos/{repo}"], {"default_branch": "main"})
+-        self.content(repo, f"{directory}/README.md", "main", self.readme(version, trunk))
+-        if trunk != "main":
+-            self.content(repo, f"{directory}/README.md", trunk, self.readme(version, trunk))
+-        state = branch or "spacedock-state/" + Path(directory).name
+-        if pin is None:
+-            self.content(repo, ".github/workflows/dev2-laws.yml", state, error="Not Found (HTTP 404)")
+-            from urllib.parse import quote
+-            self.reply(["api", f"repos/{repo}/branches/{quote(state, safe='')}"], {"name": state})
+-        else:
+-            self.content(repo, ".github/workflows/dev2-laws.yml", state,
+-                         f"steps:\n  - uses: actions/checkout@abc\n    with:\n      repository: {self.repo}\n      ref: \"{pin}\"\n")
+-        return repo
+-
+-    def run_rollout(self):
+-        fixture = self.root / "fixture.json"
+-        fixture.write_text(json.dumps(self.responses))
+-        listing = self.root / "adopters.md"
+-        listing.write_text("# Approved adopters\n\n" + "\n".join(self.rows) + "\n")
+-        return subprocess.run([sys.executable, "-B", str(Path(pv.__file__)), "rollout", str(listing)],
+-                              env={**os.environ, "PATH": str(self.root) + os.pathsep + os.environ['PATH'],
+-                                   "GH_FIXTURE": str(fixture)}, capture_output=True, text=True)
+-
+-    def test_each_row_keeps_its_own_release_sync_and_laws_status(self):
+-        self.row("one", pin=self.old)
+-        self.row("two", "0.38.1", directory="docs/dev2-poc")
+-        self.row("three", "0.38.1", pin=self.latest, branch="records", trunk="develop")
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+-        self.assertEqual(run.stdout.splitlines(), [
+-            f"fleet/one docs/dev2 README:0.38.0 released:0.38.1 no sync owed; laws: {self.old} no pin owed",
+-            "fleet/two docs/dev2-poc README:0.38.1 released:0.38.1 no sync owed; laws: not installed",
+-            f"fleet/three docs/dev2 README:0.38.1 released:0.38.1 no sync owed; laws: {self.latest} no pin owed"])
+-
+-    def test_unreadable_readme_quotes_error_and_fails_without_hiding_other_rows(self):
+-        repo = self.row("missing")
+-        self.row("readable")
+-        self.content(repo, "docs/dev2/README.md", "main", error="Not Found (HTTP 404)")
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 1)
+-        self.assertIn('fleet/missing docs/dev2 unreadable: "Not Found (HTTP 404)"', run.stdout)
+-        self.assertIn("fleet/readable docs/dev2 README:", run.stdout)
+-
+-    def test_release_line_only_does_not_owe_sync_but_a_changed_sentence_does(self):
+-        self.row("one")
+-        self.assertEqual(self.run_rollout().returncode, 0)
+-        self.content(self.repo, self.workflow, self.latest, self.readme("0.38.1") + "Changed rule.\n")
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 1)
+-        self.assertIn("sync owed;", run.stdout)
+-        self.assertNotIn("no sync owed", run.stdout)
+-
+-    def test_each_laws_file_change_owes_pin_and_identical_laws_do_not(self):
+-        self.row("one", pin=self.old)
+-        self.assertEqual(self.run_rollout().returncode, 0)
+-        for path in self.laws:
+-            with self.subTest(path=path):
+-                self.content(self.repo, path, self.latest, "changed laws\n")
+-                run = self.run_rollout()
+-                self.assertEqual(run.returncode, 1, run.stdout)
+-                self.assertIn(f"laws: {self.old} pin owed", run.stdout)
+-                self.content(self.repo, path, self.latest, "same laws\n")
+-
+-    def test_both_debts_print_readme_sync_then_merge_then_pin_move(self):
+-        self.row("both", pin=self.old)
+-        self.content(self.repo, self.workflow, self.latest, self.readme("0.38.1") + "Changed rule.\n")
+-        self.content(self.repo, self.laws[0], self.latest, "changed laws\n")
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 1, run.stdout + run.stderr)
+-        self.assertEqual(run.stdout,
+-                         f"fleet/both docs/dev2 README:0.38.0 released:0.38.1 sync owed; laws: {self.old} pin owed"
+-                         "; sync README, merge, then move pin\n")
+-
+-    def test_unknown_pin_is_owed_and_missing_install_is_not(self):
+-        self.row("unknown", pin="3" * 40)
+-        self.row("uninstalled")
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 1)
+-        self.assertIn("pin unrecognised", run.stdout)
+-        self.assertIn("laws: not installed", run.stdout)
+-        self.rows.pop(0)
+-        self.assertEqual(self.run_rollout().returncode, 0)
+-
+-    def test_non_commit_pin_is_printed_as_unrecognised(self):
+-        self.row("one", pin="main")
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 1)
+-        self.assertIn("laws: main pin unrecognised", run.stdout)
+-
+-    def test_missing_state_branch_and_forbidden_laws_are_unreadable(self):
+-        from urllib.parse import quote
+-        repo = self.row("one")
+-        self.reply(["api", f"repos/{repo}/branches/{quote('spacedock-state/dev2', safe='')}"],
+-                   error="Not Found (HTTP 404)")
+-        self.assertEqual(self.run_rollout().returncode, 1)
+-        self.content(repo, ".github/workflows/dev2-laws.yml", "spacedock-state/dev2", error="Forbidden (HTTP 403)")
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 1)
+-        self.assertIn('unreadable: "Forbidden (HTTP 403)"', run.stdout)
+-
+-    def test_search_reports_unlisted_and_failed_search_without_changing_exit(self):
+-        self.row("listed")
+-        self.reply(["api", "repos/fleet/unlisted"], {"default_branch": "main"})
+-        self.content("fleet/unlisted", "docs/dev2/README.md", "main", self.readme("0.38.0"))
+-        self.search([{"repository": {"nameWithOwner": "fleet/unlisted"}, "path": "docs/dev2/README.md"},
+-                     {"repository": {"nameWithOwner": "fleet/listed"}, "path": "docs/dev2/README.md"}])
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 0, run.stdout)
+-        self.assertIn("unlisted: fleet/unlisted docs/dev2/README.md", run.stdout)
+-        self.assertEqual(run.stdout.count("unlisted:"), 1)
+-        self.search(error="search quota exceeded")
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 0)
+-        self.assertIn('search: unavailable "search quota exceeded"', run.stdout)
+-        self.content(self.repo, self.workflow, self.latest, self.readme("0.38.1") + "Changed rule.\n")
+-        self.assertEqual(self.run_rollout().returncode, 1)
+-
+-    def test_search_reads_the_next_page_before_reporting_unlisted(self):
+-        self.row("listed")
+-        self.search([{"repository": {"nameWithOwner": "fleet/listed"},
+-                      "path": "docs/dev2/README.md"}] * 100, total=101)
+-        self.search([{"repository": {"nameWithOwner": "fleet/last"},
+-                      "path": "docs/dev2/README.md"}], page=2, total=101)
+-        self.reply(["api", "repos/fleet/last"], {"default_branch": "main"})
+-        self.content("fleet/last", "docs/dev2/README.md", "main", self.readme("0.38.0"))
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+-        self.assertIn("unlisted: fleet/last docs/dev2/README.md", run.stdout)
+-        self.assertNotIn("search: unavailable", run.stdout)
+-
+-    def test_search_reports_timeout_or_result_cap_without_changing_debt_exit(self):
+-        self.row("listed")
+-        for incomplete, total, message in [(True, 1, "incomplete results"),
+-                                            (False, 1001, "1000-result limit")]:
+-            with self.subTest(incomplete=incomplete, total=total):
+-                self.search([{"repository": {"nameWithOwner": "fleet/listed"},
+-                              "path": "docs/dev2/README.md"}] * min(total, 1000),
+-                            total=total, incomplete=incomplete)
+-                run = self.run_rollout()
+-                self.assertEqual(run.returncode, 0, run.stdout)
+-                self.assertIn("search: unavailable", run.stdout)
+-                self.assertIn(message, run.stdout)
+-        self.content(self.repo, self.workflow, self.latest, self.readme("0.38.1") + "Changed rule.\n")
+-        self.assertEqual(self.run_rollout().returncode, 1)
+-
+-    def test_search_missing_a_page_is_explicitly_unavailable(self):
+-        self.row("listed")
+-        self.search([{"repository": {"nameWithOwner": "fleet/listed"},
+-                      "path": "docs/dev2/README.md"}] * 100, total=101)
+-        self.search([], page=2, total=101)
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 0, run.stdout)
+-        self.assertIn("search: unavailable", run.stdout)
+-        self.assertIn("stopped at 100 of 101", run.stdout)
+-
+-    def omitted_content(self, path):
+-        from urllib.parse import quote
+-        for ref in (self.old, self.latest):
+-            self.reply(["api", f"repos/{self.repo}/contents/{path}?ref={quote(ref, safe='')}"],
+-                       {"type": "file", "encoding": "none", "content": "", "size": 14216605})
+-
+-    def test_omitted_workflow_contents_are_unreadable_not_equal(self):
+-        self.row("one", pin=self.old)
+-        self.omitted_content(self.workflow)
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 1, run.stdout)
+-        self.assertIn("unreadable:", run.stdout)
+-        self.assertIn("content omitted", run.stdout)
+-        self.assertNotIn("no sync owed", run.stdout)
+-
+-    def test_omitted_laws_contents_are_unreadable_not_equal(self):
+-        self.row("one", pin=self.old)
+-        self.omitted_content(self.laws[0])
+-        run = self.run_rollout()
+-        self.assertEqual(run.returncode, 1, run.stdout)
+-        self.assertIn("unreadable:", run.stdout)
+-        self.assertIn("content omitted", run.stdout)
+-        self.assertNotIn("no pin owed", run.stdout)
+-
+-    def test_annotated_release_tag_resolves_to_its_commit(self):
+-        tags = self.responses[json.dumps(["api", f"repos/{self.repo}/git/matching-refs/tags/kc-dev-flow-2-v"])]["data"]
+-        tags[-1]["object"] = {"type": "tag", "sha": "a" * 40}
+-        self.reply(["api", f"repos/{self.repo}/git/tags/{'a' * 40}"],
+-                   {"object": {"type": "commit", "sha": self.latest}})
+-        self.row("one", pin=self.latest)
+-        self.assertEqual(self.run_rollout().returncode, 0)
+-
+-    def test_missing_or_unreadable_local_list_fails(self):
+-        for listing in (self.root / "absent.md", self.root):
+-            with self.subTest(listing=str(listing)):
+-                run = subprocess.run([sys.executable, "-B", str(Path(pv.__file__)), "rollout", str(listing)],
+-                                     capture_output=True, text=True)
+-                self.assertEqual(run.returncode, 1)
+-                self.assertIn("rollout: unreadable", run.stdout)
+-                self.assertNotIn("no sync owed", run.stdout)
+-
+-    def test_missing_marker_and_package_read_failures_never_pass(self):
+-        repo = self.row("one")
+-        self.content(repo, "docs/dev2/README.md", "main", "---\ntrunk: main\n---\nNo marker\n")
+-        self.assertEqual(self.run_rollout().returncode, 1)
+-        self.content(repo, "docs/dev2/README.md", "main", self.readme("0.38.0"))
+-        self.content(self.repo, self.workflow, self.old, error="Not Found (HTTP 404)")
+-        self.assertEqual(self.run_rollout().returncode, 1)
+-
+-
+ if __name__ == "__main__":
+     unittest.main()
+diff --git a/kc-dev-flow-2/skills/maintain-flow/SKILL.md b/kc-dev-flow-2/skills/maintain-flow/SKILL.md
+index 879f716b2..2b20bfb2a 100644
+--- a/kc-dev-flow-2/skills/maintain-flow/SKILL.md
++++ b/kc-dev-flow-2/skills/maintain-flow/SKILL.md
+@@ -65,16 +65,6 @@ still fail, take a structural option to the Captain instead of a third.
+ 
+ ## Observe adopters
+ 
+-After a kc-dev-flow-2 release, run `python3 kc-dev-flow-2/scripts/package_version.py rollout
+-<list>` with authenticated `gh`. The maintainer keeps the list outside any repository,
+-committed nowhere: `owner/repo workflow-dir [state-branch]` per row. State defaults to
+-`spacedock-state/<workflow-dir basename>`; trunk comes from the README. Missing lists
+-fail. Exit 1 reports debt or unreadable rows; search supplements the list, with
+-unlisted names kept in the terminal. On the Captain's release approval, package FO
+-dispatches Draft README sync PRs for him to merge, then moves installed laws pins to
+-the tag each merged README names with a one-path state commit and push. Installation:
+-adoption.md § State laws check.
+-
+ FO grading its own work misses what an outside reader finds, so after each release the
+ maintainer reads the first task each adopter archives on it. Where the adopter lists
+ `learn`, that task's `observer.md` is the report; otherwise dispatch

@@ -1,0 +1,31 @@
+ kc-dev-flow-2/extensions/paseo/EXTENSION.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/kc-dev-flow-2/extensions/paseo/EXTENSION.md b/kc-dev-flow-2/extensions/paseo/EXTENSION.md
+index 7bdb3f7de..c5667654e 100644
+--- a/kc-dev-flow-2/extensions/paseo/EXTENSION.md
++++ b/kc-dev-flow-2/extensions/paseo/EXTENSION.md
+@@ -24,7 +24,7 @@ FO reconciles the local candidate and any existing PR, then under an applicable
+ 
+ ## Worker permission requests
+ 
+-A permission callback from a worker FO spawned for an open dispatch is FO's to answer; any other agent's follows peers. Read the request first. Allow only what FO could do itself in the task's scope and authority; deny an out-of-scope request with its reason; never pass updatedPermissions. Hold for the Captain a push to a repository he does not own, a merge or close, reading or printing a secret value (running through the secrets wrapper without reading or printing a value is allowed), a deletion beyond task-owned temporary files or another irreversible change, a message to a person or other outward write, spending money, a question asking for his judgment, and anything FO's own host refuses.
++A permission callback from a worker FO spawned for an open dispatch is FO's to answer; any other agent's follows peers. Read the request first. Allow only what FO could do itself in the task's scope and authority; deny an out-of-scope request with its reason. After denial, send the worker the reason with send_agent_prompt (activeTurnBehavior steer) unless its provider is confirmed to deliver denial messages (Claude: Paseo source, not a run; Codex omits them in six FO-operated runs); unconfirmed providers, including Gemini, get the message. Never pass updatedPermissions. Hold for the Captain a push to a repository he does not own, a merge or close, reading or printing a secret value (running through the secrets wrapper without reading or printing a value is allowed), a deletion beyond task-owned temporary files or another irreversible change, a message to a person or other outward write, spending money, a question asking for his judgment, and anything FO's own host refuses.
+ 
+ Copy agentId and requestId together from that request's block and answer each block once; never type, recall or adapt an id. After a refusal, or with no block in this turn, call get_agent_status for that worker. Read any returned pending request and decide it afresh under the same scope, authority and Captain holds; answer only its returned id. Never apply an approval or denial to a different requestId. If none is pending, the request is gone. Paseo refuses an id not pending for that agent.
+ 
+STEP 1 PASS: exact candidate export; evidence directory /tmp/denial-amendment2-acceptance.Q1lWQB
+STEP 2 PASS: 6 valid; 4 exact receipts/actions in the original turn; 2 controls; no retry.
+AC-7/AC-9/AC-10 unchanged-evidence: PASS (scorer exit 0)
+AC-7 new-turn: PASS (scorer exit 1)
+AC-9 changed-reason: PASS (scorer exit 1)
+AC-9 queued-without-receipt: PASS (scorer exit 1)
+AC-10 wrong-audit-bytes: PASS (scorer exit 1)
+AC-10 post-denial-retry: PASS (scorer exit 1)
+PASS: unchanged evidence accepted; 5 evidence falsifiers rejected. No runtime replay started.
+STEP 3 PASS: five evidence falsifiers rejected; no new worker or runtime replay.
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+67 ADR file(s) checked, 0 legacy
+STEP 4 PASS: package lint and ADR lint.
+ACCEPTANCE PASS; retained evidence: /tmp/denial-amendment2-acceptance.Q1lWQB

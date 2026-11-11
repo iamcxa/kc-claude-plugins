@@ -1,0 +1,25 @@
+{
+  "asar": "/Applications/Paseo.app/Contents/Resources/app.asar",
+  "package_version": "0.15.4",
+  "path": "node_modules/@getpaseo/server/dist/server/server/agent/providers/claude/agent.js",
+  "source_sha256": "cd72f73891d71b20d596e7facd87cec4124aa2241838675b1874a622ee2d7660",
+  "matches": [
+    {
+      "line": 1806,
+      "excerpt": "            });\n            if (this.permissionClearingSteerUuids.size > 0) {\n                return this.resolveDeniedPermission(request, {\n                    behavior: \"deny\",\n                    message: STEER_SUPERSEDED_PERMISSION_MESSAGE,\n                });\n            }\n            return await new Promise((resolve, reject) => {\n                const cleanupFns = [];\n                const cleanup = () => {\n                    while (cleanupFns.length) {\n                        const fn = cleanupFns.pop();\n                        try {\n                            fn?.();\n                        }\n                        catch {\n                            // ignore cleanup errors\n                        }\n                    }\n                };\n                const abortHandler = () => {\n                    this.pendingPermissions.delete(requestId);\n                    cleanup();\n                    this.pushEvent({\n                        type: \"permission_resolved\",\n                        provider: \"claude\",\n                        requestId,"
+    },
+    {
+      "line": 2254,
+      "excerpt": "            : request.id;\n    }\n    resolveDeniedPermission(request, response) {\n        this.recordDeniedPermissionTimeline(request, response);\n        this.pushEvent({\n            type: \"permission_resolved\",\n            provider: \"claude\",\n            requestId: request.id,\n            resolution: response,\n        });\n        return {\n            behavior: \"deny\",\n            message: response.message ?? \"Permission request denied\",\n            interrupt: response.interrupt,\n        };\n    }\n    denyPendingPermissionsSupersededBySteer() {\n        for (const [requestId, pending] of this.pendingPermissions) {\n            this.pendingPermissions.delete(requestId);\n            pending.cleanup?.();\n            pending.resolve(this.resolveDeniedPermission(pending.request, {\n                behavior: \"deny\",\n                message: STEER_SUPERSEDED_PERMISSION_MESSAGE,\n            }));\n        }\n    }\n    async respondToPermission(requestId, response) {"
+    },
+    {
+      "line": 2272,
+      "excerpt": "            this.pendingPermissions.delete(requestId);\n            pending.cleanup?.();\n            pending.resolve(this.resolveDeniedPermission(pending.request, {\n                behavior: \"deny\",\n                message: STEER_SUPERSEDED_PERMISSION_MESSAGE,\n            }));\n        }\n    }\n    async respondToPermission(requestId, response) {\n        const pending = this.pendingPermissions.get(requestId);\n        if (!pending) {\n            throw new Error(`No pending permission request with id '${requestId}'`);\n        }\n        // Before the delete below, so a rejected answer leaves the request pending\n        // and answerable rather than consuming it for nothing. AgentManager only\n        // drops its own copy once this resolves, so both maps survive the throw.\n        assertClaudeQuestionAnswerDeliverable(pending.request, response);\n        this.pendingPermissions.delete(requestId);\n        pending.cleanup?.();\n        if (response.behavior === \"allow\") {\n            if (pending.request.kind === \"plan\") {\n                const selectedActionId = response.selectedActionId;\n                const resumeMode = this.planResumeMode;\n                const shouldResumePriorMode = selectedActionId === \"implement_resume\" &&\n                    (resumeMode === \"bypassPermissions\" || resumeMode === \"auto\");\n                const targetMode = shouldResumePriorMode ? resumeMode : \"acceptEdits\";\n                await this.setMode(targetMode);"
+    },
+    {
+      "line": 2318,
+      "excerpt": "        }\n        else {\n            pending.resolve(this.resolveDeniedPermission(pending.request, response));\n            return;\n        }\n        this.pushEvent({\n            type: \"permission_resolved\",\n            provider: \"claude\",\n            requestId,\n            resolution: response,\n        });\n    }\n    describePersistence() {\n        if (this.persistence) {\n            return this.persistence;\n        }\n        if (!this.claudeSessionId) {\n            return null;\n        }\n        const { providerOptions: _providerOptions, ...persistedConfig } = this.config;\n        this.persistence = {\n            provider: \"claude\",\n            sessionId: this.claudeSessionId,\n            nativeHandle: this.claudeSessionId,\n            metadata: { ...persistedConfig },\n        };\n        return this.persistence;"
+    }
+  ],
+  "runtime_test": false
+}

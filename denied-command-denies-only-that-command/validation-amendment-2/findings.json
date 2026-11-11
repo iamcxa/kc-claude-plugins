@@ -1,0 +1,16 @@
+[
+  {
+    "id": "F1",
+    "classification": "Polish",
+    "severity": "low",
+    "title": "Amendment 2 contains agent explanation beyond the quotation and design pointer",
+    "file": "denied-command-denies-only-that-command.md",
+    "line": 282,
+    "status": "open",
+    "released_user_and_normal_workflow": "FO and the next worker read the amendment during this supported validation rerun.",
+    "observable_harm": "The entry is not quote-only: Design includes source/run conclusions and the spent-cap instruction. Captain/Asked match the gate; no additional permission or behavior requirement was found.",
+    "affected_boundary": "contract[kc-dev-flow-2/references/sd/workflow.md#captain-amendments]: retain Captain words/question and an overridden-design pointer; rationale belongs in worker evidence. No demonstrated value-criterion loss or authority expansion, so not Material.",
+    "trigger_evidence": "State 82aa6626a4f3305536d99546c18208592cb49012 introduced the paragraph; amendment-review.json preserves its exact text. ADR 0016 allows prose pointers, not new rulings.",
+    "fix": "Next authorized state edit: keep Captain/Asked and moved criteria, reduce Design to the overridden Change item 3 pointer, and move rationale into the report. No validator repair."
+  }
+]

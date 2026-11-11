@@ -1,0 +1,13 @@
+{
+  "old_state": "04b1a9133f972f689055157fe28570c40e642824",
+  "AC-9": "byte-identical",
+  "moved_AC-7_AC-10": "byte-identical stripped boundary whitespace",
+  "new_ids": [
+    11,
+    12
+  ],
+  "head_matches_PR": true,
+  "PR_state": "OPEN",
+  "PR_isDraft": false,
+  "amendment_extra_prose": "Design: reword only the existing Paseo permission sentence to default-send, with the confirmed-provider exception and evidence named. The same send_agent_prompt (activeTurnBehavior steer) remains. Claude forwarding is known from the Paseo source read in the design, not a runtime replay; Gemini remains unconfirmed and receives the default send. The extension of the default beyond Codex is source-informed policy, not a claim that other providers were replayed. The twelve worker-attempt cap remains spent; no fresh FO or worker run is added."
+}
