@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:budget-overrun-holds-and-findings-meet-non-goals:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:budget-overrun-holds-and-findings-meet-non-goals-validation-1
+              briefing:
+                id: briefing:budget-overrun-holds-and-findings-meet-non-goals:validation:attempt-1:revision-1
+                digest: sha256:13098b17b7e9a23fa100b0eada5fbf2d913ea06674505b1b70b5d1a10e98575a
+                room-ref: ./budget-overrun-holds-and-findings-meet-non-goals/review/validation/briefing-1
 started: 2026-11-11T01:44:17Z
 worktree: .worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals
 pr: iamcxa/kc-claude-plugins#841
