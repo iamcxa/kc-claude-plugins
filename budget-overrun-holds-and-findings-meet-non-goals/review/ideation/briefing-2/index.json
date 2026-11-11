@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:budget-overrun-holds-and-findings-meet-non-goals:ideation:attempt-2:revision-1",
+  "question": "決定：要不要核准「預算是什麼」（已併入第一性原理）的設計並開始實作。我建議照設計的建議核准：預算改用可數的輪數寫，新任務必須用這個寫法；每次實作與驗證派工顯示預算和已花幾輪，第一次超過就停下來，由我帶著三個「值不值得」的問題的答案來問你；同樣三題在每份設計裡必答，檢查會擋缺漏；原本的退一步提醒對這類任務取消，不另外加重大發現的規則。核准即接受這三項；它的代價是你會被問得比現在多。",
+  "artifacts": [
+    {
+      "id": "artifact:budget-overrun-holds-and-findings-meet-non-goals:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/459e753db24293e96b60acecc94a26c3551dcafb/budget-overrun-holds-and-findings-meet-non-goals.md",
+      "rev": "sha256:0b2165f817b85ff6f74ad5d01742357a4a1e270f81ad1782c0dc1dbfa9135ea8",
+      "mediaType": "text/markdown",
+      "summary": "Batch 21 ideation sitting, one design per question on the Captain's word. FO ran design_surfaces.py check: exit 0 (2026-11-11). The worker's report, not re-run by FO: the relay replay (the reload recovery entered at ideation and was approved at that gate, not through a validation finding), the archive replay (at least 55 of 113 archived tasks of this workflow with implementation records would hold at one cycle per stage; qnow 7 of 7, relay 11 of 23, web 5 of 20 countable-budget tasks), the ops-inbox replay and the word counts; no criterion is verified against a candidate. Decisions D1 (when the budget holds), D2 (the countable unit) and D3 (where the worth questions are forced) each carry a recommendation and what gets worse in the task file. The design names a new ADR; FO reserves its number before the implementation dispatch. Captain amendments 1 and 2 are recorded in the task file."
+    }
+  ]
+}

@@ -38,6 +38,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-11T02:20:02.940552Z"
                 reason: The Captain answered the six-design question with 「這次比較複雜，一題題過審」 (host question dialog, 2026-11-11); each design gets its own question.
+            - id: gate-attempt:budget-overrun-holds-and-findings-meet-non-goals-ideation-2
+              briefing:
+                id: briefing:budget-overrun-holds-and-findings-meet-non-goals:ideation:attempt-2:revision-1
+                digest: sha256:d2ebb63ded08f2c88c2ff556513df93b3d79efb84af4f5b86eb9cae70de5ab7a
+                room-ref: ./budget-overrun-holds-and-findings-meet-non-goals/review/ideation/briefing-2
 started: 2026-11-11T01:44:17Z
 ---
 
