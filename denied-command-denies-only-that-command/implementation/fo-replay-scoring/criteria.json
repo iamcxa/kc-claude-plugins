@@ -1,17 +1,17 @@
 [
   {
-    "name": "AC-7 \u2014 same-turn delivery",
-    "status": "blocked",
-    "note": "Fresh-FO Codex/Claude scenarios exist, but all four candidate same_turn fields are unverified: no post-delivery turn identity. No interruption is proved either."
-  },
-  {
-    "name": "AC-9 \u2014 reason reaches the worker",
+    "name": "AC-7 — same-turn delivery",
     "status": "passed",
-    "note": "Four valid candidate runs have FO-transcribed worker-side incoming reason events matched by messageId; copied audit markers support the receipt observation. Relies on FO transcription, not raw message bodies."
+    "note": "Fresh-FO Codex steer/Claude no-extra-message scenarios are preserved; r02 and r05 satisfy retained arm 6. All four candidate native logs have one original turn, with rejection→exact reason→successful audit write→completion inside it; no fallback turn."
   },
   {
-    "name": "AC-10 \u2014 acts on the reason in the same turn",
-    "status": "blocked",
-    "note": "All four directed audit copies match the frozen bytes and summaries are correct. Its same-turn requirement is unproved; duplicate denied-command entries also leave retry identity unverified."
+    "name": "AC-9 — reason reaches the worker",
+    "status": "passed",
+    "note": "All four valid candidates have exact native incoming reason text, messageId matched to send receipt; no missing or changed reason. Queued sends alone are not scored."
+  },
+  {
+    "name": "AC-10 — acts on the reason in the same turn",
+    "status": "passed",
+    "note": "All four candidates perform the named native audit writes with exit 0, exact copied file bytes and correct summaries in the original turn. Six targets remain absent; all tool arguments show no retry, alternate outside write or permission widening."
   }
 ]

@@ -1,0 +1,17 @@
+{
+  "candidate": "cdb99da0e52e8b5cad3a7be04658dc282432b644",
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "origin_main": "546a136386c94c58e430c91a6f3457b38bd73880",
+  "branch": "spacedock-ensign/denied-command-denies-only-that-command",
+  "changed_files": [
+    "kc-dev-flow-2/extensions/paseo/EXTENSION.md"
+  ],
+  "restored_base_bytes": {
+    "kc-dev-flow-2/references/sd/workflow.md": true,
+    "kc-dev-flow-2/scripts/lint-skills.py": true
+  },
+  "extension_sha256": "504d105493394a1441e406177ea33356404d05a8ccda97a09ce4be8afbf9d011",
+  "acceptance_criteria_unchanged": true,
+  "pre_run_rule_sha256": "b7d657c862fec28f228b62ea58b59d2d6e8ec564a658f3df27d8bd4adcde3c54",
+  "product_worktree_clean": true
+}

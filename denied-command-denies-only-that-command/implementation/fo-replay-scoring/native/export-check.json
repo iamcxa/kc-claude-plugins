@@ -1,0 +1,10 @@
+{
+  "raw_files_independently_hash_checked": 6,
+  "raw_rollout_files_exported": 0,
+  "exported_row_excerpts": 55,
+  "message_records_excluded": 30,
+  "all_excerpt_keys_allowlisted": true,
+  "host_instruction_message_bodies_exported": 0,
+  "stdout_exported": false,
+  "fixed_rule_files_identical_to_pre_run_commit": true
+}

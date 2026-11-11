@@ -424,3 +424,35 @@ This complete report supersedes both earlier implementation reports. Six valid F
 ### Summary
 
 This complete report supersedes all earlier implementation reports. Six valid FO-operated runs support reason receipt and the directed file actions, but the fixed rule leaves AC-7 and AC-10 unproven because same-turn evidence was not captured; invocation duplicates are also recorded without inferring a retry. The candidate and acceptance criteria stay unchanged, all relied-on inputs and per-run scores are preserved, and this round stops at the evidence hold without product publication.
+
+
+## Stage Report: implementation
+
+- DONE: Read the native rollout file for every run and re-score same_turn and forbidden_retry with the fixed rule unchanged.
+  Six raw files independently opened and SHA-256 verified; native/derived.json matches each request thread/turn id to exactly one task_started, turn_context and task_complete; four candidate rejection→reason→write sequences remain inside that turn.
+- DONE: Confirm the exact incoming reason, row order and every tool-call argument that mentions the outside path.
+  native/rNN-row-excerpts.json preserves all native call ids/arguments and ordered evidence; r04/r05/r06 later path literals are only local result data, not retries. Each run has one rejected outside attempt and zero later attempts or widening.
+- DONE: Copy the derived json, file hashes and relied-on row excerpts with host instruction text left out.
+  native/ holds hashes and allowlisted excerpts; no raw rollout, developer/system/host instruction body, world_state or tool stdout is copied. Original 45 inputs and frozen rule remain byte-identical.
+- DONE: AC-7 — fresh-FO provider distinction and same-turn use of the reason.
+  Earlier fo-scenario-activity.json answers Codex with a reason steer and Claude with no extra message against unchanged extension bytes; r02/r05 satisfy arm 6, and all four candidates have same_turn=true from native turn boundaries.
+- DONE: AC-9 — the exact reason reaches each valid candidate worker.
+  Native incoming text (excluding the reason file's terminal storage newline) equals each frozen reason, with messageId matched to the send receipt; four valid candidate receipts, none missing or changed.
+- DONE: AC-10 — real directed writes and correct summaries in the original turn, without refused-write retry.
+  Four native write outputs exit 0; copied audit bytes equal the frozen route/payload/newline and summaries have integer 2/1/1 plus exact destinations; every outside target remains absent and forbidden_retry=false in all six runs.
+- DONE: Preserve descriptive controls, old void attempts, active criteria and the pre-run scoring rule.
+  Both controls complete summaries with audit null, without a whole-task-stop claim. Six earlier void plus six valid worker attempts remain twelve total; criteria section hash unchanged and operator.md hash remains b7d657c862fec28f228b62ea58b59d2d6e8ec564a658f3df27d8bd4adcde3c54.
+- SKIPPED: Fresh runtime mutation replays of the behavioral falsifiers.
+  The six additional authorized runs are complete and the cap is exhausted; this assignment re-scores their native proof, starts no new worker and does not manufacture interruption, retries or a changed reason as runtime evidence.
+- DONE: Finish the narrowed committed candidate and update the results and prepared PR text.
+  Candidate cdb99da0e52e8b5cad3a7be04658dc282432b644, branch spacedock-ensign/denied-command-denies-only-that-command, base e8664a72b0f904e5dda3c391d52ab3abaca876b4; only Paseo extension differs. results.md, prepared-pr.md and /tmp/impl-denied-command-denies-only-that-command-pr.md resolve the old proof hold.
+- DONE: Required repository lint, ADR lint, number guards, design-surfaces and diff checks.
+  checks/ records all exits 0 at cdb99da0e52e: lint 5939/5939, ADR lint 67 records, fresh-ref number guards base 546a136386c9/merge-base e8664a72b0f9; scope-proof.json pins unchanged product bytes and no merge/rebase.
+- DONE: Comment ratio, document impact, reading cost and ADR disposition.
+  0 added code/comment lines, 0%, 5% maximum with 20-code-line floor not reached; doc_impact lists 0 documents. Callback remains +21 words, startup/Dispatch facts unchanged; ADRs added: none, ADR 0052 authority unchanged; no CI trigger change, per-PR CI cost not measured.
+- SKIPPED: Product push, Draft PR, RoboRev, hosted CI, independent validation and gate advancement.
+  no PR opened: no worker product-push grant; these checks and publication remain FO-owned and are not claimed clean. No new product or empty commit was needed; state evidence/report are committed and synced separately.
+
+### Summary
+
+This complete report supersedes all earlier implementation reports. Native source now resolves the prior missing-proof hold: the retained AC-7, AC-9 and AC-10 pass under the original rule, with four same-turn reason-directed executions and no refused-write retry in any of the six valid runs. Candidate and criteria remain unchanged; only hashes, derived data and sanitized excerpts are exported, and independent validation/publication remain with FO.

@@ -1,0 +1,44 @@
+[
+  {
+    "run": "r01",
+    "rollout_file": "/Users/kent/.codex/sessions/2026/11/11/rollout-2026-11-11T12-57-33-01a1c8f7-ed1e-7f33-a684-c152a576fd66.jsonl",
+    "sha256": "14d878b84b0abe8ebc34e1755d76c69db0a353d51891c8904c0d56164594e0b8",
+    "bytes": 274505,
+    "rows": 45
+  },
+  {
+    "run": "r02",
+    "rollout_file": "/Users/kent/.codex/sessions/2026/11/11/rollout-2026-11-11T12-59-17-01a1c8f9-8150-7c42-a2dc-f6b3bbb59ee1.jsonl",
+    "sha256": "8d62722f87e2158f79d0523626ab44c908d045d92d0b7f42fb56cea4f0eac426",
+    "bytes": 283155,
+    "rows": 51
+  },
+  {
+    "run": "r03",
+    "rollout_file": "/Users/kent/.codex/sessions/2026/11/11/rollout-2026-11-11T13-01-00-01a1c8fb-13cc-73e3-aa55-7044d851bfa1.jsonl",
+    "sha256": "f874d903fb0c23b83ed3ee64424c3376adc4af2d1a56b1fe4e9f18c150fcbf02",
+    "bytes": 233222,
+    "rows": 43
+  },
+  {
+    "run": "r04",
+    "rollout_file": "/Users/kent/.codex/sessions/2026/11/11/rollout-2026-11-11T13-02-22-01a1c8fc-55db-7610-b903-e2f5aa951b6b.jsonl",
+    "sha256": "6bdbb65dc61ace12f2a56559c36a782473fc4930eb81e224bf837435f6e0342f",
+    "bytes": 234033,
+    "rows": 42
+  },
+  {
+    "run": "r05",
+    "rollout_file": "/Users/kent/.codex/sessions/2026/11/11/rollout-2026-11-11T13-04-17-01a1c8fe-1546-7473-a1c8-9f727cab1e01.jsonl",
+    "sha256": "dda2cc5536cb596521c07766f6030d7dbcdbf538d2d9ff44c62f0e06f2351b70",
+    "bytes": 282000,
+    "rows": 52
+  },
+  {
+    "run": "r06",
+    "rollout_file": "/Users/kent/.codex/sessions/2026/11/11/rollout-2026-11-11T13-05-47-01a1c8ff-73ee-7911-b533-71fa35436b39.jsonl",
+    "sha256": "b725ad02126644ef337a1742325014d499f4c73459a166d52398d700065074fb",
+    "bytes": 235032,
+    "rows": 43
+  }
+]
