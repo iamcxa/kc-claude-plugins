@@ -88,7 +88,7 @@ gates:
                 state: pending
 started: 2026-11-11T01:22:31Z
 worktree: .worktrees/spacedock-ensign-story-done-reports-release-remaining
-pr: iamcxa/kc-claude-plugins#839
+pr: pr-merge:843
 ---
 
 ## Scope
