@@ -19,6 +19,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-11T01:57:14.181398Z"
                 reason: The Captain answered the joint question with a question of his own, then chose 「前兩張合併，查現成做法獨立（建議）」 (host question dialog, 2026-11-11), so the joint backlog question no longer matches what is being decided.
+            - id: gate-attempt:ideation-checks-external-prior-art-backlog-2
+              briefing:
+                id: briefing:ideation-checks-external-prior-art:backlog:attempt-2:revision-1
+                digest: sha256:033230f76c5b4aeafaf1a296e2760c278a744a9464967cbff73626194cbefe4b
+                room-ref: ./ideation-checks-external-prior-art/review/backlog/briefing-2
 ---
 
 ## Scope

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ideation-checks-external-prior-art:backlog:attempt-2:revision-1",
+  "question": "決定：要不要讓「設計階段先查現成的標準與做法」這張任務單獨進入第 21 批的設計階段。我建議核准：它問的是「這個問題別人解過了嗎」，和合併後那張「要不要做、值不值得」是不同的問題，所以維持獨立。核准代表接受這張任務檔寫的範圍、預算與停止條件，並派一個設計工人；不代表接受任何設計或修法。它標了方向要先對齊，派工前我會再問你一題。",
+  "artifacts": [
+    {
+      "id": "artifact:ideation-checks-external-prior-art:backlog:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/1aeda3fdfda9576568478b83d78a5a10180fc404/ideation-checks-external-prior-art.md",
+      "rev": "sha256:ee09d38224568f0a84d5019d62239bf8f441e901e2037226b304f9a69ccaaabb",
+      "mediaType": "text/markdown",
+      "summary": "Batch 21 backlog sitting, third part: seed filed 2026-11-10 by the retiring FO; the Captain chose to keep it a separate task of batch 21 in the host question dialog 2026-11-11. design_surfaces.py check --seed exit 0 (FO run 2026-11-11). The seed quotes the Captain's words as relayed by the qnow dev2 FO and says the backlog gate confirms them; this gate is that confirmation. The bite is the qnow FO's report, not re-run. The qnow FO asked to see the proposal and replay plan before any package edit. Alignment is recorded as needed at ideation and FO asks the Captain before dispatching."
+    }
+  ]
+}
