@@ -3,7 +3,7 @@ title: main's kc-dev-flow-2 tests pass again with the Worth questions check and 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-11), answering 「決定：合併 #846（修好 main 上壞掉的那一項測試：只在一個測試檔的假任務裡補上「值不值得」那一節）嗎？建議合併。同意即接受：只改測試資料，檢查本身和「讀不到階段就擋下」的規則沒有動；合併後 main 的測試應該恢復通過，我會在合併後確認，沒過就立刻回報；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit 9b9be172c7cb2453ae74a79f10322344bf9ab32f, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-11T09:02:13Z
 worktree: .worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test
 pr: pr-merge:846
+verdict: PASSED
+completed: 2026-11-11T10:20:36Z
+archived: 2026-11-11T10:20:36Z
 ---
 
 ## Scope
