@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:release-rollout-reaches-adopters-and-laws-pin:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:release-rollout-reaches-adopters-and-laws-pin-validation-1
+              briefing:
+                id: briefing:release-rollout-reaches-adopters-and-laws-pin:validation:attempt-1:revision-1
+                digest: sha256:7143714209fa7026e14ebd0d3c447c200c74441b591129306c5f0622ce47cab3
+                room-ref: ./release-rollout-reaches-adopters-and-laws-pin/review/validation/briefing-1
 started: 2026-11-11T01:25:39Z
 worktree: .worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin
 pr: iamcxa/kc-claude-plugins#838

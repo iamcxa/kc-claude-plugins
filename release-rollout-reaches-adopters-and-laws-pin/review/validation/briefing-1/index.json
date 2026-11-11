@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-rollout-reaches-adopters-and-laws-pin:validation:attempt-1:revision-1",
+  "question": "決定：合併 #838（每次發版後用一個唯讀指令列出每個採用 repo 的流程說明檔和法規釘選要不要動；兩樣都落後時明寫先同步說明檔、合併後再移釘選；採用清單只留在你的本機）嗎？建議合併。同意即接受：指令只報告、不會自己去同步或移釘選；清單檔不存在或讀不到會報錯；沒被你點名的採用 repo 不會有法規檢查；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit 61529999eb4184b44328fe2fbad545b1b0b0ed92, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:release-rollout-reaches-adopters-and-laws-pin:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/18017dbf424c1729dac21e01a2e8c2b7ab0312d0/release-rollout-reaches-adopters-and-laws-pin.md",
+      "rev": "sha256:e0cc10b336b23fad162ff76b85a454ba98a0b0e8545b7feddc4956484416e53c",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 0\nDelivery of release-rollout-reaches-adopters-and-laws-pin, PR #838, batch 21.\nSufficiency: one read-only command lists each adopter row with whether its README sync and its laws pin are owed against the released tag, an unreadable row is never reported as current, a both-owed line states the sync-then-pin order, and all ten active criteria hold with both Captain amendments (validation-1 report, Astra, 2026-11-11, PASSED at 61529999e; acceptance script run by FO 2026-11-11, exit 0).\nNecessity: CLAUDE.md, docs/adr/0075-release-rollout-reports-adopters-and-laws-pin.md, kc-dev-flow-2/references/sd/adoption.md, kc-dev-flow-2/scripts/package_version.py, kc-dev-flow-2/scripts/test_package_version.py and kc-dev-flow-2/skills/maintain-flow/SKILL.md change against origin/main (impl_ship.sh file list, FO run 2026-11-11; judged in the validation-1 report, Astra, 2026-11-11).\nAcceptance, run by FO in a fresh shell 2026-11-11, exit 0: env -u GIT_DIR -u GIT_WORK_TREE bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/release-rollout-reaches-adopters-and-laws-pin/validation/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/release-rollout-reaches-adopters-and-laws-pin/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-11, exit 0: gh pr view 838 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nExternal rounds: 1.\nExternal round sources: Codex Review comment says no issues on 61529999e (codex_review.py, FO run 2026-11-11, evidence=comment:6786970673).\nSecond reviewer: Copilot because the PR changes how adopter syncs and laws pins are decided after a release, a delivery rule.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5854018609\nCopilot retry: available when the Captain confirms quota is back.\nRoboRev: clean on 61529999e, evidence=roborev:1728 (FO run 2026-11-11); jobs 1725 and 1727 each reported one finding on earlier heads, the first settled by Captain amendment 2 and the second judged against GitHub's documentation with two partial-read gaps fixed (implementation reports; judged in the validation-1 report, Astra, 2026-11-11).\nCI: six checks on 61529999e finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr checks, read by FO 2026-11-11).\nValidation rounds: 1. validation-1 PASSED at 61529999e with no Material or Needs decision finding.\nCaptain amendments: 2. Amendment 1 keeps the adopter list on the maintainer's machine; amendment 2 keeps the comparison and states the order on the both-owed line.\nChief-engineer: not run, with FO's reason recorded under FO alignment; the validator was asked to judge it (validation-1 report, Astra, 2026-11-11).\nNot verified: a real release run of the step by a maintainer, and any adopter sync or pin move made from its report."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:release-rollout-reaches-adopters-and-laws-pin:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/18017dbf424c1729dac21e01a2e8c2b7ab0312d0/release-rollout-reaches-adopters-and-laws-pin/merge/ask-2.json",
+      "mediaType": "application/json",
+      "rev": "sha256:46781a41cb4ab0444321a1e0d3b9f7bde5212a2739a5c5407cade2f6ab3afb16"
+    }
+  ]
+}
