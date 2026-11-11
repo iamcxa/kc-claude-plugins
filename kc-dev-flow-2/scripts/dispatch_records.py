@@ -41,7 +41,8 @@ A record whose task file is absent is not judged by task-fact checks.
 it exits 2 for a record outside task/dispatch or without an adjacent task file, after running the existing checks.
 --names also refuses a live validation rerun with open F-numbered Needs decision findings until a later
 committed native Captain validation resolution or Captain amendment exists (ADR 0045). It skips this predicate
-for non-git snapshots; missing or ambiguous required git history exits 2.
+for non-git snapshots; pre-ruling corrections must preserve the ordered non-empty PASSED/REJECTED word list,
+and the ruling must follow the final text's first commit; missing or ambiguous required git history exits 2.
 --newest runs that scan on the file added by the latest commit that adds a file under <slug>/dispatch/, read as it
 is on disk: exit 0 when it is clean or the task has no record, 1 when a name is found, 2 when git cannot read the state.
 --coverage checks presence for a declared ideation, implementation or validation stage after an unfenced report:
@@ -422,7 +423,7 @@ def later_captain_ruling(root, task, text, selected):
     if len(reports) <= ordinal or reports[ordinal] != selected[-1]:
         raise RulingHistoryError("uncommitted-report")
     _, committed = captain_records(pinned, slug)
-    first, introduced, absent = {}, [], []
+    first, introduced, absent, versions = {}, [], [], []
     commits = ruling_git(root, "log", "--full-history", "--reverse", "--topo-order", "--format=%H",
                          head, "--", *paths).splitlines()
     for commit in commits:
@@ -431,13 +432,12 @@ def later_captain_ruling(root, task, text, selected):
             absent.append(commit)
             continue
         reports = validation_reports(snapshot)
+        identities, _ = captain_records(snapshot, slug)
         if len(reports) > ordinal:
-            if reports[ordinal] != selected[-1]:
-                raise RulingHistoryError("rewritten-report")
             introduced.append(commit)
+            versions.append((commit, reports[ordinal], identities))
         else:
             absent.append(commit)
-        identities, _ = captain_records(snapshot, slug)
         for key in identities:
             first.setdefault(key, []).append(commit)
     if not introduced:
@@ -459,6 +459,28 @@ def later_captain_ruling(root, task, text, selected):
     report_commit = origins[0]
     if any(ancestor(report_commit, commit) for commit in absent):
         raise RulingHistoryError("discontinuous-report-history")
+    stale = [(c, ids) for c, report, ids in versions if report != selected[-1]]
+    if stale:
+        final_commits = [c for c, report, _ in versions if report == selected[-1]]
+        words = re.findall(r"\b(PASSED|REJECTED)\b", selected[-1])
+        if not words:
+            raise RulingHistoryError(f"rewritten-report-verdict-unreadable at {final_commits[0]}")
+        if any(re.findall(r"\b(PASSED|REJECTED)\b", report) != words for _, report, _ in versions):
+            raise RulingHistoryError(f"rewritten-report-verdict-changed at {final_commits[0]}")
+        settled = []
+        for commit in final_commits:
+            if not any(ancestor(prior, commit) for prior in settled):
+                settled.append(commit)
+        if len(settled) != 1:
+            raise RulingHistoryError("ambiguous-report-origin")
+        known = next(ids for c, _, ids in versions if c == report_commit)
+        settled_ids = next(ids for c, _, ids in versions if c == settled[0])
+        if settled_ids - known:
+            raise RulingHistoryError(f"rewritten-report-after-ruling at {settled[0]}")
+        for commit, identities in stale:
+            if identities - known or ancestor(settled[0], commit):
+                raise RulingHistoryError(f"rewritten-report-after-ruling at {commit}")
+        report_commit = settled[0]
     for key in current & committed:
         appearances = first.get(key, [])
         if appearances and all(c != report_commit and ancestor(report_commit, c) for c in appearances):
@@ -493,7 +515,15 @@ def check_validation_rulings(files):
                       f"findings {','.join(findings)}; hold dispatch, record the ruling, then run this check again")
                 status, refused = max(status, 1), True
         except (RulingHistoryError, OSError, ValueError) as error:
-            print(f"{file}:1: cannot verify validation ruling order: {error}; hold dispatch and report the missing history to FO")
+            rewrite = {
+                "rewritten-report-after-ruling": "changed after a Captain ruling or gate entry",
+                "rewritten-report-verdict-changed": "changed its PASSED or REJECTED words",
+                "rewritten-report-verdict-unreadable": "was rewritten and has no PASSED or REJECTED word",
+            }.get(str(error).split(" at ")[0])
+            if rewrite:
+                print(f"{file}:1: validation report {len(reports)} {rewrite} ({error}); hold dispatch and bring it to the Captain")
+            else:
+                print(f"{file}:1: cannot verify validation ruling order: {error}; hold dispatch and report the missing history to FO")
             status = 2
     if refused:
         print(RECOVERY)

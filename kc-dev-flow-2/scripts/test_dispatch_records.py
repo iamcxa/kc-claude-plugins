@@ -1214,10 +1214,114 @@ class LiveValidationRulingTests(unittest.TestCase):
         self.save(REPORT.replace("settle", "choose"))
         self.assert_hold(2)
 
-    def test_rewritten_or_deleted_then_reintroduced_report_cannot_reset_clock(self):
-        self.save(REPORT.replace("settle", "choose"), native_ruling())
-        self.commit("rewrite report")
-        self.assert_hold(2)
+    def test_correction_before_later_ruling_clears(self):
+        original = REPORT + "\nREJECTED\n"
+        self.new_state(original)
+        corrected = original.replace("settle", "choose")
+        self.save(corrected)
+        self.commit("correct report before ruling")
+        self.assert_hold()
+        self.save(corrected, native_ruling())
+        self.commit("later Captain ruling")
+        self.assertEqual(self.cli(), (0, ""))
+
+    def test_corrected_report_without_ruling_names_final_text_commit(self):
+        original = REPORT + "\nREJECTED\n"
+        self.new_state(original)
+        origin = self.git("rev-parse", "HEAD")
+        self.save(original.replace("settle", "choose"))
+        final = self.commit("final report text")
+        out = self.assert_hold()
+        self.assertIn(f"report 1 at {final} findings F1;", out)
+        self.assertNotIn(origin, out)
+
+    def test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused(self):
+        for native in (native_ruling(), native_ruling(stage="ideation"),
+                       native_ruling(actor="agent:first-officer"), native_ruling(kind="withdrawal")):
+            with self.subTest(native=native):
+                original = REPORT + "\nREJECTED\n"
+                self.new_state(original)
+                self.save(original, native)
+                self.commit("record gate entry")
+                self.save(original.replace("settle", "choose"), native)
+                changed = self.commit("correct report after gate entry")
+                out = self.assert_hold(2)
+                self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
+                self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+
+    def test_correction_committed_beside_amendment_is_refused(self):
+        original = REPORT + "\nREJECTED\n"
+        self.new_state(original)
+        self.save(original.replace("settle", "choose") + AMENDMENT)
+        changed = self.commit("correct report and record amendment together")
+        self.record.write_text(self.record.read_text().replace("Independent verdict", "Captain amendment 1; Independent verdict"))
+        out = self.assert_hold(2)
+        self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
+        self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+
+    def test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused(self):
+        for before, after in (("REJECTED", "PASSED"), ("REJECTED", "REJECTED PASSED"),
+                              ("REJECTED PASSED", "PASSED REJECTED")):
+            with self.subTest(before=before, after=after):
+                original = REPORT + f"\n{before}\n"
+                corrected = REPORT + f"\n{after}\n"
+                self.new_state(original)
+                self.save(corrected)
+                changed = self.commit("change verdict words before ruling")
+                self.save(corrected, native_ruling())
+                self.commit("later ruling cannot clear changed verdict")
+                out = self.assert_hold(2)
+                self.assertIn(f"rewritten-report-verdict-changed at {changed}", out)
+                self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+
+    def test_rewritten_report_without_verdict_word_is_refused(self):
+        self.save(REPORT.replace("settle", "choose"))
+        changed = self.commit("correct report with no verdict word")
+        out = self.assert_hold(2)
+        self.assertIn(f"rewritten-report-verdict-unreadable at {changed}", out)
+        self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
+
+    def test_old_text_returning_after_final_text_cannot_reset_clock(self):
+        original = REPORT + "\nREJECTED\n"
+        corrected = original.replace("settle", "choose")
+        self.new_state(original)
+        self.save(corrected)
+        self.commit("first final text")
+        self.save(original)
+        reverted = self.commit("return to old text")
+        self.save(corrected)
+        self.commit("restore final text")
+        self.save(corrected, native_ruling())
+        self.commit("later ruling")
+        out = self.assert_hold(2)
+        self.assertIn(f"rewritten-report-after-ruling at {reverted}", out)
+
+    def test_ruling_between_two_corrections_still_refuses(self):
+        original = REPORT + "\nREJECTED\n"
+        corrected = original.replace("settle", "choose")
+        self.new_state(original)
+        self.save(corrected)
+        self.commit("first correction")
+        self.save(corrected, native_ruling())
+        self.commit("Captain rules on first correction")
+        self.save(corrected.replace("choose", "decide"), native_ruling())
+        changed = self.commit("second correction after ruling")
+        out = self.assert_hold(2)
+        self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
+
+    def test_old_gate_and_prepared_briefing_allow_pre_ruling_correction(self):
+        original = REPORT + "\nREJECTED\n"
+        for native in (native_ruling(stage="ideation"),
+                       native_ruling().split("          resolution:")[0] + "          briefing:\n            id: waiting\n"):
+            with self.subTest(native=native):
+                self.new_state(original, native)
+                corrected = original.replace("settle", "choose")
+                self.save(corrected, native)
+                self.commit("correction without new ruling identity")
+                self.save(corrected + AMENDMENT, native)
+                self.commit("later amendment")
+                self.record.write_text(self.record.read_text().replace("Independent verdict", "Captain amendment 1; Independent verdict"))
+                self.assertEqual(self.cli(), (0, ""))
 
     def test_deleted_then_reintroduced_report_is_an_evidence_error(self):
         self.save("## Scope\nWork\n")
