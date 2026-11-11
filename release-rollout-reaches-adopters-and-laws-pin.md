@@ -77,6 +77,7 @@ worktree: .worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-
 
 Alignment: needed at ideation; whether the laws check is installed by default, whether its pin follows each release, and who may open an adopter's sync PR are the Captain's call.
 Result: the Captain chose 「先報落後，預設與否等數字（建議）」 (host question dialog, 2026-11-11), answering 「「發版後鋪開到採用 repo 與法規檢查」這張任務的設計方向要怎麼定？我建議：設計先做「每次發版列出每個採用 repo 的說明檔版本和法規釘選、落後的報出來」，法規檢查要不要預設安裝、釘選要不要自動跟著發版走，等 qnow 的費用量出來、在設計關卡用數字讓你選。這是設計的方向，細節與證明仍在設計關卡由你核准。」.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-11: amendment 1 moves the adopter list out of the repository to the maintainer's machine, which removes a committed file and changes no check; the command already takes the list as a path argument.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
@@ -225,6 +226,13 @@ Recommended order: after adr-required-statement and merge-guard-stops-unasked-me
 ## Number guards
 
 ADR: 0075
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-11, host question dialog
+Captain: 「這個清單列在本地就好了，那是因為我是作者同時又是這些 repo 的維護者，放進去 dev2 repo 不是很怪嗎」 (host question dialog, 2026-11-11)
+Asked: 「採用 repo 的清單要列哪幾行？這份清單會放在這個 repo 公開的狀態分支上。我建議列設計提的 11 行：kc-claude-plugins、qnow、me-company、subspace-relay、subspace-web 各列 dev2 和 dev2-poc，subspace-v0 只列 dev2。我已核對這 11 行在各自的 main 上都有流程說明檔和狀態分支；另外搜尋到的兩個沒公開出現過的私有 repo 不列。」
+Supersedes: AC-7, AC-9
 
 ## Stage Report: ideation
 
