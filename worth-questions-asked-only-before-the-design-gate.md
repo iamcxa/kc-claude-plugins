@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:worth-questions-asked-only-before-the-design-gate:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:worth-questions-asked-only-before-the-design-gate-backlog-1
+              briefing:
+                id: briefing:worth-questions-asked-only-before-the-design-gate:backlog:attempt-1:revision-1
+                digest: sha256:1febe145cd7435b0610d9ca5fcab90f562097141bde4af179b0a986f2782d787
+                room-ref: ./worth-questions-asked-only-before-the-design-gate/review/backlog/briefing-1
 ---
 
 ## Scope
