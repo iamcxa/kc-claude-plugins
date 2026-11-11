@@ -1,0 +1,23 @@
+[
+ {
+  "doc": "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md",
+  "state": "updated",
+  "terms": [
+   "kc-dev-flow-2/scripts/dispatch_records.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/dispatch_records.py"
+  ]
+ },
+ {
+  "doc": "learning.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/dispatch_records.py"
+  ]
+ }
+]

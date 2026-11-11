@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_old_and_same_commit_rulings_do_not_clear (test_dispatch_records.LiveValidationRulingTests.test_old_and_same_commit_rulings_do_not_clear) (where='same')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/impl-validation-rerun-survives-repaired-history/mutations/allow-same-commit-ruling/test_dispatch_records.py", line 1183, in test_old_and_same_commit_rulings_do_not_clear
+    self.assert_hold()
+  File "/private/tmp/impl-validation-rerun-survives-repaired-history/mutations/allow-same-commit-ruling/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 0 != 1 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 1.066s
+
+FAILED (failures=1)

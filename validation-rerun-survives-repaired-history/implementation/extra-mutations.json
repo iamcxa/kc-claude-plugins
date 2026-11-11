@@ -1,0 +1,97 @@
+[
+  {
+    "mutation": "remove-historical-catch",
+    "commit": "071fe3b6",
+    "sides": [
+      {
+        "exit": 2,
+        "output": "/tmp/impl-validation-rerun-survives-repaired-history/qnow-falsifier/owner-cancels-booking/dispatch/validation-3.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      },
+      {
+        "exit": 2,
+        "output": "/tmp/impl-validation-rerun-survives-repaired-history/qnow-falsifier/owner-cancels-booking/dispatch/validation-3.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      }
+    ]
+  },
+  {
+    "mutation": "remove-historical-catch",
+    "commit": "cf9560fc",
+    "sides": [
+      {
+        "exit": 2,
+        "output": "/tmp/impl-validation-rerun-survives-repaired-history/qnow-falsifier/owner-cancels-booking/dispatch/validation-3.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      },
+      {
+        "exit": 2,
+        "output": "/tmp/impl-validation-rerun-survives-repaired-history/qnow-falsifier/owner-cancels-booking/dispatch/validation-3.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      }
+    ]
+  },
+  {
+    "mutation": "remove-historical-catch",
+    "commit": "744eaa08",
+    "sides": [
+      {
+        "exit": 2,
+        "output": "/tmp/impl-validation-rerun-survives-repaired-history/qnow-falsifier/owner-cancels-booking/dispatch/validation-3.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      },
+      {
+        "exit": 2,
+        "output": "/tmp/impl-validation-rerun-survives-repaired-history/qnow-falsifier/owner-cancels-booking/dispatch/validation-3.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      }
+    ]
+  },
+  {
+    "mutation": "remove-historical-catch",
+    "commit": "5868a574",
+    "sides": [
+      {
+        "exit": 2,
+        "output": "/tmp/impl-validation-rerun-survives-repaired-history/qnow-falsifier/owner-cancels-booking/dispatch/validation-3.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      },
+      {
+        "exit": 2,
+        "output": "/tmp/impl-validation-rerun-survives-repaired-history/qnow-falsifier/owner-cancels-booking/dispatch/validation-3.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      }
+    ]
+  },
+  {
+    "mutation": "remove-historical-catch",
+    "commit": "b99a7543",
+    "sides": [
+      {
+        "exit": 2,
+        "output": "/tmp/impl-validation-rerun-survives-repaired-history/qnow-falsifier/owner-cancels-booking/dispatch/validation-3.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      },
+      {
+        "exit": 2,
+        "output": "/tmp/impl-validation-rerun-survives-repaired-history/qnow-falsifier/owner-cancels-booking/dispatch/validation-3.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      }
+    ]
+  },
+  {
+    "mutation": "identity-always-absent",
+    "commit": "fda02ff5",
+    "outside-approved-corpus-change": true,
+    "sides": [
+      {
+        "exit": 2,
+        "output": "/tmp/impl-validation-rerun-survives-repaired-history/web-falsifier/_archive/number-tag-shows-send-time/dispatch/validation-999.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      },
+      {
+        "exit": 0,
+        "output": ""
+      }
+    ]
+  },
+  {
+    "mutation": "allow-same-commit-ruling",
+    "exit": 1,
+    "killed": true
+  },
+  {
+    "mutation": "omit-required-adr-recommendation",
+    "exit": 1,
+    "killed": true
+  }
+]

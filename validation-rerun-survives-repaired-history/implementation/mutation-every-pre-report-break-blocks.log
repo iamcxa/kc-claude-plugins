@@ -1,0 +1,41 @@
+FF
+======================================================================
+FAIL: test_pre_report_broken_text_without_clearing_identity_clears (test_dispatch_records.RepairedRulingHistoryTests.test_pre_report_broken_text_without_clearing_identity_clears) (native=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/impl-validation-rerun-survives-repaired-history/mutations/every-pre-report-break-blocks/test_dispatch_records.py", line 1537, in test_pre_report_broken_text_without_clearing_identity_clears
+    self.assertEqual(self.cli(), (0, ""))
+AssertionError: Tuples differ: (2, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8n[175 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpy30qmdhe/state-2/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: ambiguous-amendments; hold dispatch '
+-  'and report the missing history to FO\n')
+
+======================================================================
+FAIL: test_pre_report_broken_text_without_clearing_identity_clears (test_dispatch_records.RepairedRulingHistoryTests.test_pre_report_broken_text_without_clearing_identity_clears) (native=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/impl-validation-rerun-survives-repaired-history/mutations/every-pre-report-break-blocks/test_dispatch_records.py", line 1537, in test_pre_report_broken_text_without_clearing_identity_clears
+    self.assertEqual(self.cli(), (0, ""))
+AssertionError: Tuples differ: (2, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8n[175 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpy30qmdhe/state-3/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: ambiguous-amendments; hold dispatch '
+-  'and report the missing history to FO\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 4.261s
+
+FAILED (failures=2)

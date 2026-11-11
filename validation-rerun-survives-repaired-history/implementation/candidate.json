@@ -1,0 +1,10 @@
+{
+  "branch": "spacedock-ensign/validation-rerun-survives-repaired-history",
+  "base": "546a136386c94c58e430c91a6f3457b38bd73880",
+  "candidate": "0a5c37f091daec6909a76d443219c655b17d534e",
+  "files": {
+    "kc-dev-flow-2/scripts/dispatch_records.py": "322e6aa30a9a81041b5dbe8d2e4a6114cf1de899e0e26a6de1edd9804b59d244",
+    "kc-dev-flow-2/scripts/test_dispatch_records.py": "eac364d4d8ce056dbf16a5c8104df9956585b7c380e639c4eb43acae14005731",
+    "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md": "373ce3e792d8e763c6b17c4aa48e6f9208da7fc260d92173e610cbed6477b469"
+  }
+}

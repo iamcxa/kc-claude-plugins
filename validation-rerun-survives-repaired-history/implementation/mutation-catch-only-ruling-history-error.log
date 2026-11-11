@@ -1,0 +1,23 @@
+F
+======================================================================
+FAIL: test_bad_quoted_gate_scalar_repaired_before_report_clears (test_dispatch_records.RepairedRulingHistoryTests.test_bad_quoted_gate_scalar_repaired_before_report_clears)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/impl-validation-rerun-survives-repaired-history/mutations/catch-only-ruling-history-error/test_dispatch_records.py", line 1547, in test_bad_quoted_gate_scalar_repaired_before_report_clears
+    self.assertEqual(self.cli(), (0, ""))
+AssertionError: Tuples differ: (2, '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8n[191 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpep35f5x4/state-2/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: Extra data: line 1 column 3 (char 2); '
+-  'hold dispatch and report the missing history to FO\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 1.884s
+
+FAILED (failures=1)

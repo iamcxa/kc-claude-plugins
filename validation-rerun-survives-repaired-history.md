@@ -344,3 +344,45 @@ Recommended order: none required; this task changes `dispatch_records.py`, `test
 ### Summary
 
 The walk now treats a past version whose Captain records do not parse as unreadable instead of refusing outright; it blocks a rerun only if that version lies at or before the report and its raw text carries the clearing ruling's identity, which is a proof that it cannot make an earlier ruling look later. Prototype (diff in § Prototype diff, 34 changed lines) clears qnow `owner-cancels-booking` and kcp `fo-interviews-extension`, keeps every other outcome over 73 tasks on six state branches, and passes the existing 125 tests. The Captain's wording as written either still holds qnow (literal) or clears an unruled subspace-web rerun (first-parsed reading), so D1 asks him to accept the proof form; D2 and D3 cover the ADR amendment and three repaired shapes still held.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved proof rule, one in-place ADR 0045 amendment and three deliberately held history shapes, in only the design's named files.
+  Candidate 0a5c37f091daec6909a76d443219c655b17d534e, branch spacedock-ensign/validation-rerun-survives-repaired-history, base 546a136386c94c58e430c91a6f3457b38bd73880; three file hashes in implementation/candidate.json; no version changes.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main.
+  No PR opened: no push grant. FO owns product push and Draft PR; title/body retained at /tmp/impl-validation-rerun-survives-repaired-history-pr.md.
+- DONE: AC-1 — qnow repaired commits clear, and pre-ruling commits retain their refusals.
+  replay.json: tag/candidate 1/1 at f6c94d50,78a76aa2 and 2/0 at 071fe3b6,cf9560fc,744eaa08,5868a574,b99a7543; removing the historical catch returns 2 at all five (extra-mutations.json).
+- DONE: AC-2 — an unrepaired pinned HEAD or current task is refused with the existing diagnostic.
+  qnow 03838f91,a28d69b5 and web f67a3abe,000a7103 are 2/2 with identical raw output; strict-current/pinned unit control passes, and swallowing both parse errors is killed (mutations.json).
+- DONE: AC-3 — a pre-report broken version carrying the clearing amendment or native gate identity holds.
+  test_pre_report_broken_text_carrying_clearing_identity_holds passes for both identities; identity-always-absent is killed by both assertions.
+- DONE: AC-4 — broken versions strictly after the report do not hold.
+  test_repaired_amendment_after_report_clears and test_ruling_then_later_heading_typo_repaired_clears pass; drop-after-report-filter is killed by both.
+- DONE: AC-5 — pre-report broken text without the clearing identity, including a malformed quoted gate scalar, does not hold.
+  Amendment/native-gate controls pass; every-pre-report-break-blocks and catch-only-ruling-history-error each fail the named tests (mutations.json).
+- DONE: AC-6 — six pinned state branches retain every tag exit-0/1 event and change only the approved exit-2 events.
+  replay.json and corpus-verification.log: 1909 events, 161 checked, 73 tasks; pairs 0/0=97,1/1=46,2/0=3,2/2=15; only fo-interviews-extension and owner-cancels-booking change (changed-events.json); absent-identity mutation wrongly clears the real web fda02ff5 control (extra-mutations.json).
+- DONE: AC-7 — repaired history without a later ruling yields needs-a-later-ruling, exit 1.
+  test_repaired_history_without_later_ruling_needs_ruling passes; raise-any-stored-error returns 2 and fails it.
+- DONE: AC-8 — two task paths, a fence hiding the report and undecodable historical bytes retain their evidence holds.
+  Three Git-history controls assert exit 2 and their exact reason; accepting duplicate paths, ignoring the report gap or replacing bad bytes each fails its control.
+- DONE: AC-9 — the existing test_dispatch_records.py suite still passes.
+  suite-final.log: 136 tests OK, optional native-builder skip separately passed in native-builder.log; final fixtures fail six assertions against 0.38.1; allow-same-commit-ruling fails an existing test (mutation-existing-suite.log).
+- DONE: AC-10 — ADR 0045 carries the approved in-place amendment and lints.
+  Assigned adr_lint.py docs/adr --since 546a136386c94c58e430c91a6f3457b38bd73880 --require 0045 exits 0; omitting Recommended fails only its required-field check (mutation-adr-lint-only.log).
+- DONE: Required repository skill lint, assigned number guards and comment-ratio checks.
+  skill-lint.log, number-guards-live.log and comment-ratio.log exit 0; live number-guard rerun fetched state successfully; 136 code lines, 0 comment lines, 0.0% within 5%; workflow text unchanged (5939/5939 words).
+- DONE: Exercise the named falsifiers with python3 -B and cleared caches.
+  Ten behavior mutations plus the released baseline fail as intended (mutations.json); extra-mutations.json proves the real qnow/corpus, existing-suite and ADR falsifiers; focused-no-cache.log passes all 11 new tests after clearing the source cache. Exploratory fixture errors are preserved and explained in implementation/evidence.md.
+- DONE: Design-surface and affected-document checks.
+  design-surfaces.log exits 0; doc-impact.json: ADR 0045 updated; ADR 0048 unaffected because completion/publication is unchanged; learning.md unaffected because no adopted practice changes. No new diagnostic grammar, workflow trigger or CI configuration.
+- SKIPPED: RoboRev, hosted CI and measured CI cost per PR.
+  roborev not run: FO runs it after handoff because this worker cannot reach its daemon. Hosted CI not run: product publication is FO-owned. CI cost per PR not measured; no CI configuration changes.
+- DONE: Prepare the PR text, reproducible evidence and temporary-artifact removal plan.
+  acceptance.sh takes source/output/package/workflow arguments; its steps ran individually, wrapper syntax checked only. After committing evidence, remove /tmp/impl-validation-rerun-survives-repaired-history by exact path; retain only the requested /tmp/impl-validation-rerun-survives-repaired-history-pr.md for FO.
+
+### Summary
+
+Implemented the Captain-approved Pilot repair with strict current/pinned parsing, conservative raw-identity proof and unchanged report-rewrite boundaries. All ten acceptance criteria pass; the six-branch corpus matches the approved design exactly, while two-task-path, hidden-report and undecodable-byte histories remain deliberately held. Product commit is local only; FO owns publication, Draft PR, RoboRev and hosted CI. Evidence is in validation-rerun-survives-repaired-history/implementation/.

@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_unrepaired_current_or_pinned_text_stays_held (test_dispatch_records.RepairedRulingHistoryTests.test_unrepaired_current_or_pinned_text_stays_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/impl-validation-rerun-survives-repaired-history/mutations/swallow-current-and-pinned-errors/test_dispatch_records.py", line 1569, in test_unrepaired_current_or_pinned_text_stays_held
+    self.assertIn("ambiguous-amendments", self.assert_hold(2))
+                                          ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/impl-validation-rerun-survives-repaired-history/mutations/swallow-current-and-pinned-errors/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 1 != 2 : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpa5m7yauw/state-1/task/dispatch/validation-2.md:1: Captain amendment form at task.md:14: amendment outside '## Captain amendments'; repair the task form, then run this check again
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpa5m7yauw/state-1/task/dispatch/validation-2.md:1: validation rerun needs a later Captain ruling for report 1 at 3311dbba59abb7c6881a0116cc9fae5c2ddfa8ab findings F1; hold dispatch, record the ruling, then run this check again
+For an older free-form ruling, verify its original question and reply, preserve them, and record it as a native gate or Captain amendment before rerunning; if unavailable, hold for the Captain.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.749s
+
+FAILED (failures=1)

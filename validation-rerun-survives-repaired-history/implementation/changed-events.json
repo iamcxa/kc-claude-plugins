@@ -1,0 +1,26 @@
+[
+  {
+    "repo": "kcp",
+    "commit": "66ade90793a47a716cb55425bc4fbb57c6b15fec",
+    "record": "fo-interviews-extension/dispatch/validation-2.md",
+    "task": "fo-interviews-extension.md",
+    "old": 2,
+    "candidate": 0
+  },
+  {
+    "repo": "kcp",
+    "commit": "ee195fef9685b7772d6c95d38d3b42283cde9f9e",
+    "record": "fo-interviews-extension/dispatch/validation-3.md",
+    "task": "fo-interviews-extension.md",
+    "old": 2,
+    "candidate": 0
+  },
+  {
+    "repo": "qnow",
+    "commit": "b99a7543e7fc3e7fb88d5acf525424fc49591162",
+    "record": "owner-cancels-booking/dispatch/validation-999.md",
+    "task": "owner-cancels-booking.md",
+    "old": 2,
+    "candidate": 0
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "136 dispatch-record tests; optional native-builder separately passed",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-survives-repaired-history/implementation/suite-final.log"
+  },
+  {
+    "name": "11 new history tests, cleared Python caches",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-survives-repaired-history/implementation/focused-no-cache.log"
+  },
+  {
+    "name": "ten behavior mutations, released baseline, existing-suite and ADR falsifiers",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-survives-repaired-history/implementation/mutations.json"
+  },
+  {
+    "name": "skill lint, ADR lint, live number guards, comment ratio and design surfaces",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-survives-repaired-history/implementation/evidence.md"
+  },
+  {
+    "name": "1909 corpus events; 161 checked across 73 tasks; only 2 approved changed tasks",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-survives-repaired-history/implementation/replay.json"
+  }
+]

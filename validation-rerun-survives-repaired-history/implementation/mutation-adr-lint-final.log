@@ -1,0 +1,2 @@
+0045-validation-reruns-require-a-later-recorded-captain-ruling.md: kc-dev-flow-2/scripts/dispatch_records.py has no pointer; add a comment line 'see adr-mutant/0045-validation-reruns-require-a-later-recorded-captain-ruling.md'
+required ADR 0045: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation

@@ -1,0 +1,1 @@
+required ADR 0045: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation

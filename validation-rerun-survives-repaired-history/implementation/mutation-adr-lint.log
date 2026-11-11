@@ -1,0 +1,2 @@
+/tmp/impl-validation-rerun-survives-repaired-history/adr-mutant is not inside the repository root /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-survives-repaired-history; pass --root
+required ADR 0045: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation

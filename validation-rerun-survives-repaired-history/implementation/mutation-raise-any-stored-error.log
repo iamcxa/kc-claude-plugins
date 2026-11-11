@@ -1,0 +1,17 @@
+F
+======================================================================
+FAIL: test_repaired_history_without_later_ruling_needs_ruling (test_dispatch_records.RepairedRulingHistoryTests.test_repaired_history_without_later_ruling_needs_ruling)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/impl-validation-rerun-survives-repaired-history/mutations/raise-any-stored-error/test_dispatch_records.py", line 1578, in test_repaired_history_without_later_ruling_needs_ruling
+    self.assertIn("needs a later Captain ruling for report", self.assert_hold(1))
+                                                             ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/impl-validation-rerun-survives-repaired-history/mutations/raise-any-stored-error/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 2 != 1 : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp581tfyhl/state-1/task/dispatch/validation-2.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.833s
+
+FAILED (failures=1)
