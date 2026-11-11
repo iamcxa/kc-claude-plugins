@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_unreadable_readme_quotes_error_and_fails_without_hiding_other_rows (test_package_version.RolloutTest.test_unreadable_readme_quotes_error_and_fails_without_hiding_other_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpgr5s2o91/kc-dev-flow-2/scripts/test_package_version.py", line 170, in test_unreadable_readme_quotes_error_and_fails_without_hiding_other_rows
+    self.assertEqual(run.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.405s
+
+FAILED (failures=1)

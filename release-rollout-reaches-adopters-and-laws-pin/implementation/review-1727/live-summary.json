@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-11",
+  "candidate": "61529999eb4184b44328fe2fbad545b1b0b0ed92",
+  "command": "python3 -B kc-dev-flow-2/scripts/package_version.py rollout /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/fo-scripts/adopters.md",
+  "list_sha256": "323b3728fc1084ab9971f45a72cd3139ad46d8f43d07884a0816a410fa90004a",
+  "exit": 0,
+  "listed_rows": 11,
+  "unlisted_rows": 4,
+  "search_unavailable": 0,
+  "full_output": "/tmp/rollout-review-1727/live-output.txt (not committed; contains private unlisted names)",
+  "listed_word_count": 112,
+  "listed_rows_equal_prior": true
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "name": "search-pages control rejected",
+    "status": "passed",
+    "message": "mutation exit 1"
+  },
+  {
+    "name": "search-incomplete control rejected",
+    "status": "passed",
+    "message": "mutation exit 1"
+  },
+  {
+    "name": "search-cap control rejected",
+    "status": "passed",
+    "message": "mutation exit 1"
+  },
+  {
+    "name": "search-short-page control rejected",
+    "status": "passed",
+    "message": "mutation exit 1"
+  },
+  {
+    "name": "omitted-content control rejected",
+    "status": "passed",
+    "message": "mutation exit 1"
+  },
+  {
+    "name": "matching-refs caller unchanged",
+    "status": "passed",
+    "message": "Github.releases source bytes unchanged; documented non-paginated call retained"
+  },
+  {
+    "name": "real large-content response",
+    "status": "passed",
+    "message": "public 14,216,605-byte file: prior returns empty text, candidate raises explicit unreadability"
+  }
+]

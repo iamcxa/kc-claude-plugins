@@ -1,0 +1,20 @@
+{
+  "candidate": "61529999eb4184b44328fe2fbad545b1b0b0ed92",
+  "prior_candidate": "ba98f3ca95c1f879bf460fbb08976f337e18c4c8",
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "checks": {
+    "tests": 0,
+    "adr": 0,
+    "comments": 0,
+    "docs": 0,
+    "design": 0,
+    "number": 0,
+    "live": 0
+  },
+  "not_run": [
+    "RoboRev rerun",
+    "hosted CI",
+    "validator-selected live rows"
+  ],
+  "ci_cost_per_pr": "not measured; no CI workflow changed"
+}

@@ -377,3 +377,41 @@ This report supersedes the earlier implementation report, retaining its evidence
 ### Summary
 
 This report supersedes both earlier implementation reports, including the review-1725 Needs decision conclusion, because Captain amendment 2 has settled that question. The comparator remains as AC-4 requires, and AC-12 now makes the README-sync/merge/pin order explicit on the both-owed line; 18 tests, original mutation/byte controls, new missing-order mutation, single-debt byte comparisons, required checks and the new-candidate live run pass. Candidate ba98f3ca95c1 is committed locally without product push; FO owns updating Draft PR #838, rerunning RoboRev/CI and independent validation.
+
+
+## Stage Report: implementation
+
+- DONE: Judge RoboRev job 1727 using message-7's corrected measurement, GitHub REST documentation and a probe before repairing.
+  review-1727/sources.json and refs-probe.json: matching-refs has no documented page/per_page or pagination threshold; 49 component refs and 165 repository tags return without Link, and forced page parameters return identical sets. The first-page truncation premise is not substantiated; Github.releases is byte-identical to ba98f3ca9, so that call is unchanged.
+- DONE: Survey every other gh read, fixing supported silent omissions and stating what remains with reasons.
+  review-1727/read-survey.json enumerates repo metadata, contents, matching refs, annotated tags, named branch and search. Repo/annotated-tag/named-branch GETs are single objects and remain unchanged; directory-list caps do not apply to exact-file paths. Search and omitted file payloads are repaired below; inherent search index/access/scope limits remain advisory under the approved explicit-list design.
+- DONE: Fix code-search completeness reporting within the design's named files, with tests and executed falsifiers.
+  Raw REST pages retain total_count/incomplete_results; a 101-item fixture reaches page 2. Timeout, >1000 results or short pages print search: unavailable without changing listed-row debt exit. The old CLI already paginated: its lost metadata, not nonexistent first-page-only behavior, is the repaired seam. Five read-integrity mutations are rejected (review-1727/proof-results.json).
+- DONE: Fix successful contents responses that omit the payload, with before/after proof.
+  Public 14,216,605-byte OpenAPI file probe returned encoding none and empty content; old Github.content accepted empty text, candidate raises unreadability. Two omitted workflow/laws payload fixtures cannot compare equal now; the missing-guard mutation fails. No raw-download fallback or general file transport was added.
+- DONE: Commit only named implementation/test files, preserving branch, base, comparator, Captain amendment 2 and every criterion.
+  Candidate `61529999eb4184b44328fe2fbad545b1b0b0ed92`; prior `ba98f3ca95c1f879bf460fbb08976f337e18c4c8`; base `e8664a72b0f904e5dda3c391d52ab3abaca876b4`; branch `spacedock-ensign/release-rollout-reaches-adopters-and-laws-pin`. Follow-up changes package_version.py/test_package_version.py only; product worktree clean, no product push or criterion edits.
+- DONE: AC-1, AC-2 and AC-6 row identity, unreadability and search visibility remain satisfied.
+  23 package_version tests pass; the prior candidate fails five cases/subcases for hidden completeness/omitted content (tests-before.log). Original row-drop, swallowed-read and silent-search mutations fail again under review-1727/original-proofs; new partial-search diagnostics retain the AC-6 exit policy.
+- DONE: AC-3, AC-4 and AC-5 content-based debt and legacy output stay unchanged; AC-12 still prints both-owed merge order.
+  23 tests, eight original controls and eight legacy byte/exit comparisons pass; the marker-inclusive/SHA-equality/legacy-output mutations fail. review-1727/order-proofs reruns the missing-order mutation and five prior-candidate byte/exit comparisons; the both-owed line remains 16 words, comparator unchanged.
+- DONE: AC-8 fresh live rollout at the candidate, saving counts and exit while preserving private unlisted names.
+  review-1727/live-summary.json: 2026-11-11, local-list command/hash and candidate; 11 listed rows, four unlisted, exit 0, no search-unavailable line. Listed output is byte-identical to ba98f3ca9, 112 words. Full output remains only /tmp/rollout-review-1727/live-output.txt; no list or private names committed.
+- DONE: AC-10 lifecycle words and AC-11 local-only list ownership remain intact.
+  review-1727/word-counts.json retains independently recounted document moments: release 778→897 versus base, adoption 70→95, workflow 5939→5939, other lifecycle deltas 0. Changed diagnostics occur only at release-report time; single-README bytes are unchanged. Missing/unreadable-list tests and missing-list-success mutation pass again; no list file added.
+- DONE: Repository lint, ADR 0075 lint, number guards, comment maximum and design-surface checks at the candidate.
+  review-1727/checks.json: all recorded exits 0; lint 5939/5939; required ADR lint 68 records; number guards PASS at 61529999eb41; 408 added code lines, one comment, 0.2% under 5%; design surfaces presentable (scope check not run at implementation).
+- DONE: Per-document disposition and bounded scope/goal audit.
+  review-1727/docs.json lists ADR 0075 and maintain-flow: both unaffected because debt semantics, read-only reporting, error visibility and merge ordering remain correct. No new decision/ADR, dependency, law, CI, version or adopter change; removing metadata/content guards reproduces the named omissions. Previous capability audit reused; this is a named seam repair.
+- DONE: Answer the repeated-symptom step-back questions and update PR text plus a complete superseding report.
+  Still the original complete read-only report outcome; probes and fake-gh cases test the gap now, no external wait; deleting completeness handling would hide missing results as complete. /tmp/impl-release-rollout-reaches-adopters-and-laws-pin-pr.md names candidate and evidence; this report and task-only evidence are committed path-scoped, preserving sibling state edits.
+- SKIPPED: A matching-refs pagination repair and a deliberately fictional paginated-matching-refs fixture.
+  Message-7 requires no change to this call when evidence does not support pagination. No documented page size was found, and >100 refs return in one response. This does not claim an experimentally infinite server bound; a future undocumented API change would need new evidence.
+- SKIPPED: Product push, updating Draft PR #838, RoboRev rerun and hosted CI.
+  FO owns those; job 1727 is assessed from FO's recorded dispatch, not an independent daemon read. No new clean review claimed, external comment/request, ready action or merge. Per-PR billed CI cost not measured; CI triggers/jobs unchanged.
+- SKIPPED: Independent validator-selected live hand reads and model behavior replay.
+  Two validator choices remain due; this worker's fresh live read is not their validation. No model replay claimed; previous version-skew evidence remains under review-1725 and is not rerun here.
+
+### Summary
+
+This report supersedes all earlier implementation reports for candidate 61529999eb41. The matching-refs High finding's pagination premise is not supported by official documentation or the 49/165-ref probes, so that call remains unchanged; the authorized survey instead repaired two evidenced omissions in code-search metadata and large-file content handling. All 23 package_version tests, original/order controls, five new mutations, required checks and the fresh live rollout pass; product publication, RoboRev/CI and independent validation remain FO-owned.

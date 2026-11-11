@@ -1,0 +1,44 @@
+[
+  {
+    "read": "repos/{owner}/{repo}",
+    "shape": "single repository object",
+    "truncation": "not a collection; only default_branch is consumed",
+    "disposition": "unchanged; missing default_branch or HTTP failure is explicit unreadability",
+    "source": "https://docs.github.com/en/rest/repos/repos#get-a-repository"
+  },
+  {
+    "read": "repos/{owner}/{repo}/contents/{path}?ref=...",
+    "shape": "a specific file (README, package workflow/laws, or installed laws workflow)",
+    "truncation": "directory enumeration cap is inapplicable; large object content can be omitted with encoding none",
+    "disposition": "fixed: reject non-base64 or non-object payload as unreadable; no silent empty-file equality. Greater-than-100MB errors remain explicit. No raw-download fallback added.",
+    "source": "https://docs.github.com/en/rest/repos/contents#get-repository-content"
+  },
+  {
+    "read": "repos/{upstream}/git/matching-refs/tags/kc-dev-flow-2-v",
+    "shape": "array of matching refs, documented without page or per_page",
+    "truncation": "no documented pagination threshold; probes 49/165, no Link, page query ignored",
+    "disposition": "unchanged; original High finding not substantiated. Probe demonstrates more than 100 refs but does not claim an experimentally infinite bound. Future undocumented server changes are not assumed.",
+    "source": "https://docs.github.com/en/rest/git/refs#list-matching-references"
+  },
+  {
+    "read": "repos/{upstream}/git/tags/{sha}",
+    "shape": "single annotated tag object",
+    "truncation": "not a collection; referenced object only is consumed",
+    "disposition": "unchanged; existing chain/cycle/type checks and HTTP failure handling apply",
+    "source": "https://docs.github.com/en/rest/git/tags#get-a-tag"
+  },
+  {
+    "read": "repos/{owner}/{repo}/branches/{encoded branch}",
+    "shape": "one named branch, not List branches",
+    "truncation": "not a collection",
+    "disposition": "unchanged; only branch existence disambiguates contents404 from unreadable branch",
+    "source": "https://docs.github.com/en/rest/branches/branches#get-a-branch"
+  },
+  {
+    "read": "gh search code, replaced by gh api search/code?q=...&per_page=100&page=N",
+    "shape": "paged search results with total_count and incomplete_results",
+    "truncation": "CLI already paginates but --json exports only items; total above 1000 and incomplete_results were hidden",
+    "disposition": "fixed: preserve metadata, follow complete pages up to 1000, flag timeout/cap/short-page with search: unavailable and unchanged debt exit. Search still has inherent index/access/default-scope limitations and remains advisory; the explicit list is authoritative.",
+    "source": "https://docs.github.com/en/rest/search/search#about-search"
+  }
+]

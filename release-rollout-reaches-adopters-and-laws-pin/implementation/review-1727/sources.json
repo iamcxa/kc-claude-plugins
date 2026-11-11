@@ -1,0 +1,56 @@
+[
+  {
+    "title": "Git references: list matching references",
+    "url": "https://docs.github.com/en/rest/git/refs#list-matching-references",
+    "read": "2026-11-11",
+    "claim": "Returns matching references as an array; endpoint parameters contain no page or per_page and no documented pagination threshold."
+  },
+  {
+    "title": "GitHub REST pagination",
+    "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api",
+    "read": "2026-11-11",
+    "claim": "Paginated responses signal next pages in Link; page-size support is endpoint-specific."
+  },
+  {
+    "title": "Repository contents",
+    "url": "https://docs.github.com/en/rest/repos/contents#get-repository-content",
+    "read": "2026-11-11",
+    "claim": "Directory listing has a 1000-entry limit; 1–100MB object content may have encoding none and empty content; files over 100MB are unsupported."
+  },
+  {
+    "title": "Search limitations",
+    "url": "https://docs.github.com/en/rest/search/search#about-search",
+    "read": "2026-11-11",
+    "claim": "Search provides up to 1000 results; incomplete_results marks possible time-limited result omission. Search has index/access/scope restrictions."
+  },
+  {
+    "title": "gh search code export",
+    "url": "https://github.com/cli/cli/blob/trunk/pkg/cmd/search/code/code.go",
+    "read": "2026-11-11",
+    "claim": "JSON export writes results.Items, not Total or IncompleteResults."
+  },
+  {
+    "title": "gh code search paging",
+    "url": "https://github.com/cli/cli/blob/trunk/pkg/search/searcher.go",
+    "read": "2026-11-11",
+    "claim": "CLI already follows page links to its requested limit; it is not a first-page-only client."
+  },
+  {
+    "title": "Get a branch",
+    "url": "https://docs.github.com/en/rest/branches/branches#get-a-branch",
+    "read": "2026-11-11",
+    "claim": "Specific-branch GET is a single branch object, unlike List branches."
+  },
+  {
+    "title": "Get a repository",
+    "url": "https://docs.github.com/en/rest/repos/repos#get-a-repository",
+    "read": "2026-11-11",
+    "claim": "Specific repository lookup supplies default_branch as a single object."
+  },
+  {
+    "title": "Get an annotated tag",
+    "url": "https://docs.github.com/en/rest/git/tags#get-a-tag",
+    "read": "2026-11-11",
+    "claim": "Specific annotated-tag GET supplies its referenced object, not a paginated list."
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "case": "component-default",
+    "command": "gh api repos/iamcxa/kc-claude-plugins/git/matching-refs/tags/kc-dev-flow-2-v --include",
+    "count": 49,
+    "link": [],
+    "refs_sha256": "e9281e6081fe3b314b70587d38cef6ad8ab5a48b0eb8d165307601f20a70b704",
+    "first": "refs/tags/kc-dev-flow-2-v0.10.0",
+    "last": "refs/tags/kc-dev-flow-2-v0.9.0"
+  },
+  {
+    "case": "component-one-per-page",
+    "command": "gh api repos/iamcxa/kc-claude-plugins/git/matching-refs/tags/kc-dev-flow-2-v?per_page=1&page=2 --include",
+    "count": 49,
+    "link": [],
+    "refs_sha256": "e9281e6081fe3b314b70587d38cef6ad8ab5a48b0eb8d165307601f20a70b704",
+    "first": "refs/tags/kc-dev-flow-2-v0.10.0",
+    "last": "refs/tags/kc-dev-flow-2-v0.9.0"
+  },
+  {
+    "case": "component-paginate",
+    "command": "gh api repos/iamcxa/kc-claude-plugins/git/matching-refs/tags/kc-dev-flow-2-v --paginate --slurp",
+    "count": 49,
+    "link": [],
+    "refs_sha256": "e9281e6081fe3b314b70587d38cef6ad8ab5a48b0eb8d165307601f20a70b704",
+    "first": "refs/tags/kc-dev-flow-2-v0.10.0",
+    "last": "refs/tags/kc-dev-flow-2-v0.9.0"
+  },
+  {
+    "case": "all-tags-default",
+    "command": "gh api repos/iamcxa/kc-claude-plugins/git/matching-refs/tags/ --include",
+    "count": 165,
+    "link": [],
+    "refs_sha256": "26ca9ab78d16f893c650f56c020e07fcbe4dd497c89ce9c8cd836c85efe25294",
+    "first": "refs/tags/e2e-pipeline-v1.4.0",
+    "last": "refs/tags/v4.0"
+  },
+  {
+    "case": "all-tags-one-per-page",
+    "command": "gh api repos/iamcxa/kc-claude-plugins/git/matching-refs/tags/?per_page=1&page=2 --include",
+    "count": 165,
+    "link": [],
+    "refs_sha256": "26ca9ab78d16f893c650f56c020e07fcbe4dd497c89ce9c8cd836c85efe25294",
+    "first": "refs/tags/e2e-pipeline-v1.4.0",
+    "last": "refs/tags/v4.0"
+  }
+]

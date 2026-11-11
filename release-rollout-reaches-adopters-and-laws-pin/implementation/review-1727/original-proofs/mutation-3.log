@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_release_line_only_does_not_owe_sync_but_a_changed_sentence_does (test_package_version.RolloutTest.test_release_line_only_does_not_owe_sync_but_a_changed_sentence_does)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpx6c3bo8k/kc-dev-flow-2/scripts/test_package_version.py", line 176, in test_release_line_only_does_not_owe_sync_but_a_changed_sentence_does
+    self.assertEqual(self.run_rollout().returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.341s
+
+FAILED (failures=1)
