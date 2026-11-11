@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { execFileSync, spawn, spawnSync } from 'node:child_process'
 import { once } from 'node:events'
 import { stringify } from 'yaml'
-import { findOrphans, readProgress, taskListing } from './progress.mjs'
+import { calculateProgress, findOrphans, readProgress, taskListing } from './progress.mjs'
 import { buildAllPages, loadJourney } from './render.mjs'
 import { storyBorder, richText } from './records.mjs'
 import { diffAgainstModel, applyDiff, readRoom } from './read.mjs'
@@ -49,6 +49,72 @@ stages:
 	return { root, workflow, tasks, refs, paths, save, path, bytes, read: (m = model) => readProgress(m, workflow) }
 }
 const texts = (records) => JSON.stringify(records.map((r) => r.props?.richText))
+
+test('filed membership counts undeclared tasks and formats completed task pull requests', () => {
+	const forms = ['pr-merge:12', '12', '#12', 'team/project#12', 'https://github.com/team/project/pull/12', 'local-merge:abcdef0123', 'custom ref', '']
+	const tasks = forms.map((pr, i) => ({ id: `task-${i}`, slug: `task-${i}`, journey: 'demo', 'journey-release': 'R1', 'journey-story': 'alpha', status: 'done', pr }))
+	tasks.push({ ...tasks[0], id: 'open', slug: 'open', status: 'implementation', pr: 'pr-merge:99' })
+	for (const origin of ['git@github.com:owner/repo.git', 'https://github.com/owner/repo.git', 'ssh://git@github.com/owner/repo.git', null]) {
+		const [story] = calculateProgress(model, tasks, null, origin)
+		assert.equal(story.status, 'unverified')
+		assert.deepEqual(story.members, { tasks: 9, done: 8, prs: forms.slice(0, -1).map((_, i) => ({ task: `task-${i}`, ref: [
+			...Array(3).fill(origin ? 'owner/repo#12' : '#12'), 'team/project#12', 'team/project#12', 'local merge abcdef0', 'custom ref',
+		][i] })) })
+	}
+})
+
+test('archive report uses filed counts without changing declarations, acceptance, or source bytes', (t) => {
+	const f = fixture(t, 'slug')
+	f.tasks[0].pr = 'pr-merge:7'; f.tasks[2].pr = 'team/project#9'; f.save()
+	const before = f.bytes()
+	const run = (...args) => spawnSync(process.execPath, [join(plugin, 'lib/journey-progress.mjs'), f.path, '--workflow-dir', f.workflow, ...args], { encoding: 'utf8' })
+	const first = run('--report', 'a')
+	assert.equal(first.status, 0, first.stderr)
+	assert.match(first.stdout, /story alpha: 1 of 2 filed tasks done; declared: gap/)
+	assert.match(first.stdout, /pull requests: #7/)
+	assert.match(first.stdout, /release R1: 1 of 2 stories have every filed task done; 1 in progress; 0 have no task/)
+	assert.match(first.stdout, /done: beta \(team\/project#9\)/)
+	assert.match(first.stdout, /in progress: alpha 1\/2/)
+	assert.deepEqual(f.bytes(), before)
+	f.tasks[1].status = 'done'; f.save()
+	assert.match(run('--report', 'a').stdout, /complete by filed tasks/)
+	for (const task of f.tasks) { delete task['journey-required-tasks']; delete task['journey-mapping-complete'] }
+	f.save()
+	assert.match(run('--report', 'a').stdout, /declared: unverified/)
+	assert.equal(f.read().releases[0].acceptance, 'delivery acceptance not established')
+	assert.equal(run('--report', 'missing').status, 2)
+	assert.equal(run('--report', 'd').status, 2)
+	assert.equal(run('--report', 'a', '--draw', 'room').status, 2)
+	const failed = spawnSync(process.execPath, [join(plugin, 'lib/journey-progress.mjs'), f.path, '--workflow-dir', f.workflow, '--report', 'a'], { encoding: 'utf8', env: { ...process.env, PATH: '' } })
+	assert.equal(failed.status, 1)
+	assert.match(failed.stdout, /^journey progress not run: [^\n]+\n$/)
+	assert.equal(failed.stderr, '')
+})
+
+test('report separates release-only tasks and unknown stories and bounds lists', (t) => {
+	const f = fixture(t, 'slug'), many = structuredClone(model)
+	many.steps[0].stories = Array.from({ length: 28 }, (_, i) => ({ id: `story-${i}`, release: 'R1' }))
+	writeFileSync(f.path, stringify(many))
+	for (let i = 0; i < 28; i++) {
+		for (let j = 0; j < (i === 0 ? 4 : 1); j++) writeFileSync(join(f.workflow, `extra-${i}-${j}.md`), `---\n${stringify({ title: 'Filed work', journey: 'demo', 'journey-release': 'R1', 'journey-story': `story-${i}`, status: i < 14 ? 'done' : 'implementation', pr: `team/project#${i * 4 + j + 1}` })}---\n`)
+	}
+	writeFileSync(join(f.workflow, 'release-only.md'), '---\ntitle: Release work\nstatus: done\njourney: demo\njourney-release: R1\n---\n')
+	const run = (slug) => spawnSync(process.execPath, [join(plugin, 'lib/journey-progress.mjs'), f.path, '--workflow-dir', f.workflow, '--report', slug], { encoding: 'utf8' })
+	const result = run('extra-0-0')
+	assert.equal(result.status, 0, result.stderr)
+	assert.ok(result.stdout.trim().split('\n').length <= 9)
+	assert.ok(result.stdout.trim().split(/\s+/).length <= 160, result.stdout)
+	assert.match(result.stdout, /and \d+ more/)
+	assert.doesNotMatch(result.stdout.split('\n').find((line) => line.startsWith('done:')), /story-5\b/)
+	assert.doesNotMatch(result.stdout.split('\n').find((line) => line.startsWith('in progress:')), /story-19\b/)
+	assert.doesNotMatch(result.stdout.split('\n').find((line) => line.startsWith('done:')), /project#4\b/)
+	assert.match(result.stdout, /release tasks with no story: 1 of 1 done/)
+	assert.match(result.stdout, /not on the map: 3 tasks name a story this map does not hold/)
+	const release = run('release-only')
+	assert.equal(release.status, 0, release.stderr)
+	assert.doesNotMatch(release.stdout, /^story |^pull requests:/m)
+	assert.match(release.stdout, /release tasks with no story: 1 of 1 done/)
+})
 
 test('real archived reader distinguishes task/story ratios, full identities, and reopening', (t) => {
 	const f = fixture(t), before = f.bytes(), result = f.read()
