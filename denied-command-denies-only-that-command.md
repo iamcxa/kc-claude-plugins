@@ -292,6 +292,9 @@ Falsifier: the steer interrupts the turn (Paseo's fallback), which fails AC-7 an
 
 **AC-10** — Amended by Captain, amendment 1: 「工人有沒有照著改」. The worker acts on FO's reason by creating the reason's named audit copy inside its initial workspace with the instructed route marker, then writes the correct two-item summary. Evidence: subsequent native write calls and the resulting file bytes, the outside target's unchanged absence, and the same-turn evidence AC-7 requires. Record every valid candidate run separately; compare the no-extra-message runs descriptively, with no claim that the release stops its whole task. Falsifier: the worker merely repeats the reason without doing the directed write, writes the wrong destination or bytes, retries a refused outside write, or omits the summary; no valid run means unproven.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-11): the Captain called revise at the validation gate on #842 head cdb99da0 (gate resolution, validation attempt 1): the sentence named Codex alone. Correction routed to the implementation worker; new head d22a01d5e makes sending the reason the default and a provider confirmed to deliver the denial message the exception. RoboRev job 1740 clean on d22a01d5e (FO run 2026-11-11). The validator re-reviews.
 
 ## Stage Report: ideation
 
