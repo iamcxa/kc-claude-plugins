@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:story-done-reports-release-remaining:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:story-done-reports-release-remaining-ideation-1
+              briefing:
+                id: briefing:story-done-reports-release-remaining:ideation:attempt-1:revision-1
+                digest: sha256:1b6df17b6496f29ccef6f634239318046832b170e1d645dbe0297e1a5f5623f9
+                room-ref: ./story-done-reports-release-remaining/review/ideation/briefing-1
 started: 2026-11-11T01:22:31Z
 ---
 
