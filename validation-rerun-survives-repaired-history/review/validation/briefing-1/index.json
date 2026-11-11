@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-rerun-survives-repaired-history:validation:attempt-1:revision-1",
+  "question": "決定：合併 #844（優先任務：任務歷史裡有一個後來已修好的格式錯誤時，驗證重跑的檢查不再永久擋住；這是擋住 qnow 的那個問題）嗎？建議合併。同意即接受：放行用的是你在設計關卡核准的判法（讀不懂的舊版本只有排在驗證報告當時或之前、而且原文裡出現用來放行的那筆裁示編號時才擋）；三種罕見的歷史形狀仍然永久擋住；ADR 0045 是原地增補一段、沒有新編號；qnow 要等發版並同步後才解開；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit 0a5c37f091daec6909a76d443219c655b17d534e, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:validation-rerun-survives-repaired-history:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5db35aa3a4afc064ff99d6fb21f711d3e75e4632/validation-rerun-survives-repaired-history.md",
+      "rev": "sha256:47baeeabfbe5637899666e11cb0fa2c66cf14398761dcba84d6c3d1ba92f8ef7",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 1\nUnchecked counts: 1\nDelivery of validation-rerun-survives-repaired-history, PR #844, batch 21 priority exception.\nSufficiency: on the recorded histories the task names, the repaired ones now clear and the unrepaired ones and one real unruled history stay held, and every other event on the six pinned state branches is unchanged except the three approved ones (validation report, Astra, 2026-11-11, PASSED at 0a5c37f09, all ten criteria; acceptance script run by FO 2026-11-11, exit 0).\nNecessity: docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md, kc-dev-flow-2/scripts/dispatch_records.py and kc-dev-flow-2/scripts/test_dispatch_records.py change against origin/main (impl_ship.sh file list, FO run 2026-11-11; judged in the validation report, Astra, 2026-11-11).\nAcceptance, run by FO in a fresh shell 2026-11-11, exit 0: TMPDIR=/tmp /bin/bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-survives-repaired-history/validation/acceptance.sh /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-survives-repaired-history /Users/kent/conductor/repos/qnow-adopt-dev2 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-survives-repaired-history/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-11, exit 0: gh pr view 844 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nExternal rounds: 1.\nExternal round sources: Codex code review of 0a5c37f09 completed with no finding (codex_review.py, FO run 2026-11-11, evidence=summary:6791054864@0a5c37f09).\nSecond reviewer: Copilot because the PR changes when a validation rerun is allowed, a gate rule ADR 0045 governs.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5855978462\nCopilot retry: available when the Captain confirms quota is back.\nRoboRev: clean on 0a5c37f09, evidence=roborev:1744 (FO run 2026-11-11).\nCI: seven checks on 0a5c37f09 finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr view statusCheckRollup, read by FO 2026-11-11).\nValidation rounds: 1. PASSED at 0a5c37f09 with no Material, Deferred risk, Polish or Needs decision finding.\nCaptain amendments: 0.\nNot verified: the blocked adopter task itself after a release and sync; the three history shapes the design leaves held."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:validation-rerun-survives-repaired-history:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/5db35aa3a4afc064ff99d6fb21f711d3e75e4632/validation-rerun-survives-repaired-history/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:b81f0a3bcecd87304937e0ff5a5c63422c0ae1b00c5a7867c1d71de494549df0"
+    }
+  ]
+}

@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:validation-rerun-survives-repaired-history:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:validation-rerun-survives-repaired-history-validation-1
+              briefing:
+                id: briefing:validation-rerun-survives-repaired-history:validation:attempt-1:revision-1
+                digest: sha256:7fd6e4ad931e37f99f7656791ddd66606c286a4013e233ff080304789bb2c333
+                room-ref: ./validation-rerun-survives-repaired-history/review/validation/briefing-1
 started: 2026-11-11T06:21:35Z
 worktree: .worktrees/spacedock-ensign-validation-rerun-survives-repaired-history
 pr: iamcxa/kc-claude-plugins#844
