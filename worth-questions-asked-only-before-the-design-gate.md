@@ -3,7 +3,7 @@ title: A design that already passed its ideation gate is not refused for lacking
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
