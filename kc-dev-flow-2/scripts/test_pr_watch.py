@@ -1805,6 +1805,19 @@ class TasksTests(unittest.TestCase):
         self.assertIn("fix the reported seed fields and run", self.seed_lines(lines)[0])
         self.assertEqual(task.read_bytes(), before)
 
+    def test_real_seed_subprocess_names_a_map_task_missing_its_story_record(self):
+        self.ideation_readme()
+        readme = self.workflow / "README.md"
+        readme.write_text(readme.read_text().replace("[roborev]", "[roborev, journey-map]"))
+        self.backlog("story-needed")
+        self.gates(("story-needed", "backlog", "needs-preparation"))
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        self.assertIn("(story-needed)", self.seed_lines(lines)[0])
+        task = self.state / "story-needed.md"
+        task.write_text(task.read_text().replace("## FO alignment\n", "## FO alignment\nStory: none: test\n"))
+        self.assertEqual(self.seed_lines(self.tasks({})[1]), [])
+
     def test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not(self):
         self.ideation_readme()
         self.backlog("bad", visible="a change you can see")

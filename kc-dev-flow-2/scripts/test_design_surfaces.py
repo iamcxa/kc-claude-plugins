@@ -294,6 +294,39 @@ class SeedModeTests(unittest.TestCase):
 
 
 
+class JourneyStoryTests(unittest.TestCase):
+    def check(self, record="", story="", extensions="[journey-map]", seed=True, folder=False):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "README.md").write_text(f"---\nextensions: {extensions}\nstages:\n  states: []\n---\n")
+            path = root / ".spacedock-state" / ("task/index.md" if folder else "task.md")
+            path.parent.mkdir(parents=True)
+            (path.parent / "README.md").write_text("State checkout, not the workflow.\n")
+            text = (f"---\ntitle: Task\nstatus: ideation\njourney-story: {story}\n---\n"
+                    + SeedBoundsTests.BOUNDS + "## FO alignment\nSurfaces: none\nVisible change: none\n" + record
+                    + "\n## Acceptance criteria\n**AC-1**: a bounded result. Evidence: the real check.\n")
+            path.write_text(text)
+            return ds.check_task(path, seed=seed)
+
+    def test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows(self):
+        for folder in (False, True):
+            for record in ("", "Story:\n", "Story: none\n", "Story: none:\n", "```md\nStory: inbox-home (owner-account)\n```\n", "~~~md\nStory: none: infra\n~~~\n"):
+                with self.subTest(record=record, folder=folder):
+                    self.assertTrue(any("needs a 'Story:' line" in e for e in self.check(record, folder=folder)))
+            for record in ("Story: inbox-home (owner-account)\n", "Story: none: workflow maintenance\n"):
+                self.assertEqual(self.check(record, folder=folder), [])
+            self.assertEqual(self.check(extensions="[]", folder=folder), [])
+            self.assertEqual(self.check(extensions="\n  - 'journey-map' # enabled", record="Story: none: infra\n", folder=folder), [])
+
+    def test_design_compares_story_record_to_counted_field_only_in_map_workflows(self):
+        self.assertEqual(self.check("Story: inbox-home (owner-account)\n", "inbox-home", seed=False), [])
+        self.assertEqual(self.check("Story: none: infra\n", seed=False), [])
+        for record, story in (("Story: inbox-home (owner-account)\n", ""), ("Story: inbox-home (owner-account)\n", "switch-any-account"), ("Story: none: infra\n", "inbox-home")):
+            with self.subTest(record=record, story=story):
+                self.assertTrue(any("'Story:' names" in e for e in self.check(record, story, seed=False)))
+                self.assertEqual(self.check(record, story, extensions="[]", seed=False), [])
+
+
 class SeedBoundsTests(unittest.TestCase):
     BOUNDS = "## Scope\n\nShip the bounded checker.\nNon-goals: migrations\nBudget: one task\nStop condition: new upstream hook needed\n"
     ALIGNMENT = "## FO alignment\n\nSurfaces: none\nVisible change: none\n"

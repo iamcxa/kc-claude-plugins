@@ -6,11 +6,14 @@ frontmatter, and only when the repository keeps a kc-journey-map file
 under `docs/journey/`; with none, this extension has no step and FO writes no `journey-map not run` line for it.
 
 - **Needs:** python3 for `<package>/extensions/journey-map/map_footprint.py`; for the fold and the counts, node and a
-  kc-journey-map release that ships `lib/journey-fold.mjs`, `lib/journey-reconcile.mjs` and `lib/schemas.mjs`
+  kc-journey-map release that ships `lib/journey-fold.mjs`, `lib/journey-reconcile.mjs`, `lib/schemas.mjs` and `lib/journey-progress.mjs` with `--report`
   (without one, `add`, `check` and `audit` still run and the fold is reported as not run). A task is a
   journey task when its frontmatter has both `journey` and `journey-story`; any other task is
-  outside this extension.
-- **Joins:** FO, at three points on a journey task.
+  outside this extension, except the progress report and the story line.
+- **Joins:** FO, at five points on a journey task.
+  - Before a backlog gate, FO writes `Story: <story id> (<release id>)` or `Story: none:
+    <reason>` under `## FO alignment` on every task. The seed check refuses a missing line;
+    the design check compares it to `journey-story`. Both forms pass.
   - Right after each `spacedock gate record` or recorded Captain amendment that answers a map
     question, FO runs `python3 <package>/extensions/journey-map/map_footprint.py add <task file>
     --question <id> --source gate-attempt:<id>|amendment:<n> --words '<his words>' --answer
@@ -26,6 +29,11 @@ under `docs/journey/`; with none, this extension has no step and FO writes no `j
     archive message states `journey-map fold: <PR url>`, `not needed: <reason>` or `not run:
     <reason>`. The docs-only map pull request follows `## Delivery authority`; this extension
     grants no push.
+  - Right after archiving a task that has `journey` and `journey-release`, FO runs `node
+    <kc-journey-map>/lib/journey-progress.mjs <journey file> --workflow-dir <dir> --report
+    <slug>` and puts its lines in the archive message to the Captain. A missing
+    kc-journey-map, one without `--report` (exit 2) or a failed read is `journey progress
+    not run: <reason>`.
 - **Counts at release review:** FO runs `python3 <package>/extensions/journey-map/map_footprint.py
   audit <workflow-dir> --since <date this repository listed the extension>` (`unrecorded` and
   `invalid` must be 0) and `node <kc-journey-map>/lib/journey-reconcile.mjs <journey file>

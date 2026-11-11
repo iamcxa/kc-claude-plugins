@@ -1038,6 +1038,53 @@ def check_seed_fields(name, text):
     return [f"{name}: missing required body field: {label}" for label, _ in fields if label not in found]
 
 
+# see docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md
+def check_story_record(path, text, seed):
+    from workflow_extensions import readme_extensions
+
+    try:
+        for parent in path.resolve().parents:
+            readme = parent / "README.md"
+            if not readme.is_file():
+                continue
+            front, _ = decision_ledger.split_task(readme.read_text())
+            if front is not None and any(re.match(r"^stages:", line) for line in front):
+                if "journey-map" not in readme_extensions(readme):
+                    return []
+                break
+        else:
+            return []
+    except (OSError, UnicodeError, ValueError) as error:
+        return [f"{path.name}: cannot read workflow story rule: {error}"]
+    plain, fence = [], None
+    for line in re.sub(r"<!--.*?-->", "", text, flags=re.S).splitlines():
+        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
+        if fence:
+            if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip():
+                fence = None
+        elif marker:
+            fence = marker[1]
+        else:
+            plain.append(line)
+    fo, _ = split_fo("\n".join(plain))
+    record = re.search(r"^Story:[ \t]*(.*)$", fo, re.M)
+    value = record[1].strip() if record else ""
+    named = value.split()[0] if value else ""
+    if not named or (named in ("none", "none:") and not re.match(r"^none:[ \t]*\S", value)):
+        return [f"{path.name}: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"] if seed else []
+    if seed:
+        return []
+    front, _ = decision_ledger.split_task(text)
+    stored = next((line.split(":", 1)[1] for line in front or [] if line.startswith("journey-story:")), "")
+    try:
+        story = decision_ledger.unquote(re.sub(r"[ \t]+#.*$", "", stored).strip())
+    except ValueError as error:
+        return [f"{path.name}: cannot read journey-story: {error}"]
+    if (named == "none:" and story) or (named != "none:" and named != story):
+        return [f"{path.name}: 'Story:' names {named} but journey-story is {story or '(empty)'}"]
+    return []
+
+
 def check_task(path, seed=False, notes=None):
     errors = []
     try:
@@ -1073,6 +1120,7 @@ def check_task(path, seed=False, notes=None):
         if value.lower() == "none" and "ui" in surfaces:
             errors.append(f"{path.name}: 'Visible change: none' contradicts 'ui' in 'Surfaces:'")
 
+    errors.extend(check_story_record(path, text, seed))
     if seed:
         return check_seed_fields(path.name, text) + errors
     if "ui" in surfaces:
