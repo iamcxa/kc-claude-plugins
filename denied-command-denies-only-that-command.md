@@ -34,6 +34,10 @@ gates:
                 id: briefing:denied-command-denies-only-that-command:ideation:attempt-1:revision-1
                 digest: sha256:a2db54ee70c8799c48ceb107bfb812a1c4bf60597f10958544af6e7c8cfddedc
                 room-ref: ./denied-command-denies-only-that-command/review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-11T02:20:09.930611Z"
+                reason: The Captain answered the six-design question with 「這次比較複雜，一題題過審」 (host question dialog, 2026-11-11); each design gets its own question.
 started: 2026-11-11T01:19:20Z
 ---
 
