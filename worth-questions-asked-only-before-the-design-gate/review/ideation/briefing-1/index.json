@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worth-questions-asked-only-before-the-design-gate:ideation:attempt-1:revision-1",
+  "question": "決定：要不要核准「過了設計關卡的舊任務不被『值不值得』檢查擋下」的設計並開始實作。我建議照設計的建議核准。核准即接受三項：一、檢查改成只在任務還在設計階段（或還在待辦但已有設計）時要求那一節，階段用新版原本就在用的讀法讀出來，讀不到時照舊擋下；設計在兩個流程共 173 張任務上重播，10 張過了設計階段的任務不再被擋、17 張還在設計階段的照樣被擋、沒有任何任務新被擋下。二、停止條件裡「三張被誤擋的任務都通過」改讀成「這三張不再出現『缺那一節』的錯，其餘輸出和舊版相同」，因為其中一張本來就有另一個和這次無關的格式錯，舊版也擋它。三、多改一個檔：觀察員技能裡加寬一句話，讓它在歸檔時不把「發版前核准的設計缺那一節」記成違規；這超出原本「只改檢查和它的測試」的範圍。",
+  "artifacts": [
+    {
+      "id": "artifact:worth-questions-asked-only-before-the-design-gate:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d34d5bc24c0548d6ec828fb9db4c0f0353843b92/worth-questions-asked-only-before-the-design-gate.md",
+      "rev": "sha256:aad0c271a67a089aa8763efbe8b0c53ff2d85d79bdc4018d3144516d2e611521",
+      "mediaType": "text/markdown",
+      "summary": "Ideation gate of worth-questions-asked-only-before-the-design-gate, priority exception after batch 21.\nDesign: the Worth questions requirement applies only while the task's stage is ideation, or backlog with a Design section; the stage is read with the reader 0.39.0 already uses; an unreadable stage still refuses (task file, ## Design, Claude Opus, 2026-11-11).\nEvidence the design reports, not rerun by FO: read-only replay over 173 tasks on this workflow's state at 7fa26e43 and an adopter's at a01fae61: the refusal goes away for 10 tasks past ideation, stays for 17 in ideation, and no task is newly refused.\nDecisions the question carries: D1 reads the stop condition's \"pass\" as no Worth line and otherwise the 0.38.1 output, because adr-required-statement has an unrelated amendment-form refusal; D2 adds kc-dev-flow-2/skills/observer/SKILL.md, one widened sentence, outside the seeded budget's file list.\nDesign check: design_surfaces.py check exit 0, \"design surfaces presentable\" (FO run 2026-11-11, kc-dev-flow-2 0.39.0).\nOverlap the design reports: three tasks of this workflow in ideation edit the same two files in other functions; the design recommends this task goes first."
+    }
+  ]
+}

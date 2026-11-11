@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:worth-questions-asked-only-before-the-design-gate:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:worth-questions-asked-only-before-the-design-gate-ideation-1
+              briefing:
+                id: briefing:worth-questions-asked-only-before-the-design-gate:ideation:attempt-1:revision-1
+                digest: sha256:bd00faa3a70a74966199dfa9b163e2487b32a39007b9cca1890a08f1dad56018
+                room-ref: ./worth-questions-asked-only-before-the-design-gate/review/ideation/briefing-1
 started: 2026-11-11T14:24:19Z
 ---
 
