@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:denied-command-denies-only-that-command:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:denied-command-denies-only-that-command-validation-1
+              briefing:
+                id: briefing:denied-command-denies-only-that-command:validation:attempt-1:revision-1
+                digest: sha256:eb5f3b60b4139d05cee23c1ddda6f322d8266ca3fdc5396d3b240909067f3b7a
+                room-ref: ./denied-command-denies-only-that-command/review/validation/briefing-1
 started: 2026-11-11T01:19:20Z
 worktree: .worktrees/spacedock-ensign-denied-command-denies-only-that-command
 pr: iamcxa/kc-claude-plugins#842
