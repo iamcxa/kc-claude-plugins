@@ -1,0 +1,13 @@
+Candidate 61529999eb4184b44328fe2fbad545b1b0b0ed92 exported
+.......................
+----------------------------------------------------------------------
+Ran 23 tests in 17.968s
+
+OK
+fleet/both docs/dev2 README:0.38.0 released:0.38.1 sync owed; laws: 1111111111111111111111111111111111111111 pin owed; sync README, merge, then move pin
+fleet/missing docs/dev2 unreadable: "Not Found (HTTP 404)"
+Expected rollout exit: 1
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+Acceptance passed

@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "61529999eb4184b44328fe2fbad545b1b0b0ed92",
+  "model": "not run",
+  "necessity": "CLAUDE.md, docs/adr/0075-release-rollout-reports-adopters-and-laws-pin.md, kc-dev-flow-2/references/sd/adoption.md, kc-dev-flow-2/scripts/package_version.py, kc-dev-flow-2/scripts/test_package_version",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'validation/pin-skew/ reruns old-checker exit 0/new-checker exit'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 1 dated 2026-11-11'",
+    "point: amendment: 'Amendment 2 dated 2026-11-11'",
+    "point: path: 'CLAUDE.md'",
+    "point: path: 'docs/adr/0075-release-rollout-reports-adopters-and-laws-pin.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/adoption.md'",
+    "point: path: 'kc-dev-flow-2/scripts/package_version.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_package_version.py'",
+    "point: path: 'kc-dev-flow-2/skills/maintain-flow/SKILL.md'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#838",
+  "sufficiency": "one read-only command lists each adopter row with whether its README sync and its laws pin are owed against the released tag, an unreadable row is never reported as current, a both-owed line states th",
+  "time": "2026-11-11T04:54:24Z",
+  "verdict": "ask"
+}
