@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:main-tests-pass-with-worth-check-and-story-test:ideation:attempt-1:revision-1",
+  "question": "決定：要不要核准「修好 main 上壞掉的那一項測試」的設計並開始實作。我建議核准。設計查出錯在測試不在檢查：那個測試自己造了一張設計階段的假任務，卻沒寫「值不值得」那一節，所以不管有沒有裝 spacedock 程式，新檢查都會擋它（沒裝時報「讀不到階段」，有裝時報「缺那一節」）。核准即接受：只改一個測試檔裡那張假任務的文字，補上那一節；檢查本身、讀不到階段就擋下的規則、其他測試和 CI 設定都不動。",
+  "artifacts": [
+    {
+      "id": "artifact:main-tests-pass-with-worth-check-and-story-test:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/eb71e2e662fb84e70fafaaa049ce69afd33966af/main-tests-pass-with-worth-check-and-story-test.md",
+      "rev": "sha256:d15310dfb50010c77421d81a742d86e7f821a669848a7e2b0f1d399f5b8c4c3e",
+      "mediaType": "text/markdown",
+      "summary": "Ideation gate of main-tests-pass-with-worth-check-and-story-test, priority exception inside batch 21.\nDesign: change only the fixture text inside JourneyStoryTests.check in kc-dev-flow-2/scripts/test_design_surfaces.py, adding a visible Worth questions section; every assertion and input stays (task file, ## Design, Astra, 2026-11-11).\nEvidence the design reports, not rerun by FO: on main 571a7bd8a the test fails with no spacedock program on PATH and with the real program, with different messages; with the section added, 10 of 10 fixture verdicts are as expected on both.\nDesign check: design_surfaces.py check exit 0, \"design surfaces presentable\" (FO run 2026-11-11).\nModel: the design ran on Codex Astra because the roster's Claude Opus was at its usage limit; reason in the dispatch record."
+    }
+  ]
+}

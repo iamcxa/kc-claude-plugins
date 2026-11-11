@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:main-tests-pass-with-worth-check-and-story-test:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:main-tests-pass-with-worth-check-and-story-test-ideation-1
+              briefing:
+                id: briefing:main-tests-pass-with-worth-check-and-story-test:ideation:attempt-1:revision-1
+                digest: sha256:499c9fbbcc961dc79d7d87fc204efd76e4acd3a2051784e95b1cfaac5e185c33
+                room-ref: ./main-tests-pass-with-worth-check-and-story-test/review/ideation/briefing-1
 started: 2026-11-11T09:02:13Z
 ---
 
