@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-push-words-match-state-commit:ideation:attempt-3:revision-1",
+  "question": "決定：要不要核准「工人收到的推送說明與狀態提交工具一致」的設計並開始實作，並把那句話放進每張派工單都帶的流程說明段落。我建議這樣核准：那是目前唯一量過有效的位置，First Officer 和工人都讀得到，也符合任務原本寫的停止條件。核准即接受流程說明檔多 38 字並提高它的字數上限；設計原本建議的「放工人守則、說明檔不加字」不採用。",
+  "artifacts": [
+    {
+      "id": "artifact:worker-push-words-match-state-commit:ideation:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/67b1dcf86cf8c26fecba847bb8aaef6fdcb4df2c/worker-push-words-match-state-commit.md",
+      "rev": "sha256:66e9dc1379bbfc7183140aab1737d7c4a98b7005d35c9e19a7a1fc55b2415b77",
+      "mediaType": "text/markdown",
+      "summary": "Batch 21 ideation sitting, one design per question on the Captain's word; second question on this design after the Captain asked why the sentence was not placed in the dispatch text. FO ran design_surfaces.py check: exit 0 (2026-11-11). The worker's report, not re-run by FO: this workflow's validation dispatches stopped needing follow-up messages after FO added a push clause to the dispatch text (24 dispatches), which is evidence for words in the dispatch and not for words in a stage skill. The design holds both placements; this question asks for the Dispatch-facts option, which the design lists as the alternative: one Pushes bullet in references/sd/workflow.md Dispatch facts, 38 words, a workflow word-budget raise carrying the Captain's words, and the stop condition as written. The design recommended the stage-principles placement; FO recommends the alternative. No criterion is verified against a candidate; AC-1 and AC-2 are written for the principles placement and are restated by the implementation worker for the chosen one."
+    }
+  ]
+}

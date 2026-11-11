@@ -47,6 +47,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-11T02:49:58.837359Z"
                 reason: The Captain answered with a question, 「為何是工人守則不是放到改放進派工單都帶的段落？你說這是目前唯一量過有效的做法？」 (host question dialog, 2026-11-11); FO changes its recommendation and binds a new question.
+            - id: gate-attempt:worker-push-words-match-state-commit-ideation-3
+              briefing:
+                id: briefing:worker-push-words-match-state-commit:ideation:attempt-3:revision-1
+                digest: sha256:24b8db90e5af2f8fb97af8844ad8cb7dc95b308a105722453e486a276daaa7dd
+                room-ref: ./worker-push-words-match-state-commit/review/ideation/briefing-3
 started: 2026-11-11T01:19:15Z
 ---
 
