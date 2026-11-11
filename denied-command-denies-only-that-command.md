@@ -3,7 +3,7 @@ title: A worker whose command is denied keeps working on everything the denial d
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -53,7 +53,7 @@ gates:
                 reason: 'The Captain chose 「照建議核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要核准「拒絕一個指令不等於全停」的設計並開始實作。我建議照設計的建議核准：在每張派工單都帶的流程說明段落加一句話，說明某個指令被拒絕時不要停工、不要繞過，把其餘做完並在報告裡寫明被拒的那一步，流程說明檔多 33 字；另外在 Paseo 擴充加 21 字，讓我拒絕 Codex 工人時把理由另外傳給它，因為 Paseo 現在不會把理由帶過去；行為重放 10 次、上限 12 次。核准即接受這三項，其中第二項超出這張任務原本「只改給工人看的文字」的預算。」. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-11T01:19:20Z
 ---
 
