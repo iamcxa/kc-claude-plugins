@@ -118,6 +118,12 @@ Captain: 「給這條許可（建議）」 (host question dialog, 2026-11-11)
 Asked: 「「預算」這張任務第三次碰到設計沒列的測試檔，要不要一次給一條許可？我建議給：這張任務的實作可以更新測試裡只因為這次核准的規則改變而過時的範例資料與預期文字，但所有反例和斷言都要保留、產品程式不因此多改，而且每動一個這樣的檔案都要在報告裡列出，由獨立驗證逐一檢查。」
 Supersedes: none
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-11): validation-1 on #841 head 5bf7cf78 recommended REJECTED with two findings, both assessed Material and owned (value-ac[AC-9]: a design with no Worth questions section is refused; evidence budget-overrun-holds-and-findings-meet-non-goals/validation-1/findings.json, the validator's runs, not re-run by FO), to fix in one repair pass, then a fresh validation recheck.
+  - F1: `status: ideation # comment` in frontmatter reads as stage unknown in design_surfaces.py, so the check exits 0 on a design with no Worth questions section, where Spacedock's own reader reports ideation.
+  - F2: a `### Worth questions` heading inside an HTML comment satisfies the section check.
+
 ## Design
 
 ### PRFAQ
