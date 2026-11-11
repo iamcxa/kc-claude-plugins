@@ -1,0 +1,126 @@
+[
+  {
+    "name": "skill-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/validate-pr849-wnkdncss/candidate/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/tmp/validate-pr849-wnkdncss/candidate",
+    "exit": 0,
+    "stdout": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 6008 of 6008 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n",
+    "stderr": "",
+    "git_env": null
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "44f11855264bde64da284ffa9c1fef70e8ac38dd",
+      "--require",
+      "77"
+    ],
+    "cwd": "/tmp/validate-pr849-wnkdncss/candidate",
+    "exit": 0,
+    "stdout": "70 ADR file(s) checked, 0 legacy\n",
+    "stderr": "",
+    "git_env": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/spacedock-ensign-worth-questions-asked-only-before-the-design-gate"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.0/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worth-questions-asked-only-before-the-design-gate.md"
+    ],
+    "cwd": "/tmp/validate-pr849-wnkdncss/candidate",
+    "exit": 0,
+    "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 44f11855264b head 78905b08d6f3 merge-base 44f11855264b\n",
+    "stderr": "warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible\n",
+    "git_env": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/spacedock-ensign-worth-questions-asked-only-before-the-design-gate"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.0/scripts/comment_ratio.py",
+      "44f11855264bde64da284ffa9c1fef70e8ac38dd",
+      "78905b08d6f38817ccdda5d2e91be478fd75dfc7",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/tmp/validate-pr849-wnkdncss/candidate",
+    "exit": 0,
+    "stdout": "code lines 38, comment lines 0, 0.0%\nmaximum 5% (package default) met\n",
+    "stderr": "",
+    "git_env": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/spacedock-ensign-worth-questions-asked-only-before-the-design-gate"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.0/scripts/doc_impact.py",
+      "44f11855264bde64da284ffa9c1fef70e8ac38dd",
+      "78905b08d6f38817ccdda5d2e91be478fd75dfc7"
+    ],
+    "cwd": "/tmp/validate-pr849-wnkdncss/candidate",
+    "exit": 0,
+    "stdout": "docs/adr/0041-seed-admission-enforces-required-fields.md\treview\tkc-dev-flow-2/scripts/design_surfaces.py\ndocs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md\treview\tkc-dev-flow-2/scripts/design_surfaces.py\ndocs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md\treview\tkc-dev-flow-2/scripts/design_surfaces.py\ndocs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md\treview\tkc-dev-flow-2/scripts/design_surfaces.py\n4 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n",
+    "stderr": "",
+    "git_env": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/spacedock-ensign-worth-questions-asked-only-before-the-design-gate"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worth-questions-asked-only-before-the-design-gate"
+    ],
+    "cwd": "/tmp/validate-pr849-wnkdncss/candidate",
+    "exit": 0,
+    "stdout": "3 dispatch record(s) complete\n",
+    "stderr": "",
+    "git_env": null
+  },
+  {
+    "name": "task-check",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/validate-pr849-wnkdncss/candidate/kc-dev-flow-2/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worth-questions-asked-only-before-the-design-gate.md"
+    ],
+    "cwd": "/tmp/validate-pr849-wnkdncss/candidate",
+    "exit": 0,
+    "stdout": "worth-questions-asked-only-before-the-design-gate.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+    "stderr": "",
+    "git_env": null
+  },
+  {
+    "name": "no-cli",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "test_design_surfaces.WorthQuestionsTests"
+    ],
+    "cwd": "/tmp/validate-pr849-wnkdncss/candidate/kc-dev-flow-2/scripts",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ".ss....\n----------------------------------------------------------------------\nRan 7 tests in 0.140s\n\nOK (skipped=2)\n",
+    "git_env": null
+  }
+]

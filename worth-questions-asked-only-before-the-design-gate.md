@@ -249,3 +249,34 @@ The check will read "passed its ideation gate" from the task's stage, using the 
 ### Summary
 
 The native stage reader now releases approved later-stage designs while preserving ideation/backlog and unreadable-stage refusal; the historical observer sentence follows the two approved compatibility decisions. The local candidate and acceptance evidence are committed; FO retains publication, independent review, hosted CI and full merge-result validation.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #849 head 78905b08 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for candidate `78905b08d6f38817ccdda5d2e91be478fd75dfc7`, base `44f11855264bde64da284ffa9c1fef70e8ac38dd`; `worth-questions-asked-only-before-the-design-gate/validation/assessment.md` maps AC-1–6 and the FO-owned remainder of AC-5.
+- DONE: Judge decisions D1 and D2 as approved at the ideation gate; rerun the 173-task differential replay yourself, read-only; the implementation reports 225 tests where main's kc-dev-flow-2/scripts/test_design_surfaces.py ran 226 before this change: find which test is gone or renamed and judge whether a negative case was lost; confirm a task still in ideation with no Worth questions section is refused and an unreadable stage refuses
+  `validation/replay.json`: 173 tasks, exactly 10 later-stage releases, 17 ideation refusals, no other differences/gained errors; `validation/test-inventory.json`: none removed, renamed or changed, three added; `validation/mutations.json`: native-stage and failing-reader counterexamples detected.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `validation/acceptance.md` and `validation/acceptance.sh`: four steps, fresh `bash --noprofile --norc`, exit 0 (`validation/acceptance.log`, `validation/acceptance-result.json`); ADR lint with base plus `--require 77` exits 0 and checks 70 records (`validation/adr-lint.log`).
+- DONE: AC-1 and AC-4 exact historical CLI behavior and falsifiers.
+  `validation/replay.json` preserves every stdout/stderr/exit and task hash; the three Bite tasks equal 0.38.1 at exits 1/0/0; reverting the stage rule restores Worth, and injected unrelated output or retained later-stage Worth is rejected.
+- DONE: AC-2 and AC-3 native-reader stage and error behavior.
+  `validation/candidate-tests.log`: 229 discovered, 225 passed, four existing history skips; `validation/baseline-tests.log`: 226 discovered, 222 passed, the same four skips; no negative case was lost. The three mutants fail later-stage, earlier-stage and reader-error assertions (`validation/mutations.json`).
+- DONE: AC-5 exact scope/title checks and AC-6 independent historical Observer paragraph replay.
+  `validation/pr.json`, `validation/candidate.diff`, `validation/acceptance.log`: approved three files and fix title, bad path/title rejected; `validation/observer-review.md` and `validation/observer-evidence.json`: bound d57ed9b75ba5 copy matches artifact hash, event README 04809c3c lacks worth answers, new/old sentences yield incompatibility/violation.
+- DONE: Required lint, trigger, dispatch, documentation and necessity checks.
+  `validation/checks.json`: skill lint, ADR lint, number guards, comment ratio, doc impact, dispatch records and candidate task check exit 0; four affected ADRs independently judged unaffected in `validation/assessment.md`; `validation/role-triggers.json` and `validation/installed-task-check.json` exit 0.
+- DONE: Judge implementation limits and preserve primary evidence.
+  `validation/assessment.md`: four preexisting historical skips, no-CLI native skips, number-guard fetch warning, scoped Observer replay and delivery limits; no CI change/cost claim. Raw mutation layout failure is retained but not counted as a killed mutant; corrected and fresh-shell reruns passed.
+- SKIPPED: AC-5 full kc-dev-flow-2 test commands on the result of merging this candidate with main.
+  Explicitly FO-owned before the merge ask, with the real Spacedock reader; not independently run or claimed green by this worker.
+- SKIPPED: RoboRev, hosted CI, merge, release and adopter rollout.
+  FO-owned; `validation/pr.json` shows Draft/open at the candidate, with only a reported RoboRev result. No product push, PR comment, review request or adopter edit was made.
+
+### Summary
+
+PASSED for the exact candidate's independent validation; AC-5's full merge-result suite remains FO-owned before delivery, so this report does not authorize merge. Native stage/error tests, the independently re-run corpus, and the historical paragraph replay establish the accepted compatibility outcome and the necessity of the three-file change. All primary evidence is in the task's `validation/` folder; temporary exports are removed after the evidence commit and exact removed paths are returned in the completion reply.
+
+### Findings
+
+- F1 Deferred risk: existing CI runs design tests before Spacedock installation and can skip the two native cases (`validation/no-cli.log`); no current defect was reproduced, and both ran locally. `value-ac[AC-2]` protects stage refusal/release; it becomes Material on a demonstrated faulty supported path or delivery without the required real-reader merge-result run. See the four evidence fields in `validation/assessment.md`; no Material, Polish or Needs decision finding is added.

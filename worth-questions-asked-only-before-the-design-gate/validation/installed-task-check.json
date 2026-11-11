@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.0/scripts/design_surfaces.py",
+    "check",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worth-questions-asked-only-before-the-design-gate.md"
+  ],
+  "exit": 0,
+  "stdout": "worth-questions-asked-only-before-the-design-gate.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+  "stderr": ""
+}

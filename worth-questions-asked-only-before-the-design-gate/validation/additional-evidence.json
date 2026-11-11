@@ -1,0 +1,61 @@
+{
+  "no_readme": {
+    "exit": 1,
+    "stdout": "adr-required-statement.md:151: Captain amendment form: '### Amendment 1 \u2014 2026-10-08, ideation gate' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'\nscope check not run: stage is validation, not ideation\n",
+    "stderr": ""
+  },
+  "reading_words": [
+    {
+      "name": "plugins/adr-required-statement",
+      "before": 53,
+      "after": 34
+    },
+    {
+      "name": "plugins/archive-waits-for-observer-report",
+      "before": 28,
+      "after": 13
+    },
+    {
+      "name": "plugins/merge-guard-stops-unasked-merges",
+      "before": 28,
+      "after": 13
+    },
+    {
+      "name": "plugins/ops-inbox-r1-setup-and-isolation",
+      "before": 55,
+      "after": 36
+    },
+    {
+      "name": "plugins/validation-reads-pr-review-comments",
+      "before": 28,
+      "after": 13
+    },
+    {
+      "name": "qnow/booking-attempt-identity",
+      "before": 28,
+      "after": 13
+    },
+    {
+      "name": "qnow/branch-price-copy",
+      "before": 28,
+      "after": 13
+    },
+    {
+      "name": "qnow/operator-secret-hardening",
+      "before": 96,
+      "after": 77
+    },
+    {
+      "name": "qnow/owner-cancels-booking",
+      "before": 51,
+      "after": 32
+    },
+    {
+      "name": "qnow/shop-edits-booking",
+      "before": 28,
+      "after": 13
+    }
+  ],
+  "observer_added_words": 6,
+  "workflow_unchanged": true
+}

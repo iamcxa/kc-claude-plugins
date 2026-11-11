@@ -1,0 +1,24 @@
+Step 1 PASS: exact head 78905b08d6f38817ccdda5d2e91be478fd75dfc7 exported
+test_design_without_worth_questions_is_refused_even_with_fenced_example (test_design_surfaces.WorthQuestionsTests.test_design_without_worth_questions_is_refused_even_with_fenced_example) ... ok
+test_frontmatter_past_the_design_gate_does_not_require_worth_questions (test_design_surfaces.WorthQuestionsTests.test_frontmatter_past_the_design_gate_does_not_require_worth_questions) ... ok
+test_frontmatter_requires_worth_questions_before_the_design_gate (test_design_surfaces.WorthQuestionsTests.test_frontmatter_requires_worth_questions_before_the_design_gate) ... ok
+test_html_comments_cannot_supply_the_worth_heading (test_design_surfaces.WorthQuestionsTests.test_html_comments_cannot_supply_the_worth_heading) ... ok
+test_new_seed_budget_needs_a_fixed_form_and_cannot_borrow_an_amendment (test_design_surfaces.WorthQuestionsTests.test_new_seed_budget_needs_a_fixed_form_and_cannot_borrow_an_amendment) ... ok
+test_total_dispatch_forms_are_countable_seeds_including_minutes (test_design_surfaces.WorthQuestionsTests.test_total_dispatch_forms_are_countable_seeds_including_minutes) ... ok
+test_unreadable_stage_refuses_with_one_reader_error_and_no_worth_line (test_design_surfaces.WorthQuestionsTests.test_unreadable_stage_refuses_with_one_reader_error_and_no_worth_line) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.420s
+
+OK
+AC-2/3: reverse-stage, never-require and dropped-reader-error mutants all fail the relevant tests
+Step 2 PASS: 7 tests, no skips; all 3 mutations detected
+AC-1: all three bite tasks match 0.38.1; exits 1/0/0; reverse-stage control restores Worth
+AC-4: 173 tasks; 10 released; 17 ideation refusals; 0 other differences; 0 gained
+AC-4 falsifiers: unrelated output and retained later-stage Worth rejected
+Step 3 PASS: 10 releases, 17 ideation refusals, no other differences
+70 ADR file(s) checked, 0 legacy
+AC-5: three-file scope and captured exact-head PR title pass; extra path/non-fix controls rejected
+Step 4 PASS: 70 ADRs; approved scope and title
+Acceptance PASS
+Removed scratch: /tmp/pr849-captain.s2x8qL

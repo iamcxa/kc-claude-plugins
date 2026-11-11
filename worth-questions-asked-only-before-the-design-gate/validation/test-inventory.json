@@ -1,0 +1,16 @@
+{
+  "baseline_total": 226,
+  "baseline_skipped": 4,
+  "baseline_passed": 222,
+  "candidate_total": 229,
+  "candidate_skipped": 4,
+  "candidate_passed": 225,
+  "lost": [],
+  "changed": [],
+  "added": [
+    "WorthQuestionsTests.test_frontmatter_past_the_design_gate_does_not_require_worth_questions",
+    "WorthQuestionsTests.test_frontmatter_requires_worth_questions_before_the_design_gate",
+    "WorthQuestionsTests.test_unreadable_stage_refuses_with_one_reader_error_and_no_worth_line"
+  ],
+  "method": "AST function identity and exact AST body comparison; full -v logs confirm discovery totals and same skip names"
+}

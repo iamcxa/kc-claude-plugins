@@ -1,0 +1,48 @@
+{
+  "briefing": {
+    "type": "Briefing",
+    "version": "1",
+    "id": "briefing:merge-guard-stops-unasked-merges:ideation:attempt-2:revision-1",
+    "question": "\u6c7a\u5b9a\uff1a\u300c\u5408\u4f75\u524d\u64cb\u4e0b\u6c92\u4eba\u554f\u904e\u7684\u5408\u4f75\u300d\u7b2c\u4e8c\u8f2a\u8a2d\u8a08\u9032\u5165\u5be6\u4f5c\u55ce\uff1f\u6838\u51c6\u5373\u63a5\u53d7 D1\uff08Codex \u4e0a\u6c92\u6709\u7d00\u9304\u7684\u5408\u4f75\u4e00\u5f8b\u62d2\u7d55\uff09\u3001D2\uff08\u5957\u4ef6\u51fa\u8173\u672c\uff0c\u7531\u4f60\u5728\u6bcf\u53f0\u6a5f\u5668\u7684\u4f7f\u7528\u8005\u8a2d\u5b9a\u8a3b\u518a\uff09\u3001D3\uff08Release\u3001\u540c\u6b65\u3001learning PR \u5728\u4f60\u6838\u51c6\u3001\u554f\u53e5\u5beb\u660e\u7de8\u865f\u548c\u7248\u672c\u5f8c\uff0c\u7531 FO \u5148\u5b58\u7d00\u9304\u518d\u5408\u4f75\uff09\u8207 D4\uff08Paseo \u4e0a\u7684 Claude FO \u88ab\u64cb\u6642\u7528\u300c\u8981\u554f\u4eba\u300d\uff0c\u8acb\u6c42\u6703\u9001\u5230\u4f60\u624b\u6a5f\uff09\u56db\u500b\u5efa\u8b70\u3002",
+    "artifacts": [
+      {
+        "id": "artifact:merge-guard-stops-unasked-merges:ideation:attempt-2:revision-1:item-1",
+        "uri": "git-root://state/d57ed9b75ba539019052d5352ab982190d8cab24/merge-guard-stops-unasked-merges.md",
+        "rev": "sha256:583fe2feb749f4271d6d071ebc9de3871284c151691e4fe604ab67200536b4de",
+        "mediaType": "text/markdown",
+        "summary": "Ideation cycle 2 (Opus, 2026-11-06): Paseo-hosted Claude run held the guard's ask as a pending Paseo request; the Captain saw and answered it on his phone (captain-steps/1.md, 2026-11-06). merge_guard.py record carries a Release, sync or learning PR whose approving question names number and head; recount 74 pass / 10 stop of 84 merges, #672 still stops (ideation report). D1-D4."
+      }
+    ]
+  },
+  "artifact_sha": "d57ed9b75ba539019052d5352ab982190d8cab24",
+  "artifact_hash_matches": true,
+  "event_time": "2026-11-06T09:02:23+08:00",
+  "event_time_readme_sha": "04809c3c6146c9f4a8f2f0b916fe84c94bfaa1a3",
+  "event_time_readme_has_worth_answers": false,
+  "checks": {
+    "baseline": {
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/validate-pr849-wnkdncss/baseline/kc-dev-flow-2/scripts/design_surfaces.py",
+        "check",
+        "/tmp/validate-pr849-wnkdncss/observer/dev2/.spacedock-state/merge-guard-stops-unasked-merges.md"
+      ],
+      "exit": 1,
+      "stdout": "merge-guard-stops-unasked-merges.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\nscope check not run: not in a git checkout\n",
+      "stderr": ""
+    },
+    "candidate": {
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/validate-pr849-wnkdncss/candidate/kc-dev-flow-2/scripts/design_surfaces.py",
+        "check",
+        "/tmp/validate-pr849-wnkdncss/observer/dev2/.spacedock-state/merge-guard-stops-unasked-merges.md"
+      ],
+      "exit": 1,
+      "stdout": "merge-guard-stops-unasked-merges.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\nscope check not run: not in a git checkout\n",
+      "stderr": ""
+    }
+  }
+}

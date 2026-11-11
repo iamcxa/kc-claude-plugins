@@ -1,0 +1,132 @@
+{
+  "command": "read",
+  "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worth-questions-asked-only-before-the-design-gate.md",
+  "total_lines": "251",
+  "frontmatter": {
+    "gates": "",
+    "merge": "pr",
+    "pr": "iamcxa/kc-claude-plugins#849",
+    "profile": "pilot",
+    "started": "2026-11-11T14:24:19Z",
+    "status": "validation",
+    "title": "A design that already passed its ideation gate is not refused for lacking Worth questions",
+    "variant": "kc-dev-flow-2",
+    "worktree": ".worktrees/spacedock-ensign-worth-questions-asked-only-before-the-design-gate"
+  },
+  "headings": [
+    {
+      "text": "Scope",
+      "level": "2",
+      "offset": "53",
+      "lines": "9"
+    },
+    {
+      "text": "Budget",
+      "level": "2",
+      "offset": "62",
+      "lines": "3"
+    },
+    {
+      "text": "Stop condition",
+      "level": "2",
+      "offset": "65",
+      "lines": "3"
+    },
+    {
+      "text": "FO alignment",
+      "level": "2",
+      "offset": "68",
+      "lines": "7"
+    },
+    {
+      "text": "Design",
+      "level": "2",
+      "offset": "75",
+      "lines": "101"
+    },
+    {
+      "text": "PRFAQ",
+      "level": "3",
+      "offset": "77",
+      "lines": "30"
+    },
+    {
+      "text": "Change",
+      "level": "3",
+      "offset": "107",
+      "lines": "21"
+    },
+    {
+      "text": "Replay",
+      "level": "3",
+      "offset": "128",
+      "lines": "10"
+    },
+    {
+      "text": "Callers that run the full check after ideation",
+      "level": "3",
+      "offset": "138",
+      "lines": "8"
+    },
+    {
+      "text": "Chain and prior rulings",
+      "level": "3",
+      "offset": "146",
+      "lines": "7"
+    },
+    {
+      "text": "Worth questions",
+      "level": "3",
+      "offset": "153",
+      "lines": "6"
+    },
+    {
+      "text": "Words FO reads at each moment",
+      "level": "3",
+      "offset": "159",
+      "lines": "9"
+    },
+    {
+      "text": "Batch overlap",
+      "level": "3",
+      "offset": "168",
+      "lines": "8"
+    },
+    {
+      "text": "Acceptance criteria",
+      "level": "2",
+      "offset": "176",
+      "lines": "14"
+    },
+    {
+      "text": "Decisions for the Captain",
+      "level": "2",
+      "offset": "190",
+      "lines": "6"
+    },
+    {
+      "text": "Stage Report: ideation",
+      "level": "2",
+      "offset": "196",
+      "lines": "22"
+    },
+    {
+      "text": "Summary",
+      "level": "3",
+      "offset": "214",
+      "lines": "4"
+    },
+    {
+      "text": "Stage Report: implementation",
+      "level": "2",
+      "offset": "218",
+      "lines": "34"
+    },
+    {
+      "text": "Summary",
+      "level": "3",
+      "offset": "249",
+      "lines": "3"
+    }
+  ]
+}

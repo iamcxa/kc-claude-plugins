@@ -1,0 +1,26 @@
+[
+  {
+    "name": "AC-1: historical Bite tasks match 0.38.1",
+    "status": "passed"
+  },
+  {
+    "name": "AC-2: native stage cases and reverse controls",
+    "status": "passed"
+  },
+  {
+    "name": "AC-3: unreadable stage refuses",
+    "status": "passed"
+  },
+  {
+    "name": "AC-4: pinned 173-task replay",
+    "status": "passed"
+  },
+  {
+    "name": "AC-5: scope/title passed; FO merge-result full suite remains",
+    "status": "untested"
+  },
+  {
+    "name": "AC-6: historical Observer paragraph replay",
+    "status": "passed"
+  }
+]

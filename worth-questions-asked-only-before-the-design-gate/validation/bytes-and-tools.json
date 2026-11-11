@@ -1,0 +1,31 @@
+{
+  "files": {
+    "kc-dev-flow-2/scripts/design_surfaces.py": {
+      "sha256": "a8d0820593961d109d4ac22e8b2053bdb268a82d68cb5ff765a43222764b368a",
+      "matches_git_object": true
+    },
+    "kc-dev-flow-2/scripts/test_design_surfaces.py": {
+      "sha256": "52d09587b4104832f6520827a560966f088db49cbd2b280d36c5306e2a01d171",
+      "matches_git_object": true
+    },
+    "kc-dev-flow-2/skills/observer/SKILL.md": {
+      "sha256": "10faa3638ca0b9c38d3017de9f3c225b1338f5ad98b07eee53969d2750fc5578",
+      "matches_git_object": true
+    }
+  },
+  "tools": {
+    "python": {
+      "exit": 0,
+      "output": "Python 3.11.14\n"
+    },
+    "spacedock": {
+      "exit": 0,
+      "output": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3\n"
+    },
+    "git": {
+      "exit": 0,
+      "output": "git version 2.54.0 (Apple Git-157)\n"
+    }
+  },
+  "package_version": "0.39.0"
+}

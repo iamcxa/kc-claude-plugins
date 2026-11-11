@@ -1,0 +1,11 @@
+{
+  "command": [
+    "bash",
+    "--noprofile",
+    "--norc",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/worth-questions-asked-only-before-the-design-gate/validation/acceptance.sh"
+  ],
+  "exit": 0,
+  "elapsed_seconds": 57.456,
+  "fresh_shell": true
+}

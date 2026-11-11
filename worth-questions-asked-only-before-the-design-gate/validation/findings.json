@@ -1,0 +1,10 @@
+[
+  {
+    "severity": "info",
+    "title": "Deferred risk: CI can skip the two native-reader tests",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 257,
+    "detail": "Existing CI runs this suite before installing Spacedock. Both native cases ran locally; no current defect was reproduced. FO still owes the full merge-result suite with the real reader before delivery.",
+    "status": "confirmed"
+  }
+]

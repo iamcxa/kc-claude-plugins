@@ -1,0 +1,10 @@
+{
+  "scratch": "/tmp/validate-pr849-wnkdncss",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-worth-questions-asked-only-before-the-design-gate",
+  "state": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+  "head": "78905b08d6f38817ccdda5d2e91be478fd75dfc7",
+  "base": "44f11855264bde64da284ffa9c1fef70e8ac38dd",
+  "package": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.0",
+  "git_dir": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/spacedock-ensign-worth-questions-asked-only-before-the-design-gate",
+  "initial_scratch_removed": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/validate-pr849-wnkdncss"
+}
