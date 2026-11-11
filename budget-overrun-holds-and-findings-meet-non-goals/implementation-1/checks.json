@@ -1,0 +1,84 @@
+[
+  {
+    "name": "role_triggers",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "log": "/tmp/budget-implementation/role_triggers-final.log"
+  },
+  {
+    "name": "design_surfaces",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "log": "/tmp/budget-implementation/design_surfaces-final.log"
+  },
+  {
+    "name": "dispatch_stage",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "log": "/tmp/budget-implementation/dispatch_stage-final.log"
+  },
+  {
+    "name": "delivery_gate",
+    "status": "failed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "log": "/tmp/budget-implementation/delivery_gate-final.log"
+  },
+  {
+    "name": "pr_watch",
+    "status": "failed",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "log": "/tmp/budget-implementation/pr_watch-final.log"
+  },
+  {
+    "name": "lint",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "log": "/tmp/budget-implementation/lint-final.log"
+  },
+  {
+    "name": "adr",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "--require",
+      "0077"
+    ],
+    "log": "/tmp/budget-implementation/adr-final.log"
+  }
+]

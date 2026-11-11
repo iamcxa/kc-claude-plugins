@@ -1,0 +1,16 @@
+test_amendment_needs_the_same_entry_verbatim_words (test_role_triggers.BudgetTest.test_amendment_needs_the_same_entry_verbatim_words) ... FAIL
+
+======================================================================
+FAIL: test_amendment_needs_the_same_entry_verbatim_words (test_role_triggers.BudgetTest.test_amendment_needs_the_same_entry_verbatim_words)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 819, in test_amendment_needs_the_same_entry_verbatim_words
+    self.assertEqual(run(self.state, SLUG)[0], 1, fields)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : Asked: more work
+Budget: two cycles per stage
+
+----------------------------------------------------------------------
+Ran 1 test in 0.363s
+
+FAILED (failures=1)

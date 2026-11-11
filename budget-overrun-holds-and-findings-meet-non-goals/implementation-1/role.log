@@ -1,0 +1,14 @@
+.........................................F..............
+======================================================================
+FAIL: test_two_failed_reports_count_once_each_and_passing_reports_do_not_count (__main__.StepBackTest.test_two_failed_reports_count_once_each_and_passing_reports_do_not_count) (findings=('- F1 Material: gap\n- F2 Needs decision: another gap', '- F1 Material: gap\n- F2 Needs decision: another gap'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 376, in test_two_failed_reports_count_once_each_and_passing_reports_do_not_count
+    self.assertEqual(len(out.split()), 50)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 46 != 50
+
+----------------------------------------------------------------------
+Ran 56 tests in 76.458s
+
+FAILED (failures=1)

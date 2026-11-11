@@ -94,6 +94,10 @@ Captain: 「前兩張合併，查現成做法獨立（建議）」 (host questio
 Asked: 「預算、第一性原理、先查現成做法這三張任務要怎麼合併？我建議：預算和第一性原理合成一張（同一組「是不是你要的、值不值得」的問題，在任務進來、超預算、出現重大發現這幾個時機問），「先查現成做法」維持獨立。合併會記成預算那張的第二筆修正案，第一性原理那張留在待辦並註明已併入。」
 Supersedes: none
 
+### Amendment 3 — 2026-11-11, host question dialog
+Captain: 「加總次數和停止句，分鐘另談（建議）」 (host question dialog, 2026-11-11); before it he asked 「現在預算會長得像這樣，對嗎？『240 累計代理分鐘、最多 5 次派工，含一輪修正。並行代理各自計入，人工與平台等待另記；任一上限到達，就保留成果、回報剩餘工作並停止加碼。』」 (host question dialog, 2026-11-11)
+Asked: 「預算的寫法要不要照你的例子擴大？目前核准的設計只認「每階段幾輪」兩種寫法，實作工人已在做。我建議：這一張先加上「派工總次數上限」這種寫法，並把「到上限就保留成果、回報剩餘工作並停止加碼」當成停下來時的預設結果；「累計代理分鐘」因為現在沒有可靠的時間來源，另外記成一張要先查證的任務，不塞進這張。」
+Supersedes: none
 
 ## Design
 
@@ -335,3 +339,41 @@ ADR: 0077
 ### Summary
 
 The record shows that a budget here is usually a happy-path template ("One package PR" in this workflow, "one cycle per stage" in relay), so it never measured worth. Cycles, as counted exactly by dispatch records, are the unit that ran away. The design makes the existing `dispatch_stage.py` → `role_triggers.py` hold carry one budget event: print the Budget line and cycles spent at each implementation and validation dispatch, and hold at the first cycle past a countable bound with the three worth questions (asked, without, premise). That event replaces the advisory step-back reminder for such tasks and adds no separate Material-finding rule. The same three questions are forced in each ideation design, which the ops-inbox case needs because its Budget, in days, never holds. The relay replay corrects the bite: the reload recovery entered at ideation and was approved under a one-sentence gate question, so all five Material findings were owned by accepted criteria. Three decisions go to the Captain: when to hold (D1), whether new seeds must state cycles in a fixed form (D2, which decides the Non-goal versus amendment 1 tension), and where the worth questions are forced (D3).
+
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (e8664a72b0f904e5dda3c391d52ab3abaca876b4) implementing the approved design and acceptance criteria in the task file; D1, D2 and D3 as recommended and approved at the ideation gate, with Captain amendments 1 and 2 already carried by the design; denied-command-denies-only-that-command is implemented in parallel and also changes kc-dev-flow-2/references/sd/workflow.md and the word budget steps, so keep your changes to the sections the design names and expect FO to ask for a merge of main later; story-done-reports-release-remaining has a local candidate that also changes kc-dev-flow-2/scripts/design_surfaces.py seed rules, in a different function; only the files the design names
+  Local partial candidate 0243d34829634a218c3ba3302f3f6def7ea87b62 on the assigned branch/base; no PR opened: no push grant; FO owns publication, and scope/AC-7 clarification is pending. Prepared title/body: /tmp/impl-budget-overrun-holds-and-findings-meet-non-goals-pr.md and implementation-1/prepared-pr.md.
+- DONE: ADR 0077 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  Added 0077 and appended its amendment pointer to 0026; installed 0.38.1 adr_lint.py docs/adr --since e8664a72b0f904e5dda3c391d52ab3abaca876b4 --require 0077 exits 0 (implementation-1/adr-at-commit.log).
+- FAILED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  AC-5 consumer suites retain four intentional-behavior fixture failures in two files outside the design; stopped product edits and asked FO. AC-7's backlog Gate content conflicts with the approved no-backlog addition; asked FO before dependent edits. Eleven actual mutation falsifiers caught; fresh directories, -B and bytecode disabled (implementation-1/mutations.json).
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py docs/adr --since <base> --require 0077 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured
+  All four local checks exit 0; README 5973/5973, comments 11/289 (3.8%, maximum 5%), fresh-state number check at candidate. No product push/version edits; CI cost not measured, workflows/triggers unchanged; FO-owned actions remain not run (implementation-1/{lint-at-commit,adr-at-commit,number-guards,comment-ratio}.log).
+- DONE: AC-1 — each implementation/validation dispatch shows the Budget verbatim and spent cycles, including the pending cycle
+  Countable/uncountable real-Spacedock dispatch tests pass; dropping successful budget stdout forwarding fails both (implementation-1/budget-dispatch-fixed.log, mutation-forward-budget.log).
+- DONE: AC-2 — first cycle past the bound holds, removes the new record and skips building, then a covering amendment allows it
+  Real dispatch and committed/pending role fixtures pass; >= instead of > and ignoring the amendment each fail their acceptance test (budget-dispatch-fixed.log, budget-final.log, mutation-{off-by-one,ignore-amendment}.log).
+- DONE: AC-3 — relay first holds at implementation-2 at 42317d0c, naming its Symptom, before d85ce152
+  Candidate read over pinned relay history with synthetic post-release headers and pending overlays holds at 42317d0c14d24228ddf08b6dd51f6575fc139bf4; saved base exits 0 there (implementation-1/relay-replay.json, replay.py).
+- DONE: AC-4 — report fixed-form first-overrun counts beside the four pinned ideation counts and explain differences
+  Fixed: qnow 0/0 versus broad 7/7; relay 10/21 versus 11/23; web 0/0 versus 5/20; dev2 0 with 58 actual budget-bearing record tasks versus survey 0/60, whose extra two are a fenced placeholder and a stage-report sentence. All task differences named (implementation-1/archive-replay.json, README.md).
+- FAILED: AC-5 — countable tasks lose advisory step-back, uncountable tasks retain it, role events stay, delivery_gate/pr_watch suites pass
+  Role fixtures pass and mutation catches either wrong reminder behavior; consumer suites fail only four old fixture expectations (delivery_gate 1/208, pr_watch 3/135). Updating test_delivery_gate.py/test_pr_watch.py needs FO's scope authorization; those files remain unchanged.
+- DONE: AC-6 — old first-record headers do not acquire a budget hold, while new records carry Budget
+  Eight final focused BudgetTest cases pass, including an old first stage before a later new ideation header and pending replacement order; ignoring first-header admission fails (budget-final.log, mutation-ignore-first-header.log). Full merge-ask acceptance remains limited by AC-5's failing suite.
+- DONE: AC-9 — design worth section and same-entry verbatim amendment Budget authority
+  Two Worth tests pass; missing-section and invented-bound mutants fail their named assertions; principles carry all three per-part questions. Final seed form check also refuses an amendment borrowed for a non-countable seed (implementation-1/{worth-unit,mutation-optional-worth,mutation-invent-amendment-bound,mutation-optional-seed-bound}.log).
+- FAILED: AC-7 — workflow forms, hold, amendment line, gate-content location, quoted raise and independent lifecycle recount
+  Forms/hold/amendment and one quoted +34 step implemented; lint/recount pass. Gate-content location remains untouched pending FO's resolution of backlog versus ideation. Independent costs: startup 5939→5973; countable/uncountable dispatch +11/+14; sampled hold +71; idle/merge reminder 51→0; ideation principles 643→687 (implementation-1/word-count.json).
+- DONE: AC-8 — reserved ADR and amendment line pass the required linter
+  ADR 0077 and 0026 pass --since <base> --require 0077 (implementation-1/adr-at-commit.log).
+- DONE: Affected documents, capability boundary and compatibility evidence
+  All twelve doc-impact rows carry updated/unaffected verdicts in implementation-1/doc-impact-verdicts.jsonl; the design's existing-code audit was reused. Four pinned corpora in both checker modes add only intended Worth/fixed-Budget diagnostics, losing no previous diagnostics (corpus-check.json).
+- SKIPPED: RoboRev, product push/Draft PR and hosted CI
+  Delegated explicitly to FO; not run, never treated as clean. Full exact-candidate regression rerun is owed after scope/gate resolution; prior full run and final eight targeted cases are distinguished in implementation-1/README.md.
+
+### Summary
+
+Saved the bounded Pilot candidate at 0243d34829634a218c3ba3302f3f6def7ea87b62, off e8664a72b0f904e5dda3c391d52ab3abaca876b4, without product publication; eleven falsifiers and the pinned relay replay demonstrate the budget boundary, not complete delivery. Implementation remains held: two unlisted consumer test files need permission for four expected fixture updates, and AC-7 contradicts the approved gate location; FO was told before expanding either surface, while reports, checks and prepared PR text were preserved in this task's implementation-1 folder.

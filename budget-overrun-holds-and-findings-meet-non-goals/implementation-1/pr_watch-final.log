@@ -1,0 +1,38 @@
+................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+                        {add,check,wait,tasks} [args ...]
+test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+..............F...........................................F........................F...................
+======================================================================
+FAIL: test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not (__main__.TasksTests.test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_pr_watch.py", line 1816, in test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not
+    self.assertEqual(lines[0], "next: the seed check fails for these backlog tasks (bad); before preparing the gate of one, "
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               f"fix the reported seed fields and run `python3 {watch.SEED} check --seed <task>`.")
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'next[46 chars] (bad, fine); before preparing the gate of one[274 chars]k>`.' != 'next[46 chars] (bad); before preparing the gate of one, fix [268 chars]k>`.'
+Diff is 813 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_committed_second_symptom_round_is_forwarded_at_idle (__main__.TasksTests.test_committed_second_symptom_round_is_forwarded_at_idle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_pr_watch.py", line 756, in test_committed_second_symptom_round_is_forwarded_at_idle
+    self.assertTrue(any("what breaks if this criterion or process is deleted?" in line for line in lines), lines)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['next: diagnosis has 2 implementation dispatches on symptom "page freeze": before the next step, answer: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now?']
+
+======================================================================
+FAIL: test_second_failed_validation_is_advisory_live_and_silent_archived (__main__.TasksTests.test_second_failed_validation_is_advisory_live_and_silent_archived)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_pr_watch.py", line 1583, in test_second_failed_validation_is_advisory_live_and_silent_archived
+    self.assertIn("before the next step, answer: is what I am solving still the outcome first asked for", lines[0])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'before the next step, answer: is what I am solving still the outcome first asked for' not found in 'next: some-task has 2 validations with a Material or Needs decision finding and 0 replacing amendments: before the next step, answer: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now?'
+
+----------------------------------------------------------------------
+Ran 135 tests in 85.575s
+
+FAILED (failures=3)

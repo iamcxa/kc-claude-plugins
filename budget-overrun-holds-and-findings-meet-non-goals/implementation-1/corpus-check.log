@@ -1,0 +1,50 @@
+{
+  "dev2": {
+    "seed": {
+      "tasks": 230,
+      "new_refusals": 80,
+      "changed_messages": 85
+    },
+    "design": {
+      "tasks": 230,
+      "new_refusals": 124,
+      "changed_messages": 140
+    }
+  },
+  "qnow": {
+    "seed": {
+      "tasks": 163,
+      "new_refusals": 8,
+      "changed_messages": 12
+    },
+    "design": {
+      "tasks": 163,
+      "new_refusals": 15,
+      "changed_messages": 54
+    }
+  },
+  "relay": {
+    "seed": {
+      "tasks": 137,
+      "new_refusals": 1,
+      "changed_messages": 2
+    },
+    "design": {
+      "tasks": 137,
+      "new_refusals": 38,
+      "changed_messages": 85
+    }
+  },
+  "web": {
+    "seed": {
+      "tasks": 93,
+      "new_refusals": 30,
+      "changed_messages": 31
+    },
+    "design": {
+      "tasks": 93,
+      "new_refusals": 12,
+      "changed_messages": 77
+    }
+  }
+}

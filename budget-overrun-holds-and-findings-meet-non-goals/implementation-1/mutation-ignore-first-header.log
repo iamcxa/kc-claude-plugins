@@ -1,0 +1,15 @@
+test_old_first_stage_record_never_opts_in_with_later_headers (test_role_triggers.BudgetTest.test_old_first_stage_record_never_opts_in_with_later_headers) ... FAIL
+
+======================================================================
+FAIL: test_old_first_stage_record_never_opts_in_with_later_headers (test_role_triggers.BudgetTest.test_old_first_stage_record_never_opts_in_with_later_headers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 831, in test_old_first_stage_record_never_opts_in_with_later_headers
+    self.assertNotIn("budget exceeded", out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'budget exceeded' unexpectedly found in 'next: some-task budget exceeded; hold for the Captain. Symptom: failure 2. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 0\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.397s
+
+FAILED (failures=1)

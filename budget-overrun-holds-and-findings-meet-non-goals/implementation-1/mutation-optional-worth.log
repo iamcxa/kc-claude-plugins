@@ -1,0 +1,15 @@
+test_design_without_worth_questions_is_refused_even_with_fenced_example (test_design_surfaces.WorthQuestionsTests.test_design_without_worth_questions_is_refused_even_with_fenced_example) ... FAIL
+
+======================================================================
+FAIL: test_design_without_worth_questions_is_refused_even_with_fenced_example (test_design_surfaces.WorthQuestionsTests.test_design_without_worth_questions_is_refused_even_with_fenced_example)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 261, in test_design_without_worth_questions_is_refused_even_with_fenced_example
+    self.assertTrue(any("Worth questions" in e for e in ds.check_task(path)))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

@@ -1,0 +1,1438 @@
+.........ssss..........F..........F.................FFFFFFFFF.F..F.......F....FF.FFFFFFFFF.F...FF.F.FF.FFFF.FFFFFFFFFFFFFF.................FF..FF....FF............FFF......FFFF...FFFF.F...F.FFF.F...F.F.FFF.F.FFF..F..................
+======================================================================
+FAIL: test_a_relocated_criterion_none_no_amendments_and_a_fenced_example_pass (__main__.AmendmentTests.test_a_relocated_criterion_none_no_amendments_and_a_fenced_example_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 505, in test_a_relocated_criterion_none_no_amendments_and_a_fenced_example_pass
+    self.assertEqual(self.errors(FENCED_EXAMPLE), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_fence_skip_flags_a_fenced_example (__main__.AmendmentTests.test_mutation_dropping_the_fence_skip_flags_a_fenced_example)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 709, in test_mutation_dropping_the_fence_skip_flags_a_fenced_example
+    self.assertEqual(self.errors(FENCED_EXAMPLE), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_reminder_is_last_at_backlog_and_ideation_only (__main__.AskFormTests.test_reminder_is_last_at_backlog_and_ideation_only) (stage='ideation', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1627, in test_reminder_is_last_at_backlog_and_ideation_only
+    self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test
+scope check not run: backlog briefing unreadable
+
+
+======================================================================
+FAIL: test_a_built_screen_review_with_every_disposition_passes_and_prints_its_lines (__main__.BuiltScreenTests.test_a_built_screen_review_with_every_disposition_passes_and_prints_its_lines)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2244, in test_a_built_screen_review_with_every_disposition_passes_and_prints_its_lines
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_decline_needs_its_ruling_report_and_an_overruled_one_becomes_a_decision (__main__.BuiltScreenTests.test_a_decline_needs_its_ruling_report_and_an_overruled_one_becomes_a_decision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2302, in test_a_decline_needs_its_ruling_report_and_an_overruled_one_becomes_a_decision
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_task_without_a_design_review_or_not_at_validation_is_not_refused (__main__.BuiltScreenTests.test_a_task_without_a_design_review_or_not_at_validation_is_not_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2265, in test_a_task_without_a_design_review_or_not_at_validation_is_not_refused
+    self.assertEqual(self.run_check(lines="", reviewed=False), ([], []))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (["task.md: design needs '### Worth questio[88 chars], []) != ([], [])
+
+First differing element 0:
+["task.md: design needs '### Worth questio[83 chars]est"]
+[]
+
++ ([], [])
+- (["task.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"],
+-  [])
+
+======================================================================
+FAIL: test_a_ui_task_without_a_built_screen_review_or_waiver_is_refused (__main__.BuiltScreenTests.test_a_ui_task_without_a_built_screen_review_or_waiver_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2253, in test_a_ui_task_without_a_built_screen_review_or_waiver_is_refused
+    self.assertEqual(self.run_check(lines='Built screen review: waived 「skip it」\n')[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_an_f_bullet_must_be_in_the_current_validation_report (__main__.BuiltScreenTests.test_an_f_bullet_must_be_in_the_current_validation_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2320, in test_an_f_bullet_must_be_in_the_current_validation_report
+    self.assertEqual(self.run_check(earlier=stale)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_an_ideation_picture_is_not_a_built_screen (__main__.BuiltScreenTests.test_an_ideation_picture_is_not_a_built_screen)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2262, in test_an_ideation_picture_is_not_a_built_screen
+    self.assertEqual(self.run_check(shot=b"different bytes")[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_each_branch_of_the_screenshot_rule_has_a_mutant_that_passes_what_it_refuses (__main__.BuiltScreenTests.test_each_branch_of_the_screenshot_rule_has_a_mutant_that_passes_what_it_refuses) [status gate]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2288, in test_each_branch_of_the_screenshot_rule_has_a_mutant_that_passes_what_it_refuses
+    self.assertEqual((real, len(broken)), ([], 1), broken)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (["task.md: design needs '### Worth questio[87 chars]], 2) != ([], 1)
+
+First differing element 0:
+["task.md: design needs '### Worth questio[83 chars]est"]
+[]
+
++ ([], 1)
+- (["task.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"],
+-  2) : ["task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test", "task.md: built screen review not run: a ui task with a design review needs a 'Built screen review:' line or a quoted waiver"]
+
+======================================================================
+FAIL: test_each_branch_of_the_screenshot_rule_has_a_mutant_that_passes_what_it_refuses (__main__.BuiltScreenTests.test_each_branch_of_the_screenshot_rule_has_a_mutant_that_passes_what_it_refuses) [design review condition]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2288, in test_each_branch_of_the_screenshot_rule_has_a_mutant_that_passes_what_it_refuses
+    self.assertEqual((real, len(broken)), ([], 1), broken)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (["task.md: design needs '### Worth questio[87 chars]], 2) != ([], 1)
+
+First differing element 0:
+["task.md: design needs '### Worth questio[83 chars]est"]
+[]
+
++ ([], 1)
+- (["task.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"],
+-  2) : ["task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test", "task.md: built screen review not run: a ui task with a design review needs a 'Built screen review:' line or a quoted waiver"]
+
+======================================================================
+FAIL: test_preview_sequence_checks_and_prints_every_picture (__main__.BuiltScreenTests.test_preview_sequence_checks_and_prints_every_picture)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2227, in test_preview_sequence_checks_and_prints_every_picture
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_the_review_finding_and_decline_lines_are_read_from_the_current_validation_report_only (__main__.BuiltScreenTests.test_the_review_finding_and_decline_lines_are_read_from_the_current_validation_report_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2328, in test_the_review_finding_and_decline_lines_are_read_from_the_current_validation_report_only
+    self.assertEqual(self.run_check(earlier=old)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_decision_ruling_needs_a_line_a_kind_and_an_owner (__main__.DeclineCheckTests.test_a_decision_ruling_needs_a_line_a_kind_and_an_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2100, in test_a_decision_ruling_needs_a_line_a_kind_and_an_owner
+    self.assertEqual(self.run_check(review=two, report=MINORS, declines=good)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_host_component_decline_needs_its_name_and_declaration_path (__main__.DeclineCheckTests.test_a_host_component_decline_needs_its_name_and_declaration_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2095, in test_a_host_component_decline_needs_its_name_and_declaration_path
+    self.assertEqual(self.run_check(review=named)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_host_look_decision_must_end_with_the_adr_title (__main__.DeclineCheckTests.test_a_host_look_decision_must_end_with_the_adr_title)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2116, in test_a_host_look_decision_must_end_with_the_adr_title
+    self.assertEqual(self.run_check(review=plain, report=MINORS, declines=other)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_ruling_missing_its_evidence_or_change_is_refused (__main__.DeclineCheckTests.test_a_ruling_missing_its_evidence_or_change_is_refused) [evidence]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2052, in test_a_ruling_missing_its_evidence_or_change_is_refused
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_ruling_missing_its_evidence_or_change_is_refused (__main__.DeclineCheckTests.test_a_ruling_missing_its_evidence_or_change_is_refused) [change]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2052, in test_a_ruling_missing_its_evidence_or_change_is_refused
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_ruling_outside_the_rulings_list_does_not_count (__main__.DeclineCheckTests.test_a_ruling_outside_the_rulings_list_does_not_count) [another key]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2042, in test_a_ruling_outside_the_rulings_list_does_not_count
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_ruling_outside_the_rulings_list_does_not_count (__main__.DeclineCheckTests.test_a_ruling_outside_the_rulings_list_does_not_count) [after the root]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2042, in test_a_ruling_outside_the_rulings_list_does_not_count
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_ruling_outside_the_rulings_list_does_not_count (__main__.DeclineCheckTests.test_a_ruling_outside_the_rulings_list_does_not_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2044, in test_a_ruling_outside_the_rulings_list_does_not_count
+    self.assertEqual(self.run_check(declines=fenced)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_scalar_design_decline_check_root_is_refused (__main__.DeclineCheckTests.test_a_scalar_design_decline_check_root_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2066, in test_a_scalar_design_decline_check_root_is_refused
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_an_empty_evidence_or_change_counts_as_missing (__main__.DeclineCheckTests.test_an_empty_evidence_or_change_counts_as_missing) [evidence]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2060, in test_an_empty_evidence_or_change_counts_as_missing
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_an_empty_evidence_or_change_counts_as_missing (__main__.DeclineCheckTests.test_an_empty_evidence_or_change_counts_as_missing) [change]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2060, in test_an_empty_evidence_or_change_counts_as_missing
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_an_overruled_decline_redisposed_passes_and_counts (__main__.DeclineCheckTests.test_an_overruled_decline_redisposed_passes_and_counts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2079, in test_an_overruled_decline_redisposed_passes_and_counts
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_decisions_of_one_kind_and_owner_print_once (__main__.DeclineCheckTests.test_decisions_of_one_kind_and_owner_print_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2124, in test_decisions_of_one_kind_and_owner_print_once
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_fenced_preview_line_cannot_bind_a_report (__main__.DesignReviewTests.test_a_fenced_preview_line_cannot_bind_a_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1456, in test_a_fenced_preview_line_cannot_bind_a_report
+    self.assertEqual(self.run_check(previews=previews)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_folder_task_passes_with_its_own_report (__main__.DesignReviewTests.test_a_folder_task_passes_with_its_own_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1278, in test_a_folder_task_passes_with_its_own_report
+    self.assertEqual(self.run_check(folder_form=True)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["index.md: design needs '### Worth questi[84 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"index.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["index.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_report_naming_any_of_several_preview_lines_passes (__main__.DesignReviewTests.test_a_report_naming_any_of_several_preview_lines_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1342, in test_a_report_naming_any_of_several_preview_lines_passes
+    self.assertEqual(self.run_check(previews=previews, report=DESIGN_REPORT.replace("preview: preview.html", "preview: second.html"))[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_review_without_a_decline_prints_one_short_line_and_the_preview (__main__.DesignReviewTests.test_a_review_without_a_decline_prints_one_short_line_and_the_preview)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1272, in test_a_review_without_a_decline_prints_one_short_line_and_the_preview
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_reviewed_ui_design_passes_and_prints_its_summary_preview_and_upheld_decline (__main__.DesignReviewTests.test_a_reviewed_ui_design_passes_and_prints_its_summary_preview_and_upheld_decline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1265, in test_a_reviewed_ui_design_passes_and_prints_its_summary_preview_and_upheld_decline
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_ui_task_past_ideation_or_without_ui_is_unchanged (__main__.DesignReviewTests.test_a_ui_task_past_ideation_or_without_ui_is_unchanged) (status='implementation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1309, in test_a_ui_task_past_ideation_or_without_ui_is_unchanged
+    self.assertEqual((errors, notes), ([], []))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (["task.md: design needs '### Worth questio[88 chars], []) != ([], [])
+
+First differing element 0:
+["task.md: design needs '### Worth questio[83 chars]est"]
+[]
+
++ ([], [])
+- (["task.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"],
+-  [])
+
+======================================================================
+FAIL: test_a_ui_task_past_ideation_or_without_ui_is_unchanged (__main__.DesignReviewTests.test_a_ui_task_past_ideation_or_without_ui_is_unchanged) (status='validation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1309, in test_a_ui_task_past_ideation_or_without_ui_is_unchanged
+    self.assertEqual((errors, notes), ([], []))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (["task.md: design needs '### Worth questio[88 chars], []) != ([], [])
+
+First differing element 0:
+["task.md: design needs '### Worth questio[83 chars]est"]
+[]
+
++ ([], [])
+- (["task.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"],
+-  [])
+
+======================================================================
+FAIL: test_a_ui_task_past_ideation_or_without_ui_is_unchanged (__main__.DesignReviewTests.test_a_ui_task_past_ideation_or_without_ui_is_unchanged) (surfaces='none')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1309, in test_a_ui_task_past_ideation_or_without_ui_is_unchanged
+    self.assertEqual((errors, notes), ([], []))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (["task.md: design needs '### Worth questio[88 chars], []) != ([], [])
+
+First differing element 0:
+["task.md: design needs '### Worth questio[83 chars]est"]
+[]
+
++ ([], [])
+- (["task.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"],
+-  [])
+
+======================================================================
+FAIL: test_an_empty_findings_list_passes_with_no_finding_lines (__main__.DesignReviewTests.test_an_empty_findings_list_passes_with_no_finding_lines)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1318, in test_an_empty_findings_list_passes_with_no_finding_lines
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_limitations_are_not_read_so_an_unshown_state_beside_no_findings_passes (__main__.DesignReviewTests.test_limitations_are_not_read_so_an_unshown_state_beside_no_findings_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1349, in test_limitations_are_not_read_so_an_unshown_state_beside_no_findings_passes
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_design_call_lets_a_missing_review_pass (__main__.DesignReviewTests.test_mutation_dropping_the_design_call_lets_a_missing_review_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1385, in test_mutation_dropping_the_design_call_lets_a_missing_review_pass
+    self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_design_review_count_lets_two_lines_pass (__main__.DesignReviewTests.test_mutation_dropping_the_design_review_count_lets_two_lines_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1371, in test_mutation_dropping_the_design_review_count_lets_two_lines_pass
+    self.assertEqual(self.run_check(review=review, extra=later, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_duplicate_rule_lets_two_dispositions_pass (__main__.DesignReviewTests.test_mutation_dropping_the_duplicate_rule_lets_two_dispositions_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1420, in test_mutation_dropping_the_duplicate_rule_lets_two_dispositions_pass
+    self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_fixed_rule_refuses_a_fixed_finding (__main__.DesignReviewTests.test_mutation_dropping_the_fixed_rule_refuses_a_fixed_finding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1413, in test_mutation_dropping_the_fixed_rule_refuses_a_fixed_finding
+    self.assertEqual(self.run_check()[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_minor_test_lets_a_declined_major_pass (__main__.DesignReviewTests.test_mutation_dropping_the_minor_test_lets_a_declined_major_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1392, in test_mutation_dropping_the_minor_test_lets_a_declined_major_pass
+    self.assertEqual(self.run_check(review=review, declines=both, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_one_preview_rule_lets_two_direct_previews_pass (__main__.DesignReviewTests.test_mutation_dropping_the_one_preview_rule_lets_two_direct_previews_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1430, in test_mutation_dropping_the_one_preview_rule_lets_two_direct_previews_pass
+    self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_preview_rule_lets_another_preview_pass (__main__.DesignReviewTests.test_mutation_dropping_the_preview_rule_lets_another_preview_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1398, in test_mutation_dropping_the_preview_rule_lets_another_preview_pass
+    self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_surfaces_count_lets_a_second_line_hide_ui (__main__.DesignReviewTests.test_mutation_dropping_the_surfaces_count_lets_a_second_line_hide_ui)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1379, in test_mutation_dropping_the_surfaces_count_lets_a_second_line_hide_ui
+    self.assertEqual(mutant.check_task(path), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_gating_on_ideation_alone_refuses_a_task_without_ui (__main__.DesignReviewTests.test_mutation_gating_on_ideation_alone_refuses_a_task_without_ui)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1408, in test_mutation_gating_on_ideation_alone_refuses_a_task_without_ui
+    self.assertEqual(self.run_check(review="", report=None, surfaces="none")[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_matching_only_the_first_preview_line_refuses_the_second (__main__.DesignReviewTests.test_mutation_matching_only_the_first_preview_line_refuses_the_second)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1448, in test_mutation_matching_only_the_first_preview_line_refuses_the_second
+    self.assertEqual(self.run_check(previews=previews, report=report)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_reading_preview_candidates_from_the_raw_body_lets_a_fenced_one_bind (__main__.DesignReviewTests.test_mutation_reading_preview_candidates_from_the_raw_body_lets_a_fenced_one_bind)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1463, in test_mutation_reading_preview_candidates_from_the_raw_body_lets_a_fenced_one_bind
+    self.assertEqual(self.run_check(previews=previews, report=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_reading_the_preview_at_any_indent_takes_a_nested_one (__main__.DesignReviewTests.test_mutation_reading_the_preview_at_any_indent_takes_a_nested_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1436, in test_mutation_reading_the_preview_at_any_indent_takes_a_nested_one
+    self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_searching_the_whole_report_takes_a_preview_of_another_mapping (__main__.DesignReviewTests.test_mutation_searching_the_whole_report_takes_a_preview_of_another_mapping)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1442, in test_mutation_searching_the_whole_report_takes_a_preview_of_another_mapping
+    self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit (__main__.ScopeCheckTests.test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit) (changed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1720, in test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit
+    self.assertEqual(code, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit (__main__.ScopeCheckTests.test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit) (changed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1720, in test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit
+    self.assertEqual(code, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it (__main__.ScopeCheckTests.test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1901, in test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it
+    self.assertEqual(self.run_main(plain / "t.md")[0], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_a_task_the_check_cannot_judge_prints_why_and_exits_zero (__main__.ScopeCheckTests.test_a_task_the_check_cannot_judge_prints_why_and_exits_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1846, in test_a_task_the_check_cannot_judge_prints_why_and_exits_zero
+    self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\nscope check not run: no closed backlog approval\n" + __import__("delivery_gate").ASK_FORM + "\n"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (1, "t.md: design needs '### Worth questio[134 chars]l\n") != (0, 't.md: design surfaces presentable\nsc[425 chars].\n')
+
+First differing element 0:
+1
+0
+
+Diff is 776 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_an_unchanged_scope_is_clean_and_prints_the_presentable_line (__main__.ScopeCheckTests.test_an_unchanged_scope_is_clean_and_prints_the_presentable_line)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1759, in test_an_unchanged_scope_is_clean_and_prints_the_presentable_line
+    self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\n" + __import__("delivery_gate").ASK_FORM + "\n"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (1, "t.md: design needs '### Worth questio[85 chars]t\n") != (0, 't.md: design surfaces presentable\nne[376 chars].\n')
+
+First differing element 0:
+1
+0
+
+- (1,
+-  "t.md: design needs '### Worth questions': Captain words served, what breaks "
+-  "without each part, and the premise's cheap test\n")
++ (0,
++  't.md: design surfaces presentable\n'
++  'next: before gate prepare, write the question the Captain answers: one '
++  'decision; its first sentence says what he decides and what you recommend; '
++  'plain words before ids and paths, and any term he has not seen expanded in '
++  'eight words or fewer; one sentence saying what approving accepts. Show him '
++  'this bound question verbatim and record his answer as `answering 「<that '
++  'question>」`.\n')
+
+======================================================================
+FAIL: test_an_uncommitted_amendment_covers_an_uncommitted_scope_line (__main__.ScopeCheckTests.test_an_uncommitted_amendment_covers_an_uncommitted_scope_line)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1830, in test_an_uncommitted_amendment_covers_an_uncommitted_scope_line
+    self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\n" + __import__("delivery_gate").ASK_FORM + "\n"))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (1, "t.md: design needs '### Worth questio[85 chars]t\n") != (0, 't.md: design surfaces presentable\nne[376 chars].\n')
+
+First differing element 0:
+1
+0
+
+- (1,
+-  "t.md: design needs '### Worth questions': Captain words served, what breaks "
+-  "without each part, and the premise's cheap test\n")
++ (0,
++  't.md: design surfaces presentable\n'
++  'next: before gate prepare, write the question the Captain answers: one '
++  'decision; its first sentence says what he decides and what you recommend; '
++  'plain words before ids and paths, and any term he has not seen expanded in '
++  'eight words or fewer; one sentence saying what approving accepts. Show him '
++  'this bound question verbatim and record his answer as `answering 「<that '
++  'question>」`.\n')
+
+======================================================================
+FAIL: test_a_comment_or_blank_line_before_findings_does_not_move_its_depth (__main__.SecurityReviewTests.test_a_comment_or_blank_line_before_findings_does_not_move_its_depth)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1094, in test_a_comment_or_blank_line_before_findings_does_not_move_its_depth
+    self.assertEqual(self.report_errors(report), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_dash_inside_a_block_scalar_is_not_an_item (__main__.SecurityReviewTests.test_a_dash_inside_a_block_scalar_is_not_an_item)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 988, in test_a_dash_inside_a_block_scalar_is_not_an_item
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_declined_medium_and_an_acceptance_criterion_on_any_severity_pass (__main__.SecurityReviewTests.test_a_declined_medium_and_an_acceptance_criterion_on_any_severity_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 828, in test_a_declined_medium_and_an_acceptance_criterion_on_any_severity_pass
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_quoted_severity_still_counts_as_a_finding (__main__.SecurityReviewTests.test_a_quoted_severity_still_counts_as_a_finding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 844, in test_a_quoted_severity_still_counts_as_a_finding
+    self.assertEqual((errors, len(notes)), ([], 1))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (["task.md: design needs '### Worth questio[87 chars]], 1) != ([], 1)
+
+First differing element 0:
+["task.md: design needs '### Worth questio[83 chars]est"]
+[]
+
++ ([], 1)
+- (["task.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"],
+-  1)
+
+======================================================================
+FAIL: test_a_report_with_an_empty_findings_list_passes_with_no_finding_lines (__main__.SecurityReviewTests.test_a_report_with_an_empty_findings_list_passes_with_no_finding_lines)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 848, in test_a_report_with_an_empty_findings_list_passes_with_no_finding_lines
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_reviewed_prod_design_passes_and_prints_one_short_line (__main__.SecurityReviewTests.test_a_reviewed_prod_design_passes_and_prints_one_short_line)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 784, in test_a_reviewed_prod_design_passes_and_prints_one_short_line
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_root_key_that_carries_a_value_is_refused_so_its_children_are_not_scalar_text (__main__.SecurityReviewTests.test_a_root_key_that_carries_a_value_is_refused_so_its_children_are_not_scalar_text)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1113, in test_a_root_key_that_carries_a_value_is_refused_so_its_children_are_not_scalar_text
+    self.assertEqual(self.report_errors("tob_security_review:  # the reviewer's note\n  pr: none\n  findings: []\n"), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_severity_may_sit_on_any_line_of_its_item (__main__.SecurityReviewTests.test_a_severity_may_sit_on_any_line_of_its_item)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 994, in test_a_severity_may_sit_on_any_line_of_its_item
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_a_task_of_another_profile_or_past_ideation_is_unchanged (__main__.SecurityReviewTests.test_a_task_of_another_profile_or_past_ideation_is_unchanged) (profile='pilot', status='ideation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 824, in test_a_task_of_another_profile_or_past_ideation_is_unchanged
+    self.assertEqual((errors, notes), ([], []))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (["task.md: design needs '### Worth questio[88 chars], []) != ([], [])
+
+First differing element 0:
+["task.md: design needs '### Worth questio[83 chars]est"]
+[]
+
++ ([], [])
+- (["task.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"],
+-  [])
+
+======================================================================
+FAIL: test_a_task_of_another_profile_or_past_ideation_is_unchanged (__main__.SecurityReviewTests.test_a_task_of_another_profile_or_past_ideation_is_unchanged) (profile='poc', status='ideation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 824, in test_a_task_of_another_profile_or_past_ideation_is_unchanged
+    self.assertEqual((errors, notes), ([], []))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (["task.md: design needs '### Worth questio[88 chars], []) != ([], [])
+
+First differing element 0:
+["task.md: design needs '### Worth questio[83 chars]est"]
+[]
+
++ ([], [])
+- (["task.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"],
+-  [])
+
+======================================================================
+FAIL: test_a_task_of_another_profile_or_past_ideation_is_unchanged (__main__.SecurityReviewTests.test_a_task_of_another_profile_or_past_ideation_is_unchanged) (profile='prod', status='implementation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 824, in test_a_task_of_another_profile_or_past_ideation_is_unchanged
+    self.assertEqual((errors, notes), ([], []))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (["task.md: design needs '### Worth questio[88 chars], []) != ([], [])
+
+First differing element 0:
+["task.md: design needs '### Worth questio[83 chars]est"]
+[]
+
++ ([], [])
+- (["task.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"],
+-  [])
+
+======================================================================
+FAIL: test_an_indented_root_line_is_not_a_second_root (__main__.SecurityReviewTests.test_an_indented_root_line_is_not_a_second_root)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1070, in test_an_indented_root_line_is_not_a_second_root
+    self.assertEqual(errors, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_counting_any_dash_as_an_item_splits_a_block_scalar (__main__.SecurityReviewTests.test_mutation_counting_any_dash_as_an_item_splits_a_block_scalar)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1036, in test_mutation_counting_any_dash_as_an_item_splits_a_block_scalar
+    self.assertEqual(self.run_check(review=review, report=report)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_direct_child_rule_reads_a_nested_findings_as_the_list (__main__.SecurityReviewTests.test_mutation_dropping_the_direct_child_rule_reads_a_nested_findings_as_the_list)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1140, in test_mutation_dropping_the_direct_child_rule_reads_a_nested_findings_as_the_list
+    self.assertEqual(self.run_check(review=self.NONE, report=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_empty_list_literal_refuses_findings_of_nothing (__main__.SecurityReviewTests.test_mutation_dropping_the_empty_list_literal_refuses_findings_of_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1026, in test_mutation_dropping_the_empty_list_literal_refuses_findings_of_nothing
+    self.assertEqual(self.report_errors(report), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_empty_rule_passes_a_key_with_no_items (__main__.SecurityReviewTests.test_mutation_dropping_the_empty_rule_passes_a_key_with_no_items)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1021, in test_mutation_dropping_the_empty_rule_passes_a_key_with_no_items
+    self.assertEqual(self.run_check(review=self.NONE, report=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_folder_rule_lets_a_path_outside_pass (__main__.SecurityReviewTests.test_mutation_dropping_the_folder_rule_lets_a_path_outside_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 915, in test_mutation_dropping_the_folder_rule_lets_a_path_outside_pass
+    self.assertEqual(self.run_check(review=review, outside=True, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_quote_strip_refuses_a_quoted_severity (__main__.SecurityReviewTests.test_mutation_dropping_the_quote_strip_refuses_a_quoted_severity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 932, in test_mutation_dropping_the_quote_strip_refuses_a_quoted_severity
+    self.assertEqual(self.run_check(report=quoted)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_root_value_rule_reads_a_scalar_root_as_a_mapping (__main__.SecurityReviewTests.test_mutation_dropping_the_root_value_rule_reads_a_scalar_root_as_a_mapping)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1120, in test_mutation_dropping_the_root_value_rule_reads_a_scalar_root_as_a_mapping
+    self.assertEqual(self.run_check(review=self.NONE, report=report, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_security_call_lets_a_missing_review_pass (__main__.SecurityReviewTests.test_mutation_dropping_the_security_call_lets_a_missing_review_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 891, in test_mutation_dropping_the_security_call_lets_a_missing_review_pass
+    self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_security_duplicate_check_lets_two_dispositions_pass (__main__.SecurityReviewTests.test_mutation_dropping_the_security_duplicate_check_lets_two_dispositions_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 885, in test_mutation_dropping_the_security_duplicate_check_lets_two_dispositions_pass
+    self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_security_review_count_lets_two_lines_pass (__main__.SecurityReviewTests.test_mutation_dropping_the_security_review_count_lets_two_lines_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 879, in test_mutation_dropping_the_security_review_count_lets_two_lines_pass
+    self.assertEqual(self.run_check(review=review, extra=later, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_severity_test_lets_a_declined_high_pass (__main__.SecurityReviewTests.test_mutation_dropping_the_severity_test_lets_a_declined_high_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 897, in test_mutation_dropping_the_severity_test_lets_a_declined_high_pass
+    self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_matching_unquoted_frontmatter_only_skips_a_quoted_prod_task (__main__.SecurityReviewTests.test_mutation_matching_unquoted_frontmatter_only_skips_a_quoted_prod_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 927, in test_mutation_matching_unquoted_frontmatter_only_skips_a_quoted_prod_task
+    self.assertEqual(self.run_check(module=mutant, **kwargs)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_reading_a_folder_task_as_a_flat_task_refuses_its_own_report (__main__.SecurityReviewTests.test_mutation_reading_a_folder_task_as_a_flat_task_refuses_its_own_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 901, in test_mutation_reading_a_folder_task_as_a_flat_task_refuses_its_own_report
+    self.assertEqual(self.run_check(folder_form=True)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["index.md: design needs '### Worth questi[84 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"index.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["index.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_mutation_reading_ids_from_the_whole_task_accepts_a_prose_id (__main__.SecurityReviewTests.test_mutation_reading_ids_from_the_whole_task_accepts_a_prose_id)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 921, in test_mutation_reading_ids_from_the_whole_task_accepts_a_prose_id
+    self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+======================================================================
+FAIL: test_the_same_report_passes_for_a_flat_task_and_for_a_folder_task (__main__.SecurityReviewTests.test_the_same_report_passes_for_a_flat_task_and_for_a_folder_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 791, in test_the_same_report_passes_for_a_flat_task_and_for_a_folder_task
+    self.assertEqual((flat, folder), ([], []))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (["task.md: design needs '### Worth questio[217 chars]st"]) != ([], [])
+
+First differing element 0:
+["task.md: design needs '### Worth questio[83 chars]est"]
+[]
+
++ ([], [])
+- (["task.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"],
+-  ["index.md: design needs '### Worth questions': Captain words served, what "
+-   "breaks without each part, and the premise's cheap test"])
+
+----------------------------------------------------------------------
+Ran 222 tests in 15.986s
+
+FAILED (failures=82, skipped=4)
+task.md: missing required body field: Non-goals
+task.md: missing required body field: Budget
+task.md: missing required body field: Stop condition
+task.md: '## FO alignment' has 2 'Surfaces:' lines, expected exactly 1
+task.md: design surfaces presentable
+scope check not run: no frontmatter
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+scope check not run: no frontmatter
+task.md: 'Surfaces:' has unknown value(s) api
+scope check not run: no frontmatter
+task.md: 'Surfaces:' combines 'none' with other values
+scope check not run: no frontmatter
+task.md: '## FO alignment' needs a 'Visible change:' line
+scope check not run: no frontmatter
+task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+scope check not run: no frontmatter
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+scope check not run: no frontmatter
+task.md: surface 'ui' needs a 'UI proposal:' line with text
+scope check not run: no frontmatter
+task.md: surface 'ui' Preview 'missing.html' does not exist
+scope check not run: no frontmatter
+task.md: surface 'db' needs a 'Migration source:' line with a value
+scope check not run: no frontmatter
+task.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table
+scope check not run: no frontmatter
+task.md: design surfaces presentable
+scope check not run: no frontmatter
+task.md: seed fields and FO alignment recorded
+task.md: seed fields and FO alignment recorded
+task.md: seed fields and FO alignment recorded
+task.md: surface 'ui' needs a 'UI proposal:' line with text
+task.md: surface 'ui' needs a 'Preview:' line
+scope check not run: no frontmatter
+task.md: missing '## FO alignment' section
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: '## FO alignment' needs a 'Visible change:' line
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+task.md: 'Surfaces:' has unknown value(s) api
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
