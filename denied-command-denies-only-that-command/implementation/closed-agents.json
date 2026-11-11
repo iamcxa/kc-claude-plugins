@@ -1,0 +1,44 @@
+[
+  {
+    "id": "f725714e-0128-4ac3-8717-a5c6e3710d2f",
+    "status": "closed",
+    "archivedAt": "2026-11-11T04:15:37.749Z",
+    "title": "Refusal replay candidate-astra-1"
+  },
+  {
+    "id": "e71fb7b0-7a37-4a3e-9f87-8f482f773826",
+    "status": "closed",
+    "archivedAt": "2026-11-11T04:15:34.258Z",
+    "title": "Refusal replay release-astra-1"
+  },
+  {
+    "id": "61d52bb0-301a-4a5e-8d54-d6187c76d48b",
+    "status": "closed",
+    "archivedAt": "2026-11-11T04:15:30.380Z",
+    "title": "Refusal replay candidate-sol-2"
+  },
+  {
+    "id": "60502f0e-b23c-4a2d-88d0-e502ec0404c9",
+    "status": "closed",
+    "archivedAt": "2026-11-11T04:15:26.596Z",
+    "title": "Refusal replay candidate-sol-1"
+  },
+  {
+    "id": "4f12a248-d4b9-4c92-9c6a-123feb211f79",
+    "status": "closed",
+    "archivedAt": "2026-11-11T04:15:23.162Z",
+    "title": "Refusal replay release-sol-1"
+  },
+  {
+    "id": "0fea8a89-aec7-482b-8370-4afc4c698403",
+    "status": "closed",
+    "archivedAt": "2026-11-11T04:10:28.350Z",
+    "title": "Refusal replay FO scenario"
+  },
+  {
+    "id": "9bf2e6c9-5778-408e-a0f6-7f3fe5278b6f",
+    "status": "closed",
+    "archivedAt": "2026-11-11T04:08:14.405Z",
+    "title": "Refusal replay release sol 1"
+  }
+]

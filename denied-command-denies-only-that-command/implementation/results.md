@@ -39,3 +39,14 @@ Word counts (wc -w equivalent): startup/resume 5939 -> 5972; Dispatch facts 297 
 ADRs added: none. This extends ADR 0037's Team instruction and records the word raise under ADR 0020; it does not replace either ruling. doc_impact.py returned seven retained documents: ADR 0020 unaffected (same quote/budget mechanism); ADR 0037 unaffected (same single Team home); ADR 0049 unaffected (model table unchanged); ADR 0052 unaffected (authority unchanged; the provider-specific reason step extends its procedure); package README unaffected (same authority, install and routing claims); maintain-flow skill unaffected (same replay method); learning.md unaffected (no learning adoption).
 
 Local lint exits 0 at 5972/5972; 47 existing lint tests pass; ADR lint exits 0 (67 records); fresh-ref number guards exits 0 at candidate; design-surfaces exits 0; diff --check exits 0; comment ratio 0/3 code lines, 0%, package maximum 5% (floor 20 code lines, therefore the numeric cap is not enforced for this three-line addition). No CI trigger changed; per-PR CI cost was not measured. Package lint is the repository copy used by CI; other required package scripts are from the exact installed 0.38.1 root named in the dispatch.
+
+
+## ADR byte identity at the inspected base
+
+e8664a72b0f904e5dda3c391d52ab3abaca876b4
+
+docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md sha256:a49b4da2665730f648334a0a8465bde6df3c779e9b0c42b3e61510cc96185afb
+
+docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md sha256:978f2731eda46ecb8351e435bed023d77620e25714c9b6defe5f0fbd962a6029
+
+docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md sha256:9a25ffb41b4d49b94bfdd68b581be9789ae9867231345f36f6e11dcd62d7be58
