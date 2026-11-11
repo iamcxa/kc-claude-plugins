@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.38.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.38.0...kc-dev-flow-2-v0.38.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** accept validation corrections before rulings ([#834](https://github.com/iamcxa/kc-claude-plugins/issues/834)) ([7655b8d](https://github.com/iamcxa/kc-claude-plugins/commit/7655b8dab3daba2674ebd0faad3fb81e9754187c))
+
 ## [0.38.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.37.0...kc-dev-flow-2-v0.38.0) (2026-11-10)
 
 
