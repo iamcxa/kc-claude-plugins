@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:first-principles-check-in-dev2-principles:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:first-principles-check-in-dev2-principles-backlog-1
+              briefing:
+                id: briefing:first-principles-check-in-dev2-principles:backlog:attempt-1:revision-1
+                digest: sha256:41a7e4e0e039a9909cc26c4af95d7ebfa9165a4dd3a4e2793941a93985328029
+                room-ref: ./first-principles-check-in-dev2-principles/review/backlog/briefing-1
 ---
 
 ## Scope

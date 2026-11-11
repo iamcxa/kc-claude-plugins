@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:first-principles-check-in-dev2-principles:backlog:attempt-1:revision-1",
+  "question": "決定：把「設計階段先查現成的標準與做法」和「dev2 的原則讓每個階段問第一性原理的問題」這兩張拉進第 21 批、進入設計階段。我建議核准：它們和預算那張是同一個主題，都是先把問題問對。核准代表接受這兩張任務檔寫的範圍、預算與停止條件，並各派一個設計工人；不代表接受任何設計或修法。兩張都標了方向要先對齊，派工前我會各問你一題。",
+  "artifacts": [
+    {
+      "id": "artifact:first-principles-check-in-dev2-principles:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7bcce69b420990ae998c0345ad2f06e314d8f574/first-principles-check-in-dev2-principles.md",
+      "rev": "sha256:91a789bf78f42613fbdacd4e1bea6cea2d2e89fddeb08e072255aeac1c271692",
+      "mediaType": "text/markdown",
+      "summary": "Batch 21 backlog sitting, second part: two seeds filed 2026-11-10 by the retiring FO, pulled into batch 21 after the Captain chose 「重寫，並把兩張原則任務拉進這批」 in the host question dialog 2026-11-11. This seed: first-principles-check-in-dev2-principles. design_surfaces.py check --seed exit 0 (FO run 2026-11-11). Each seed quotes the Captain's words as relayed by a peer session and says the backlog gate confirms them; this gate is that confirmation. Both record alignment as needed at ideation and FO asks the Captain before dispatching."
+    }
+  ]
+}
