@@ -1,0 +1,701 @@
+{
+  "candidate-tests": [
+    {
+      "name": "candidate_story_absent",
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "-B",
+        "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "JourneyStoryTests"
+      ],
+      "path": "/usr/bin:/bin",
+      "resolver": null,
+      "exit": 0,
+      "stdout": "",
+      "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.064s\n\nOK\n"
+    },
+    {
+      "name": "candidate_full_absent",
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "-B",
+        "kc-dev-flow-2/scripts/test_design_surfaces.py"
+      ],
+      "path": "/usr/bin:/bin",
+      "resolver": null,
+      "exit": 0,
+      "stdout": "task.md: missing required body field: Non-goals\ntask.md: missing required body field: Budget\ntask.md: missing required body field: Stop condition\ntask.md: '## FO alignment' has 2 'Surfaces:' lines, expected exactly 1\ntask.md: design surfaces presentable\nscope check not run: no frontmatter\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\nscope check not run: no frontmatter\ntask.md: 'Surfaces:' has unknown value(s) api\nscope check not run: no frontmatter\ntask.md: 'Surfaces:' combines 'none' with other values\nscope check not run: no frontmatter\ntask.md: '## FO alignment' needs a 'Visible change:' line\nscope check not run: no frontmatter\ntask.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'\nscope check not run: no frontmatter\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\nscope check not run: no frontmatter\ntask.md: surface 'ui' needs a 'UI proposal:' line with text\nscope check not run: no frontmatter\ntask.md: surface 'ui' Preview 'missing.html' does not exist\nscope check not run: no frontmatter\ntask.md: surface 'db' needs a 'Migration source:' line with a value\nscope check not run: no frontmatter\ntask.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table\nscope check not run: no frontmatter\ntask.md: design surfaces presentable\nscope check not run: no frontmatter\ntask.md: seed fields and FO alignment recorded\ntask.md: seed fields and FO alignment recorded\ntask.md: seed fields and FO alignment recorded\ntask.md: surface 'ui' needs a 'UI proposal:' line with text\ntask.md: surface 'ui' needs a 'Preview:' line\nscope check not run: no frontmatter\ntask.md: missing '## FO alignment' section\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: '## FO alignment' needs a 'Visible change:' line\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Surfaces:' has unknown value(s) api\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'\n",
+      "stderr": ".........ssss.....................................................................................................................................................................................................................\n----------------------------------------------------------------------\nRan 226 tests in 17.617s\n\nOK (skipped=4)\n"
+    },
+    {
+      "name": "candidate_story_present",
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "-B",
+        "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "JourneyStoryTests"
+      ],
+      "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+      "resolver": "/Users/kent/.local/bin/spacedock",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.061s\n\nOK\n"
+    },
+    {
+      "name": "candidate_full_present",
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "-B",
+        "kc-dev-flow-2/scripts/test_design_surfaces.py"
+      ],
+      "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+      "resolver": "/Users/kent/.local/bin/spacedock",
+      "exit": 0,
+      "stdout": "task.md: missing required body field: Non-goals\ntask.md: missing required body field: Budget\ntask.md: missing required body field: Stop condition\ntask.md: '## FO alignment' has 2 'Surfaces:' lines, expected exactly 1\ntask.md: design surfaces presentable\nscope check not run: no frontmatter\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\nscope check not run: no frontmatter\ntask.md: 'Surfaces:' has unknown value(s) api\nscope check not run: no frontmatter\ntask.md: 'Surfaces:' combines 'none' with other values\nscope check not run: no frontmatter\ntask.md: '## FO alignment' needs a 'Visible change:' line\nscope check not run: no frontmatter\ntask.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'\nscope check not run: no frontmatter\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\nscope check not run: no frontmatter\ntask.md: surface 'ui' needs a 'UI proposal:' line with text\nscope check not run: no frontmatter\ntask.md: surface 'ui' Preview 'missing.html' does not exist\nscope check not run: no frontmatter\ntask.md: surface 'db' needs a 'Migration source:' line with a value\nscope check not run: no frontmatter\ntask.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table\nscope check not run: no frontmatter\ntask.md: design surfaces presentable\nscope check not run: no frontmatter\ntask.md: seed fields and FO alignment recorded\ntask.md: seed fields and FO alignment recorded\ntask.md: seed fields and FO alignment recorded\ntask.md: surface 'ui' needs a 'UI proposal:' line with text\ntask.md: surface 'ui' needs a 'Preview:' line\nscope check not run: no frontmatter\ntask.md: missing '## FO alignment' section\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: '## FO alignment' needs a 'Visible change:' line\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Surfaces:' has unknown value(s) api\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'\n",
+      "stderr": ".........ssss.....................................................................................................................................................................................................................\n----------------------------------------------------------------------\nRan 226 tests in 17.914s\n\nOK (skipped=4)\n"
+    },
+    {
+      "name": "native_worth_controls",
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "-B",
+        "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+        "DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values",
+        "DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable"
+      ],
+      "path": "/Users/kent/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/usr/local/go/bin:/Users/kent/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path:/Users/kent/.codex/tmp/arg0/codex-arg0Ia4auX:/Users/kent/.local/bin:/Users/kent/.antigravity/antigravity/bin:/Users/kent/.pyenv/shims:/Users/kent/.deno/bin:/Users/kent/.yarn/bin:/Users/kent/.config/yarn/global/node_modules/.bin:/Users/kent/.console-ninja/.bin:/Users/kent/.npm-global/bin:/Users/kent/.codeium/windsurf/bin:/Users/kent/Library/pnpm:/opt/homebrew/opt/openssl@1.1/bin:/opt/homebrew/opt/unzip/bin:/Users/kent/.bun/bin:/usr/local/opt/openssl@1.1/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/kent/.orbstack/bin:/Users/kent/Library/Android/sdk/emulator:/Users/kent/Library/Android/sdk/tools:/Users/kent/Library/Android/sdk/tools/bin:/Users/kent/Library/Android/sdk/platform-tools:/Users/kent/n/bin:/Users/kent/go/bin:/Users/kent/.orbstack/bin",
+      "resolver": "/Users/kent/.local/bin/spacedock",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 3.428s\n\nOK\n"
+    }
+  ],
+  "evidence": {
+    "base": "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+    "checks": [
+      {
+        "name": "baseline_story_absent",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/test_design_surfaces.py",
+          "JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows"
+        ],
+        "path": "/usr/bin:/bin",
+        "resolver": null,
+        "exit": 1,
+        "stdout": "",
+        "stderr": "F\n======================================================================\nFAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (__main__.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_design_surfaces.py\", line 368, in test_design_compares_story_record_to_counted_field_only_in_map_workflows\n    self.assertEqual(self.check(\"Story: inbox-home (owner-account)\\n\", \"inbox-home\", seed=False), [])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [\"task.md: cannot read stage for Worth que[53 chars]ck'\"] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n\"task.md: cannot read stage for Worth questions: [Errno 2] No such file or directory: 'spacedock'\"\n\n+ []\n- ['task.md: cannot read stage for Worth questions: [Errno 2] No such file or '\n-  \"directory: 'spacedock'\"]\n\n----------------------------------------------------------------------\nRan 1 test in 0.048s\n\nFAILED (failures=1)\n"
+      },
+      {
+        "name": "baseline_story_present",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/test_design_surfaces.py",
+          "JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows"
+        ],
+        "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+        "resolver": "/Users/kent/.local/bin/spacedock",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "F\n======================================================================\nFAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (__main__.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_design_surfaces.py\", line 368, in test_design_compares_story_record_to_counted_field_only_in_map_workflows\n    self.assertEqual(self.check(\"Story: inbox-home (owner-account)\\n\", \"inbox-home\", seed=False), [])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [\"task.md: design needs '### Worth questio[83 chars]est\"] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n\"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\"\n\n+ []\n- [\"task.md: design needs '### Worth questions': Captain words served, what \"\n-  \"breaks without each part, and the premise's cheap test\"]\n\n----------------------------------------------------------------------\nRan 1 test in 0.051s\n\nFAILED (failures=1)\n"
+      }
+    ]
+  },
+  "mutations-direct": {
+    "fixture": "---\ntitle: Task\nstatus: ideation # review\n---\n## Scope\nShip the bounded checker.\nNon-goals: migrations\nBudget: one cycle per stage\nStop condition: new upstream hook needed\n## FO alignment\nSurfaces: none\nVisible change: none\n## PRFAQ\nA bounded CLI result.\n## Acceptance criteria\n**AC-1**: a bounded result. Evidence: the real check.\n",
+    "fixture_sha256": "d5911a94b060033dfa82a77484fbba779e8863694e7f4e4c87da9788dbb6373a",
+    "checks": [
+      {
+        "name": "direct_missing_worth_absent",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/direct-workflow/.spacedock-state/task.md"
+        ],
+        "path": "/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "task.md: cannot read stage for Worth questions: [Errno 2] No such file or directory: 'spacedock'\nscope check not run: stage is unknown, not ideation\n",
+        "stderr": "",
+        "expected_exit": 1
+      },
+      {
+        "name": "direct_visible_worth_absent",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/direct-workflow/.spacedock-state/task.md"
+        ],
+        "path": "/usr/bin:/bin",
+        "exit": 0,
+        "stdout": "task.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n",
+        "stderr": "",
+        "expected_exit": 0
+      },
+      {
+        "name": "mutant_remove_fixture_absent",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "-c",
+          "import sys,types,unittest\nfrom pathlib import Path\npath=Path(sys.argv[1]);sys.path.insert(0,str(path.parent))\nsource=path.read_text();added=sys.argv[2];assert source.count(added)==1\nmodule=types.ModuleType('fixture_mutant');module.__file__=str(path)\nexec(compile(source.replace(added,''),str(path),'exec'),module.__dict__)\nsuite=unittest.TestSuite([module.JourneyStoryTests('test_design_compares_story_record_to_counted_field_only_in_map_workflows')])\nresult=unittest.TextTestRunner().run(suite)\nsys.exit(not result.wasSuccessful())\n",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_design_surfaces.py",
+          "                    + \"\\n## PRFAQ\\n### Worth questions\\n\"\n                    \"Asked: check Story agreement; without: mismatches pass; premise: records can disagree, compare the fixture.\\n\"\n"
+        ],
+        "path": "/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "F\n======================================================================\nFAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (fixture_mutant.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_design_surfaces.py\", line 368, in test_design_compares_story_record_to_counted_field_only_in_map_workflows\nAssertionError: Lists differ: [\"task.md: cannot read stage for Worth que[53 chars]ck'\"] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n\"task.md: cannot read stage for Worth questions: [Errno 2] No such file or directory: 'spacedock'\"\n\n+ []\n- ['task.md: cannot read stage for Worth questions: [Errno 2] No such file or '\n-  \"directory: 'spacedock'\"]\n\n----------------------------------------------------------------------\nRan 1 test in 0.051s\n\nFAILED (failures=1)\n",
+        "expected_exit": 1
+      },
+      {
+        "name": "direct_missing_worth_present",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/direct-workflow/.spacedock-state/task.md"
+        ],
+        "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\nscope check not run: stage is unknown, not ideation\n",
+        "stderr": "",
+        "expected_exit": 1
+      },
+      {
+        "name": "direct_visible_worth_present",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/direct-workflow/.spacedock-state/task.md"
+        ],
+        "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+        "exit": 0,
+        "stdout": "task.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n",
+        "stderr": "",
+        "expected_exit": 0
+      },
+      {
+        "name": "mutant_remove_fixture_present",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "-c",
+          "import sys,types,unittest\nfrom pathlib import Path\npath=Path(sys.argv[1]);sys.path.insert(0,str(path.parent))\nsource=path.read_text();added=sys.argv[2];assert source.count(added)==1\nmodule=types.ModuleType('fixture_mutant');module.__file__=str(path)\nexec(compile(source.replace(added,''),str(path),'exec'),module.__dict__)\nsuite=unittest.TestSuite([module.JourneyStoryTests('test_design_compares_story_record_to_counted_field_only_in_map_workflows')])\nresult=unittest.TextTestRunner().run(suite)\nsys.exit(not result.wasSuccessful())\n",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_design_surfaces.py",
+          "                    + \"\\n## PRFAQ\\n### Worth questions\\n\"\n                    \"Asked: check Story agreement; without: mismatches pass; premise: records can disagree, compare the fixture.\\n\"\n"
+        ],
+        "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "F\n======================================================================\nFAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (fixture_mutant.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_design_surfaces.py\", line 368, in test_design_compares_story_record_to_counted_field_only_in_map_workflows\nAssertionError: Lists differ: [\"task.md: design needs '### Worth questio[83 chars]est\"] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n\"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\"\n\n+ []\n- [\"task.md: design needs '### Worth questions': Captain words served, what \"\n-  \"breaks without each part, and the premise's cheap test\"]\n\n----------------------------------------------------------------------\nRan 1 test in 0.045s\n\nFAILED (failures=1)\n",
+        "expected_exit": 1
+      },
+      {
+        "name": "mutant_swallow_exception_direct",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "-c",
+          "import sys;from pathlib import Path;import importlib.util;sys.path.insert(0,sys.argv[1]);p=Path(sys.argv[2]);s=importlib.util.spec_from_file_location('ds',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);code=m.main(['check',sys.argv[3]]);assert code==1, f'expected refusal, got exit {code}'",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant/scripts/design_surfaces.py",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/direct-workflow/.spacedock-state/task.md"
+        ],
+        "path": "/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "task.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n",
+        "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import sys;from pathlib import Path;import importlib.util;sys.path.insert(0,sys.argv[1]);p=Path(sys.argv[2]);s=importlib.util.spec_from_file_location('ds',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);code=m.main(['check',sys.argv[3]]);assert code==1, f'expected refusal, got exit {code}'\n                                                                                                                                                                                                                                                                         ^^^^^^^\nAssertionError: expected refusal, got exit 0\n",
+        "expected_exit": 1
+      },
+      {
+        "name": "mutant_swallow_exception_existing_unreadable_test",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "-c",
+          "import sys,unittest,importlib.util\nfrom pathlib import Path\nsys.path.insert(0,sys.argv[1]);s=importlib.util.spec_from_file_location('test_dispatch_stage',Path(sys.argv[1])/'test_dispatch_stage.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m);m.ROOT=Path(sys.argv[2]);m.BINARY='/Users/kent/.local/bin/spacedock'\nr=unittest.TextTestRunner().run(unittest.TestSuite([m.DispatchStageTests('test_unreadable_native_stage_does_not_make_design_presentable')]))\nsys.exit(not r.wasSuccessful())\n",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant"
+        ],
+        "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "FFFF\n======================================================================\nFAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output=None)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 165, in test_unreadable_native_stage_does_not_make_design_presentable\n    result = self.call([sys.executable, \"-B\", ROOT / \"scripts/design_surfaces.py\", \"check\", self.entity],\n                       expected=1, child_env={**self.env, \"SPACEDOCK_BIN\": str(binary)})\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 80, in call\n    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-dhnptdg9/code/docs/dev2/.spacedock-state/dispatch-fixture-1cde3e56ea86484d9f32c4174a3c7d04.md')], 'dispatch-fixture-1cde3e56ea86484d9f32c4174a3c7d04.md: design surfaces presentable\\nscope check not run: stage is unknown, not ideation\\n', '')\n\n======================================================================\nFAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='not json')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 165, in test_unreadable_native_stage_does_not_make_design_presentable\n    result = self.call([sys.executable, \"-B\", ROOT / \"scripts/design_surfaces.py\", \"check\", self.entity],\n                       expected=1, child_env={**self.env, \"SPACEDOCK_BIN\": str(binary)})\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 80, in call\n    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-dhnptdg9/code/docs/dev2/.spacedock-state/dispatch-fixture-1cde3e56ea86484d9f32c4174a3c7d04.md')], 'dispatch-fixture-1cde3e56ea86484d9f32c4174a3c7d04.md: design surfaces presentable\\nscope check not run: stage is unknown, not ideation\\n', '')\n\n======================================================================\nFAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='{\"command\": \"read\", \"path\": \"/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-dhnptdg9/code/docs/dev2/.spacedock-state/dispatch-fixture-1cde3e56ea86484d9f32c4174a3c7d04.md\", \"frontmatter\": {\"status\": 1}}')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 165, in test_unreadable_native_stage_does_not_make_design_presentable\n    result = self.call([sys.executable, \"-B\", ROOT / \"scripts/design_surfaces.py\", \"check\", self.entity],\n                       expected=1, child_env={**self.env, \"SPACEDOCK_BIN\": str(binary)})\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 80, in call\n    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-dhnptdg9/code/docs/dev2/.spacedock-state/dispatch-fixture-1cde3e56ea86484d9f32c4174a3c7d04.md')], 'dispatch-fixture-1cde3e56ea86484d9f32c4174a3c7d04.md: design surfaces presentable\\nscope check not run: stage is unknown, not ideation\\n', '')\n\n======================================================================\nFAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='{\"command\": \"read\", \"path\": \"/another/task.md\", \"frontmatter\": {\"status\": \"done\"}}')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 165, in test_unreadable_native_stage_does_not_make_design_presentable\n    result = self.call([sys.executable, \"-B\", ROOT / \"scripts/design_surfaces.py\", \"check\", self.entity],\n                       expected=1, child_env={**self.env, \"SPACEDOCK_BIN\": str(binary)})\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 80, in call\n    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-dhnptdg9/code/docs/dev2/.spacedock-state/dispatch-fixture-1cde3e56ea86484d9f32c4174a3c7d04.md')], 'dispatch-fixture-1cde3e56ea86484d9f32c4174a3c7d04.md: design surfaces presentable\\nscope check not run: stage is unknown, not ideation\\n', '')\n\n----------------------------------------------------------------------\nRan 1 test in 1.145s\n\nFAILED (failures=4)\n",
+        "expected_exit": 1
+      },
+      {
+        "name": "direct_plain_status_missing_worth_absent",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/direct-workflow/.spacedock-state/task.md"
+        ],
+        "path": "/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "task.md: cannot read stage for Worth questions: [Errno 2] No such file or directory: 'spacedock'\nscope check not run: no closed backlog approval\n",
+        "stderr": "",
+        "stdout_words": 23,
+        "task_unchanged": true
+      },
+      {
+        "name": "direct_plain_status_visible_worth_absent",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/direct-workflow/.spacedock-state/task.md"
+        ],
+        "path": "/usr/bin:/bin",
+        "exit": 0,
+        "stdout": "task.md: design surfaces presentable\nscope check not run: no closed backlog approval\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\n",
+        "stderr": "",
+        "stdout_words": 74,
+        "task_unchanged": true
+      },
+      {
+        "name": "direct_plain_status_missing_worth_present",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/direct-workflow/.spacedock-state/task.md"
+        ],
+        "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\nscope check not run: no closed backlog approval\n",
+        "stderr": "",
+        "stdout_words": 27,
+        "task_unchanged": true
+      },
+      {
+        "name": "direct_plain_status_visible_worth_present",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/direct-workflow/.spacedock-state/task.md"
+        ],
+        "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+        "exit": 0,
+        "stdout": "task.md: design surfaces presentable\nscope check not run: no closed backlog approval\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.\n",
+        "stderr": "",
+        "stdout_words": 74,
+        "task_unchanged": true
+      }
+    ],
+    "plain_status_fixture": "---\ntitle: Task\nstatus: ideation\n---\n## Scope\nShip the bounded checker.\nNon-goals: migrations\nBudget: one cycle per stage\nStop condition: new upstream hook needed\n## FO alignment\nSurfaces: none\nVisible change: none\n## PRFAQ\nA bounded CLI result.\n## Acceptance criteria\n**AC-1**: a bounded result. Evidence: the real check.\n"
+  },
+  "post-commit-checks": {
+    "cleared_cache_paths": [
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/__pycache__/count_tokens.cpython-315.pyc"
+    ],
+    "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f",
+    "checks": [
+      {
+        "name": "candidate_story_absent",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/test_design_surfaces.py",
+          "JourneyStoryTests"
+        ],
+        "path": "/usr/bin:/bin",
+        "resolver": null,
+        "exit": 0,
+        "stdout": "",
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.075s\n\nOK\n",
+        "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+      },
+      {
+        "name": "candidate_full_absent",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/test_design_surfaces.py"
+        ],
+        "path": "/usr/bin:/bin",
+        "resolver": null,
+        "exit": 0,
+        "stdout": "task.md: missing required body field: Non-goals\ntask.md: missing required body field: Budget\ntask.md: missing required body field: Stop condition\ntask.md: '## FO alignment' has 2 'Surfaces:' lines, expected exactly 1\ntask.md: design surfaces presentable\nscope check not run: no frontmatter\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\nscope check not run: no frontmatter\ntask.md: 'Surfaces:' has unknown value(s) api\nscope check not run: no frontmatter\ntask.md: 'Surfaces:' combines 'none' with other values\nscope check not run: no frontmatter\ntask.md: '## FO alignment' needs a 'Visible change:' line\nscope check not run: no frontmatter\ntask.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'\nscope check not run: no frontmatter\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\nscope check not run: no frontmatter\ntask.md: surface 'ui' needs a 'UI proposal:' line with text\nscope check not run: no frontmatter\ntask.md: surface 'ui' Preview 'missing.html' does not exist\nscope check not run: no frontmatter\ntask.md: surface 'db' needs a 'Migration source:' line with a value\nscope check not run: no frontmatter\ntask.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table\nscope check not run: no frontmatter\ntask.md: design surfaces presentable\nscope check not run: no frontmatter\ntask.md: seed fields and FO alignment recorded\ntask.md: seed fields and FO alignment recorded\ntask.md: seed fields and FO alignment recorded\ntask.md: surface 'ui' needs a 'UI proposal:' line with text\ntask.md: surface 'ui' needs a 'Preview:' line\nscope check not run: no frontmatter\ntask.md: missing '## FO alignment' section\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: '## FO alignment' needs a 'Visible change:' line\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Surfaces:' has unknown value(s) api\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'\n",
+        "stderr": ".........ssss.....................................................................................................................................................................................................................\n----------------------------------------------------------------------\nRan 226 tests in 18.969s\n\nOK (skipped=4)\n",
+        "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+      },
+      {
+        "name": "candidate_story_present",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/test_design_surfaces.py",
+          "JourneyStoryTests"
+        ],
+        "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+        "resolver": "/Users/kent/.local/bin/spacedock",
+        "exit": 0,
+        "stdout": "",
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.065s\n\nOK\n",
+        "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+      },
+      {
+        "name": "candidate_full_present",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/test_design_surfaces.py"
+        ],
+        "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+        "resolver": "/Users/kent/.local/bin/spacedock",
+        "exit": 0,
+        "stdout": "task.md: missing required body field: Non-goals\ntask.md: missing required body field: Budget\ntask.md: missing required body field: Stop condition\ntask.md: '## FO alignment' has 2 'Surfaces:' lines, expected exactly 1\ntask.md: design surfaces presentable\nscope check not run: no frontmatter\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\nscope check not run: no frontmatter\ntask.md: 'Surfaces:' has unknown value(s) api\nscope check not run: no frontmatter\ntask.md: 'Surfaces:' combines 'none' with other values\nscope check not run: no frontmatter\ntask.md: '## FO alignment' needs a 'Visible change:' line\nscope check not run: no frontmatter\ntask.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'\nscope check not run: no frontmatter\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\nscope check not run: no frontmatter\ntask.md: surface 'ui' needs a 'UI proposal:' line with text\nscope check not run: no frontmatter\ntask.md: surface 'ui' Preview 'missing.html' does not exist\nscope check not run: no frontmatter\ntask.md: surface 'db' needs a 'Migration source:' line with a value\nscope check not run: no frontmatter\ntask.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table\nscope check not run: no frontmatter\ntask.md: design surfaces presentable\nscope check not run: no frontmatter\ntask.md: seed fields and FO alignment recorded\ntask.md: seed fields and FO alignment recorded\ntask.md: seed fields and FO alignment recorded\ntask.md: surface 'ui' needs a 'UI proposal:' line with text\ntask.md: surface 'ui' needs a 'Preview:' line\nscope check not run: no frontmatter\ntask.md: missing '## FO alignment' section\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: '## FO alignment' needs a 'Visible change:' line\ntask.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Surfaces:' has unknown value(s) api\ntask.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'\ntask.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'\n",
+        "stderr": ".........ssss.....................................................................................................................................................................................................................\n----------------------------------------------------------------------\nRan 226 tests in 18.503s\n\nOK (skipped=4)\n",
+        "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+      },
+      {
+        "name": "native_worth_controls",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+          "DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values",
+          "DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable"
+        ],
+        "path": "/Users/kent/.local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/usr/local/go/bin:/Users/kent/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path:/Users/kent/.codex/tmp/arg0/codex-arg0Ia4auX:/Users/kent/.local/bin:/Users/kent/.antigravity/antigravity/bin:/Users/kent/.pyenv/shims:/Users/kent/.deno/bin:/Users/kent/.yarn/bin:/Users/kent/.config/yarn/global/node_modules/.bin:/Users/kent/.console-ninja/.bin:/Users/kent/.npm-global/bin:/Users/kent/.codeium/windsurf/bin:/Users/kent/Library/pnpm:/opt/homebrew/opt/openssl@1.1/bin:/opt/homebrew/opt/unzip/bin:/Users/kent/.bun/bin:/usr/local/opt/openssl@1.1/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/kent/.orbstack/bin:/Users/kent/Library/Android/sdk/emulator:/Users/kent/Library/Android/sdk/tools:/Users/kent/Library/Android/sdk/tools/bin:/Users/kent/Library/Android/sdk/platform-tools:/Users/kent/n/bin:/Users/kent/go/bin:/Users/kent/.orbstack/bin",
+        "resolver": "/Users/kent/.local/bin/spacedock",
+        "exit": 0,
+        "stdout": "",
+        "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 3.753s\n\nOK\n",
+        "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+      },
+      {
+        "name": "mutant_remove_fixture_absent",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "-c",
+          "import sys,types,unittest\nfrom pathlib import Path\npath=Path(sys.argv[1]);sys.path.insert(0,str(path.parent))\nsource=path.read_text();added=sys.argv[2];assert source.count(added)==1\nmodule=types.ModuleType('fixture_mutant');module.__file__=str(path)\nexec(compile(source.replace(added,''),str(path),'exec'),module.__dict__)\nsuite=unittest.TestSuite([module.JourneyStoryTests('test_design_compares_story_record_to_counted_field_only_in_map_workflows')])\nresult=unittest.TextTestRunner().run(suite)\nsys.exit(not result.wasSuccessful())\n",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_design_surfaces.py",
+          "                    + \"\\n## PRFAQ\\n### Worth questions\\n\"\n                    \"Asked: check Story agreement; without: mismatches pass; premise: records can disagree, compare the fixture.\\n\"\n"
+        ],
+        "path": "/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "F\n======================================================================\nFAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (fixture_mutant.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_design_surfaces.py\", line 368, in test_design_compares_story_record_to_counted_field_only_in_map_workflows\nAssertionError: Lists differ: [\"task.md: cannot read stage for Worth que[53 chars]ck'\"] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n\"task.md: cannot read stage for Worth questions: [Errno 2] No such file or directory: 'spacedock'\"\n\n+ []\n- ['task.md: cannot read stage for Worth questions: [Errno 2] No such file or '\n-  \"directory: 'spacedock'\"]\n\n----------------------------------------------------------------------\nRan 1 test in 0.163s\n\nFAILED (failures=1)\n",
+        "expected_exit": 1,
+        "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+      },
+      {
+        "name": "mutant_remove_fixture_present",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "-c",
+          "import sys,types,unittest\nfrom pathlib import Path\npath=Path(sys.argv[1]);sys.path.insert(0,str(path.parent))\nsource=path.read_text();added=sys.argv[2];assert source.count(added)==1\nmodule=types.ModuleType('fixture_mutant');module.__file__=str(path)\nexec(compile(source.replace(added,''),str(path),'exec'),module.__dict__)\nsuite=unittest.TestSuite([module.JourneyStoryTests('test_design_compares_story_record_to_counted_field_only_in_map_workflows')])\nresult=unittest.TextTestRunner().run(suite)\nsys.exit(not result.wasSuccessful())\n",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_design_surfaces.py",
+          "                    + \"\\n## PRFAQ\\n### Worth questions\\n\"\n                    \"Asked: check Story agreement; without: mismatches pass; premise: records can disagree, compare the fixture.\\n\"\n"
+        ],
+        "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "F\n======================================================================\nFAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (fixture_mutant.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_design_surfaces.py\", line 368, in test_design_compares_story_record_to_counted_field_only_in_map_workflows\nAssertionError: Lists differ: [\"task.md: design needs '### Worth questio[83 chars]est\"] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n\"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\"\n\n+ []\n- [\"task.md: design needs '### Worth questions': Captain words served, what \"\n-  \"breaks without each part, and the premise's cheap test\"]\n\n----------------------------------------------------------------------\nRan 1 test in 0.076s\n\nFAILED (failures=1)\n",
+        "expected_exit": 1,
+        "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+      },
+      {
+        "name": "mutant_swallow_exception_direct",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "-c",
+          "import sys;from pathlib import Path;import importlib.util;sys.path.insert(0,sys.argv[1]);p=Path(sys.argv[2]);s=importlib.util.spec_from_file_location('ds',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);code=m.main(['check',sys.argv[3]]);assert code==1, f'expected refusal, got exit {code}'",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant/scripts/design_surfaces.py",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/direct-workflow/.spacedock-state/task.md"
+        ],
+        "path": "/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "task.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n",
+        "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import sys;from pathlib import Path;import importlib.util;sys.path.insert(0,sys.argv[1]);p=Path(sys.argv[2]);s=importlib.util.spec_from_file_location('ds',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);code=m.main(['check',sys.argv[3]]);assert code==1, f'expected refusal, got exit {code}'\n                                                                                                                                                                                                                                                                         ^^^^^^^\nAssertionError: expected refusal, got exit 0\n",
+        "expected_exit": 1,
+        "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+      },
+      {
+        "name": "mutant_swallow_exception_existing_unreadable_test",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "-c",
+          "import sys,unittest,importlib.util\nfrom pathlib import Path\nsys.path.insert(0,sys.argv[1]);s=importlib.util.spec_from_file_location('test_dispatch_stage',Path(sys.argv[1])/'test_dispatch_stage.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m);m.ROOT=Path(sys.argv[2]);m.BINARY='/Users/kent/.local/bin/spacedock'\nr=unittest.TextTestRunner().run(unittest.TestSuite([m.DispatchStageTests('test_unreadable_native_stage_does_not_make_design_presentable')]))\nsys.exit(not r.wasSuccessful())\n",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant"
+        ],
+        "path": "/Users/kent/.local/bin:/usr/bin:/bin",
+        "exit": 1,
+        "stdout": "",
+        "stderr": "FFFF\n======================================================================\nFAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output=None)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 165, in test_unreadable_native_stage_does_not_make_design_presentable\n    result = self.call([sys.executable, \"-B\", ROOT / \"scripts/design_surfaces.py\", \"check\", self.entity],\n                       expected=1, child_env={**self.env, \"SPACEDOCK_BIN\": str(binary)})\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 80, in call\n    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-10w871mn/code/docs/dev2/.spacedock-state/dispatch-fixture-b5a034a4de394e31b229896d28ed0b4f.md')], 'dispatch-fixture-b5a034a4de394e31b229896d28ed0b4f.md: design surfaces presentable\\nscope check not run: stage is unknown, not ideation\\n', '')\n\n======================================================================\nFAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='not json')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 165, in test_unreadable_native_stage_does_not_make_design_presentable\n    result = self.call([sys.executable, \"-B\", ROOT / \"scripts/design_surfaces.py\", \"check\", self.entity],\n                       expected=1, child_env={**self.env, \"SPACEDOCK_BIN\": str(binary)})\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 80, in call\n    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-10w871mn/code/docs/dev2/.spacedock-state/dispatch-fixture-b5a034a4de394e31b229896d28ed0b4f.md')], 'dispatch-fixture-b5a034a4de394e31b229896d28ed0b4f.md: design surfaces presentable\\nscope check not run: stage is unknown, not ideation\\n', '')\n\n======================================================================\nFAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='{\"command\": \"read\", \"path\": \"/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-10w871mn/code/docs/dev2/.spacedock-state/dispatch-fixture-b5a034a4de394e31b229896d28ed0b4f.md\", \"frontmatter\": {\"status\": 1}}')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 165, in test_unreadable_native_stage_does_not_make_design_presentable\n    result = self.call([sys.executable, \"-B\", ROOT / \"scripts/design_surfaces.py\", \"check\", self.entity],\n                       expected=1, child_env={**self.env, \"SPACEDOCK_BIN\": str(binary)})\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 80, in call\n    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-10w871mn/code/docs/dev2/.spacedock-state/dispatch-fixture-b5a034a4de394e31b229896d28ed0b4f.md')], 'dispatch-fixture-b5a034a4de394e31b229896d28ed0b4f.md: design surfaces presentable\\nscope check not run: stage is unknown, not ideation\\n', '')\n\n======================================================================\nFAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='{\"command\": \"read\", \"path\": \"/another/task.md\", \"frontmatter\": {\"status\": \"done\"}}')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 165, in test_unreadable_native_stage_does_not_make_design_presentable\n    result = self.call([sys.executable, \"-B\", ROOT / \"scripts/design_surfaces.py\", \"check\", self.entity],\n                       expected=1, child_env={**self.env, \"SPACEDOCK_BIN\": str(binary)})\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/test_dispatch_stage.py\", line 80, in call\n    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/.context/impl-main-tests-worth-story/native-refusal-mutant/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-10w871mn/code/docs/dev2/.spacedock-state/dispatch-fixture-b5a034a4de394e31b229896d28ed0b4f.md')], 'dispatch-fixture-b5a034a4de394e31b229896d28ed0b4f.md: design surfaces presentable\\nscope check not run: stage is unknown, not ideation\\n', '')\n\n----------------------------------------------------------------------\nRan 1 test in 0.869s\n\nFAILED (failures=4)\n",
+        "expected_exit": 1,
+        "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+      }
+    ],
+    "source_cache_files_after": []
+  },
+  "reading": {
+    "instruction_words": {
+      "workflow": 6008,
+      "dev": 801,
+      "mod": 48,
+      "learn": 280,
+      "gate": 969,
+      "present": 675,
+      "startup": 365,
+      "idle": 100,
+      "delivery": 488,
+      "extensions": 224
+    },
+    "fixtures": {
+      "open": {
+        "exit": 0,
+        "words": 29,
+        "lines": [
+          "fact: o/r#7 OPEN draft=False checks=green",
+          "next: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test/kc-dev-flow-2/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpitcmlo1o/watch.json wait` in the background, unless one is running.",
+          "next: when it exits, do the next: lines it prints."
+        ]
+      },
+      "merged": {
+        "exit": 0,
+        "words": 0,
+        "lines": []
+      },
+      "archive": {
+        "exit": 0,
+        "words": 5,
+        "lines": [
+          "next: run kc-dev-flow-2:learn for some-task."
+        ]
+      },
+      "sitting": {
+        "exit": 0,
+        "words": 90,
+        "lines": [
+          "next: 4 gates await the Captain at validation (t0, t1, t2, t3); unless already presented, present them in one message and record each with his one answer. Name the merge order and each shared file from Batch overlap.",
+          "next: before asking, list each open decision of these tasks once, from their decision sections and the map's open questions on their journey-story, with its home, a plain sentence, your recommendation and what gets worse; then ask one at a time; a decision that blocks no worker waits for the next sitting."
+        ]
+      }
+    },
+    "base": {
+      "startup": 7251,
+      "idle_open": 889,
+      "idle_merged": 860,
+      "archive": 333,
+      "merge_ask": 2446
+    },
+    "candidate": {
+      "startup": 7251,
+      "idle_open": 889,
+      "idle_merged": 860,
+      "archive": 333,
+      "merge_ask": 2446
+    },
+    "direct_output_words": {
+      "direct_missing_worth_absent": 24,
+      "direct_visible_worth_absent": 13,
+      "direct_missing_worth_present": 28,
+      "direct_visible_worth_present": 13
+    },
+    "input_sha256": {
+      "workflow": "bec0dd28dec096360263d828f7739bdc00f1059aecc391cb5fff6504261a1145",
+      "dev": "c47a9663ba2eedef98aa08cd3b7131326ba1ef9c848cb7c22c9a129fc2a66167",
+      "mod": "b2fc121dcc078d5fa990f9bb86485d71ee6bf53965350f39bf5dd75b333cfd1b",
+      "learn": "65de65a8476bd4f3dc82be7d59b579add301cd43536e2584fa7048b245c7bfbc",
+      "gate": "aca5e4e1a5c38bac7ba6c566c8e29951f5ecc93540abd1926d0d7dc8598cfd4d",
+      "present": "dd98858990e93de3cb0efeada11c719d1abba8517887ec3bb625a76d95655e2d",
+      "upstream": "162f152b4573f51eb7e745a557cd06bfe53ff3390cddd9947c1bc80bdab9991a"
+    },
+    "before_dispatch": "All package paths except the Story fixture test are byte-identical to base; no added or removed dispatch inputs.",
+    "plain_status_gate_output_words": {
+      "direct_plain_status_missing_worth_absent": 23,
+      "direct_plain_status_visible_worth_absent": 74,
+      "direct_plain_status_missing_worth_present": 27,
+      "direct_plain_status_visible_worth_present": 74
+    }
+  },
+  "required-checks": {
+    "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f",
+    "checks": [
+      {
+        "name": "lint_skills",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "kc-dev-flow-2/scripts/lint-skills.py"
+        ],
+        "exit": 0,
+        "stdout": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 6008 of 6008 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n",
+        "stderr": ""
+      },
+      {
+        "name": "adr_lint",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py",
+          "docs/adr",
+          "--since",
+          "571a7bd8a24ce08fac149fbcc91c4561610834c7"
+        ],
+        "exit": 0,
+        "stdout": "70 ADR file(s) checked, 0 legacy\n",
+        "stderr": ""
+      },
+      {
+        "name": "number_guards",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/number_guards.py",
+          "check",
+          "--repo",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test",
+          "--workflow-dir",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+          "--task",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/main-tests-pass-with-worth-check-and-story-test.md",
+          "--base",
+          "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+          "--head",
+          "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+        ],
+        "exit": 0,
+        "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 571a7bd8a24c head 9b9be172c7cb merge-base 571a7bd8a24c\n",
+        "stderr": ""
+      },
+      {
+        "name": "comment_ratio",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/comment_ratio.py",
+          "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+          "9b9be172c7cb2453ae74a79f10322344bf9ab32f",
+          "--workflow-dir",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+        ],
+        "exit": 0,
+        "stdout": "code lines 2, comment lines 0, 0.0%\nmaximum 5% (package default) not enforced: 2 code lines added, fewer than 20\n",
+        "stderr": ""
+      },
+      {
+        "name": "doc_impact",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/doc_impact.py",
+          "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+          "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+        ],
+        "exit": 0,
+        "stdout": "0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n",
+        "stderr": ""
+      },
+      {
+        "name": "design_surfaces",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-B",
+          "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/design_surfaces.py",
+          "check",
+          "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/main-tests-pass-with-worth-check-and-story-test.md"
+        ],
+        "exit": 0,
+        "stdout": "main-tests-pass-with-worth-check-and-story-test.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n",
+        "stderr": ""
+      }
+    ],
+    "number_guards_sandbox_attempt": {
+      "name": "number_guards",
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "-B",
+        "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/number_guards.py",
+        "check",
+        "--repo",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test",
+        "--workflow-dir",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+        "--task",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/main-tests-pass-with-worth-check-and-story-test.md",
+        "--base",
+        "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+        "--head",
+        "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+      ],
+      "exit": 0,
+      "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 571a7bd8a24c head 9b9be172c7cb merge-base 571a7bd8a24c\n",
+      "stderr": "warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible\n"
+    }
+  },
+  "scope": {
+    "base": "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+    "changed": [
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "fixture_only": true,
+    "assertion_ast_equal": true,
+    "checker_sha256": "19be172a565f34a2a43b6a2e8f98d4e6c5ece7370e97f0ab1a963f537c13fa46",
+    "unchanged_package_paths": 118,
+    "scope_falsifiers": [
+      "second product file rejected",
+      "changed assertion rejected"
+    ],
+    "adr_records": {
+      "0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md": {
+        "commit": "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+        "sha256": "97f14773e680927e218eb3f866bd733f232d607134f37ecda344de9244187953",
+        "status": "Accepted"
+      },
+      "0076-a-journey-workflows-new-seed-records-its-story-or-none.md": {
+        "commit": "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+        "sha256": "f9131ac1c94459a11f4f051619765f3f8eedb076cb93286e58b2da4e3e9cf1b2",
+        "status": "Accepted"
+      },
+      "0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md": {
+        "commit": "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+        "sha256": "d31f3ac3b93c14d2c6bc4dbbbf87ed95349b192fceda00c736a8e1332e3252c6",
+        "status": "Accepted"
+      }
+    }
+  },
+  "provenance": {
+    "base": "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+    "candidate": "9b9be172c7cb2453ae74a79f10322344bf9ab32f",
+    "tree": "67b75a024aa3c39ef0e6bec8f2db764cf51ad584",
+    "branch": "spacedock-ensign/main-tests-pass-with-worth-check-and-story-test",
+    "recorded_at": "2026-11-11T09:32:41.116472+00:00",
+    "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test",
+    "open_task_prs": [],
+    "role_triggers": "0 event(s) read at HEAD, each with a call or a waiver.",
+    "product_branch_pushed": false,
+    "roborev": "not run: FO-owned",
+    "hosted_ci_and_merge_result": "not run: FO-owned",
+    "ci_cost_per_pr": "not measured",
+    "overlap": "Only this worker was running in the active Paseo inventory; three shared-file designs remain outside this fixture."
+  },
+  "mutant_setup": {
+    "fixture_mutant": "Read the candidate test source, remove the exact two inserted source lines, compile into a fresh module, run the original Story design test; the -c program and literal removed source are saved in checks.command.",
+    "native_mutant": "Create an owned scratch package with references symlinked to the assigned worktree; symlink scripts except design_surfaces.py. Copy that checker and replace its one errors.append for cannot read stage for Worth questions with pass. Run the saved direct assertion and existing DispatchStageTests unreadable-stage method with ROOT set to the scratch package. Product source is never modified.",
+    "source_caches": "The exact count_tokens cache file was cleared before all post-commit tests and mutations; no source .pyc remained afterward; every invocation used -B and PYTHONDONTWRITEBYTECODE=1."
+  }
+}

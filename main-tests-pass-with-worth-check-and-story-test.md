@@ -202,3 +202,38 @@ None beyond the ordinary design gate. Recommend the single-fixture repair; its t
 ### Summary
 
 The failure is an incomplete Story test fixture: providing the real Spacedock program does not cure it. Complete that fixture while keeping all Story assertions and native-reader refusals; current code/CLI observations support the bounded design, with candidate and delivery proof still outstanding.
+
+## Stage Report: implementation
+
+- DONE: The fixture-only repair the design's Proposition names, inside JourneyStoryTests.check in kc-dev-flow-2/scripts/test_design_surfaces.py; no other product file; only the files the design names
+  Base 571a7bd8a24ce08fac149fbcc91c4561610834c7; candidate 9b9be172c7cb2453ae74a79f10322344bf9ab32f adds two fixture-text lines; every existing Story test AST and the checker bytes are unchanged. All raw checks/commands: [implementation evidence](main-tests-pass-with-worth-check-and-story-test/implementation-evidence.json).
+- DONE: AC-1 original Story test and full design-surfaces suite pass with and without a Spacedock program; falsifier fails
+  At the committed candidate with caches cleared and python3 -B, JourneyStoryTests passes 2/2 and full suite runs 226, exit 0, 4 existing optional skips in each PATH mode; SPACEDOCK_BIN unset, resolver absent versus /Users/kent/.local/bin/spacedock. Removing the added section fails the original test in both modes (exit 1).
+- DONE: AC-2 unreadable native stage refuses; real quoted/commented ideation requires Worth answers; falsifier fails
+  Real Spacedock 0.27.2 passes both existing DispatchStageTests Worth methods (2/2). Direct absent-program CLI exits 1 with cannot-read-stage and no presentable message, preserving task bytes; visible Worth passes. Swallowing the exception in an owned scratch copy fails the direct refusal assertion and existing unreadable-stage test; product source unchanged.
+- DONE: AC-3 exact scope, unchanged decisions and lifecycle reading equality; falsifiers refuse
+  Diff is one file/two fixture lines; 118 other package paths and design_surfaces.py bytes equal base. Independent recount preserves 7251/889/860/333/2446 lifecycle words, normal-status direct outputs 74/23/27, and dispatch inputs. Scope predicate refuses a second product path or assertion edit.
+- SKIPPED: AC-4 hosted PR-head workflow and every existing workflow command on a fresh merge result before the merge ask
+  FO-owned after publication: record current main, both merge parents and tested SHA/tree, run all existing workflow commands and both Story PATH modes, then read hosted CI at the PR head. This implementation report is not merge-result or hosted-CI acceptance.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs) exit 0
+  Frontmatter/routes/bindings/script paths pass; workflow 6008 of 6008 words, unchanged; no word-budget raise.
+- DONE: Package adr_lint.py docs/adr --since <base> exit 0
+  70 ADR files checked, 0 legacy; no new decision record owed or added for the task-local fixture repair; accepted ADRs 0048/0076/0077 pinned and hashed in evidence.
+- DONE: Package number_guards.py check exit 0
+  Explicit assigned repo/workflow/task/base/candidate: PASS no findings; migration guard skipped because no migrations-path. The sandbox state-fetch warning was resolved by an authorized rerun with successful sync, not accepted as fresh evidence.
+- DONE: Package comment_ratio.py within its maximum
+  2 code lines, 0 comment lines, 0.0%; maximum 5%, not enforced below 20 added code lines (script's rule).
+- DONE: Package doc_impact.py and task design_surfaces.py exit 0
+  0 affected documents, so none need updated/unaffected entries; task surfaces presentable, scope check intentionally not run at implementation stage.
+- DONE: Commit locally on the assigned branch, no push; PR text written for FO
+  Branch spacedock-ensign/main-tests-pass-with-worth-check-and-story-test; candidate 9b9be172c7cb2453ae74a79f10322344bf9ab32f. Conventional Commit title/body prepared at /tmp/impl-main-tests-pass-with-worth-check-and-story-test-pr.md; no versions changed.
+- SKIPPED: One Draft PR from a branch off origin/main; FO pushes, opens the Draft PR and reads CI
+  No PR opened: no product push grant. Read-only GitHub query returned no open PR for this branch; publication and delivery remain FO-owned.
+- SKIPPED: RoboRev
+  Not run: dispatch delegates local review to FO because this sandbox cannot reach its daemon; no clean-review claim.
+- DONE: CI cost measured or stated as not measured
+  CI cost per PR not measured; triggers/jobs unchanged and no additional hosted job introduced.
+
+### Summary
+
+The approved Pilot repair is one locally committed fixture addition; committed-candidate tests and reverse controls preserve Story assertions and native-stage refusal. Durable commands, outputs, source equality and lifecycle recount are linked above; product publication, RoboRev, hosted CI, independent validation and fresh-main merge-result acceptance remain with FO. No /tmp scratch was created except the required PR-text handoff, which is retained; the owned worktree scratch is removed after this evidence commit.
