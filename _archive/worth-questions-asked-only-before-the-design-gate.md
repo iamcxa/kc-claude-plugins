@@ -3,7 +3,7 @@ title: A design that already passed its ideation gate is not refused for lacking
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-11), answering 「決定：合併 #849（過了設計關卡的舊任務不再被「值不值得」檢查擋下；還在設計階段的任務照樣要寫那一節）嗎？建議合併。同意即接受：檢查只看任務現在的階段，所以一張任務只要離開設計階段就不再被問那三個問題，即使它的設計是新版之後才寫的；階段讀不到時照舊擋下；觀察員技能多改了一句話；驗證留一項延後的風險不修（CI 在安裝 spacedock 程式之前就跑設計檢查的測試，其中兩個要用到它的案例在 CI 會被跳過，本機都有跑過）；合併後還要發 0.39.1 並同步 kc-claude-plugins 和 qnow 才生效，發版我另外問你；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit 78905b08d6f38817ccdda5d2e91be478fd75dfc7, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-11T14:24:19Z
 worktree: .worktrees/spacedock-ensign-worth-questions-asked-only-before-the-design-gate
 pr: pr-merge:849
+verdict: PASSED
+completed: 2026-11-11T15:44:32Z
+archived: 2026-11-11T15:44:32Z
 ---
 
 ## Scope
