@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:worth-questions-asked-only-before-the-design-gate:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:worth-questions-asked-only-before-the-design-gate-validation-1
+              briefing:
+                id: briefing:worth-questions-asked-only-before-the-design-gate:validation:attempt-1:revision-1
+                digest: sha256:3dfcfd76d8649678dbd0c3e35e25a5544139fa41d0d52008897580f26516fb13
+                room-ref: ./worth-questions-asked-only-before-the-design-gate/review/validation/briefing-1
 started: 2026-11-11T14:24:19Z
 worktree: .worktrees/spacedock-ensign-worth-questions-asked-only-before-the-design-gate
 pr: iamcxa/kc-claude-plugins#849
