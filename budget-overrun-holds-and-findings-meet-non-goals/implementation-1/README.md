@@ -116,3 +116,12 @@ past its implementation bound passes the merge ask when its first record lacks
 Budget, and holds it without an ask when the first record carries Budget
 (`merge-transition-probe.json`). This exercises AC-6 directly; it does not settle
 the four AC-5 fixture expectations or establish real hosted-provider facts.
+
+## Later amendment — not in this candidate
+
+Captain amendment 3 was observed in the shared state checkout after preserving
+candidate 0243d3482 and the original hold report. It adds a total dispatch-count
+bound and a default preserve-results/report-remaining/stop result; agent minutes
+stay separate. This candidate and its tests cover the earlier two per-stage cycle
+forms and do not implement amendment 3. FO must route the amended scope/checklist
+alongside the held consumer-test and AC-7 location decisions.

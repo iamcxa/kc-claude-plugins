@@ -26,3 +26,7 @@ failures above; the full suite needs an exact-candidate rerun after authorizatio
 
 RoboRev and hosted CI not run: FO owns those. CI cost not measured; CI triggers
 and workflows were unchanged. No product push or PR was performed by the worker.
+
+A later Captain amendment 3 adds total dispatch limits and a default
+preserve/report/stop result. It is not implemented by this saved candidate; FO
+must dispatch the amended scope before publication.
