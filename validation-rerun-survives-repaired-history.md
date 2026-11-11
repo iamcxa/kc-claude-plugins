@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-11-11T06:21:35Z
 worktree: .worktrees/spacedock-ensign-validation-rerun-survives-repaired-history
-pr: iamcxa/kc-claude-plugins#844
+pr: pr-merge:844
 ---
 
 ## Scope
