@@ -3,7 +3,7 @@ title: A worker whose command is denied keeps working on everything the denial d
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
