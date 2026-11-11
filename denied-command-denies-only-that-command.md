@@ -43,6 +43,17 @@ gates:
                 id: briefing:denied-command-denies-only-that-command:ideation:attempt-2:revision-1
                 digest: sha256:84f96d8e503f6c4770aca41474621b5dfcf997483518ab2f2266fe23d16feccb
                 room-ref: ./denied-command-denies-only-that-command/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:denied-command-denies-only-that-command:ideation:2
+                briefing: briefing:denied-command-denies-only-that-command:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-11T02:54:31.609792Z"
+                decision: approve
+                reason: 'The Captain chose 「照建議核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要核准「拒絕一個指令不等於全停」的設計並開始實作。我建議照設計的建議核准：在每張派工單都帶的流程說明段落加一句話，說明某個指令被拒絕時不要停工、不要繞過，把其餘做完並在報告裡寫明被拒的那一步，流程說明檔多 33 字；另外在 Paseo 擴充加 21 字，讓我拒絕 Codex 工人時把理由另外傳給它，因為 Paseo 現在不會把理由帶過去；行為重放 10 次、上限 12 次。核准即接受這三項，其中第二項超出這張任務原本「只改給工人看的文字」的預算。」. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-11T01:19:20Z
 ---
 
