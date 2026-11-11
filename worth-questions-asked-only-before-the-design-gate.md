@@ -122,11 +122,18 @@ Result: 173 tasks (75 here, 98 in qnow), 0 tasks with any other output differenc
 - Observer at archive (`skills/observer/SKILL.md`, "Replay the design check"): it extracts the task at its ideation-briefing sha, where `status:` is still `ideation`, so the candidate still refuses it. Replayed: `merge-guard-stops-unasked-merges` at `d57ed9b75ba5` and `archive-waits-for-observer-report` at `cdbfae07247e` exit 1 with the Worth line on both 0.39.0 and the candidate. The observer would report a `violation` for every design approved before 0.39.0. That is outside this task's file list; see Decision D2.
 - Unchanged and still refused, as intended: the ideation worker and FO before `spacedock gate prepare`, which both run while the stage is `ideation`. `pr_watch.py` runs only `check --seed`, which does not check Worth. `delivery_gate.py`, `dispatch_records.py`, `dispatch_stage.py`, `laws_check.py` and `validation_security.py` import helpers and do not run `check_task`.
 
+### Chain and prior rulings
+
+- Spacedock 0.27.3: `spacedock status --read --json` returns the task's `status` but gives `gates` as an empty string, so the stage is the record its native reader exposes. `spacedock gate --help` lists prepare, withdraw, record and consume, and none of them reads a gate back. Spacedock has no "passed stage X" query to reuse.
+- kc-dev-flow-2 at `origin/main` 44f11855 (0.39.0): `worth_stage` and the unreadable-stage error already exist in `design_surfaces.py`. `decision_ledger.gate_entries` parses gate records. The Budget exemption reads the first dispatch record's `Budget:` header (`role_triggers.budget_status`). The fix reuses `worth_stage`.
+- Sibling adopter qnow (`qnow-adopt-dev2`, state `a01fae61`): there is no local workaround to borrow; its FO reported the same refusal. It is the second replay corpus.
+- Prior rulings read: ADR 0077 (above), and every `^Override: recommended` line in this state checkout and its `_archive/` (5 lines). None of those 5 lines concerns stop conditions, the observer or the Worth rule. ADR 0017, "History laws judge only the events a push adds", ruled that checks judge new events and do not keep historical ones red; D2 follows it. ADR 0077's Captain amendment 4 let a task change two test files its design did not list, once he was asked; D2 asks the same way and does not assume.
+
 ### Worth questions
 
 - **Scope part: the stage rule in `check_task`.** Captain's words served: 「開一張優先修正任務，讓檢查只在任務還沒過設計關卡時要求那一節」. Without it, 10 in-flight tasks across this workflow and qnow stay refused at implementation or validation for wording he already approved, and FO has to backfill or wave past the check. Premise that would make it unneeded: the refusal is advisory, so FO could proceed anyway. Cheap test, done: `design_surfaces.py check` exits 1, and workflow.md says "a non-zero exit as the gate not presentable".
 - **Scope part: tests for each stage.** Captain's words served: 「還在設計階段又沒寫那一節的任務照樣被擋」 (backlog ask). Without them, the next change to this block can flip either side unseen; 0.39.0 shipped with no past-ideation case. Premise that would make them unneeded: an existing test already covers a frontmatter task past ideation. Cheap test, done: the 226 existing tests pass on both rules, so none does.
-- **Every part serves the Captain's words.** No part is left for him to keep or cut.
+- **Scope part, only if D2 is approved: one sentence in the observer skill.** Captain's words served: 「已經過了設計關卡的舊任務，要不要被新的「值不值得」檢查擋下？我建議不要」. Archive is a later stage, and the observer is the one caller this check change cannot release. Without it, the archive report of each design approved before 0.39.0 shows a `violation` FO did not commit. Premise that would make it unneeded: the observer already treats this as historical. Cheap test, done: its historical-copy sentence covers only seed-field failures, and the briefing-sha replays above exit 1 with the Worth line. This part sits outside the approved file list, so it is the Captain's to keep or cut (D2).
 
 ### Words FO reads at each moment
 
@@ -157,6 +164,8 @@ This task runs alone as a Captain-approved priority exception. It has no other b
 
 **AC-5** The PR changes only `kc-dev-flow-2/scripts/design_surfaces.py` and `kc-dev-flow-2/scripts/test_design_surfaces.py`, plus `kc-dev-flow-2/skills/observer/SKILL.md` if D2 is approved. Its title is `fix(kc-dev-flow-2): …` so release-please proposes 0.39.1. The full kc-dev-flow-2 test commands pass on the result of merging the candidate with main, run by FO before the merge ask. Evidence: `git diff --name-only origin/main...HEAD`, the PR title, and FO's merge-result run. Falsifier: an extra path, a non-`fix` title, or a failing suite.
 
+**AC-6** Only if D2 is approved: the observer skill's historical-copy sentence also covers the `design needs '### Worth questions'` line. A briefing copy whose event-time README does not name worth answers is reported as current-schema incompatibility, not as a `violation`. Evidence: the skill text at the candidate, plus one observer replay of `merge-guard-stops-unasked-merges` at briefing sha `d57ed9b75ba5` with README from before 0.39.0, reporting incompatibility. Falsifier: the unchanged sentence yields `violation` for the same replay.
+
 ## Decisions for the Captain
 
 **D1. Stop condition for `adr-required-statement`.** The Stop condition says the three Bite tasks "pass the check at the candidate". Two can; `adr-required-statement` cannot within this scope. Its Amendment 1 lacks a valid `Supersedes:` value, which 0.38.1 refuses too. Recommendation: read "pass" for that task as "no Worth line, and the rest of the output equal to 0.38.1's" (AC-1), and leave the amendment record to that task's own FO. What gets worse: `adr-required-statement` still stops at its validation gate until its FO repairs the amendment, and this task's stop condition is met on a narrower reading than its words.
@@ -172,12 +181,14 @@ This task runs alone as a Captain-approved priority exception. It has no other b
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
   `### Words FO reads at each moment`: implementation/validation output falls 28→13 words per released clean task and by 19 per released task with other defects; ideation and the merge ask are unchanged; documents change by 0 words.
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
-  AC-1 to AC-5 under `## Acceptance criteria`, with D1 (stop-condition reading for `adr-required-statement`) and D2 (observer archive replay) under `## Decisions for the Captain`.
+  AC-1 to AC-6 under `## Acceptance criteria` (AC-6 only if D2 is approved), with D1 (stop-condition reading for `adr-required-statement`) and D2 (observer archive replay) under `## Decisions for the Captain`.
   AC-1: the prototype prints no Worth line on the three Bite tasks; two exit 0, and `adr-required-statement` prints the same `Supersedes:` defect as 0.38.1 (measured on scratch copies; not yet verified on the built candidate).
   AC-2: not yet verified; the per-stage tests are written at implementation. Today's 226 tests pass on the prototype, which shows none covers a past-ideation task.
   AC-3: not yet verified; the test is written at implementation. A README-less copy reads successfully (`spacedock status --read` exit 0).
   AC-4: measured on the prototype: 173 rows, 0 `OTHER-DIFF`, 10 released, 17 still refused, all in ideation. To be re-run on the built candidate.
   AC-5: not yet verified; it depends on the PR and FO's merge-result run.
+  AC-6: not yet verified; conditional on D2.
+  `python3 <package>/scripts/design_surfaces.py check` on this task file (0.39.0): `worth-questions-asked-only-before-the-design-gate.md: design surfaces presentable`, exit 0.
 
 ### Summary
 
