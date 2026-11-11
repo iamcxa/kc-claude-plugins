@@ -34,6 +34,17 @@ gates:
                 id: briefing:worth-questions-asked-only-before-the-design-gate:ideation:attempt-1:revision-1
                 digest: sha256:bd00faa3a70a74966199dfa9b163e2487b32a39007b9cca1890a08f1dad56018
                 room-ref: ./worth-questions-asked-only-before-the-design-gate/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worth-questions-asked-only-before-the-design-gate:ideation:1
+                briefing: briefing:worth-questions-asked-only-before-the-design-gate:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-11T14:45:43.267186Z"
+                decision: approve
+                reason: 'The Captain chose 「三項都核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要核准「過了設計關卡的舊任務不被『值不值得』檢查擋下」的設計並開始實作。我建議照設計的建議核准。核准即接受三項：一、檢查改成只在任務還在設計階段（或還在待辦但已有設計）時要求那一節，階段用新版原本就在用的讀法讀出來，讀不到時照舊擋下；設計在兩個流程共 173 張任務上重播，10 張過了設計階段的任務不再被擋、17 張還在設計階段的照樣被擋、沒有任何任務新被擋下。二、停止條件裡「三張被誤擋的任務都通過」改讀成「這三張不再出現『缺那一節』的錯，其餘輸出和舊版相同」，因為其中一張本來就有另一個和這次無關的格式錯，舊版也擋它。三、多改一個檔：觀察員技能裡加寬一句話，讓它在歸檔時不把「發版前核准的設計缺那一節」記成違規；這超出原本「只改檢查和它的測試」的範圍。」. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-11T14:24:19Z
 ---
 
