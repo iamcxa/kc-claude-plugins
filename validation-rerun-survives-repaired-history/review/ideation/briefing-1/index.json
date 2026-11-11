@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-rerun-survives-repaired-history:ideation:attempt-1:revision-1",
+  "question": "決定：要不要核准「任務歷史裡有已修好的格式錯誤時，仍可再派驗證」的設計並開始實作。我建議照設計的建議核准。核准即接受三項：一、放行的判法改用設計提的版本：一個讀不懂的舊版本，只有當它排在驗證報告當時或之前、而且它的原始文字裡出現了要用來放行的那筆裁示的編號時，才擋下重跑；這和你上次選的說法不同，因為設計量出那個說法照一種讀法會放行一張不該放行的任務、照字面讀又解不開 qnow。二、把這次改動記成 ADR 0045 的一段原地增補，不開新編號。三、有三種罕見的歷史形狀仍然會被永久擋住，先接受、不在這張處理。核准後我派實作工人。",
+  "artifacts": [
+    {
+      "id": "artifact:validation-rerun-survives-repaired-history:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/03cbbf985293653a209975d99af3cc459e7f0694/validation-rerun-survives-repaired-history.md",
+      "rev": "sha256:0a49bd1bc4fbc6ddeca05a35dce286c7d449b6d85a9880b2fd5327696aa894c6",
+      "mediaType": "text/markdown",
+      "summary": "Priority task, ideation gate. Ideation report committed at 6f6e42e69 (state branch, 2026-11-11) by the ideation-1 worker, whose final reply was cut by a usage limit after the commit. FO ran design_surfaces.py check: exit 0, design surfaces presentable (2026-11-11). The worker's report, not re-run by FO: an inventory of nine refusals a past version alone can raise; replays on qnow owner-cancels-booking (cleared at its repaired commits by a prototype, held at the unrepaired ones); a corpus of 1909 events on six state branches where 161 events on 73 tasks reach the check, the designed rule clears 2 tasks, keeps 6 held and changes no event the 0.38.1 tag returns 0 or 1; 125 existing tests pass with the prototype. No criterion is verified against a candidate. Decisions: D1 the proof rule instead of the wording the Captain chose at alignment, with the measured reason; D2 an in-place ADR 0045 amendment; D3 three repaired-past shapes stay held with 0 hits in the corpus. Not replayed: dev2-poc, dev, ship and plan state branches."
+    }
+  ]
+}

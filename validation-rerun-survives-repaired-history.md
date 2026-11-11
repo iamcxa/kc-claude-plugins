@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:validation-rerun-survives-repaired-history:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:validation-rerun-survives-repaired-history-ideation-1
+              briefing:
+                id: briefing:validation-rerun-survives-repaired-history:ideation:attempt-1:revision-1
+                digest: sha256:eb1eea539e089f272afeec3c8497a10d835e123194d01f64b9cab020417a3c3c
+                room-ref: ./validation-rerun-survives-repaired-history/review/ideation/briefing-1
 started: 2026-11-11T06:21:35Z
 ---
 
