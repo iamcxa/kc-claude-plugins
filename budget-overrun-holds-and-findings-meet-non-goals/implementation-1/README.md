@@ -106,3 +106,13 @@ reminder on a countable task drops 51 to 0. Ideation worker principles grow
 claim that all lifecycle costs fell. The one +34 workflow-budget entry quotes
 the bound ideation gate and names loaded moments; gate-content resolution may
 require recounting it.
+
+## Additional exact-candidate merge boundary probe
+
+`python3 -B merge-transition-probe.py <assigned-worktree>` ran the real
+`delivery_gate.py` role-check path at 0243d34829634a218c3ba3302f3f6def7ea87b62,
+with the existing external-provider stubs. The same committed countable task
+past its implementation bound passes the merge ask when its first record lacks
+Budget, and holds it without an ask when the first record carries Budget
+(`merge-transition-probe.json`). This exercises AC-6 directly; it does not settle
+the four AC-5 fixture expectations or establish real hosted-provider facts.
