@@ -47,6 +47,14 @@ gates:
 ## FO alignment
 
 Alignment: needed at ideation; when an overrun holds and who may rule a finding out of scope are the Captain's call.
+Result: the Captain chose 「重寫，並把兩張原則任務拉進這批」 (host question dialog, 2026-11-11), answering 「預算這張任務要不要改題目？我建議改：把題目從「超過預算就停、範圍外的發現不修」改成「任務的預算是你願意花多少的一句話，用數得出來的單位寫、每次派工看得到已花多少、超過時把原本的問題帶回給你；重大發現先回答是不是這張任務要的結果」，讓設計從這個問法開始。這是修改你已核准的任務範圍，會記成一筆你的修正案。」. Before it he asked 「這個問題跟退一步想是不是有異曲同工之妙？疊在一起再想一次有沒有改變建議」, 「所以問題在於預算怎麼設計，對嗎？暫時不裁決，先看目前怎麼做的？」 and 「先針對預算是什麼想一下，因為它可能會改變怎麼解決問題，而這件事剛好對應到最近回饋產生的問題，對嗎？一開始的問題問錯了，後面的解法就不對，就會造成目標膨脹，進一步守不住關卡」 (chat with this FO, 2026-11-11).
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-11, host question dialog
+Captain: 「重寫，並把兩張原則任務拉進這批」 (host question dialog, 2026-11-11)
+Asked: 「預算這張任務要不要改題目？我建議改：把題目從「超過預算就停、範圍外的發現不修」改成「任務的預算是你願意花多少的一句話，用數得出來的單位寫、每次派工看得到已花多少、超過時把原本的問題帶回給你；重大發現先回答是不是這張任務要的結果」，讓設計從這個問法開始。這是修改你已核准的任務範圍，會記成一筆你的修正案。」
+Supersedes: none
