@@ -1,0 +1,102 @@
+[
+  {
+    "name": "baseline",
+    "exit": 1,
+    "killed": true,
+    "tests": [
+      "test_dispatch_records.RepairedRulingHistoryTests"
+    ],
+    "log": "mutation-baseline.log"
+  },
+  {
+    "name": "remove-historical-catch",
+    "exit": 1,
+    "killed": true,
+    "tests": [
+      "test_dispatch_records.RepairedRulingHistoryTests.test_repaired_amendment_after_report_clears"
+    ],
+    "log": "mutation-remove-historical-catch.log"
+  },
+  {
+    "name": "identity-always-absent",
+    "exit": 1,
+    "killed": true,
+    "tests": [
+      "test_dispatch_records.RepairedRulingHistoryTests.test_pre_report_broken_text_carrying_clearing_identity_holds"
+    ],
+    "log": "mutation-identity-always-absent.log"
+  },
+  {
+    "name": "drop-after-report-filter",
+    "exit": 1,
+    "killed": true,
+    "tests": [
+      "test_dispatch_records.RepairedRulingHistoryTests.test_repaired_amendment_after_report_clears",
+      "test_dispatch_records.RepairedRulingHistoryTests.test_ruling_then_later_heading_typo_repaired_clears"
+    ],
+    "log": "mutation-drop-after-report-filter.log"
+  },
+  {
+    "name": "every-pre-report-break-blocks",
+    "exit": 1,
+    "killed": true,
+    "tests": [
+      "test_dispatch_records.RepairedRulingHistoryTests.test_pre_report_broken_text_without_clearing_identity_clears"
+    ],
+    "log": "mutation-every-pre-report-break-blocks.log"
+  },
+  {
+    "name": "catch-only-ruling-history-error",
+    "exit": 1,
+    "killed": true,
+    "tests": [
+      "test_dispatch_records.RepairedRulingHistoryTests.test_bad_quoted_gate_scalar_repaired_before_report_clears"
+    ],
+    "log": "mutation-catch-only-ruling-history-error.log"
+  },
+  {
+    "name": "raise-any-stored-error",
+    "exit": 1,
+    "killed": true,
+    "tests": [
+      "test_dispatch_records.RepairedRulingHistoryTests.test_repaired_history_without_later_ruling_needs_ruling"
+    ],
+    "log": "mutation-raise-any-stored-error.log"
+  },
+  {
+    "name": "accept-two-task-paths",
+    "exit": 1,
+    "killed": true,
+    "tests": [
+      "test_dispatch_records.RepairedRulingHistoryTests.test_two_historical_task_paths_stay_held"
+    ],
+    "log": "mutation-accept-two-task-paths.log"
+  },
+  {
+    "name": "ignore-hidden-report-gap",
+    "exit": 1,
+    "killed": true,
+    "tests": [
+      "test_dispatch_records.RepairedRulingHistoryTests.test_historical_fence_hiding_report_stays_held"
+    ],
+    "log": "mutation-ignore-hidden-report-gap.log"
+  },
+  {
+    "name": "replace-undecodable-bytes",
+    "exit": 1,
+    "killed": true,
+    "tests": [
+      "test_dispatch_records.RepairedRulingHistoryTests.test_undecodable_historical_bytes_stay_held"
+    ],
+    "log": "mutation-replace-undecodable-bytes.log"
+  },
+  {
+    "name": "swallow-current-and-pinned-errors",
+    "exit": 1,
+    "killed": true,
+    "tests": [
+      "test_dispatch_records.RepairedRulingHistoryTests.test_unrepaired_current_or_pinned_text_stays_held"
+    ],
+    "log": "mutation-swallow-current-and-pinned-errors.log"
+  }
+]

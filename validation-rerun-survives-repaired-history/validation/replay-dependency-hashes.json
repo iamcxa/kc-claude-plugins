@@ -1,0 +1,26 @@
+{
+  "decision_ledger.py": {
+    "candidate": "d6cbedb4c8f7b3fafa07f14afb92079ff0139adfd2b87a82a1067079b68512f3",
+    "tag": "d6cbedb4c8f7b3fafa07f14afb92079ff0139adfd2b87a82a1067079b68512f3"
+  },
+  "design_surfaces.py": {
+    "candidate": "0073457e28f8a2d5801fd5337ac3885433c0862d292f96973474286cb229738b",
+    "tag": "0073457e28f8a2d5801fd5337ac3885433c0862d292f96973474286cb229738b"
+  },
+  "delivery_gate.py": {
+    "candidate": "60cadc9c8be6e3f0a6de461f6d9d3caef40b3dfd03c573657db9e514d9c357af",
+    "tag": "60cadc9c8be6e3f0a6de461f6d9d3caef40b3dfd03c573657db9e514d9c357af"
+  },
+  "role_triggers.py": {
+    "candidate": "baaa4e033148c57564afb3a63b96446f25221ddb4644cb278fe2a704d98cdc56",
+    "tag": "baaa4e033148c57564afb3a63b96446f25221ddb4644cb278fe2a704d98cdc56"
+  },
+  "number_guards.py": {
+    "candidate": "bf395410b8f1e17edd08352d1013b6754ad90811a99e0880e0f24c1250d95d9b",
+    "tag": "bf395410b8f1e17edd08352d1013b6754ad90811a99e0880e0f24c1250d95d9b"
+  },
+  "workflow_extensions.py": {
+    "candidate": "6cdc232f0e8949ab7bc0ec3b00fbf273ad8160dd0bd31739b545595e57e77690",
+    "tag": "6cdc232f0e8949ab7bc0ec3b00fbf273ad8160dd0bd31739b545595e57e77690"
+  }
+}

@@ -1,0 +1,2 @@
+0045-validation-reruns-require-a-later-recorded-captain-ruling.md: protects kc-dev-flow-2/scripts/dispatch_records.py, which does not exist
+required ADR 0045: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation

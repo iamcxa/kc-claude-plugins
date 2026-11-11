@@ -1,0 +1,9 @@
+{
+  "exit": 0,
+  "steps": 4,
+  "log": "acceptance.log",
+  "log_lifespan_seconds": 59.59,
+  "removed_scratch": [
+    "/tmp/val844-acceptance.MIj7KE"
+  ]
+}

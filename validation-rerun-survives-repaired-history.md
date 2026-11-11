@@ -387,3 +387,41 @@ The walk now treats a past version whose Captain records do not parse as unreada
 ### Summary
 
 Implemented the Captain-approved Pilot repair with strict current/pinned parsing, conservative raw-identity proof and unchanged report-rewrite boundaries. All ten acceptance criteria pass; the six-branch corpus matches the approved design exactly, while two-task-path, hidden-report and undecodable-byte histories remain deliberately held. Product commit is local only; FO owns publication, Draft PR, RoboRev and hosted CI. Evidence is in validation-rerun-survives-repaired-history/implementation/.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #844 head 0a5c37f0 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 0a5c37f091daec6909a76d443219c655b17d534e; validation/candidate.json binds bytes, validation/evidence.md adjudicates all implementation limits and AC-1 through AC-10; no new Material, Deferred risk, Polish or Needs decision finding.
+- DONE: Replay the qnow case the task's Scope names against the candidate, read-only, and judge alignment Result 「能證明不影響才放行」: show at least one history the candidate must still refuse and that it does
+  validation/replay.json: the repaired commits clear; unrepaired HEADs and the real web history at fda02ff5 remain held. validation/extra-mutations.json proves dropping the identity test wrongly clears that unruled history; the accepted proof rule preserves the required boundary.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation/acceptance.sh has four steps; exact fresh-shell command and limits in validation/evidence.md, observed exit 0 in validation/acceptance.log and validation/acceptance-receipt.json. Assigned ADR lint with --since 546a136386c94c58e430c91a6f3457b38bd73880 --require 0045 exits 0 (validation/adr-lint-dispatch-package.log).
+- DONE: AC-1 repaired recorded task histories clear
+  validation/replay.json: two 1/1, five 2/0 recorded comparisons; removing the historical catch restores all five refusals (validation/extra-mutations.json).
+- DONE: AC-2 current and pinned malformed text stays held
+  validation/replay.json: four unrepaired real controls retain 2/2 and byte-equal output; the swallow-current/pinned-errors mutant fails (validation/mutations.json).
+- DONE: AC-3 an earlier broken version carrying the ruling identity holds
+  Both amendment and native gate controls pass; the identity-always-absent mutant fails both assertions (validation/mutation-identity-always-absent.log).
+- DONE: AC-4 broken versions strictly after the report do not hold
+  Both repaired-placement and later-typo controls pass; dropping the after-report clause fails both (validation/mutation-drop-after-report-filter.log).
+- DONE: AC-5 earlier broken versions without the identity and bad quoted gate scalars clear
+  Amendment, native gate and malformed-quoted-scalar controls pass; overblocking and narrowing the catch fail (validation/mutations.json).
+- DONE: AC-6 the six pinned state branches change only the approved events
+  validation/corpus-verification.log and validation/replay.json: 1909 events, 161 checked on 73 tasks; 97 remain 0, 46 remain 1, three 2-to-0 events and 15 remain 2; exact changed event identities match design. Private detail is redacted after raw verification; the real web counterexample kills the absent-identity mutation.
+- DONE: AC-7 no later ruling yields the existing exit-1 refusal
+  Raising every stored parse error fails the needs-later-ruling control (validation/mutation-raise-any-stored-error.log).
+- DONE: AC-8 the three accepted historical evidence holds remain
+  Two task paths, hidden report and undecodable bytes hold at baseline and candidate; removing each guard fails its test (validation/mutations.json, validation/mutation-baseline.log).
+- DONE: AC-9 existing dispatch-record tests pass
+  validation/suite.log: 136 tests OK, one optional builder skip separately passes in validation/native-builder-corrected.log; allowing same-commit rulings fails an existing test (validation/mutation-existing-suite.log). Supplemental 84 laws tests (one declared optional-source skip) and 40 real dispatch-stage tests pass in validation/laws.log and validation/dispatch-stage-corrected.log.
+- DONE: AC-10 one approved in-place ADR 0045 amendment lints
+  validation/candidate.diff contains the exact alignment and ideation words; assigned lint exits 0; omitting Recommended produces the intended exit-1 failure (validation/mutation-adr-lint-only.log).
+- DONE: Required guards, retained-document review and candidate integrity
+  validation/checks.json records successful skill lint, number guards, comment ratio, design and dispatch checks; validation/doc-impact.json is fully adjudicated in validation/evidence.md. Candidate files retain their original hashes (validation/candidate-integrity.log); no product, workflow, version or CI edits by validation.
+- SKIPPED: RoboRev execution and delivery approval
+  FO owns RoboRev and the validation/delivery gates. validation/pr-final.json observes the unchanged OPEN Draft candidate and hosted results; no merge, release, adoption or measured CI cost is claimed.
+
+### Summary
+
+PASSED for PR #844 head 0a5c37f091daec6909a76d443219c655b17d534e against all ten criteria and the Captain-approved design. The real repaired-history outcome works, each required falsifier detects its known error, and the corpus has only the accepted changes; the three deliberately held shapes and structural-only authority limit remain explicit. Evidence and the fresh-shell acceptance script are under validation-rerun-survives-repaired-history/validation/; FO retains gate and delivery authority, and temporary-export cleanup is recorded in validation/cleanup.json after the evidence commit.

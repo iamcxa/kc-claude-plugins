@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_historical_fence_hiding_report_stays_held (test_dispatch_records.RepairedRulingHistoryTests.test_historical_fence_hiding_report_stays_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/ignore-hidden-report-gap/test_dispatch_records.py", line 1594, in test_historical_fence_hiding_report_stays_held
+    self.assertIn("discontinuous-report-history", self.assert_hold(2))
+                                                  ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/mutations/ignore-hidden-report-gap/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 0 != 2 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 1.576s
+
+FAILED (failures=1)

@@ -1,0 +1,2 @@
+PASS: all 161 predicate events across 73 tasks match the approved corpus pairs; only the two named tasks change
+PASS: all 1909 events accounted for; exact three changed event identities match design; all private outcomes equal before redaction.

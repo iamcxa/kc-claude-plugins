@@ -1,0 +1,999 @@
+.E.FFF.FFFF.F....FFFFFEFFFF..F.FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.F..F
+======================================================================
+ERROR: test_advance_commits_record_and_withholds_envelope_on_commit_failure (test_dispatch_stage.DispatchStageTests.test_advance_commits_record_and_withholds_envelope_on_commit_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 858, in test_advance_commits_record_and_withholds_envelope_on_commit_failure
+    self.call([BINARY, "dispatch", "build", "--stamp", "--workflow-dir", self.workflow,
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 71, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'None'
+
+======================================================================
+ERROR: test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record (test_dispatch_stage.DispatchStageTests.test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 160, in test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record
+    self.call([BINARY, "state", "commit", self.slug, "--workflow-dir", self.workflow])
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 71, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'None'
+
+======================================================================
+FAIL: test_candidates_and_feedback_flags_reach_real_build (test_dispatch_stage.DispatchStageTests.test_candidates_and_feedback_flags_reach_real_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 409, in test_candidates_and_feedback_flags_reach_real_build
+    self.build("validation", ("--candidate", sha, "--candidate", "a" * 40))
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-x72p64ya/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-x72p64ya/code/docs/dev2/.spacedock-state/dispatch-fixture-aeb58ec1e13f41a3b055e114fea28387.md'), '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-x72p64ya/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-x72p64ya/notes.txt'), '--spacedock', None, '--host', 'codex', '--candidate', 'fabf02ae4d6fb1d7bf6d14fa6a1dc02dbef73590', '--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_changed_checklist_creates_next_committed_record (test_dispatch_stage.DispatchStageTests.test_changed_checklist_creates_next_committed_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 850, in test_changed_checklist_creates_next_committed_record
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-y4id67hl/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-y4id67hl/code/docs/dev2/.spacedock-state/dispatch-fixture-999e4346a5ae4c3890674dba17c0d7e7.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-y4id67hl/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-y4id67hl/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_committed_then_assembly_failure_keeps_record_for_retry (test_dispatch_stage.DispatchStageTests.test_committed_then_assembly_failure_keeps_record_for_retry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 776, in test_committed_then_assembly_failure_keeps_record_for_retry
+    held = self.build(extra=("--spacedock", failing), expected=8)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 8 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-n9f7d18h/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-n9f7d18h/code/docs/dev2/.spacedock-state/dispatch-fixture-655a51c84ed449058ba7ee567e98dde4.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-n9f7d18h/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-n9f7d18h/notes.txt'), '--spacedock', None, '--host', 'codex', '--spacedock', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-n9f7d18h/commit-then-fail')], '', 'Traceback (most recent call last):\n  File "/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-n9f7d18h/commit-then-fail", line 3, in <module>\n    result = subprocess.run([None, *sys.argv[1:]], capture_output=True, text=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run\n    with Popen(*popenargs, **kwargs) as process:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1826, in _execute_child\n    and os.path.dirname(executable)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "<frozen posixpath>", line 152, in dirname\nTypeError: expected str, bytes or os.PathLike object, not NoneType\n')
+
+======================================================================
+FAIL: test_failed_stamp_removes_uncommitted_record_and_passes_error (test_dispatch_stage.DispatchStageTests.test_failed_stamp_removes_uncommitted_record_and_passes_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 421, in test_failed_stamp_removes_uncommitted_record_and_passes_error
+    self.assertTrue(held.stderr.startswith("dispatch build --stamp:"), held.stderr)
+AssertionError: False is not true : dispatch_stage: [Errno 2] No such file or directory: 'None'
+
+
+======================================================================
+FAIL: test_ideation_builds_even_when_a_call_is_owed (test_dispatch_stage.DispatchStageTests.test_ideation_builds_even_when_a_call_is_owed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 362, in test_ideation_builds_even_when_a_call_is_owed
+    self.build(extra=("--spacedock", self.spy))
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-i_x3li71/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-i_x3li71/code/docs/dev2/.spacedock-state/dispatch-fixture-47e2a01e24c04cf2a5ddd3ff4c8f5d07.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-i_x3li71/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-i_x3li71/notes.txt'), '--spacedock', None, '--host', 'codex', '--spacedock', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-i_x3li71/spy')], '', 'Traceback (most recent call last):\n  File "/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-i_x3li71/spy", line 5, in <module>\n    sys.exit(subprocess.call([None, *sys.argv[1:]]))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 389, in call\n    with Popen(*popenargs, **kwargs) as p:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1826, in _execute_child\n    and os.path.dirname(executable)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "<frozen posixpath>", line 152, in dirname\nTypeError: expected str, bytes or os.PathLike object, not NoneType\n')
+
+======================================================================
+FAIL: test_identical_retry_reuses_only_at_adding_commit (test_dispatch_stage.DispatchStageTests.test_identical_retry_reuses_only_at_adding_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 426, in test_identical_retry_reuses_only_at_adding_commit
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-z61k_jmf/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-z61k_jmf/code/docs/dev2/.spacedock-state/dispatch-fixture-b043a11d3821492998ddc148cc699ead.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-z61k_jmf/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-z61k_jmf/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it (test_dispatch_stage.DispatchStageTests.test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 355, in test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it
+    self.assert_role_hold_then_release("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 350, in assert_role_hold_then_release
+    self.build(stage, extra)
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-b1xv78s4/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-b1xv78s4/code/docs/dev2/.spacedock-state/dispatch-fixture-5e1b1caf7769485ba79b8dc1ea88efe8.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-b1xv78s4/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-b1xv78s4/notes.txt'), '--spacedock', None, '--host', 'codex', '--spacedock', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-b1xv78s4/spy')], '', 'Traceback (most recent call last):\n  File "/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-b1xv78s4/spy", line 5, in <module>\n    sys.exit(subprocess.call([None, *sys.argv[1:]]))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 389, in call\n    with Popen(*popenargs, **kwargs) as p:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1826, in _execute_child\n    and os.path.dirname(executable)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "<frozen posixpath>", line 152, in dirname\nTypeError: expected str, bytes or os.PathLike object, not NoneType\n')
+
+======================================================================
+FAIL: test_inline_scope_uses_the_real_commit_unit (test_dispatch_stage.DispatchStageTests.test_inline_scope_uses_the_real_commit_unit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 808, in test_inline_scope_uses_the_real_commit_unit
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-nphoq_mc/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-nphoq_mc/code/docs/dev2/dispatch-fixture-49aa9034a7ee4597a050c33f7a9ad978.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-nphoq_mc/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-nphoq_mc/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (test_dispatch_stage.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='flat')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 725, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1y4js1wx/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1y4js1wx/code/docs/dev2/.spacedock-state/dispatch-fixture-5231e30f02124a76bc12fa920dee7b4a.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1y4js1wx/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1y4js1wx/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (test_dispatch_stage.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='folder')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 725, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-24324irl/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-24324irl/code/docs/dev2/.spacedock-state/dispatch-fixture-0f80100c48e94c7ba54569e0f138451d/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-24324irl/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-24324irl/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_retry_preserves_staged_record_with_worktree_at_head (test_dispatch_stage.DispatchStageTests.test_retry_preserves_staged_record_with_worktree_at_head)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 661, in test_retry_preserves_staged_record_with_worktree_at_head
+    stage, extra = self.scope_seed(route="retry")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-41c8mkof/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-41c8mkof/code/docs/dev2/.spacedock-state/dispatch-fixture-5f97312d02af49b7b4f49878a9f8a41b.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-41c8mkof/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-41c8mkof/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_role_checks_the_opus_model_floor (test_dispatch_stage.DispatchStageTests.test_role_checks_the_opus_model_floor) (model='opus')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 192, in test_role_checks_the_opus_model_floor
+    result = self.role(extra=("--model", model))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-lilot2lj/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-lilot2lj/code/docs/dev2/.spacedock-state/dispatch-fixture-dba8a55b39f74f78829cc0714a1ea969.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-lilot2lj/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-lilot2lj/notes.txt'), '--spacedock', None, '--model', 'opus'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_role_checks_the_opus_model_floor (test_dispatch_stage.DispatchStageTests.test_role_checks_the_opus_model_floor) (model='gpt-6-astra (Codex via Paseo, thinking xhigh)')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 192, in test_role_checks_the_opus_model_floor
+    result = self.role(extra=("--model", model))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-lilot2lj/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-lilot2lj/code/docs/dev2/.spacedock-state/dispatch-fixture-dba8a55b39f74f78829cc0714a1ea969.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-lilot2lj/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-lilot2lj/notes.txt'), '--spacedock', None, '--model', 'gpt-6-astra (Codex via Paseo, thinking xhigh)'], '', "dispatch_stage: dispatch not built; '/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-lilot2lj/code/docs/dev2/.spacedock-state/dispatch-fixture-dba8a55b39f74f78829cc0714a1ea969/dispatch/engineering-reviewer-1.md': untracked non-ignored task file. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n")
+
+======================================================================
+FAIL: test_role_commits_complete_record_before_printing_exact_inputs (test_dispatch_stage.DispatchStageTests.test_role_commits_complete_record_before_printing_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 119, in test_role_commits_complete_record_before_printing_exact_inputs
+    result = self.role(extra=("--roster", "fixture roster", "--note", "role fixture"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-4dgrg0zi/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-4dgrg0zi/code/docs/dev2/.spacedock-state/dispatch-fixture-325102b74d05427f93748340e435e6b9.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-4dgrg0zi/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-4dgrg0zi/notes.txt'), '--spacedock', None, '--roster', 'fixture roster', '--note', 'role fixture'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_role_crlf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_role_crlf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 254, in test_role_crlf_inputs_keep_raw_bytes
+    self.assert_input_bytes(True, "\r\n")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 232, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b"dispatch_stage: [Errno 2] No such file or directory: 'None'\n"
+
+======================================================================
+FAIL: test_role_lf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_role_lf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 260, in test_role_lf_inputs_keep_raw_bytes
+    self.assert_input_bytes(True, "\n")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 232, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b"dispatch_stage: [Errno 2] No such file or directory: 'None'\n"
+
+======================================================================
+FAIL: test_role_numbering_is_per_role_and_retries_reuse_the_latest_record (test_dispatch_stage.DispatchStageTests.test_role_numbering_is_per_role_and_retries_reuse_the_latest_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 208, in test_role_numbering_is_per_role_and_retries_reuse_the_latest_record
+    first = self.role()
+            ^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-aunky0u_/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-aunky0u_/code/docs/dev2/.spacedock-state/dispatch-fixture-9e611f1c86e944a3b49dd1a3f93a3a32.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-aunky0u_/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-aunky0u_/notes.txt'), '--spacedock', None], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed (test_dispatch_stage.DispatchStageTests.test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 181, in test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed
+    self.assertEqual(result.returncode, 0, (result.stdout, result.stderr))
+AssertionError: 1 != 0 : ('', 'Traceback (most recent call last):\n  File "/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-2d42n927/spy", line 6, in <module>\n    sys.exit(subprocess.call([None, *sys.argv[1:]]))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 389, in call\n    with Popen(*popenargs, **kwargs) as p:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1826, in _execute_child\n    and os.path.dirname(executable)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "<frozen posixpath>", line 152, in dirname\nTypeError: expected str, bytes or os.PathLike object, not NoneType\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-m0mppej3/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-m0mppej3/code/docs/dev2/.spacedock-state/dispatch-fixture-92c336b2645b4891af591141c2077e3c.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-m0mppej3/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-m0mppej3/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-i71xqh2l/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-i71xqh2l/code/docs/dev2/.spacedock-state/dispatch-fixture-b108a94d8f60450a9828bad05f5f72b0.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-i71xqh2l/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-i71xqh2l/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1zg8i6ji/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1zg8i6ji/code/docs/dev2/.spacedock-state/dispatch-fixture-d3dd27452943497e9c05fbc6c8f0ebde.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1zg8i6ji/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1zg8i6ji/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_ksg12a5/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_ksg12a5/code/docs/dev2/.spacedock-state/dispatch-fixture-f493ea98f7444f2c9d029583efc96fc8.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_ksg12a5/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_ksg12a5/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_5im3_w8/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_5im3_w8/code/docs/dev2/.spacedock-state/dispatch-fixture-765f4ffddf32443e9fad81e050972a03.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_5im3_w8/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_5im3_w8/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-n0d7roae/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-n0d7roae/code/docs/dev2/.spacedock-state/dispatch-fixture-341d375c22ae4443a29aa3ca424a1e4c.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-n0d7roae/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-n0d7roae/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ndkv5oyp/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ndkv5oyp/code/docs/dev2/.spacedock-state/dispatch-fixture-12365107de0946a1b139e91c728725be.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ndkv5oyp/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ndkv5oyp/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-gjbf8a5i/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-gjbf8a5i/code/docs/dev2/.spacedock-state/dispatch-fixture-a970f576a0d9413eadf72a0abd220fe2.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-gjbf8a5i/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-gjbf8a5i/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-25of2a6q/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-25of2a6q/code/docs/dev2/.spacedock-state/dispatch-fixture-de65058e53bc44b985bc12cd9b81f629.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-25of2a6q/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-25of2a6q/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-0mv1hrlq/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-0mv1hrlq/code/docs/dev2/.spacedock-state/dispatch-fixture-d0edfeadcef64c6f8d0eb8aa0aa47ff0.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-0mv1hrlq/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-0mv1hrlq/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-2xd7zs1s/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-2xd7zs1s/code/docs/dev2/.spacedock-state/dispatch-fixture-4675f36d636541f3a66acedb58877dfb.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-2xd7zs1s/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-2xd7zs1s/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_y9tvklc/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_y9tvklc/code/docs/dev2/.spacedock-state/dispatch-fixture-a6d886f4daf747a8a4d47cfa2d9caaa8.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_y9tvklc/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-_y9tvklc/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-bq_n9gtd/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-bq_n9gtd/code/docs/dev2/.spacedock-state/dispatch-fixture-14b833d4368045f59fa7cd2ee7f3a409.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-bq_n9gtd/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-bq_n9gtd/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-koobeqmp/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-koobeqmp/code/docs/dev2/.spacedock-state/dispatch-fixture-15f9cbb6f7f24eb38786c1cc00e96375.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-koobeqmp/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-koobeqmp/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-hs1ml9br/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-hs1ml9br/code/docs/dev2/.spacedock-state/dispatch-fixture-f1d3bb71dc7a4d36a8f5bfcc46cb7253.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-hs1ml9br/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-hs1ml9br/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-0e5adiy5/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-0e5adiy5/code/docs/dev2/.spacedock-state/dispatch-fixture-9ce30f9eeee9432289b76c0ff0d35c78.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-0e5adiy5/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-0e5adiy5/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-oww8rdnn/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-oww8rdnn/code/docs/dev2/.spacedock-state/dispatch-fixture-71237394655f41ee9c1bb0e00f3d9996.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-oww8rdnn/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-oww8rdnn/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-jb1oti15/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-jb1oti15/code/docs/dev2/.spacedock-state/dispatch-fixture-0563c0f893ca4a76816eb878506d4ce7.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-jb1oti15/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-jb1oti15/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-o3kkhldz/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-o3kkhldz/code/docs/dev2/.spacedock-state/dispatch-fixture-324a57ab2e8f4ddd915c818d669bce1a.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-o3kkhldz/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-o3kkhldz/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1ph3xtd2/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1ph3xtd2/code/docs/dev2/.spacedock-state/dispatch-fixture-72bffd7e2ed64e4c8f4c2dfc718ab11a.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1ph3xtd2/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-1ph3xtd2/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ogs3gw2d/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ogs3gw2d/code/docs/dev2/.spacedock-state/dispatch-fixture-38e65b4901ac41a0b7cc0fa6e96e6960/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ogs3gw2d/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ogs3gw2d/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-g8c_njm8/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-g8c_njm8/code/docs/dev2/.spacedock-state/dispatch-fixture-77a38cc532b142acafee3e2384252cc2/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-g8c_njm8/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-g8c_njm8/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-x5e_qyne/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-x5e_qyne/code/docs/dev2/.spacedock-state/dispatch-fixture-0c62fd95bf544b75aae1589751cb1efe/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-x5e_qyne/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-x5e_qyne/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-jj94b98n/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-jj94b98n/code/docs/dev2/.spacedock-state/dispatch-fixture-e03499c1ec2f4269a3c3f8c1b40a30ef/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-jj94b98n/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-jj94b98n/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-gdltgdjy/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-gdltgdjy/code/docs/dev2/.spacedock-state/dispatch-fixture-3abe5ceb4cc84bb18ae23ba95e1e1e3c/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-gdltgdjy/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-gdltgdjy/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-m81ols9j/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-m81ols9j/code/docs/dev2/.spacedock-state/dispatch-fixture-0225c118acd24415b14bb6097d10a501/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-m81ols9j/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-m81ols9j/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-xfhoz66k/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-xfhoz66k/code/docs/dev2/.spacedock-state/dispatch-fixture-42642502931546ffb12cf90c5985e6cb/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-xfhoz66k/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-xfhoz66k/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-w5q1ebpj/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-w5q1ebpj/code/docs/dev2/.spacedock-state/dispatch-fixture-8d1f37bf35004c0498c17f8064123aa4/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-w5q1ebpj/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-w5q1ebpj/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-d2ymxbzz/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-d2ymxbzz/code/docs/dev2/.spacedock-state/dispatch-fixture-d088a8eaac044f699b6a2539435a6286/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-d2ymxbzz/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-d2ymxbzz/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-drlm5umb/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-drlm5umb/code/docs/dev2/.spacedock-state/dispatch-fixture-c6dfe1f92e9f40b3a694c0dc613a7fb8/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-drlm5umb/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-drlm5umb/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-2hqyr936/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-2hqyr936/code/docs/dev2/.spacedock-state/dispatch-fixture-10d0ce2052b543f7a86588a9d76a1a44/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-2hqyr936/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-2hqyr936/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-axjk93s8/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-axjk93s8/code/docs/dev2/.spacedock-state/dispatch-fixture-ddc06fc4950e4c80836177a7207a7ba4/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-axjk93s8/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-axjk93s8/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-6_d8kssz/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-6_d8kssz/code/docs/dev2/.spacedock-state/dispatch-fixture-71efa2eef36b49979305ed00b9dcd0da/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-6_d8kssz/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-6_d8kssz/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ggya63zd/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ggya63zd/code/docs/dev2/.spacedock-state/dispatch-fixture-6004501ff3134d6da41c0a37a2cf4837/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ggya63zd/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ggya63zd/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-xeaqk3js/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-xeaqk3js/code/docs/dev2/.spacedock-state/dispatch-fixture-053e78f6a3354888a6cbf60c8e0e43af/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-xeaqk3js/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-xeaqk3js/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 554, in scope_seed
+    self.build()
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-u5usrtid/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-u5usrtid/code/docs/dev2/.spacedock-state/dispatch-fixture-e979db3d09d04f2fa87ce820bf2b2558/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-u5usrtid/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-u5usrtid/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-hocjlr45/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-hocjlr45/code/docs/dev2/.spacedock-state/dispatch-fixture-c6756b79fed14806bdf2a16450494617/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-hocjlr45/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-hocjlr45/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-junbhynw/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-junbhynw/code/docs/dev2/.spacedock-state/dispatch-fixture-f6f668f3113f4a1aabe957c71fa9529d/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-junbhynw/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-junbhynw/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-9cd2gglc/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-9cd2gglc/code/docs/dev2/.spacedock-state/dispatch-fixture-0966f5a11e5947f3abb53c28c45ad306/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-9cd2gglc/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-9cd2gglc/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 551, in scope_seed
+    self.build("implementation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-bd0mrwvk/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-bd0mrwvk/code/docs/dev2/.spacedock-state/dispatch-fixture-e38dc335aa15474abdf44e26519f7ed7/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-bd0mrwvk/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-bd0mrwvk/notes.txt'), '--spacedock', None, '--host', 'codex'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_stage_crlf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_stage_crlf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 257, in test_stage_crlf_inputs_keep_raw_bytes
+    self.assert_input_bytes(False, "\r\n")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 232, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b"dispatch_stage: [Errno 2] No such file or directory: 'None'\n"
+
+======================================================================
+FAIL: test_stage_lf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_stage_lf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 263, in test_stage_lf_inputs_keep_raw_bytes
+    self.assert_input_bytes(False, "\n")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 232, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b"dispatch_stage: [Errno 2] No such file or directory: 'None'\n"
+
+======================================================================
+FAIL: test_stamp_commits_complete_record_and_exact_inputs (test_dispatch_stage.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 287, in test_stamp_commits_complete_record_and_exact_inputs
+    result = self.build(extra=("--roster", "fixture roster", "--note", "README fixture"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-fyiheahc/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-fyiheahc/code/docs/dev2/.spacedock-state/dispatch-fixture-d302c4ff7b604f5cad5e13ec1ab9cd6a.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-fyiheahc/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-fyiheahc/notes.txt'), '--spacedock', None, '--host', 'codex', '--roster', 'fixture roster', '--note', 'README fixture'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_successful_checks_keep_distinct_other_stage_warnings (test_dispatch_stage.DispatchStageTests.test_successful_checks_keep_distinct_other_stage_warnings)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 479, in test_successful_checks_keep_distinct_other_stage_warnings
+    self.build("validation", validation)
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ir9cmrk2/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ir9cmrk2/code/docs/dev2/.spacedock-state/dispatch-fixture-8e84dcf34074474494d1f272114baac9.md'), '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ir9cmrk2/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-ir9cmrk2/notes.txt'), '--spacedock', None, '--host', 'codex', '--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '--symptom', 'previous failure'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_successful_same_symptom_forwards_one_reminder_before_real_build (test_dispatch_stage.DispatchStageTests.test_successful_same_symptom_forwards_one_reminder_before_real_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 450, in test_successful_same_symptom_forwards_one_reminder_before_real_build
+    first = self.build("implementation", ("--symptom", "same failure"))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-8yg3nkex/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-8yg3nkex/code/docs/dev2/.spacedock-state/dispatch-fixture-fafeab88f1ae401cb95ddaa7c1b53429.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-8yg3nkex/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-8yg3nkex/notes.txt'), '--spacedock', None, '--host', 'codex', '--symptom', 'same failure'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_the_third_dispatch_counts_before_it_is_committed (test_dispatch_stage.DispatchStageTests.test_the_third_dispatch_counts_before_it_is_committed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 367, in test_the_third_dispatch_counts_before_it_is_committed
+    self.build("implementation", ("--symptom", "same failure"))
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-e_od3trb/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-e_od3trb/code/docs/dev2/.spacedock-state/dispatch-fixture-8e2bf1b9575e4deba51f4127152b1ce1.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-e_od3trb/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-e_od3trb/notes.txt'), '--spacedock', None, '--host', 'codex', '--symptom', 'same failure'], '', "dispatch_stage: [Errno 2] No such file or directory: 'None'\n")
+
+======================================================================
+FAIL: test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it (test_dispatch_stage.DispatchStageTests.test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 358, in test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it
+    self.assert_role_hold_then_release("validation")
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 350, in assert_role_hold_then_release
+    self.build(stage, extra)
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 103, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/val844-0a5c37f0/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-t6p16kwt/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-t6p16kwt/code/docs/dev2/.spacedock-state/dispatch-fixture-d99bd7ea05344dcab855e6843429f867.md'), '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-t6p16kwt/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-t6p16kwt/notes.txt'), '--spacedock', None, '--host', 'codex', '--spacedock', PosixPath('/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-t6p16kwt/spy'), '--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'], '', 'Traceback (most recent call last):\n  File "/private/tmp/val844-0a5c37f0/tmp/dispatch-stage-t6p16kwt/spy", line 5, in <module>\n    sys.exit(subprocess.call([None, *sys.argv[1:]]))\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 389, in call\n    with Popen(*popenargs, **kwargs) as p:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1826, in _execute_child\n    and os.path.dirname(executable)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "<frozen posixpath>", line 152, in dirname\nTypeError: expected str, bytes or os.PathLike object, not NoneType\n')
+
+----------------------------------------------------------------------
+Ran 40 tests in 128.187s
+
+FAILED (failures=65, errors=2)

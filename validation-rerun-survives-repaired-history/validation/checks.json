@@ -1,0 +1,116 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "546a136386c94c58e430c91a6f3457b38bd73880",
+      "--require",
+      "0045"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-survives-repaired-history",
+    "exit": 0
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/comment_ratio.py",
+      "546a136386c94c58e430c91a6f3457b38bd73880",
+      "0a5c37f091daec6909a76d443219c655b17d534e",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-survives-repaired-history",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-survives-repaired-history",
+    "exit": 0
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/doc_impact.py",
+      "546a136386c94c58e430c91a6f3457b38bd73880",
+      "0a5c37f091daec6909a76d443219c655b17d534e",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-survives-repaired-history",
+      "--json"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-survives-repaired-history",
+    "exit": 0
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-survives-repaired-history.md"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-survives-repaired-history",
+    "exit": 0
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-survives-repaired-history"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-validation-rerun-survives-repaired-history",
+    "exit": 0
+  },
+  {
+    "name": "number guards",
+    "exit": 0,
+    "log": "number-guards.log"
+  },
+  {
+    "name": "ADR lint (assigned package)",
+    "exit": 0,
+    "log": "adr-lint-dispatch-package.log"
+  },
+  {
+    "name": "design surfaces (assigned package)",
+    "exit": 0,
+    "log": "design-surfaces-dispatch-package.log"
+  },
+  {
+    "name": "dispatch records (assigned package)",
+    "exit": 0,
+    "log": "dispatch-records-dispatch-package.log"
+  },
+  {
+    "name": "behavior mutations",
+    "exit": 0,
+    "log": "mutations.log"
+  },
+  {
+    "name": "additional falsifiers",
+    "exit": 0,
+    "log": "extra-mutations.log"
+  },
+  {
+    "name": "skill lint",
+    "exit": 0,
+    "log": "skill-lint.log"
+  },
+  {
+    "name": "role triggers validation refresh",
+    "exit": 0,
+    "log": "role-triggers.log"
+  },
+  {
+    "name": "native Spacedock version",
+    "exit": 0,
+    "log": "runtime.log"
+  }
+]

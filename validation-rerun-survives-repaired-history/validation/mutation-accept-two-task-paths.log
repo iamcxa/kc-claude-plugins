@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_two_historical_task_paths_stay_held (test_dispatch_records.RepairedRulingHistoryTests.test_two_historical_task_paths_stay_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/accept-two-task-paths/test_dispatch_records.py", line 1587, in test_two_historical_task_paths_stay_held
+    self.assertIn("ambiguous-task-paths", self.assert_hold(2))
+                                          ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/mutations/accept-two-task-paths/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 0 != 2 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.646s
+
+FAILED (failures=1)

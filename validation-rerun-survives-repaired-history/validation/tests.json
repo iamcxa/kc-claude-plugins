@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Dispatch record suite",
+    "status": "passed",
+    "message": "Ran 136 tests in 161.872s; suite.log",
+    "file": "suite.log"
+  },
+  {
+    "name": "Laws consumer suite",
+    "status": "passed",
+    "message": "Ran 84 tests in 134.446s; laws.log",
+    "file": "laws.log"
+  },
+  {
+    "name": "Native builder control",
+    "status": "passed",
+    "message": "Ran 1 test in 41.557s; native-builder-corrected.log",
+    "file": "native-builder-corrected.log"
+  },
+  {
+    "name": "Fresh-shell acceptance",
+    "status": "passed",
+    "message": "Ran 12 tests in 11.429s; acceptance.log",
+    "file": "acceptance.log"
+  },
+  {
+    "name": "Native dispatch-stage suite",
+    "status": "passed",
+    "message": "Ran 40 tests in 198.490s; dispatch-stage-corrected.log",
+    "file": "dispatch-stage-corrected.log"
+  }
+]

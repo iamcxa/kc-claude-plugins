@@ -1,0 +1,53 @@
+[
+  {
+    "repo": "kcp",
+    "commit": "66ade90793a47a716cb55425bc4fbb57c6b15fec",
+    "record": "fo-interviews-extension/dispatch/validation-2.md",
+    "task": "fo-interviews-extension.md",
+    "checked": true,
+    "sides": [
+      {
+        "exit": 2,
+        "output": "/tmp/val844-0a5c37f0/kcp/fo-interviews-extension/dispatch/validation-2.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      },
+      {
+        "exit": 0,
+        "output": ""
+      }
+    ]
+  },
+  {
+    "repo": "kcp",
+    "commit": "ee195fef9685b7772d6c95d38d3b42283cde9f9e",
+    "record": "fo-interviews-extension/dispatch/validation-3.md",
+    "task": "fo-interviews-extension.md",
+    "checked": true,
+    "sides": [
+      {
+        "exit": 2,
+        "output": "/tmp/val844-0a5c37f0/kcp/fo-interviews-extension/dispatch/validation-3.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      },
+      {
+        "exit": 0,
+        "output": ""
+      }
+    ]
+  },
+  {
+    "repo": "qnow",
+    "commit": "b99a7543e7fc3e7fb88d5acf525424fc49591162",
+    "record": "owner-cancels-booking/dispatch/validation-999.md",
+    "task": "owner-cancels-booking.md",
+    "checked": true,
+    "sides": [
+      {
+        "exit": 2,
+        "output": "/tmp/val844-0a5c37f0/qnow/owner-cancels-booking/dispatch/validation-999.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO\n"
+      },
+      {
+        "exit": 0,
+        "output": ""
+      }
+    ]
+  }
+]

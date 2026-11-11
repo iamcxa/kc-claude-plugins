@@ -1,0 +1,23 @@
+F
+======================================================================
+FAIL: test_repaired_amendment_after_report_clears (test_dispatch_records.RepairedRulingHistoryTests.test_repaired_amendment_after_report_clears)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/remove-historical-catch/test_dispatch_records.py", line 1514, in test_repaired_amendment_after_report_clears
+    self.assertEqual(self.cli(), (0, ""))
+AssertionError: Tuples differ: (2, '/tmp/val844-0a5c37f0/tmp/tmpjgm4opn6/[151 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/tmp/val844-0a5c37f0/tmp/tmpjgm4opn6/state-1/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: ambiguous-amendments; hold dispatch '
+-  'and report the missing history to FO\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.687s
+
+FAILED (failures=1)

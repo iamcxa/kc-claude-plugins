@@ -1,0 +1,107 @@
+F..FFFF.F...
+======================================================================
+FAIL: test_bad_quoted_gate_scalar_repaired_before_report_clears (test_dispatch_records.RepairedRulingHistoryTests.test_bad_quoted_gate_scalar_repaired_before_report_clears)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/baseline/test_dispatch_records.py", line 1547, in test_bad_quoted_gate_scalar_repaired_before_report_clears
+    self.assertEqual(self.cli(), (0, ""))
+AssertionError: Tuples differ: (2, '/tmp/val844-0a5c37f0/tmp/tmpnb0hso66/[167 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/tmp/val844-0a5c37f0/tmp/tmpnb0hso66/state-2/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: Extra data: line 1 column 3 (char 2); '
+-  'hold dispatch and report the missing history to FO\n')
+
+======================================================================
+FAIL: test_pre_report_broken_text_without_clearing_identity_clears (test_dispatch_records.RepairedRulingHistoryTests.test_pre_report_broken_text_without_clearing_identity_clears) (native=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/baseline/test_dispatch_records.py", line 1537, in test_pre_report_broken_text_without_clearing_identity_clears
+    self.assertEqual(self.cli(), (0, ""))
+AssertionError: Tuples differ: (2, '/tmp/val844-0a5c37f0/tmp/tmpducknksx/[151 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/tmp/val844-0a5c37f0/tmp/tmpducknksx/state-2/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: ambiguous-amendments; hold dispatch '
+-  'and report the missing history to FO\n')
+
+======================================================================
+FAIL: test_pre_report_broken_text_without_clearing_identity_clears (test_dispatch_records.RepairedRulingHistoryTests.test_pre_report_broken_text_without_clearing_identity_clears) (native=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/baseline/test_dispatch_records.py", line 1537, in test_pre_report_broken_text_without_clearing_identity_clears
+    self.assertEqual(self.cli(), (0, ""))
+AssertionError: Tuples differ: (2, '/tmp/val844-0a5c37f0/tmp/tmpducknksx/[151 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/tmp/val844-0a5c37f0/tmp/tmpducknksx/state-3/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: ambiguous-amendments; hold dispatch '
+-  'and report the missing history to FO\n')
+
+======================================================================
+FAIL: test_repaired_amendment_after_report_clears (test_dispatch_records.RepairedRulingHistoryTests.test_repaired_amendment_after_report_clears)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/baseline/test_dispatch_records.py", line 1514, in test_repaired_amendment_after_report_clears
+    self.assertEqual(self.cli(), (0, ""))
+AssertionError: Tuples differ: (2, '/tmp/val844-0a5c37f0/tmp/tmpcdt65di9/[151 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/tmp/val844-0a5c37f0/tmp/tmpcdt65di9/state-1/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: ambiguous-amendments; hold dispatch '
+-  'and report the missing history to FO\n')
+
+======================================================================
+FAIL: test_repaired_history_without_later_ruling_needs_ruling (test_dispatch_records.RepairedRulingHistoryTests.test_repaired_history_without_later_ruling_needs_ruling)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/baseline/test_dispatch_records.py", line 1578, in test_repaired_history_without_later_ruling_needs_ruling
+    self.assertIn("needs a later Captain ruling for report", self.assert_hold(1))
+                                                             ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/mutations/baseline/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 2 != 1 : /tmp/val844-0a5c37f0/tmp/tmpjxu4lt5w/state-1/task/dispatch/validation-2.md:1: cannot verify validation ruling order: ambiguous-amendments; hold dispatch and report the missing history to FO
+
+
+======================================================================
+FAIL: test_ruling_then_later_heading_typo_repaired_clears (test_dispatch_records.RepairedRulingHistoryTests.test_ruling_then_later_heading_typo_repaired_clears)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/baseline/test_dispatch_records.py", line 1523, in test_ruling_then_later_heading_typo_repaired_clears
+    self.assertEqual(self.cli(), (0, ""))
+AssertionError: Tuples differ: (2, '/tmp/val844-0a5c37f0/tmp/tmpiivalnkg/[151 chars]O\n') != (0, '')
+
+First differing element 0:
+2
+0
+
++ (0, '')
+- (2,
+-  '/tmp/val844-0a5c37f0/tmp/tmpiivalnkg/state-1/task/dispatch/validation-2.md:1: '
+-  'cannot verify validation ruling order: ambiguous-amendments; hold dispatch '
+-  'and report the missing history to FO\n')
+
+----------------------------------------------------------------------
+Ran 11 tests in 11.750s
+
+FAILED (failures=6)

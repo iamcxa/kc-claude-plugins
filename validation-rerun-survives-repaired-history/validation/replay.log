@@ -1,0 +1,18 @@
+qnow f6c94d50 [1, 1]
+qnow 78a76aa2 [1, 1]
+qnow 03838f91 [2, 2]
+qnow a28d69b5 [2, 2]
+qnow 071fe3b6 [2, 0]
+qnow cf9560fc [2, 0]
+qnow 744eaa08 [2, 0]
+qnow 5868a574 [2, 0]
+qnow b99a7543 [2, 0]
+web f67a3abe [2, 2]
+web 000a7103 [2, 2]
+kcp events 757 checked 36
+qnow events 396 checked 26
+relay events 375 checked 31
+web events 333 checked 60
+v0 events 46 checked 7
+private-adopter events 2 checked 1
+{"events": 1909, "checked": 161, "pairs": {"1->1": 46, "0->0": 97, "2->0": 3, "2->2": 15}, "tasks": 73, "errors": 0}

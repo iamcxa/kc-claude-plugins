@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_undecodable_historical_bytes_stay_held (test_dispatch_records.RepairedRulingHistoryTests.test_undecodable_historical_bytes_stay_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/replace-undecodable-bytes/test_dispatch_records.py", line 1602, in test_undecodable_historical_bytes_stay_held
+    self.assertIn("cannot verify validation ruling order:", out)
+AssertionError: 'cannot verify validation ruling order:' not found in '/tmp/val844-0a5c37f0/tmp/tmpae7wj0by/state-1/task/dispatch/validation-2.md:1: validation report 1 was rewritten and has no PASSED or REJECTED word (rewritten-report-verdict-unreadable at fbf8e197ad3f0c3ce4dd9df2c3027f850c8d6358); hold dispatch and bring it to the Captain\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.023s
+
+FAILED (failures=1)

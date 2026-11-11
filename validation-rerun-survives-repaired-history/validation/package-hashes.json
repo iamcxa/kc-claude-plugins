@@ -1,0 +1,30 @@
+{
+  "scripts/role_triggers.py": {
+    "claude": "baaa4e033148c57564afb3a63b96446f25221ddb4644cb278fe2a704d98cdc56",
+    "codex": "baaa4e033148c57564afb3a63b96446f25221ddb4644cb278fe2a704d98cdc56"
+  },
+  "scripts/adr_lint.py": {
+    "claude": "7313e02238830471138d23508c1106bf4ff15ab8b166c060ec1d6e5a160e719f",
+    "codex": "7313e02238830471138d23508c1106bf4ff15ab8b166c060ec1d6e5a160e719f"
+  },
+  "scripts/number_guards.py": {
+    "claude": "bf395410b8f1e17edd08352d1013b6754ad90811a99e0880e0f24c1250d95d9b",
+    "codex": "bf395410b8f1e17edd08352d1013b6754ad90811a99e0880e0f24c1250d95d9b"
+  },
+  "scripts/doc_impact.py": {
+    "claude": "2af123dbeeeb0912da30bd1f1c9241c7d3692615e920d5958a1cca33ca7026cd",
+    "codex": "2af123dbeeeb0912da30bd1f1c9241c7d3692615e920d5958a1cca33ca7026cd"
+  },
+  "scripts/comment_ratio.py": {
+    "claude": "b01e2f61e64b0a3666964e54dd4b14e308345359445d78d6ab68bbcce638a3a0",
+    "codex": "b01e2f61e64b0a3666964e54dd4b14e308345359445d78d6ab68bbcce638a3a0"
+  },
+  "scripts/design_surfaces.py": {
+    "claude": "0073457e28f8a2d5801fd5337ac3885433c0862d292f96973474286cb229738b",
+    "codex": "1638ffbc609cb864ce4e4a84b426c6f89e0961b6c8dd82e0aee6b4864b22b831"
+  },
+  "scripts/dispatch_records.py": {
+    "claude": "24c38c6e92c98716e3b5194d97fa2ae4cfcebc363a8fa62f0f03de7bd8978eb9",
+    "codex": "24c38c6e92c98716e3b5194d97fa2ae4cfcebc363a8fa62f0f03de7bd8978eb9"
+  }
+}

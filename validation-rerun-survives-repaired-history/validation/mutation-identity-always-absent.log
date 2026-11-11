@@ -1,0 +1,27 @@
+FF
+======================================================================
+FAIL: test_pre_report_broken_text_carrying_clearing_identity_holds (test_dispatch_records.RepairedRulingHistoryTests.test_pre_report_broken_text_carrying_clearing_identity_holds) (native=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/identity-always-absent/test_dispatch_records.py", line 1561, in test_pre_report_broken_text_carrying_clearing_identity_holds
+    out = self.assert_hold(2)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/mutations/identity-always-absent/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 0 != 2 : 
+
+======================================================================
+FAIL: test_pre_report_broken_text_carrying_clearing_identity_holds (test_dispatch_records.RepairedRulingHistoryTests.test_pre_report_broken_text_carrying_clearing_identity_holds) (native=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/val844-0a5c37f0/mutations/identity-always-absent/test_dispatch_records.py", line 1561, in test_pre_report_broken_text_carrying_clearing_identity_holds
+    out = self.assert_hold(2)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/val844-0a5c37f0/mutations/identity-always-absent/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 0 != 2 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 3.826s
+
+FAILED (failures=2)

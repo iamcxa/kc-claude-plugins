@@ -1,0 +1,1 @@
+PASS: all three changed candidate files retain the archived SHA-256 bytes after tests and mutations.

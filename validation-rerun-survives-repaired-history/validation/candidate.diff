@@ -1,0 +1,245 @@
+diff --git a/docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md b/docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md
+index f7e584cf0..e91c882b4 100644
+--- a/docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md
++++ b/docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md
+@@ -62,6 +62,8 @@ the finding. Missing, shallow or ambiguous required history is an evidence hold.
+ 
+ Amended 2026-11-11 (Captain: 「裁示前的補改都算，結論不能改（建議）」, answering 「驗證報告被補改過之後，哪些補改還算同一份報告、可以繼續派驗證？我建議：你第一次裁示之前的補改都算，但不能改變報告的結論（通過或退回）；裁示之後才改的照舊拒絕。這是設計的方向，細節與證明仍在設計關卡由你核准。」 in the host question dialog; then 「核准（建議）」, answering 「決定：要不要核准「驗證報告在你裁示前被補改過，仍可再派驗證」的設計並開始實作。我建議核准：設計照你選的方向做，用 qnow 的真實歷史重放過三種情況，結果都符合預期。核准即接受設計裡兩項建議：一、「結論沒變」的判法是每一版報告裡 PASSED 與 REJECTED 這兩個字的出現順序完全相同；二、把這次改動記成 ADR 0045（驗證重跑前必須有你之後的裁示）的一段原地增補，不開新編號。核准後我派實作工人。」 at the ideation gate): a validation report edited in place still counts as the report a later ruling answers when every correction, including the commit that first carries the final text, precedes the first Captain record or gate entry recorded after the report appeared, and every version carries the same ordered, non-empty list of whole-word `PASSED` and `REJECTED` tokens. The later supported ruling must first appear strictly after the commit where the final text first appears. Otherwise the check holds with `rewritten-report-after-ruling`, `rewritten-report-verdict-changed` or `rewritten-report-verdict-unreadable`. The check still runs only while the newest report has an open Needs decision finding.
+ 
++Amended 2026-11-11 (Captain: 「能證明不影響才放行（建議）」, answering 「驗證重跑的檢查回頭讀任務歷史時，碰到讀不懂的舊版本（例如修正案曾經寫錯位置）要怎麼處理？我建議：只有在能證明讀不懂的版本不影響結論時才放行，也就是用來放行的那筆裁示，它第一次出現的版本本身讀得懂、而且排在所有讀不懂的版本之後；其他情況照舊拒絕。設計要量出這樣在各 repo 解開幾張、還擋幾張。這是設計的方向，細節與證明仍在設計關卡由你核准。」 in the host question dialog; then 「核准（建議）」, answering 「決定：要不要核准「任務歷史裡有已修好的格式錯誤時，仍可再派驗證」的設計並開始實作。我建議照設計的建議核准。核准即接受三項：一、放行的判法改用設計提的版本：一個讀不懂的舊版本，只有當它排在驗證報告當時或之前、而且它的原始文字裡出現了要用來放行的那筆裁示的編號時，才擋下重跑；這和你上次選的說法不同，因為設計量出那個說法照一種讀法會放行一張不該放行的任務、照字面讀又解不開 qnow。二、把這次改動記成 ADR 0045 的一段原地增補，不開新編號。三、有三種罕見的歷史形狀仍然會被永久擋住，先接受、不在這張處理。核准後我派實作工人。」 at the ideation gate): a repaired past version whose Captain records cannot be parsed does not itself refuse a rerun. A supported ruling in both current and pinned text clears only when every parsed appearance is strictly after the report and no unparsed version not strictly after the report carries its identity in raw text: the case-insensitive numbered amendment heading, or the native gate-attempt id. Current and pinned text still parse strictly; report-rewrite checks still hold when required identities cannot be read. With no later ruling, the refusal remains needs-a-later-ruling. Two historical task paths, a fence hiding a report and undecodable historical bytes remain evidence holds, with no recovery added here.
++
+ This predicate runs through `--names`, not `--newest` or the historical snapshot
+ caller. Passing establishes structure and order; the First Officer still checks
+ the original question and reply, per-finding coverage and permission for the
+diff --git a/kc-dev-flow-2/scripts/dispatch_records.py b/kc-dev-flow-2/scripts/dispatch_records.py
+index 7cf1cc4dd..b574cc354 100755
+--- a/kc-dev-flow-2/scripts/dispatch_records.py
++++ b/kc-dev-flow-2/scripts/dispatch_records.py
+@@ -43,6 +43,7 @@ it exits 2 for a record outside task/dispatch or without an adjacent task file,
+ committed native Captain validation resolution or Captain amendment exists (ADR 0045). It skips this predicate
+ for non-git snapshots; pre-ruling corrections must preserve the ordered non-empty PASSED/REJECTED word list,
+ and the ruling must follow the final text's first commit; missing or ambiguous required git history exits 2.
++For unchanged reports, unparsed Captain records hold only if they may carry the clearing ruling not strictly after the report.
+ --newest runs that scan on the file added by the latest commit that adds a file under <slug>/dispatch/, read as it
+ is on disk: exit 0 when it is clean or the task has no record, 1 when a name is found, 2 when git cannot read the state.
+ --coverage checks presence for a declared ideation, implementation or validation stage after an unfenced report:
+@@ -342,6 +343,16 @@ class RulingHistoryError(Exception):
+     pass
+ 
+ 
++AMENDMENT_NUMBER = re.compile(r"^\s*### Amendment ([0-9]+)\b", re.I | re.M)
++
++
++def may_hold(snapshot, key):
++    kind, value = key
++    if kind == "amendment":
++        return value in {int(n) for n in AMENDMENT_NUMBER.findall(snapshot)}
++    return value is None or value in snapshot
++
++
+ def validation_reports(text):
+     _, body = split_task(text)
+     clean = "\n".join(outside_fences(body))
+@@ -423,7 +434,7 @@ def later_captain_ruling(root, task, text, selected):
+     if len(reports) <= ordinal or reports[ordinal] != selected[-1]:
+         raise RulingHistoryError("uncommitted-report")
+     _, committed = captain_records(pinned, slug)
+-    first, introduced, absent, versions = {}, [], [], []
++    first, introduced, absent, versions, unparsed = {}, [], [], [], {}
+     commits = ruling_git(root, "log", "--full-history", "--reverse", "--topo-order", "--format=%H",
+                          head, "--", *paths).splitlines()
+     for commit in commits:
+@@ -432,13 +443,16 @@ def later_captain_ruling(root, task, text, selected):
+             absent.append(commit)
+             continue
+         reports = validation_reports(snapshot)
+-        identities, _ = captain_records(snapshot, slug)
++        try:
++            identities, _ = captain_records(snapshot, slug)
++        except (RulingHistoryError, ValueError) as error:
++            identities, unparsed[commit] = None, (error, snapshot)
+         if len(reports) > ordinal:
+             introduced.append(commit)
+             versions.append((commit, reports[ordinal], identities))
+         else:
+             absent.append(commit)
+-        for key in identities:
++        for key in identities or ():
+             first.setdefault(key, []).append(commit)
+     if not introduced:
+         raise RulingHistoryError("report-history-missing")
+@@ -459,6 +473,11 @@ def later_captain_ruling(root, task, text, selected):
+     report_commit = origins[0]
+     if any(ancestor(report_commit, commit) for commit in absent):
+         raise RulingHistoryError("discontinuous-report-history")
++    def parsed(commit, identities):
++        if identities is None:
++            raise unparsed[commit][0]
++        return identities
++
+     stale = [(c, ids) for c, report, ids in versions if report != selected[-1]]
+     if stale:
+         final_commits = [c for c, report, _ in versions if report == selected[-1]]
+@@ -473,18 +492,25 @@ def later_captain_ruling(root, task, text, selected):
+                 settled.append(commit)
+         if len(settled) != 1:
+             raise RulingHistoryError("ambiguous-report-origin")
+-        known = next(ids for c, _, ids in versions if c == report_commit)
+-        settled_ids = next(ids for c, _, ids in versions if c == settled[0])
++        known = parsed(report_commit, next(ids for c, _, ids in versions if c == report_commit))
++        settled_ids = parsed(settled[0], next(ids for c, _, ids in versions if c == settled[0]))
+         if settled_ids - known:
+             raise RulingHistoryError(f"rewritten-report-after-ruling at {settled[0]}")
+         for commit, identities in stale:
+-            if identities - known or ancestor(settled[0], commit):
++            if ancestor(settled[0], commit) or parsed(commit, identities) - known:
+                 raise RulingHistoryError(f"rewritten-report-after-ruling at {commit}")
+         report_commit = settled[0]
++    blocked = None
+     for key in current & committed:
+         appearances = first.get(key, [])
+         if appearances and all(c != report_commit and ancestor(report_commit, c) for c in appearances):
+-            return report_commit, True
++            hiding = [c for c, (_, snapshot) in unparsed.items()
++                      if (c == report_commit or not ancestor(report_commit, c)) and may_hold(snapshot, key)]
++            if not hiding:
++                return report_commit, True
++            blocked = blocked or unparsed[hiding[0]][0]
++    if blocked:
++        raise blocked
+     return report_commit, False
+ 
+ 
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_records.py b/kc-dev-flow-2/scripts/test_dispatch_records.py
+index 4dc07d116..9b6883214 100644
+--- a/kc-dev-flow-2/scripts/test_dispatch_records.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_records.py
+@@ -1493,6 +1493,128 @@ class LiveValidationRulingTests(unittest.TestCase):
+ 
+ 
+ 
++class RepairedRulingHistoryTests(unittest.TestCase):
++    setUp = LiveValidationRulingTests.setUp
++    git = LiveValidationRulingTests.git
++    save = LiveValidationRulingTests.save
++    commit = LiveValidationRulingTests.commit
++    cli = LiveValidationRulingTests.cli
++    assert_hold = LiveValidationRulingTests.assert_hold
++
++    def new_state(self, body=REPORT, native="", slug="task"):
++        LiveValidationRulingTests.new_state(self, body, native, slug)
++        self.record.write_text(self.record.read_text().replace(
++            "1. Independent", "1. Captain amendment 1. Independent"))
++
++    def test_repaired_amendment_after_report_clears(self):
++        self.save(REPORT + AMENDMENT.replace("## Captain amendments", "## Wrong section"))
++        self.commit("amendment outside its section after report")
++        self.save(REPORT + AMENDMENT)
++        self.commit("repair amendment placement")
++        self.assertEqual(self.cli(), (0, ""))
++
++    def test_ruling_then_later_heading_typo_repaired_clears(self):
++        self.save(REPORT + AMENDMENT)
++        self.commit("later ruling")
++        self.save(REPORT + AMENDMENT.replace("## Captain amendments", "## Wrong section"))
++        self.commit("heading typo")
++        self.save(REPORT + AMENDMENT)
++        self.commit("repair heading")
++        self.assertEqual(self.cli(), (0, ""))
++
++    def test_pre_report_broken_text_without_clearing_identity_clears(self):
++        for native in (False, True):
++            with self.subTest(native=native):
++                broken = AMENDMENT.replace("Amendment 1", "Amendment 9").replace(
++                    "## Captain amendments", "## Wrong section")
++                self.new_state("## Scope\nWork\n" + broken)
++                self.save("## Scope\nWork\n")
++                self.commit("repair before report")
++                self.save(REPORT)
++                self.commit("report after repair")
++                self.save(REPORT + ("" if native else AMENDMENT), native_ruling() if native else "")
++                self.commit("new ruling after report")
++                self.assertEqual(self.cli(), (0, ""))
++
++    def test_bad_quoted_gate_scalar_repaired_before_report_clears(self):
++        self.new_state("## Scope\nWork\n", native_ruling(slug="other", reason='""bad""'))
++        self.save("## Scope\nWork\n")
++        self.commit("repair gate scalar")
++        self.save(REPORT)
++        self.commit("report")
++        self.save(REPORT, native_ruling())
++        self.commit("later ruling with new identity")
++        self.assertEqual(self.cli(), (0, ""))
++
++    def test_pre_report_broken_text_carrying_clearing_identity_holds(self):
++        for native in (False, True):
++            with self.subTest(native=native):
++                broken = "" if native else AMENDMENT.replace("## Captain amendments", "## Wrong section")
++                self.new_state("## Scope\nWork\n" + broken,
++                               native_ruling(reason='""bad""') if native else "")
++                self.save("## Scope\nWork\n")
++                self.commit("remove broken record before report")
++                self.save(REPORT)
++                self.commit("report")
++                self.save(REPORT + ("" if native else AMENDMENT), native_ruling() if native else "")
++                self.commit("same identity reintroduced after report")
++                out = self.assert_hold(2)
++                self.assertIn("cannot verify validation ruling order:", out)
++                self.assertIn("Extra data" if native else "ambiguous-amendments", out)
++
++    def test_unrepaired_current_or_pinned_text_stays_held(self):
++        broken = REPORT + AMENDMENT.replace("## Captain amendments", "## Wrong section")
++        self.save(broken)
++        self.commit("still broken at pinned HEAD")
++        self.assertIn("ambiguous-amendments", self.assert_hold(2))
++        self.save(REPORT + AMENDMENT)
++        self.assertIn("ambiguous-amendments", self.assert_hold(2))
++
++    def test_repaired_history_without_later_ruling_needs_ruling(self):
++        self.save(REPORT + AMENDMENT.replace("## Captain amendments", "## Wrong section"))
++        self.commit("broken record after report")
++        self.save(REPORT)
++        self.commit("repair by removing record")
++        self.assertIn("needs a later Captain ruling for report", self.assert_hold(1))
++
++    def test_two_historical_task_paths_stay_held(self):
++        duplicate = self.record.parent.parent / "index.md"
++        duplicate.write_text(self.task.read_text())
++        self.commit("two task paths")
++        duplicate.unlink()
++        self.save(REPORT + AMENDMENT)
++        self.commit("remove duplicate and add later ruling")
++        self.assertIn("ambiguous-task-paths", self.assert_hold(2))
++
++    def test_historical_fence_hiding_report_stays_held(self):
++        self.save("```\n" + REPORT)
++        self.commit("unclosed fence hides report")
++        self.save(REPORT + AMENDMENT)
++        self.commit("repair fence and add later ruling")
++        self.assertIn("discontinuous-report-history", self.assert_hold(2))
++
++    def test_undecodable_historical_bytes_stay_held(self):
++        self.task.write_bytes(self.task.read_bytes() + b"\xff\n")
++        self.commit("undecodable bytes")
++        self.save(REPORT + AMENDMENT)
++        self.commit("repair bytes and add later ruling")
++        out = self.assert_hold(2)
++        self.assertIn("cannot verify validation ruling order:", out)
++        self.assertIn("decode", out)
++
++    def test_report_rewrite_requiring_unreadable_identities_stays_held(self):
++        original = REPORT + "\nREJECTED: choose scope.\n"
++        broken = AMENDMENT.replace("## Captain amendments", "## Wrong section")
++        for at_origin in (False, True):
++            with self.subTest(at_origin=at_origin):
++                self.new_state(original + (broken if at_origin else ""))
++                self.save(original.replace("choose", "decide") + ("" if at_origin else broken))
++                self.commit("correct report without changing verdict")
++                self.save(original.replace("choose", "decide") + AMENDMENT)
++                self.commit("repair record and add ruling")
++                self.assertIn("ambiguous-amendments", self.assert_hold(2))
++
++
+ class SavedValidationRulingTests(unittest.TestCase):
+     setUp = LiveValidationRulingTests.setUp
+     new_state = LiveValidationRulingTests.new_state

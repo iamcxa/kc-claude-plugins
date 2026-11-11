@@ -1,0 +1,19 @@
+PASS export 0a5c37f091daec6909a76d443219c655b17d534e
+............
+----------------------------------------------------------------------
+Ran 12 tests in 15.294s
+
+OK
+PASS repaired-history and same-commit controls
+PASS f6c94d50: released=1 candidate=1
+PASS 78a76aa2: released=1 candidate=1
+PASS 03838f91: released=2 candidate=2
+PASS a28d69b5: released=2 candidate=2
+PASS 071fe3b6: released=2 candidate=0
+PASS cf9560fc: released=2 candidate=0
+PASS 744eaa08: released=2 candidate=0
+PASS 5868a574: released=2 candidate=0
+PASS b99a7543: released=2 candidate=0
+68 ADR file(s) checked, 0 legacy
+PASS ADR lint; acceptance complete
+Removed scratch: /tmp/val844-0a5c37f0/tmp/val844-acceptance.tyEyXg
