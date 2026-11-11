@@ -40,6 +40,10 @@ All six disposable state origins changed only refs/heads/spacedock-state/wf; all
 - static-results.json and lint-tests.json: repository lint and 47 existing mutations, ADR lint, number guards and comment ratio pass. Number guard reported a state-fetch warning; this candidate reserves/adds no number. comment ratio is 0.0%, with the default 5% maximum not enforced below 20 added code lines.
 - Full workflow word count: 5939 to 5977. Dispatch facts including its heading: 300 to 338, correcting the design table's count by -3 on both sides. All three worker stages load the extra 38 words. Recorded implementation context totals are 1362 to 1400 and validation 1516 to 1554.
 
+## Captain closure
+
+Captain amendment 2 closes without delivery because neither release replay reproduced the bite. No product push or PR; preserve the local candidate. Reopen only with a recorded real dispatch showing the misclassification.
+
 ## Handoff
 
 Product branch push, Draft PR, RoboRev and hosted CI are FO-owned and were not run. No version or CI configuration changed; CI cost per PR was not measured. Prepared PR text is /tmp/impl-worker-push-words-match-state-commit-pr.md. The existing Captain approval covers the +38 budget step; it does not erase the unresolved AC-4 origin assertion.
