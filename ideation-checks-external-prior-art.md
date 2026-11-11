@@ -55,6 +55,7 @@ gates:
 ## FO alignment
 
 Alignment: needed at ideation; how far ideation looks outside the repository, and what it costs each task, are the Captain's call.
+Result: the Captain chose 「交給設計比較」 (host question dialog, 2026-11-11), answering 「「設計階段先查現成的標準與做法」這張任務的設計方向要怎麼定？我建議：只在設計工人正要發明一套新機制時才查，查完寫一小段「查了什麼、採用或改用或不用與理由」，其他任務不用查、不加必填欄位。這是設計的方向，細節與證明仍在設計關卡由你核准。」. FO's recommendation was not taken: the design compares the choices and he picks at the ideation gate.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
