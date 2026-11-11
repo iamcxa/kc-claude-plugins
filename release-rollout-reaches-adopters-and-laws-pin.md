@@ -220,7 +220,7 @@ Recommended order: after adr-required-statement and merge-guard-stops-unasked-me
 
 **AC-8** A live run against the real list at the candidate. Evidence: the command, date and full output saved in the task's implementation folder. Two rows chosen by the validator match a by-hand `gh api` read of the same README and laws file. Falsifier: a row whose printed release line or pin differs from the hand read.
 
-**AC-10** Amended by Captain, amendment 1. The step and rules are written once each: maintain-flow § Observe adopters names `package_version.py rollout <list>`, a maintainer-supplied list outside any repository committed nowhere, who moves the README and pin and on whose word; root `CLAUDE.md` § Post-merge has one pointer; adoption.md § State laws check states the installation ruling. No package text names an adopter repository or supplies a list path inside a repository. Evidence: repository `lint-skills.py` exits 0 including its repeat check; implementation reports per-moment base/candidate word counts with an independent recount. Falsifier: lint fails, a non-release/non-adoption moment grows, or package text restores an in-repository list.
+**AC-10** Amended by Captain, amendment 1. The step and rules are written once each: maintain-flow § Observe adopters names `package_version.py rollout <list>`, a maintainer-supplied list outside any repository committed nowhere, who moves the README and pin and on whose word; root `CLAUDE.md` § Post-merge carries one pointer row; adoption.md § State laws check states the D1 ruling. No package text names an adopter repository or supplies a list path inside a repository. Evidence: `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0, including its 12-word repeat check; implementation reports per-moment base/candidate word counts with an independent recount. Falsifier: lint fails, a non-release/non-adoption moment grows, or package text restores an in-repository list.
 
 **AC-11** Amended by Captain, amendment 1. The command takes the maintainer's local list path; it is committed nowhere, and no list file is added to the package or state branch. Evidence: the AC-8 run reads the FO-supplied local file, and fake-gh tests cover a missing and unreadable list returning non-zero. Falsifier: a missing list returns 0 or says nothing is owed, or the candidate adds a list to either repository.
 
@@ -415,3 +415,28 @@ This report supersedes both earlier implementation reports, including the review
 ### Summary
 
 This report supersedes all earlier implementation reports for candidate 61529999eb41. The matching-refs High finding's pagination premise is not supported by official documentation or the 49/165-ref probes, so that call remains unchanged; the authorized survey instead repaired two evidenced omissions in code-search metadata and large-file content handling. All 23 package_version tests, original/order controls, five new mutations, required checks and the fresh live rollout pass; product publication, RoboRev/CI and independent validation remain FO-owned.
+
+## Stage Report: implementation
+
+- DONE: Reword AC-10 only, in the task file, without widening or narrowing it.
+  The three clauses rejected by the validation dispatch now use superseded AC-7's wording; the command/list constraints, word-count recount and falsifier are unchanged. No amendment wording was added, and no other criterion changed. Exact changed clauses (the checker's sentence boundaries include semicolons):
+  Old: root `CLAUDE.md` § Post-merge has one pointer;
+  New: root `CLAUDE.md` § Post-merge carries one pointer row;
+  Old: adoption.md § State laws check states the installation ruling.
+  New: adoption.md § State laws check states the D1 ruling.
+  Old: repository `lint-skills.py` exits 0 including its repeat check;
+  New: `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0, including its 12-word repeat check;
+- DONE: Check AC-11 and AC-12 for the same defect against their amendments and fix them the same way if they have it.
+  AC-11 yields no added-word finding under amendment 1. AC-12 is amendment 2's new criterion, not a replacement; its printed sync/merge/pin order and unchanged AC-4 match that Captain/Asked ruling. Both remain byte-identical.
+- DONE: Exercise the validation-dispatch wording check before and after this correction.
+  Installed 0.38.1 dispatch_records.py --names --strict on temporary validation-1.md snapshots: original exit 1 flags only has/installation/repository; corrected exit 0. The record names amendments 1 and 2 and candidate 61529999eb4184b44328fe2fbad545b1b0b0ed92. Reverting each corrected clause independently restores its added-word finding. Temporary logs are /tmp/rollout-ac10-wording/{before,after}.log; no real validation record was created and no worker dispatched.
+- DONE: Keep the accepted product candidate and prior evidence unchanged.
+  Product HEAD 61529999eb4184b44328fe2fbad545b1b0b0ed92 on spacedock-ensign/release-rollout-reaches-adopters-and-laws-pin is clean; base remains e8664a72b0f904e5dda3c391d52ab3abaca876b4. Prior review-1727 evidence and this task's preceding implementation report retain the 23 tests, mutations, live rollout, lint/ADR/number/comment checks and document dispositions; none was modified or rerun for this task-text-only correction.
+- DONE: Commit the task file with the state commit command and report the exact old and new sentences.
+  Only this task file is changed by this round. The FO-authorized /Users/kent/.local/bin/spacedock state commit release-rollout-reaches-adopters-and-laws-pin --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2 publishes it after this append; the three exact old/new clauses are recorded above. Sibling task edits are preserved and excluded.
+- SKIPPED: Product push, PR changes, RoboRev, hosted CI and independent validation.
+  FO message-8 reports candidate 61529999e pushed to Draft PR #838 and RoboRev job 1728 clean; those are FO's observations, not rerun here. Actual validation dispatch remains FO-owned. No product/evidence/CI/version change, external comment or merge; per-PR CI cost remains not measured.
+
+### Summary
+
+This report supersedes the earlier implementation reports for the message-8/message-9 wording follow-up; their unchanged product evidence remains referenced above. AC-10 restores three inherited AC-7 clauses, AC-11/AC-12 remain unchanged, and the same strict validation-record check changes from the reproduced three-word rejection to exit 0. The product candidate remains 61529999eb4184b44328fe2fbad545b1b0b0ed92; the FO still owns retrying the real validation dispatch.
