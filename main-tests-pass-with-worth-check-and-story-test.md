@@ -3,7 +3,7 @@ title: main's kc-dev-flow-2 tests pass again with the Worth questions check and 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要核准「修好 main 上壞掉的那一項測試」的設計並開始實作。我建議核准。設計查出錯在測試不在檢查：那個測試自己造了一張設計階段的假任務，卻沒寫「值不值得」那一節，所以不管有沒有裝 spacedock 程式，新檢查都會擋它（沒裝時報「讀不到階段」，有裝時報「缺那一節」）。核准即接受：只改一個測試檔裡那張假任務的文字，補上那一節；檢查本身、讀不到階段就擋下的規則、其他測試和 CI 設定都不動。」. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-11T09:02:13Z
 ---
 
