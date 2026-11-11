@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "relay_members": [
+    11,
+    6,
+    167
+  ],
+  "agent_reviews_members": {
+    "tasks": 6,
+    "done": 5,
+    "prs": [
+      {
+        "task": "agent-review-identity",
+        "ref": "spacedock-dev/subspace-relay#342"
+      },
+      {
+        "task": "comment-admission",
+        "ref": "spacedock-dev/subspace-relay#355"
+      },
+      {
+        "task": "device-route-after-decision",
+        "ref": "spacedock-dev/subspace-relay#367"
+      },
+      {
+        "task": "device-route-room-gate",
+        "ref": "spacedock-dev/subspace-relay#360"
+      },
+      {
+        "task": "front-door-hardening",
+        "ref": "spacedock-dev/subspace-relay#377"
+      }
+    ]
+  },
+  "release_only_tasks": 8,
+  "short_report_lines": 7,
+  "short_report_words": 52,
+  "checks": [
+    "AC-1",
+    "AC-2",
+    "AC-3",
+    "AC-5",
+    "AC-6",
+    "AC-7",
+    "AC-9"
+  ]
+}

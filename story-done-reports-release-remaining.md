@@ -693,3 +693,42 @@ This report supersedes the first ideation report above. Dispatch: `dispatch/idea
 ### Summary
 
 The design is kept and one step added on the Captain's revise. Every new task in a workflow listing journey-map writes `Story: <story id> (<release id>)` or `Story: none: <reason>` under FO alignment; the existing seed check refuses only a missing line, and the idle look already runs that check. Measured on today's state, the line would be missing on 135 of 137 relay tasks and 163 of 163 qnow tasks; this workflow is unaffected. The rule reaches backlog tasks that still need preparation (31 existing relay and 11 qnow tasks are named on the day it ships, then one rollout pass), a design-check rule keeps the line and the counted fields together, and it takes Gap 1 of journey-map-progress-and-provenance whole, and comes with an ADR draft that extends ADR 0041.
+
+## Stage Report: implementation
+
+- DONE: Two pull requests, as the approved design says: prepare the producer and dev2 changes on their assigned branches, based on freshly fetched origin/main.
+  Base e8664a72b0f904e5dda3c391d52ab3abaca876b4; producer spacedock-ensign/story-done-reports-release-remaining at fd1caa475f85483cf5c4031a1e58656ff5d3eaff; dev2 spacedock-ensign/story-done-reports-release-remaining-dev2 at fa485f008562f00ebf91deed19e58ea52bb4b4dc; both clean, exact hashes in implementation-1/evidence/candidates.json.
+- DONE: Write one Conventional Commit PR text per branch and report both branches, bases and candidate SHAs.
+  /tmp/impl-story-done-reports-release-remaining-pr.md and /tmp/impl-story-done-reports-release-remaining-dev2-pr.md; durable copies producer-pr.md and dev2-pr.md under implementation-1/evidence/.
+- SKIPPED: Product branch pushes, Draft PR creation, RoboRev, hosted CI, reviews, ready and merge.
+  FO owns publication and local review; no PR opened: no push grant. Delegated checks were not run, not clean; CI cost not measured and CI definitions unchanged.
+- DONE: D1 A1, D2 B1, D3 C3 and the added Story step, limited to the design's files plus Captain amendment 1's sample.
+  Seven producer files and six dev2/ADR files; workflow.md, test_release_acceptance.py and the consumer contract-versions.json are byte-identical to base. The canvas/map are not written.
+- DONE: ADR 0076 records the ruling the design names, quoting the Captain's words from the task file and its gate records.
+  docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md quotes ideation attempts 2/3, names the options/recommendation and protects check_story_record; adr-lint.log exits 0, requiring 0076.
+- DONE: AC-1, AC-3, AC-5, AC-6, AC-7 and AC-9: run the report through native pinned replays and its fixture control.
+  progress-replay-result.json and AC1-before/after.stdout: inbox-home 0/1→1/1, owner-account 0/4→1/4 with PR #999; all-story counts 11/6/167; agent-reviews 6/5; qnow r12 has 8 release-only tasks; real 28-story report 7 lines/52 words; missing CLI prints one not-run line and exits 1; old CLI exits 2.
+- DONE: AC-2: declared status, required/done task fields, task IDs, release acceptance and walk prompts are unchanged.
+  replay_progress.py compares both native JSON snapshots to base field for field and both due commands print identical output; turning all-done members into declared exists fails AC2-members-as-declared.log.
+- DONE: AC-4 and AC-8: ref rules and the additive journey-progress 1.1.0 contract.
+  progress/schema tests cover all eight ref forms with ssh/https/no origin, and retain the v1 wire string and 1.0.0 hash; dropping URL conversion or the version bump fails the recorded mutants; progress-schema.log prints members rows.
+- DONE: AC-11, AC-12, AC-13 and AC-15: seed form, workflow scope, idle reach and story/field agreement.
+  seed-replay.json: relay 135/137 refused, qnow 163/163, local 0/230; idle names 31/11; both old relay records agree. Missing/fenced/empty/none-without-reason records fail, both forms and unlisted workflows pass; reverse mutations fail the tests and forcing all workflows refuses local 230.
+- DONE: AC-14 and every runnable falsifier, with python3 -B and fresh/cleared mutant caches.
+  mutations.json (11), remaining-mutations.json (3), AC12-force-all-workflows.json (1), plus the native archive status control; missing ADR exits 1 and the workflow-edit mutation is excluded by the same path/byte check that passes on both candidates.
+- SKIPPED: AC-10: the next real relay archive after both releases reach the adopter.
+  Explicit future check: release-rollout-reaches-adopters-and-laws-pin and FO's real archive message are still owed; scratch replay is not rollout or delivery acceptance.
+- DONE: Captain amendment 1: update only fixtures/journey-progress-v1.json; keep the whole-document assertion and consumer contract registry.
+  The design's unchanged-sample claim was wrong: assertEqual(doc, self.document) rejects additive members. The combined exact-byte pair passes all 122 unchanged tests; amendment-1-mutant.log rejects an unrecorded producer field at that same assertion. No consumer registry/test edit was needed.
+- DONE: Build replay copies under /tmp from the local relay/qnow clones at the criteria's commits, keeping originals read only after fetch.
+  /tmp/opencode-story-done/replays; relay code 0fce82296710d7bf3b89c2871adefd71db2e2957/state 77f5bb4e0e286467ec7078038e8bb9d680baddde; qnow code ebc59cf96fdd5303e0dfccb1559d6048724e33ae/state 03838f912be5a74c972750128955524d03b5a6b6; local state 10149f1c5. README.md in evidence records reproduction and limits.
+- DONE: Keep the 30-second reader limit; satisfy repository skill lint, ADR lint, number guards and comment ratio at both candidate heads.
+  No limit change: later sequential traces read successfully at base/candidate; earlier timeouts are retained as limits. Repository lint and required ADR lint exit 0; fresh-fetch number guards exit 0 on both heads; comments 0.0%/1.2% below 5%; corresponding logs saved.
+- DONE: Run the affected producer, design, watch, dispatch and consumer tests.
+  21 producer tests; 222 design tests (4 existing conditional skips); 136 watch tests; 125 dispatch tests (1 conditional skip); 122 integrated consumer tests. Named negative mutations catch the corresponding false behavior, rather than relying on pass counts alone.
+- DONE: Record affected-document dispositions and FO reading cost.
+  Producer doc_impact: none. ADR 0041 unaffected: its bounds remain and 0076 adds the story rule; ADR 0057 unaffected: amendment comparison is unchanged; ADR 0076 updated. words.json: extension 612→713 (max 726), archive instructions 50→100 plus report, seed instruction 40; workflow remains 5939 words.
+
+### Summary
+
+Implemented the approved Pilot route as two local product commits; FO owns pushing, opening the two Draft PRs (producer first), RoboRev and CI. The only added file outside the original design is the sample Captain amendment 1 authorized; its whole-document assertion stays intact. All current implementation checks pass; AC-10 awaits real release/rollout and the assembled reproduction wrapper is syntax-checked but not run end to end.

@@ -1,0 +1,29 @@
+✔ filed membership counts undeclared tasks and formats completed task pull requests (2.735333ms)
+✔ archive report uses filed counts without changing declarations, acceptance, or source bytes (3007.802958ms)
+✔ report separates release-only tasks and unknown stories and bounds lists (1536.410459ms)
+✔ real archived reader distinguishes task/story ratios, full identities, and reopening (338.948041ms)
+✔ an id-style: slug workflow reads tasks by slug and still refuses what it cannot identify (946.609ms)
+✔ declaration fields a member had cleared do not count as a second declaration (125.63025ms)
+✔ real records refuse missing, partial, conflicting, duplicate, malformed, and short-ID scope (2255.259459ms)
+✔ actual partial page, missing CLI, and implicit or empty journey scope cannot complete (547.89275ms)
+✔ derived projections use three borders without entering story wording or source readback (105.0925ms)
+✔ actual refresh CLI draws to isolated canvas and native-compatible readback preserves bytes (1755.478959ms)
+✔ a task naming this journey but a release and story the map does not hold is an orphan (0.24325ms)
+✔ the real reader lists orphans from the task listing and the refresh CLI exits 1 on them (546.235875ms)
+✔ a release-acceptance task with no journey fields is not an orphan; with a journey and release but no story it is (657.124667ms)
+✔ the table and version print and the recorded hash binds them (79.876208ms)
+✔ an edited table with an unchanged version exits 1 naming the schema (112.094042ms)
+✔ a bumped version with no recorded hash exits 1 (59.089125ms)
+✔ the printed history pointers name files that exist and a runnable command (196.490583ms)
+✔ release-walk prints its table and version, and an edited table with an unchanged version exits 1 (172.46675ms)
+✔ journey-progress registers its printed table and refuses an unversioned shape edit (154.447625ms)
+✔ the progress producer preserves the registered keys and acceptance meanings (1957.94675ms)
+✔ the README and SKILL.md send a reader to the schema command, the CHANGELOG and the ADR, and say when (14.70425ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13099.719542

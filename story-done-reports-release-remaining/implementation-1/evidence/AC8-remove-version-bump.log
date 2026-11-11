@@ -1,0 +1,31 @@
+✖ journey-progress registers its printed table and refuses an unversioned shape edit (44.05475ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 97.822625
+
+✖ failing tests:
+
+test at lib/schemas.test.mjs:73:1
+✖ journey-progress registers its printed table and refuses an unversioned shape edit (44.05475ms)
+  AssertionError [ERR_ASSERTION]: journey-progress: the field table changed but version 1.0.0 did not; bump current and record the new hash 8719b204c1818958d7e3f73e7cb544906661d98fcc3ba9f6c0271389cf629ac1
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///private/tmp/opencode-story-done/mutants/AC8-remove-version-bump/lib/schemas.test.mjs:75:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

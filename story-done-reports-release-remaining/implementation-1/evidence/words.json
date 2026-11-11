@@ -1,0 +1,13 @@
+{
+  "extension": {
+    "before": 612,
+    "after": 713,
+    "maximum": 726
+  },
+  "after_archive": {
+    "before": 50,
+    "after": 100
+  },
+  "seed_instruction": 40,
+  "workflow_bytes_equal": true
+}

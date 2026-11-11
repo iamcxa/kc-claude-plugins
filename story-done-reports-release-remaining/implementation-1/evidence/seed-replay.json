@@ -1,0 +1,2766 @@
+{
+  "relay": {
+    "tasks": 137,
+    "story_refusals": 135,
+    "refused": [
+      "_archive/account-publish-ceiling.md",
+      "_archive/agent-front-door.md",
+      "_archive/agent-review-identity.md",
+      "_archive/anonymous-can-sign-in.md",
+      "_archive/briefing-sent-time.md",
+      "_archive/ci-only-pr-runtime-check.md",
+      "_archive/close-race-copilot.md",
+      "_archive/close-race.md",
+      "_archive/comment-admission.md",
+      "_archive/continuity-earlier-comments-beside-latest.md",
+      "_archive/continuity-room-points-to-latest.md",
+      "_archive/decision-leg-split.md",
+      "_archive/decision-leg-under-limit.md",
+      "_archive/decision-panel-host.md",
+      "_archive/deploy-records.md",
+      "_archive/device-binding-read.md",
+      "_archive/device-route-after-decision.md",
+      "_archive/device-route-room-gate.md",
+      "_archive/document-display-name.md",
+      "_archive/duplicate-annotation-id-decision.md",
+      "_archive/env-overridable-daily-quota.md",
+      "_archive/font-and-width.md",
+      "_archive/frame-and-content-headers.md",
+      "_archive/front-door-flag.md",
+      "_archive/front-door-hardening.md",
+      "_archive/identity-at-first-comment.md",
+      "_archive/identity-cannot-be-borrowed.md",
+      "_archive/junk-share-edge-cost.md",
+      "_archive/launch-stories-verified.md",
+      "_archive/limit-observability.md",
+      "_archive/live-web-notice.md",
+      "_archive/llms-covers-room-contract.md",
+      "_archive/llms-points-at-formats.md",
+      "_archive/llms-teaches-versions.md",
+      "_archive/multi-document-one-round-trip.md",
+      "_archive/multi-document-room-picker.md",
+      "_archive/one-entry-account-menu.md",
+      "_archive/one-identity-entry.md",
+      "_archive/one-share-link.md",
+      "_archive/openapi-route-coverage.md",
+      "_archive/others-highlights-in-author-colour.md",
+      "_archive/owner-decision-record.md",
+      "_archive/owner-feedback-pages.md",
+      "_archive/owner-link-and-account.md",
+      "_archive/owner-link-leak-safe.md",
+      "_archive/owner-link-sign-in-to-claim.md",
+      "_archive/owner-sees-all-feedback-page.md",
+      "_archive/owner-sees-all-feedback-room.md",
+      "_archive/owner-sees-all-feedback.md",
+      "_archive/pair-once.md",
+      "_archive/pair-pages-center-vertically.md",
+      "_archive/pair-pages-copy-and-marks.md",
+      "_archive/pair-pages-favicon.md",
+      "_archive/preview-blob-cleanup.md",
+      "_archive/production-retention-sweep.md",
+      "_archive/publish-admission.md",
+      "_archive/refused-decision-keeps-comments.md",
+      "_archive/remove-pairing-code.md",
+      "_archive/review-keyword-invocations.md",
+      "_archive/review-ui-consistency-relay.md",
+      "_archive/review-ui-dialogs-specs-both-shells.md",
+      "_archive/review-ui-specs-both-shells.md",
+      "_archive/revoke-ends-access.md",
+      "_archive/room-anchor-context.md",
+      "_archive/room-in-page-error-style.md",
+      "_archive/room-menu-paired-computers.md",
+      "_archive/room-modals-try-copy.md",
+      "_archive/room-phone-tray-spec-opens-tray.md",
+      "_archive/room-result-skips-legacy-retraction.md",
+      "_archive/room-specs-follow-web-part-select.md",
+      "_archive/room-view-get-removal.md",
+      "_archive/rr-pairs-once.md",
+      "_archive/rr-revise-follows-latest.md",
+      "_archive/signed-in-job-split.md",
+      "_archive/spacedock-install-beta.md",
+      "_archive/storage-stops-growing.md",
+      "_archive/theme-switch-keeps-draft.md",
+      "_archive/try-auto-refresh.md",
+      "_archive/try-fixed-link.md",
+      "_archive/try-refresh-on-production.md",
+      "agent-front-door-publish.md",
+      "author-handle.md",
+      "browser-agent-finds-llms.md",
+      "capacity-raise-and-respond.md",
+      "capacity-triage-prompt.md",
+      "card-sign-in-keeps-unsent-comments.md",
+      "ci-design-review.md",
+      "ci-failure-evidence.md",
+      "cl-perspective-reviewer.md",
+      "close-race-slot-log.md",
+      "comment-sent-when-added-relay.md",
+      "continuity-revision-times.md",
+      "dev-secrets-wrapper.md",
+      "fetch-only-agent-reads-share.md",
+      "held-comments-survive-try-renewal.md",
+      "inbox-home.md",
+      "install-polish-after-launch.md",
+      "limit-telemetry-posthog.md",
+      "link-trust-per-revision.md",
+      "my-agent-comments-are-mine.md",
+      "observability-sentry-posthog.md",
+      "ops-inbox-ceiling-emitter.md",
+      "owner-decides-before-sign-in.md",
+      "owner-decision-after-sent-comments.md",
+      "owner-link-spec-hosted.md",
+      "pairing-copy-button-touch-target.md",
+      "pairing-pages-assume-agent.md",
+      "pairing-scope-beyond-one-computer.md",
+      "product-feedback-channel.md",
+      "refusal-never-suggests-bare-location.md",
+      "relay-first-officer.md",
+      "remove-owner-link-require-current-client.md",
+      "replaced-session-keeps-commenting.md",
+      "review-comment-names-product.md",
+      "review-deck-parts.md",
+      "review-static-html-prototype.md",
+      "review-ui-room-asks-through-shell.md",
+      "reviewers-see-each-others-comments.md",
+      "revise-after-pairing-uses-paired-quota.md",
+      "room-presentation-requested-by.md",
+      "rr-pair-confirm-choice-prompt.md",
+      "rr-pair-for-requester.md",
+      "sent-comment-edit-delete-relay.md",
+      "share-names-its-requester.md",
+      "shared-host-credential-sandbox.md",
+      "shared-team-identity.md",
+      "signed-in-specs-run.md",
+      "spacedock-pi-parity.md",
+      "staging-branch-deploy.md",
+      "staging-limits-every-context.md",
+      "staging-pin-read-retry.md",
+      "try-comment-flood-cap.md",
+      "try-page-current-install.md",
+      "unpair-and-repair-leave-room-authority.md",
+      "workos-signout.md"
+    ],
+    "changed": [
+      {
+        "path": "_archive/account-publish-ceiling.md",
+        "seed": true,
+        "added": [
+          "account-publish-ceiling.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/agent-front-door.md",
+        "seed": true,
+        "added": [
+          "agent-front-door.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/agent-review-identity.md",
+        "seed": true,
+        "added": [
+          "agent-review-identity.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/anonymous-can-sign-in.md",
+        "seed": true,
+        "added": [
+          "anonymous-can-sign-in.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/briefing-sent-time.md",
+        "seed": true,
+        "added": [
+          "briefing-sent-time.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/ci-only-pr-runtime-check.md",
+        "seed": true,
+        "added": [
+          "ci-only-pr-runtime-check.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/close-race-copilot.md",
+        "seed": true,
+        "added": [
+          "close-race-copilot.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/close-race.md",
+        "seed": true,
+        "added": [
+          "close-race.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/comment-admission.md",
+        "seed": true,
+        "added": [
+          "comment-admission.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/continuity-earlier-comments-beside-latest.md",
+        "seed": true,
+        "added": [
+          "continuity-earlier-comments-beside-latest.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/continuity-room-points-to-latest.md",
+        "seed": true,
+        "added": [
+          "continuity-room-points-to-latest.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/decision-leg-split.md",
+        "seed": true,
+        "added": [
+          "decision-leg-split.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/decision-leg-under-limit.md",
+        "seed": true,
+        "added": [
+          "decision-leg-under-limit.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/decision-panel-host.md",
+        "seed": true,
+        "added": [
+          "decision-panel-host.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/deploy-records.md",
+        "seed": true,
+        "added": [
+          "deploy-records.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/device-binding-read.md",
+        "seed": true,
+        "added": [
+          "device-binding-read.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/device-route-after-decision.md",
+        "seed": true,
+        "added": [
+          "device-route-after-decision.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/device-route-room-gate.md",
+        "seed": true,
+        "added": [
+          "device-route-room-gate.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/document-display-name.md",
+        "seed": true,
+        "added": [
+          "document-display-name.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/duplicate-annotation-id-decision.md",
+        "seed": true,
+        "added": [
+          "duplicate-annotation-id-decision.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/env-overridable-daily-quota.md",
+        "seed": true,
+        "added": [
+          "env-overridable-daily-quota.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/font-and-width.md",
+        "seed": true,
+        "added": [
+          "font-and-width.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/frame-and-content-headers.md",
+        "seed": true,
+        "added": [
+          "frame-and-content-headers.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/front-door-flag.md",
+        "seed": true,
+        "added": [
+          "front-door-flag.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/front-door-hardening.md",
+        "seed": true,
+        "added": [
+          "front-door-hardening.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/identity-at-first-comment.md",
+        "seed": true,
+        "added": [
+          "identity-at-first-comment.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/identity-cannot-be-borrowed.md",
+        "seed": true,
+        "added": [
+          "identity-cannot-be-borrowed.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/junk-share-edge-cost.md",
+        "seed": true,
+        "added": [
+          "junk-share-edge-cost.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/launch-stories-verified.md",
+        "seed": true,
+        "added": [
+          "launch-stories-verified.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/limit-observability.md",
+        "seed": true,
+        "added": [
+          "limit-observability.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/live-web-notice.md",
+        "seed": true,
+        "added": [
+          "live-web-notice.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/llms-covers-room-contract.md",
+        "seed": true,
+        "added": [
+          "llms-covers-room-contract.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/llms-points-at-formats.md",
+        "seed": true,
+        "added": [
+          "llms-points-at-formats.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/llms-teaches-versions.md",
+        "seed": true,
+        "added": [
+          "llms-teaches-versions.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/multi-document-one-round-trip.md",
+        "seed": true,
+        "added": [
+          "multi-document-one-round-trip.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/multi-document-room-picker.md",
+        "seed": true,
+        "added": [
+          "multi-document-room-picker.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/one-entry-account-menu.md",
+        "seed": true,
+        "added": [
+          "one-entry-account-menu.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/one-identity-entry.md",
+        "seed": true,
+        "added": [
+          "one-identity-entry.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/one-share-link.md",
+        "seed": true,
+        "added": [
+          "one-share-link.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/openapi-route-coverage.md",
+        "seed": true,
+        "added": [
+          "openapi-route-coverage.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/others-highlights-in-author-colour.md",
+        "seed": true,
+        "added": [
+          "others-highlights-in-author-colour.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-decision-record.md",
+        "seed": true,
+        "added": [
+          "owner-decision-record.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-feedback-pages.md",
+        "seed": true,
+        "added": [
+          "owner-feedback-pages.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-link-and-account.md",
+        "seed": true,
+        "added": [
+          "owner-link-and-account.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-link-leak-safe.md",
+        "seed": true,
+        "added": [
+          "owner-link-leak-safe.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-link-sign-in-to-claim.md",
+        "seed": true,
+        "added": [
+          "owner-link-sign-in-to-claim.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-sees-all-feedback-page.md",
+        "seed": true,
+        "added": [
+          "owner-sees-all-feedback-page.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-sees-all-feedback-room.md",
+        "seed": true,
+        "added": [
+          "owner-sees-all-feedback-room.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-sees-all-feedback.md",
+        "seed": true,
+        "added": [
+          "owner-sees-all-feedback.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/pair-once.md",
+        "seed": true,
+        "added": [
+          "pair-once.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/pair-pages-center-vertically.md",
+        "seed": true,
+        "added": [
+          "pair-pages-center-vertically.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/pair-pages-copy-and-marks.md",
+        "seed": true,
+        "added": [
+          "pair-pages-copy-and-marks.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/pair-pages-favicon.md",
+        "seed": true,
+        "added": [
+          "pair-pages-favicon.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/preview-blob-cleanup.md",
+        "seed": true,
+        "added": [
+          "preview-blob-cleanup.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/production-retention-sweep.md",
+        "seed": true,
+        "added": [
+          "production-retention-sweep.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/publish-admission.md",
+        "seed": true,
+        "added": [
+          "publish-admission.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/refused-decision-keeps-comments.md",
+        "seed": true,
+        "added": [
+          "refused-decision-keeps-comments.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/remove-pairing-code.md",
+        "seed": true,
+        "added": [
+          "remove-pairing-code.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/review-keyword-invocations.md",
+        "seed": true,
+        "added": [
+          "review-keyword-invocations.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/review-ui-consistency-relay.md",
+        "seed": true,
+        "added": [
+          "review-ui-consistency-relay.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/review-ui-dialogs-specs-both-shells.md",
+        "seed": true,
+        "added": [
+          "review-ui-dialogs-specs-both-shells.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/review-ui-specs-both-shells.md",
+        "seed": true,
+        "added": [
+          "review-ui-specs-both-shells.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/revoke-ends-access.md",
+        "seed": true,
+        "added": [
+          "revoke-ends-access.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/room-anchor-context.md",
+        "seed": true,
+        "added": [
+          "room-anchor-context.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/room-in-page-error-style.md",
+        "seed": true,
+        "added": [
+          "room-in-page-error-style.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/room-menu-paired-computers.md",
+        "seed": true,
+        "added": [
+          "room-menu-paired-computers.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/room-modals-try-copy.md",
+        "seed": true,
+        "added": [
+          "room-modals-try-copy.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/room-phone-tray-spec-opens-tray.md",
+        "seed": true,
+        "added": [
+          "room-phone-tray-spec-opens-tray.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/room-result-skips-legacy-retraction.md",
+        "seed": true,
+        "added": [
+          "room-result-skips-legacy-retraction.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/room-specs-follow-web-part-select.md",
+        "seed": true,
+        "added": [
+          "room-specs-follow-web-part-select.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/room-view-get-removal.md",
+        "seed": true,
+        "added": [
+          "room-view-get-removal.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/rr-pairs-once.md",
+        "seed": true,
+        "added": [
+          "rr-pairs-once.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/rr-revise-follows-latest.md",
+        "seed": true,
+        "added": [
+          "rr-revise-follows-latest.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/signed-in-job-split.md",
+        "seed": true,
+        "added": [
+          "signed-in-job-split.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/spacedock-install-beta.md",
+        "seed": true,
+        "added": [
+          "spacedock-install-beta.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/storage-stops-growing.md",
+        "seed": true,
+        "added": [
+          "storage-stops-growing.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/theme-switch-keeps-draft.md",
+        "seed": true,
+        "added": [
+          "theme-switch-keeps-draft.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/try-auto-refresh.md",
+        "seed": true,
+        "added": [
+          "try-auto-refresh.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/try-fixed-link.md",
+        "seed": true,
+        "added": [
+          "try-fixed-link.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/try-refresh-on-production.md",
+        "seed": true,
+        "added": [
+          "try-refresh-on-production.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "agent-front-door-publish.md",
+        "seed": true,
+        "added": [
+          "agent-front-door-publish.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "author-handle.md",
+        "seed": true,
+        "added": [
+          "author-handle.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "browser-agent-finds-llms.md",
+        "seed": true,
+        "added": [
+          "browser-agent-finds-llms.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "capacity-raise-and-respond.md",
+        "seed": true,
+        "added": [
+          "capacity-raise-and-respond.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "capacity-triage-prompt.md",
+        "seed": true,
+        "added": [
+          "capacity-triage-prompt.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "card-sign-in-keeps-unsent-comments.md",
+        "seed": true,
+        "added": [
+          "card-sign-in-keeps-unsent-comments.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "ci-design-review.md",
+        "seed": true,
+        "added": [
+          "ci-design-review.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "ci-failure-evidence.md",
+        "seed": true,
+        "added": [
+          "ci-failure-evidence.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "cl-perspective-reviewer.md",
+        "seed": true,
+        "added": [
+          "cl-perspective-reviewer.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "close-race-slot-log.md",
+        "seed": true,
+        "added": [
+          "close-race-slot-log.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "comment-sent-when-added-relay.md",
+        "seed": true,
+        "added": [
+          "comment-sent-when-added-relay.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "continuity-revision-times.md",
+        "seed": true,
+        "added": [
+          "continuity-revision-times.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "dev-secrets-wrapper.md",
+        "seed": true,
+        "added": [
+          "dev-secrets-wrapper.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "fetch-only-agent-reads-share.md",
+        "seed": true,
+        "added": [
+          "fetch-only-agent-reads-share.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "held-comments-survive-try-renewal.md",
+        "seed": true,
+        "added": [
+          "held-comments-survive-try-renewal.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "inbox-home.md",
+        "seed": true,
+        "added": [
+          "inbox-home.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "install-polish-after-launch.md",
+        "seed": true,
+        "added": [
+          "install-polish-after-launch.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "limit-telemetry-posthog.md",
+        "seed": true,
+        "added": [
+          "limit-telemetry-posthog.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "link-trust-per-revision.md",
+        "seed": true,
+        "added": [
+          "link-trust-per-revision.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "my-agent-comments-are-mine.md",
+        "seed": true,
+        "added": [
+          "my-agent-comments-are-mine.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "observability-sentry-posthog.md",
+        "seed": true,
+        "added": [
+          "observability-sentry-posthog.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "ops-inbox-ceiling-emitter.md",
+        "seed": true,
+        "added": [
+          "ops-inbox-ceiling-emitter.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "owner-decides-before-sign-in.md",
+        "seed": true,
+        "added": [
+          "owner-decides-before-sign-in.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "owner-decision-after-sent-comments.md",
+        "seed": true,
+        "added": [
+          "owner-decision-after-sent-comments.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "owner-link-spec-hosted.md",
+        "seed": true,
+        "added": [
+          "owner-link-spec-hosted.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "pairing-copy-button-touch-target.md",
+        "seed": true,
+        "added": [
+          "pairing-copy-button-touch-target.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "pairing-pages-assume-agent.md",
+        "seed": true,
+        "added": [
+          "pairing-pages-assume-agent.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "pairing-scope-beyond-one-computer.md",
+        "seed": true,
+        "added": [
+          "pairing-scope-beyond-one-computer.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "product-feedback-channel.md",
+        "seed": true,
+        "added": [
+          "product-feedback-channel.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "refusal-never-suggests-bare-location.md",
+        "seed": true,
+        "added": [
+          "refusal-never-suggests-bare-location.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "relay-first-officer.md",
+        "seed": true,
+        "added": [
+          "relay-first-officer.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "remove-owner-link-require-current-client.md",
+        "seed": true,
+        "added": [
+          "remove-owner-link-require-current-client.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "replaced-session-keeps-commenting.md",
+        "seed": true,
+        "added": [
+          "replaced-session-keeps-commenting.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "review-comment-names-product.md",
+        "seed": true,
+        "added": [
+          "review-comment-names-product.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "review-deck-parts.md",
+        "seed": true,
+        "added": [
+          "review-deck-parts.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "review-static-html-prototype.md",
+        "seed": true,
+        "added": [
+          "review-static-html-prototype.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "review-ui-room-asks-through-shell.md",
+        "seed": true,
+        "added": [
+          "review-ui-room-asks-through-shell.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "reviewers-see-each-others-comments.md",
+        "seed": true,
+        "added": [
+          "reviewers-see-each-others-comments.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "revise-after-pairing-uses-paired-quota.md",
+        "seed": true,
+        "added": [
+          "revise-after-pairing-uses-paired-quota.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "room-presentation-requested-by.md",
+        "seed": true,
+        "added": [
+          "room-presentation-requested-by.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "rr-pair-confirm-choice-prompt.md",
+        "seed": true,
+        "added": [
+          "rr-pair-confirm-choice-prompt.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "rr-pair-for-requester.md",
+        "seed": true,
+        "added": [
+          "rr-pair-for-requester.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "sent-comment-edit-delete-relay.md",
+        "seed": true,
+        "added": [
+          "sent-comment-edit-delete-relay.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "share-names-its-requester.md",
+        "seed": true,
+        "added": [
+          "share-names-its-requester.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "shared-host-credential-sandbox.md",
+        "seed": true,
+        "added": [
+          "shared-host-credential-sandbox.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "shared-team-identity.md",
+        "seed": true,
+        "added": [
+          "shared-team-identity.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "signed-in-specs-run.md",
+        "seed": true,
+        "added": [
+          "signed-in-specs-run.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "spacedock-pi-parity.md",
+        "seed": true,
+        "added": [
+          "spacedock-pi-parity.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "staging-branch-deploy.md",
+        "seed": true,
+        "added": [
+          "staging-branch-deploy.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "staging-limits-every-context.md",
+        "seed": true,
+        "added": [
+          "staging-limits-every-context.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "staging-pin-read-retry.md",
+        "seed": true,
+        "added": [
+          "staging-pin-read-retry.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "try-comment-flood-cap.md",
+        "seed": true,
+        "added": [
+          "try-comment-flood-cap.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "try-page-current-install.md",
+        "seed": true,
+        "added": [
+          "try-page-current-install.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "unpair-and-repair-leave-room-authority.md",
+        "seed": true,
+        "added": [
+          "unpair-and-repair-leave-room-authority.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "workos-signout.md",
+        "seed": true,
+        "added": [
+          "workos-signout.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      }
+    ],
+    "recorded_consistency": [
+      {
+        "path": "_archive/entry-without-name-field.md",
+        "errors": []
+      },
+      {
+        "path": "_archive/own-comments-follow-account.md",
+        "errors": []
+      }
+    ],
+    "idle_names": [
+      "agent-front-door-publish",
+      "author-handle",
+      "capacity-raise-and-respond",
+      "capacity-triage-prompt",
+      "card-sign-in-keeps-unsent-comments",
+      "ci-design-review",
+      "cl-perspective-reviewer",
+      "close-race-slot-log",
+      "continuity-revision-times",
+      "inbox-home",
+      "owner-link-spec-hosted",
+      "pairing-copy-button-touch-target",
+      "pairing-pages-assume-agent",
+      "pairing-scope-beyond-one-computer",
+      "refusal-never-suggests-bare-location",
+      "relay-first-officer",
+      "remove-owner-link-require-current-client",
+      "replaced-session-keeps-commenting",
+      "review-comment-names-product",
+      "review-deck-parts",
+      "room-presentation-requested-by",
+      "rr-pair-confirm-choice-prompt",
+      "sent-comment-edit-delete-relay",
+      "share-names-its-requester",
+      "shared-host-credential-sandbox",
+      "shared-team-identity",
+      "staging-branch-deploy",
+      "staging-limits-every-context",
+      "staging-pin-read-retry",
+      "unpair-and-repair-leave-room-authority",
+      "workos-signout"
+    ],
+    "idle_count": 31
+  },
+  "qnow": {
+    "tasks": 163,
+    "story_refusals": 163,
+    "refused": [
+      "_archive/accept-branch-invitation.md",
+      "_archive/agents-md-rules-refresh.md",
+      "_archive/api-one-router.md",
+      "_archive/app-menu-icons-on-deploy.md",
+      "_archive/app-phone-screen-regressions.md",
+      "_archive/billing-plan-model.md",
+      "_archive/booking-events-timeline.md",
+      "_archive/booking-outcomes.md",
+      "_archive/booking-submit-staff-confirm.md",
+      "_archive/branch-hours-generate-starts.md",
+      "_archive/cash-at-pickup.md",
+      "_archive/check-database-version.md",
+      "_archive/ci-real-postgres-tests.md",
+      "_archive/clerk-pro-plan-record.md",
+      "_archive/clerk-testing-token-e2e.md",
+      "_archive/clerk-web-phone-signin.md",
+      "_archive/closed-days-no-slots.md",
+      "_archive/closure-guard-restore.md",
+      "_archive/confirm-within-capacity.md",
+      "_archive/database-version-check-pending.md",
+      "_archive/db-rules-pilot.md",
+      "_archive/demo-tenant-in-migrations.md",
+      "_archive/dev-secrets-from-1password.md",
+      "_archive/go-live-consent.md",
+      "_archive/journey-edits-after-merge.md",
+      "_archive/journey-maps-merge-and-reorder.md",
+      "_archive/landing-page-and-trial-requests.md",
+      "_archive/landing-visual-polish.md",
+      "_archive/move-to-singapore-region.md",
+      "_archive/office-browser-bundle-guard.md",
+      "_archive/office-confirmed-schedule.md",
+      "_archive/office-crud-foundation.md",
+      "_archive/office-follows-antd-pro.md",
+      "_archive/office-header-shows-phone.md",
+      "_archive/office-layout-batch/index.md",
+      "_archive/office-role-screens.md",
+      "_archive/office-staff-management.md",
+      "_archive/operator-onboarding-api.md",
+      "_archive/owner-booking-list.md",
+      "_archive/owner-leaves-note.md",
+      "_archive/owner-picks-visited-branch.md",
+      "_archive/owner-reconfirm-no-duplicate.md",
+      "_archive/owner-signin-session-exists.md",
+      "_archive/owner-sms-notices.md",
+      "_archive/owner-vehicle-kept-after-name.md",
+      "_archive/owner-vehicle-on-booking.md",
+      "_archive/pending-booking-cap.md",
+      "_archive/phone-country-code-honest.md",
+      "_archive/preview-sign-in-wildcard.md",
+      "_archive/production-on-qnow-tw-clerk-live.md",
+      "_archive/production-operations.md",
+      "_archive/qnow-migration-baseline.md",
+      "_archive/qnow-migration-cutover.md",
+      "_archive/qnow-migration-delivery.md",
+      "_archive/qnow-release-migration.md",
+      "_archive/r1-online-walkthrough.md",
+      "_archive/r14-round-1.md",
+      "_archive/reception-holds-slot.md",
+      "_archive/reset-uat-database.md",
+      "_archive/schedule-settings-match-design.md",
+      "_archive/shop-entry-services-slots.md",
+      "_archive/shop-onboarding-script.md",
+      "_archive/slots-by-capacity.md",
+      "_archive/sms-confirm-cancel-in-flight-race.md",
+      "_archive/staff-multi-branch.md",
+      "_archive/staging-pr-previews.md",
+      "_archive/staging-separate-project.md",
+      "_archive/test-pg-matches-production-postgres.md",
+      "_archive/vehicle-based-pricing.md",
+      "acceptance-runtime-preflight.md",
+      "agents-md-adr-pointer.md",
+      "booking-attempt-identity.md",
+      "booking-detail-shows-weekday.md",
+      "booking-month-preview.md",
+      "booking-multi-service.md",
+      "booking-screens-design-polish.md",
+      "bookings-insert-grant-narrowed.md",
+      "branch-contact-and-maps-booking-link.md",
+      "branch-price-copy.md",
+      "ci-office-tests-only-when-affected.md",
+      "consent-return-keeps-shop-code-native.md",
+      "copy-adds-missing-services.md",
+      "customer-cars-class-batched.md",
+      "date-exceptions-hours-and-ranges.md",
+      "demo-shop-migration-test-under-load.md",
+      "deploy-check-serves-assets.md",
+      "drizzle-support-type-errors.md",
+      "e2e-clerk-dependent-specs-stable.md",
+      "first-consent-time-kept.md",
+      "fmodel-support-agents-md-restored.md",
+      "kc-dev-flow-2-gate-script-false-positives.md",
+      "linked-car-keeps-manual-choice.md",
+      "linked-car-slots-ask-sign-in.md",
+      "new-booking-options-load-failure.md",
+      "new-car-survives-name-detour.md",
+      "notice-shop-name-fallback.md",
+      "notice-text-shorthand-ip.md",
+      "office-action-audit-log.md",
+      "office-create-forms-block-double-submit.md",
+      "office-email-sign-in-option.md",
+      "office-form-tests-faster.md",
+      "office-look-and-layout-redesign.md",
+      "office-outcome-notice-clears-on-reload.md",
+      "office-price-column-fits-1440/index.md",
+      "office-r4-acceptance-followups.md",
+      "office-schedule-time-picker.md",
+      "office-shop-link-and-qr.md",
+      "office-sign-in-follows-refine-antd.md",
+      "office-staff-management-next.md",
+      "office-theme-switching.md",
+      "office-top-loading-bar.md",
+      "office-ui-tests-finish-on-ci.md",
+      "onboarding-rerun-after-service-edits.md",
+      "operator-secret-hardening.md",
+      "operator-secret-opt-in-documented.md",
+      "owner-app-offline-detection.md",
+      "owner-app-tab-icons-load/index.md",
+      "owner-cancels-booking.md",
+      "owner-payment-view-recovers-from-failed-poll.md",
+      "owner-phone-change-affordance.md",
+      "owner-signs-in-with-line.md",
+      "partner-shop-model-rules.md",
+      "pr-deploy-previews.md",
+      "prepush-db-tests-finish-under-load.md",
+      "price-table-reload-after-refused-activation.md",
+      "price-table-whole-edit.md",
+      "product-analytics-posthog.md",
+      "production-database-restore.md",
+      "production-go-live.md",
+      "production-incident-agent.md",
+      "qnow-migration-history.md",
+      "r14-poc-flywheel.md",
+      "r14-user-manual-trial.md",
+      "r5-deferred-edge-cases.md",
+      "rebooking-link-foreign-car-returns-to-choice.md",
+      "release-cadence-slice-done.md",
+      "rls-census-covers-bypasses.md",
+      "schedule-keep-conflicting-booking.md",
+      "schedule-settings-layout-polish.md",
+      "schedule-settings-phone-touch-check.md",
+      "self-serve-entry-code-issuance.md",
+      "self-serve-trial-initial-shop-setup.md",
+      "self-serve-trial-payment-journey.md",
+      "shop-customer-claim-create-race.md",
+      "shop-customer-create-signup-race.md",
+      "shop-edits-booking.md",
+      "signature-accessible-alternative.md",
+      "signature-path-requires-a-line.md",
+      "singapore-rollback-criterion.md",
+      "sms-usage-alert.md",
+      "staff-booking-any-start-time.md",
+      "staff-booking-rechecks-closed-entry.md",
+      "staff-booking-replay-checks-stored-pricing.md",
+      "staff-invite-sms.md",
+      "taiwan-holidays-preload.md",
+      "technician-progress-report.md",
+      "tenant-console-and-self-serve-trial.md",
+      "vehicle-catalog-upkeep.md",
+      "vehicle-rule-one-confirm-open.md",
+      "vehicle-rule-warnings-follow-pricing-mode.md",
+      "vehicle-service-history.md",
+      "vehicle-size-classification-redesign.md",
+      "void-paid-record.md"
+    ],
+    "changed": [
+      {
+        "path": "_archive/accept-branch-invitation.md",
+        "seed": true,
+        "added": [
+          "accept-branch-invitation.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/agents-md-rules-refresh.md",
+        "seed": true,
+        "added": [
+          "agents-md-rules-refresh.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/api-one-router.md",
+        "seed": true,
+        "added": [
+          "api-one-router.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/app-menu-icons-on-deploy.md",
+        "seed": true,
+        "added": [
+          "app-menu-icons-on-deploy.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/app-phone-screen-regressions.md",
+        "seed": true,
+        "added": [
+          "app-phone-screen-regressions.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/billing-plan-model.md",
+        "seed": true,
+        "added": [
+          "billing-plan-model.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/booking-events-timeline.md",
+        "seed": true,
+        "added": [
+          "booking-events-timeline.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/booking-outcomes.md",
+        "seed": true,
+        "added": [
+          "booking-outcomes.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/booking-submit-staff-confirm.md",
+        "seed": true,
+        "added": [
+          "booking-submit-staff-confirm.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/branch-hours-generate-starts.md",
+        "seed": true,
+        "added": [
+          "branch-hours-generate-starts.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/cash-at-pickup.md",
+        "seed": true,
+        "added": [
+          "cash-at-pickup.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/check-database-version.md",
+        "seed": true,
+        "added": [
+          "check-database-version.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/ci-real-postgres-tests.md",
+        "seed": true,
+        "added": [
+          "ci-real-postgres-tests.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/clerk-pro-plan-record.md",
+        "seed": true,
+        "added": [
+          "clerk-pro-plan-record.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/clerk-testing-token-e2e.md",
+        "seed": true,
+        "added": [
+          "clerk-testing-token-e2e.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/clerk-web-phone-signin.md",
+        "seed": true,
+        "added": [
+          "clerk-web-phone-signin.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/closed-days-no-slots.md",
+        "seed": true,
+        "added": [
+          "closed-days-no-slots.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/closure-guard-restore.md",
+        "seed": true,
+        "added": [
+          "closure-guard-restore.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/confirm-within-capacity.md",
+        "seed": true,
+        "added": [
+          "confirm-within-capacity.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/database-version-check-pending.md",
+        "seed": true,
+        "added": [
+          "database-version-check-pending.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/db-rules-pilot.md",
+        "seed": true,
+        "added": [
+          "db-rules-pilot.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/demo-tenant-in-migrations.md",
+        "seed": true,
+        "added": [
+          "demo-tenant-in-migrations.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/dev-secrets-from-1password.md",
+        "seed": true,
+        "added": [
+          "dev-secrets-from-1password.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/go-live-consent.md",
+        "seed": true,
+        "added": [
+          "go-live-consent.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/journey-edits-after-merge.md",
+        "seed": true,
+        "added": [
+          "journey-edits-after-merge.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/journey-maps-merge-and-reorder.md",
+        "seed": true,
+        "added": [
+          "journey-maps-merge-and-reorder.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/landing-page-and-trial-requests.md",
+        "seed": true,
+        "added": [
+          "landing-page-and-trial-requests.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/landing-visual-polish.md",
+        "seed": true,
+        "added": [
+          "landing-visual-polish.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/move-to-singapore-region.md",
+        "seed": true,
+        "added": [
+          "move-to-singapore-region.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/office-browser-bundle-guard.md",
+        "seed": true,
+        "added": [
+          "office-browser-bundle-guard.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/office-confirmed-schedule.md",
+        "seed": true,
+        "added": [
+          "office-confirmed-schedule.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/office-crud-foundation.md",
+        "seed": true,
+        "added": [
+          "office-crud-foundation.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/office-follows-antd-pro.md",
+        "seed": true,
+        "added": [
+          "office-follows-antd-pro.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/office-header-shows-phone.md",
+        "seed": true,
+        "added": [
+          "office-header-shows-phone.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/office-layout-batch/index.md",
+        "seed": true,
+        "added": [
+          "index.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/office-role-screens.md",
+        "seed": true,
+        "added": [
+          "office-role-screens.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/office-staff-management.md",
+        "seed": true,
+        "added": [
+          "office-staff-management.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/operator-onboarding-api.md",
+        "seed": true,
+        "added": [
+          "operator-onboarding-api.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-booking-list.md",
+        "seed": true,
+        "added": [
+          "owner-booking-list.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-leaves-note.md",
+        "seed": true,
+        "added": [
+          "owner-leaves-note.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-picks-visited-branch.md",
+        "seed": true,
+        "added": [
+          "owner-picks-visited-branch.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-reconfirm-no-duplicate.md",
+        "seed": true,
+        "added": [
+          "owner-reconfirm-no-duplicate.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-signin-session-exists.md",
+        "seed": true,
+        "added": [
+          "owner-signin-session-exists.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-sms-notices.md",
+        "seed": true,
+        "added": [
+          "owner-sms-notices.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-vehicle-kept-after-name.md",
+        "seed": true,
+        "added": [
+          "owner-vehicle-kept-after-name.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/owner-vehicle-on-booking.md",
+        "seed": true,
+        "added": [
+          "owner-vehicle-on-booking.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/pending-booking-cap.md",
+        "seed": true,
+        "added": [
+          "pending-booking-cap.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/phone-country-code-honest.md",
+        "seed": true,
+        "added": [
+          "phone-country-code-honest.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/preview-sign-in-wildcard.md",
+        "seed": true,
+        "added": [
+          "preview-sign-in-wildcard.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/production-on-qnow-tw-clerk-live.md",
+        "seed": true,
+        "added": [
+          "production-on-qnow-tw-clerk-live.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/production-operations.md",
+        "seed": true,
+        "added": [
+          "production-operations.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/qnow-migration-baseline.md",
+        "seed": true,
+        "added": [
+          "qnow-migration-baseline.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/qnow-migration-cutover.md",
+        "seed": true,
+        "added": [
+          "qnow-migration-cutover.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/qnow-migration-delivery.md",
+        "seed": true,
+        "added": [
+          "qnow-migration-delivery.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/qnow-release-migration.md",
+        "seed": true,
+        "added": [
+          "qnow-release-migration.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/r1-online-walkthrough.md",
+        "seed": true,
+        "added": [
+          "r1-online-walkthrough.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/r14-round-1.md",
+        "seed": true,
+        "added": [
+          "r14-round-1.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/reception-holds-slot.md",
+        "seed": true,
+        "added": [
+          "reception-holds-slot.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/reset-uat-database.md",
+        "seed": true,
+        "added": [
+          "reset-uat-database.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/schedule-settings-match-design.md",
+        "seed": true,
+        "added": [
+          "schedule-settings-match-design.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/shop-entry-services-slots.md",
+        "seed": true,
+        "added": [
+          "shop-entry-services-slots.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/shop-onboarding-script.md",
+        "seed": true,
+        "added": [
+          "shop-onboarding-script.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/slots-by-capacity.md",
+        "seed": true,
+        "added": [
+          "slots-by-capacity.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/sms-confirm-cancel-in-flight-race.md",
+        "seed": true,
+        "added": [
+          "sms-confirm-cancel-in-flight-race.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/staff-multi-branch.md",
+        "seed": true,
+        "added": [
+          "staff-multi-branch.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/staging-pr-previews.md",
+        "seed": true,
+        "added": [
+          "staging-pr-previews.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/staging-separate-project.md",
+        "seed": true,
+        "added": [
+          "staging-separate-project.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/test-pg-matches-production-postgres.md",
+        "seed": true,
+        "added": [
+          "test-pg-matches-production-postgres.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "_archive/vehicle-based-pricing.md",
+        "seed": true,
+        "added": [
+          "vehicle-based-pricing.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "acceptance-runtime-preflight.md",
+        "seed": true,
+        "added": [
+          "acceptance-runtime-preflight.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "agents-md-adr-pointer.md",
+        "seed": true,
+        "added": [
+          "agents-md-adr-pointer.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "booking-attempt-identity.md",
+        "seed": true,
+        "added": [
+          "booking-attempt-identity.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "booking-detail-shows-weekday.md",
+        "seed": true,
+        "added": [
+          "booking-detail-shows-weekday.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "booking-month-preview.md",
+        "seed": true,
+        "added": [
+          "booking-month-preview.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "booking-multi-service.md",
+        "seed": true,
+        "added": [
+          "booking-multi-service.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "booking-screens-design-polish.md",
+        "seed": true,
+        "added": [
+          "booking-screens-design-polish.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "bookings-insert-grant-narrowed.md",
+        "seed": true,
+        "added": [
+          "bookings-insert-grant-narrowed.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "branch-contact-and-maps-booking-link.md",
+        "seed": true,
+        "added": [
+          "branch-contact-and-maps-booking-link.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "branch-price-copy.md",
+        "seed": true,
+        "added": [
+          "branch-price-copy.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "ci-office-tests-only-when-affected.md",
+        "seed": true,
+        "added": [
+          "ci-office-tests-only-when-affected.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "consent-return-keeps-shop-code-native.md",
+        "seed": true,
+        "added": [
+          "consent-return-keeps-shop-code-native.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "copy-adds-missing-services.md",
+        "seed": true,
+        "added": [
+          "copy-adds-missing-services.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "customer-cars-class-batched.md",
+        "seed": true,
+        "added": [
+          "customer-cars-class-batched.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "date-exceptions-hours-and-ranges.md",
+        "seed": true,
+        "added": [
+          "date-exceptions-hours-and-ranges.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "demo-shop-migration-test-under-load.md",
+        "seed": true,
+        "added": [
+          "demo-shop-migration-test-under-load.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "deploy-check-serves-assets.md",
+        "seed": true,
+        "added": [
+          "deploy-check-serves-assets.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "drizzle-support-type-errors.md",
+        "seed": true,
+        "added": [
+          "drizzle-support-type-errors.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "e2e-clerk-dependent-specs-stable.md",
+        "seed": true,
+        "added": [
+          "e2e-clerk-dependent-specs-stable.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "first-consent-time-kept.md",
+        "seed": true,
+        "added": [
+          "first-consent-time-kept.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "fmodel-support-agents-md-restored.md",
+        "seed": true,
+        "added": [
+          "fmodel-support-agents-md-restored.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "kc-dev-flow-2-gate-script-false-positives.md",
+        "seed": true,
+        "added": [
+          "kc-dev-flow-2-gate-script-false-positives.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "linked-car-keeps-manual-choice.md",
+        "seed": true,
+        "added": [
+          "linked-car-keeps-manual-choice.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "linked-car-slots-ask-sign-in.md",
+        "seed": true,
+        "added": [
+          "linked-car-slots-ask-sign-in.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "new-booking-options-load-failure.md",
+        "seed": true,
+        "added": [
+          "new-booking-options-load-failure.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "new-car-survives-name-detour.md",
+        "seed": true,
+        "added": [
+          "new-car-survives-name-detour.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "notice-shop-name-fallback.md",
+        "seed": true,
+        "added": [
+          "notice-shop-name-fallback.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "notice-text-shorthand-ip.md",
+        "seed": true,
+        "added": [
+          "notice-text-shorthand-ip.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-action-audit-log.md",
+        "seed": true,
+        "added": [
+          "office-action-audit-log.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-create-forms-block-double-submit.md",
+        "seed": true,
+        "added": [
+          "office-create-forms-block-double-submit.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-email-sign-in-option.md",
+        "seed": true,
+        "added": [
+          "office-email-sign-in-option.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-form-tests-faster.md",
+        "seed": true,
+        "added": [
+          "office-form-tests-faster.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-look-and-layout-redesign.md",
+        "seed": true,
+        "added": [
+          "office-look-and-layout-redesign.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-outcome-notice-clears-on-reload.md",
+        "seed": true,
+        "added": [
+          "office-outcome-notice-clears-on-reload.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-price-column-fits-1440/index.md",
+        "seed": true,
+        "added": [
+          "index.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-r4-acceptance-followups.md",
+        "seed": true,
+        "added": [
+          "office-r4-acceptance-followups.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-schedule-time-picker.md",
+        "seed": true,
+        "added": [
+          "office-schedule-time-picker.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-shop-link-and-qr.md",
+        "seed": true,
+        "added": [
+          "office-shop-link-and-qr.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-sign-in-follows-refine-antd.md",
+        "seed": true,
+        "added": [
+          "office-sign-in-follows-refine-antd.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-staff-management-next.md",
+        "seed": true,
+        "added": [
+          "office-staff-management-next.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-theme-switching.md",
+        "seed": true,
+        "added": [
+          "office-theme-switching.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-top-loading-bar.md",
+        "seed": true,
+        "added": [
+          "office-top-loading-bar.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "office-ui-tests-finish-on-ci.md",
+        "seed": true,
+        "added": [
+          "office-ui-tests-finish-on-ci.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "onboarding-rerun-after-service-edits.md",
+        "seed": true,
+        "added": [
+          "onboarding-rerun-after-service-edits.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "operator-secret-hardening.md",
+        "seed": true,
+        "added": [
+          "operator-secret-hardening.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "operator-secret-opt-in-documented.md",
+        "seed": true,
+        "added": [
+          "operator-secret-opt-in-documented.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "owner-app-offline-detection.md",
+        "seed": true,
+        "added": [
+          "owner-app-offline-detection.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "owner-app-tab-icons-load/index.md",
+        "seed": true,
+        "added": [
+          "index.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "owner-cancels-booking.md",
+        "seed": true,
+        "added": [
+          "owner-cancels-booking.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "owner-payment-view-recovers-from-failed-poll.md",
+        "seed": true,
+        "added": [
+          "owner-payment-view-recovers-from-failed-poll.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "owner-phone-change-affordance.md",
+        "seed": true,
+        "added": [
+          "owner-phone-change-affordance.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "owner-signs-in-with-line.md",
+        "seed": true,
+        "added": [
+          "owner-signs-in-with-line.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "partner-shop-model-rules.md",
+        "seed": true,
+        "added": [
+          "partner-shop-model-rules.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "pr-deploy-previews.md",
+        "seed": true,
+        "added": [
+          "pr-deploy-previews.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "prepush-db-tests-finish-under-load.md",
+        "seed": true,
+        "added": [
+          "prepush-db-tests-finish-under-load.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "price-table-reload-after-refused-activation.md",
+        "seed": true,
+        "added": [
+          "price-table-reload-after-refused-activation.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "price-table-whole-edit.md",
+        "seed": true,
+        "added": [
+          "price-table-whole-edit.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "product-analytics-posthog.md",
+        "seed": true,
+        "added": [
+          "product-analytics-posthog.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "production-database-restore.md",
+        "seed": true,
+        "added": [
+          "production-database-restore.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "production-go-live.md",
+        "seed": true,
+        "added": [
+          "production-go-live.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "production-incident-agent.md",
+        "seed": true,
+        "added": [
+          "production-incident-agent.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "qnow-migration-history.md",
+        "seed": true,
+        "added": [
+          "qnow-migration-history.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "r14-poc-flywheel.md",
+        "seed": true,
+        "added": [
+          "r14-poc-flywheel.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "r14-user-manual-trial.md",
+        "seed": true,
+        "added": [
+          "r14-user-manual-trial.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "r5-deferred-edge-cases.md",
+        "seed": true,
+        "added": [
+          "r5-deferred-edge-cases.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "rebooking-link-foreign-car-returns-to-choice.md",
+        "seed": true,
+        "added": [
+          "rebooking-link-foreign-car-returns-to-choice.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "release-cadence-slice-done.md",
+        "seed": true,
+        "added": [
+          "release-cadence-slice-done.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "rls-census-covers-bypasses.md",
+        "seed": true,
+        "added": [
+          "rls-census-covers-bypasses.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "schedule-keep-conflicting-booking.md",
+        "seed": true,
+        "added": [
+          "schedule-keep-conflicting-booking.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "schedule-settings-layout-polish.md",
+        "seed": true,
+        "added": [
+          "schedule-settings-layout-polish.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "schedule-settings-phone-touch-check.md",
+        "seed": true,
+        "added": [
+          "schedule-settings-phone-touch-check.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "self-serve-entry-code-issuance.md",
+        "seed": true,
+        "added": [
+          "self-serve-entry-code-issuance.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "self-serve-trial-initial-shop-setup.md",
+        "seed": true,
+        "added": [
+          "self-serve-trial-initial-shop-setup.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "self-serve-trial-payment-journey.md",
+        "seed": true,
+        "added": [
+          "self-serve-trial-payment-journey.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "shop-customer-claim-create-race.md",
+        "seed": true,
+        "added": [
+          "shop-customer-claim-create-race.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "shop-customer-create-signup-race.md",
+        "seed": true,
+        "added": [
+          "shop-customer-create-signup-race.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "shop-edits-booking.md",
+        "seed": true,
+        "added": [
+          "shop-edits-booking.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "signature-accessible-alternative.md",
+        "seed": true,
+        "added": [
+          "signature-accessible-alternative.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "signature-path-requires-a-line.md",
+        "seed": true,
+        "added": [
+          "signature-path-requires-a-line.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "singapore-rollback-criterion.md",
+        "seed": true,
+        "added": [
+          "singapore-rollback-criterion.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "sms-usage-alert.md",
+        "seed": true,
+        "added": [
+          "sms-usage-alert.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "staff-booking-any-start-time.md",
+        "seed": true,
+        "added": [
+          "staff-booking-any-start-time.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "staff-booking-rechecks-closed-entry.md",
+        "seed": true,
+        "added": [
+          "staff-booking-rechecks-closed-entry.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "staff-booking-replay-checks-stored-pricing.md",
+        "seed": true,
+        "added": [
+          "staff-booking-replay-checks-stored-pricing.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "staff-invite-sms.md",
+        "seed": true,
+        "added": [
+          "staff-invite-sms.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "taiwan-holidays-preload.md",
+        "seed": true,
+        "added": [
+          "taiwan-holidays-preload.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "technician-progress-report.md",
+        "seed": true,
+        "added": [
+          "technician-progress-report.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "tenant-console-and-self-serve-trial.md",
+        "seed": true,
+        "added": [
+          "tenant-console-and-self-serve-trial.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "vehicle-catalog-upkeep.md",
+        "seed": true,
+        "added": [
+          "vehicle-catalog-upkeep.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "vehicle-rule-one-confirm-open.md",
+        "seed": true,
+        "added": [
+          "vehicle-rule-one-confirm-open.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "vehicle-rule-warnings-follow-pricing-mode.md",
+        "seed": true,
+        "added": [
+          "vehicle-rule-warnings-follow-pricing-mode.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "vehicle-service-history.md",
+        "seed": true,
+        "added": [
+          "vehicle-service-history.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "vehicle-size-classification-redesign.md",
+        "seed": true,
+        "added": [
+          "vehicle-size-classification-redesign.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      },
+      {
+        "path": "void-paid-record.md",
+        "seed": true,
+        "added": [
+          "void-paid-record.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+        ],
+        "removed": []
+      }
+    ],
+    "recorded_consistency": [],
+    "idle_names": [
+      "booking-multi-service",
+      "bookings-insert-grant-narrowed",
+      "ci-office-tests-only-when-affected",
+      "fmodel-support-agents-md-restored",
+      "office-form-tests-faster",
+      "office-staff-management-next",
+      "qnow-migration-history",
+      "r14-poc-flywheel",
+      "technician-progress-report",
+      "vehicle-catalog-upkeep",
+      "vehicle-service-history"
+    ],
+    "idle_count": 11
+  },
+  "local": {
+    "tasks": 230,
+    "story_refusals": 0,
+    "refused": [],
+    "changed": [],
+    "recorded_consistency": []
+  }
+}

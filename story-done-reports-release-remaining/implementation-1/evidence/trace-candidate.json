@@ -1,0 +1,1170 @@
+{
+  "ms": 15624.172084,
+  "diagnostic": null,
+  "calls": [
+    {
+      "command": "git",
+      "args": [
+        "-C",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "remote",
+        "get-url",
+        "origin"
+      ],
+      "ms": 17.042834
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--archived",
+        "--all-fields",
+        "--limit",
+        "0",
+        "--json"
+      ],
+      "ms": 1789.4309170000001
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "account-publish-ceiling",
+        "--archived",
+        "--json"
+      ],
+      "ms": 220.93054100000018
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/account-publish-ceiling.md",
+        "--json"
+      ],
+      "ms": 6.312667000000147
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "agent-front-door",
+        "--archived",
+        "--json"
+      ],
+      "ms": 213.65795800000024
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/agent-front-door.md",
+        "--json"
+      ],
+      "ms": 6.329125000000204
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "agent-review-identity",
+        "--archived",
+        "--json"
+      ],
+      "ms": 222.16291599999977
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/agent-review-identity.md",
+        "--json"
+      ],
+      "ms": 5.851416999999856
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "comment-admission",
+        "--archived",
+        "--json"
+      ],
+      "ms": 211.3409590000001
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/comment-admission.md",
+        "--json"
+      ],
+      "ms": 6.0063749999999345
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "continuity-earlier-comments-beside-latest",
+        "--archived",
+        "--json"
+      ],
+      "ms": 210.17437500000005
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/continuity-earlier-comments-beside-latest.md",
+        "--json"
+      ],
+      "ms": 7.097291000000041
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "continuity-room-points-to-latest",
+        "--archived",
+        "--json"
+      ],
+      "ms": 571.2958329999997
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/continuity-room-points-to-latest.md",
+        "--json"
+      ],
+      "ms": 8.890667000000121
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "device-route-after-decision",
+        "--archived",
+        "--json"
+      ],
+      "ms": 595.5430419999998
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/device-route-after-decision.md",
+        "--json"
+      ],
+      "ms": 19.25945799999954
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "device-route-room-gate",
+        "--archived",
+        "--json"
+      ],
+      "ms": 747.4928330000002
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/device-route-room-gate.md",
+        "--json"
+      ],
+      "ms": 6.385707999999795
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "entry-without-name-field",
+        "--archived",
+        "--json"
+      ],
+      "ms": 427.1095000000005
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/entry-without-name-field.md",
+        "--json"
+      ],
+      "ms": 6.535125000000335
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "front-door-flag",
+        "--archived",
+        "--json"
+      ],
+      "ms": 337.1819580000001
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/front-door-flag.md",
+        "--json"
+      ],
+      "ms": 9.79858299999978
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "front-door-hardening",
+        "--archived",
+        "--json"
+      ],
+      "ms": 254.27149999999983
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/front-door-hardening.md",
+        "--json"
+      ],
+      "ms": 7.296374999999898
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "identity-cannot-be-borrowed",
+        "--archived",
+        "--json"
+      ],
+      "ms": 345.4088330000004
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/identity-cannot-be-borrowed.md",
+        "--json"
+      ],
+      "ms": 14.433165999999801
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "limit-observability",
+        "--archived",
+        "--json"
+      ],
+      "ms": 411.5595000000003
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/limit-observability.md",
+        "--json"
+      ],
+      "ms": 7.839082999999846
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "others-highlights-in-author-colour",
+        "--archived",
+        "--json"
+      ],
+      "ms": 227.50937500000055
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/others-highlights-in-author-colour.md",
+        "--json"
+      ],
+      "ms": 27.043791000000056
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "own-comments-follow-account",
+        "--archived",
+        "--json"
+      ],
+      "ms": 242.54058299999997
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/own-comments-follow-account.md",
+        "--json"
+      ],
+      "ms": 6.8422920000002705
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "owner-feedback-pages",
+        "--archived",
+        "--json"
+      ],
+      "ms": 217.6443330000002
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/owner-feedback-pages.md",
+        "--json"
+      ],
+      "ms": 7.156332999999904
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "owner-link-leak-safe",
+        "--archived",
+        "--json"
+      ],
+      "ms": 238.1133749999999
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/owner-link-leak-safe.md",
+        "--json"
+      ],
+      "ms": 6.232459000000745
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "owner-link-sign-in-to-claim",
+        "--archived",
+        "--json"
+      ],
+      "ms": 215.51816700000018
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/owner-link-sign-in-to-claim.md",
+        "--json"
+      ],
+      "ms": 5.853667000000314
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "owner-sees-all-feedback",
+        "--archived",
+        "--json"
+      ],
+      "ms": 216.00116700000035
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/owner-sees-all-feedback.md",
+        "--json"
+      ],
+      "ms": 6.711833999999726
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "owner-sees-all-feedback-page",
+        "--archived",
+        "--json"
+      ],
+      "ms": 207.58308399999987
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/owner-sees-all-feedback-page.md",
+        "--json"
+      ],
+      "ms": 6.033708000000843
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "owner-sees-all-feedback-room",
+        "--archived",
+        "--json"
+      ],
+      "ms": 214.62437499999942
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/owner-sees-all-feedback-room.md",
+        "--json"
+      ],
+      "ms": 6.234582999999475
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "pair-once",
+        "--archived",
+        "--json"
+      ],
+      "ms": 209.23362499999894
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/pair-once.md",
+        "--json"
+      ],
+      "ms": 7.411250000001019
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "revoke-ends-access",
+        "--archived",
+        "--json"
+      ],
+      "ms": 246.11774999999943
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/revoke-ends-access.md",
+        "--json"
+      ],
+      "ms": 6.605457999999999
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "room-modals-try-copy",
+        "--archived",
+        "--json"
+      ],
+      "ms": 214.95158300000003
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/room-modals-try-copy.md",
+        "--json"
+      ],
+      "ms": 5.360458999999537
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "rr-revise-follows-latest",
+        "--archived",
+        "--json"
+      ],
+      "ms": 219.08808399999907
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/rr-revise-follows-latest.md",
+        "--json"
+      ],
+      "ms": 5.644083999999566
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "spacedock-install-beta",
+        "--archived",
+        "--json"
+      ],
+      "ms": 214.01000000000022
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/spacedock-install-beta.md",
+        "--json"
+      ],
+      "ms": 8.434416000000056
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "try-auto-refresh",
+        "--archived",
+        "--json"
+      ],
+      "ms": 206.6916250000013
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/try-auto-refresh.md",
+        "--json"
+      ],
+      "ms": 7.775666999999885
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "try-fixed-link",
+        "--archived",
+        "--json"
+      ],
+      "ms": 198.9049589999995
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/try-fixed-link.md",
+        "--json"
+      ],
+      "ms": 5.458708000000115
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "install-polish-after-launch",
+        "--archived",
+        "--json"
+      ],
+      "ms": 340.9774580000012
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/install-polish-after-launch.md",
+        "--json"
+      ],
+      "ms": 5.988665999999284
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "spacedock-pi-parity",
+        "--archived",
+        "--json"
+      ],
+      "ms": 205.76670800000102
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/spacedock-pi-parity.md",
+        "--json"
+      ],
+      "ms": 6.667124999999942
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "fetch-only-agent-reads-share",
+        "--archived",
+        "--json"
+      ],
+      "ms": 231.45287499999904
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/fetch-only-agent-reads-share.md",
+        "--json"
+      ],
+      "ms": 5.2850410000010015
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "agent-front-door-publish",
+        "--archived",
+        "--json"
+      ],
+      "ms": 247.52958299999955
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/agent-front-door-publish.md",
+        "--json"
+      ],
+      "ms": 5.211250000000291
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "author-handle",
+        "--archived",
+        "--json"
+      ],
+      "ms": 210.93516699999964
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/author-handle.md",
+        "--json"
+      ],
+      "ms": 5.5595830000002024
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "inbox-home",
+        "--archived",
+        "--json"
+      ],
+      "ms": 205.233209
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/inbox-home.md",
+        "--json"
+      ],
+      "ms": 4.5853750000005675
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "workos-signout",
+        "--archived",
+        "--json"
+      ],
+      "ms": 193.30941699999858
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/workos-signout.md",
+        "--json"
+      ],
+      "ms": 5.025625000000218
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "agent-front-door",
+        "--archived",
+        "--json"
+      ],
+      "ms": 203.47345900000073
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/agent-front-door.md",
+        "--json"
+      ],
+      "ms": 6.829875000001266
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "agent-front-door-publish",
+        "--archived",
+        "--json"
+      ],
+      "ms": 205.56925000000047
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/agent-front-door-publish.md",
+        "--json"
+      ],
+      "ms": 5.123583000000508
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "front-door-flag",
+        "--archived",
+        "--json"
+      ],
+      "ms": 199.17583399999967
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/front-door-flag.md",
+        "--json"
+      ],
+      "ms": 6.626833000000261
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "agent-review-identity",
+        "--archived",
+        "--json"
+      ],
+      "ms": 204.14133399999992
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/agent-review-identity.md",
+        "--json"
+      ],
+      "ms": 5.998625000000175
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "comment-admission",
+        "--archived",
+        "--json"
+      ],
+      "ms": 202.85404200000085
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/comment-admission.md",
+        "--json"
+      ],
+      "ms": 5.51666699999987
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "device-route-room-gate",
+        "--archived",
+        "--json"
+      ],
+      "ms": 201.073042
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/device-route-room-gate.md",
+        "--json"
+      ],
+      "ms": 5.904375000000073
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "owner-sees-all-feedback",
+        "--archived",
+        "--json"
+      ],
+      "ms": 199.2957920000008
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/owner-sees-all-feedback.md",
+        "--json"
+      ],
+      "ms": 5.653667000000496
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "owner-sees-all-feedback-room",
+        "--archived",
+        "--json"
+      ],
+      "ms": 201.12774999999965
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/_archive/owner-sees-all-feedback-room.md",
+        "--json"
+      ],
+      "ms": 5.841707999999926
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "inbox-home",
+        "--archived",
+        "--json"
+      ],
+      "ms": 208.1792919999989
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/inbox-home.md",
+        "--json"
+      ],
+      "ms": 4.995291999999608
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--resolve",
+        "workos-signout",
+        "--archived",
+        "--json"
+      ],
+      "ms": 199.82091700000092
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--read",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2/.spacedock-state/workos-signout.md",
+        "--json"
+      ],
+      "ms": 5.798000000000684
+    },
+    {
+      "command": "spacedock",
+      "args": [
+        "status",
+        "--workflow-dir",
+        "/tmp/opencode-story-done/replays/relay/docs/dev2",
+        "--archived",
+        "--all-fields",
+        "--limit",
+        "0",
+        "--json"
+      ],
+      "ms": 1692.757791
+    }
+  ]
+}

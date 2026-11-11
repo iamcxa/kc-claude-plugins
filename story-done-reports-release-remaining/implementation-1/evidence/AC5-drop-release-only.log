@@ -1,0 +1,37 @@
+✖ report separates release-only tasks and unknown stories and bounds lists (785.664041ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 906.398416
+
+✖ failing tests:
+
+test at lib/progress.test.mjs:94:1
+✖ report separates release-only tasks and unknown stories and bounds lists (785.664041ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /release tasks with no story: 1 of 1 done/. Input:
+  
+  'journey progress: demo/R1 after extra-0-0 (done)\n' +
+    'story story-0: 4 of 4 filed tasks done; declared: unverified\n' +
+    'pull requests: team/project#1, team/project#2, team/project#3, and 1 more\n' +
+    'release R1: 14 of 28 stories have every filed task done; 14 in progress; 0 have no task\n' +
+    'done: story-0 (team/project#1, team/project#2, team/project#3), story-1 (team/project#5), story-2 (team/project#9), story-3 (team/project#13), story-4 (team/project#17), and 9 more\n' +
+    'in progress: story-14 0/1, story-15 0/1, story-16 0/1, story-17 0/1, story-18 0/1, and 9 more\n' +
+    'not on the map: 3 tasks name a story this map does not hold\n' +
+    'canvas: not redrawn; draw it with kc-journey-progress\n'
+  
+      at TestContext.<anonymous> (file:///private/tmp/opencode-story-done/mutants/AC5-drop-release-only/lib/progress.test.mjs:111:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'journey progress: demo/R1 after extra-0-0 (done)\nstory story-0: 4 of 4 filed tasks done; declared: unverified\npull requests: team/project#1, team/project#2, team/project#3, and 1 more\nrelease R1: 14 of 28 stories have every filed task done; 14 in progress; 0 have no task\ndone: story-0 (team/project#1, team/project#2, team/project#3), story-1 (team/project#5), story-2 (team/project#9), story-3 (team/project#13), story-4 (team/project#17), and 9 more\nin progress: story-14 0/1, story-15 0/1, story-16 0/1, story-17 0/1, story-18 0/1, and 9 more\nnot on the map: 3 tasks name a story this map does not hold\ncanvas: not redrawn; draw it with kc-journey-progress\n',
+    expected: /release tasks with no story: 1 of 1 done/,
+    operator: 'match',
+    diff: 'simple'
+  }

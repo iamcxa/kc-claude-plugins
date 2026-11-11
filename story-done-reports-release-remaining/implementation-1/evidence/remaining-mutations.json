@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Captain amendment 1: unrecorded producer field",
+    "status": "passed",
+    "message": "unchanged whole-document assertion rejects extra field, exit 1"
+  },
+  {
+    "name": "AC14 required ADR omitted",
+    "status": "passed",
+    "message": "ADR linter rejects missing 0076, exit 1"
+  },
+  {
+    "name": "AC9 workflow edit",
+    "status": "passed",
+    "message": "actual throwaway git diff adds forbidden workflow path; real bytes equal base"
+  }
+]

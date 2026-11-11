@@ -1,0 +1,3 @@
+{
+  "error": "usage: journey-progress.mjs <journey.yaml> --workflow-dir <dir> [--draw <room>] [--pages story-map,journey-board,function-map]"
+}
