@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_search_reports_timeout_or_result_cap_without_changing_debt_exit (test_package_version.RolloutTest.test_search_reports_timeout_or_result_cap_without_changing_debt_exit) (incomplete=False, total=1001)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpn2et7p4k/search-cap/kc-dev-flow-2/scripts/test_package_version.py", line 272, in test_search_reports_timeout_or_result_cap_without_changing_debt_exit
+    self.assertIn(message, run.stdout)
+AssertionError: '1000-result limit' not found in 'fleet/listed docs/dev2 README:0.38.0 released:0.38.1 no sync owed; laws: not installed\nsearch: unavailable "unexpected gh: [\\"api\\", \\"search/code?q=x-release-please-version%20filename%3AREADME.md%20user%3Aiamcxa%20user%3Aspacedock-dev&per_page=100&page=2\\"]"\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.450s
+
+FAILED (failures=1)

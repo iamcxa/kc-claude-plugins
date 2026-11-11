@@ -1,0 +1,6 @@
+Compare the loaded kc-dev-flow-2 package with the release an adopted workflow README was synced from.
+
+Usage: package_version.py <workflow README>
+Exit 0 when they match, when the README is behind the package (re-sync it), or when the
+README carries no release line. Exit 1 when the loaded package is older than the README:
+the session must load the newer package before it dispatches. Exit 2 on a usage error.

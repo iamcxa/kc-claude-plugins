@@ -1,0 +1,8 @@
+{
+  "rows": 11,
+  "all_names_and_paths_in_public_state": true,
+  "all_rows_in_task_named_six_repositories": true,
+  "network_calls": 0,
+  "authorization": "validation-1.md explicitly instructs use of this exact local file for live GitHub read-only run",
+  "guard": "live.py verifies same assertions before first network request"
+}

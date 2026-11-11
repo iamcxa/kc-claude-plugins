@@ -1,0 +1,33 @@
+{
+  "candidate": "61529999eb4184b44328fe2fbad545b1b0b0ed92",
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "changed_paths": {
+    "CLAUDE.md": {
+      "export_matches_head": true,
+      "sha256": "7707e873fabc16965c1e4dd2459b246be0d5fd2894a4bf10f8cde3098b57e364"
+    },
+    "docs/adr/0075-release-rollout-reports-adopters-and-laws-pin.md": {
+      "export_matches_head": true,
+      "sha256": "b29efa3b1951dd69ce3117376fabf5b8a0eed325eda8840c7b318721f8c6ca62"
+    },
+    "kc-dev-flow-2/references/sd/adoption.md": {
+      "export_matches_head": true,
+      "sha256": "7f9ac94e8bf04461ce828fcdd3f61dce3d5dd0f9060559050a1a4d11a93b189a"
+    },
+    "kc-dev-flow-2/scripts/package_version.py": {
+      "export_matches_head": true,
+      "sha256": "f590c5f222638fe4a5090519070564322eeda19dbb53c01cac8d1ee531bd83d7"
+    },
+    "kc-dev-flow-2/scripts/test_package_version.py": {
+      "export_matches_head": true,
+      "sha256": "15671290b45cf0514807fb2f1cc844288782d8b57f8878a92842aa6522824072"
+    },
+    "kc-dev-flow-2/skills/maintain-flow/SKILL.md": {
+      "export_matches_head": true,
+      "sha256": "b752cf6c8d33c6c2ee79e04de8cc3b226a508c67e7f34b5e878de9ed09d77419"
+    }
+  },
+  "adopter_list_file_in_product_or_state": false,
+  "product_status": "",
+  "branch": "spacedock-ensign/release-rollout-reaches-adopters-and-laws-pin"
+}

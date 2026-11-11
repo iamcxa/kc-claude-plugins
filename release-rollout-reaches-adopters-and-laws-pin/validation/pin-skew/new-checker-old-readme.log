@@ -1,0 +1,5 @@
+L1 observer-before-sentinel: 0 events judged (README lists no learn)
+L2 dispatch-record-complete: 1 events judged in 3628f40463ec..a10736489581, 1 violated
+violation: L2 dispatch-record-complete record=t/dispatch/implementation-2.md commit=a10736489581 roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /pkg/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'
+L3 amendment-append-only: 0 events judged in 3628f40463ec..a10736489581, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in 3628f40463ec..a10736489581, 0 violated

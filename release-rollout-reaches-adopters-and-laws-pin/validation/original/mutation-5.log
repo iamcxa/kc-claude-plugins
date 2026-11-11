@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_search_reports_unlisted_and_failed_search_without_changing_exit (test_package_version.RolloutTest.test_search_reports_unlisted_and_failed_search_without_changing_exit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpuudym8mz/kc-dev-flow-2/scripts/test_package_version.py", line 244, in test_search_reports_unlisted_and_failed_search_without_changing_exit
+    self.assertIn('search: unavailable "search quota exceeded"', run.stdout)
+AssertionError: 'search: unavailable "search quota exceeded"' not found in 'fleet/listed docs/dev2 README:0.38.0 released:0.38.1 no sync owed; laws: not installed\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.803s
+
+FAILED (failures=1)

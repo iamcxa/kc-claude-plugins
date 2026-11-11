@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_each_laws_file_change_owes_pin_and_identical_laws_do_not (test_package_version.RolloutTest.test_each_laws_file_change_owes_pin_and_identical_laws_do_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpapijoyfb/kc-dev-flow-2/scripts/test_package_version.py", line 185, in test_each_laws_file_change_owes_pin_and_identical_laws_do_not
+    self.assertEqual(self.run_rollout().returncode, 0)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.397s
+
+FAILED (failures=1)

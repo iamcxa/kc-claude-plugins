@@ -1,0 +1,20 @@
+[
+  {
+    "repository": "iamcxa/kc-claude-plugins",
+    "workflow": "docs/dev2",
+    "readme_release": "0.38.1",
+    "pin": "ec2bae0d6b9c4cedc5fc67adfc99d7043143c5de",
+    "matches": true,
+    "changed_release_rejected": true,
+    "changed_pin_rejected": true
+  },
+  {
+    "repository": "iamcxa/qnow",
+    "workflow": "docs/dev2",
+    "readme_release": "0.38.0",
+    "pin": null,
+    "matches": true,
+    "changed_release_rejected": true,
+    "changed_pin_rejected": "not installed"
+  }
+]

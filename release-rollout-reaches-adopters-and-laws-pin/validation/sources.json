@@ -1,0 +1,17 @@
+[
+  {
+    "url": "https://docs.github.com/en/rest/git/refs?apiVersion=2022-11-28#list-matching-references",
+    "read": "2026-11-11",
+    "finding": "Matching refs declares owner, repo and ref path parameters; no page/per_page parameter or page-size threshold. This is not proof of an infinite backend bound."
+  },
+  {
+    "url": "https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content",
+    "read": "2026-11-11",
+    "finding": "Exact file reads differ from capped directory listings. Large object responses may omit content with encoding none; candidate rejects this explicitly."
+  },
+  {
+    "url": "https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#search-code",
+    "read": "2026-11-11",
+    "finding": "Search offers pages, a 1000-result ceiling and incomplete_results; index/access/scope limits still make it supplementary to the explicit local list."
+  }
+]

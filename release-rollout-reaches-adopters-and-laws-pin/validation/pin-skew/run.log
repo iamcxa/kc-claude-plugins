@@ -1,0 +1,10 @@
+{
+  "candidate": "61529999eb4184b44328fe2fbad545b1b0b0ed92",
+  "both_owed_exit": 1,
+  "both_owed_line": "fleet/both docs/dev2 README:0.38.0 released:0.38.1 sync owed; laws: 1111111111111111111111111111111111111111 pin owed; sync README, merge, then move pin",
+  "readme_target_breaks_AC4": true,
+  "old_readme_older_checker_exit": 0,
+  "old_readme_newer_checker_exit": 1,
+  "exercised_difference": "implementation-2 extension instruction: old release checks implementation-1 only; newer release checks every fresh implementation record",
+  "product_changes": false
+}

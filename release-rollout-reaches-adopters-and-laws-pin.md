@@ -441,3 +441,35 @@ This report supersedes all earlier implementation reports for candidate 61529999
 ### Summary
 
 This report supersedes the earlier implementation reports for the message-8/message-9 wording follow-up; their unchanged product evidence remains referenced above. AC-10 restores three inherited AC-7 clauses, AC-11/AC-12 remain unchanged, and the same strict validation-record check changes from the reproduced three-word rejection to exit 0. The product candidate remains 61529999eb4184b44328fe2fbad545b1b0b0ed92; the FO still owns retrying the real validation dispatch.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #838 head 61529999 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 61529999eb4184b44328fe2fbad545b1b0b0ed92, base e8664a72b0f904e5dda3c391d52ab3abaca876b4; validation/README.md maps every current AC, executed falsifier and implementation limit; validation/artifact.json binds the six unchanged candidate files.
+- DONE: Captain amendments 1 and 2 are in the task file: the adopter list lives on the maintainer's machine and is committed nowhere, and the both-owed report line states the sync-then-pin order; check that no file at the candidate and no evidence you commit names an adopter repo that is not already named on this public state branch, use the maintainer's local list /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/fo-scripts/adopters.md for the live run and save counts and exit code only, and judge the two RoboRev findings (jobs 1725 and 1727) and their dispositions independently, including FO's recorded reason for not calling the chief-engineer; placement: the Captain approved dispatching workers from the First Officer's workspace until the task-workspace sandbox is repaired (host question dialog, 2026-11-11)
+  validation/live-summary.json: 11 listed, four unlisted, zero unreadable/debt, exit 0; validation/live-hand-checks.json independently matches two selected rows and rejects changed release/pin. validation/privacy.json and local-list-preflight.json preserve the local-list/public-state boundary; review and chief-engineer dispositions are in validation/README.md.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation/acceptance.sh has four steps and was run exactly from its published task-folder path under fresh bash --noprofile --norc: validation/acceptance.log, exit 0. Installed 0.38.1 adr_lint.py docs/adr --since e8664a72b0f904e5dda3c391d52ab3abaca876b4 --require 0075: validation/adr.log, exit 0, 68 ADRs. No new Material or Needs decision finding.
+- DONE: AC-1, AC-2, AC-3, AC-4 and AC-6 — exact rows, visible failures and content-based debt.
+  validation/tests.log: 23 tests pass; validation/original/proof-results.json and mutation-{1,2,3,4,5}.log reject a dropped row, swallowed README error, release-marker comparison, SHA-only pin comparison and silent search failure.
+- DONE: AC-5 and AC-12 — retain legacy bytes and print sync/merge/pin order only when both are owed.
+  validation/original/proof-results.json records eight base/head cmp/exit matches and a rejected changed-byte control; validation/order/proof-results.json records five a1a35a714/head matches and missing-order rejection; order/before-amendment.log shows the real earlier candidate failing AC-12.
+- DONE: AC-10 and AC-11 — independently recount the named moments and preserve the local-only list.
+  validation/word-counts.json: release 778→897, adoption 70→95, workflow 5939 unchanged, other moment deltas zero; Python and wc agree. original/mutation-lint.log rejects a repeated 12-word passage; original/mutation-6.log rejects missing-list success; artifact.json shows no tracked adopter list.
+- DONE: Independently judge RoboRev jobs 1725 and 1727 and their repairs.
+  validation/pin-skew/ reruns old-checker exit 0/new-checker exit 1 and rejects changing AC-4's comparator; amendment 2 settles the order. validation/refs-probe.json confirms 49/165 refs without Link and identical pagination probes; integrity/proof-results.json rejects five real read-integrity omissions. Hypothetical undocumented truncation is Deferred risk, not a supported Material defect.
+- DONE: Independently judge the recorded chief-engineer decline and answer the step-back reminders.
+  validation/role.log exits 0: two rounds per symptom, no third; ADR 0026 permits the plain repair-count decline. Still the approved read-only release report, gaps testable now, deleting comparison/order/integrity handling loses the named protections; full reasoning in validation/README.md.
+- DONE: Required lint, number, comment, document, design and dispatch checks at this candidate.
+  validation/checks.json and named logs: exits 0; number-refreshed.log has fresh state refs; comments.log is 408 code/one ADR comment, 0.2% versus 5%; docs.log lists ADR 0075 and maintain-flow updated; dispatch.log has 12 complete records, dispatch-strict.exit is 0. Design helper's historical Scope check is explicitly not run at validation.
+- DONE: Verify goal sufficiency, minimal necessity, exact artifact and public evidence boundaries.
+  validation/README.md maps all six product paths to the accepted report, tests, release/install entry points or ruling; artifact.json confirms clean product worktree and archive bytes. Only this task's entity/report/evidence are changed; no product/adopter write or new dependency, law, version or CI configuration.
+- DONE: Check observed hosted state and state all remaining evidence limits.
+  validation/pr.json binds the exact open Draft PR head; observed checks succeed and deploy is skipped, without claiming required-check clearance or merge. Search remains advisory; local smoke is not live adoption; FO's job-1728 clean report was not independently rerun; no model replay or billed CI-cost measurement. These limits do not withdraw an accepted criterion.
+- SKIPPED: Product publication, adopter synchronization/pin writes, review requests and gate/merge actions.
+  These remain FO/Captain-owned and were not performed. The authorized task-scoped state commit/push publishes this report only; the initial network auto-review rejection was resolved with a pre-request public-name check and approved retry, not bypassed.
+
+### Summary
+
+PASSED: candidate 61529999eb4184b44328fe2fbad545b1b0b0ed92 meets all ten active acceptance criteria, including both Captain amendments, with independent live reads, executed counterexamples and a fresh-shell acceptance script. No new Material or Needs decision finding remains; this is a validation recommendation, with the gate, product merge and adopter actions still owned by FO/Captain.
