@@ -83,7 +83,7 @@ BASE = """# Design: seats remaining
 ## Scope
 
 Non-goals: migrations
-Budget: one task
+Budget: one cycle per stage
 Stop condition: upstream changes needed
 
 ## FO alignment
@@ -92,6 +92,9 @@ Surfaces: ui, db
 Visible change: a driver sees seats remaining per slot.
 
 ## PRFAQ
+
+### Worth questions
+Asked: requested seats; without: no count; premise: seats vary, check one slot.
 
 UI proposal: add a seats-remaining label to each slot row.
 Preview: preview.html
@@ -150,6 +153,9 @@ Superseded text:
 
 FENCED_EXAMPLE = """
 ## Design
+
+### Worth questions
+Asked: requested slice; without: outcome fails; premise: needed, check one use.
 
 ```
 ## Captain amendments
@@ -246,6 +252,24 @@ class DesignSurfacesTests(unittest.TestCase):
             self.assertEqual(ds.check_task(path), [])
 
 
+class WorthQuestionsTests(unittest.TestCase):
+    def test_design_without_worth_questions_is_refused_even_with_fenced_example(self):
+        for heading in ("", "```\n### Worth questions\n```\n"):
+            text = BASE.split("## PRFAQ")[0] + "## Design\n\n" + heading + "body\n\n## Acceptance criteria\n**AC-1** bounded\n"
+            with tempfile.TemporaryDirectory() as d:
+                path = write_task(d, text)
+                self.assertTrue(any("Worth questions" in e for e in ds.check_task(path)))
+                path.write_text(text.replace("## Design", "## Design\n### Worth questions\nAsked, without, premise."))
+                self.assertFalse(any("Worth questions" in e for e in ds.check_task(path)))
+
+    def test_new_seed_budget_needs_a_fixed_form_and_cannot_borrow_an_amendment(self):
+        for value in ("one package PR", "one round per stage"):
+            text = BASE.replace("Budget: one cycle per stage", "Budget: " + value)
+            text += "\n## Captain amendments\n### Amendment 1 — 2026-11-11, chat\nCaptain: 「two cycles per stage」\nBudget: two cycles per stage\n"
+            with tempfile.TemporaryDirectory() as d:
+                self.assertTrue(any("Budget must start" in e for e in ds.check_task(write_task(d, text), seed=True)))
+
+
 class SeedModeTests(unittest.TestCase):
     def test_each_seed_rule_refuses_and_exits_1(self):
         cases = {
@@ -295,7 +319,7 @@ class SeedModeTests(unittest.TestCase):
 
 
 class SeedBoundsTests(unittest.TestCase):
-    BOUNDS = "## Scope\n\nShip the bounded checker.\nNon-goals: migrations\nBudget: one task\nStop condition: new upstream hook needed\n"
+    BOUNDS = "## Scope\n\nShip the bounded checker.\nNon-goals: migrations\nBudget: one cycle per stage\nStop condition: new upstream hook needed\n"
     ALIGNMENT = "## FO alignment\n\nSurfaces: none\nVisible change: none\n"
 
     def check(self, text, folder=False, module=ds):
@@ -320,32 +344,32 @@ class SeedBoundsTests(unittest.TestCase):
 
     def test_dedicated_sections_and_scope_bullets_and_plural_forms(self):
         for text in (
-            "## Non-goals\nNo migrations.\n## Budget\nOne task.\n## Stop conditions\nNeeds upstream.\n",
-            "## Scope\n- Non-goal: migrations\n* Budget: one task\n- Stop conditions: upstream change\n",
+            "## Non-goals\nNo migrations.\n## Budget\nOne cycle per stage.\n## Stop conditions\nNeeds upstream.\n",
+            "## Scope\n- Non-goal: migrations\n* Budget: one cycle per stage\n- Stop conditions: upstream change\n",
         ):
             self.assertEqual(self.check(text + self.ALIGNMENT), [])
 
     def test_empty_placeholder_quote_report_and_fenced_impostors_are_refused(self):
         for value in ("", "   ", "<approved bound>", "<approved> <bound>", "<!-- decide later -->"):
-            text = self.BOUNDS.replace("Budget: one task", "Budget: " + value)
+            text = self.BOUNDS.replace("Budget: one cycle per stage", "Budget: " + value)
             self.assertIn("task.md: missing required body field: Budget", self.check(text + self.ALIGNMENT))
         for impostor in (
-            "## Report\nBudget: one task\n",
-            "# Report\nBudget: one task\n",
-            "### Report\nBudget: one task\n",
-            "> ## Budget\n> one task\n",
-            "## Scope\n> Budget: one task\n",
-            "## Scope\n" + "    Budget: one task\n",
-            "## Scope\n" + "~~~markdown\nBudget: one task\n~~~\n",
-            "## Scope\n" + "```markdown\nBudget: one task\n```\n",
-            "## Budget\n~~~\none task\n~~~\n",
-            "---\nnotes: |\n  ## Budget\n  one task\n---\n",
+            "## Report\nBudget: one cycle per stage\n",
+            "# Report\nBudget: one cycle per stage\n",
+            "### Report\nBudget: one cycle per stage\n",
+            "> ## Budget\n> one cycle per stage\n",
+            "## Scope\n> Budget: one cycle per stage\n",
+            "## Scope\n" + "    Budget: one cycle per stage\n",
+            "## Scope\n" + "~~~markdown\nBudget: one cycle per stage\n~~~\n",
+            "## Scope\n" + "```markdown\nBudget: one cycle per stage\n```\n",
+            "## Budget\n~~~\none cycle per stage\n~~~\n",
+            "---\nnotes: |\n  ## Budget\n  one cycle per stage\n---\n",
         ):
-            text = self.BOUNDS.replace("Budget: one task\n", "") + impostor + self.ALIGNMENT
+            text = self.BOUNDS.replace("Budget: one cycle per stage\n", "") + impostor + self.ALIGNMENT
             self.assertIn("task.md: missing required body field: Budget", self.check(text), impostor)
 
     def test_dedicated_bounds_reject_quotes_at_zero_to_three_spaces(self):
-        values = {"Non-goals": "No migrations.", "Budget": "One task.",
+        values = {"Non-goals": "No migrations.", "Budget": "One cycle per stage.",
                   "Stop condition": "Upstream change."}
         for field in values:
             for indent in range(4):
@@ -360,7 +384,7 @@ class SeedBoundsTests(unittest.TestCase):
                                              [f"{name}: missing required body field: {field}"])
 
     def test_dedicated_bounds_accept_real_content_at_zero_to_three_spaces(self):
-        values = {"Non-goals": "No migrations.", "Budget": "One task.",
+        values = {"Non-goals": "No migrations.", "Budget": "One cycle per stage.",
                   "Stop condition": "Upstream change."}
         for field in values:
             for indent in range(4):
@@ -372,7 +396,7 @@ class SeedBoundsTests(unittest.TestCase):
                         self.assertEqual(self.check(body + self.ALIGNMENT, folder), [])
 
     def test_slug_id_frontmatter_and_scope_are_not_new_requirements(self):
-        text = "## Non-goals\nNo migration.\n## Budget\nOne task.\n## Stop condition\nUpstream needed.\n" + self.ALIGNMENT
+        text = "## Non-goals\nNo migration.\n## Budget\nOne cycle per stage.\n## Stop condition\nUpstream needed.\n" + self.ALIGNMENT
         for front in ("", "---\ntitle: seed\nstatus: backlog\n---\n",
                       "---\nid: task\ntitle: seed\nstatus: backlog\n---\n"):
             self.assertEqual(self.check(front + text), [])
@@ -401,8 +425,8 @@ class SeedBoundsTests(unittest.TestCase):
 
     def test_fence_length_and_kind_keep_impostors_hidden(self):
         for fence, short in (("````", "```"), ("~~~~", "~~~"), ("~~~", "```")):
-            text = self.BOUNDS.replace("Budget: one task\n", "")
-            text += f"## Scope\n{fence}\n{short}\nBudget: one task\n{fence}\n"
+            text = self.BOUNDS.replace("Budget: one cycle per stage\n", "")
+            text += f"## Scope\n{fence}\n{short}\nBudget: one cycle per stage\n{fence}\n"
             self.assertIn("task.md: missing required body field: Budget", self.check(text + self.ALIGNMENT))
 
 
@@ -722,6 +746,9 @@ Surfaces: none
 Visible change: none
 
 ## Design
+
+### Worth questions
+Asked: requested slice; without: outcome fails; premise: needed, check one use.
 
 ### Security review
 
@@ -1196,6 +1223,9 @@ Visible change: a person sees a panel.
 
 ## Design
 
+### Worth questions
+Asked: requested slice; without: outcome fails; premise: needed, check one use.
+
 UI proposal: a panel.
 Preview: preview.html
 
@@ -1505,13 +1535,18 @@ gates:
 - Source: issue 1.
 - Bite: the first thing.
 - Non-goals: to be set at ideation.
-- Budget: one task.
+- Budget: one cycle per stage.
 - Stop condition: upstream change.
 
 ## FO alignment
 
 Surfaces: none
 Visible change: none
+
+## Design
+
+### Worth questions
+Asked: requested seats; without: no count; premise: seats vary, check one slot.
 
 ## Acceptance criteria
 
@@ -2134,6 +2169,9 @@ Surfaces: ui
 Visible change: a person sees a panel.
 
 ## Design
+
+### Worth questions
+Asked: requested slice; without: outcome fails; premise: needed, check one use.
 
 UI proposal: a panel.
 Preview: preview.html

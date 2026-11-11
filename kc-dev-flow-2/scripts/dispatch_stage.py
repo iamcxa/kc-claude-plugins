@@ -12,7 +12,7 @@ import sys
 
 from design_surfaces import task_folder
 from number_guards import Misconfigured, frontmatter
-from role_triggers import rank
+from role_triggers import budget_text, rank
 
 SCRIPTS = Path(__file__).resolve().parent
 
@@ -101,6 +101,9 @@ def check_task_scope(state, scope):
 def record_text(args, number, dispatched, checklist, notes):
     annotation = "workflow checkout" + (f", {args.note}" if args.note else "")
     header = [f"# {args.stage}-{number}", f"Dispatched: {dispatched} ({annotation})", f"Model: {args.model}"]
+    # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+    if not args.role:
+        header.append(f"Budget: {budget_text(args.entity_path.read_text()) or 'not recorded'}")
     if args.roster:
         header.append(f"Roster: {args.roster}")
     header += [f"Candidate: {sha}" for sha in args.candidate]
@@ -210,9 +213,10 @@ def main(argv=None):
                                 str(folder.parent), folder.name, "--pending", str(path)], capture_output=True, text=True)
         if roles.returncode:
             remove_uncommitted(path, wrote)
-            print(f"dispatch_stage: dispatch not built; {folder.name} owes a special-role call:", file=sys.stderr)
+            print(f"dispatch_stage: dispatch not built; {folder.name} budget or special-role check held:", file=sys.stderr)
             sys.stderr.write(roles.stdout + roles.stderr)
             return 1
+        sys.stderr.write("".join(line for line in roles.stdout.splitlines(keepends=True) if line.startswith("budget:")))
     checks = [subprocess.run([sys.executable, "-B", str(SCRIPTS / "dispatch_records.py"), *map(str, flags)],
                              capture_output=True, text=True)
               for flags in ((task_folder(args.entity_path),), ("--names", "--strict", path))]

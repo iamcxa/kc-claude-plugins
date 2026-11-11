@@ -23,6 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import decision_ledger
+from role_triggers import budget_bound, budget_text, outside_fences
 
 KNOWN = {"ui", "db", "none"}
 CAPTAIN_QUOTE = re.compile(r"「[^」]*\S[^」]*」")
@@ -1035,7 +1036,11 @@ def check_seed_fields(name, text):
                 value = re.sub(r"<[^>]*>", "", value).strip(" \t-'\"*")
                 if value:
                     found.add(label)
-    return [f"{name}: missing required body field: {label}" for label, _ in fields if label not in found]
+    errors = [f"{name}: missing required body field: {label}" for label, _ in fields if label not in found]
+    # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+    if "Budget" in found and not budget_bound(budget_text(body, amendments=False)):
+        errors.append(f"{name}: Budget must start with 'N cycles per stage' or 'N implementation and M validation cycles'")
+    return errors
 
 
 def check_task(path, seed=False, notes=None):
@@ -1089,6 +1094,12 @@ def check_task(path, seed=False, notes=None):
     front = FRONTMATTER.match(text)
     profile, status = (FM_PROFILE.search(front.group(1)), FM_STATUS.search(front.group(1))) if front else (None, None)
     plain = "\n".join(unfenced(lines))
+    # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+    worth_lines = list(outside_fences(text))
+    design = section(worth_lines, re.compile(r"^## Design[ \t]*$", re.I))
+    if (design is not None or (status and status[1] == "ideation")) and not any(
+            re.fullmatch(r"### Worth questions[ \t]*", line, re.I) for line in (design if design is not None else worth_lines)):
+        errors.append(f"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test")
     if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):
         summary = check_security(path, plain, declared, errors)
         if summary and notes is not None:

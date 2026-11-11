@@ -352,8 +352,8 @@ def validations(*findings):
 
 
 class StepBackTest(Fixture):
-    questions = ("is what I am solving still the outcome first asked for", "can this gap be tested now, or am I waiting",
-                 "what breaks if this criterion or process is deleted?")
+    questions = ("which Captain words does this serve", "what breaks without it",
+                 "which single premise would make the task unneeded, and what cheap test checks it now?")
     failed = "- F1 Material: gap\n- F2 Needs decision: another gap"
     amendments = [(n, f"2026-10-{15 + n}", "AC-1", "none") for n in (1, 2, 3, 4)]
 
@@ -373,7 +373,7 @@ class StepBackTest(Fixture):
                 if expected:
                     self.assertEqual(len(out.splitlines()), 1)
                     self.assert_questions(out)
-                    self.assertEqual(len(out.split()), 51)
+                    self.assertEqual(len(out.split()), 46)
 
     def test_fenced_findings_and_nonblocking_findings_do_not_count(self):
         for finding in (f"```md\n{self.failed}\n```", "- F2 Deferred risk: later", "- F3 Polish: wording"):
@@ -753,6 +753,118 @@ class SymptomRoundsTest(Fixture):
                     code, out = run(self.state, SLUG)
                     self.assertEqual(code, 1, out)
                     self.assertIn(MECHANISM, out)
+
+
+class BudgetTest(Fixture):
+    def record(self, stage, number, header=True, commit=True):
+        path = self.state / f"{SLUG}/dispatch/{stage}-{number}.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f"# {stage}-{number}\nDispatched: 2026-11-11\n"
+                        + ("Budget: One cycle per stage.\n" if header else "")
+                        + f"Symptom: failure {number}\n## Checklist\nwork\n")
+        if commit:
+            self.put(self.body)
+        return path
+
+    def seed(self, value="One cycle per stage.", extra=""):
+        self.body = task() + f"\n## Budget\n- {value}\n" + extra
+        self.put(self.body)
+
+    def test_fixed_forms_are_narrow_and_case_insensitive(self):
+        from role_triggers import budget_bound, budget_text
+        for value, expected in (("ONE cycle per stage.", (1, 1)),
+                ("10 cycles per stage; bounded work", (10, 10)),
+                ("two implementation and three validation cycles", (2, 3)),
+                ("one implementation and 1 validation cycle.", (1, 1))):
+            self.assertEqual(tuple(budget_bound(value).values()), expected)
+        for value in ("one round per stage", "one package PR", "at most 3 days", "eleven cycles per stage",
+                      "one cycle per stagecoach", "one implementation and two validation cyclesextra"):
+            self.assertIsNone(budget_bound(value), value)
+        self.assertEqual(budget_text("## Budget and stop condition\nBudget: one cycle per stage.\n"),
+                         "one cycle per stage.")
+
+    def test_pending_overrun_holds_and_an_amendment_clears_it(self):
+        self.seed()
+        self.record("ideation", 1)
+        self.record("implementation", 1)
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 0, out)
+        self.assertIn("Budget: One cycle per stage.; spent implementation 1, validation 0", out)
+        pending = self.record("implementation", 2, commit=False)
+        code, out = run(self.state, SLUG, "--pending", pending)
+        self.assertEqual(code, 1, out)
+        self.assertIn("budget exceeded; hold for the Captain", out)
+        self.assertIn("Symptom: failure 2", out)
+        for q in StepBackTest.questions:
+            self.assertIn(q, out)
+        self.assertEqual(run(self.state, SLUG)[0], 0)
+        self.put(self.body)
+        self.assertEqual(run(self.state, SLUG)[0], 1)
+        self.body += ("\n## Captain amendments\n### Amendment 1 — 2026-11-11, chat\n"
+                      "Captain: 「approved」\nAsked: approve two cycles per stage\n"
+                      "Budget: two cycles per stage\nSupersedes: none\n")
+        self.put(self.body)
+        self.assertEqual(run(self.state, SLUG)[0], 0)
+        self.assertIn("Budget: two cycles per stage; spent implementation 2", run(self.state, SLUG)[1])
+
+    def test_amendment_needs_the_same_entry_verbatim_words(self):
+        self.seed()
+        self.record("implementation", 2)
+        for fields in ("Asked: more work\nBudget: two cycles per stage", "Asked: TWO cycles per stage\nBudget: two cycles per stage",
+                       "Design: two cycles per stage\nBudget: two cycles per stage",
+                       "Asked: two cycles per stage\n```\nBudget: two cycles per stage\n```",
+                       "Asked: two cycles per stage\n### Amendment 2 — 2026-11-11, chat\nBudget: two cycles per stage"):
+            body = self.body + "\n## Captain amendments\n### Amendment 1 — 2026-11-11, chat\nCaptain: 「ok」\n" + fields
+            self.put(body)
+            self.assertEqual(run(self.state, SLUG)[0], 1, fields)
+        self.put(self.body + "\n## Captain amendments\n### Amendment 1 — 2026-11-11, chat\n"
+                 "Budget: two cycles per stage\nCaptain: 「two cycles per stage」\nSupersedes: none\n")
+        self.assertEqual(run(self.state, SLUG)[0], 0)
+
+    def test_old_first_stage_record_never_opts_in_with_later_headers(self):
+        self.seed()
+        self.record("ideation", 1, header=False)
+        self.record("implementation", 2)
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 0, out)
+        self.assertIn("spent implementation 2", out)
+        self.assertNotIn("budget exceeded", out)
+
+    def test_stage_bounds_and_followups_are_independent(self):
+        self.seed("two implementation and one validation cycle")
+        self.record("implementation", 2)
+        self.record("validation", 1)
+        self.record("implementation", "2-message-9")
+        self.assertEqual(run(self.state, SLUG)[0], 0)
+        self.record("validation", 2)
+        self.assertEqual(run(self.state, SLUG)[0], 1)
+
+    def test_first_record_is_chronological_and_pending_keeps_its_slot(self):
+        self.seed()
+        first = self.record("implementation", 1, header=False)
+        self.record("ideation", 1)
+        self.record("implementation", 2)
+        self.assertEqual(run(self.state, SLUG)[0], 0)
+        self.assertEqual(run(self.state, SLUG, "--pending", first)[0], 0)
+
+    def test_uncountable_budget_prints_but_does_not_hold(self):
+        self.seed("at most 3 days")
+        self.record("implementation", 9)
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 0, out)
+        self.assertIn("Budget: at most 3 days; spent implementation 9, validation 0; states no cycles", out)
+
+    def test_countable_budget_removes_advisory_but_preserves_role_calls(self):
+        self.seed("ten cycles per stage")
+        self.put(self.body + validations(StepBackTest.failed, StepBackTest.failed))
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("before the next step", out)
+        self.put(self.body + validations(*([StepBackTest.failed] * 3)))
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 1, out)
+        self.assertIn(MECHANISM, out)
+        self.assertNotIn("budget exceeded", out)
 
 
 if __name__ == "__main__":
