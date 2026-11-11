@@ -180,6 +180,16 @@ class RolloutTest(unittest.TestCase):
                 self.assertIn(f"laws: {self.old} pin owed", run.stdout)
                 self.content(self.repo, path, self.latest, "same laws\n")
 
+    def test_both_debts_print_readme_sync_then_merge_then_pin_move(self):
+        self.row("both", pin=self.old)
+        self.content(self.repo, self.workflow, self.latest, self.readme("0.38.1") + "Changed rule.\n")
+        self.content(self.repo, self.laws[0], self.latest, "changed laws\n")
+        run = self.run_rollout()
+        self.assertEqual(run.returncode, 1, run.stdout + run.stderr)
+        self.assertEqual(run.stdout,
+                         f"fleet/both docs/dev2 README:0.38.0 released:0.38.1 sync owed; laws: {self.old} pin owed"
+                         "; sync README, merge, then move pin\n")
+
     def test_unknown_pin_is_owed_and_missing_install_is_not(self):
         self.row("unknown", pin="3" * 40)
         self.row("uninstalled")

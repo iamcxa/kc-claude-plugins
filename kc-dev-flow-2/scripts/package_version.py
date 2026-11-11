@@ -157,8 +157,9 @@ def rollout(listing):
             owed = workflow_text(gh.content(UPSTREAM, WORKFLOW, tags[have])) != workflow_text(gh.content(UPSTREAM, WORKFLOW, released))
             branch = state[0] if state else "spacedock-state/" + Path(directory).name
             laws, pin_owed = laws_status(gh, repo, branch, released, set(tags.values()))
+            order = "; sync README, merge, then move pin" if owed and pin_owed else ""
             print(f"{repo} {directory} README:{'.'.join(marker.groups())} released:{'.'.join(map(str, version))} "
-                  f"{'sync owed' if owed else 'no sync owed'}; laws: {laws}")
+                  f"{'sync owed' if owed else 'no sync owed'}; laws: {laws}{order}")
             failed |= owed or pin_owed
         except (Unreadable, KeyError, TypeError) as error:
             print(f"{repo} {directory} unreadable: {diagnostic(error)}")
