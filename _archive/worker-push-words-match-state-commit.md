@@ -3,7 +3,7 @@ title: What a worker is told about pushing matches what the state commit command
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: done
 gates:
     version: 1
     records:
@@ -65,6 +65,9 @@ gates:
                 state: consumed
 started: 2026-11-11T01:19:15Z
 worktree: .worktrees/spacedock-ensign-worker-push-words-match-state-commit
+verdict: REJECTED
+completed: 2026-11-11T04:10:24Z
+archived: 2026-11-11T04:10:24Z
 ---
 
 ## Scope
