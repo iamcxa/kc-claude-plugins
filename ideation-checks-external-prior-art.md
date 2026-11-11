@@ -15,6 +15,10 @@ gates:
                 id: briefing:ideation-checks-external-prior-art:backlog:attempt-1:revision-1
                 digest: sha256:35a98c1f4614958293dd54cd4bf316baa20ed857f05d0ed464c7dbd072fd3671
                 room-ref: ./ideation-checks-external-prior-art/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-11T01:57:14.181398Z"
+                reason: The Captain answered the joint question with a question of his own, then chose 「前兩張合併，查現成做法獨立（建議）」 (host question dialog, 2026-11-11), so the joint backlog question no longer matches what is being decided.
 ---
 
 ## Scope
