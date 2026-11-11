@@ -1,8 +1,5 @@
 {
-  "pending": [
-    "/tmp/validate-denial-amendment2-1hc9zlqz",
-    "/tmp/denial-amendment2-acceptance.Q1lWQB"
-  ],
+  "pending": [],
   "moved_initial_path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/validate-denial-amendment2-1hc9zlqz",
   "preserved": [
     {
@@ -10,5 +7,12 @@
       "reason": "Existing FO-owned required replay input; not created by this run."
     }
   ],
-  "rule": "Remove exact owned paths after evidence commit, then commit observed cleanup."
+  "rule": "Remove exact owned paths after evidence commit, then commit observed cleanup.",
+  "removed": [
+    "/tmp/validate-denial-amendment2-1hc9zlqz",
+    "/tmp/denial-amendment2-acceptance.Q1lWQB"
+  ],
+  "evidence_committed_before_removal": "c08fe98c1af3b60432eb92877675c6fa58894a34",
+  "own_scratch_left": [],
+  "initial_path_status": "moved into /tmp before validation; absent after cleanup"
 }

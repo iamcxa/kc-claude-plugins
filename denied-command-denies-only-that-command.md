@@ -579,3 +579,5 @@ This complete report supersedes the earlier implementation reports for the curre
 ### Summary
 
 Cycle 2 verdict: PASSED at d22a01d5e8d334f6f4e8a2c5853f8f6abeddc89a within the accepted source/runtime limits, with F1 Polish open. Independent native-log reread, live bytes, five evidence falsifiers and four-step acceptance pass; extra amendment prose is disclosed without a demonstrated value or authority loss. Product and prior reports remain unchanged; FO retains Captain-step rerun, record-form disposition and delivery.
+
+Cleanup completed after evidence commit c08fe98c1af3b60432eb92877675c6fa58894a34: removed /tmp/validate-denial-amendment2-1hc9zlqz and /tmp/denial-amendment2-acceptance.Q1lWQB by exact path; both verified absent. No scratch created by this run remains. Existing /tmp/denial-replay-b21-fo and prior workers’ scratch remain because they are not owned by this run and the frozen acceptance input is still required.
