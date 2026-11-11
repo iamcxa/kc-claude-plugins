@@ -213,3 +213,38 @@ This task runs alone as a Captain-approved priority exception. It has no other b
 ### Summary
 
 The check will read "passed its ideation gate" from the task's stage, using the native reader 0.39.0 already calls, and will keep refusing when that stage cannot be read. A five-line prototype releases 10 past-ideation tasks across this workflow and qnow, keeps all 17 in-ideation tasks refused, and changes nothing else across 173 tasks. ADR 0077 already confines the rule to ideation and needs no change. Two decisions return to the Captain: how to read the stop condition for `adr-required-statement`, which has an unrelated defect 0.38.1 also refuses, and whether to widen the observer's historical-copy sentence so archive reports stop flagging pre-0.39.0 designs.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design within the three-file scope.
+  Candidate `78905b08d6f38817ccdda5d2e91be478fd75dfc7` on `spacedock-ensign/worth-questions-asked-only-before-the-design-gate`, based on freshly fetched `origin/main` `44f11855264bde64da284ffa9c1fef70e8ac38dd`; no version bump or new decision record (existing ADR 0077 already covers ideation-only answers).
+- DONE: AC-1: the three Bite tasks lose the Worth diagnostic and otherwise equal 0.38.1.
+  `implementation/evidence.json` replay.bite: exits 1/0/0; the first retains its existing Supersedes defect. Reverting the stage hunk restores the Worth diagnostic on all three.
+- DONE: AC-2: frontmatter stage cases exercise the real Spacedock reader.
+  229 tests, 4 existing historical cases skipped; new tests cover ideation with/without Design, backlog, absent/empty stage, implementation, validation (including quoted/commented YAML), done. Reverting the stage rule fails 4 later-stage cases; never requiring Worth fails 5 earlier-stage cases.
+- DONE: AC-3: an unreadable stage produces one reader error and no Worth diagnostic.
+  A failing executable exits 23; dropping the error append fails its test. All three source mutations were executed with python3 -B and no script bytecode caches.
+- DONE: AC-4: differential replay covers both pinned snapshots and 173 tasks.
+  Exactly the 10 designed later-stage tasks lose the line; 17 remain refused, all ideation; 0 other differences and 0 gained lines. An injected unrelated output line is rejected; per-task raw outputs and exits are in evidence.json.
+- DONE: AC-5 locally owned scope and title checks.
+  `git diff --name-only origin/main...HEAD` lists the checker, its tests and observer skill; prepared title is `fix(kc-dev-flow-2): require Worth questions before the design gate`. Injected extra-path/non-fix-title controls are rejected.
+- DONE: AC-6: widen one observer sentence and replay the historical design-check paragraph.
+  Manual paragraph replay at state `d57ed9b75ba5` with event-time README `04809c3c6146c9f4a8f2f0b916fe84c94bfaa1a3`: current-schema incompatibility; restoring the old sentence yields violation. This is not a full independent Observer run; raw check output, both sentences and the policy verdicts are in evidence.json.
+- DONE: Repository skill lint, ADR lint, number guards and comment_ratio.py checks.
+  All exit 0; workflow 6008/6008 words; 70 ADRs checked; 38 added code lines, 0 comment lines (0.0%, maximum 5%). Number guards warns its state fetch failed, so reservations may be stale; this task adds no ADR/migration or number reservation.
+- DONE: Affected-document dispositions from doc_impact.py.
+  ADR 0041 unaffected: seed bounds unchanged; ADR 0057 unaffected: amendment-word comparison unchanged; ADR 0076 unaffected: story checks unchanged; ADR 0077 unaffected: already ideation-only and old-record-exempt. Each path and reason is in evidence.json.documents; observer sentence updated.
+- DONE: Reading-load and temporary-surface check.
+  Released clean-task output falls 28 to 13 words; other released tasks lose 19 words; observer adds 6 words at archive; shared workflow unchanged. The two new native tests explicitly skip without Spacedock (CI currently installs it later); they ran locally, and a no-CLI probe passes with exactly those two skipped. No enduring scaffold was added.
+- DONE: Prepare PR text and retain evidence for FO.
+  `/tmp/impl-worth-questions-asked-only-before-the-design-gate-pr.md`; committed evidence is `worth-questions-asked-only-before-the-design-gate/implementation/evidence.json`. CI cost not measured; no CI configuration changed. Remove the eight listed /tmp logs and the ignored code scratch after this evidence commit, preserving the PR file.
+- SKIPPED: One Draft PR from a branch off origin/main.
+  No PR opened: no product push grant; FO owns product push and Draft PR creation from the prepared text.
+- SKIPPED: Full kc-dev-flow-2 test commands on the result of merging the candidate with main (AC-5).
+  Delegated to FO before the merge ask, with the real Spacedock reader installed; not run here and not claimed green.
+- SKIPPED: RoboRev and hosted CI.
+  FO owns the local review and hosted checks; not run here and not claimed clean.
+
+### Summary
+
+The native stage reader now releases approved later-stage designs while preserving ideation/backlog and unreadable-stage refusal; the historical observer sentence follows the two approved compatibility decisions. The local candidate and acceptance evidence are committed; FO retains publication, independent review, hosted CI and full merge-result validation.
