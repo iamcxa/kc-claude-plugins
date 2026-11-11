@@ -241,6 +241,11 @@ Superseded text:
 
 **AC-9** The list exists at the D2 home with the rows he approves. Evidence: `git show origin/spacedock-state/dev2:.notes/adopters.md` (or the chosen path) lists them, and the AC-8 run reads that file. Falsifier: a row in the AC-8 output that is not in the file, or the reverse.
 
+### Amendment 2 — 2026-11-11, host question dialog
+Captain: 「比對不動，把順序寫在那一行（建議）」 (host question dialog, 2026-11-11)
+Asked: 「#838（發版後檢查採用 repo 誰落後）被審查工具指出：報告會在流程說明檔還沒同步前就把法規釘選報成「該移」，而先移釘選會讓新版法規檢查誤判舊說明檔底下的紀錄。要怎麼處理？我建議：比對方式不動，兩樣都落後時在那一行明寫「先同步說明檔，合併後再移釘選」，並加一項新的驗收條件；原本第四項驗收條件不改。」
+Supersedes: none
+
 ## Stage Report: ideation
 
 - DONE: Per the Captain's Result line: design the step that, for a release, lists each known adopter's workflow README marker and laws pin against the released tag and reports those behind, and say where the list of adopters lives; measure the qnow laws trial read-only (gh run list --repo iamcxa/qnow --workflow dev2-laws.yml: runs, durations, failures since 2026-11-10) and present default install and pin-follows-release versus Captain's-word-only side by side with that cost for him to pick at the gate, saying what GitHub bills for those runs only from a source you read
