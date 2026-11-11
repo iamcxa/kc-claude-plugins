@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-11-11T14:24:19Z
 worktree: .worktrees/spacedock-ensign-worth-questions-asked-only-before-the-design-gate
-pr: iamcxa/kc-claude-plugins#849
+pr: pr-merge:849
 ---
 
 ## Scope
