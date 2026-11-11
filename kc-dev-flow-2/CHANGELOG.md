@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.39.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.38.1...kc-dev-flow-2-v0.39.0) (2026-11-11)
+
+
+### Features
+
+* **kc-dev-flow-2:** hold task budget overruns for the Captain ([#841](https://github.com/iamcxa/kc-claude-plugins/issues/841)) ([571a7bd](https://github.com/iamcxa/kc-claude-plugins/commit/571a7bd8a24ce08fac149fbcc91c4561610834c7))
+* **kc-dev-flow-2:** report adopter release rollout and laws drift ([#838](https://github.com/iamcxa/kc-claude-plugins/issues/838)) ([546a136](https://github.com/iamcxa/kc-claude-plugins/commit/546a136386c94c58e430c91a6f3457b38bd73880))
+* **kc-dev-flow-2:** require story records in journey workflows ([#843](https://github.com/iamcxa/kc-claude-plugins/issues/843)) ([4947482](https://github.com/iamcxa/kc-claude-plugins/commit/4947482cf8340058619495f7f2f5a2d145ba0464))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** allow reruns past repaired ruling history ([#844](https://github.com/iamcxa/kc-claude-plugins/issues/844)) ([eeee002](https://github.com/iamcxa/kc-claude-plugins/commit/eeee002303aca7c14237258253cd9318a5b3248c))
+* **kc-dev-flow-2:** complete Story test Worth questions fixture ([#846](https://github.com/iamcxa/kc-claude-plugins/issues/846)) ([539350a](https://github.com/iamcxa/kc-claude-plugins/commit/539350a6cb97a88d5fd34c561c53449e079a40ee))
+* **kc-dev-flow-2:** send Codex workers the denial reason through Paseo ([#842](https://github.com/iamcxa/kc-claude-plugins/issues/842)) ([ad81736](https://github.com/iamcxa/kc-claude-plugins/commit/ad817367b354b37c73498bb3484eb052b338829b))
+
 ## [0.38.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.38.0...kc-dev-flow-2-v0.38.1) (2026-11-11)
 
 

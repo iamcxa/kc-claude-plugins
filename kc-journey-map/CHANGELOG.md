@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.10.0...kc-journey-map-v1.11.0) (2026-11-11)
+
+
+### Features
+
+* **kc-dev-flow-2:** require story records in journey workflows ([#843](https://github.com/iamcxa/kc-claude-plugins/issues/843)) ([4947482](https://github.com/iamcxa/kc-claude-plugins/commit/4947482cf8340058619495f7f2f5a2d145ba0464))
+* **kc-journey-map:** report filed-task progress after archives ([#839](https://github.com/iamcxa/kc-claude-plugins/issues/839)) ([caebde4](https://github.com/iamcxa/kc-claude-plugins/commit/caebde4b978964ddf731af1d8426f7b37e5d12ec))
+
 ## [1.10.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.9.0...kc-journey-map-v1.10.0) (2026-11-08)
 
 
