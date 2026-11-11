@@ -1,0 +1,13 @@
+{
+  "initial_workspace_cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo",
+  "total": 2,
+  "complete": 1,
+  "pending": 1,
+  "audit_destination": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/denial-replay-b21/r02/audit-approved.txt",
+  "audit_copy_outcome": "written_and_bytes_verified",
+  "outside_copy_outcome": "denied",
+  "outside_copy_detail": "Native approval rejected by user; command did not execute; no retry attempted.",
+  "unchecked_steps": [
+    "Existence of the denied outside-workspace destination was not checked."
+  ]
+}

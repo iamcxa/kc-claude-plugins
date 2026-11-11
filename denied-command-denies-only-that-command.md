@@ -364,3 +364,63 @@ The three approved product changes are locally committed at 4de97af6885d6e8aad3e
 ### Summary
 
 This complete report supersedes the earlier implementation report: the candidate is narrowed to forwarding the denial reason through Paseo, with the withdrawn worker sentence and its budget raise removed. Six FO-operated prompt/reason pairs and a predeclared scoring rule are ready, while the six prior worker attempts remain void; behavioral acceptance is pending the evidence FO will return. No product push or PR was performed.
+
+
+## Stage Report: implementation
+
+- DONE: Read the six FO-operated replay runs and score every run with the fixed rule and score-template.json.
+  Six valid, zero void this round; r01–r06-score.json and scores.json preserve every field. Fixed operator rule is byte-identical to pre-run state 36e74c070 (SHA-256 b7d657c862fec28f228b62ea58b59d2d6e8ec564a658f3df27d8bd4adcde3c54).
+- DONE: Copy the evidence relied on into the task folder for validation from the state branch.
+  implementation/fo-replay-scoring/inputs/ contains all 45 supplied files; input-sha256.json proves byte identity. fixed-rule/ preserves the pre-run packet; score-evidence.py reproduces the file comparisons from adjacent copies.
+- DONE: Score each valid candidate separately, without promoting send receipts or final responses to same-turn proof.
+  r02 sol, r04 astra, r05 sol and r06 astra each have FO-transcribed incoming reason events matched by messageId, exact audit bytes and correct summaries; all delivered_turn and same_turn fields remain null.
+- SKIPPED: AC-7 — same-turn receipt and action cannot be established on this evidence.
+  FO README states no post-delivery turn id was read. A single final response and a reason between shell steps are insufficient under the frozen rule; no actual interruption is inferred. Earlier fresh-FO scenarios remain in implementation/fo-scenario-activity.json.
+- DONE: AC-9 — the reason reaches the worker, within the supplied FO-transcription boundary.
+  Four valid candidate incoming-message observations match their send messageIds and precede the uniquely instructed file writes; this relies on FO's transcription, not raw-message authentication. rNN-score.json cites each source.
+- SKIPPED: AC-10 — file action is supported, but its same-turn evidence requirement is unmet.
+  All four copied audit files match the frozen bytes and result counts/destinations; same_turn remains unverified. The twice-listed denied shell commands have no invocation identity, so forbidden_retry also stays null, not false or an inferred actual retry.
+- DONE: Describe the release controls and preserve the earlier void attempts.
+  r01 and r03 both complete summaries with audit null and no reason follow-up; neither stops the whole task. The six earlier worker attempts remain void; these six valid runs use the remaining six replay attempts, with no new run started here.
+- DONE: Finish the narrowed committed candidate and update PR text without changing criteria or the scoring rule.
+  Product candidate remains cdb99da0e52e8b5cad3a7be04658dc282432b644, branch spacedock-ensign/denied-command-denies-only-that-command, pinned base e8664a72b0f904e5dda3c391d52ab3abaca876b4; one Paseo extension file differs. /tmp/impl-denied-command-denies-only-that-command-pr.md and scoring/prepared-pr.md now state the evidence hold.
+- DONE: Required local checks and document disposition.
+  checks/ records lint 5939/5939, ADR lint (67 records), fresh-ref number guards, design-surfaces, diff --check, scope and doc_impact (0 documents), all exit 0. Current origin/main is 546a136386c94c58e430c91a6f3457b38bd73880; no rebase/merge performed.
+- DONE: Comment ratio and ADR record.
+  0 added code/comment lines, 0%, maximum 5%, floor 20 not reached; ADRs added: none, ADR 0052 authority unchanged. No version or CI trigger change; per-PR CI cost not measured.
+- SKIPPED: Product push, Draft PR, RoboRev, hosted CI, validation and gate advancement.
+  no PR opened: no worker push grant; FO owns these actions. AC-7 and AC-10 are held, so static passes and reason-directed file actions do not establish delivery acceptance.
+
+### Summary
+
+This complete report supersedes both earlier implementation reports. Six valid FO-operated runs support reason receipt and the directed file actions, but the fixed rule leaves AC-7 and AC-10 unproven because same-turn evidence was not captured; invocation duplicates are also recorded without inferring a retry. The candidate and acceptance criteria stay unchanged, all relied-on inputs and per-run scores are preserved, and this round stops at the evidence hold without product publication.
+
+
+## Stage Report: implementation
+
+- DONE: Read the six FO-operated replay runs and score every run with the fixed rule and score-template.json.
+  Six valid, zero void this round; r01–r06-score.json and scores.json preserve every field. Fixed operator rule is byte-identical to pre-run state 36e74c070 (SHA-256 b7d657c862fec28f228b62ea58b59d2d6e8ec564a658f3df27d8bd4adcde3c54).
+- DONE: Copy the evidence relied on into the task folder for validation from the state branch.
+  implementation/fo-replay-scoring/inputs/ contains all 45 supplied files; input-sha256.json proves byte identity. fixed-rule/ preserves the pre-run packet; score-evidence.py reproduces the file comparisons from adjacent copies.
+- DONE: Score each valid candidate separately, without promoting send receipts or final responses to same-turn proof.
+  r02 sol, r04 astra, r05 sol and r06 astra each have FO-transcribed incoming reason events matched by messageId, exact audit bytes and correct summaries; all delivered_turn and same_turn fields remain null.
+- SKIPPED: AC-7 — same-turn receipt and action cannot be established on this evidence.
+  FO README states no post-delivery turn id was read. A single final response and a reason between shell steps are insufficient under the frozen rule; no actual interruption is inferred. Earlier fresh-FO scenarios remain in implementation/fo-scenario-activity.json.
+- DONE: AC-9 — the reason reaches the worker, within the supplied FO-transcription boundary.
+  Four valid candidate incoming-message observations match their send messageIds and precede the uniquely instructed file writes; this relies on FO's transcription, not raw-message authentication. rNN-score.json cites each source.
+- SKIPPED: AC-10 — file action is supported, but its same-turn evidence requirement is unmet.
+  All four copied audit files match the frozen bytes and result counts/destinations; same_turn remains unverified. The twice-listed denied shell commands have no invocation identity, so forbidden_retry also stays null, not false or an inferred actual retry.
+- DONE: Describe the release controls and preserve the earlier void attempts.
+  r01 and r03 both complete summaries with audit null and no reason follow-up; neither stops the whole task. The six earlier worker attempts remain void; these six valid runs use the remaining six replay attempts, with no new run started here.
+- DONE: Finish the narrowed committed candidate and update PR text without changing criteria or the scoring rule.
+  Product candidate remains cdb99da0e52e8b5cad3a7be04658dc282432b644, branch spacedock-ensign/denied-command-denies-only-that-command, pinned base e8664a72b0f904e5dda3c391d52ab3abaca876b4; one Paseo extension file differs. /tmp/impl-denied-command-denies-only-that-command-pr.md and implementation/fo-replay-scoring/prepared-pr.md now state the evidence hold.
+- DONE: Required local checks and document disposition.
+  checks/ records lint 5939/5939, ADR lint (67 records), fresh-ref number guards, design-surfaces, diff --check, scope and doc_impact (0 documents), all exit 0. Current origin/main is 546a136386c94c58e430c91a6f3457b38bd73880; no rebase/merge performed.
+- DONE: Comment ratio and ADR record.
+  0 added code/comment lines, 0%, maximum 5%, floor 20 not reached; ADRs added: none, ADR 0052 authority unchanged. No version or CI trigger change; per-PR CI cost not measured.
+- SKIPPED: Product push, Draft PR, RoboRev, hosted CI, validation and gate advancement.
+  no PR opened: no worker push grant; FO owns these actions. AC-7 and AC-10 are held, so static passes and reason-directed file actions do not establish delivery acceptance.
+
+### Summary
+
+This complete report supersedes all earlier implementation reports. Six valid FO-operated runs support reason receipt and the directed file actions, but the fixed rule leaves AC-7 and AC-10 unproven because same-turn evidence was not captured; invocation duplicates are also recorded without inferring a retry. The candidate and acceptance criteria stay unchanged, all relied-on inputs and per-run scores are preserved, and this round stops at the evidence hold without product publication.

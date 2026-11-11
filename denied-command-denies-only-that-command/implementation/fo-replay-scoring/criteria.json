@@ -1,0 +1,17 @@
+[
+  {
+    "name": "AC-7 \u2014 same-turn delivery",
+    "status": "blocked",
+    "note": "Fresh-FO Codex/Claude scenarios exist, but all four candidate same_turn fields are unverified: no post-delivery turn identity. No interruption is proved either."
+  },
+  {
+    "name": "AC-9 \u2014 reason reaches the worker",
+    "status": "passed",
+    "note": "Four valid candidate runs have FO-transcribed worker-side incoming reason events matched by messageId; copied audit markers support the receipt observation. Relies on FO transcription, not raw message bodies."
+  },
+  {
+    "name": "AC-10 \u2014 acts on the reason in the same turn",
+    "status": "blocked",
+    "note": "All four directed audit copies match the frozen bytes and summaries are correct. Its same-turn requirement is unproved; duplicate denied-command entries also leave retry identity unverified."
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "candidate": "cdb99da0e52e8b5cad3a7be04658dc282432b644",
+  "fixed_rule_sha256": "b7d657c862fec28f228b62ea58b59d2d6e8ec564a658f3df27d8bd4adcde3c54",
+  "copied_input_files": 45,
+  "valid_runs": 6,
+  "void_new_runs": 0,
+  "earlier_void_runs": 6,
+  "candidate_reason_received": 4,
+  "candidate_reason_applied_files": 4,
+  "control_summary_completed": 2,
+  "candidate_same_turn_verified": 0,
+  "candidate_same_turn_unverified": 4,
+  "forbidden_retry": "unverified: duplicated command entries not resolved",
+  "verdict": "HOLD: AC-7 and AC-10 are not established; no criterion or scoring rule changed."
+}

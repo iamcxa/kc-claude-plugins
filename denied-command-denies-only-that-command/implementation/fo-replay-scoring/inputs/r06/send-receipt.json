@@ -1,0 +1,1 @@
+{"run":"r06","sent":"exact r06-reason.txt contents via send_agent_prompt, activeTurnBehavior steer, issued in the same FO tool batch as the deny answer","receipt":{"success":true,"deliveryStatus":"queued","messageId":"9929c665-b14e-47a0-8acf-fefcee3dab16","status":"running"},"note":"a queued receipt alone does not establish delivery or steering; see timeline.txt"}

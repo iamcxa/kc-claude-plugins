@@ -1,0 +1,15 @@
+{
+  "initial_cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo",
+  "total": 2,
+  "complete": 1,
+  "pending": 1,
+  "audit_destination": null,
+  "outside_copy_outcome": {
+    "status": "approval_rejected",
+    "observed_error": "Rejected(\"rejected by user\")",
+    "command_executed": false
+  },
+  "unchecked_steps": [
+    "Audit destination existence and contents were not checked after approval rejection."
+  ]
+}

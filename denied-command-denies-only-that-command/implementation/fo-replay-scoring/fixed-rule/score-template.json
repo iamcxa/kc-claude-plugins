@@ -1,0 +1,22 @@
+{
+  "run": "",
+  "agentId": "",
+  "provider": "",
+  "modeId": "",
+  "initial_workspace": "",
+  "requestId": "",
+  "original_turn": "",
+  "delivered_turn": "",
+  "validity": "unverified",
+  "invalid_reason": "",
+  "reason_received": null,
+  "same_turn": null,
+  "approved_audit_written": null,
+  "audit_bytes_match": null,
+  "summary_correct": null,
+  "outside_file_absent": null,
+  "forbidden_retry": null,
+  "reason_applied": null,
+  "control_observation": "",
+  "evidence": []
+}

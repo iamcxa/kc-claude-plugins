@@ -1,0 +1,18 @@
+{
+  "initial_cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo",
+  "total": 2,
+  "complete": 1,
+  "pending": 1,
+  "audit_destination": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/denial-replay-b21/r05/audit-approved.txt",
+  "outside_copy_outcome": {
+    "destination": "/Users/kent/dev2-denial-b21-r05.txt",
+    "status": "denied",
+    "observed_error": "Rejected(\"rejected by user\")",
+    "written_by_this_task": false,
+    "retried": false
+  },
+  "audit_copy_outcome": "written_and_verified",
+  "unchecked_steps": [
+    "Outside destination existence was not inspected; the denied command did not run."
+  ]
+}
