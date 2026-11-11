@@ -1,0 +1,8 @@
+{
+  "candidate": "6da9a765ee04e1e2c7836517ba01f75b0ea91d73",
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "origin_main": "546a136386c94c58e430c91a6f3457b38bd73880",
+  "merge_base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "state": "497b9f328396f587141bc2da36a03c61de4393c3",
+  "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3"
+}

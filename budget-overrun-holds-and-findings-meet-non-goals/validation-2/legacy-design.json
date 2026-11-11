@@ -1,0 +1,22 @@
+[
+  {
+    "version": "base",
+    "exit": 0,
+    "stdout": "old-design.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+    "stderr": "",
+    "sha256": "6ac5b85841bf38f2e61389c8c79a3a495c3736fb50c047d1abab9260dc7617e4",
+    "state_revision": "497b9f328396f587141bc2da36a03c61de4393c3",
+    "source": "budget-overrun-holds-and-findings-meet-non-goals.md",
+    "unchanged": true
+  },
+  {
+    "version": "candidate",
+    "exit": 1,
+    "stdout": "old-design.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\nscope check not run: stage is validation, not ideation\n",
+    "stderr": "",
+    "sha256": "6ac5b85841bf38f2e61389c8c79a3a495c3736fb50c047d1abab9260dc7617e4",
+    "state_revision": "497b9f328396f587141bc2da36a03c61de4393c3",
+    "source": "budget-overrun-holds-and-findings-meet-non-goals.md",
+    "unchanged": true
+  }
+]

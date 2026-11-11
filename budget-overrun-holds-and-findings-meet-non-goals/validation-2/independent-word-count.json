@@ -1,0 +1,40 @@
+[
+  {
+    "moment": "workflow",
+    "base": 5939,
+    "candidate": 6008
+  },
+  {
+    "moment": "ideation",
+    "base": 643,
+    "candidate": 687
+  },
+  {
+    "moment": "at",
+    "words": 11
+  },
+  {
+    "moment": "uncountable",
+    "words": 14
+  },
+  {
+    "moment": "hold",
+    "words": 88
+  },
+  {
+    "moment": "old_idle",
+    "words": 51
+  },
+  {
+    "moment": "new_idle",
+    "words": 11
+  },
+  {
+    "moment": "total",
+    "words": 15
+  },
+  {
+    "moment": "mixed",
+    "words": 17
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "archive": {
+    "dev2": {
+      "tasks": 58,
+      "broad_countable": 0,
+      "broad_held": 0,
+      "fixed_countable": 0,
+      "fixed_held": 0
+    },
+    "qnow": {
+      "tasks": 7,
+      "broad_countable": 7,
+      "broad_held": 7,
+      "fixed_countable": 0,
+      "fixed_held": 0
+    },
+    "relay": {
+      "tasks": 32,
+      "broad_countable": 23,
+      "broad_held": 11,
+      "fixed_countable": 21,
+      "fixed_held": 10
+    },
+    "web": {
+      "tasks": 24,
+      "broad_countable": 20,
+      "broad_held": 5,
+      "fixed_countable": 0,
+      "fixed_held": 0
+    }
+  },
+  "relay_first": {
+    "rev": "42317d0c14d24228ddf08b6dd51f6575fc139bf4",
+    "pending": "comment-sent-when-added-relay/dispatch/implementation-2.md",
+    "base_exit": 0,
+    "base": "role triggers: 0 event(s) read at 42317d0c14d24228ddf08b6dd51f6575fc139bf4, each with a call or a waiver.",
+    "candidate_exit": 1,
+    "candidate": "next: comment-sent-when-added-relay budget exceeded; hold for the Captain. Symptom: PR #491 CI red at 20b316da plus contract additions since implementation-1. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 0"
+  }
+}

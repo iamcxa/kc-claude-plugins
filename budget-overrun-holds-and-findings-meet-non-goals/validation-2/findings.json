@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "medium",
+    "title": "舊設計缺少 Worth questions 章節仍會被拒絕",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 1148,
+    "detail": "Deferred risk: historical design base exit 0 / candidate exit 1. AC-9 promises no old-design exemption. A new compatibility or backfill requirement needs Captain decision.",
+    "fix": "保留此限制供交付裁決；本修補不回填或豁免歷史設計。",
+    "status": "confirmed"
+  }
+]

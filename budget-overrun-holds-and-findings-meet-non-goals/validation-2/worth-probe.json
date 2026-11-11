@@ -1,0 +1,440 @@
+[
+  {
+    "case": "plain-missing",
+    "version": "candidate",
+    "exit": 1,
+    "expected": 1,
+    "stdout": "task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\nscope check not run: no closed backlog approval\n",
+    "stderr": "",
+    "native": {
+      "command": "read",
+      "path": "/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/task.md",
+      "total_lines": "14",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Worth probe",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "7",
+          "lines": "3"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "10",
+          "lines": "3"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "13",
+          "lines": "2"
+        }
+      ]
+    },
+    "unchanged": true
+  },
+  {
+    "case": "plain-missing",
+    "version": "rejected",
+    "exit": 1,
+    "expected": 1,
+    "stdout": "task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\nscope check not run: no closed backlog approval\n",
+    "stderr": "",
+    "native": {
+      "command": "read",
+      "path": "/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/task.md",
+      "total_lines": "14",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Worth probe",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "7",
+          "lines": "3"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "10",
+          "lines": "3"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "13",
+          "lines": "2"
+        }
+      ]
+    },
+    "unchanged": true
+  },
+  {
+    "case": "commented-status-missing",
+    "version": "candidate",
+    "exit": 1,
+    "expected": 1,
+    "stdout": "task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\nscope check not run: stage is unknown, not ideation\n",
+    "stderr": "",
+    "native": {
+      "command": "read",
+      "path": "/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/task.md",
+      "total_lines": "14",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Worth probe",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "7",
+          "lines": "3"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "10",
+          "lines": "3"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "13",
+          "lines": "2"
+        }
+      ]
+    },
+    "unchanged": true
+  },
+  {
+    "case": "commented-status-missing",
+    "version": "rejected",
+    "exit": 0,
+    "expected": 0,
+    "stdout": "task.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n",
+    "stderr": "",
+    "native": {
+      "command": "read",
+      "path": "/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/task.md",
+      "total_lines": "14",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Worth probe",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "7",
+          "lines": "3"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "10",
+          "lines": "3"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "13",
+          "lines": "2"
+        }
+      ]
+    },
+    "unchanged": true
+  },
+  {
+    "case": "quoted-status-missing",
+    "version": "candidate",
+    "exit": 1,
+    "expected": 1,
+    "stdout": "task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\nscope check not run: stage is unknown, not ideation\n",
+    "stderr": "",
+    "native": {
+      "command": "read",
+      "path": "/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/task.md",
+      "total_lines": "14",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Worth probe",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "7",
+          "lines": "3"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "10",
+          "lines": "3"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "13",
+          "lines": "2"
+        }
+      ]
+    },
+    "unchanged": true
+  },
+  {
+    "case": "quoted-status-missing",
+    "version": "rejected",
+    "exit": 0,
+    "expected": 0,
+    "stdout": "task.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n",
+    "stderr": "",
+    "native": {
+      "command": "read",
+      "path": "/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/task.md",
+      "total_lines": "14",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Worth probe",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "7",
+          "lines": "3"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "10",
+          "lines": "3"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "13",
+          "lines": "2"
+        }
+      ]
+    },
+    "unchanged": true
+  },
+  {
+    "case": "commented-heading",
+    "version": "candidate",
+    "exit": 1,
+    "expected": 1,
+    "stdout": "task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\nscope check not run: no closed backlog approval\n",
+    "stderr": "",
+    "native": {
+      "command": "read",
+      "path": "/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/task.md",
+      "total_lines": "16",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Worth probe",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "7",
+          "lines": "3"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "10",
+          "lines": "5"
+        },
+        {
+          "text": "Worth questions",
+          "level": "3",
+          "offset": "13",
+          "lines": "2"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "15",
+          "lines": "2"
+        }
+      ]
+    },
+    "unchanged": true
+  },
+  {
+    "case": "commented-heading",
+    "version": "rejected",
+    "exit": 0,
+    "expected": 0,
+    "stdout": "task.md: design surfaces presentable\nscope check not run: no closed backlog approval\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n",
+    "stderr": "",
+    "native": {
+      "command": "read",
+      "path": "/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/task.md",
+      "total_lines": "16",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Worth probe",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "7",
+          "lines": "3"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "10",
+          "lines": "5"
+        },
+        {
+          "text": "Worth questions",
+          "level": "3",
+          "offset": "13",
+          "lines": "2"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "15",
+          "lines": "2"
+        }
+      ]
+    },
+    "unchanged": true
+  },
+  {
+    "case": "visible-control",
+    "version": "candidate",
+    "exit": 0,
+    "expected": 0,
+    "stdout": "task.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n",
+    "stderr": "",
+    "native": {
+      "command": "read",
+      "path": "/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/task.md",
+      "total_lines": "15",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Worth probe",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "7",
+          "lines": "3"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "10",
+          "lines": "4"
+        },
+        {
+          "text": "Worth questions",
+          "level": "3",
+          "offset": "12",
+          "lines": "2"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "14",
+          "lines": "2"
+        }
+      ]
+    },
+    "unchanged": true
+  },
+  {
+    "case": "visible-control",
+    "version": "rejected",
+    "exit": 0,
+    "expected": 0,
+    "stdout": "task.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n",
+    "stderr": "",
+    "native": {
+      "command": "read",
+      "path": "/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/task.md",
+      "total_lines": "15",
+      "frontmatter": {
+        "profile": "pilot",
+        "status": "ideation",
+        "title": "Worth probe",
+        "variant": "kc-dev-flow-2"
+      },
+      "headings": [
+        {
+          "text": "FO alignment",
+          "level": "2",
+          "offset": "7",
+          "lines": "3"
+        },
+        {
+          "text": "PRFAQ",
+          "level": "2",
+          "offset": "10",
+          "lines": "4"
+        },
+        {
+          "text": "Worth questions",
+          "level": "3",
+          "offset": "12",
+          "lines": "2"
+        },
+        {
+          "text": "Acceptance criteria",
+          "level": "2",
+          "offset": "14",
+          "lines": "2"
+        }
+      ]
+    },
+    "unchanged": true
+  },
+  {
+    "case": "exit-failure",
+    "version": "candidate",
+    "exit": 1,
+    "stdout": "task.md: cannot read stage for Worth questions: reader refused\nscope check not run: stage is unknown, not ideation\n",
+    "stderr": ""
+  },
+  {
+    "case": "timeout",
+    "version": "candidate",
+    "exit": 1,
+    "stdout": "task.md: cannot read stage for Worth questions: Command '['/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/timeout', 'status', '--workflow-dir', '/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq', '--read', '/private/tmp/pr841-validation-2-20261111/tmp/worth-cli-u6tkg3nq/task.md', '--json']' timed out after 30 seconds\nscope check not run: stage is unknown, not ideation\n",
+    "stderr": ""
+  }
+]

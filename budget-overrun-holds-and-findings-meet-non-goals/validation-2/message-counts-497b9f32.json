@@ -1,0 +1,165 @@
+[
+  {
+    "task": "amendment-checked-when-written",
+    "state_revision": "497b9f328396f587141bc2da36a03c61de4393c3",
+    "count": 5,
+    "stage_records": 5,
+    "all_messages": 6,
+    "counted_messages": 0,
+    "records": [
+      {
+        "name": "ideation-1.md",
+        "symptom": null,
+        "counted": true,
+        "sha256": "30a2278d6789d14f04ef6b72067df4c034b00d49de421ca831963e99bb8b8423"
+      },
+      {
+        "name": "implementation-1-message-1.md",
+        "symptom": "none",
+        "counted": false,
+        "sha256": "d372da8edddfc0de8f35ced2fa5139176182f1966c8c7732823b3eea2f5fba44"
+      },
+      {
+        "name": "implementation-1-message-2.md",
+        "symptom": "none",
+        "counted": false,
+        "sha256": "fc2e2ec37e9e4c7fc119cf92db598d369bf89e5a16d676bcd7af4bfc733f37fb"
+      },
+      {
+        "name": "implementation-1-message-3.md",
+        "symptom": "none",
+        "counted": false,
+        "sha256": "5ebd15c36437c0e8d24d4841045ac5f4d126ad0c9b0a65c8d076055689cc6949"
+      },
+      {
+        "name": "implementation-1-message-4.md",
+        "symptom": "none",
+        "counted": false,
+        "sha256": "550a77d9e87492b6f266ca3d3c8a65642c3a7d4bb990cbe93873d4656e0a9b55"
+      },
+      {
+        "name": "implementation-1-message-5.md",
+        "symptom": "none",
+        "counted": false,
+        "sha256": "ae79e89940d9d48784fe9775f3d84aa15668ded28f16c968db9e06c6065ff588"
+      },
+      {
+        "name": "implementation-1-message-6.md",
+        "symptom": "none",
+        "counted": false,
+        "sha256": "632813b111e8104b2add9bd5851276564d16a3aaf970bda30250c2faf5d89ecd"
+      },
+      {
+        "name": "implementation-1.md",
+        "symptom": null,
+        "counted": true,
+        "sha256": "3e0c3e47542b88511dbf0dc626405e67a56c239eb821e50e9630c9bb663f68ea"
+      },
+      {
+        "name": "validation-1.md",
+        "symptom": null,
+        "counted": true,
+        "sha256": "d25fcc8ecd5cce97e730875ac2a74bbd6751cc09ad4b9c47bed73bbb2b0dde25"
+      },
+      {
+        "name": "validation-2.md",
+        "symptom": "a partial repair of reused ids re-reports an already reported id (validation-1 f1)",
+        "counted": true,
+        "sha256": "6c37551d5bad70f7588ae66abb5985b4e0cb06b1f50656ab1b113e549f361891"
+      },
+      {
+        "name": "validation-3.md",
+        "symptom": "a tilde-fenced example supplies the amendment marker (validation-2 f3)",
+        "counted": true,
+        "sha256": "a49458f51c69dbcad9638a9441dc0bb5201a99b27b481a118ba01c29358f0c63"
+      }
+    ],
+    "excluded_special_roles": [
+      "_archive/amendment-checked-when-written/dispatch/chief-engineer-1.md",
+      "_archive/amendment-checked-when-written/dispatch/engineering-reviewer-1.md"
+    ]
+  },
+  {
+    "task": "release-rollout-reaches-adopters-and-laws-pin",
+    "state_revision": "497b9f328396f587141bc2da36a03c61de4393c3",
+    "count": 8,
+    "stage_records": 3,
+    "all_messages": 9,
+    "counted_messages": 5,
+    "records": [
+      {
+        "name": "ideation-1.md",
+        "symptom": null,
+        "counted": true,
+        "sha256": "a02cd53021976a70a7696dc3ca827ac47003c63715e5a5d0a61da36423e899ae"
+      },
+      {
+        "name": "implementation-1-message-1.md",
+        "symptom": "none",
+        "counted": false,
+        "sha256": "77a162d0a9f1d5965e25af38949e0833a3b2b807151fa288d95f66e64f85cfc2"
+      },
+      {
+        "name": "implementation-1-message-2.md",
+        "symptom": "none",
+        "counted": false,
+        "sha256": "6d6218e94cb3ca3f05e5f530de9ebdb4cdde86e296508c59bd769998dcf73605"
+      },
+      {
+        "name": "implementation-1-message-3.md",
+        "symptom": "none",
+        "counted": false,
+        "sha256": "dea8eb2c497a71e9032241a348a81964082daf8b29d5f8a28684a97981df6927"
+      },
+      {
+        "name": "implementation-1-message-4.md",
+        "symptom": "roborev finding: laws pin compared with the newest release instead of the readme's release",
+        "counted": true,
+        "sha256": "f19ee43a5329a4fc386020e438e5a53c47567552566310a25368d14053c5eccc"
+      },
+      {
+        "name": "implementation-1-message-5.md",
+        "symptom": "roborev finding: laws pin compared with the newest release instead of the readme's release",
+        "counted": true,
+        "sha256": "693e3adfde9b4928b73033b7631dff7e1ef213cce7d2a2ab45602af49c535085"
+      },
+      {
+        "name": "implementation-1-message-6.md",
+        "symptom": "roborev finding: a gh read that can silently return a partial result",
+        "counted": true,
+        "sha256": "4e8ac0acd60c98feb4d00752fa4b6e806c154051026104481bccf57233d68950"
+      },
+      {
+        "name": "implementation-1-message-7.md",
+        "symptom": "roborev finding: a gh read that can silently return a partial result",
+        "counted": true,
+        "sha256": "eda747835ff9ec9beb34527ee2f07a7c6d3342884dbea3920691c54bebd07a81"
+      },
+      {
+        "name": "implementation-1-message-8.md",
+        "symptom": "replacement criterion words not found in the captain's amendment",
+        "counted": true,
+        "sha256": "ae0cd27bd8da73f6f45e1b09bef87e25ca27db58bfda057c0e6f404e1c7ce3b8"
+      },
+      {
+        "name": "implementation-1-message-9.md",
+        "symptom": "none",
+        "counted": false,
+        "sha256": "b15a4308e81898fc7053c74b75037f1fb01b8aaf9269ec3b0e37e3896d6ea189"
+      },
+      {
+        "name": "implementation-1.md",
+        "symptom": null,
+        "counted": true,
+        "sha256": "5fc8004bd360b6fc5379c1bdadc459b7c7b5eccd03318edbf550312e6313590a"
+      },
+      {
+        "name": "validation-1.md",
+        "symptom": null,
+        "counted": true,
+        "sha256": "65c54c6133e6671c4cea5e96a564cdd38d8fdffed6b9bb64ee37ffd9227a46ad"
+      }
+    ],
+    "excluded_special_roles": []
+  }
+]

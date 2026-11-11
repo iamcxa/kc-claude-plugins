@@ -1,0 +1,166 @@
+diff --git a/kc-dev-flow-2/scripts/design_surfaces.py b/kc-dev-flow-2/scripts/design_surfaces.py
+index 06f2acb7d..e4b03ef13 100644
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -15,6 +15,7 @@ import argparse
+ import difflib
+ import hashlib
+ import json
++import os
+ import re
+ import subprocess
+ import sys
+@@ -1045,6 +1046,54 @@ def check_seed_fields(name, text):
+     return errors
+ 
+ 
++# see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
++def worth_lines(text):
++    from role_triggers import FENCE as marker_pattern
++
++    fence, comment = None, False
++    for line in text.splitlines():
++        marker = marker_pattern.match(line) if not comment else None
++        if fence:
++            if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence):
++                fence = None
++            continue
++        if marker:
++            fence = marker[1]
++            continue
++        visible = ""
++        while line:
++            if comment:
++                _, closed, line = line.partition("-->")
++                comment = not bool(closed)
++                if comment:
++                    break
++            else:
++                part, opened, line = line.partition("<!--")
++                visible += part
++                comment = bool(opened)
++        yield visible
++
++
++def worth_stage(path):
++    from dispatch_records import find_readme
++
++    path = path.resolve()
++    readme = find_readme(path)
++    workflow = readme.parent if readme else path.parent
++    done = subprocess.run([os.environ.get("SPACEDOCK_BIN") or "spacedock", "status", "--workflow-dir", str(workflow),
++                           "--read", str(path), "--json"], capture_output=True, text=True, timeout=30)
++    if done.returncode:
++        raise ValueError((done.stderr or done.stdout).strip() or f"Spacedock read exited {done.returncode}")
++    data = json.loads(done.stdout)
++    if not isinstance(data, dict):
++        raise ValueError("malformed Spacedock read")
++    fields = data.get("frontmatter")
++    if data.get("command") != "read" or data.get("path") != str(path) or not isinstance(fields, dict) \
++            or ("status" in fields and not isinstance(fields["status"], str)):
++        raise ValueError("malformed or mismatched Spacedock read")
++    return fields.get("status")
++
++
+ def check_task(path, seed=False, notes=None):
+     errors = []
+     try:
+@@ -1096,14 +1145,17 @@ def check_task(path, seed=False, notes=None):
+     front = FRONTMATTER.match(text)
+     profile, status = (FM_PROFILE.search(front.group(1)), FM_STATUS.search(front.group(1))) if front else (None, None)
+     plain = "\n".join(unfenced(lines))
+-    # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+-    from role_triggers import outside_fences
+-
+-    worth_lines = list(outside_fences(text))
+-    design = section(worth_lines, re.compile(r"^## Design[ \t]*$", re.I))
+-    if (design is not None or (status and status[1] == "ideation")) and not any(
+-            re.fullmatch(r"### Worth questions[ \t]*", line, re.I) for line in (design if design is not None else worth_lines)):
+-        errors.append(f"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test")
++    worth = list(worth_lines(text))
++    design = section(worth, re.compile(r"^## Design[ \t]*$", re.I))
++    if not any(re.fullmatch(r"### Worth questions[ \t]*", line, re.I) for line in (design if design is not None else worth)):
++        needed = design is not None
++        if not needed and text.lstrip("\ufeff\n").startswith("---\n"):
++            try:
++                needed = worth_stage(path) == "ideation"
++            except (OSError, ValueError, subprocess.TimeoutExpired) as exc:
++                errors.append(f"{path.name}: cannot read stage for Worth questions: {exc}")
++        if needed:
++            errors.append(f"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test")
+     if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):
+         summary = check_security(path, plain, declared, errors)
+         if summary and notes is not None:
+diff --git a/kc-dev-flow-2/scripts/test_design_surfaces.py b/kc-dev-flow-2/scripts/test_design_surfaces.py
+index aa169a737..0ae5f54ef 100644
+--- a/kc-dev-flow-2/scripts/test_design_surfaces.py
++++ b/kc-dev-flow-2/scripts/test_design_surfaces.py
+@@ -253,6 +253,21 @@ class DesignSurfacesTests(unittest.TestCase):
+ 
+ 
+ class WorthQuestionsTests(unittest.TestCase):
++    def test_html_comments_cannot_supply_the_worth_heading(self):
++        base = (BASE.split("## PRFAQ")[0] + "## Design\n\n{heading}\n"
++                "## Acceptance criteria\n**AC-1** bounded\n")
++        for heading in ("<!--\n### Worth questions\n-->", "<!--\n### Worth questions\n",
++                        "<!--\n```\n-->\n<!--\n### Worth questions\n-->"):
++            with self.subTest(heading=heading), tempfile.TemporaryDirectory() as d:
++                path = write_task(d, base.replace("{heading}", heading))
++                self.assertTrue(any("Worth questions" in e for e in ds.check_task(path)))
++        for heading in ("<!-- note -->\n### Worth questions\nAsked, without, premise.",
++                        "```html\n<!-- literal example\n```\n### Worth questions\nAsked, without, premise.",
++                        "<!--\n```\n-->\n### Worth questions\nAsked, without, premise."):
++            with self.subTest(heading=heading), tempfile.TemporaryDirectory() as d:
++                path = write_task(d, base.replace("{heading}", heading))
++                self.assertFalse(any("Worth questions" in e for e in ds.check_task(path)))
++
+     def test_design_without_worth_questions_is_refused_even_with_fenced_example(self):
+         for heading in ("", "```\n### Worth questions\n```\n"):
+             text = BASE.split("## PRFAQ")[0] + "## Design\n\n" + heading + "body\n\n## Acceptance criteria\n**AC-1** bounded\n"
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_stage.py b/kc-dev-flow-2/scripts/test_dispatch_stage.py
+index ba5ec550c..13ca89373 100644
+--- a/kc-dev-flow-2/scripts/test_dispatch_stage.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_stage.py
+@@ -131,6 +131,42 @@ class DispatchStageTests(unittest.TestCase):
+         self.assertIn("budget: Budget: at most 3 days; spent implementation 0, validation 1; states no cycles", result.stderr)
+         self.assertIn("Budget: at most 3 days\n", self.record("validation").read_text())
+ 
++    def test_worth_requirement_uses_native_stage_for_yaml_status_values(self):
++        original = self.entity.read_text()
++        design = ("\n## PRFAQ\nA bounded CLI result.\n\n## Acceptance criteria\n"
++                  "**AC-1** Bounded result. Evidence: one CLI run.\n")
++        for path in (self.entity, self.folder / "index.md"):
++            path.parent.mkdir(exist_ok=True)
++            for status in ("ideation", "ideation # ready for review", "'ideation' # review", '"ideation" # review'):
++                with self.subTest(status=status, path=path.name):
++                    text = original.replace("status: ideation", "status: " + status) + design
++                    path.write_text(text)
++                    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
++                                        "--read", path, "--json"])
++                    self.assertEqual(json.loads(native.stdout)["frontmatter"]["status"], "ideation")
++                    checker = ROOT / "scripts/design_surfaces.py"
++                    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
++                    self.assertIn("design needs '### Worth questions'", refused.stdout)
++                    self.assertEqual(path.read_text(), text)
++                    path.write_text(text.replace("## PRFAQ\n", "## PRFAQ\n### Worth questions\nAsked, without, premise.\n"))
++                    self.call([sys.executable, "-B", checker, "check", path])
++
++    def test_unreadable_native_stage_does_not_make_design_presentable(self):
++        self.entity.write_text(self.entity.read_text().replace("status: ideation", "status: ideation # review")
++                               + "\n## PRFAQ\nresult\n## Acceptance criteria\n**AC-1** result\n")
++        binary = self.base / "unreadable-stage"
++        cases = (None, "not json", json.dumps({"command": "read", "path": str(self.entity), "frontmatter": {"status": 1}}),
++                 json.dumps({"command": "read", "path": "/another/task.md", "frontmatter": {"status": "done"}}))
++        for output in cases:
++            with self.subTest(output=output):
++                if output is not None:
++                    binary.write_text(f"#!{sys.executable}\nprint({output!r})\n")
++                    binary.chmod(0o755)
++                result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
++                                   expected=1, child_env={**self.env, "SPACEDOCK_BIN": str(binary)})
++                self.assertIn("cannot read stage for Worth questions", result.stdout)
++                self.assertNotIn("design surfaces presentable", result.stdout)
++
+     def test_budget_hold_removes_record_and_skips_build_until_amended(self):
+         self.entity.write_text(self.entity.read_text() + "\n## Budget\n- One cycle per stage.\n")
+         self.set_stage("implementation")

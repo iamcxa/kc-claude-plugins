@@ -1,0 +1,15 @@
+test_total_cap_counts_only_messages_with_a_named_header_symptom (test_role_triggers.BudgetTest.test_total_cap_counts_only_messages_with_a_named_header_symptom) ... FAIL
+
+======================================================================
+FAIL: test_total_cap_counts_only_messages_with_a_named_header_symptom (test_role_triggers.BudgetTest.test_total_cap_counts_only_messages_with_a_named_header_symptom)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_role_triggers.py", line 823, in test_total_cap_counts_only_messages_with_a_named_header_symptom
+    self.assertEqual(run(self.state, SLUG, "--pending", message)[0], 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 3.022s
+
+FAILED (failures=1)

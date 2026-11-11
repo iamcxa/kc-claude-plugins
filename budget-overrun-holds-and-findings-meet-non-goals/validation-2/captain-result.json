@@ -1,0 +1,7 @@
+{
+  "command": "/bin/bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-overrun-holds-and-findings-meet-non-goals/validation-2/captain.sh",
+  "environment": "env -i PATH=/Users/kent/.local/bin:/opt/homebrew/bin:/usr/bin:/bin TMPDIR=/tmp/pr841-validation-2-20261111/tmp",
+  "exit": 0,
+  "steps": 5,
+  "log": "captain.log"
+}

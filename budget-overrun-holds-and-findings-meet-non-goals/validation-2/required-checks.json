@@ -1,0 +1,101 @@
+[
+  {
+    "name": "role-admission",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/role_triggers.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "budget-overrun-holds-and-findings-meet-non-goals"
+    ],
+    "exit": 0,
+    "log": "role-admission.log"
+  },
+  {
+    "name": "adr",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "--require",
+      "0077"
+    ],
+    "exit": 0,
+    "log": "adr.log"
+  },
+  {
+    "name": "comments",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/comment_ratio.py",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "6da9a765ee04e1e2c7836517ba01f75b0ea91d73",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "log": "comments.log"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-overrun-holds-and-findings-meet-non-goals"
+    ],
+    "exit": 0,
+    "log": "dispatch-records.log"
+  },
+  {
+    "name": "task-design",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-overrun-holds-and-findings-meet-non-goals.md"
+    ],
+    "exit": 0,
+    "log": "task-design.log"
+  },
+  {
+    "name": "number",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--base",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "--head",
+      "6da9a765ee04e1e2c7836517ba01f75b0ea91d73",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-overrun-holds-and-findings-meet-non-goals.md"
+    ],
+    "exit": 0,
+    "log": "number.log"
+  },
+  {
+    "name": "number-fresh",
+    "exit": 0,
+    "log": "number-fresh.log",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--base",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "--head",
+      "6da9a765ee04e1e2c7836517ba01f75b0ea91d73",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-overrun-holds-and-findings-meet-non-goals.md"
+    ]
+  }
+]

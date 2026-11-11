@@ -1,0 +1,15 @@
+test_total_dispatch_cap_counts_stages_and_named_followups_once (test_role_triggers.BudgetTest.test_total_dispatch_cap_counts_stages_and_named_followups_once) ... FAIL
+
+======================================================================
+FAIL: test_total_dispatch_cap_counts_stages_and_named_followups_once (test_role_triggers.BudgetTest.test_total_dispatch_cap_counts_stages_and_named_followups_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_role_triggers.py", line 794, in test_total_dispatch_cap_counts_stages_and_named_followups_once
+    self.assertIn("total dispatches 4", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'total dispatches 4' not found in 'budget: Budget: at most 4 dispatches total; spent implementation 1, validation 1; states no cycles\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.918s
+
+FAILED (failures=1)

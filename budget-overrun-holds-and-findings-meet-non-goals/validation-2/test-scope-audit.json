@@ -1,0 +1,62 @@
+[
+  {
+    "file": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "removed_tests": [],
+    "changed_old_tests": [
+      "OwedRoleCallTests.test_second_failure_prints_questions_before_ask_without_holding_and_with_other_problems"
+    ],
+    "repair_changed_old_functions": [],
+    "repair_removed_functions": []
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "removed_tests": [],
+    "changed_old_tests": [
+      "SeedBoundsTests.test_dedicated_sections_and_scope_bullets_and_plural_forms",
+      "SeedBoundsTests.test_empty_placeholder_quote_report_and_fenced_impostors_are_refused",
+      "SeedBoundsTests.test_dedicated_bounds_reject_quotes_at_zero_to_three_spaces",
+      "SeedBoundsTests.test_dedicated_bounds_accept_real_content_at_zero_to_three_spaces",
+      "SeedBoundsTests.test_slug_id_frontmatter_and_scope_are_not_new_requirements",
+      "SeedBoundsTests.test_fence_length_and_kind_keep_impostors_hidden"
+    ],
+    "repair_changed_old_functions": [],
+    "repair_removed_functions": []
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "removed_tests": [],
+    "changed_old_tests": [
+      "DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs",
+      "DispatchStageTests.test_successful_same_symptom_forwards_one_reminder_before_real_build"
+    ],
+    "repair_changed_old_functions": [],
+    "repair_removed_functions": []
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "removed_tests": [],
+    "changed_old_tests": [
+      "TasksTests.test_committed_second_symptom_round_is_forwarded_at_idle",
+      "TasksTests.test_second_failed_validation_is_advisory_live_and_silent_archived",
+      "TasksTests.test_real_seed_subprocess_names_a_missing_bound_with_valid_alignment"
+    ],
+    "repair_changed_old_functions": [],
+    "repair_removed_functions": []
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "removed_tests": [],
+    "changed_old_tests": [
+      "StepBackTest.test_two_failed_reports_count_once_each_and_passing_reports_do_not_count"
+    ],
+    "repair_changed_old_functions": [],
+    "repair_removed_functions": []
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "removed_tests": [],
+    "changed_old_tests": [],
+    "repair_changed_old_functions": [],
+    "repair_removed_functions": []
+  }
+]

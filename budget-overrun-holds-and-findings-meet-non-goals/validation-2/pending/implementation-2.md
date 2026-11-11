@@ -1,0 +1,26 @@
+Budget: One cycle per stage.
+# comment-sent-when-added-relay implementation (correction cycle 2)
+
+Symptom: PR #491 CI red at 20b316da plus contract additions since implementation-1
+Dispatched: 20b316daed48e9e40c24a49c71f386766d3d8738 (PR #491 head)
+Model: codex gpt-6.1-sol, reasoning xhigh (the Captain, 2026-10-26: sol or astra)
+Captain: 「改」 (chat, 2026-11-10) made #491 the dependency of Web's Sign in card and Web 0.2.41.
+
+## Checklist
+
+Correct comment-sent-when-added-relay on its task branch (PR #491) against the additions recorded in comment-sent-when-added-relay/web-contract.md since implementation-1: hold one frozen transport per distinct comment keyed by its serialized bytes so a pending or failed send no longer blocks the next (H2 ruling, ADR 0075 consequence updated), return every held item in restoredSends and clear only the matching one on onSendRemoved, feed onRestoredSendsDropped(count) into the existing dropped-comments notice, and on a claim remount with feedback 'all' before any setIdentity that carries mayDecide (H1 addition), each with an owning test that fails on the current head and passes after
+
+Diagnose and fix the three browser failures on head 20b316da (all-feedback-room.spec.ts "a comment relay's list has not shown yet stays visible, without an include box" and "the holder's just-sent card, and relay's listed card after it, carry the anchor…"; account-owner.spec.ts "a held record that is stale, edited, another document's, malformed…"), stating for each whether the product or the spec was wrong; add a check that a relay-frozen Result passes Web's validateRestoredSends byte-identically (Web main ad7471be); run the repository's checks (Linux node:24.18.0 unit suite at default settings) and the RoboRev gate, commit on top, push once, update the Draft PR body, and report the new head for the FO to watch CI
+
+## Scope notes
+
+Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0
+Load the stage skill kc-dev-flow-2:implementation. Profile pilot. This is correction cycle 2. Read in the state checkout /Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state: comment-sent-when-added-relay.md (Design, Acceptance criteria, the implementation-1 report) and all of comment-sent-when-added-relay/web-contract.md, especially the sections added on 2026-11-09 and 2026-11-10 (H1 addition, H2 pending sends, F9/F10, "#491 CI state", "Web built and merged").
+Worktree: find it with `git -C /Users/kent/conductor/workspaces/subspace-relay/beirut-dev2 worktree list` (branch spacedock-ensign/comment-sent-when-added-relay, head 20b316da, Draft PR #491). Add commits on top; never rewrite or force-push. Do not turn sendOnAdd on beyond what the branch already does behind the Web capability; activation follows Web 0.2.41.
+Web is read-only: ~/conductor/repos/subspace-web after a fetch, main at ad7471be (send-on-add merged as 2a63a9a7, restoredSends with code, onSendRemoved, onRestoredSendsDropped, refusal send-on-add-needs-all-feedback keyed on identity.mayDecide). Run the browser specs against the Web build the repository's suite uses; if a failing spec only passes against Web main, say so rather than change the pin.
+Siblings: #490, #492, #494 (ready for review) and #495 share HTTP 2.1.0 and Room files; do not absorb them; keep the collision note in the PR body.
+Push: under the Captain's standing grant 「SD review 範圍內（relay、web、v0）的 dev2 任務，FO 和工人可以推任務分支、開草稿 PR、改成正式送審；合併、關 PR 和 release 仍由我決定。」 (AGENTS.md), one normal push at the end, PR stays Draft, do not merge. Do not rerun hosted CI; the FO watches it.
+Local runs: archives under /tmp/comment-sent-when-added-relay-implementation-2/, private HOME/XDG, env -i allowlist, pnpm 10.26.1 offline from /Users/kent/Library/pnpm/store/v3; Linux image relay-llms-contract-reference:node24.18.0 (or build the same FROM node:24.18.0 with apt jq and uuid-runtime), --network none, default settings first, any relaxed run only beside it with each test that needs it named. Known on base: netlify/routes.test.ts WorkOS token-endpoint case exceeds 5 s; close-race.wire.test.ts fails on this Mac. Signed-in browser runs locally with the synthetic WorkOS stub (see /tmp/owner-decision-browser.py for the pattern; select spec files by exact path); stop a leg after two setup failures. Browsers: separate /tmp profile, PLAYWRIGHT_BROWSERS_PATH=/Users/kent/Library/Caches/ms-playwright, never download Chromium, never Kent's Chrome. RoboRev with the normal HOME only: python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.35.0/extensions/roborev/roborev_gate.py --repo <worktree> --base 8b3e2370. No secrets, no hosted writes beyond the PR's own Deploy Preview build.
+Not allowed: git stash; wildcard deletes; editing installed plugin files; CI workflow edits; changing Web; messaging anyone but the FO.
+Write "## Stage Report: implementation" for this cycle with the checklist lines verbatim as items (each DONE or SKIPPED with reason, FAILED only for a real failure, no extra items) into comment-sent-when-added-relay.md on the state checkout; evidence under comment-sent-when-added-relay/implementation-2/, files under 1 MB. Leave state uncommitted; the FO commits.
+Send your completion message to `main`; as a Paseo Codex agent, your final message is that completion message.

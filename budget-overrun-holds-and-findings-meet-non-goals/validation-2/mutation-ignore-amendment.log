@@ -1,0 +1,15 @@
+test_pending_overrun_holds_and_an_amendment_clears_it (test_role_triggers.BudgetTest.test_pending_overrun_holds_and_an_amendment_clears_it) ... FAIL
+
+======================================================================
+FAIL: test_pending_overrun_holds_and_an_amendment_clears_it (test_role_triggers.BudgetTest.test_pending_overrun_holds_and_an_amendment_clears_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_role_triggers.py", line 892, in test_pending_overrun_holds_and_an_amendment_clears_it
+    self.assertEqual(run(self.state, SLUG)[0], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 3.614s
+
+FAILED (failures=1)

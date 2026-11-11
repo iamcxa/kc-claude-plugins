@@ -1,0 +1,68 @@
+[
+  {
+    "task": "_archive/seed-check-requires-schema-fields.md",
+    "old": "<approved bound>",
+    "new": "",
+    "source": [
+      {
+        "line": 163,
+        "text": "> Record non-empty `id`, `title`, `status`, `variant: kc-dev-flow-2`, and the user's selected `profile`. For `id-style: slug`, supply the slug as `id` to `spacedock new`; otherwise it omits that field. The five-stage route accepts `pilot` or `prod`; the POC adaptation removes ideation from frontmatter and Stages and accepts `poc` only. Before admission and dispatch, FO holds an unknown/mismatched profile; SD does not enforce this rule. Preserve approved outcome and scope under `## Scope`, with non-empty `Non-goals:`, `Budget:` and `Stop condition:` lines or matching level-two sections. Use bold **AC-N** declarations with individual evidence clauses."
+      },
+      {
+        "line": 172,
+        "text": "Budget: <approved bound>"
+      },
+      {
+        "line": 464,
+        "text": "Budget: one task"
+      },
+      {
+        "line": 473,
+        "text": "sed '/^Budget:/d' \"$SEED_ACCEPT_DIR/valid.md\" > \"$SEED_ACCEPT_DIR/missing.md\""
+      },
+      {
+        "line": 489,
+        "text": "## Budget"
+      },
+      {
+        "line": 547,
+        "text": "- F1 Material: FO admitting a new seed in the supported dedicated-section form can get exit 0 with no actual Budget: `## Budget` followed by one to three spaces then `> <approved bound>`. Harm: a quoted unfilled example clears the required-bound check and permits backlog gate preparation. Protected claim: `value-ac[AC-2]` excludes quotes/empty content and `value-ac[AC-8]` requires Budget. Trigger: four-case `quote-probe.json` and acceptance step 4; `design_surfaces.py` filters `>` only at column zero, then strips the placeholder and counts the remaining `>` as content. Return through implementation feedback; candidate bytes preserved."
+      },
+      {
+        "line": 610,
+        "text": "Budget: one task"
+      },
+      {
+        "line": 619,
+        "text": "sed '/^Budget:/d' \"$SEED_ACCEPT_DIR/valid.md\" > \"$SEED_ACCEPT_DIR/missing.md\""
+      },
+      {
+        "line": 635,
+        "text": "## Budget"
+      },
+      {
+        "line": 754,
+        "text": "Budget: one task"
+      },
+      {
+        "line": 763,
+        "text": "sed '/^Budget:/d' \"$SEED_ACCEPT_DIR/valid.md\" > \"$SEED_ACCEPT_DIR/missing.md\""
+      },
+      {
+        "line": 779,
+        "text": "## Budget"
+      }
+    ]
+  },
+  {
+    "task": "_archive/release-acceptance/index.md",
+    "old": "Captain decision 7 approved two PRs; if the enforcement half is split out as a third (it is independent of the walk), that changes an approved budget and needs his word.",
+    "new": "",
+    "source": [
+      {
+        "line": 377,
+        "text": "- Budget: Captain decision 7 approved two PRs; if the enforcement half is split out as a third (it is independent of the walk), that changes an approved budget and needs his word."
+      }
+    ]
+  }
+]

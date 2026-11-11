@@ -1,0 +1,4 @@
+/tmp/pr841-validation-2-20261111/corpus-md/dev2: with impl/val records and a Budget line 60; cycle bound read 0; held at first overrun 0; first hold at {}
+/tmp/pr841-validation-2-20261111/corpus-md/qnow: with impl/val records and a Budget line 7; cycle bound read 7; held at first overrun 7; first hold at {('implementation', 3): 1, ('implementation', 2): 6}
+/tmp/pr841-validation-2-20261111/corpus-md/relay: with impl/val records and a Budget line 32; cycle bound read 23; held at first overrun 11; first hold at {('implementation', 2): 9, ('validation', 2): 2}
+/tmp/pr841-validation-2-20261111/corpus-md/web: with impl/val records and a Budget line 24; cycle bound read 20; held at first overrun 5; first hold at {('validation', 2): 2, ('implementation', 2): 3}

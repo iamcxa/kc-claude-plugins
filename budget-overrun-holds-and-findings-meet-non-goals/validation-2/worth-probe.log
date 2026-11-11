@@ -1,0 +1,12 @@
+candidate: plain-missing: exit 1
+rejected: plain-missing: exit 1
+candidate: commented-status-missing: exit 1
+rejected: commented-status-missing: exit 0
+candidate: quoted-status-missing: exit 1
+rejected: quoted-status-missing: exit 0
+candidate: commented-heading: exit 1
+rejected: commented-heading: exit 0
+candidate: visible-control: exit 0
+rejected: visible-control: exit 0
+exit-failure: refused with exit 1
+timeout: refused with exit 1

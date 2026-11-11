@@ -1,0 +1,78 @@
+test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) ... 
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation # ready for review', path='dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md') ... FAIL
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status="'ideation' # review", path='dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md') ... FAIL
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='"ideation" # review', path='dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md') ... FAIL
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation # ready for review', path='index.md') ... FAIL
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status="'ideation' # review", path='index.md') ... FAIL
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='"ideation" # review', path='index.md') ... FAIL
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation # ready for review', path='dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/tmp/pr841-validation-2-20261111/tmp/worth-base-export-0doclmgt/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/tmp/pr841-validation-2-20261111/tmp/dispatch-stage-4dnyvvle/code/docs/dev2/.spacedock-state/dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md')], 'dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status="'ideation' # review", path='dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/tmp/pr841-validation-2-20261111/tmp/worth-base-export-0doclmgt/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/tmp/pr841-validation-2-20261111/tmp/dispatch-stage-4dnyvvle/code/docs/dev2/.spacedock-state/dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md')], 'dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='"ideation" # review', path='dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/tmp/pr841-validation-2-20261111/tmp/worth-base-export-0doclmgt/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/tmp/pr841-validation-2-20261111/tmp/dispatch-stage-4dnyvvle/code/docs/dev2/.spacedock-state/dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md')], 'dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation # ready for review', path='index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/tmp/pr841-validation-2-20261111/tmp/worth-base-export-0doclmgt/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/tmp/pr841-validation-2-20261111/tmp/dispatch-stage-4dnyvvle/code/docs/dev2/.spacedock-state/dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56/index.md')], 'index.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status="'ideation' # review", path='index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/tmp/pr841-validation-2-20261111/tmp/worth-base-export-0doclmgt/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/tmp/pr841-validation-2-20261111/tmp/dispatch-stage-4dnyvvle/code/docs/dev2/.spacedock-state/dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56/index.md')], 'index.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='"ideation" # review', path='index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/tmp/pr841-validation-2-20261111/tmp/worth-base-export-0doclmgt/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/tmp/pr841-validation-2-20261111/tmp/dispatch-stage-4dnyvvle/code/docs/dev2/.spacedock-state/dispatch-fixture-7aefdda1740c41aaa60745525fdf0e56/index.md')], 'index.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+----------------------------------------------------------------------
+Ran 1 test in 4.502s
+
+FAILED (failures=6)

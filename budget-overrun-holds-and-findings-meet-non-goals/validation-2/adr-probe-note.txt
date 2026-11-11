@@ -1,0 +1,1 @@
+Initial validation-only probe asserted the English word missing after correctly asserting exit 1. The linter instead printed required ADR 0077 does not exist. The exact output is retained in adr-removed-0077.log. No product or product-test expectation changed; rerun below checks the actual missing-record diagnostic and exit.

@@ -1,0 +1,122 @@
+[
+  {
+    "name": "AC-1: Budget 顯示",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "tests.json; mutation-forward-budget.log"
+      }
+    }
+  },
+  {
+    "name": "AC-2: 超預算與修正案",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "tests.json; mutation-off-by-one.log; mutation-ignore-amendment.log"
+      }
+    }
+  },
+  {
+    "name": "AC-3: Relay 歷史重播",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "relay-replay.json; replay-audit.json"
+      }
+    }
+  },
+  {
+    "name": "AC-4: 四份歷史計數",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "archive-replay.json; count-differences.json; replay-audit.json"
+      }
+    }
+  },
+  {
+    "name": "AC-5: 提醒與角色呼叫",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "tests.json; mutations.json"
+      }
+    }
+  },
+  {
+    "name": "AC-6: 舊任務豁免",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "merge-transition-probe.json; mutation-ignore-first-header.log"
+      }
+    }
+  },
+  {
+    "name": "AC-8: 決策紀錄",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "adr.log; adr-falsifier.json"
+      }
+    }
+  },
+  {
+    "name": "AC-9: 章節與授權",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "worth-probe.json; repair-proof.json; mutations.json"
+      }
+    }
+  },
+  {
+    "name": "AC-10: 關卡與字數",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "independent-word-count.json; mutations.json"
+      }
+    }
+  },
+  {
+    "name": "AC-11: 派工總額",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "tests.json; mutations.json"
+      }
+    }
+  },
+  {
+    "name": "AC-12: 保留既有成果",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "captain.log; mutations.json"
+      }
+    }
+  },
+  {
+    "name": "AC-13: 修正訊息計數",
+    "status": "passed",
+    "cells": {
+      "候選版本": {
+        "status": "passed",
+        "evidence": "message-counts-40cfa1ae.json; message-counts-497b9f32.json; mutations.json"
+      }
+    }
+  }
+]

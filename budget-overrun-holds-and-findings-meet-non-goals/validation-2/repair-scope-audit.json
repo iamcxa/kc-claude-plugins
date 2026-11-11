@@ -1,0 +1,32 @@
+{
+  "role_triggers.py": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  },
+  "dispatch_stage.py": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  },
+  "design_surfaces.py": {
+    "changed": [
+      "check_task"
+    ],
+    "added": [
+      "worth_lines",
+      "worth_stage"
+    ],
+    "removed": []
+  },
+  "delivery_gate.py": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  },
+  "pr_watch.py": {
+    "changed": [],
+    "added": [],
+    "removed": []
+  }
+}

@@ -1,0 +1,35 @@
+Step 1: candidate 6da9a765ee04e1e2c7836517ba01f75b0ea91d73
+Step 2: missing/commented headings = 1, visible control = 0
+candidate: plain-missing: exit 1
+rejected: plain-missing: exit 1
+candidate: commented-status-missing: exit 1
+rejected: commented-status-missing: exit 0
+candidate: quoted-status-missing: exit 1
+rejected: quoted-status-missing: exit 0
+candidate: commented-heading: exit 1
+rejected: commented-heading: exit 0
+candidate: visible-control: exit 0
+rejected: visible-control: exit 0
+exit-failure: refused with exit 1
+timeout: refused with exit 1
+Step 3: real dispatch boundary; expect 3 tests OK
+test_budget_line_and_spent_cycles_are_printed_before_build (test_dispatch_stage.DispatchStageTests.test_budget_line_and_spent_cycles_are_printed_before_build) ... ok
+test_budget_hold_removes_record_and_skips_build_until_amended (test_dispatch_stage.DispatchStageTests.test_budget_hold_removes_record_and_skips_build_until_amended) ... ok
+test_total_cap_holds_before_build_and_keeps_existing_results (test_dispatch_stage.DispatchStageTests.test_total_cap_holds_before_build_and_keeps_existing_results) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 5.824s
+
+OK
+Step 4: authority and message count; expect 3 tests OK
+test_amendment_needs_the_same_entry_verbatim_words (test_role_triggers.BudgetTest.test_amendment_needs_the_same_entry_verbatim_words) ... ok
+test_total_cap_counts_only_messages_with_a_named_header_symptom (test_role_triggers.BudgetTest.test_total_cap_counts_only_messages_with_a_named_header_symptom) ... ok
+test_old_first_stage_record_never_opts_in_with_later_headers (test_role_triggers.BudgetTest.test_old_first_stage_record_never_opts_in_with_later_headers) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.754s
+
+OK
+Step 5: old merge ask passes; new merge ask holds
+old first record: merge ask passes; new first record: budget holds merge ask
+PASS: five acceptance steps completed; temporary export will be removed.

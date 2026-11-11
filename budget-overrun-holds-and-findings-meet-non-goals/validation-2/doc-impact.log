@@ -1,0 +1,15 @@
+docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md	review	kc-dev-flow-2/scripts/lint-skills.py
+docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md	review	kc-dev-flow-2/scripts/lint-skills.py
+docs/adr/0041-seed-admission-enforces-required-fields.md	review	kc-dev-flow-2/scripts/design_surfaces.py
+docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md	review	kc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/role_triggers.py
+docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md	review	kc-dev-flow-2/scripts/lint-skills.py
+docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md	review	kc-dev-flow-2/scripts/design_surfaces.py
+docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md	review	kc-dev-flow-2/scripts/test_sd_dispatch.py
+docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md	review	kc-dev-flow-2/scripts/dispatch_stage.py
+docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md	review	kc-dev-flow-2/scripts/dispatch_stage.py
+docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md	updated	budget_dispatches, kc-dev-flow-2/scripts/design_surfaces.py, kc-dev-flow-2/scripts/dispatch_stage.py, kc-dev-flow-2/scripts/role_triggers.py
+kc-dev-flow-2/README.md	review	kc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_sd_dispatch.py
+kc-dev-flow-2/references/sd/adoption.md	review	kc-dev-flow-2/scripts/test_sd_dispatch.py
+kc-dev-flow-2/skills/maintain-flow/SKILL.md	review	kc-dev-flow-2/scripts/lint-skills.py
+learning.md	review	kc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_sd_dispatch.py
+14 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

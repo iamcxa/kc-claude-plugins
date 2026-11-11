@@ -1,0 +1,106 @@
+[
+  {
+    "task": "journey-canvas-hosted-poc.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "picky-reviewers-may-run-on-gemini.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "gate-summary-names-each-decline.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "adoption-asks-which-extensions.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "step-back-answer-has-a-record-line.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "story-done-reports-release-remaining.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "denied-command-denies-only-that-command.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "comment-check-reaches-delivery-gate.md",
+    "records": [
+      "ideation-1.md",
+      "ideation-2.md"
+    ]
+  },
+  {
+    "task": "worker-push-words-match-state-commit.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "adr-silent-undo-probe.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "fo-write-checks-parse-top-level.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "archive-waits-for-observer-report.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "release-rollout-reaches-adopters-and-laws-pin.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "dispatch-carries-reserved-adr-number.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "seed-check-requires-alignment-result.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "budget-overrun-holds-and-findings-meet-non-goals.md",
+    "records": [
+      "ideation-1.md"
+    ]
+  },
+  {
+    "task": "captain-ruling-sources-checked.md",
+    "records": [
+      "ideation-1.md",
+      "ideation-2.md"
+    ]
+  }
+]

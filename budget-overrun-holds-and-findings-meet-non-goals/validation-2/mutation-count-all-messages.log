@@ -1,0 +1,17 @@
+test_total_cap_counts_only_messages_with_a_named_header_symptom (test_role_triggers.BudgetTest.test_total_cap_counts_only_messages_with_a_named_header_symptom) ... FAIL
+
+======================================================================
+FAIL: test_total_cap_counts_only_messages_with_a_named_header_symptom (test_role_triggers.BudgetTest.test_total_cap_counts_only_messages_with_a_named_header_symptom)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_role_triggers.py", line 815, in test_total_cap_counts_only_messages_with_a_named_header_symptom
+    self.assertEqual(code, 0, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : next: some-task budget exceeded; hold for the Captain. Symptom: none. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.
+budget: Budget: at most 1 dispatch total; spent implementation 1, validation 0; total dispatches 2
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.727s
+
+FAILED (failures=1)

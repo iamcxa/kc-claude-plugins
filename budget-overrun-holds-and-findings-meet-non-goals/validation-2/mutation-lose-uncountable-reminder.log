@@ -1,0 +1,17 @@
+test_two_failed_reports_count_once_each_and_passing_reports_do_not_count (test_role_triggers.StepBackTest.test_two_failed_reports_count_once_each_and_passing_reports_do_not_count) ... 
+  test_two_failed_reports_count_once_each_and_passing_reports_do_not_count (test_role_triggers.StepBackTest.test_two_failed_reports_count_once_each_and_passing_reports_do_not_count) (findings=('- F1 Material: gap\n- F2 Needs decision: another gap', '- F1 Material: gap\n- F2 Needs decision: another gap')) ... FAIL
+
+======================================================================
+FAIL: test_two_failed_reports_count_once_each_and_passing_reports_do_not_count (test_role_triggers.StepBackTest.test_two_failed_reports_count_once_each_and_passing_reports_do_not_count) (findings=('- F1 Material: gap\n- F2 Needs decision: another gap', '- F1 Material: gap\n- F2 Needs decision: another gap'))
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr841-validation-2-20261111/candidate/kc-dev-flow-2/scripts/test_role_triggers.py", line 372, in test_two_failed_reports_count_once_each_and_passing_reports_do_not_count
+    self.assertEqual("before the next step" in out, expected, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False != True : role triggers: 0 event(s) read at HEAD, each with a call or a waiver.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.931s
+
+FAILED (failures=1)
