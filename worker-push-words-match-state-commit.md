@@ -84,6 +84,7 @@ started: 2026-11-11T01:19:15Z
 ## FO alignment
 
 Alignment: not needed before ideation; the Captain approved filing it and the direction is to make two existing statements agree.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-11: amendment 1 records the placement the Captain chose at the ideation gate itself, and the approved design already describes that option and what it changes in the build.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
@@ -249,6 +250,13 @@ Runs: the checklist names no rule under test. Each arm runs on the recorded mode
 - **Report:** a table of runs by outcome, with the release arm's outcome.
 - **Falsifier:** one candidate run that calls the push a deviation or asks for approval stops the change. After two rewordings that still fail, a structural option (the Dispatch-facts option) goes to the Captain.
 - **No-change result:** if the release arm also shows no deviation, the replay does not show a change. Report that, and claim no effect.
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-11, ideation gate
+Captain: 「核准，放派工單都帶的段落（建議）」 (host question dialog, 2026-11-11)
+Asked: 「決定：要不要核准「工人收到的推送說明與狀態提交工具一致」的設計並開始實作，並把那句話放進每張派工單都帶的流程說明段落。我建議這樣核准：那是目前唯一量過有效的位置，First Officer 和工人都讀得到，也符合任務原本寫的停止條件。核准即接受流程說明檔多 38 字並提高它的字數上限；設計原本建議的「放工人守則、說明檔不加字」不採用。」
+Supersedes: AC-1, AC-2
 
 ## Stage Report: ideation
 
