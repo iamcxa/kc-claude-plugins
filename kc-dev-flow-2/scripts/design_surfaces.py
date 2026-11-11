@@ -23,7 +23,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import decision_ledger
-from role_triggers import budget_bound, budget_text, outside_fences
 
 KNOWN = {"ui", "db", "none"}
 CAPTAIN_QUOTE = re.compile(r"「[^」]*\S[^」]*」")
@@ -1001,6 +1000,8 @@ def scope_hold(task):
 
 # see docs/adr/0041-seed-admission-enforces-required-fields.md
 def check_seed_fields(name, text):
+    from role_triggers import budget_bound, budget_text
+
     front = FRONTMATTER.match(text)
     body = text[front.end():] if front else text
     body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
@@ -1039,7 +1040,8 @@ def check_seed_fields(name, text):
     errors = [f"{name}: missing required body field: {label}" for label, _ in fields if label not in found]
     # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
     if "Budget" in found and not budget_bound(budget_text(body, amendments=False)):
-        errors.append(f"{name}: Budget must start with 'N cycles per stage' or 'N implementation and M validation cycles'")
+        errors.append(f"{name}: Budget must start with 'N cycles per stage', 'N implementation and M validation cycles', "
+                      "'at most N dispatches total' or '最多 N 次派工'; an explicit agent-minutes clause may precede it, but minutes are not counted")
     return errors
 
 
@@ -1095,6 +1097,8 @@ def check_task(path, seed=False, notes=None):
     profile, status = (FM_PROFILE.search(front.group(1)), FM_STATUS.search(front.group(1))) if front else (None, None)
     plain = "\n".join(unfenced(lines))
     # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+    from role_triggers import outside_fences
+
     worth_lines = list(outside_fences(text))
     design = section(worth_lines, re.compile(r"^## Design[ \t]*$", re.I))
     if (design is not None or (status and status[1] == "ideation")) and not any(

@@ -73,6 +73,9 @@ DIAGNOSIS_RECORD = re.compile(r"^(implementation|validation)-([1-9][0-9]*)(?:-me
 STAGE_RECORD = re.compile(r"^(ideation|implementation|validation)-([1-9][0-9]*)(?:-message-([1-9][0-9]*))?\.md$")
 NUMBERS = {word: n for n, word in enumerate("zero one two three four five six seven eight nine ten".split())}
 NUMBER = r"(?:[0-9]+|one|two|three|four|five|six|seven|eight|nine|ten)"
+MINUTES = re.compile(r"\bagent[- ]minutes\b|代理分鐘", re.I)
+MINUTES_PREFIX = re.compile(r"^(?:[0-9]+[ \t]+(?:cumulative[ \t]+)?agent[- ]minutes|"
+                            r"[0-9]+[ \t]*(?:累計)?代理分鐘)[ \t]*[;；,，、][ \t]*(.*)$", re.I)
 
 
 class Unverifiable(Exception):
@@ -157,6 +160,12 @@ def dispatch_header(text):
 def budget_bound(value):
     def number(raw):
         return int(raw) if raw.isdigit() else NUMBERS[raw.lower()]
+    minutes = MINUTES_PREFIX.match(value)
+    value = minutes[1] if minutes else value
+    total = re.match(rf"^(?:at most ({NUMBER}) dispatch(?:es)? total\b|"
+                     r"最多[ \t]*([0-9]+)[ \t]*次派工(?=$|[，。、,;； \t]))", value, re.I)
+    if total:
+        return {"total": number(total[1] or total[2])}
     per_stage = re.match(rf"^({NUMBER}) cycles? per stage\b", value, re.I)
     if per_stage:
         return dict.fromkeys(("implementation", "validation"), number(per_stage[1]))
@@ -189,6 +198,12 @@ def budget_text(text, amendments=True):
     return value
 
 
+# see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+def budget_dispatches(dispatches):
+    return [(name, body) for name, body in dispatches if (record := STAGE_RECORD.fullmatch(name)) and (
+        not record[3] or (symptom_name(body) and symptom_name(body) != "none"))]
+
+
 def budget_status(text, dispatches, slug):
     value = budget_text(text)
     bound = budget_bound(value)
@@ -196,17 +211,26 @@ def budget_status(text, dispatches, slug):
                         if (m := DIAGNOSIS_RECORD.fullmatch(name)) and m[1] == stage and not m[3]), default=0)
              for stage in ("implementation", "validation")}
     stages = [body for name, body in dispatches if STAGE_RECORD.fullmatch(name)]
+    counted = budget_dispatches(dispatches)
+    total = len(counted)
     admitted = bool(stages and re.search(r"^Budget:", dispatch_header(stages[0]), re.M))
     summary = [f"budget: Budget: {value or 'not recorded'}; spent implementation {spent['implementation']}, validation {spent['validation']}"
-               + ("" if bound else "; states no cycles")] if value or admitted else []
-    over = [stage for stage, count in spent.items() if bound and count > bound[stage]]
+               + (f"; total dispatches {total}" if bound and "total" in bound else "")
+               + ("" if bound else "; states no cycles")
+               + ("; minutes not counted" if MINUTES.search(value) else "")] if value or admitted else []
+    over = (["total"] if total > bound["total"] else []) if bound and "total" in bound else [
+        stage for stage, count in spent.items() if bound and count > bound[stage]]
     if admitted and over:
+        newest = counted[-1][0] if counted else ""
+        record = newest if over == ["total"] else f"{over[0]}-{spent[over[0]]}.md"
         symptom = next((m[1] for name, body in reversed(dispatches)
-                        if name == f"{over[0]}-{spent[over[0]]}.md"
+                        if name == record
                         and (m := re.search(r"^Symptom:[ \t]*(.*)$", dispatch_header(body), re.M))), None)
         summary.insert(0, f"next: {slug} budget exceeded; hold for the Captain. Symptom: {symptom or 'none'}. "
                        f"Ask: {STEP_BACK} Record his new bound as Budget: verbatim from Asked: or Captain: "
-                       "in a Captain amendment; or stop, record a known limit or split.")
+                       "in a Captain amendment; or stop, record a known limit or split. "
+                       "Default: keep the results, report the remaining work and stop adding, "
+                       "unless the Captain replaces this outcome.")
     return bool(admitted and over), summary, bound
 
 

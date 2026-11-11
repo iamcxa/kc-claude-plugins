@@ -262,6 +262,13 @@ class WorthQuestionsTests(unittest.TestCase):
                 path.write_text(text.replace("## Design", "## Design\n### Worth questions\nAsked, without, premise."))
                 self.assertFalse(any("Worth questions" in e for e in ds.check_task(path)))
 
+    def test_total_dispatch_forms_are_countable_seeds_including_minutes(self):
+        for value in ("at most 5 dispatches total", "最多 5 次派工，含一輪修正",
+                      "240 累計代理分鐘、最多 5 次派工，含一輪修正"):
+            text = BASE.replace("Budget: one cycle per stage", "Budget: " + value)
+            with tempfile.TemporaryDirectory() as d:
+                self.assertEqual(ds.check_task(write_task(d, text), seed=True), [])
+
     def test_new_seed_budget_needs_a_fixed_form_and_cannot_borrow_an_amendment(self):
         for value in ("one package PR", "one round per stage"):
             text = BASE.replace("Budget: one cycle per stage", "Budget: " + value)

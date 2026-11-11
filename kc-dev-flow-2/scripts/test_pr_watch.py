@@ -753,7 +753,7 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(sum('next: diagnosis has 2 implementation dispatches on symptom "page freeze"' in line
                              for line in lines), 1, lines)
-        self.assertTrue(any("what breaks if this criterion or process is deleted?" in line for line in lines), lines)
+        self.assertTrue(any("what breaks without it" in line for line in lines), lines)
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -1580,7 +1580,7 @@ class TasksTests(unittest.TestCase):
         self.task("some-task", worktree=False, body=(report * 2).encode())
         code, lines = self.tasks({})
         self.assertEqual((code, len(lines)), (0, 1), lines)
-        self.assertIn("before the next step, answer: is what I am solving still the outcome first asked for", lines[0])
+        self.assertIn("before the next step, answer: which Captain words does this serve", lines[0])
         self.assertNotIn("dispatch kc-dev-flow-2:chief-engineer", lines[0])
         (self.state / "_archive").mkdir()
         self.git(self.state, "mv", "some-task.md", "_archive/some-task.md")
@@ -1776,7 +1776,7 @@ class TasksTests(unittest.TestCase):
 
     def backlog(self, slug, surfaces="none", visible="none", heading=True):
         record = f"## FO alignment\n\nSurfaces: {surfaces}\nVisible change: {visible}\n" if heading else "## Scope\n\nnothing\n"
-        record += "\n## Scope\nNon-goals: migrations\nBudget: one task\nStop condition: upstream change\n"
+        record += "\n## Scope\nNon-goals: migrations\nBudget: one cycle per stage\nStop condition: upstream change\n"
         self.task(slug, status="backlog", worktree=False, body=record.encode())
 
     def seed_lines(self, lines):
@@ -1795,7 +1795,7 @@ class TasksTests(unittest.TestCase):
         self.ideation_readme()
         self.backlog("missing-budget")
         task = self.state / "missing-budget.md"
-        task.write_text(task.read_text().replace("Budget: one task\n", ""))
+        task.write_text(task.read_text().replace("Budget: one cycle per stage\n", ""))
         before = task.read_bytes()
         self.gates(("missing-budget", "backlog", "needs-preparation"))
         code, lines = self.tasks({})

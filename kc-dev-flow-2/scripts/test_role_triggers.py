@@ -783,6 +783,91 @@ class BudgetTest(Fixture):
         self.assertEqual(budget_text("## Budget and stop condition\nBudget: one cycle per stage.\n"),
                          "one cycle per stage.")
 
+    def test_total_dispatch_cap_counts_stages_and_named_followups_once(self):
+        self.seed("at most 4 dispatches total")
+        self.record("ideation", 1)
+        self.record("implementation", 1)
+        self.record("validation", 1)
+        self.record("implementation", "1-message-1")
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 0, out)
+        self.assertIn("total dispatches 4", out)
+        pending = self.record("implementation", 2, commit=False)
+        code, out = run(self.state, SLUG, "--pending", pending)
+        self.assertEqual(code, 1, out)
+        self.assertIn("budget exceeded", out)
+        self.assertIn("total dispatches 5", out)
+        self.put(self.body)
+        self.assertEqual(run(self.state, SLUG, "--pending", pending), run(self.state, SLUG))
+
+    def test_total_cap_counts_only_messages_with_a_named_header_symptom(self):
+        self.seed("at most 1 dispatch total")
+        self.record("implementation", 1)
+        message = self.record("implementation", "1-message-1", commit=False)
+        for body in ("Symptom: none\n## Checklist\nanswer\n",
+                     "Symptom:  NoNe  \n## Checklist\nanswer\n",
+                     "Symptom: \n## Checklist\nanswer\n",
+                     "## Checklist\nanswer without a header\n",
+                     "## Checklist\nSymptom: body text is not a header\n",
+                     "```\nSymptom: fenced example\n```\nSymptom: NoNe\n"):
+            message.write_text("Budget: at most 1 dispatch total\n" + body)
+            code, out = run(self.state, SLUG, "--pending", message)
+            self.assertEqual(code, 0, out)
+            self.assertIn("total dispatches 1", out)
+        message.write_text("Budget: at most 1 dispatch total\nSymptom: booking draft lost\n## Checklist\nrepair\n")
+        code, out = run(self.state, SLUG, "--pending", message)
+        self.assertEqual(code, 1, out)
+        self.assertIn("total dispatches 2", out)
+        self.assertIn("Symptom: booking draft lost", out)
+        message.write_text("Symptom: nonempty draft lost\n## Checklist\nrepair\n")
+        self.assertEqual(run(self.state, SLUG, "--pending", message)[0], 1)
+
+    def test_total_cap_uses_record_count_not_the_highest_cycle_number(self):
+        self.seed("最多 2 次派工，含一輪修正")
+        self.record("implementation", 9)
+        self.record("validation", 4)
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 0, out)
+        self.assertIn("total dispatches 2", out)
+        self.record("validation", "4-message-1")
+        self.assertEqual(run(self.state, SLUG)[0], 1)
+
+    def test_total_cap_ignores_special_role_records_and_legacy_tasks_stay_exempt(self):
+        self.seed("at most one dispatch total")
+        self.record("implementation", 1, header=False)
+        self.record("chief-engineer", 1)
+        self.record("engineering-reviewer", 1)
+        self.record("implementation", 2)
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 0, out)
+        self.assertIn("total dispatches 2", out)
+        self.assertNotIn("budget exceeded", out)
+
+    def test_countable_part_survives_an_explicit_minutes_clause(self):
+        for index, value in enumerate(("240 cumulative agent-minutes, at most 2 dispatches total",
+                      "240 累計代理分鐘、最多 2 次派工，含一輪修正",
+                      "at most 2 dispatches total; 240 agent-minutes")):
+            self.seed(value)
+            if index == 0:
+                self.record("implementation", 1)
+                self.record("validation", 1)
+            code, out = run(self.state, SLUG)
+            self.assertEqual(code, 0, out)
+            self.assertIn("Budget: " + value, out)
+            self.assertIn("total dispatches 2", out)
+            self.assertIn("minutes not counted", out)
+            pending = self.record("implementation", 2, commit=False)
+            self.assertEqual(run(self.state, SLUG, "--pending", pending)[0], 1)
+            pending.unlink()
+
+    def test_hold_states_the_preserve_report_stop_default_and_captain_override(self):
+        self.seed()
+        self.record("implementation", 2)
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 1, out)
+        self.assertIn("keep the results, report the remaining work and stop adding", out)
+        self.assertIn("unless the Captain replaces this outcome", out)
+
     def test_pending_overrun_holds_and_an_amendment_clears_it(self):
         self.seed()
         self.record("ideation", 1)

@@ -151,6 +151,21 @@ class DispatchStageTests(unittest.TestCase):
         self.assertIn("spent implementation 2, validation 0", resumed.stderr)
         self.assertIn("Budget: two cycles per stage\n", self.record("implementation", 2).read_text())
 
+    def test_total_cap_holds_before_build_and_keeps_existing_results(self):
+        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 240 累計代理分鐘、最多 1 次派工，含一輪修正\n")
+        self.set_stage("implementation")
+        first = self.build("implementation", ("--symptom", "none"))
+        self.assertIn("total dispatches 1", first.stderr)
+        self.assertIn("minutes not counted", first.stderr)
+        results = self.repo / "results.txt"
+        results.write_text("retained work")
+        held = self.build("implementation", ("--symptom", "new gap", "--spacedock", self.spy), expected=1)
+        self.assertIn("keep the results, report the remaining work and stop adding", held.stderr)
+        self.assertIn("unless the Captain replaces this outcome", held.stderr)
+        self.assertEqual(results.read_text(), "retained work")
+        self.assertFalse(self.marker.exists())
+        self.assertFalse(self.record("implementation", 2).exists())
+
     def test_role_commits_complete_record_before_printing_exact_inputs(self):
         dispatched = self.git(self.workflow, "rev-parse", "HEAD")
         result = self.role(extra=("--roster", "fixture roster", "--note", "role fixture"))
