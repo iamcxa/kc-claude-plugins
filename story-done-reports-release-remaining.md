@@ -57,8 +57,8 @@ Release review: not needed: workflow maintenance, on no journey map.
 
 Profile: pilot. Recommended route: after FO archives a task that names a journey release,
 FO runs one kc-journey-map command and puts its five-to-seven lines in the archive message:
-how many of the release's stories are done, which are in progress, which have no task, and
-the pull requests that finished the archived task's story. Progress and pull request links
+how many of the release's stories are done and which, with their pull requests, which are
+in progress and which have no task. Progress and pull request links
 are computed from task state at that moment and are never written into the map file. The
 canvas is not redrawn by this step. The story declaration step is not taken; instead the
 reader adds a second count, from the tasks filed under each story, beside the declared
@@ -79,8 +79,8 @@ without asking, at each archive.
 - **Q: Is "every filed task done" the same as "story done"?** No. Work not yet filed
   cannot be counted. The report says "filed", and the declared status, the canvas colours
   and the release-walk prompt keep today's meaning.
-- **Q: Does the map file change?** No. ADR 0031 already rejected a story field that a
-  process writes without the Captain accepting an edit.
+- **Q: Does the map file change?** No (D2 B1). A map-file record is option B3; ADR 0031,
+  a related ruling, rejected a story field written without the Captain accepting an edit.
 - **Q: What about qnow?** Of 78 tasks that name the qnow journey, 4 name a story and 21 a
   release. The report counts the release-only tasks under "not on the map", which tells
   the Captain the count is incomplete there. It does not fix that.
@@ -119,7 +119,7 @@ Read progress with `node <kc-journey-map 1.10.0>/lib/journey-progress.mjs <map>
 | Repository (map) | Map stories | Tasks on the journey | Declaring tasks | Reader today | Counted by filed tasks |
 | --- | --- | --- | --- | --- | --- |
 | relay (`spacedock-review.yaml`) | 184 | 62 (41 name a story) | 5 | 2 gap, 182 unverified, 27 orphans | 11 all done, 6 in progress, 167 no task |
-| qnow (`qnow.yaml`) | 190 | 78 (4 name a story, 21 a release) | 0 | 190 unverified, 77 orphans | 0 all done, 1 in progress (the only story-named task on the map) |
+| qnow (`qnow.yaml`) | 190 | 78 (4 name a story, 21 a release) | 0 | 190 unverified, 77 orphans | 0 all done, 1 in progress (branch-price-copy, implementation, r14/copy-prices-from-branch: the only task on a map story) |
 | this repository (`kc-decision-log/journey.yaml`) | 30 | 0; dev2 does not list `journey-map` | 0 | not run: no journey task | none |
 
 - **Why relay's declarations are stale** (full-history clone, `git log --reverse -G`).
@@ -186,6 +186,7 @@ This change adds a capability: a progress report at archive, and pull request re
   story <story>: <done> of <tasks> filed tasks done; declared: <exists | gap | unverified | none>
   pull requests: <ref>, <ref>            (or: pull requests: none recorded)
   release <release>: <a> of <n> stories have every filed task done; <p> in progress; <z> have no task
+  done: <story> (<ref>, <ref>), ... (stories with every filed task done; at most 5, each with at most 3 refs, then "and <x> more")
   in progress: <story> <done>/<tasks>, ... (at most 5, then "and <x> more")
   not on the map: <k> tasks name this release with no story on the map   (only when k > 0)
   canvas: not redrawn; draw it with kc-journey-progress
@@ -201,12 +202,19 @@ This change adds a capability: a progress report at archive, and pull request re
   the wire string stays `journey-progress/v1`, whose pin is major only).
   `skills/kc-journey-progress/SKILL.md` gains one paragraph on `--report` and on
   `members` ("filed tasks, not an exhaustive scope").
-- `lib/progress.test.mjs` covers the new behavior.
+- `lib/progress.test.mjs` covers the new behavior; `lib/schemas.test.mjs` pins the exact
+  story and release keys and `journey-progress 1.0.0`, so it changes with the table.
+- Consumer check, unchanged: kc-dev-flow-2's `test_release_acceptance.py` runs the in-repo
+  `journey-progress.mjs` and asserts the `acceptance` meaning (its `live_producer` case);
+  its fixture `journey-progress-v1.json` carries no `members` and stays valid under an
+  additive change.
 
 **kc-dev-flow-2 PR.**
 - `extensions/journey-map/EXTENSION.md`: the Needs line names `lib/journey-progress.mjs`
-  with `--report` (9 words). The Joins list gains one bullet after the fold bullet (50
-  words):
+  with `--report` (9 words). "at three points on a journey task" becomes "at four points",
+  and the journey-task definition sentence ends ", except the progress report" (5 words),
+  because the new step also runs for a task with a release and no story. The Joins list
+  gains one bullet after the fold bullet (50 words):
 
   > Right after archiving a task that has `journey` and `journey-release`, FO runs `node
   > <kc-journey-map>/lib/journey-progress.mjs <journey file> --workflow-dir <dir> --report
@@ -242,11 +250,11 @@ flowchart TD
 
 | Moment | Before | After (recommended) | Under C1 instead |
 | --- | --- | --- | --- |
-| Startup: `references/sd/workflow.md` | 5939 | 5939 | about +40 in the Release review bullet; needs a budget raise in `lint-skills.py` |
-| Startup: journey-map `EXTENSION.md` | 612 | 671 (+50 bullet, +9 Needs) | 671 |
-| Backlog gate on a journey task: Release review bullet | 420 | 420 | about 460 |
+| Startup: `references/sd/workflow.md` | 5939 | 5939 | 5960 (+21: a drafted 48-word sentence replaces the 27-word split-step sentence); needs a budget raise in `lint-skills.py` |
+| Startup: journey-map `EXTENSION.md` | 612 | 676 (+50 bullet, +9 Needs, +5 definition) | 676 |
+| Backlog gate on a journey task: Release review bullet | 420 | 420 | 441 |
 | After the archive: instructions | 50 (fold bullet) | 100 | 100 |
-| After the archive: script output | fold draft diff (not measured); no progress output | + report, at most 7 lines and 120 words | same |
+| After the archive: script output | fold draft diff (not measured); no progress output | + report, at most 9 lines and 160 words | same |
 | Idle looks (`pr_watch.py tasks`) | unchanged | unchanged | unchanged |
 
 Reading the raw JSON instead would add 5186 words at each relay archive. This task adds
@@ -271,18 +279,19 @@ as a reduction target.
 
 ### Batch overlap
 
-Files the recommended design changes:
+Read at state commit 045694484 (2026-11-11, after a re-pull). Files the recommended design changes:
 - `kc-journey-map/lib/progress.mjs`, `lib/journey-progress.mjs`, `lib/progress.test.mjs`,
-  `lib/schemas.mjs`, `lib/contract-versions.json`, `skills/kc-journey-progress/SKILL.md`.
+  `lib/schemas.mjs`, `lib/schemas.test.mjs`, `lib/contract-versions.json`,
+  `skills/kc-journey-progress/SKILL.md`.
 - `kc-dev-flow-2/extensions/journey-map/EXTENSION.md`.
 - Shared index: none (no ADR, no README budget step).
 
 | Task | Its files or checks (from its task file) | Shared with this design |
 | --- | --- | --- |
-| release-rollout-reaches-adopters-and-laws-pin (ideation) | release rollout to adopters | no file; this task's stop condition needs the new kc-journey-map and kc-dev-flow-2 to reach relay |
+| release-rollout-reaches-adopters-and-laws-pin (ideation) | release rollout to adopters; mentions workflow.md and `lint-skills.py` as unchanged | no file; this task's stop condition needs the new kc-journey-map and kc-dev-flow-2 to reach relay |
 | budget-overrun-holds-and-findings-meet-non-goals (ideation) | `references/sd/workflow.md` | none; under C1, the same file |
 | worker-push-words-match-state-commit (ideation) | `extensions/paseo/EXTENSION.md`, workflow.md Dispatch facts, `lint-skills.py` | none (a different EXTENSION.md); under C1, workflow.md and `WORKFLOW_BUDGET_STEPS` |
-| denied-command-denies-only-that-command (ideation) | `extensions/paseo/EXTENSION.md`, Dispatch facts | none |
+| denied-command-denies-only-that-command (ideation) | `extensions/paseo/EXTENSION.md`, Dispatch facts; its overlap note names this task's journey-map EXTENSION.md as "no shared file" | none |
 | journey-map-progress-and-provenance (backlog, read only) | `progress.mjs`, `journey-progress.mjs`, the journey-progress schema | same files and schema; this task first, so that one designs on journey-progress 1.1.0 |
 | adr-required-statement (validation) | workflow.md, `docs/dev2/README.md`, `lint-skills.py` | none; under C1, workflow.md and the budget |
 | dispatch-carries-reserved-adr-number (ideation) | `pr_watch.py`, learning.md | none; the `pr_watch.py` trigger alternative in D1 would share `tasks` |
@@ -329,7 +338,9 @@ canvas is redrawn.
   docs-only map PR. Worse:
   - It is one more PR for the Captain to merge per story.
   - Map and tasks can disagree.
-  - ADR 0031 already rejected a process-written story field.
+  - Related ruling, not a governing one: ADR 0031 rejected a story field written without
+    the Captain accepting an edit and with no consumer; B3 goes through a PR he merges and
+    he is its consumer.
 
 **D3: the story declaration step.**
 - **C3 (recommended).** Do not take it. Add a count of filed tasks beside the unchanged
@@ -339,8 +350,8 @@ canvas is redrawn.
 - **C1.** Take it: at each backlog approval into a story, FO sets the story's
   `journey-required-tasks` to all current members, plus a reader rule that a nested,
   newer declaration supersedes an archived one. Worse:
-  - It adds a third surface (`references/sd/workflow.md`, about +40 words, a budget raise
-    and `test_sd_dispatch.py` strings) beyond "one PR each".
+  - It adds a third surface (`references/sd/workflow.md`, +21 words by the drafted
+    sentence, a budget raise and `test_sd_dispatch.py` strings) beyond "one PR each".
   - It is forward-only: today's 3 stale relay stories stay unverified until a new task
     joins, and owner-sees-all, whose members are all archived, never recovers.
   - The list FO writes asserts only "approved so far", the same weakness as C3, at more
@@ -349,7 +360,8 @@ canvas is redrawn.
   adds would read "unverified" for 182 of 184 relay stories and all of qnow, so the
   Captain's question stays unanswered.
 
-Past rulings read: ADR 0031 (no process-written story field: supports B1 over B3); ADR
+Past rulings read: ADR 0031 (related: it rejected an acceptance field written without the
+Captain's edit and with no consumer; B3 differs on both); ADR
 0056 (directory discovery, producer-first registration, idle-look walk prompt: C3 keeps
 its trigger unchanged); `git grep -n '^Override:'` in state finds 5 lines, none in this
 area.
@@ -360,9 +372,9 @@ Replay workspace: the pinned clones above, with the state copied under
 `<code>/docs/dev2/.spacedock-state`; `<cand>` is the candidate kc-journey-map checkout
 with `npm ci` done.
 
-**AC-1** — A declared story's last task completing is reported with its release's remaining stories and its pull requests. Evidence: on the relay replay, run `spacedock status --workflow-dir <relay>/docs/dev2 --set inbox-home status=done pr=pr-merge:999`, then `node <cand>/lib/journey-progress.mjs <relay>/docs/journey/spacedock-review.yaml --workflow-dir <relay>/docs/dev2 --report inbox-home`. It exits 0 and prints `story inbox-home: 1 of 1 filed tasks done; declared: exists`, `pull requests: spacedock-dev/subspace-relay#999`, and `release owner-account: 1 of 4 stories have every filed task done; 1 in progress; 2 have no task`. Falsifier: without the `--set`, the same command prints `0 of 1` and `0 of 4`.
+**AC-1** — A declared story's last task completing is reported with its release's remaining stories and its pull requests. Evidence: on the relay replay, run `spacedock status --workflow-dir <relay>/docs/dev2 --set inbox-home status=done pr=pr-merge:999`, then `node <cand>/lib/journey-progress.mjs <relay>/docs/journey/spacedock-review.yaml --workflow-dir <relay>/docs/dev2 --report inbox-home`. It exits 0 and prints `story inbox-home: 1 of 1 filed tasks done; declared: exists`, `pull requests: spacedock-dev/subspace-relay#999`, `release owner-account: 1 of 4 stories have every filed task done; 1 in progress; 2 have no task`, `done: inbox-home (spacedock-dev/subspace-relay#999)` and `in progress: switch-any-account 0/1`. Falsifier: without the `--set`, the same command prints `0 of 1` and `0 of 4`.
 
-**AC-2** — Declared status, release acceptance and the walk prompt are unchanged. Evidence: on the unmodified relay and qnow replays, the `status`, `requiredTasks`, `doneTasks`, `taskIds` of every story and the `status`, `acceptance` of every release from `<cand>` equal kc-journey-map 1.10.0's output field for field (a jq or python diff prints nothing). `release_acceptance.py due` prints the same lines with either `--progress`. Falsifier: a reader that sets `exists` from member counts changes relay's continuity-latest release (2 stories with only done members) to `pending delivery acceptance`, and the diff names it.
+**AC-2** — Declared status, release acceptance and the walk prompt are unchanged. Evidence: on the unmodified relay and qnow replays, the `status`, `requiredTasks`, `doneTasks`, `taskIds` of every story and the `status`, `acceptance` of every release from `<cand>` equal kc-journey-map 1.10.0's output field for field (a jq or python diff prints nothing). `release_acceptance.py due` prints the same lines with either `--progress` (continuity-latest is unclaimed, so a status change would add a `next:` line), and kc-dev-flow-2's `test_release_acceptance.py` passes against the candidate checkout. Falsifier: a reader that sets `exists` from member counts changes relay's continuity-latest release (2 stories with only done members) to `pending delivery acceptance`, and the diff names it.
 
 **AC-3** — Filed-task counts match task state. Evidence: on the unmodified relay replay, the `<cand>` JSON `members` gives 11 stories with every member done, 6 in progress and 167 with no task, matching the table in `### Measurements`. agent-reviews-from-link reads `{tasks: 6, done: 5}`. Falsifier: counting only declared members gives 3 for agent-reviews-from-link.
 
@@ -370,13 +382,13 @@ with `npm ci` done.
 
 **AC-5** — A release-only task and an incomplete map are reported honestly. Evidence: on the qnow replay, `--report production-operations` (archived, release r12, no story) exits 0, prints no `story` line, and prints `not on the map: <k> tasks name this release with no story on the map` with k equal to the count of r12 tasks without a map story in the `spacedock status` listing. Falsifier: omitting orphans from the report drops the line.
 
-**AC-6** — The report stays short. Evidence: on the relay replay, `--report` for a task of second-opinion-later (28 stories) prints at most 7 lines and 120 words (`wc -l -w`), and the in-progress list stops at 5 names with `and <x> more`. Falsifier: listing every story exceeds 120 words.
+**AC-6** — The report stays short. Evidence: on the relay replay, `--report` for a task of second-opinion-later (28 stories) prints at most 9 lines and 160 words (`wc -l -w`); the done and in-progress lists each stop at 5 names with `and <x> more`, and each done story shows at most 3 refs. Falsifier: listing every story or every ref exceeds 160 words.
 
 **AC-7** — FO's step cannot pass silently. Evidence: kc-journey-map 1.10.0 run with `--report inbox-home` exits 2 with its usage line (observed 2026-11-11). `<cand>` with `spacedock` removed from PATH exits 1 and prints exactly one line starting `journey progress not run:`. The candidate EXTENSION.md bullet names both cases. Falsifier: a `<cand>` that prints the report on a failed read with exit 0.
 
 **AC-8** — The schema version moves with the field table. Evidence: `node <cand>/lib/schemas.mjs journey-progress` prints the `members` rows; `contract-versions.json` names `journey-progress` current 1.1.0 with a new hash and keeps 1.0.0. The kc-journey-map schema test exits 0. Falsifier: removing the version entry while keeping the rows makes that test fail.
 
-**AC-9** — The kc-dev-flow-2 step is the bullet as designed, and nothing else in the FO reading changes. Evidence: `git diff origin/main -- kc-dev-flow-2/` touches only `extensions/journey-map/EXTENSION.md`; `wc -w` of that file is 612 before and at most 671 after; `references/sd/workflow.md` is byte-identical. FO's after-archive step is run by hand on the relay replay of AC-1 by copying the bullet's command verbatim, and it prints AC-1's lines. Falsifier: a candidate that also edits workflow.md fails the diff check.
+**AC-9** — The kc-dev-flow-2 step is the bullet as designed, and nothing else in the FO reading changes. Evidence: `git diff origin/main -- kc-dev-flow-2/` touches only `extensions/journey-map/EXTENSION.md`; `wc -w` of that file is 612 before and at most 676 after, and its Joins line says four points; `references/sd/workflow.md` is byte-identical. FO's after-archive step is run by hand on the relay replay of AC-1 by copying the bullet's command verbatim, and it prints AC-1's lines. Falsifier: a candidate that also edits workflow.md fails the diff check.
 
 **AC-10** (stop condition, real use) — On relay, after both releases reach it, the next archive of a task on a declared story has FO's archive message carrying the report lines, or `journey progress not run: <reason>`. Evidence: the archive message quoted with its task slug. Not yet verified: this needs the release and rollout (see release-rollout-reaches-adopters-and-laws-pin); validation may record it as an unverified future check.
 
@@ -385,17 +397,17 @@ with `npm ci` done.
 - DONE: Per the Captain's Result line, compare the choices side by side for him to pick at the gate, each with what gets worse: (a) what FO reports after a story task is archived and whether the canvas is redrawn then; (b) progress and story-to-PR links derived from task state versus written into the map file; (c) taking the story declaration step (a task joins its story's journey-required-tasks when approved into the story) into this task versus leaving it to journey-map-progress-and-provenance. Measure today's declared and undeclared stories on subspace-relay, qnow and this repository read-only, and run the progress reader on at least one real map
   `### Decisions for the Captain` D1 A1–A3, D2 B1–B3, D3 C1–C3, each with what gets worse. `### Measurements`: relay 5 declarations, 2 gap and 182 unverified; qnow 0 declarations, 190 unverified; this repo has no journey task. The reader ran on relay and qnow at the pinned SHAs.
 - DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (story-done-reports-release-remaining, release-rollout-reaches-adopters-and-laws-pin, budget-overrun-holds-and-findings-meet-non-goals, worker-push-words-match-state-commit, denied-command-denies-only-that-command) and live task of other sessions (journey-map-progress-and-provenance (backlog, read only), adr-required-statement, dispatch-carries-reserved-adr-number, journey-server-host-pilot, merge-guard-stops-unasked-merges, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions or held; read only)) that changes the same file or check, so FO can order implementation
-  The design's 7 files plus 11 task rows. The only shared files under the recommended choices are with journey-map-progress-and-provenance (`progress.mjs` and the schema). The recommended order is given.
+  The design's 8 files plus 11 task rows, re-read at state 045694484. The only shared files under the recommended choices are with journey-map-progress-and-provenance (`progress.mjs` and the schema). The recommended order is given.
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
-  The `### Words FO reads` table: EXTENSION.md 612→671, after-archive instructions 50→100, report output at most 120 words (against 5186 words of JSON), workflow.md 5939 unchanged, with a C1 column.
+  The `### Words FO reads` table: EXTENSION.md 612→676, after-archive instructions 50→100, report output at most 160 words (against 5186 words of JSON), workflow.md 5939 unchanged; the C1 column is measured from a drafted sentence (+21 words).
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
   AC-1..AC-10 below, each with a command and a falsifier; D1–D3 each carry a recommendation and its cost.
 - DONE: AC-1 report on a declared story's completion: not yet verified (needs `--report`). The underlying count was exercised: in scratch, inbox-home set done moved owner-account from 0 to 1 of 4 stories with inbox-home `exists`.
-- DONE: AC-2 declared status, acceptance and walk prompt unchanged: not yet verified. The falsifier's premise was measured: continuity-latest has 2 stories whose members are all done.
+- DONE: AC-2 declared status, acceptance and walk prompt unchanged: not yet verified. The falsifier's premise was measured: continuity-latest has 2 stories whose members are all done, and no task claims its walk.
 - DONE: AC-3 filed-task counts: not yet verified on the candidate. The expected values (11, 6, 167; agent-reviews-from-link 6 and 5) come from the current state listing.
 - DONE: AC-4 pull request ref rules: not yet verified. The measured `pr:` shapes on relay are 40 `pr-merge:N`, 1 `owner/repo#N`, 1 URL and 20 empty.
 - DONE: AC-5 release-only and incomplete maps: not yet verified. qnow has 77 orphans (57 with no release, 17 with a release and no story, 3 off the map), and production-operations is release r12 with no story.
-- DONE: AC-6 report length: not yet verified (no candidate yet).
+- DONE: AC-6 report length (at most 9 lines, 160 words): not yet verified (no candidate yet).
 - DONE: AC-7 cannot run silently: partly verified. kc-journey-map 1.10.0 with `--report` exits 2 with its usage line (2026-11-11). The candidate's exit 1 is not yet verified.
 - DONE: AC-8 schema version moves: not yet verified. journey-progress is at 1.0.0 in `contract-versions.json` at origin/main.
 - DONE: AC-9 kc-dev-flow-2 diff limited to the extension: not yet verified. The base counts were measured: EXTENSION.md 612 words, bullet 50.
