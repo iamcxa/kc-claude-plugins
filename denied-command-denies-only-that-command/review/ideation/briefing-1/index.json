@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:denied-command-denies-only-that-command:ideation:attempt-1:revision-1",
+  "question": "決定：第 21 批六張設計要不要照各自的建議核准並開始實作。我建議六張都核准。核准即接受以下每一項建議，哪一張要調整請直接說：一、故事回報進度：每張有切片的任務歸檔時回報、不自動重畫畫布；進度與 PR 連結現算並顯示在回報裡，畫布上不顯示 PR；不做故事宣告，改在回報裡多列「已建檔任務」的計數。二、發版鋪開：法規檢查維持你點名才裝，釘選在每次說明檔同步合併後跟著移；採用 repo 清單放在這個 repo 狀態分支的一個檔案，只列已公開提過的；由我在你每次發版說一聲後派同步 PR，合併後移釘選。三、預算：預算改用可數的輪數寫，每次實作與驗證派工顯示已花幾輪，第一次超過就停下來問三個值不值得的問題；同樣三題在設計階段必答並由檢查擋缺漏；取代原本的退一步提醒，不另加重大發現規則。四、推送說明：那句話放在實作與驗證的工人守則，不放進流程說明檔。五、拒絕一個指令：那句話放進每張派工單都帶的段落，流程說明檔加 33 字；另外讓 Codex 工人收得到拒絕的理由；重放 10 次、上限 12 次。六、先查現成做法：採「只在要發明新機制時才查」，由事先講好的重放規則決定出不出，不通過就退到「每張一行」，再不通過就不開 PR；查的範圍是工人已知的加上 repo 自己的相依套件，不上網搜尋。",
+  "artifacts": [
+    {
+      "id": "artifact:denied-command-denies-only-that-command:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b86cee4659ee10e6b1e7532f279242d03cb4743e/denied-command-denies-only-that-command.md",
+      "rev": "sha256:c634a8afb3e1dab2e493149b7c56d4d2b7285304a3e15ec060940631f3407971",
+      "mediaType": "text/markdown",
+      "summary": "Batch 21 ideation sitting, six designs. This task: denied-command-denies-only-that-command. FO ran design_surfaces.py check on the committed design: exit 0, design surfaces presentable (2026-11-11). Everything else is the ideation worker's report, not re-run by FO: its measurements, replays on prototypes or plans, and word counts. No acceptance criterion is verified against a candidate. The design's decisions for the Captain, each with a recommendation and what gets worse, are in the task file; the bound question lists the recommendation FO asks him to accept for each task."
+    }
+  ]
+}

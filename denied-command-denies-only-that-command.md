@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:denied-command-denies-only-that-command:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:denied-command-denies-only-that-command-ideation-1
+              briefing:
+                id: briefing:denied-command-denies-only-that-command:ideation:attempt-1:revision-1
+                digest: sha256:a2db54ee70c8799c48ceb107bfb812a1c4bf60597f10958544af6e7c8cfddedc
+                room-ref: ./denied-command-denies-only-that-command/review/ideation/briefing-1
 started: 2026-11-11T01:19:20Z
 ---
 
