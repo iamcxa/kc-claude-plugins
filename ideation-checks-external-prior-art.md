@@ -35,6 +35,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:ideation-checks-external-prior-art:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:ideation-checks-external-prior-art-ideation-1
+              briefing:
+                id: briefing:ideation-checks-external-prior-art:ideation:attempt-1:revision-1
+                digest: sha256:9b9c1f993b6be0f5403730f03c05acd0595390f180508a762d1732b2e31c66bd
+                room-ref: ./ideation-checks-external-prior-art/review/ideation/briefing-1
 started: 2026-11-11T02:01:14Z
 ---
 
