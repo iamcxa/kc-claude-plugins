@@ -253,6 +253,21 @@ class DesignSurfacesTests(unittest.TestCase):
 
 
 class WorthQuestionsTests(unittest.TestCase):
+    def test_html_comments_cannot_supply_the_worth_heading(self):
+        base = (BASE.split("## PRFAQ")[0] + "## Design\n\n{heading}\n"
+                "## Acceptance criteria\n**AC-1** bounded\n")
+        for heading in ("<!--\n### Worth questions\n-->", "<!--\n### Worth questions\n",
+                        "<!--\n```\n-->\n<!--\n### Worth questions\n-->"):
+            with self.subTest(heading=heading), tempfile.TemporaryDirectory() as d:
+                path = write_task(d, base.replace("{heading}", heading))
+                self.assertTrue(any("Worth questions" in e for e in ds.check_task(path)))
+        for heading in ("<!-- note -->\n### Worth questions\nAsked, without, premise.",
+                        "```html\n<!-- literal example\n```\n### Worth questions\nAsked, without, premise.",
+                        "<!--\n```\n-->\n### Worth questions\nAsked, without, premise."):
+            with self.subTest(heading=heading), tempfile.TemporaryDirectory() as d:
+                path = write_task(d, base.replace("{heading}", heading))
+                self.assertFalse(any("Worth questions" in e for e in ds.check_task(path)))
+
     def test_design_without_worth_questions_is_refused_even_with_fenced_example(self):
         for heading in ("", "```\n### Worth questions\n```\n"):
             text = BASE.split("## PRFAQ")[0] + "## Design\n\n" + heading + "body\n\n## Acceptance criteria\n**AC-1** bounded\n"

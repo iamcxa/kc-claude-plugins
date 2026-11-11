@@ -131,6 +131,42 @@ class DispatchStageTests(unittest.TestCase):
         self.assertIn("budget: Budget: at most 3 days; spent implementation 0, validation 1; states no cycles", result.stderr)
         self.assertIn("Budget: at most 3 days\n", self.record("validation").read_text())
 
+    def test_worth_requirement_uses_native_stage_for_yaml_status_values(self):
+        original = self.entity.read_text()
+        design = ("\n## PRFAQ\nA bounded CLI result.\n\n## Acceptance criteria\n"
+                  "**AC-1** Bounded result. Evidence: one CLI run.\n")
+        for path in (self.entity, self.folder / "index.md"):
+            path.parent.mkdir(exist_ok=True)
+            for status in ("ideation", "ideation # ready for review", "'ideation' # review", '"ideation" # review'):
+                with self.subTest(status=status, path=path.name):
+                    text = original.replace("status: ideation", "status: " + status) + design
+                    path.write_text(text)
+                    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
+                                        "--read", path, "--json"])
+                    self.assertEqual(json.loads(native.stdout)["frontmatter"]["status"], "ideation")
+                    checker = ROOT / "scripts/design_surfaces.py"
+                    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+                    self.assertIn("design needs '### Worth questions'", refused.stdout)
+                    self.assertEqual(path.read_text(), text)
+                    path.write_text(text.replace("## PRFAQ\n", "## PRFAQ\n### Worth questions\nAsked, without, premise.\n"))
+                    self.call([sys.executable, "-B", checker, "check", path])
+
+    def test_unreadable_native_stage_does_not_make_design_presentable(self):
+        self.entity.write_text(self.entity.read_text().replace("status: ideation", "status: ideation # review")
+                               + "\n## PRFAQ\nresult\n## Acceptance criteria\n**AC-1** result\n")
+        binary = self.base / "unreadable-stage"
+        cases = (None, "not json", json.dumps({"command": "read", "path": str(self.entity), "frontmatter": {"status": 1}}),
+                 json.dumps({"command": "read", "path": "/another/task.md", "frontmatter": {"status": "done"}}))
+        for output in cases:
+            with self.subTest(output=output):
+                if output is not None:
+                    binary.write_text(f"#!{sys.executable}\nprint({output!r})\n")
+                    binary.chmod(0o755)
+                result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
+                                   expected=1, child_env={**self.env, "SPACEDOCK_BIN": str(binary)})
+                self.assertIn("cannot read stage for Worth questions", result.stdout)
+                self.assertNotIn("design surfaces presentable", result.stdout)
+
     def test_budget_hold_removes_record_and_skips_build_until_amended(self):
         self.entity.write_text(self.entity.read_text() + "\n## Budget\n- One cycle per stage.\n")
         self.set_stage("implementation")

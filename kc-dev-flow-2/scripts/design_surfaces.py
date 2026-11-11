@@ -15,6 +15,7 @@ import argparse
 import difflib
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -1045,6 +1046,54 @@ def check_seed_fields(name, text):
     return errors
 
 
+# see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+def worth_lines(text):
+    from role_triggers import FENCE as marker_pattern
+
+    fence, comment = None, False
+    for line in text.splitlines():
+        marker = marker_pattern.match(line) if not comment else None
+        if fence:
+            if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence):
+                fence = None
+            continue
+        if marker:
+            fence = marker[1]
+            continue
+        visible = ""
+        while line:
+            if comment:
+                _, closed, line = line.partition("-->")
+                comment = not bool(closed)
+                if comment:
+                    break
+            else:
+                part, opened, line = line.partition("<!--")
+                visible += part
+                comment = bool(opened)
+        yield visible
+
+
+def worth_stage(path):
+    from dispatch_records import find_readme
+
+    path = path.resolve()
+    readme = find_readme(path)
+    workflow = readme.parent if readme else path.parent
+    done = subprocess.run([os.environ.get("SPACEDOCK_BIN") or "spacedock", "status", "--workflow-dir", str(workflow),
+                           "--read", str(path), "--json"], capture_output=True, text=True, timeout=30)
+    if done.returncode:
+        raise ValueError((done.stderr or done.stdout).strip() or f"Spacedock read exited {done.returncode}")
+    data = json.loads(done.stdout)
+    if not isinstance(data, dict):
+        raise ValueError("malformed Spacedock read")
+    fields = data.get("frontmatter")
+    if data.get("command") != "read" or data.get("path") != str(path) or not isinstance(fields, dict) \
+            or ("status" in fields and not isinstance(fields["status"], str)):
+        raise ValueError("malformed or mismatched Spacedock read")
+    return fields.get("status")
+
+
 def check_task(path, seed=False, notes=None):
     errors = []
     try:
@@ -1096,14 +1145,17 @@ def check_task(path, seed=False, notes=None):
     front = FRONTMATTER.match(text)
     profile, status = (FM_PROFILE.search(front.group(1)), FM_STATUS.search(front.group(1))) if front else (None, None)
     plain = "\n".join(unfenced(lines))
-    # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
-    from role_triggers import outside_fences
-
-    worth_lines = list(outside_fences(text))
-    design = section(worth_lines, re.compile(r"^## Design[ \t]*$", re.I))
-    if (design is not None or (status and status[1] == "ideation")) and not any(
-            re.fullmatch(r"### Worth questions[ \t]*", line, re.I) for line in (design if design is not None else worth_lines)):
-        errors.append(f"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test")
+    worth = list(worth_lines(text))
+    design = section(worth, re.compile(r"^## Design[ \t]*$", re.I))
+    if not any(re.fullmatch(r"### Worth questions[ \t]*", line, re.I) for line in (design if design is not None else worth)):
+        needed = design is not None
+        if not needed and text.lstrip("\ufeff\n").startswith("---\n"):
+            try:
+                needed = worth_stage(path) == "ideation"
+            except (OSError, ValueError, subprocess.TimeoutExpired) as exc:
+                errors.append(f"{path.name}: cannot read stage for Worth questions: {exc}")
+        if needed:
+            errors.append(f"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test")
     if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):
         summary = check_security(path, plain, declared, errors)
         if summary and notes is not None:
