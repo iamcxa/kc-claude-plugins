@@ -34,6 +34,10 @@ gates:
                 id: briefing:worker-push-words-match-state-commit:ideation:attempt-1:revision-1
                 digest: sha256:ae33ca312207ad6707385f22aa39b91963feaa0613ba134c2163d7f26358bd40
                 room-ref: ./worker-push-words-match-state-commit/review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-11T02:20:06.458071Z"
+                reason: The Captain answered the six-design question with 「這次比較複雜，一題題過審」 (host question dialog, 2026-11-11); each design gets its own question.
 started: 2026-11-11T01:19:15Z
 ---
 
