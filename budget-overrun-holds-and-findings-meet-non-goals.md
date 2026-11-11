@@ -75,7 +75,7 @@ gates:
                 state: pending
 started: 2026-11-11T01:44:17Z
 worktree: .worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals
-pr: iamcxa/kc-claude-plugins#841
+pr: pr-merge:841
 ---
 
 ## Scope
