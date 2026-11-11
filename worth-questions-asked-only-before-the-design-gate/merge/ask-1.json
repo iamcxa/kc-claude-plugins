@@ -1,0 +1,21 @@
+{
+  "class": "never",
+  "head": "78905b08d6f38817ccdda5d2e91be478fd75dfc7",
+  "model": "not run",
+  "necessity": "kc-dev-flow-2/scripts/design_surfaces.py, kc-dev-flow-2/scripts/test_design_surfaces.py and kc-dev-flow-2/skills/observer/SKILL.md change against origin/main, the third by the Captain's approval of de",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F1 Deferred risk: existing CI'",
+    "point: deferred: 'FO declines F1 Deferred risk: the'",
+    "point: deferred: 'Validation rounds: 1. PASSED at 78905b08d'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/skills/observer/SKILL.md'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#849",
+  "sufficiency": "at the candidate the three tasks named in the task's Bite print no Worth questions line and otherwise their 0.38.1 output, a task in ideation with no such section is still refused, an unreadable stage",
+  "time": "2026-11-11T15:37:41Z",
+  "verdict": "ask"
+}

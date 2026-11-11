@@ -1,0 +1,29 @@
+main=44f11855264bde64da284ffa9c1fef70e8ac38dd head=78905b08d6f38817ccdda5d2e91be478fd75dfc7 merged-tree=f8eb7593f7b03a82d1fef10a46f5e18197e75a7c 2026-11-11T15:16:59Z
+exit=0 | lint-skills.py | 
+exit=0 | scripts/test_lint_skills.py | Ran 47 tests in 12.431s OK 
+exit=0 | scripts/test_design_surfaces.py | Ran 229 tests in 18.986s OK (skipped=4) 
+exit=0 | scripts/test_adr_doc_checks.py | Ran 9 tests in 1.467s OK 
+exit=0 | scripts/test_poc_readme.py | Ran 9 tests in 2.113s OK 
+exit=0 | scripts/test_comment_ratio.py | Ran 14 tests in 7.841s OK 
+exit=0 | scripts/test_number_guards.py | Ran 38 tests in 32.642s OK 
+exit=0 | extensions/codex/test_codex_review.py | Ran 36 tests in 0.004s OK 
+exit=0 | extensions/roborev/test_roborev_gate.py | Ran 5 tests in 2.640s OK 
+exit=0 | extensions/copilot/test_copilot_review.py | Ran 15 tests in 0.000s OK 
+exit=0 | extensions/journey-map/test_map_footprint.py | Ran 23 tests in 0.221s OK 
+exit=0 | extensions/release-acceptance/test_release_acceptance.py | Ran 122 tests in 6.194s OK (skipped=4) 
+exit=0 | scripts/test_dispatch_records.py | Ran 136 tests in 165.932s OK (skipped=1) 
+exit=0 | scripts/test_delivery_gate.py | Ran 208 tests in 137.186s OK (skipped=1) 
+exit=0 | scripts/test_validation_security.py | Ran 5 tests in 0.600s OK 
+exit=0 | scripts/test_pr_watch.py | Ran 136 tests in 84.335s OK 
+exit=0 | scripts/test_replay_dispatch.py | Ran 8 tests in 6.201s OK 
+exit=0 | scripts/test_decision_ledger.py | Ran 23 tests in 0.666s OK 
+exit=0 | scripts/test_package_version.py | Ran 23 tests in 7.781s OK 
+exit=0 | scripts/test_workflow_checkout.py | Ran 13 tests in 10.253s OK 
+exit=0 | scripts/test_observer_check.py | Ran 19 tests in 7.762s OK 
+exit=0 | scripts/test_merge_audit.py | Ran 17 tests in 14.984s OK 
+exit=0 | scripts/test_role_triggers.py | Ran 63 tests in 103.318s OK 
+exit=0 | scripts/test_laws_check.py | Ran 84 tests in 144.311s OK (skipped=1) 
+exit=0 | scripts/test_learning.py | Ran 50 tests in 59.727s OK 
+exit=0 | scripts/test_dispatch_stage.py | Ran 46 tests in 195.941s OK 
+exit=0 | scripts/test_sd_dispatch.py | 
+exit=0 | scripts/test_observer_recovery.py | 
