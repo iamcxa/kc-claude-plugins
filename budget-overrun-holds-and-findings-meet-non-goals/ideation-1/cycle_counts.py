@@ -1,5 +1,5 @@
 import sys,re,pathlib,json,collections
-sys.path.insert(0,'/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts')
+import os; sys.path.insert(0, os.environ['KC_DEV_FLOW_2_SCRIPTS'])
 import role_triggers as rt
 root=pathlib.Path(sys.argv[1]); only=sys.argv[2] if len(sys.argv)>2 else None
 H2=re.compile(r'^## ')
@@ -26,4 +26,3 @@ n=len(res); c=lambda f:sum(1 for r in res if f(r))
 print(root.parent.name if root.name=='.spacedock-state' else root.name, only or 'all', 'dev2 tasks',n,'| impl>=1',c(lambda r:r['impl']>=1))
 print('  hold@2nd impl',c(lambda r:r['impl']>=2),'| hold@3rd',c(lambda r:r['impl']>=3),'| hold@4th',c(lambda r:r['impl']>=4),'| CE 4 repair passes (impl>=5)',c(lambda r:r['impl']>=5))
 print('  any Material validation',c(lambda r:r['valmat']>=1),'(findings',sum(r['matf'] for r in res),') | step-back 2 Material validations',c(lambda r:r['valmat']>=2))
-json.dump(res,open('/tmp/r2-'+(root.name if root.name!='.spacedock-state' else 'kcp')+'-'+(only or 'all')+'.json','w'))

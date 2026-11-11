@@ -68,14 +68,23 @@ Supersedes: none
 
 ## Design
 
+### PRFAQ
+
+**A task's budget now says how many worker cycles the Captain will pay for. Each dispatch shows what is spent, and the first cycle past it comes back to him as his original question.** FO proposes the Budget in cycles at the backlog gate. Before every implementation or validation dispatch, the dispatch script prints the Budget beside the cycles spent. When the next cycle would pass the bound, the script holds, and FO asks the Captain three worth questions: which of his words the cycle serves, what breaks without it, and which premise would make the task unneeded. The ideation design answers the same three questions for each part of the scope.
+
+- **Who uses this?** The Captain, who sets the bound and rules at a hold. FO, which proposes the bound and asks at a hold. The ideation worker, who answers the worth questions in the design.
+- **What stops?** The dispatch past the bound, until an amendment records his new bound. If he chooses to stop, record a known limit or split the task, no dispatch follows.
+- **What does not change?** Budgets written in another form are printed and never held. Tasks started before the release are never held. The Material-finding rule and every chief-engineer and engineering-reviewer event stay as they are.
+- **What goes away?** The advisory step-back reminder, for tasks whose Budget counts cycles.
+
 ### What a budget is for, and what the record shows
 
 A budget is the Captain's statement of how much the outcome is worth to him. It is useful only if it is counted in the unit that runs away, shown as it is spent, and sends the original question back to him when it is passed (amendment 1). Survey of the `Budget:` lines as they stand, with the first line under `## Budget` or a `Budget:` line read per task (`ideation-1/budget_lines.py`, `ideation-1/counts.txt`; state branches pinned: this workflow `e5efef4e`, qnow `d80c162d`, subspace-relay `13ef3567`, subspace-web `faf28a25`, all `origin/spacedock-state/dev2`, read 2026-11-11):
 
 - This workflow: 109 tasks have a Budget; 98 say "One package PR" plus a word-budget clause. That is a bound on the shape of the delivery, and it is never passed: fo-lifecycle-mod was one PR and 16 implementation dispatches. None of the 60 tasks with stage dispatch records has a Budget that states a number of cycles.
-- subspace-relay: "one cycle per stage" on 51 of 68 tasks. Five more say "half a day" and four "one day" of worker time, all marked FO-proposed. web and qnow write per-stage rounds or passes ("one ideation, one implementation, one validation round"; "one ideation pass and one implementation pass in one PR. This is FO's proposal").
+- subspace-relay: "one cycle per stage" on 51 of 68 tasks. Six more say "half a day" and four "one day" of worker time, all marked FO-proposed. web and qnow write per-stage rounds or passes ("one ideation, one implementation, one validation round"; "one ideation pass and one implementation pass in one PR. This is FO's proposal").
 - What ran away is cycles, meaning worker dispatches. Where a Budget states cycles, the dispatch records exceed it often: at the first implementation or validation overrun, qnow 7 of 7, relay 11 of 23 and web 5 of 20 (`ideation-1/overrun_holds.py`). Most of these Budget lines are a template for the happy path that FO proposed and the Captain approved in a batch. They do not state what the outcome is worth to him.
-- Dispatch records `<task>/dispatch/<stage>-<n>.md` count cycles exactly (written by `dispatch_stage.py` since #812). Lines of code (relay: 2032 added, about 30 of them server product code) and days are not recorded per dispatch.
+- Dispatch records `<task>/dispatch/<stage>-<n>.md` count cycles exactly (written by `dispatch_stage.py` since #812). Lines of code (relay: 2032 added, about 30 of them server product code, by the relay FO's count, not re-run here) and days are not recorded per dispatch.
 
 Cheapest step that would have made the relay task's overrun visible: print the `Budget:` line next to the cycle number at each dispatch. Relay's implementation-2 record was committed at `42317d0c` (2026-11-10T14:45+08:00) against "One cycle per stage." The package's own checks fired later. `role_triggers.py` 0.38.1, replayed over the relay history with `--rev` at each commit (`ideation-1/relay-role-triggers-replay.txt`), owes a chief-engineer call first at `d85ce152` (22:07, 4 repair passes, after implementation-5) and prints the step-back reminder at `45902a30` (23:15, two validations with a Material finding). The Captain was first asked at implementation-6. So the budget line went unread for four cycles.
 
@@ -101,23 +110,28 @@ The step-back questions in `role_triggers.py` (`STEP_BACK`: outcome first asked 
 
 | Moment | Who answers | Forced by | Recorded where |
 | --- | --- | --- | --- |
-| A task entering (backlog gate) | FO, in the gate question; the Captain rules | the gate itself: the Captain reads it (backlog Gate content names the answers) | the gate question and its resolution, as today |
+| A task entering its design (ideation) | the ideation worker, per scope part; the Captain rules at the ideation gate | ideation principles, and a `design_surfaces.py check` refusal when the design has no `### Worth questions` section | that section of the task's design |
 | A budget passed (the next implementation or validation dispatch over the bound) | FO, in a hold question; the Captain rules | `dispatch_stage.py` exit 1 through `role_triggers.py` | `### Amendment N` with `Budget:` (new bound), or his stop |
 | A Material finding | no separate moment: a repair within budget follows the existing disposition; a repair past budget reaches him as the hold's reason (the dispatch's `Symptom:` header) | the budget hold | as above |
-| Existing step-back events (2 Material validations, 2 replacing amendments, 2 same-symptom dispatches) | FO | printed advisory, as today | replaced for tasks with a countable Budget; unchanged for others |
+| Existing step-back events (2 validations with a Material or Needs decision finding, 2 replacing amendments, 2 same-symptom dispatches) | FO | printed advisory, as today | replaced for tasks with a countable Budget; unchanged for others |
 
 **Removed or replaced.**
 - For a task whose Budget states cycles, the advisory step-back reminder (51 words, printed at idle and at the merge check) is not printed. The budget hold asks the same questions and holds; the reminder only advised.
 - The `STEP_BACK` wording becomes the three worth questions. The chief-engineer event for replacing amendments uses it, so it stays one constant.
 - The held task step-back-answer-has-a-record-line (FO's self-answered record line) is answered by its own hold precedent: answers go to the Captain at a hold, and no self-answered line is added.
+- No backlog-gate addition: the ideation worker has the research to trace each part, and FO at backlog does not.
 - This design adds no new script and no new record kind. The Material-finding rule in workflow.md stays as written.
 
 ### Mechanism
 
 ```mermaid
 flowchart TD
-  A[Seed proposed by FO] --> B["Backlog gate: FO states the worth answers<br/>and a Budget in cycles"]
-  B -->|Captain approves| C[Ideation, then implementation and validation]
+  A[Seed proposed by FO] --> B["Backlog gate: FO proposes a Budget in cycles"]
+  B -->|Captain approves| W["Ideation: the worker answers the worth questions<br/>per scope part (### Worth questions)"]
+  W --> X{"design_surfaces.py check: section present?"}
+  X -->|no| W
+  X -->|yes| Y["Ideation gate: parts with no Captain words<br/>named for him to keep or cut"]
+  Y -->|Captain approves| C[Implementation and validation]
   C --> D["dispatch_stage.py before each implementation<br/>or validation dispatch runs role_triggers.py --pending"]
   D --> E{"Budget states cycles?"}
   E -->|no| F["Print: Budget states no cycles; nothing counted<br/>step-back reminder unchanged"] --> G[Build the dispatch]
@@ -125,14 +139,15 @@ flowchart TD
   H -->|yes| I["Print the Budget line and cycles spent"] --> G
   H -->|no| J["Exit 1: record removed, dispatch not built;<br/>print the hold question with the Symptom"]
   J --> K["FO asks the Captain the worth questions<br/>(in a batch: the one exception question)"]
-  K -->|new bound| L["### Amendment N with Budget:"] --> D
+  K -->|approves the proposed bound| L["### Amendment N; its Budget: copies<br/>the bound from Asked: verbatim"] --> D
   K -->|stop, known limit or split| M[Return to the gate he names; no dispatch]
-  B -->|Captain cuts a part or declines| N[Seed revised or not admitted]
+  Y -->|Captain cuts a part| N[Design revised under his revise]
 ```
 
 - `role_triggers.py` gains one event, the budget. It reads the bound from the task's Budget line (`## Budget` first line or `Budget:`), overridden by the last `Budget:` line in a `### Amendment N` entry. It reads the spent cycles from the committed dispatch record names, with the `--pending` record counted. Exit 1 when the pending implementation or validation cycle exceeds that stage's bound. On exit 0 its stdout carries one `budget:` line (17 words), which `dispatch_stage.py` forwards. Today it reads `roles.stdout` only on a non-zero exit.
-- Countable forms are fixed (D2): `N cycles per stage` and `N implementation and M validation cycles`. Any other Budget prints "states no cycles" and is never held. This reads a number from a fixed form, and the counts come from records, which follows ADR 0026's 「設計時不應該過度依賴關鍵字」. The ideation parser `ideation-1/budget_bound.py`, which also accepts today's free phrasings, is replay evidence and is not shipped.
-- Transition: following the Schema precedent "Replay counts do not enforce these on existing tasks", the event applies only to tasks whose backlog gate resolution is dated on or after the release. relay's live comment-sent-when-added-relay is therefore not held at its merge ask, which `delivery_gate.py` checks through `role_triggers.py`.
+- Countable forms are fixed (D2): `N cycle(s) per stage` and `N implementation and M validation cycle(s)`, where N and M are digits or the English words one to ten, matched case-insensitively at the start of the Budget text. So relay's "One cycle per stage." matches. Any other Budget prints "states no cycles" and is never held.
+- Where the new bound is written: the hold question FO asks names exactly one proposed bound in a fixed form, and says that approving accepts it. FO records the amendment as ADR 0005 and workflow.md § Captain amendments require: his words, and the question verbatim. It adds one `Budget:` line whose value must appear verbatim in that entry's `Asked:` or `Captain:` line. `role_triggers.py` honours an amendment `Budget:` only when that holds, so FO adds no words of its own. If he names a different bound (relay's actual answer was 「甲」 to a two-option question), FO asks again with his bound as the proposal. This reads a number from a fixed form, and the counts come from records, which follows ADR 0026's 「設計時不應該過度依賴關鍵字」. The ideation parser `ideation-1/budget_bound.py`, which also accepts today's free phrasings, is replay evidence and is not shipped.
+- Transition: following the Schema precedent "Replay counts do not enforce these on existing tasks", `dispatch_stage.py` writes a `Budget:` header into each dispatch record it saves. The event holds only a task whose first stage record carries that header, so a task started before an adopter synced the release is never held, whatever day the adopter syncs. relay's live comment-sent-when-added-relay is therefore not held at its merge ask, which `delivery_gate.py` checks through `role_triggers.py`.
 - Limits:
   - Ideation re-dispatches are not counted, because `dispatch_stage.py` checks only implementation and validation. Most ideation re-dispatches follow the Captain's own revise.
   - A Budget in days is not countable.
@@ -140,21 +155,22 @@ flowchart TD
 - The workflow.md changes:
   - § Schema: one sentence naming the two forms and the hold.
   - The Captain amendments template: an optional `Budget:` line.
-  - § `backlog` Gate content: the worth answers.
   - § Stages, the sentence that dispatches a repair at once: "after the existing overlap check and the budget check".
-  - `design_surfaces.py`'s amendment form check ignores unknown lines, and `role_triggers.py`'s engineering-reviewer `FIELD` reads only `Supersedes|Design`, so a `Budget:` line in an amendment trips neither. Implementation keeps a test for each.
+  - `skills/ideation/principles.md`: the worth questions, answered per scope part in a `### Worth questions` section; `design_surfaces.py check` refuses a design without it.
+  - A `Budget:` line in an amendment: a throwaway run of `design_surfaces.py check` on this task with a `Budget:` line added to amendment 2 printed the same result as without it (`ideation-1/amendment-budget-line.txt`). `role_triggers.py`'s engineering-reviewer `FIELD` reads only `Supersedes|Design`. Implementation keeps a test for each.
 
 ### Replays: how many questions return to the Captain
 
-Counting rule: the cycles are the dispatch record names (`<stage>-<n>.md`), or `## Stage Report: implementation` headings where a task predates records (`ideation-1/cycle_counts.py`). Questions are counted as one per task at its first overrun, with no raise modelled. That is a floor. If every hold is answered with +1, the ceiling is one question per extra cycle.
+Counting rule: cycles are the highest `<stage>-<n>.md` dispatch record number, so only tasks with records count (`ideation-1/overrun_holds.py`, `ideation-1/archive_counts.py`). The two existing events are counted as `role_triggers.py` counts them: chief-engineer at report headings minus one of four or more, and step-back at two validations with a Material or Needs decision finding, or two replacing amendments. Questions are counted as one per task at its first overrun, with no raise modelled. That is a floor. If every hold is answered with +1, the ceiling is one question per extra cycle.
 
-| Option | relay task | this workflow, archive (151 kc-dev-flow-2 tasks, 128 with implementation) | adopters (countable Budget tasks) |
+| Option | relay task | this workflow, archive (151 kc-dev-flow-2 tasks, 113 with implementation records) | adopters (countable Budget tasks) |
 | --- | --- | --- | --- |
-| Today (CE at 4 repair passes; step-back advisory) | 0 forced Captain questions (1 CE call, 1 advisory); FO chose to ask once, at implementation-6 | 0 forced; CE owed on 34, step-back on 3 | 0 forced |
+| Today (CE at 4 repair passes; step-back advisory) | 0 forced Captain questions (1 CE call, 1 advisory); FO chose to ask once, at implementation-6 | 0 forced; CE owed on 21, step-back reached on 17 | 0 forced |
 | Visible only (print Budget and spent, no hold) | 0; the line is printed from implementation-2 | 0 | 0 |
-| Hold at the first cycle past a countable bound (recommended, D1) | at least 1, at implementation-2; up to 8 if every answer is +1 (implementation 2–6, validation 2–4) | 0 under today's PR budgets; under D2 with "one cycle per stage", at least 84 (2nd implementation cycle) | qnow 7 of 7, relay 11 of 23, web 5 of 20 |
-| Hold at the 3rd implementation cycle | 1, at implementation-3 | 61 if bound 2 | (not modelled per Budget) |
-| A separate finding-ownership test against the backlog Scope | 3 (v1 F1, v2 F1, v2 F2), judgment only | not replayed: 18 Material findings in 12 tasks would need reading | not replayed |
+| Hold at the first cycle past a countable bound (recommended, D1) | at least 1, at implementation-2; up to 8 if every answer is +1 (implementation 2–6, validation 2–4) | 0 under today's PR budgets; under D2 with "one cycle per stage", at least 55 (2nd implementation cycle) | qnow 7 of 7, relay 11 of 23, web 5 of 20 |
+| Hold at the 3rd implementation cycle | 1, at implementation-3 | 44 if bound 2 | (not modelled per Budget) |
+| A separate finding-ownership test against the backlog Scope | 3 (v1 F1, v2 F1, v2 F2), judgment only | not replayed | not replayed |
+| Worth questions forced at ideation (D3) | 1 section at its ideation; reload recovery named as tracing to no Captain words | one section per design; no hold | (not replayed) |
 
 **ops-inbox replay, three questions at its first ideation dispatch** (`ops-inbox-r1-setup-and-isolation/dispatch/ideation-1.md`, `c27e7659`, 2026-10-23), using only that task's recorded Scope and FO alignment:
 
@@ -184,7 +200,7 @@ The answers come to about 40 words. It had one implementation and one validation
 - **Past rulings read:**
   - ADR 0026 (counts from records, not phrases): followed, by fixed forms.
   - ADR 0020 (word raise needs his quote): followed, see below.
-  - ADR 0011 (delegation ladder): money and authority are always asked, and this design asks.
+  - ADR 0011 (FO may decide for the Captain by a delegation ladder): this design keeps the raise of a bound with the Captain and does not put it on the ladder.
   - `git grep 'Override:'` in this state checkout (2026-11-11): no ruling in the budget area.
   - The step-back-answer hold (2026-11-05): no self-answered line; answers go to the Captain.
 
@@ -192,13 +208,14 @@ The answers come to about 40 words. It had one implementation and one validation
 
 | Moment | Base | Candidate |
 | --- | --- | --- |
-| Startup and resume (README) | 5939 | about 5992 (+53: Schema 17, amendment `Budget:` line 10, backlog Gate content 22, repair sentence 4); needs a `WORKFLOW_BUDGET_STEPS` raise with his quote |
+| Startup and resume (README) | 5939 | about 5970 (+31: Schema 17, amendment `Budget:` line 10, repair sentence 4); needs a `WORKFLOW_BUDGET_STEPS` raise with his quote |
 | Each implementation or validation dispatch within budget | 0 from this check | +17 (`budget:` line), or +10 for "states no cycles" |
 | A dispatch past budget | 0 (FO composed its own question, if any) | +52 (hold line with the worth questions) |
 | Idle and merge check on a countable-budget task after 2 Material validations | 51 (step-back reminder) | 0 |
-| Backlog gate preparation | the gate question | + the worth answers (about 40 words for a small task) |
+| Ideation dispatch (worker reads ideation principles) | ideation principles | + about 30 words (the three questions and the section name); the design gains a section, about 40 words for a small task |
+| Ideation gate check with the section missing | design_surfaces.py output | + one refusal line, about 20 words |
 
-The idle and merge moment falls. The README and dispatch moments rise.
+The idle and merge moment falls. The README, dispatch and ideation moments rise.
 
 ### ADR (implementation writes it; FO reserves the number)
 
@@ -207,7 +224,8 @@ Ruling: a task's budget is the Captain's statement of worth in cycles. Each impl
 ### Batch overlap
 
 Files this design changes:
-- `kc-dev-flow-2/references/sd/workflow.md`: § Schema, § `backlog` Gate content, § Stages repair sentence, § Captain amendments template.
+- `kc-dev-flow-2/references/sd/workflow.md`: § Schema, § Stages repair sentence, § Captain amendments template.
+- `skills/ideation/principles.md`, and `scripts/design_surfaces.py` with its tests (the `### Worth questions` refusal).
 - `scripts/role_triggers.py` and `scripts/test_role_triggers.py`.
 - `scripts/dispatch_stage.py` and `scripts/test_dispatch_stage.py`.
 - `scripts/lint-skills.py` (`WORKFLOW_BUDGET_STEPS`).
@@ -218,16 +236,16 @@ How each batch and live task meets those files, read 2026-11-11 at `e5efef4e`:
 - **release-rollout-reaches-adopters-and-laws-pin:** workflow.md, `lint-skills.py`. Same conflict class.
 - **worker-push-words-match-state-commit:** workflow.md § Dispatch facts, and `WORKFLOW_BUDGET_STEPS` only under its rejected Dispatch-facts option. No section overlap.
 - **denied-command-denies-only-that-command:** workflow.md and a `WORKFLOW_BUDGET_STEPS` raise (delta 33). It already names this task as sharing `role_triggers.py`; its design does not edit it.
-- **ideation-checks-external-prior-art:** `skills/ideation/principles.md`, which this design does not touch. It stays separate (amendment 2).
+- **ideation-checks-external-prior-art:** `skills/ideation/principles.md`, which this design now also edits. The edits are textual neighbours (prior art and worth questions are both ideation duties), so whichever lands second rebases. It stays a separate task (amendment 2).
 - **first-principles-check-in-dev2-principles:** folded here; not dispatched.
 - **step-back-answer-has-a-record-line** (held at ideation): `role_triggers.py` `STEP_BACK` and its reminder. This is a direct conflict: this design replaces the reminder it would add a record line to. Recommend closing it as answered by this design if this design is approved.
 - **gate-summary-names-each-decline:** none (it lists `role_triggers.py` only as "no shared function").
-- **adr-required-statement** (validation): workflow.md, `lint-skills.py`, `design_surfaces.py`. README count, plus the ADR index.
-- **dispatch-carries-reserved-adr-number:** `dispatch_records.py`, `pr_watch.py`, and possibly the dispatch build path. Implementation checks for a shared `dispatch_stage.py` edit before it starts.
+- **adr-required-statement** (validation): workflow.md, `lint-skills.py`, `design_surfaces.py`. README count, a `design_surfaces.py` check function, plus the ADR index.
+- **dispatch-carries-reserved-adr-number:** `dispatch_records.py`, `pr_watch.py`, `design_surfaces.py` (named three times), and possibly the dispatch build path. Implementation checks for a shared `dispatch_stage.py` or `design_surfaces.py` edit before it starts.
 - **merge-guard-stops-unasked-merges** (validation): workflow.md, `lint-skills.py`, `delivery_gate.py` (which runs `role_triggers.py`; its code is unchanged here).
 - **journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot:** none. ops-inbox is read only, as the replay case.
 
-Recommended order: the two validation-stage tasks that edit the README land first (merge-guard-stops-unasked-merges, adr-required-statement). The smaller README edits of batch 21 follow (denied-command, worker-push, release-rollout, story-done). This task lands last of the README editors: it rebases `role_triggers.py` and appends its `WORKFLOW_BUDGET_STEPS` entry after theirs.
+Recommended order: the two validation-stage tasks that edit the README land first (merge-guard-stops-unasked-merges, adr-required-statement). The smaller README edits of batch 21 follow (denied-command, worker-push, release-rollout, story-done). ideation-checks-external-prior-art lands before this task if both are approved. This task lands last of the README editors: it rebases `role_triggers.py`, `design_surfaces.py` and the ideation principles, and appends its `WORKFLOW_BUDGET_STEPS` entry after theirs.
 
 ## Acceptance criteria
 
@@ -241,7 +259,9 @@ Recommended order: the two validation-stage tasks that edit the README land firs
 
 **AC-5** For a task with a countable Budget, `role_triggers.py` no longer prints the two-event step-back reminder. For a task without one it still does. Every chief-engineer and engineering-reviewer event is unchanged. Evidence: the existing step-back tests pass on uncountable fixtures; a new countable fixture with two Material validations prints no reminder; `delivery_gate.py`'s and `pr_watch.py`'s existing suites pass. Falsifier: a reminder printed, or one lost on an uncountable fixture.
 
-**AC-6** A task whose backlog gate resolution is dated before the release is never held by the budget event: not at dispatch and not at the merge ask (`delivery_gate.py`). Evidence: a fixture with an older backlog resolution and an overrun exits 0 with its `budget:` line. Falsifier: removing the date test holds it.
+**AC-6** A task whose first stage dispatch record has no `Budget:` header (started before the release) is never held by the budget event: not at dispatch and not at the merge ask (`delivery_gate.py`). A record saved by the candidate `dispatch_stage.py` carries the header. Evidence: a fixture whose old records lack the header and overrun exits 0 with its `budget:` line; a fixture with the header holds. Falsifier: ignoring the header holds the old fixture.
+
+**AC-9** The ideation principles ask the three worth questions per scope part in a `### Worth questions` section. `design_surfaces.py check` refuses an ideation design without that section and passes one with it. An amendment `Budget:` line counts only when its value appears verbatim in the same entry's `Asked:` or `Captain:` line. Evidence: `test_design_surfaces.py` cases for a missing and a present section; `test_role_triggers.py` cases for a matching and a non-matching amendment `Budget:`. Falsifier: a design with no section passes, or an FO-invented bound clears the hold.
 
 **AC-7** workflow.md states the two countable forms, the hold, the amendment `Budget:` line and the worth answers in backlog Gate content. `lint-skills.py` exits 0 with one `WORKFLOW_BUDGET_STEPS` raise carrying the Captain's quoted ruling and its loaded moments. The words-per-moment table is recounted at the candidate by an independent copy of the count. Evidence: the lint output and the recount. Falsifier: a README count off the budget.
 
@@ -250,30 +270,35 @@ Recommended order: the two validation-stage tasks that edit the README land firs
 ## Needs decision
 
 - **D1. When the budget holds.** Recommend at the first implementation or validation cycle past a countable bound. The alternatives were visible only (0 questions), which the relay record shows went unread for four cycles, and holding at the third cycle. What gets worse: on today's Budget lines, which are happy-path templates, the Captain gets one more question on about half of relay's countable tasks and all of qnow's (relay 11/23, qnow 7/7, web 5/20) until budgets are written as worth. The relay task alone could have asked up to eight times if each answer had been +1.
-- **D2. The countable unit, and this workflow's budgets.** This decides the tension between the Non-goal (no unit other than what seeds already write) and amendment 1 (a countable unit). Recommend cycles, the unit three adopters already write, in two fixed forms (`N cycles per stage`, `N implementation and M validation cycles`). New seeds would need one (the `design_surfaces.py` seed check). "One package PR" would stay as a line under Scope, not as the Budget. What gets worse: every backlog proposal carries a number FO must propose from history, and this workflow, whose budgets were never passed, now gets questions (at least 84 of 128 archived tasks would have held at "one cycle per stage"). The alternative of parsing free Budget prose would go against ADR 0026.
-- **D3. The worth questions.** Recommend one set, stated at backlog in the gate question and forced at every budget hold, with the step-back reminder removed for countable-budget tasks, no separate Material-finding moment, and no self-answered record line. What gets worse: within budget, a Material finding in behaviour the design added is repaired without asking him. In relay that was 3 of 5 Material findings. They reach him only because their repair is past budget.
+- **D2. The countable unit, and this workflow's budgets.** This decides the tension between the Non-goal (no unit other than what seeds already write) and amendment 1 (a countable unit). Recommend cycles, the unit three adopters already write, in two fixed forms (`N cycles per stage`, `N implementation and M validation cycles`). New seeds would need one (the `design_surfaces.py` seed check). "One package PR" would stay as a line under Scope, not as the Budget. What gets worse: every backlog proposal carries a number FO must propose from history, and this workflow, whose budgets were never passed, now gets questions (at least 55 of the 113 archived tasks with implementation records would have held at "one cycle per stage"). The alternative of parsing free Budget prose would go against ADR 0026.
+- **D3. Where the worth questions are forced.** The folded task carries his words 「我覺得應該把第一性原理確實加入到 dev2 心態原則中…沒有任何階段會強制問」, and its stop condition asks that a named stage be made to answer. Recommend forcing them at two moments: in the ideation design (ideation principles plus a `design_surfaces.py check` refusal), and at every budget hold. Remove the step-back reminder for countable-budget tasks, add no Material-finding moment and add no self-answered record line. A hold alone would not serve: on the ops-inbox case (Budget "at most 3 days", not countable) a hold never fires, and only the ideation section would have named the setup command and the second adapter. In relay it would have named the reload recovery before the ideation gate. The alternative, stating the questions at backlog without forcing, costs fewer words but leaves no stage made to answer. What gets worse: every ideation design gains a section (about 40 words for a small task), and the check tests that it is there, not that it is true. Within budget, a Material finding in behaviour the design added is still repaired without asking him (3 of relay's 5).
 
 ## Stage Report: ideation
 
 - DONE: Captain amendment 1 replaces the title's question: design from 'a task's budget is the Captain's statement of how much the outcome is worth, written in a countable unit, visible as spent at each dispatch, and when exceeded the original question returns to him; a Material finding first answers whether it is part of the outcome this task was asked for', and read his three earlier questions quoted in the Result line. Start from what a budget is for before any mechanism: survey how Budget lines are written and exceeded across this workflow and the qnow, subspace-relay and subspace-web state branches (read-only), say which unit tracks what actually ran away, and show the cheapest step that would have made the relay task's overrun visible. Lay the existing step-back questions in kc-dev-flow-2/scripts/role_triggers.py beside this and say whether one mechanism serves both; replay the relay task and this workflow's archived tasks to count how often each option would return a question to the Captain
-  § What a budget is for (four branches pinned; cycles are the unit that ran away; printing Budget beside the cycle at implementation-2 `42317d0c` is the cheapest step), § One set of questions (one mechanism: the budget hold carries the worth questions; the step-back reminder is replaced for countable budgets), § Replays (questions per option; relay 1–8, archive 0 or ≥84 by D2); scripts and outputs in `budget-overrun-holds-and-findings-meet-non-goals/ideation-1/`.
-- DONE: Amendment 2 (follow-up `ideation-1-message-1`): one set of worth questions with moments, record places and what is removed; ops-inbox replay at its ideation-1 dispatch and a control task; ideation-checks-external-prior-art kept separate
-  § One set of questions (moments table; removed: step-back reminder on countable budgets, the held record-line proposal), § Replays (ops-inbox: the two parts with no Captain words were the two later superseded; control delivery-gate-pr-body-attribution-link about 40 words, never held).
+  § What a budget is for (four branches pinned; cycles are the unit that ran away; printing Budget beside the cycle at implementation-2 `42317d0c` is the cheapest step), § One set of questions (one mechanism: the budget hold carries the worth questions; the step-back reminder is replaced for countable budgets), § Replays (questions per option; relay 1–8, archive 0, or at least 55 under D2); scripts and outputs in `budget-overrun-holds-and-findings-meet-non-goals/ideation-1/`.
+- DONE: Captain amendment 2 folds the backlog task first-principles-check-in-dev2-principles into this one: read that task file's Scope (the three questions, its case ops-inbox-r1-setup-and-isolation, and what it leaves open) and design one set of questions about whether the work is what the Captain asked for and worth its cost, with the moments it is asked (a task entering, a budget exceeded, a Material finding, and the existing step-back events in kc-dev-flow-2/scripts/role_triggers.py), where the answer is recorded, and what the design removes or replaces so the flow does not only grow
+  § One set of questions: three worth questions; moments table (ideation forced by a check, budget hold forced by the script, Material finding through the hold, step-back replaced on countable budgets); removed list; D3.
+- DONE: Keep everything the first dispatch asked for; add a replay on the ops-inbox case's backlog or ideation dispatch beside the relay replay, and a control task where the questions stay short
+  § Replays: ops-inbox at `ideation-1.md` (`c27e7659`): the two parts with no Captain words were the two later superseded; control delivery-gate-pr-body-attribution-link, about 40 words, never held.
+- DONE: The task ideation-checks-external-prior-art stays a separate task and is not part of this design
+  Not designed here; listed in § Batch overlap as sharing `skills/ideation/principles.md`, with an order.
 - DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (story-done-reports-release-remaining, release-rollout-reaches-adopters-and-laws-pin, budget-overrun-holds-and-findings-meet-non-goals, worker-push-words-match-state-commit, denied-command-denies-only-that-command, ideation-checks-external-prior-art, first-principles-check-in-dev2-principles) and live task of other sessions (adr-required-statement, dispatch-carries-reserved-adr-number, journey-server-host-pilot, merge-guard-stops-unasked-merges, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions or held; read only)) that changes the same file or check, so FO can order implementation
   § Batch overlap lists the files, every named task, step-back-answer-has-a-record-line (direct `role_triggers.py` conflict) and gate-summary-names-each-decline, and a Recommended order line.
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
-  § Words FO reads at each moment: README 5939 → about 5992 (raise needed), dispatch +17/+10, hold +52, idle/merge step-back 51 → 0 on countable budgets; drafted text counted with `wc -w`, to be recounted independently (AC-7).
+  § Words FO reads at each moment: README 5939 → about 5970 (raise needed), dispatch +17/+10, hold +52, ideation +about 30, idle/merge step-back 51 → 0 on countable budgets; drafted text counted with `wc -w`, to be recounted independently (AC-7).
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
-  AC-1–AC-8 and D1–D3 in the task file; `design_surfaces.py check`: "design surfaces presentable", exit 0, with its bound-question reminder for FO.
+  AC-1 to AC-9 and D1 to D3 in the task file; `design_surfaces.py check`: "design surfaces presentable", exit 0, with its bound-question reminder for FO.
 - DONE: AC-1 (budget line printed at each dispatch) — not yet verified; future test in `test_dispatch_stage.py`.
 - DONE: AC-2 (hold past the bound, cleared by an amendment `Budget:`) — not yet verified; ideation evidence is only that `dispatch_stage.py` already holds on `role_triggers.py` exit 1 (origin/main source read).
 - DONE: AC-3 (relay holds at implementation-2) — not yet verified on a candidate; base replay recorded: no hold before `d85ce152` (`ideation-1/relay-role-triggers-replay.txt`).
 - DONE: AC-4 (archived replay counts) — ideation counts measured (`ideation-1/counts.txt`); candidate counts not yet run.
 - DONE: AC-5 (step-back reminder replaced on countable budgets) — not yet verified.
-- DONE: AC-6 (no hold for tasks admitted before the release) — not yet verified.
+- DONE: AC-6 (no hold for tasks whose first record has no `Budget:` header) — not yet verified.
 - DONE: AC-7 (README, raise, recount) — not yet verified; drafted counts only.
 - DONE: AC-8 (ADR at reserved number) — not yet verified; draft ruling and short title in § ADR.
+- DONE: AC-9 (worth questions forced at ideation; amendment `Budget:` must be verbatim) — not yet verified; ideation evidence only that today's amendment check accepts a `Budget:` line (`ideation-1/amendment-budget-line.txt`).
 
 ### Summary
 
-The record shows that a budget here is usually a happy-path template ("One package PR" in this workflow, "one cycle per stage" in relay), so it never measured worth. Cycles, as counted exactly by dispatch records, are the unit that ran away. The design makes the existing `dispatch_stage.py` → `role_triggers.py` hold carry one budget event: print the Budget line and cycles spent at each implementation and validation dispatch, and hold at the first cycle past a countable bound with the three worth questions (asked, without, premise). That event replaces the advisory step-back reminder for such tasks and adds no separate Material-finding rule. The relay replay corrects the bite: the reload recovery entered at ideation and was approved under a one-sentence gate question, so all five Material findings were owned by accepted criteria. Three decisions go to the Captain: when to hold (D1), whether new seeds must state cycles in a fixed form (D2, which decides the Non-goal versus amendment 1 tension), and the one worth-question set (D3).
+The record shows that a budget here is usually a happy-path template ("One package PR" in this workflow, "one cycle per stage" in relay), so it never measured worth. Cycles, as counted exactly by dispatch records, are the unit that ran away. The design makes the existing `dispatch_stage.py` → `role_triggers.py` hold carry one budget event: print the Budget line and cycles spent at each implementation and validation dispatch, and hold at the first cycle past a countable bound with the three worth questions (asked, without, premise). That event replaces the advisory step-back reminder for such tasks and adds no separate Material-finding rule. The same three questions are forced in each ideation design, which the ops-inbox case needs because its Budget, in days, never holds. The relay replay corrects the bite: the reload recovery entered at ideation and was approved under a one-sentence gate question, so all five Material findings were owned by accepted criteria. Three decisions go to the Captain: when to hold (D1), whether new seeds must state cycles in a fixed form (D2, which decides the Non-goal versus amendment 1 tension), and where the worth questions are forced (D3).

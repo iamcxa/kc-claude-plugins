@@ -18,3 +18,5 @@ subspace-web all dev2 tasks 76 | impl>=1 62
 dev2 archive dev2 tasks 151 | impl>=1 128
   hold@2nd impl 84 | hold@3rd 61 | hold@4th 41 | CE 4 repair passes (impl>=5) 34
   any Material validation 12 (findings 18 ) | step-back 2 Material validations 3
+archived kc-dev-flow-2 tasks 151 | with implementation dispatch records 113 | >=2 55 | >=3 44 | >=5 25
+step-back events reached: 17 | chief-engineer at 4 repair passes (report headings): 21
