@@ -112,6 +112,11 @@ Captain: 「只算修正的訊息（建議）」 (host question dialog, 2026-11-
 Asked: 「預算的「派工總次數上限」裡，我在同一個階段追加給工人的訊息要怎麼算？我建議：只有要工人回去修東西的訊息（紀錄上有寫問題名稱的）算一次派工，回答工人提問或轉達你裁示的訊息不算。以「發版鋪開」為例，這樣是 7 次；每則都算是 11 次，都不算是 2 次。」
 Supersedes: none
 
+### Amendment 6 — 2026-11-11, host question dialog
+Captain: 「給這條許可（建議）」 (host question dialog, 2026-11-11)
+Asked: 「「預算」這張任務第三次碰到設計沒列的測試檔，要不要一次給一條許可？我建議給：這張任務的實作可以更新測試裡只因為這次核准的規則改變而過時的範例資料與預期文字，但所有反例和斷言都要保留、產品程式不因此多改，而且每動一個這樣的檔案都要在報告裡列出，由獨立驗證逐一檢查。」
+Supersedes: none
+
 ## Design
 
 ### PRFAQ
@@ -314,8 +319,12 @@ Recommended order: the two validation-stage tasks that edit the README land firs
 **AC-8** The ADR above is written at its reserved number, with an amendment line on ADR 0026, and `adr_lint.py` passes. Evidence: `adr_lint.py docs/adr --since <base> --require <number>`.
 
 
+**AC-11** — Amended by Captain, amendment 3. A total-dispatch Budget accepts `at most N dispatches total` (singular `dispatch` too) or `最多 N 次派工` at the start of the countable part; English N is digits or one to ten, Chinese N is digits. An explicit numeric agent-minutes clause can precede it, separated by comma or semicolon including Chinese punctuation. It counts the saved ideation, implementation and validation dispatch records, with follow-up messages governed by AC-13 and special-role records excluded, including the pending dispatch once. It allows the cap and holds the next dispatch beyond it. Mixed minutes remain verbatim in output, with `minutes not counted`. Evidence: total-cap role, seed and real-dispatch fixtures, including mixed minutes, at the cap and one beyond. Falsifiers: reject the total form, ignore the cap, count the pending record twice, or omit the minutes notice.
+
 **AC-12** — Amended by Captain, amendment 3. A budget hold states its default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome. Existing results remain intact when the pending dispatch is removed. Evidence: the role hold fixture checks the stated default and replacement authority, and the real dispatch fixture keeps an existing results file unchanged while holding before build. Falsifier: removing the default or the Captain replacement clause fails the fixture.
 
+
+**AC-13** — Amended by Captain, amendment 5. A follow-up message record counts as one dispatch toward the total cap when its out-of-fence `Symptom:` header names a symptom. `Symptom: none` (case/space normalized), an empty header and no Symptom header do not count: none names a symptom. A body line or fenced example is not a header. Ordinary stage records still count once; special-role records do not. Evidence: fixtures for a named repair message, an answer message, no header and header impostors; the committed-state replay reports candidate counts on archived amendment-checked-when-written and live release-rollout-reaches-adopters-and-laws-pin. Falsifier: counting all messages, counting no messages or reading a body/fenced symptom fails the fixture.
 
 ## Needs decision
 
