@@ -1,0 +1,22 @@
+{
+  "candidate": {
+    "head": "78905b08d6f38817ccdda5d2e91be478fd75dfc7",
+    "status": "## spacedock-ensign/worth-questions-asked-only-before-the-design-gate\n"
+  },
+  "state": {
+    "head": "fb0ff83ed810233ef6803ea1d7b644796fb11721",
+    "status": "## spacedock-state/dev2\n?? worth-questions-asked-only-before-the-design-gate/validation/cleanup.json\n"
+  },
+  "fo_workspace": {
+    "head": "4f6405504d9def9f8b5b7665c6accc91f281a716",
+    "status": "## iamcxa/trim-kc-dev-flow-third\n M .gitignore\n D .gstack/browse-startup-error.log\n?? $REPLAY_SHELL_LOG\n"
+  },
+  "task": {
+    "status": "validation",
+    "total_lines": "282"
+  },
+  "publication_before_cleanup": {
+    "local": "fb0ff83ed810233ef6803ea1d7b644796fb11721",
+    "origin": "fb0ff83ed810233ef6803ea1d7b644796fb11721"
+  }
+}

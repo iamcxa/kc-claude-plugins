@@ -1,0 +1,10 @@
+{
+  "evidence_commit": "fb0ff83ed810233ef6803ea1d7b644796fb11721",
+  "removed": [
+    "/tmp/validate-pr849-wnkdncss",
+    "/tmp/pr849-captain.s2x8qL",
+    "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/validate-pr849-wnkdncss"
+  ],
+  "all_absent": true,
+  "notes": "Primary export removed by exact path after evidence commit; acceptance export removed by its EXIT trap; initial system-temp directory removed when relocated under /tmp."
+}
