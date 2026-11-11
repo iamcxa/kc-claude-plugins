@@ -1,6 +1,6 @@
 ---
 name: kc-journey-progress
-description: Use when explicitly refreshing release story development progress from local Spacedock tasks, optionally drawing the observation on the journey canvas. Drawing alone uses kc-journey-map.
+description: Use when explicitly refreshing release story development progress or reporting remaining stories and pull requests after an archive with --report, optionally drawing the observation on the journey canvas. Drawing alone uses kc-journey-map.
 ---
 
 Refresh local task progress once, then optionally draw that observation. Resolve this
@@ -18,6 +18,13 @@ selects the existing canvas endpoint. Exit 1 accompanies unverified observations
 an orphan (a task that names this journey but a release and story the map does not
 hold, listed under `orphans` with its slug, short id, release and story; a closed task naming a story since removed from the map stays listed until its fields are cleared), or a failed draw; exit 2 reports invalid arguments/input. A failed draw retains the
 computed observation in the error output, without claiming that it was drawn.
+
+`--report <task slug>` prints a short archive report without drawing: filed-task counts,
+remaining stories and done tasks' pull request refs. Story and release `members` in JSON
+count filed tasks, not an exhaustive scope; declared status and delivery acceptance keep
+their existing meaning. The report exits 0 even for undeclared stories, 1 with one
+`journey progress not run:` line on a failed read, or 2 for invalid arguments or a task
+that names no release of this map.
 
 ## Declare the required work in its existing tasks
 

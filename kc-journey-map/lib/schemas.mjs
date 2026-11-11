@@ -29,8 +29,10 @@ export const SCHEMAS = {
 		['observedAt', 'ISO timestamp of the task observation'],
 		['diagnostic', 'null on a successful task read; otherwise a nonempty diagnostic string'],
 		['orphans', '`[{slug, id, release, story}]`: tasks naming this journey but no map story; missing release or story is null'],
-		['stories', '`[{journey, release, story, status, requiredTasks, doneTasks, taskIds, diagnostic?}]`; status is `exists`, `gap` or `unverified`; diagnostic is present when unverified'],
-		['releases', '`[{release, totalStories, doneStories, requiredTasks, doneTasks, status, acceptance}]`; status is `exists`, `gap` or `unverified`; acceptance is `pending delivery acceptance` exactly when the release has stories and all exist, otherwise `delivery acceptance not established`'],
+		['stories', '`[{journey, release, story, status, requiredTasks, doneTasks, taskIds, members, diagnostic?}]`; status is `exists`, `gap` or `unverified`; diagnostic is present when unverified'],
+		['stories[].members', '`{tasks, done, prs: [{task, ref}]}` from every filed member, independent of its declaration; prs holds nonempty refs of done tasks, task is its slug'],
+		['releases', '`[{release, totalStories, doneStories, requiredTasks, doneTasks, status, acceptance, members}]`; status is `exists`, `gap` or `unverified`; acceptance is `pending delivery acceptance` exactly when the release has stories and all exist, otherwise `delivery acceptance not established`'],
+		['releases[].members', '`{storiesDone, storiesOpen, storiesEmpty}`: stories with at least one filed task and all done, with unfinished filed tasks, or with no filed task'],
 	],
 }
 export const ADR_TITLE = 'a-captain-ruling-reaches-the-map-as-a-versioned-footprint'
