@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-push-words-match-state-commit:ideation:attempt-2:revision-1",
+  "question": "決定：要不要核准「工人收到的推送說明與狀態提交工具一致」的設計並開始實作。我建議照設計的建議核准：在實作和驗證兩個階段的工人守則各加一句話，說明狀態分支的推送是這個階段的一部分，「不要推送」指的是產品分支、主幹和 PR；流程說明檔不增加字數。核准即接受這句話放在工人守則而不是每張派工單都帶的流程說明段落。",
+  "artifacts": [
+    {
+      "id": "artifact:worker-push-words-match-state-commit:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/7c3d06fe4b3bc9c7996a0b50c30059329c2d3eb6/worker-push-words-match-state-commit.md",
+      "rev": "sha256:67d02447ad9ee24801ee886329573a6be1378d7efc1fba30a996b39b6af5ef3c",
+      "mediaType": "text/markdown",
+      "summary": "Batch 21 ideation sitting, one design per question on the Captain's word. FO ran design_surfaces.py check: exit 0 (2026-11-11). The worker's report, not re-run by FO: that spacedock state commit pushes whenever the checkout has an origin, the count of amended reports and follow-up messages, and the replay plan with a throwaway origin; no criterion is verified against a candidate. One decision, the placement of the sentence, with a recommendation and what gets worse in the task file."
+    }
+  ]
+}
