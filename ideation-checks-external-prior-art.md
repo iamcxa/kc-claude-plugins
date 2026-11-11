@@ -24,6 +24,17 @@ gates:
                 id: briefing:ideation-checks-external-prior-art:backlog:attempt-2:revision-1
                 digest: sha256:033230f76c5b4aeafaf1a296e2760c278a744a9464967cbff73626194cbefe4b
                 room-ref: ./ideation-checks-external-prior-art/review/backlog/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ideation-checks-external-prior-art:backlog:2
+                briefing: briefing:ideation-checks-external-prior-art:backlog:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-11T01:58:26.269174Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要讓「設計階段先查現成的標準與做法」這張任務單獨進入第 21 批的設計階段。我建議核准：它問的是「這個問題別人解過了嗎」，和合併後那張「要不要做、值不值得」是不同的問題，所以維持獨立。核准代表接受這張任務檔寫的範圍、預算與停止條件，並派一個設計工人；不代表接受任何設計或修法。它標了方向要先對齊，派工前我會再問你一題。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
