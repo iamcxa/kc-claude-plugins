@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validation-rerun-accepts-report-fixed-before-ruling:validation:attempt-1:revision-1",
+  "question": "決定：合併 #834（驗證報告在你裁示前被補改過、結論字眼沒變時，仍可再派驗證；裁示後才改或改了結論的照舊拒絕）嗎？建議合併。同意即接受：不用 PASSED 或 REJECTED 這兩個字就把結論反過來的改法擋不到；只在說明裡多寫或少寫一次這兩個字也會被擋；驗證留下一項延後風險（手寫的關卡紀錄可以騙過檢查，正常流程產生不出來）；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit 7d75d65ef317fc5c426eb7b0975d93a72d50acaa, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:validation-rerun-accepts-report-fixed-before-ruling:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/739b95b12da6733fbdc037698dc579557dd837ec/validation-rerun-accepts-report-fixed-before-ruling.md",
+      "rev": "sha256:2e148ccbc5ce1fdbc6989ba8ba36e2b17667dd1da686deb3d944a39fa93fb473",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 0\nDelivery of validation-rerun-accepts-report-fixed-before-ruling, PR #834, a priority single task before batch 21.\nSufficiency: the recorded qnow history is refused at the kc-dev-flow-2-v0.38.0 tag and dispatched at the candidate, a rewrite after a ruling and a pre-ruling verdict flip are refused at both, and all six criteria hold (validation-1 report, Astra, 2026-11-11, PASSED at 7d75d65ef; acceptance script run by FO 2026-11-11, exit 0).\nNecessity: docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md, kc-dev-flow-2/scripts/dispatch_records.py and kc-dev-flow-2/scripts/test_dispatch_records.py change against origin/main (git diff --stat origin/main...HEAD, FO run 2026-11-11; judged in the validation-1 report, Astra, 2026-11-11).\nAcceptance, run by FO in a fresh shell 2026-11-11, exit 0: /usr/bin/env -u BASH_ENV -u ENV -u GIT_DIR -u GIT_WORK_TREE bash --noprofile --norc '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-accepts-report-fixed-before-ruling/validation/acceptance.sh'\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-accepts-report-fixed-before-ruling/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-11, exit 0: gh pr view 834 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nExternal rounds: 1.\nExternal round sources: Codex code review of 7d75d65ef completed with no finding (codex_review.py, FO run 2026-11-11, evidence=summary:6782849698@7d75d65ef).\nSecond reviewer: Copilot because the PR changes when a validation rerun may be dispatched, a review rule.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5851589073\nCopilot retry: available when the Captain confirms quota is back.\nRoboRev: clean on 7d75d65ef, evidence=roborev:1722 (FO run 2026-11-11).\nCI: six checks on 7d75d65ef finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr checks, read by FO 2026-11-11).\nValidation rounds: 1. validation-1 PASSED at 7d75d65ef with one Deferred risk and no Material or Needs decision finding.\nImplementation dispatches: 3. implementation-1 (Codex) and implementation-2 (Claude, on the Captain's choice) never did work because the task workspace's sandbox refused the state checkout, git and the codex executable; implementation-3 (Codex, dispatched from FO's workspace on the Captain's choice) produced the candidate.\nFO declines: F1 of validation-1, a hand-authored resolution plus withdrawal on one gate attempt sharing an identity so a late correction clears, as Deferred risk judged at 7d75d65ef [validation/native-withdrawal.json shows native prepare, record and withdraw refuse that combination as frozen closed, so no supported workflow produces it; Material on an observed supported history].\nNot verified: the fix on an installed release; qnow's owner-cancels-booking stays held until a release carries it and qnow adopts it."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:validation-rerun-accepts-report-fixed-before-ruling:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/739b95b12da6733fbdc037698dc579557dd837ec/validation-rerun-accepts-report-fixed-before-ruling/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:aae21cc0db73a231868d0ef4f11fbb4c0192ff100981f300d11bfdfa984fdf30"
+    }
+  ]
+}

@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:validation-rerun-accepts-report-fixed-before-ruling:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:validation-rerun-accepts-report-fixed-before-ruling-validation-1
+              briefing:
+                id: briefing:validation-rerun-accepts-report-fixed-before-ruling:validation:attempt-1:revision-1
+                digest: sha256:4eda0b2cee05d69eb6c216cb73fc5bf830d9fe464df2cf82e3ae55be4c406ade
+                room-ref: ./validation-rerun-accepts-report-fixed-before-ruling/review/validation/briefing-1
 started: 2026-11-10T16:15:50Z
 worktree: .worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling
 pr: iamcxa/kc-claude-plugins#834
