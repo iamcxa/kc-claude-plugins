@@ -620,6 +620,13 @@ The same seed without a `Story:` line under a README that does not list `journey
 
 ADR: 0076
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-11, host question dialog
+Captain: 「更新樣本檔，測試不動（建議）」 (host question dialog, 2026-11-11)
+Asked: 「「故事回報進度」的實作要不要多改一個設計沒列的檔案？進度工具的輸出多了欄位後，dev2 切片驗收擴充裡那個「實跑進度工具並和樣本檔逐字比對」的測試會失敗。我建議：同意多改，但改的是那份樣本檔（加入新欄位），測試本身不動、維持逐字比對；不採用工人提議的「把測試改成容許多出來的欄位」。」
+Supersedes: none
+
 ## Stage Report: ideation
 
 - DONE: Per the Captain's Result line, compare the choices side by side for him to pick at the gate, each with what gets worse: (a) what FO reports after a story task is archived and whether the canvas is redrawn then; (b) progress and story-to-PR links derived from task state versus written into the map file; (c) taking the story declaration step (a task joins its story's journey-required-tasks when approved into the story) into this task versus leaving it to journey-map-progress-and-provenance. Measure today's declared and undeclared stories on subspace-relay, qnow and this repository read-only, and run the progress reader on at least one real map
