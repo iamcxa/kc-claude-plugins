@@ -55,6 +55,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-11T01:25:39Z
+worktree: .worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin
 ---
 
 ## Scope
