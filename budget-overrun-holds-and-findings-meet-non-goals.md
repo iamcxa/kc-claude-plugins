@@ -55,6 +55,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-11T01:44:17Z
+worktree: .worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals
 ---
 
 ## Scope
