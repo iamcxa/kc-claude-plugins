@@ -15,6 +15,17 @@ gates:
                 id: briefing:worth-questions-asked-only-before-the-design-gate:backlog:attempt-1:revision-1
                 digest: sha256:1febe145cd7435b0610d9ca5fcab90f562097141bde4af179b0a986f2782d787
                 room-ref: ./worth-questions-asked-only-before-the-design-gate/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worth-questions-asked-only-before-the-design-gate:backlog:1
+                briefing: briefing:worth-questions-asked-only-before-the-design-gate:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-11T14:24:06.311538Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要讓「已經過了設計關卡的舊任務不被『值不值得』檢查擋下」這張修正任務插隊進入設計階段。我建議核准。核准代表接受任務檔寫的範圍（只改檢查在什麼時候要求那一節，不動三個問題的內容、不動預算規則、不補寫任何已核准的設計）、預算（設計、實作、驗證各一輪，一個 PR）與停止條件（我這邊三張被誤擋的任務在新版通過檢查、還在設計階段又沒寫那一節的任務照樣被擋，而且我在請你合併前，先在合併進 main 之後的結果上把整組測試指令全部重跑一次），並派一個設計工人決定「過了設計關卡」要從哪裡讀出來。不代表接受任何修法。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
