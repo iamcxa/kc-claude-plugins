@@ -1,0 +1,14 @@
+[
+  {
+    "name": "AC-7: provider-specific instruction and original-turn use",
+    "status": "passed"
+  },
+  {
+    "name": "AC-9: exact reason received by every valid candidate",
+    "status": "passed"
+  },
+  {
+    "name": "AC-10: instructed local audit and correct summary, no retry",
+    "status": "passed"
+  }
+]

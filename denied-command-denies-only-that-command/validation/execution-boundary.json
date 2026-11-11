@@ -1,0 +1,9 @@
+{
+  "method": "git archive plus disposable shared bare clone for read-only Git queries",
+  "candidate": "cdb99da0e52e8b5cad3a7be04658dc282432b644",
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "remote_base_seen_via_github": "546a136386c94c58e430c91a6f3457b38bd73880",
+  "number_guard_ref_source": "fresh local shared-repository refs into disposable bare clone; no new ADR or migration is reserved",
+  "runtime_replays_started": 0,
+  "raw_rollouts_copied": 0
+}

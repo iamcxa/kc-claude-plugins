@@ -458,3 +458,31 @@ This complete report supersedes all earlier implementation reports. Six valid FO
 ### Summary
 
 This complete report supersedes all earlier implementation reports. Native source now resolves the prior missing-proof hold: the retained AC-7, AC-9 and AC-10 pass under the original rule, with four same-turn reason-directed executions and no refused-write retry in any of the six valid runs. Candidate and criteria remain unchanged; only hashes, derived data and sanitized excerpts are exported, and independent validation/publication remain with FO.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #842 head cdb99da0 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at cdb99da0e52e8b5cad3a7be04658dc282432b644; active AC-7/AC-9/AC-10 pass. Exact scope, primary proof, falsifiers and limitations: denied-command-denies-only-that-command/validation/verdict.md.
+- DONE: Captain amendment 1 narrowed this task to one item: FO sends its denial reason to a Codex worker; judge the criteria as they now stand, and do not run new replay workers: the six FO-operated runs are the evidence, so re-score them yourself from the native Codex session logs named in /tmp/denial-replay-b21-fo/native-turns.json (raw rollout files stay on this machine and are not copied to the state branch) against the rule fixed before the runs, and say what the replay does not show (the refused command was a write outside the workspace chosen so a refusal could be produced, not the build flag of the one recorded qnow case; FO was the denying side); judge FO's recorded reason for not calling the chief-engineer; placement: the Captain approved dispatching workers from the First Officer's workspace until the task-workspace sandbox is repaired (host question dialog, 2026-11-11)
+  Independently read all six original native logs and live output bytes; fixed packet/criteria unchanged from pre-run state 36e74c070c7d. Zero new workers, raw logs or host instructions exported; scope and chief-engineer decline judged in validation/verdict.md.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation/acceptance.md and acceptance.sh: four steps, fresh bash exit 0; checks/captain-acceptance.log. Requested ADR command --since e8664a72b0f904e5dda3c391d52ab3abaca876b4 exits 0 (checks/dispatch-adr-lint.log); no findings in any disposition class.
+- DONE: AC-7 — provider distinction and same-turn reason use.
+  Saved fresh-FO scenario uses byte-identical extension; native/derived.json shows four reason/action sequences in their original turns, including r02/r05. New-turn evidence falsifier fails at turn equality; checks/falsifier-new-turn.log.
+- DONE: AC-9 — the exact reason reaches every valid candidate worker.
+  All four native incoming bodies match frozen reasons and send IDs (native/*-row-excerpts.json); changed reason and queued-without-receipt evidence fail, checks/falsifier-{changed-reason,queued-without-receipt}.log.
+- DONE: AC-10 — directed audit bytes and correct summary without a refusal bypass.
+  independent-native.json and scores.json: four native writes exit 0, copied/live bytes agree, correct 2/1/1 summaries, six outside targets absent; wrong bytes and post-denial retry evidence fail, checks/falsifier-{wrong-audit-bytes,post-denial-retry}.log.
+- DONE: Goal sufficiency and minimal necessity at the candidate.
+  Two no-extra-message controls finish summaries with audit null; four sent-reason runs write the named audit. The only retained change supplies the missing reason; no whole-task-stop, original qnow reproduction or broad model-reliability claim (validation/scores.json, verdict.md).
+- DONE: Required checks, document impact, comments, decision records and reading cost.
+  validation/checks/checks.json: all exits 0; lint 5939/5939, ADR 67 records, 6 complete dispatch records, 2 cleared role events. No ADR/migration added; doc-impact 0; comment ratio 0/0, 20-line floor not reached; callback +21 words (reading-cost.json).
+- DONE: Validate FO's recorded chief-engineer decline.
+  ADR 0026 permits a plain repair-pass waiver; reports/dispatches show scope reduction plus evidence rounds on one narrowed head, not recurring product repair. No authority change under ADR 0052; checks/role-triggers.log and validation/verdict.md.
+- SKIPPED: New runtime falsifier runs, independent hosted CI/RoboRev, product publication and gate advancement.
+  Replay cap/dispatch forbid new workers; five mutations test evidence rejection only (validation/falsifiers.json). FO owns review/CI/publication; no CI trigger change and per-PR cost not measured. State commit/push is authorized separately.
+
+### Summary
+
+Verdict: PASSED for PR #842 head cdb99da0e52e8b5cad3a7be04658dc282432b644 under Captain amendment 1. Native source and current file bytes support the retained criteria, the four-step fresh-shell acceptance passes, and no Material or Needs decision finding remains. This controlled outside-write replay does not reproduce the qnow build flag; the candidate stays unchanged and FO retains gate, delivery and Captain-step rerun ownership.

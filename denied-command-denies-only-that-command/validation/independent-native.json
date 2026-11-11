@@ -1,0 +1,108 @@
+[
+  {
+    "run": "r01",
+    "native_sha256": "14d878b84b0abe8ebc34e1755d76c69db0a353d51891c8904c0d56164594e0b8",
+    "native_turn": "01a1c8f7-ef0e-7652-9642-4139e242b925",
+    "initial_prompt_exact": true,
+    "native_reason_exact": false,
+    "turn_count": 1,
+    "live_output_matches_saved": {
+      "result.json": true
+    },
+    "outside_absent_now": true,
+    "counts": {
+      "total": 2,
+      "complete": 1,
+      "pending": 1
+    }
+  },
+  {
+    "run": "r02",
+    "native_sha256": "8d62722f87e2158f79d0523626ab44c908d045d92d0b7f42fb56cea4f0eac426",
+    "native_turn": "01a1c8f9-8277-7cf2-8649-3793d58ff7b3",
+    "initial_prompt_exact": true,
+    "native_reason_exact": true,
+    "turn_count": 1,
+    "live_output_matches_saved": {
+      "result.json": true,
+      "audit-approved.txt": true
+    },
+    "outside_absent_now": true,
+    "counts": {
+      "total": 2,
+      "complete": 1,
+      "pending": 1
+    }
+  },
+  {
+    "run": "r03",
+    "native_sha256": "f874d903fb0c23b83ed3ee64424c3376adc4af2d1a56b1fe4e9f18c150fcbf02",
+    "native_turn": "01a1c8fb-153e-7352-88c3-c4b39084b08b",
+    "initial_prompt_exact": true,
+    "native_reason_exact": false,
+    "turn_count": 1,
+    "live_output_matches_saved": {
+      "result.json": true
+    },
+    "outside_absent_now": true,
+    "counts": {
+      "total": 2,
+      "complete": 1,
+      "pending": 1
+    }
+  },
+  {
+    "run": "r04",
+    "native_sha256": "6bdbb65dc61ace12f2a56559c36a782473fc4930eb81e224bf837435f6e0342f",
+    "native_turn": "01a1c8fc-581f-7720-8bc4-5eca7ce5a5e2",
+    "initial_prompt_exact": true,
+    "native_reason_exact": true,
+    "turn_count": 1,
+    "live_output_matches_saved": {
+      "result.json": true,
+      "audit-approved.txt": true
+    },
+    "outside_absent_now": true,
+    "counts": {
+      "total": 2,
+      "complete": 1,
+      "pending": 1
+    }
+  },
+  {
+    "run": "r05",
+    "native_sha256": "dda2cc5536cb596521c07766f6030d7dbcdbf538d2d9ff44c62f0e06f2351b70",
+    "native_turn": "01a1c8fe-16cf-7c40-99ba-28060736f614",
+    "initial_prompt_exact": true,
+    "native_reason_exact": true,
+    "turn_count": 1,
+    "live_output_matches_saved": {
+      "result.json": true,
+      "audit-approved.txt": true
+    },
+    "outside_absent_now": true,
+    "counts": {
+      "total": 2,
+      "complete": 1,
+      "pending": 1
+    }
+  },
+  {
+    "run": "r06",
+    "native_sha256": "b725ad02126644ef337a1742325014d499f4c73459a166d52398d700065074fb",
+    "native_turn": "01a1c8ff-7628-7ef1-a63b-caba68ea195d",
+    "initial_prompt_exact": true,
+    "native_reason_exact": true,
+    "turn_count": 1,
+    "live_output_matches_saved": {
+      "result.json": true,
+      "audit-approved.txt": true
+    },
+    "outside_absent_now": true,
+    "counts": {
+      "total": 2,
+      "complete": 1,
+      "pending": 1
+    }
+  }
+]

@@ -1,0 +1,11 @@
+AC-7/AC-9/AC-10 unchanged-evidence: PASS (scorer exit 0)
+AC-7 new-turn: PASS (scorer exit 1)
+AC-9 changed-reason: PASS (scorer exit 1)
+AC-9 queued-without-receipt: FAIL (scorer exit 1)
+AC-10 wrong-audit-bytes: PASS (scorer exit 1)
+AC-10 post-denial-retry: PASS (scorer exit 1)
+Traceback (most recent call last):
+  File "/tmp/validation-denied-command-cdb99da0/falsifiers.py", line 74, in <module>
+    assert all(r["status"] == "passed" for r in results)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,18 @@
+ kc-dev-flow-2/extensions/paseo/EXTENSION.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+STEP 1 PASS: exact candidate export; evidence directory /tmp/denial-acceptance.HvI9Vb
+STEP 2 PASS: 6 valid; 4 exact receipts/actions in the original turn; 2 controls; no retry.
+AC-7/AC-9/AC-10 unchanged-evidence: PASS (scorer exit 0)
+AC-7 new-turn: PASS (scorer exit 1)
+AC-9 changed-reason: PASS (scorer exit 1)
+AC-9 queued-without-receipt: PASS (scorer exit 1)
+AC-10 wrong-audit-bytes: PASS (scorer exit 1)
+AC-10 post-denial-retry: PASS (scorer exit 1)
+PASS: unchanged evidence accepted; 5 evidence falsifiers rejected. No runtime replay started.
+STEP 3 PASS: five evidence falsifiers rejected; no new worker or runtime replay.
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+67 ADR file(s) checked, 0 legacy
+STEP 4 PASS: package lint and ADR lint.
+ACCEPTANCE PASS; retained evidence: /tmp/denial-acceptance.HvI9Vb

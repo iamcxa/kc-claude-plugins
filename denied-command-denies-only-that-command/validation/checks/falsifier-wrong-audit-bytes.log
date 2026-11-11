@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/validation-denied-command-cdb99da0/falsifiers-final/wrong-audit-bytes/score-evidence.py", line 175, in <module>
+    assert candidate == score["reason_applied"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

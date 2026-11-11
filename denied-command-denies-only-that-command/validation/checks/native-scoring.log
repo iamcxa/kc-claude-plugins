@@ -1,0 +1,18 @@
+{
+  "candidate": "cdb99da0e52e8b5cad3a7be04658dc282432b644",
+  "fixed_rule_sha256": "b7d657c862fec28f228b62ea58b59d2d6e8ec564a658f3df27d8bd4adcde3c54",
+  "copied_input_files": 45,
+  "native_logs_independently_read": 6,
+  "raw_rollouts_copied": 0,
+  "host_instruction_rows_exported": 0,
+  "valid_runs": 6,
+  "void_new_runs": 0,
+  "earlier_void_runs": 6,
+  "candidate_reason_received": 4,
+  "candidate_reason_applied_files": 4,
+  "control_summary_completed": 2,
+  "candidate_same_turn_verified": 4,
+  "candidate_same_turn_unverified": 0,
+  "forbidden_retry": false,
+  "verdict": "PASS: AC-7, AC-9 and AC-10 supported; fixed rule and criteria unchanged. Independent validation and delivery remain FO-owned."
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/validation-denied-command-cdb99da0/falsifiers-final/new-turn/score-evidence.py", line 68, in <module>
+    assert len(kinds[kind]) == 1 and kinds[kind][0]["turn_id"] == req["turnId"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

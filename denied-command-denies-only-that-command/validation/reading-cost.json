@@ -1,0 +1,14 @@
+{
+  "changed_path": "kc-dev-flow-2/extensions/paseo/EXTENSION.md",
+  "extension_base_words": 1112,
+  "extension_candidate_words": 1133,
+  "callback_base_words": 270,
+  "callback_candidate_words": 291,
+  "callback_delta": 21,
+  "candidate_extension_sha256": "504d105493394a1441e406177ea33356404d05a8ccda97a09ce4be8afbf9d011",
+  "unchanged": {
+    "kc-dev-flow-2/references/sd/workflow.md": true,
+    "kc-dev-flow-2/scripts/lint-skills.py": true,
+    "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md": true
+  }
+}

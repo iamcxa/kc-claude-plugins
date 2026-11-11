@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/validation-denied-command-cdb99da0/falsifiers-final/changed-reason/score-evidence.py", line 135, in <module>
+    assert incoming["text"] == reason
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

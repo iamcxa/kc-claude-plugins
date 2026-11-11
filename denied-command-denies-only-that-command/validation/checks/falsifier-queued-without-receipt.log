@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/validation-denied-command-cdb99da0/falsifiers-final/queued-without-receipt/score-evidence.py", line 131, in <module>
+    incoming = kinds["exact_reason_user_message"]
+               ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'exact_reason_user_message'
