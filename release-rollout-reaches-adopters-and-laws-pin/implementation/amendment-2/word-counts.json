@@ -1,0 +1,86 @@
+{
+  "sections": [
+    {
+      "revision": "base",
+      "section": "post-merge",
+      "words": 282,
+      "independent_wc": 282
+    },
+    {
+      "revision": "base",
+      "section": "release-skill",
+      "words": 284,
+      "independent_wc": 284
+    },
+    {
+      "revision": "base",
+      "section": "observe-adopters",
+      "words": 212,
+      "independent_wc": 212
+    },
+    {
+      "revision": "base",
+      "section": "laws-install-paragraph",
+      "words": 70,
+      "independent_wc": 70
+    },
+    {
+      "revision": "base",
+      "section": "workflow",
+      "words": 5939,
+      "independent_wc": 5939
+    },
+    {
+      "revision": "candidate",
+      "section": "post-merge",
+      "words": 302,
+      "independent_wc": 302
+    },
+    {
+      "revision": "candidate",
+      "section": "release-skill",
+      "words": 284,
+      "independent_wc": 284
+    },
+    {
+      "revision": "candidate",
+      "section": "observe-adopters",
+      "words": 311,
+      "independent_wc": 311
+    },
+    {
+      "revision": "candidate",
+      "section": "laws-install-paragraph",
+      "words": 95,
+      "independent_wc": 95
+    },
+    {
+      "revision": "candidate",
+      "section": "workflow",
+      "words": 5939,
+      "independent_wc": 5939
+    }
+  ],
+  "unchanged_lifecycle_files": [
+    "kc-dev-flow-2/references/sd/workflow.md",
+    "kc-dev-flow-2/scripts/pr_watch.py",
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/dispatch_records.py"
+  ],
+  "unchanged_moment_deltas": {
+    "startup": 0,
+    "idle-open-PR": 0,
+    "idle-merged-PR": 0,
+    "after-archive": 0,
+    "merge-ask": 0
+  },
+  "dispatch_output_words": 12,
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "candidate": "ba98f3ca95c1f879bf460fbb08976f337e18c4c8",
+  "amendment_2_report_change": {
+    "words_added_only_when_both_owed": 6,
+    "both_owed_row_words": 16,
+    "single_debt_rows_delta": 0,
+    "document_moment_counts_unchanged_from_prior_candidate": true
+  }
+}

@@ -224,6 +224,8 @@ Recommended order: after adr-required-statement and merge-guard-stops-unasked-me
 
 **AC-11** Amended by Captain, amendment 1. The command takes the maintainer's local list path; it is committed nowhere, and no list file is added to the package or state branch. Evidence: the AC-8 run reads the FO-supplied local file, and fake-gh tests cover a missing and unreadable list returning non-zero. Falsifier: a missing list returns 0 or says nothing is owed, or the candidate adds a list to either repository.
 
+**AC-12** Amended by Captain, amendment 2. When an adopter owes both a README sync and a laws pin move, that same report line states the order in words: sync the README first, merge it, then move the pin. The comparison and debt classification in AC-4 remain unchanged. Evidence: a fake-gh both-owed fixture asserts the complete printed line and exit 1, fails at candidate a1a35a714 before the change, and passes after it; single-debt stdout bytes compare equal to a1a35a714. Falsifier: removing the printed order while still reporting the pin as owed fails the fixture.
+
 ## Number guards
 
 ADR: 0075
@@ -339,3 +341,39 @@ The read-only release command now reports workflow sync and installed-laws pin d
 ### Summary
 
 This report supersedes the earlier implementation report, retaining its evidence at the unchanged candidate and replacing its outdated no-PR/no-review status with FO's Draft PR #838 and forwarded High finding. The reported early pin debt matches AC-4, while a real-checker probe confirms why moving the pin must wait for README merge; changing the comparator to the README release breaks that approved criterion. No product repair or criterion rewrite was made; the comparator decision and final finding disposition return to FO/Captain, with a clean product worktree and updated handoff text.
+
+
+## Stage Report: implementation
+
+- DONE: Captain amendment 2 settles RoboRev job 1725; keep AC-4's released-tag comparison and print the order in a both-owed row.
+  Candidate `ba98f3ca95c1f879bf460fbb08976f337e18c4c8` appends `; sync README, merge, then move pin` when both debts are true; comparison, debt flags, exit classification and pin writes are unchanged (the command remains read-only).
+- DONE: Add one new criterion under a fresh id marked Amended by Captain, amendment 2; leave every prior criterion unchanged.
+  AC-12 added with the both-owed fixture and missing-order falsifier; amendment-2/criteria-check.json verifies all 11 prior criterion blocks, including superseded blocks, byte-identical to criteria-before.json.
+- DONE: Implement within the design's named files, show single-debt lines byte-identical, and commit locally without pushing.
+  Follow-up commit `ba98f3ca9` changes package_version.py and test_package_version.py only; prior `a1a35a714510683a44a2ac5ec02241e7cb354f80`, base `e8664a72b0f904e5dda3c391d52ab3abaca876b4`, branch `spacedock-ensign/release-rollout-reaches-adopters-and-laws-pin`. Five byte/exit comparisons pass in amendment-2/proof-results.json; product worktree clean.
+- DONE: AC-12 both-owed order, with a before/after test and executed falsifier.
+  amendment-2/tests-before.log: 18 tests, one expected missing-order failure on a1a35a714; tests.log: all 18 pass after the change; missing-order-mutation.log rejects a pin-owed line without order, exit 1. The printed both-owed row is 16 words (both-owed.txt).
+- DONE: AC-1, AC-2 and AC-6 row identity, explicit unreadability and search diagnostics remain satisfied.
+  All package_version cases pass; original-proofs reruns reject dropping a row, swallowing the read failure and silencing search failure, each exit 1; its eight-control proof-results.json is saved under amendment-2/original-proofs.
+- DONE: AC-3, AC-4 and AC-5 text comparisons and single-README behavior remain unchanged.
+  Existing laws-change/unknown-pin/absent-install tests pass; marker-inclusive and pin-equality mutations fail; all eight original stdout/exit comparisons with base pass and changed legacy bytes fail cmp (amendment-2/original-proofs/run.log).
+- DONE: AC-8 live read at the new candidate, retaining the privacy handling of amendment 1.
+  2026-11-11 command, candidate and list hash in amendment-2/live-summary.json: 11 listed rows, four unlisted, exit 0; listed output matches a1a35a714 byte-for-byte, 112 words. Full output stays only /tmp/rollout-amendment-2/live-output.txt; no local list or private unlisted names committed.
+- DONE: AC-10 per-moment words and written rules; AC-11 local-only list remains intact.
+  amendment-2/word-counts.json: release documents 778→897 versus original base, installation paragraph 70→95, shared workflow 5939→5939 and other lifecycle deltas 0, independently recounted with wc -w; only a both-owed report adds six words. No document or list-path default changed; missing/unreadable-list fixtures and success mutation controls pass again.
+- DONE: Repository skill lint, required ADR/number guards, comment maximum and design-surface checks at the candidate.
+  amendment-2/checks.json records all exits 0; repository lint 5939/5939; ADR 0075 required, 68 records; number guards PASS on ba98f3ca95c1; comments 323 code lines, one comment, 0.3% under 5%; design surfaces presentable (scope check not run at implementation).
+- DONE: Affected documents and ADR 0075 remain correct; scope/goal audit retains only the approved behavior and regression test.
+  amendment-2/docs.json: ADR 0075 unaffected because released-tag debt and post-merge sequencing remain its ruling; maintain-flow unaffected because its report command and move-after-merge instructions remain accurate. No existing ADR edited, no new number, version, law, CI or adopter change; removing the new suffix produces the named AC-12 failure.
+- DONE: Answer the repeated-symptom step-back questions before useful work; no new profile or orchestration scope.
+  role_triggers.py exits 0 with its step-back reminder: still the original read-only rollout outcome; gap immediately testable with fake gh; deleting AC-12 removes the in-row merge sequence even though debt arithmetic survives. Pilot boundary and FO publication ownership retained.
+- DONE: Update the prepared PR text and append a complete report superseding earlier implementation reports.
+  /tmp/impl-release-rollout-reaches-adopters-and-laws-pin-pr.md names ba98f3ca95c1, amendment 2, single-debt compatibility and validation; this complete report is appended. Only this task's report/evidence is committed path-scoped; concurrent sibling state work remains untouched.
+- SKIPPED: Product push, editing Draft PR #838, RoboRev rerun and hosted CI.
+  FO owns these under the dispatch; no external review request/comment, ready action or merge performed. RoboRev and hosted CI are not run here, not clean; per-PR billed CI cost not measured, no CI trigger or job changed.
+- SKIPPED: Validator-selected two live hand reads and model behavior replay.
+  Independent validator choices remain due; this worker's fresh live read and fake-gh controls do not substitute for them. Earlier real-checker version-skew evidence is retained under review-1725, not rerun in this round; no model-behavior claim made.
+
+### Summary
+
+This report supersedes both earlier implementation reports, including the review-1725 Needs decision conclusion, because Captain amendment 2 has settled that question. The comparator remains as AC-4 requires, and AC-12 now makes the README-sync/merge/pin order explicit on the both-owed line; 18 tests, original mutation/byte controls, new missing-order mutation, single-debt byte comparisons, required checks and the new-candidate live run pass. Candidate ba98f3ca95c1 is committed locally without product push; FO owns updating Draft PR #838, rerunning RoboRev/CI and independent validation.

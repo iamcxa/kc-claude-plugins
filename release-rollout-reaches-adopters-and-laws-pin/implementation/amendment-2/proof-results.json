@@ -1,0 +1,37 @@
+[
+  {
+    "name": "sync-only bytes/exit unchanged",
+    "status": "passed",
+    "message": "cmp exit 0; both command exits 1"
+  },
+  {
+    "name": "pin-only bytes/exit unchanged",
+    "status": "passed",
+    "message": "cmp exit 0; both command exits 1"
+  },
+  {
+    "name": "unknown-pin-only bytes/exit unchanged",
+    "status": "passed",
+    "message": "cmp exit 0; both command exits 1"
+  },
+  {
+    "name": "no-debt bytes/exit unchanged",
+    "status": "passed",
+    "message": "cmp exit 0; both command exits 0"
+  },
+  {
+    "name": "sync-uninstalled bytes/exit unchanged",
+    "status": "passed",
+    "message": "cmp exit 0; both command exits 1"
+  },
+  {
+    "name": "AC-12 missing-order mutation",
+    "status": "passed",
+    "message": "same pin debt without order rejected, exit 1"
+  },
+  {
+    "name": "both-owed row",
+    "status": "passed",
+    "message": "order follows pin debt on the same line; exit 1; 16 words"
+  }
+]

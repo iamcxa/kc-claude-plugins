@@ -1,0 +1,22 @@
+.......F..........
+======================================================================
+FAIL: test_both_debts_print_readme_sync_then_merge_then_pin_move (test_package_version.RolloutTest.test_both_debts_print_readme_sync_then_merge_then_pin_move)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin/kc-dev-flow-2/scripts/test_package_version.py", line 189, in test_both_debts_print_readme_sync_then_merge_then_pin_move
+    self.assertEqual(run.stdout,
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+                     f"fleet/both docs/dev2 README:0.38.0 released:0.38.1 sync owed; laws: {self.old} pin owed"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "; sync README, merge, then move pin\n")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'flee[88 chars]1111111111111111 pin owed\n' != 'flee[88 chars]1111111111111111 pin owed; sync README, merge, then move pin\n'
+- fleet/both docs/dev2 README:0.38.0 released:0.38.1 sync owed; laws: 1111111111111111111111111111111111111111 pin owed
++ fleet/both docs/dev2 README:0.38.0 released:0.38.1 sync owed; laws: 1111111111111111111111111111111111111111 pin owed; sync README, merge, then move pin
+?                                                                                                                      +++++++++++++++++++++++++++++++++++
+
+
+----------------------------------------------------------------------
+Ran 18 tests in 9.535s
+
+FAILED (failures=1)
