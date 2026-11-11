@@ -62,6 +62,17 @@ gates:
                 id: briefing:budget-overrun-holds-and-findings-meet-non-goals:validation:attempt-1:revision-1
                 digest: sha256:13098b17b7e9a23fa100b0eada5fbf2d913ea06674505b1b70b5d1a10e98575a
                 room-ref: ./budget-overrun-holds-and-findings-meet-non-goals/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:budget-overrun-holds-and-findings-meet-non-goals:validation:1
+                briefing: briefing:budget-overrun-holds-and-findings-meet-non-goals:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-11T08:56:26.663026Z"
+                decision: approve
+                reason: 'The Captain chose 「合併，時間另開任務（建議）」 (host question dialog, 2026-11-11), answering 「決定：合併 #841（預算任務：任務的預算寫成數得出來的上限，每次派工顯示已用多少，第一次超過時保留成果並回到你這裡；設計要先回答三個「值不值得」的問題）嗎？建議合併，Codex 提的兩個中等問題和驗證留的一項風險這次不修、另開任務。同意即接受四件沒修的事：一、我追加給工人的修正訊息在送出前不會檢查預算，超過上限要到下一次派工、閒置檢查或合併前才擋下，也就是可能多做一則訊息的工；二、直接改任務檔裡的預算那一行可以解除擋下而不留修正案；三、升級後，還沒過設計關卡、又沒寫「值不值得」那一節的舊設計會被擋下，要補寫才能過；四、實作時順帶找到的 15 個同類檢查漏洞（都在這張任務範圍外）不修。另外累計代理分鐘不在這張，Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit 6da9a765ee04e1e2c7836517ba01f75b0ea91d73, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」; in the same dialog he first asked 「這個版本有包含時間估算與紀錄嗎？」, FO answered that it does not, and he then chose. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-11T01:44:17Z
 worktree: .worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals
 pr: iamcxa/kc-claude-plugins#841
