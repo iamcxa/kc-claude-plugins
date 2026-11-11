@@ -43,6 +43,10 @@ gates:
                 id: briefing:ideation-checks-external-prior-art:ideation:attempt-1:revision-1
                 digest: sha256:9b9c1f993b6be0f5403730f03c05acd0595390f180508a762d1732b2e31c66bd
                 room-ref: ./ideation-checks-external-prior-art/review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-11T02:20:14.025866Z"
+                reason: The Captain answered the six-design question with 「這次比較複雜，一題題過審」 (host question dialog, 2026-11-11); each design gets its own question.
 started: 2026-11-11T02:01:14Z
 ---
 
