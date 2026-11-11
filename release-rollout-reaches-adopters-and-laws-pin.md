@@ -265,3 +265,39 @@ Superseded text:
 ### Summary
 
 The design extends the existing `package_version.py` with a read-only `rollout` mode the package maintainer runs after each kc-dev-flow-2 release. It reports, per listed adopter workflow, whether a README sync or a laws pin move is owed. It counts a mismatched version as owed only when the package text actually changed, and it never reports an unreadable repository as current. The measured qnow trial (15 billed minutes for 14 pushes, one true violation caught) and GitHub's published rates put default install over the Pro allowance by arithmetic. So the recommendation is that installing stays on the Captain's word and the pin follows each README sync merge. Code search found four adopted workflows missing from FO's hand list, and it also missed two listed ones, so the list is a file, with search as a cross-check. No repository file, branch or commit was written outside this task file.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design in the assigned worktree, on the branch based on origin/main; named files only, no version bump.
+  Base `e8664a72b0f904e5dda3c391d52ab3abaca876b4`; candidate `a1a35a714510683a44a2ac5ec02241e7cb354f80`; branch `spacedock-ensign/release-rollout-reaches-adopters-and-laws-pin`; six files, clean product worktree.
+- DONE: ADR 0075 records the ruling the design names, quoting the Captain's words from the task file and its gate records.
+  `docs/adr/0075-release-rollout-reports-adopters-and-laws-pin.md` quotes the ideation approval/question and amendment 1; `adr_lint.py docs/adr --since <base> --require 0075` exits 0 (68 records).
+- DONE: AC-1 per-row report line and AC-2 unreadable never current.
+  `implementation/rollout-tests.log`: exact three-row fixture; README HTTP404 is quoted with exit 1 while later rows print; dropping a row or swallowing the read failure is rejected (`mutation-1.log`, `mutation-2.log`).
+- DONE: AC-3 sync owed only on workflow text changes, and AC-4 pin owed only on laws changes or an unrecognised pin.
+  Fixtures cover release-only and sentence changes, each of three laws files, identical laws, unknown pins and absent install; marker-inclusive and SHA-equality mutations fail (`mutation-3.log`, `mutation-4.log`).
+- DONE: AC-5 single-README mode unchanged; existing tests retained unedited and stdout bytes compared with base.
+  Six original test methods unchanged; eight stdout/exit cases compare equal by `cmp`; changing the matching-output byte fails `cmp` (`mutation-legacy.log`); the dispatch fixture stays 12 words.
+- DONE: AC-6 unlisted rows and search-failure diagnostics do not change the owed exit code.
+  Fake-gh success/failure cases keep exit 0 or existing exit 1; silencing search failure is rejected (`mutation-5.log`).
+- DONE: AC-8 live run at the candidate, with the privacy handling in implementation-1-message-2.
+  2026-11-11 command/date/input hash and two independent implementation hand reads are in `implementation/live-summary.json`: 11 listed rows, four unlisted, exit 0; full private output remains only `/tmp/rollout-implementation/live-candidate-output.txt`; changed printed release/pin fail the hand-read comparison.
+- DONE: AC-10 rules and per-moment word counts, replacing AC-7 under Captain amendment 1.
+  `implementation/word-counts.json`, independently recounted with `wc -w`: release documents 778→897 plus 112 report words; adoption paragraph 70→95; shared workflow 5939→5939; startup/open-PR idle/merged-PR idle/archive/merge ask deltas 0. Repository lint exits 0; copied 12-word repetition fails (`mutation-lint.log`); spans and exclusions in evidence README.
+- DONE: AC-11 explicit local list, replacing AC-9; no list file added to either repository.
+  AC-7/AC-9 moved verbatim under amendment 1 and fresh AC-10/AC-11 written; the run reads FO's local path, package docs specify outside any repository, and absent/unreadable-list fixtures fail; a missing-list success mutation is rejected (`mutation-6.log`).
+- DONE: Repository lint, required ADR/number guards and comment ratio, using the dispatch-designated package scripts.
+  All exits 0 in `implementation/checks.json`; repository lint 5939/5939; number guards at the candidate report PASS; 313 added code lines, one comment, 0.3% versus 5%; design_surfaces.py exits 0; no bytecode caches used in mutation runs.
+- DONE: Affected documents and bounded existing-code/goal audit.
+  `implementation/check-docs.json` lists ADR 0075 and maintain-flow, both updated; adoption and root CLAUDE pointer also updated as designed. Prior design capability audit reused; base lacks rollout (nine new tests fail there); each retained surface serves AC-1–AC-11, the ruling, or release/adoption entry points; no workflow/law/CI/version file changed.
+- DONE: Record qnow's current state without treating the post-design change as a defect.
+  Independent contents HTTP404 plus state-branch HTTP200 match `laws: not installed`; FO confirms Captain-authorised removal at `dce0a96c0` in implementation-1-message-3.
+- SKIPPED: One Draft PR; product push, PR creation, RoboRev and hosted CI are FO-owned under this dispatch.
+  No PR opened: no push grant. Prepared title/body: `/tmp/impl-release-rollout-reaches-adopters-and-laws-pin-pr.md`; branch and exact candidate above; all delegated checks are not run, not clean. CI cost per PR not measured; no CI trigger or job changed.
+- SKIPPED: Two live rows chosen by the independent validator and behavior replay of a model.
+  Validator picks remain due; implementation hand reads are not independent validation. Reporting was exercised at fake-gh and live-gh seams; existing worker dispatch behavior is unchanged, and no model-behavior claim is made.
+
+### Summary
+
+The read-only release command now reports workflow sync and installed-laws pin debt using a maintainer-supplied local list, with unreadable rows explicit and search treated as a cross-check. Captain amendment 1 keeps that list committed nowhere; 17 tests, eight mutation controls, byte comparisons, required checks and the final-candidate live read passed. Product publication, Draft PR, RoboRev, hosted CI and independent validation remain with FO; no adopter was changed.

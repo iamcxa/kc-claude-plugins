@@ -1,0 +1,42 @@
+[
+  {
+    "name": "AC-1 drop a listed row",
+    "status": "passed",
+    "message": "mutation rejected, exit 1; mutation-1.log"
+  },
+  {
+    "name": "AC-2 failed README read becomes nothing owed",
+    "status": "passed",
+    "message": "mutation rejected, exit 1; mutation-2.log"
+  },
+  {
+    "name": "AC-3 compare release markers too",
+    "status": "passed",
+    "message": "mutation rejected, exit 1; mutation-3.log"
+  },
+  {
+    "name": "AC-4 pin equality replaces laws-content comparison",
+    "status": "passed",
+    "message": "mutation rejected, exit 1; mutation-4.log"
+  },
+  {
+    "name": "AC-6 silence failed search",
+    "status": "passed",
+    "message": "mutation rejected, exit 1; mutation-5.log"
+  },
+  {
+    "name": "AC-11 missing list becomes nothing owed",
+    "status": "passed",
+    "message": "mutation rejected, exit 1; mutation-6.log"
+  },
+  {
+    "name": "AC-5 original mode stdout bytes",
+    "status": "passed",
+    "message": "8 base/candidate cases cmp equal; changed matching output rejected by cmp exit 1"
+  },
+  {
+    "name": "AC-10 repeated workflow passage",
+    "status": "passed",
+    "message": "12-word repeat mutation rejected by repository linter exit 1"
+  }
+]

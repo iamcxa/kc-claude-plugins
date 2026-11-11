@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-11",
+  "command": "python3 -B kc-dev-flow-2/scripts/package_version.py rollout /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/fo-scripts/adopters.md",
+  "exit": 0,
+  "listed_rows": 11,
+  "unlisted_rows": 4,
+  "search_unavailable": 0,
+  "listed_word_count": 112,
+  "max_row_words": 12,
+  "list_sha256": "323b3728fc1084ab9971f45a72cd3139ad46d8f43d07884a0816a410fa90004a",
+  "full_output": "/tmp/rollout-implementation/live-candidate-output.txt (contains unlisted private names; not committed)",
+  "manual_checks": [
+    {
+      "repo": "iamcxa/kc-claude-plugins",
+      "workflow": "docs/dev2",
+      "marker": "<!-- kc-dev-flow-2 0.38.1 x-release-please-version -->",
+      "pin": "ec2bae0d6b9c4cedc5fc67adfc99d7043143c5de",
+      "readme_blob": "923abc07a085de9f042e552d90dc948617dfe1fb",
+      "laws_blob": "ef15bb2aa0b32507cad0e783652be815ef8eb5d1"
+    },
+    {
+      "repo": "iamcxa/qnow",
+      "workflow": "docs/dev2",
+      "marker": "<!-- kc-dev-flow-2 0.38.0 x-release-please-version -->",
+      "laws": "contents HTTP404 and branch HTTP200",
+      "removed_at": "dce0a96c0 (FO-confirmed Captain-authorised removal)",
+      "readme_blob": "437e614388a19584fa3b4213bbc9ef141941a111"
+    }
+  ],
+  "falsifier": "Changed README release and pin each rejected against independent API read.",
+  "candidate": "a1a35a714510683a44a2ac5ec02241e7cb354f80"
+}

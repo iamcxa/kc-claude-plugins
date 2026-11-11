@@ -1,0 +1,23 @@
+FF
+======================================================================
+FAIL: test_missing_or_unreadable_local_list_fails (test_package_version.RolloutTest.test_missing_or_unreadable_local_list_fails) (listing='/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpx12bz04a/absent.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpj6bgefvt/kc-dev-flow-2/scripts/test_package_version.py", line 240, in test_missing_or_unreadable_local_list_fails
+    self.assertEqual(run.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_missing_or_unreadable_local_list_fails (test_package_version.RolloutTest.test_missing_or_unreadable_local_list_fails) (listing='/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpx12bz04a')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpj6bgefvt/kc-dev-flow-2/scripts/test_package_version.py", line 240, in test_missing_or_unreadable_local_list_fails
+    self.assertEqual(run.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.195s
+
+FAILED (failures=2)

@@ -1,0 +1,16 @@
+[
+ {
+  "doc": "docs/adr/0075-release-rollout-reports-adopters-and-laws-pin.md",
+  "state": "updated",
+  "terms": [
+   "kc-dev-flow-2/scripts/package_version.py"
+  ]
+ },
+ {
+  "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+  "state": "updated",
+  "terms": [
+   "kc-dev-flow-2/scripts/package_version.py"
+  ]
+ }
+]

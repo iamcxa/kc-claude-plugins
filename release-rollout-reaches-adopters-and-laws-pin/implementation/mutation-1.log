@@ -1,0 +1,36 @@
+F
+======================================================================
+FAIL: test_each_row_keeps_its_own_release_sync_and_laws_status (test_package_version.RolloutTest.test_each_row_keeps_its_own_release_sync_and_laws_status)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp06c0slf6/kc-dev-flow-2/scripts/test_package_version.py", line 149, in test_each_row_keeps_its_own_release_sync_and_laws_status
+    self.assertEqual(run.stdout.splitlines(), [
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"fleet/one docs/dev2 README:0.38.0 released:0.38.1 no sync owed; laws: {self.old} no pin owed",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "fleet/two docs/dev2-poc README:0.38.1 released:0.38.1 no sync owed; laws: not installed",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"fleet/three docs/dev2 README:0.38.1 released:0.38.1 no sync owed; laws: {self.latest} no pin owed"])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['fle[206 chars]lled'] != ['fle[206 chars]lled', 'fleet/three docs/dev2 README:0.38.1 re[83 chars]wed']
+
+Second list contains 1 additional elements.
+First extra element 2:
+'fleet/three docs/dev2 README:0.38.1 released:0.38.1 no sync owed; laws: 2222222222222222222222222222222222222222 no pin owed'
+
+  ['fleet/one docs/dev2 README:0.38.0 released:0.38.1 no sync owed; laws: '
+   '1111111111111111111111111111111111111111 no pin owed',
+   'fleet/two docs/dev2-poc README:0.38.1 released:0.38.1 no sync owed; laws: '
+-  'not installed']
+?                 ^
+
++  'not installed',
+?                 ^
+
++  'fleet/three docs/dev2 README:0.38.1 released:0.38.1 no sync owed; laws: '
++  '2222222222222222222222222222222222222222 no pin owed']
+
+----------------------------------------------------------------------
+Ran 1 test in 1.133s
+
+FAILED (failures=1)

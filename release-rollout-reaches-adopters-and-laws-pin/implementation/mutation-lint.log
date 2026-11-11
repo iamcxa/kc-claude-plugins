@@ -1,0 +1,2 @@
+FAIL: skills/maintain-flow/SKILL.md: uses <package> but has no 'Package root:' line
+FAIL: skills/maintain-flow/SKILL.md: repeats 42 words of references/sd/workflow.md: 'kc-dev-flow-2 dev. before each worker dispatch fo runs python3 <package>/scripts'

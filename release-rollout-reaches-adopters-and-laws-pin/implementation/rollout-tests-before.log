@@ -1,0 +1,98 @@
+......FFFFFFFFF
+======================================================================
+FAIL: test_annotated_release_tag_resolves_to_its_commit (__main__.RolloutTest.test_annotated_release_tag_resolves_to_its_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin/kc-dev-flow-2/scripts/test_package_version.py", line 225, in test_annotated_release_tag_resolves_to_its_commit
+    self.assertEqual(self.run_rollout().returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_each_laws_file_change_owes_pin_and_identical_laws_do_not (__main__.RolloutTest.test_each_laws_file_change_owes_pin_and_identical_laws_do_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin/kc-dev-flow-2/scripts/test_package_version.py", line 174, in test_each_laws_file_change_owes_pin_and_identical_laws_do_not
+    self.assertEqual(self.run_rollout().returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_each_row_keeps_its_own_release_sync_and_laws_status (__main__.RolloutTest.test_each_row_keeps_its_own_release_sync_and_laws_status)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin/kc-dev-flow-2/scripts/test_package_version.py", line 148, in test_each_row_keeps_its_own_release_sync_and_laws_status
+    self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : Compare the loaded kc-dev-flow-2 package with the release an adopted workflow README was synced from.
+
+Usage: package_version.py <workflow README>
+Exit 0 when they match, when the README is behind the package (re-sync it), or when the
+README carries no release line. Exit 1 when the loaded package is older than the README:
+the session must load the newer package before it dispatches. Exit 2 on a usage error.
+
+
+======================================================================
+FAIL: test_missing_marker_and_package_read_failures_never_pass (__main__.RolloutTest.test_missing_marker_and_package_read_failures_never_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin/kc-dev-flow-2/scripts/test_package_version.py", line 230, in test_missing_marker_and_package_read_failures_never_pass
+    self.assertEqual(self.run_rollout().returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_missing_state_branch_and_forbidden_laws_are_unreadable (__main__.RolloutTest.test_missing_state_branch_and_forbidden_laws_are_unreadable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin/kc-dev-flow-2/scripts/test_package_version.py", line 198, in test_missing_state_branch_and_forbidden_laws_are_unreadable
+    self.assertEqual(self.run_rollout().returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_release_line_only_does_not_owe_sync_but_a_changed_sentence_does (__main__.RolloutTest.test_release_line_only_does_not_owe_sync_but_a_changed_sentence_does)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin/kc-dev-flow-2/scripts/test_package_version.py", line 165, in test_release_line_only_does_not_owe_sync_but_a_changed_sentence_does
+    self.assertEqual(self.run_rollout().returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0
+
+======================================================================
+FAIL: test_search_reports_unlisted_and_failed_search_without_changing_exit (__main__.RolloutTest.test_search_reports_unlisted_and_failed_search_without_changing_exit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin/kc-dev-flow-2/scripts/test_package_version.py", line 211, in test_search_reports_unlisted_and_failed_search_without_changing_exit
+    self.assertEqual(run.returncode, 0, run.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : Compare the loaded kc-dev-flow-2 package with the release an adopted workflow README was synced from.
+
+Usage: package_version.py <workflow README>
+Exit 0 when they match, when the README is behind the package (re-sync it), or when the
+README carries no release line. Exit 1 when the loaded package is older than the README:
+the session must load the newer package before it dispatches. Exit 2 on a usage error.
+
+
+======================================================================
+FAIL: test_unknown_pin_is_owed_and_missing_install_is_not (__main__.RolloutTest.test_unknown_pin_is_owed_and_missing_install_is_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin/kc-dev-flow-2/scripts/test_package_version.py", line 187, in test_unknown_pin_is_owed_and_missing_install_is_not
+    self.assertEqual(run.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_unreadable_readme_quotes_error_and_fails_without_hiding_other_rows (__main__.RolloutTest.test_unreadable_readme_quotes_error_and_fails_without_hiding_other_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin/kc-dev-flow-2/scripts/test_package_version.py", line 159, in test_unreadable_readme_quotes_error_and_fails_without_hiding_other_rows
+    self.assertEqual(run.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.398s
+
+FAILED (failures=9)

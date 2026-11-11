@@ -1,0 +1,21 @@
+{
+  "candidate": "a1a35a714510683a44a2ac5ec02241e7cb354f80",
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "checks": {
+    "adr": 0,
+    "comments": 0,
+    "docs": 0,
+    "number": 0
+  },
+  "unit_test_log": "rollout-tests.log",
+  "mutations": "proof-results.json",
+  "live": "live-summary.json",
+  "unrun": [
+    "product push",
+    "Draft PR creation",
+    "RoboRev",
+    "hosted CI",
+    "independent validator-selected live hand reads"
+  ],
+  "ci_cost_per_pr": "not measured; no CI workflow changed"
+}
