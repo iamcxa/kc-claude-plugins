@@ -43,6 +43,17 @@ gates:
                 id: briefing:release-rollout-reaches-adopters-and-laws-pin:ideation:attempt-2:revision-1
                 digest: sha256:acb939d10bbb7c3c5cb309053445198f1a50694dd67002ca94c1137014c480d9
                 room-ref: ./release-rollout-reaches-adopters-and-laws-pin/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-rollout-reaches-adopters-and-laws-pin:ideation:2
+                briefing: briefing:release-rollout-reaches-adopters-and-laws-pin:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-11T02:42:08.741425Z"
+                decision: approve
+                reason: 'The Captain chose 「照建議核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要核准「發版後鋪開到採用 repo 與法規檢查」的設計並開始實作。我建議照設計的建議核准：每次發版後跑一個唯讀指令，列出每個採用 repo 的說明檔和法規釘選要不要動；法規檢查維持你點名才裝，釘選在每次說明檔同步合併後跟著移；採用 repo 的清單放在這個 repo 狀態分支的一個檔案，只列已經公開提過的；由我在你每次發版說一聲後派同步 PR，你合併後我移釘選。核准即接受這三項。」. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-11T01:25:39Z
 ---
 
