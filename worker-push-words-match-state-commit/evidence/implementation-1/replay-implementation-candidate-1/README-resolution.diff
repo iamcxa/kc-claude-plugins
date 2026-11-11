@@ -1,0 +1,18 @@
+diff --git a/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-1/README-unresolved.md b/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-1/README-resolved.md
+index 7ea7b5711..e5a467728 100644
+--- a/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-1/README-unresolved.md
++++ b/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-1/README-resolved.md
+@@ -4,13 +4,8 @@ entity-type: task
+ id-style: slug
+ entity-label: task
+ entity-label-plural: tasks
+-<<<<<<< /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-1-sources/README.md
+ extensions: [roborev, codex, copilot, learn, peers, journey-map]
+ second-reviewer: copilot
+-=======
+-extensions: [learn, peers]
+-second-reviewer: ""
+->>>>>>> /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-1/package/kc-dev-flow-2/references/sd/workflow.md
+ state: .spacedock-state
+ trunk: main
+ migrations-path: apps/qnow-api/netlify/database/migrations

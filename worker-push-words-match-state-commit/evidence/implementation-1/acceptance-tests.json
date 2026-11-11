@@ -1,0 +1,57 @@
+[
+  {
+    "name": "base lacks the dispatch push explanation",
+    "status": "passed",
+    "message": "mutation rejected: bullet count"
+  },
+  {
+    "name": "remove bullet",
+    "status": "passed",
+    "message": "mutation rejected: bullet count"
+  },
+  {
+    "name": "duplicate bullet",
+    "status": "passed",
+    "message": "mutation rejected: bullet count"
+  },
+  {
+    "name": "move bullet outside dispatch facts",
+    "status": "passed",
+    "message": "mutation rejected: outside Dispatch facts"
+  },
+  {
+    "name": "extra product path",
+    "status": "passed",
+    "message": "mutation rejected: {'kc-dev-flow-2/references/sd/workflow.md', 'kc-dev-flow-2/skills/implementation/principles.md', 'kc-dev-flow-2/scripts/lint-skills.py'}"
+  },
+  {
+    "name": "wrong gate quotation",
+    "status": "passed",
+    "message": "mutation rejected: Captain words differ from recorded amendment"
+  },
+  {
+    "name": "candidate lint",
+    "status": "passed",
+    "message": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5977 of 5977 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior"
+  },
+  {
+    "name": "remove raise",
+    "status": "passed",
+    "message": "FAIL: references/sd/workflow.md: 5977 words exceeds the budget of 5939; move the added text out of the README, or add a raise step of 38 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS"
+  },
+  {
+    "name": "remove quoted words",
+    "status": "passed",
+    "message": "FAIL: references/sd/workflow.md: WORKFLOW_BUDGET_STEPS[19] raises the budget by 38 and its 'captain' has no quoted words"
+  },
+  {
+    "name": "remove loading moment",
+    "status": "passed",
+    "message": "FAIL: references/sd/workflow.md: WORKFLOW_BUDGET_STEPS[19] raises the budget by 38 and has no 'loaded' moment"
+  },
+  {
+    "name": "candidate placement and actual dispatch context loading",
+    "status": "passed",
+    "message": "three native stage definitions and all four candidate dispatch context fetches contain one Pushes bullet; two release dispatch context fetches contain none"
+  }
+]

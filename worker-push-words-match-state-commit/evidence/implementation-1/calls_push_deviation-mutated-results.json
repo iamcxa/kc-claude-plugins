@@ -1,0 +1,128 @@
+[
+  {
+    "run": "replay-implementation-release",
+    "arm": "release",
+    "stage": "implementation",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "agent_id": "ba94a135-3505-4f8a-acc5-fcd182961d4d",
+    "state_head": "0cf440bc300955048d60ae79ef3118957774b46b",
+    "changed_state_refs": [
+      "refs/heads/spacedock-state/wf"
+    ],
+    "state_commit_pushed": true,
+    "only_expected_state_ref_changed": true,
+    "product_remote_unchanged": true,
+    "reported_as_done": true,
+    "calls_push_deviation": false,
+    "asks_publication_approval": false,
+    "transcript_reports_state_commit": false,
+    "final_report": "replay-implementation-release/final-stage-report.md",
+    "final_reply": "replay-implementation-release/final-response.md"
+  },
+  {
+    "run": "replay-implementation-candidate-1",
+    "arm": "candidate-1",
+    "stage": "implementation",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "agent_id": "33a43082-f93a-442d-a57a-4b1a5ef74fb5",
+    "state_head": "cd9fea336a90e951e71680a5f91bce58eba6bd99",
+    "changed_state_refs": [
+      "refs/heads/spacedock-state/wf"
+    ],
+    "state_commit_pushed": true,
+    "only_expected_state_ref_changed": true,
+    "product_remote_unchanged": true,
+    "reported_as_done": true,
+    "calls_push_deviation": true,
+    "asks_publication_approval": false,
+    "transcript_reports_state_commit": true,
+    "final_report": "replay-implementation-candidate-1/final-stage-report.md",
+    "final_reply": "replay-implementation-candidate-1/final-response.md"
+  },
+  {
+    "run": "replay-implementation-candidate-2",
+    "arm": "candidate-2",
+    "stage": "implementation",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "agent_id": "72d0f62c-b843-4ab1-9eef-9d7608ad0439",
+    "state_head": "6c6164ada9c4e0e5864021480efdbb5975121d81",
+    "changed_state_refs": [
+      "refs/heads/spacedock-state/wf"
+    ],
+    "state_commit_pushed": true,
+    "only_expected_state_ref_changed": true,
+    "product_remote_unchanged": true,
+    "reported_as_done": true,
+    "calls_push_deviation": false,
+    "asks_publication_approval": false,
+    "transcript_reports_state_commit": false,
+    "final_report": "replay-implementation-candidate-2/final-stage-report.md",
+    "final_reply": "replay-implementation-candidate-2/final-response.md"
+  },
+  {
+    "run": "replay-validation-release",
+    "arm": "release",
+    "stage": "validation",
+    "model": "gpt-6-astra",
+    "effort": "xhigh",
+    "agent_id": "a6a30b2a-63fd-44f0-b267-0af934c88051",
+    "state_head": "88d69b9707579dc1933f67607ab190c7381c3829",
+    "changed_state_refs": [
+      "refs/heads/spacedock-state/wf"
+    ],
+    "state_commit_pushed": true,
+    "only_expected_state_ref_changed": true,
+    "product_remote_unchanged": true,
+    "reported_as_done": true,
+    "calls_push_deviation": false,
+    "asks_publication_approval": false,
+    "transcript_reports_state_commit": true,
+    "final_report": "replay-validation-release/final-stage-report.md",
+    "final_reply": "replay-validation-release/final-response.md"
+  },
+  {
+    "run": "replay-validation-candidate-1",
+    "arm": "candidate-1",
+    "stage": "validation",
+    "model": "gpt-6-astra",
+    "effort": "xhigh",
+    "agent_id": "91217b60-47d8-4761-b5d0-7e38363deec6",
+    "state_head": "6cd752e078cb6f6b8ed0b6df6a606f1979c386f9",
+    "changed_state_refs": [
+      "refs/heads/spacedock-state/wf"
+    ],
+    "state_commit_pushed": true,
+    "only_expected_state_ref_changed": true,
+    "product_remote_unchanged": true,
+    "reported_as_done": true,
+    "calls_push_deviation": false,
+    "asks_publication_approval": false,
+    "transcript_reports_state_commit": true,
+    "final_report": "replay-validation-candidate-1/final-stage-report.md",
+    "final_reply": "replay-validation-candidate-1/final-response.md"
+  },
+  {
+    "run": "replay-validation-candidate-2",
+    "arm": "candidate-2",
+    "stage": "validation",
+    "model": "gpt-6-astra",
+    "effort": "xhigh",
+    "agent_id": "de29c5fb-bedf-4726-93cb-b5353edfe697",
+    "state_head": "b6e56362c3e0b3f32f20b1f5523be6e5a1eda649",
+    "changed_state_refs": [
+      "refs/heads/spacedock-state/wf"
+    ],
+    "state_commit_pushed": true,
+    "only_expected_state_ref_changed": true,
+    "product_remote_unchanged": true,
+    "reported_as_done": true,
+    "calls_push_deviation": false,
+    "asks_publication_approval": false,
+    "transcript_reports_state_commit": true,
+    "final_report": "replay-validation-candidate-2/final-stage-report.md",
+    "final_reply": "replay-validation-candidate-2/final-response.md"
+  }
+]

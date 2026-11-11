@@ -1,0 +1,10 @@
+{
+  "reason": "scratch code branch used spacedock-ensign-<slug> while dispatch requires spacedock-ensign/<slug>; canceled before outcome; excluded from all behavior counts",
+  "agents": [
+    "a9345cc0-fa66-4fb0-822b-b92a63637917",
+    "a8a54f4b-beba-44da-a05b-6954a6b7d344",
+    "6cec6c7a-f4c9-47bf-b0bf-20f5a654836c",
+    "ccd733f4-529d-4803-9e6f-ac1a0f789cc4"
+  ],
+  "launch_workspace": "FO workspace, approved placement workaround; direct scratch workspace launch failed with Operation not permitted"
+}

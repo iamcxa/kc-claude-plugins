@@ -219,7 +219,7 @@ Recommended order: under the principles option, any order, except land this befo
 ## Acceptance criteria
 
 **AC-5** Amended by Captain, amendment 1. One `- **Pushes:**` bullet in `kc-dev-flow-2/references/sd/workflow.md` Dispatch facts contains the approved alternative wording. Only that file and `kc-dev-flow-2/scripts/lint-skills.py` change; neither stage principles file changes.
-- Evidence: compare the candidate diff with the base and build implementation and validation dispatches; each contains the bullet once.
+- Evidence: compare the candidate diff with the base and build implementation and validation dispatches and run their stage-definition fetch commands; each fetched context contains the bullet once.
 - Falsifier: remove or duplicate the bullet, move it outside Dispatch facts, or change a file beyond the two named paths; the check must fail.
 
 **AC-6** Amended by Captain, amendment 1. `python3 -B kc-dev-flow-2/scripts/lint-skills.py` exits 0 with one appended `WORKFLOW_BUDGET_STEPS` raise of 38 words, from 5939 to 5977, quoting the Captain's ideation-gate words and the question he answered. The step names startup/resume and the worker-dispatch loading moment.
@@ -257,6 +257,11 @@ Runs: the checklist names no rule under test. Each arm runs on the recorded mode
 Captain: 「核准，放派工單都帶的段落（建議）」 (host question dialog, 2026-11-11)
 Asked: 「決定：要不要核准「工人收到的推送說明與狀態提交工具一致」的設計並開始實作，並把那句話放進每張派工單都帶的流程說明段落。我建議這樣核准：那是目前唯一量過有效的位置，First Officer 和工人都讀得到，也符合任務原本寫的停止條件。核准即接受流程說明檔多 38 字並提高它的字數上限；設計原本建議的「放工人守則、說明檔不加字」不採用。」
 Supersedes: AC-1, AC-2
+
+### Amendment 2 — 2026-11-11, host question dialog
+Captain: 「不出貨，結案記下學到的（建議）」 (host question dialog, 2026-11-11)
+Asked: 「「工人收到的推送說明與狀態提交工具一致」這張任務要不要出貨？重放六次的結果是新版四次都對，但舊版兩次也都對，沒有量到行為上的改善。我建議不出貨：任務以「重放沒有重現問題」結案並記下學到的，流程說明檔不加那 38 字；之後在真實派工裡再看到，就拿那次的紀錄重開。」
+Supersedes: none
 
 ## Stage Report: ideation
 

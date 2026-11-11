@@ -1,0 +1,32 @@
+[
+  {
+    "run": "/tmp/opencode/worker-push-words-match-state-commit/implementation-release",
+    "exit": 0,
+    "output": "removed /private/tmp/opencode/worker-push-words-match-state-commit/implementation-release\n"
+  },
+  {
+    "run": "/tmp/opencode/worker-push-words-match-state-commit/implementation-candidate-1",
+    "exit": 0,
+    "output": "removed /private/tmp/opencode/worker-push-words-match-state-commit/implementation-candidate-1\n"
+  },
+  {
+    "run": "/tmp/opencode/worker-push-words-match-state-commit/implementation-candidate-2",
+    "exit": 0,
+    "output": "removed /private/tmp/opencode/worker-push-words-match-state-commit/implementation-candidate-2\n"
+  },
+  {
+    "run": "/tmp/opencode/worker-push-words-match-state-commit/validation-release",
+    "exit": 0,
+    "output": "removed /private/tmp/opencode/worker-push-words-match-state-commit/validation-release\n"
+  },
+  {
+    "run": "/tmp/opencode/worker-push-words-match-state-commit/validation-candidate-1",
+    "exit": 0,
+    "output": "removed /private/tmp/opencode/worker-push-words-match-state-commit/validation-candidate-1\n"
+  },
+  {
+    "run": "/tmp/opencode/worker-push-words-match-state-commit/validation-candidate-2",
+    "exit": 0,
+    "output": "removed /private/tmp/opencode/worker-push-words-match-state-commit/validation-candidate-2\n"
+  }
+]

@@ -1,0 +1,3 @@
+The approved pending-booking-cap design is built API-only on a branch from origin/main: constant 3, early refusal-only count before the branch lock and vehicle insert, authoritative post-lock count with one database timestamp shared with the slot check, 422 TOO_MANY_PENDING, owner app unchanged
+AC-1 to AC-9 each have a test or check at the stated layer, run with exit codes; real-Postgres cases run in the existing test-pg harness only, and each test is shown to fail when its guarded line is removed
+Affected type-checks, booking tests, lint, adr_lint (if an ADR is written) and the roborev gate run with exit codes; nothing pushed, no PR

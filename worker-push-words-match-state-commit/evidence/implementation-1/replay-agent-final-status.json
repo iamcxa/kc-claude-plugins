@@ -1,0 +1,44 @@
+[
+  {
+    "agentId": "ba94a135-3505-4f8a-acc5-fcd182961d4d",
+    "status": "idle",
+    "workspaceId": "wks_a8f029f6e72d90cb",
+    "model": "gpt-6.1-sol",
+    "thinkingOptionId": "xhigh"
+  },
+  {
+    "agentId": "33a43082-f93a-442d-a57a-4b1a5ef74fb5",
+    "status": "idle",
+    "workspaceId": "wks_a8f029f6e72d90cb",
+    "model": "gpt-6.1-sol",
+    "thinkingOptionId": "xhigh"
+  },
+  {
+    "agentId": "72d0f62c-b843-4ab1-9eef-9d7608ad0439",
+    "status": "idle",
+    "workspaceId": "wks_a8f029f6e72d90cb",
+    "model": "gpt-6.1-sol",
+    "thinkingOptionId": "xhigh"
+  },
+  {
+    "agentId": "a6a30b2a-63fd-44f0-b267-0af934c88051",
+    "status": "idle",
+    "workspaceId": "wks_a8f029f6e72d90cb",
+    "model": "gpt-6-astra",
+    "thinkingOptionId": "xhigh"
+  },
+  {
+    "agentId": "91217b60-47d8-4761-b5d0-7e38363deec6",
+    "status": "idle",
+    "workspaceId": "wks_a8f029f6e72d90cb",
+    "model": "gpt-6-astra",
+    "thinkingOptionId": "xhigh"
+  },
+  {
+    "agentId": "de29c5fb-bedf-4726-93cb-b5353edfe697",
+    "status": "idle",
+    "workspaceId": "wks_a8f029f6e72d90cb",
+    "model": "gpt-6-astra",
+    "thinkingOptionId": "xhigh"
+  }
+]

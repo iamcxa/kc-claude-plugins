@@ -1,0 +1,25 @@
+{
+  "state_commit": "b6e56362c3e0b3f32f20b1f5523be6e5a1eda649",
+  "remote_commit": "b6e56362c3e0b3f32f20b1f5523be6e5a1eda649",
+  "report_bytes_match_remote": true,
+  "original_entity_prefix_preserved": true,
+  "state_status": "",
+  "code_status": "",
+  "candidate": "32901fe5f34fb17ae9a5741cff88471d55e81288",
+  "changed_paths": [
+    "owner-cancels-booking.md",
+    "owner-cancels-booking/evidence/validation-1/acceptance-smoke.log",
+    "owner-cancels-booking/evidence/validation-1/acceptance.sh",
+    "owner-cancels-booking/evidence/validation-1/adr-lint.log",
+    "owner-cancels-booking/evidence/validation-1/checks.json",
+    "owner-cancels-booking/evidence/validation-1/comment-ratio.log",
+    "owner-cancels-booking/evidence/validation-1/design-surfaces.log",
+    "owner-cancels-booking/evidence/validation-1/dispatch-records.log",
+    "owner-cancels-booking/evidence/validation-1/doc-impact.log",
+    "owner-cancels-booking/evidence/validation-1/findings.md",
+    "owner-cancels-booking/evidence/validation-1/number-guards.log",
+    "owner-cancels-booking/evidence/validation-1/provenance.json",
+    "owner-cancels-booking/evidence/validation-1/role-triggers.log"
+  ],
+  "task_status": "validation; verdict REJECTED; FO handoff remains"
+}

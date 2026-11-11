@@ -1,0 +1,34 @@
+## Stage Report: implementation
+
+- DONE: The approved pending-booking-cap design is built API-only on a branch from origin/main: constant 3, early refusal-only count before the branch lock and vehicle insert, authoritative post-lock count with one database timestamp shared with the slot check, 422 TOO_MANY_PENDING, owner app unchanged
+  Candidate d2df4acaa0a4200afd9efbd5913d9c66478b82ed, branch spacedock-ensign/pending-booking-cap, from origin/main a8793b938deb12ff4d599a427998c28b4fe080f1; production owner-app and migration paths have no diff. This records implementation, not exercised acceptance.
+- FAILED: AC-1 to AC-9 each have a test or check at the stated layer, run with exit codes; real-Postgres cases run in the existing test-pg harness only, and each test is shown to fail when its guarded line is removed
+  The isolated replay explicitly forbids application unit/integration/e2e suites and starting databases, servers or browsers. Tests were authored, but no application test, real-Postgres run or guard-removal control was executed; none of AC-1..AC-9 is claimed runtime-passed.
+- FAILED: Affected type-checks, booking tests, lint, adr_lint (if an ADR is written) and the roborev gate run with exit codes; nothing pushed, no PR
+  API/app/client/office type-checks each exit 2 (missing dependencies; API/client/office first error TS2688 missing node types; app first error TS2468 missing Promise); pnpm lint exits 1 with 16 errors, including unchanged .github/scripts/classify-changes.mjs. Booking suites prohibited; roborev exits 3. Only the report state branch is to be synced; no product push and no PR opened: no push grant.
+- DONE: Required package scripts and affected-file lint
+  role_triggers.py=0; design_surfaces.py check=0; number_guards.py check=0; adr_lint.py docs/adr --since a8793b938deb12ff4d599a427998c28b4fe080f1 --require 0047=0; doc_impact.py=0; affected-file biome check=0 (7 files, no errors/warnings). Commands, exits and raw logs: /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/evidence/application-checks.json and package-checks.json.
+- DONE: Implementation goal check and comment budget
+  code lines 583, comment lines 5, 0.9%;    3/  43 apps/qnow-api/src/db/booking-store.ts;    2/ 475 apps/qnow-api/test-pg/pending-booking-cap.pg.test.ts; maximum 5% (package default) met. The base lacks either quota check and uses the host clock for slot admission; those are the guarded seams. No migration, endpoint, privileged role, dependency or operational service was added; all new test helpers stay in the single quota spec.
+- DONE: Decision record and affected documents
+  number_guards.py reserve --kind adr returned ADR: 0047, recorded in this task; docs/adr/0047-three-active-owner-requests-per-branch.md is updated and is the only document listed by doc_impact.py. It preserves the Captain's ideation 「准」, chosen rule, API-maintainer/shop-staff ownership, residuals and code-revert rollback.
+- FAILED: Local review evidence
+  incomplete: the roborev daemon is not running. No clean review is claimed and no daemon was started; the package gate was run against the committed candidate and the dispatched base.
+- SKIPPED: AC-1 and AC-5 real route/database proof
+  pending-booking-cap.pg.test.ts authors third/fourth, owner/branch/staff-owner scope, alternate service/date/entry, statuses, inclusive lapse, staff-path exemption, over-cap preservation and decline/refill checks. Dropping subject/branch/status/lapse filters or applying quota to the staff creation path should break the corresponding assertions; not run.
+- SKIPPED: AC-2 and AC-3 forced interleavings
+  The new test-pg spec observes eight distinct PIDs waiting in pg_locks at READ COMMITTED, then asserts exactly one create/seven refusals and count three; deleting only the locked count should fail it. Replay/conflict, inactive-service replay, locked twins and an early lookup/count race assert key resolution before quota; moving quota ahead of either key recheck should fail them; not run.
+- SKIPPED: AC-4 and AC-8 rollback and early-refusal proof
+  The new spec authors exact booking/event/vehicle/profile/delivery snapshots, a held-lock refusal with no advisory lock/vehicle INSERT, a below-cap loser with vehicle rollback and a notification-channel spy. Removing the early guard should block full-cap requests; returning normally from the locked refusal should retain the losing vehicle; not run.
+- SKIPPED: AC-6 unchanged-app compatibility proof
+  booking.test.tsx adds the exact 422 fallback; summary-class-price.test.tsx asserts retained car/note/date/time/key, settled single POST, all navigation spies unchanged and explicit-press-only retry. Changing the fallback, clearing inputs/key or automatically retrying/navigating should fail these authored checks; not run. No app production file changed.
+- SKIPPED: AC-7 integrated compatibility and rollback proof
+  The candidate retains asMember, the existing branch lock and lapse helper; source searches find no integrated BookingEdited/edit-booking writer at the pinned base. The sibling shop-edits-booking task remains at implementation without a candidate report here; FO must reconcile its eventual writer. Existing booking-db.spec.ts uses fixed September host-clock fixtures and cumulative owners: their compatibility with authoritative database time/quota remains unverified and may require fixture changes, without disabling the guard. No revert experiment was run.
+- SKIPPED: AC-9 real database clock proof
+  The new spec authors stale-host past/future controls and an observed lock-wait with a controlled clock-result seam, checking exact-start lapse, captured submission time and occupying query dates. Restoring input.now to slot availability/window computation should fail the response or executed-SQL-parameter assertion; the controlled-clock seam is not a wall-clock boundary crossing; not run.
+- DONE: Available syntax and scope checks
+  Node --check parses the five affected .ts files (not .tsx, not type checking or behavior); biome parses all seven affected TS/TSX files. git diff --check passes; dependency installation, application test execution, hosted changes, messages and stash were not performed.
+
+### Summary
+
+The bounded API candidate and unexecuted regression cases are committed at d2df4acaa0a4200afd9efbd5913d9c66478b82ed; package 0.38.1 was resolved only from the replay's package root. Verification remains incomplete: FO must arrange application dependencies, permitted focused suites/mutation controls and local review, reconcile existing fixtures and the sibling booking editor, then route independent validation; this report grants no approval, stage advance, merge or release. The generic app fallback, conservative early refusal, per-branch rather than global quota, unmeasured query cost, closure obstruction and historical growth remain the accepted design's residuals.

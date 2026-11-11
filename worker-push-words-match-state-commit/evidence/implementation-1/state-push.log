@@ -1,0 +1,15 @@
+{
+  "root": "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14",
+  "before": {
+    "refs/heads/spacedock-state/proof": "63ad2b98ba8522668c7eeb97ed04d0229efc7f21"
+  },
+  "after": {
+    "refs/heads/spacedock-state/proof": "793ca164e71fe469345dd9c75e47d774e8b40f9d"
+  },
+  "pushed_head": "793ca164e71fe469345dd9c75e47d774e8b40f9d",
+  "local_head": "90c17a24d2c8a2e163ade043874a9a010f98d724",
+  "published_output": "Committed and pushed sample to spacedock-state/proof.\n",
+  "local_only_output": "Committed sample locally; no origin remote \u2014 state is local-only until an origin is configured.\n",
+  "extra_ref_mutation_caught": true,
+  "no_push_mutation_caught": true
+}

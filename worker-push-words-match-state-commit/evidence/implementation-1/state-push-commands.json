@@ -1,0 +1,258 @@
+[
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code",
+      "init",
+      "-b",
+      "main"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "Initialized empty Git repository in /private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/.git/\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code",
+      "add",
+      "tracked"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code",
+      "-c",
+      "user.name=replay",
+      "-c",
+      "user.email=replay@localhost",
+      "commit",
+      "-m",
+      "fixture"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "[main (root-commit) 216638e] fixture\n 1 file changed, 1 insertion(+)\n create mode 100644 tracked\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/docs/proof/.spacedock-state",
+      "init",
+      "-b",
+      "spacedock-state/proof"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "Initialized empty Git repository in /private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/docs/proof/.spacedock-state/.git/\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/docs/proof/.spacedock-state",
+      "add",
+      "sample.md"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/docs/proof/.spacedock-state",
+      "-c",
+      "user.name=replay",
+      "-c",
+      "user.email=replay@localhost",
+      "commit",
+      "-m",
+      "fixture"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "[spacedock-state/proof (root-commit) 63ad2b9] fixture\n 1 file changed, 8 insertions(+)\n create mode 100644 sample.md\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "init",
+      "--bare",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/remote.git"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "Initialized empty Git repository in /private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/remote.git/\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/docs/proof/.spacedock-state",
+      "remote",
+      "add",
+      "origin",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/remote.git"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/docs/proof/.spacedock-state",
+      "push",
+      "origin",
+      "HEAD"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/remote.git\n * [new branch]      HEAD -> spacedock-state/proof\n"
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/remote.git",
+      "for-each-ref",
+      "--format=%(refname) %(objectname)"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "refs/heads/spacedock-state/proof 63ad2b98ba8522668c7eeb97ed04d0229efc7f21\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "/Users/kent/.local/bin/spacedock",
+      "state",
+      "commit",
+      "sample",
+      "--workflow-dir",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/docs/proof",
+      "-m",
+      "proof: report"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "Committed and pushed sample to spacedock-state/proof.\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/docs/proof/.spacedock-state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "793ca164e71fe469345dd9c75e47d774e8b40f9d\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/remote.git",
+      "for-each-ref",
+      "--format=%(refname) %(objectname)"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "refs/heads/spacedock-state/proof 793ca164e71fe469345dd9c75e47d774e8b40f9d\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/remote.git",
+      "update-ref",
+      "refs/heads/unexpected",
+      "793ca164e71fe469345dd9c75e47d774e8b40f9d"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/remote.git",
+      "for-each-ref",
+      "--format=%(refname) %(objectname)"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "refs/heads/spacedock-state/proof 793ca164e71fe469345dd9c75e47d774e8b40f9d\nrefs/heads/unexpected 793ca164e71fe469345dd9c75e47d774e8b40f9d\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/docs/proof/.spacedock-state",
+      "remote",
+      "remove",
+      "origin"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "/Users/kent/.local/bin/spacedock",
+      "state",
+      "commit",
+      "sample",
+      "--workflow-dir",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/docs/proof",
+      "-m",
+      "proof: local"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "Committed sample locally; no origin remote \u2014 state is local-only until an origin is configured.\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/state-push-proof-17tonw14/code/docs/proof/.spacedock-state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "stdout": "90c17a24d2c8a2e163ade043874a9a010f98d724\n",
+    "stderr": ""
+  }
+]

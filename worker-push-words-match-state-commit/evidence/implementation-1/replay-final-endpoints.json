@@ -1,0 +1,56 @@
+[
+  {
+    "run": "replay-implementation-release",
+    "code_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release-sources/code-remote.git",
+    "code_head": "c50641afecbea1e2b217ab0928281a253fabac52",
+    "code_status": "",
+    "state_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release-sources/state-remote.git",
+    "state_head": "0cf440bc300955048d60ae79ef3118957774b46b",
+    "state_status": ""
+  },
+  {
+    "run": "replay-implementation-candidate-1",
+    "code_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-1-sources/code-remote.git",
+    "code_head": "89c61c0772fec1c0d7d8c861f9d4930dcfb0506e",
+    "code_status": "",
+    "state_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-1-sources/state-remote.git",
+    "state_head": "cd9fea336a90e951e71680a5f91bce58eba6bd99",
+    "state_status": ""
+  },
+  {
+    "run": "replay-implementation-candidate-2",
+    "code_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2-sources/code-remote.git",
+    "code_head": "d2df4acaa0a4200afd9efbd5913d9c66478b82ed",
+    "code_status": "",
+    "state_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2-sources/state-remote.git",
+    "state_head": "6c6164ada9c4e0e5864021480efdbb5975121d81",
+    "state_status": ""
+  },
+  {
+    "run": "replay-validation-release",
+    "code_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-validation-release-sources/code-remote.git",
+    "code_head": "32901fe5f34fb17ae9a5741cff88471d55e81288",
+    "code_status": "",
+    "state_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-validation-release-sources/state-remote.git",
+    "state_head": "88d69b9707579dc1933f67607ab190c7381c3829",
+    "state_status": ""
+  },
+  {
+    "run": "replay-validation-candidate-1",
+    "code_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-validation-candidate-1-sources/code-remote.git",
+    "code_head": "32901fe5f34fb17ae9a5741cff88471d55e81288",
+    "code_status": "",
+    "state_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-validation-candidate-1-sources/state-remote.git",
+    "state_head": "6cd752e078cb6f6b8ed0b6df6a606f1979c386f9",
+    "state_status": ""
+  },
+  {
+    "run": "replay-validation-candidate-2",
+    "code_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-validation-candidate-2-sources/code-remote.git",
+    "code_head": "32901fe5f34fb17ae9a5741cff88471d55e81288",
+    "code_status": "",
+    "state_origin": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-validation-candidate-2-sources/state-remote.git",
+    "state_head": "b6e56362c3e0b3f32f20b1f5523be6e5a1eda649",
+    "state_status": ""
+  }
+]

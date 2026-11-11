@@ -1,0 +1,104 @@
+[
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/package/kc-dev-flow-2/scripts/comment_ratio.py",
+      "a8793b938deb12ff4d599a427998c28b4fe080f1",
+      "HEAD",
+      "--workflow-dir",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/wf"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/evidence/comment-ratio.log"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/package/kc-dev-flow-2/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/code",
+      "--workflow-dir",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/wf",
+      "--task",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/wf/.spacedock-state/pending-booking-cap.md",
+      "--base",
+      "a8793b938deb12ff4d599a427998c28b4fe080f1"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/evidence/number-guards.log"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/package/kc-dev-flow-2/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "a8793b938deb12ff4d599a427998c28b4fe080f1",
+      "--require",
+      "0047"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/evidence/adr-lint.log"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/package/kc-dev-flow-2/scripts/design_surfaces.py",
+      "check",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/wf/.spacedock-state/pending-booking-cap.md"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/evidence/design-surfaces.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/package/kc-dev-flow-2/scripts/doc_impact.py",
+      "a8793b938deb12ff4d599a427998c28b4fe080f1",
+      "HEAD",
+      "--repo",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/code",
+      "--json"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/evidence/doc-impact.json"
+  },
+  {
+    "name": "roborev",
+    "command": [
+      "python3",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/package/kc-dev-flow-2/extensions/roborev/roborev_gate.py",
+      "--repo",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/code",
+      "--base",
+      "a8793b938deb12ff4d599a427998c28b4fe080f1"
+    ],
+    "exit": 3,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/evidence/roborev.log"
+  },
+  {
+    "name": "lint-affected",
+    "command": [
+      "pnpm",
+      "exec",
+      "biome",
+      "check",
+      "apps/qnow-api/src/db/booking-store.ts",
+      "apps/qnow-api/src/bookings/types.ts",
+      "apps/qnow-api/src/bookings/routes.ts",
+      "apps/qnow-api/src/__tests__/app.spec.ts",
+      "apps/qnow-api/test-pg/pending-booking-cap.pg.test.ts",
+      "apps/qnow-app/test/booking.test.tsx",
+      "apps/qnow-app/test/summary-class-price.test.tsx",
+      "--reporter=json"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/evidence/lint-affected.json"
+  }
+]

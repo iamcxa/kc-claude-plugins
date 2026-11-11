@@ -1,0 +1,210 @@
+[
+  {
+    "name": "role-triggers",
+    "command": [
+      "python3",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/package/kc-dev-flow-2/scripts/role_triggers.py",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.spacedock-state",
+      "pending-booking-cap"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/role-triggers.log"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/package/kc-dev-flow-2/scripts/design_surfaces.py",
+      "check",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.spacedock-state/pending-booking-cap.md"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/design-surfaces.log"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/package/kc-dev-flow-2/scripts/adr_lint.py",
+      "docs/adr",
+      "--require",
+      "0047"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/adr-lint.log"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/package/kc-dev-flow-2/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.worktrees/spacedock-ensign-pending-booking-cap",
+      "--workflow-dir",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf",
+      "--task",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.spacedock-state/pending-booking-cap.md",
+      "--base",
+      "a8793b938deb12ff4d599a427998c28b4fe080f1"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/number-guards.log"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.worktrees/spacedock-ensign-pending-booking-cap",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/diff-check.log"
+  },
+  {
+    "name": "type-check-api",
+    "command": [
+      "node",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.worktrees/spacedock-ensign-pending-booking-cap/node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--project",
+      "apps/qnow-api/tsconfig.json"
+    ],
+    "exit": 1,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/type-check-api.log"
+  },
+  {
+    "name": "type-check-app",
+    "command": [
+      "node",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.worktrees/spacedock-ensign-pending-booking-cap/node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--project",
+      "apps/qnow-app/tsconfig.json"
+    ],
+    "exit": 1,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/type-check-app.log"
+  },
+  {
+    "name": "type-check-client",
+    "command": [
+      "node",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.worktrees/spacedock-ensign-pending-booking-cap/node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--project",
+      "packages/qnow-client/tsconfig.json"
+    ],
+    "exit": 1,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/type-check-client.log"
+  },
+  {
+    "name": "type-check-office",
+    "command": [
+      "node",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.worktrees/spacedock-ensign-pending-booking-cap/node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--project",
+      "apps/qnow-office/tsconfig.json"
+    ],
+    "exit": 1,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/type-check-office.log"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "node",
+      "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.worktrees/spacedock-ensign-pending-booking-cap/node_modules/@biomejs/biome/bin/biome",
+      "check",
+      "."
+    ],
+    "exit": 1,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/lint.log"
+  },
+  {
+    "name": "syntax-booking-store",
+    "command": [
+      "node",
+      "--experimental-transform-types",
+      "--check",
+      "apps/qnow-api/src/db/booking-store.ts"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/syntax-booking-store.log"
+  },
+  {
+    "name": "syntax-types",
+    "command": [
+      "node",
+      "--experimental-transform-types",
+      "--check",
+      "apps/qnow-api/src/bookings/types.ts"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/syntax-types.log"
+  },
+  {
+    "name": "syntax-routes",
+    "command": [
+      "node",
+      "--experimental-transform-types",
+      "--check",
+      "apps/qnow-api/src/bookings/routes.ts"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/syntax-routes.log"
+  },
+  {
+    "name": "syntax-app.spec",
+    "command": [
+      "node",
+      "--experimental-transform-types",
+      "--check",
+      "apps/qnow-api/src/__tests__/app.spec.ts"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/syntax-app.spec.log"
+  },
+  {
+    "name": "syntax-pending-booking-cap.pg.test",
+    "command": [
+      "node",
+      "--experimental-transform-types",
+      "--check",
+      "apps/qnow-api/test-pg/pending-booking-cap.pg.test.ts"
+    ],
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/syntax-pending-booking-cap.pg.test.log"
+  },
+  {
+    "name": "comment-ratio",
+    "command": "python3 /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/package/kc-dev-flow-2/scripts/comment_ratio.py a8793b938deb12ff4d599a427998c28b4fe080f1 HEAD --workflow-dir /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf",
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/comment-ratio.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": "python3 /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/package/kc-dev-flow-2/scripts/doc_impact.py a8793b938deb12ff4d599a427998c28b4fe080f1 HEAD",
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/doc-impact.log"
+  },
+  {
+    "name": "number-guards-committed",
+    "command": "python3 /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/package/kc-dev-flow-2/scripts/number_guards.py check --repo /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.worktrees/spacedock-ensign-pending-booking-cap --workflow-dir /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf --task /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.spacedock-state/pending-booking-cap.md --base a8793b938deb12ff4d599a427998c28b4fe080f1",
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/number-guards-committed.log"
+  },
+  {
+    "name": "adr-lint-committed",
+    "command": "python3 /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/package/kc-dev-flow-2/scripts/adr_lint.py docs/adr --since a8793b938deb12ff4d599a427998c28b4fe080f1 --require 0047",
+    "exit": 0,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/adr-lint-committed.log"
+  },
+  {
+    "name": "roborev",
+    "command": "python3 /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/package/kc-dev-flow-2/extensions/roborev/roborev_gate.py --repo /private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/.worktrees/spacedock-ensign-pending-booking-cap --base a8793b938deb12ff4d599a427998c28b4fe080f1",
+    "exit": 3,
+    "log": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/evidence/roborev.log"
+  }
+]

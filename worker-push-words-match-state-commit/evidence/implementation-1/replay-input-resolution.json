@@ -1,0 +1,44 @@
+[
+  {
+    "run": "replay-implementation-release",
+    "rule": "keep recorded adopter extensions and second-reviewer; retain all clean package merge output",
+    "resolved_readme": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/README-resolved.md",
+    "stage_definition_words": 1362,
+    "dispatch_pointer_words": 777
+  },
+  {
+    "run": "replay-implementation-candidate-1",
+    "rule": "keep recorded adopter extensions and second-reviewer; retain all clean package merge output",
+    "resolved_readme": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-1/README-resolved.md",
+    "stage_definition_words": 1400,
+    "dispatch_pointer_words": 777
+  },
+  {
+    "run": "replay-implementation-candidate-2",
+    "rule": "keep recorded adopter extensions and second-reviewer; retain all clean package merge output",
+    "resolved_readme": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-2/README-resolved.md",
+    "stage_definition_words": 1400,
+    "dispatch_pointer_words": 777
+  },
+  {
+    "run": "replay-validation-release",
+    "rule": "native merge clean; no hand resolution needed",
+    "resolved_readme": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-validation-release/wf/README.md",
+    "stage_definition_words": 1516,
+    "dispatch_pointer_words": 1014
+  },
+  {
+    "run": "replay-validation-candidate-1",
+    "rule": "native merge clean; no hand resolution needed",
+    "resolved_readme": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-validation-candidate-1/wf/README.md",
+    "stage_definition_words": 1554,
+    "dispatch_pointer_words": 1014
+  },
+  {
+    "run": "replay-validation-candidate-2",
+    "rule": "native merge clean; no hand resolution needed",
+    "resolved_readme": "/private/tmp/opencode/worker-push-words-match-state-commit/replay-validation-candidate-2/wf/README.md",
+    "stage_definition_words": 1554,
+    "dispatch_pointer_words": 1014
+  }
+]

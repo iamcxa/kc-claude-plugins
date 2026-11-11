@@ -1,0 +1,45 @@
+[
+  {
+    "ref": "refs/heads/docs/browser-acceptance-rule",
+    "before": null,
+    "after": "ac3c3b594d65c34a83ac5b237fd26f2b1d36f599",
+    "local_commit": "ac3c3b594d65c34a83ac5b237fd26f2b1d36f599\n2026-11-11T11:20:39+08:00\nKent\ndocs(adr): amend 0059 with the browser acceptance ruling"
+  },
+  {
+    "ref": "refs/heads/spacedock-state/dev2",
+    "before": "f9029a5f2d8f8ebf030e543251cbd0298e1f8e06",
+    "after": "88c30b5337511450e2f4469dfde5518d941b5414",
+    "local_commit": "88c30b5337511450e2f4469dfde5518d941b5414\n2026-11-11T11:23:47+08:00\nKent\nstate: update owner-e2e-suite-passes-on-main"
+  },
+  {
+    "ref": "refs/pull/1176/merge",
+    "before": "2d1bcdfa7f629c27d7b99ea18b74c9c1209fda4d",
+    "after": "29a96dc05e84cdd76b8f472a947f6b5e1e1f2125"
+  },
+  {
+    "ref": "refs/pull/1299/merge",
+    "before": "9e4d36b1293d1cc64ae1b9b81ff8d27564e22f5e",
+    "after": "8378c5b1644fa4f500ca8eb21b107fe71acd38e5"
+  },
+  {
+    "ref": "refs/pull/1307/merge",
+    "before": "c4b4511c05be2bd1f4e0672914d0670bade9be5f",
+    "after": "3c6620c084fe65ad1702708325507383b08e4410"
+  },
+  {
+    "ref": "refs/pull/1330/merge",
+    "before": "627850abc82f98288b5aac4ff6ffe79aa44c8edd",
+    "after": "c342a9a047ddf98ceb5dd8cbe2f70305e6939452"
+  },
+  {
+    "ref": "refs/pull/1351/head",
+    "before": null,
+    "after": "ac3c3b594d65c34a83ac5b237fd26f2b1d36f599",
+    "local_commit": "ac3c3b594d65c34a83ac5b237fd26f2b1d36f599\n2026-11-11T11:20:39+08:00\nKent\ndocs(adr): amend 0059 with the browser acceptance ruling"
+  },
+  {
+    "ref": "refs/pull/1351/merge",
+    "before": null,
+    "after": "dfbd2002951da0277a54aa63c640ece54fc3216d"
+  }
+]

@@ -1,0 +1,12 @@
+diff --git a/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/README.md b/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-1/wf/README.md
+index a5706f269..e5a467728 100644
+--- a/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-release/wf/README.md
++++ b/tmp/opencode/worker-push-words-match-state-commit/replay-implementation-candidate-1/wf/README.md
+@@ -265,6 +265,7 @@ Each number or factual claim in a gate summary or PR body names the command that
+ 
+ ## Dispatch facts
+ 
++- **Pushes:** the state-branch push that `spacedock state commit`, or the ensign contract's sync, makes for your report is yours and expected. Any other push or PR needs a grant your dispatch quotes; "do not push" means those.
+ - **Team:** You are one worker in a team completing the project goal; your stage
+   and handoff serve that goal. Before substantial work or retrying a failure,
+   check this task's prior reports, linked sibling tasks and PRs, and relevant
