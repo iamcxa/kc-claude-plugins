@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:release-rollout-reaches-adopters-and-laws-pin:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:release-rollout-reaches-adopters-and-laws-pin-backlog-1
+              briefing:
+                id: briefing:release-rollout-reaches-adopters-and-laws-pin:backlog:attempt-1:revision-1
+                digest: sha256:b8934f759c9b6a5fe38bbb047c32c266b198d455619c43d52f73c1b9ab54bd03
+                room-ref: ./release-rollout-reaches-adopters-and-laws-pin/review/backlog/briefing-1
 ---
 
 ## Scope
