@@ -350,6 +350,8 @@ class JourneyStoryTests(unittest.TestCase):
             (path.parent / "README.md").write_text("State checkout, not the workflow.\n")
             text = (f"---\ntitle: Task\nstatus: ideation\njourney-story: {story}\n---\n"
                     + SeedBoundsTests.BOUNDS + "## FO alignment\nSurfaces: none\nVisible change: none\n" + record
+                    + "\n## PRFAQ\n### Worth questions\n"
+                    "Asked: check Story agreement; without: mismatches pass; premise: records can disagree, compare the fixture.\n"
                     + "\n## Acceptance criteria\n**AC-1**: a bounded result. Evidence: the real check.\n")
             path.write_text(text)
             return ds.check_task(path, seed=seed)
