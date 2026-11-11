@@ -3,7 +3,7 @@ title: Ideation checks standards and known patterns before designing a mechanism
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -34,7 +34,7 @@ gates:
                 reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要讓「設計階段先查現成的標準與做法」這張任務單獨進入第 21 批的設計階段。我建議核准：它問的是「這個問題別人解過了嗎」，和合併後那張「要不要做、值不值得」是不同的問題，所以維持獨立。核准代表接受這張任務檔寫的範圍、預算與停止條件，並派一個設計工人；不代表接受任何設計或修法。它標了方向要先對齊，派工前我會再問你一題。」. Recommendation: followed.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
