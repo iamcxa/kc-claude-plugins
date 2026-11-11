@@ -1,0 +1,32 @@
+F
+======================================================================
+FAIL: test_check_exiting_1_with_no_stdout_exits_2 (__main__.ExitContractTest.test_check_exiting_1_with_no_stdout_exits_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining-dev2/kc-dev-flow-2/scripts/test_laws_check.py", line 188, in test_check_exiting_1_with_no_stdout_exits_2
+    self.assertEqual(code, 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : L2 dispatch-record-complete: 0 events judged in 07dab720d777..8bc3bcc86388, 0 violated
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjet17how/q1/pkg/scripts/laws_check.py", line 464, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjet17how/q1/pkg/scripts/laws_check.py", line 452, in main
+    violated, heads, violations = judge(ctx, law_id, spec)
+                                  ~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjet17how/q1/pkg/scripts/laws_check.py", line 418, in judge
+    judged, violations, note, *distinct = fn(ctx)
+                                          ~~^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjet17how/q1/pkg/scripts/laws_check.py", line 333, in l3_amendment_append_only
+    regions = raw_amendment_regions(before)
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjet17how/q1/pkg/scripts/laws_check.py", line 250, in raw_amendment_regions
+    from design_surfaces import AMENDMENT_FENCE, AMENDMENT_LEVEL, AMENDMENT_START, AMENDMENTS_HEADING
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjet17how/q1/pkg/scripts/design_surfaces.py", line 26, in <module>
+    from workflow_extensions import readme_extensions
+ModuleNotFoundError: No module named 'workflow_extensions'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.560s
+
+FAILED (failures=1)

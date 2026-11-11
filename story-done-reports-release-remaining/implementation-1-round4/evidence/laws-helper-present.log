@@ -1,0 +1,6 @@
+test_check_exiting_1_with_no_stdout_exits_2 (laws_dependency_probe.ExitContractTest.test_check_exiting_1_with_no_stdout_exits_2) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.512s
+
+OK

@@ -1,0 +1,3 @@
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base fd1caa475f85 head e079d0c555fd merge-base fd1caa475f85

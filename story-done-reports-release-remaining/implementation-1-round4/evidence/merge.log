@@ -1,0 +1,9 @@
+Merge made by the 'ort' strategy.
+ kc-journey-map/lib/contract-versions.json          |  5 +-
+ kc-journey-map/lib/journey-progress.mjs            | 36 ++++++----
+ kc-journey-map/lib/progress.mjs                    | 76 ++++++++++++++++++----
+ kc-journey-map/lib/progress.test.mjs               | 68 ++++++++++++++++++-
+ kc-journey-map/lib/schemas.mjs                     |  6 +-
+ kc-journey-map/lib/schemas.test.mjs                | 12 ++--
+ kc-journey-map/skills/kc-journey-progress/SKILL.md |  9 ++-
+ 7 files changed, 176 insertions(+), 36 deletions(-)

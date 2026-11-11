@@ -1,0 +1,10 @@
+{
+  "head": "e079d0c555fde855527a82c7a497a4d07e6e4c04",
+  "workflow_sha256": "9b31c17d3e3e3bab51be782a9b97e901a67b657f0e6cb907ebffe87b0373a802",
+  "spacedock_root": "4d158a484ec73e184861067f8ed1e20087fdc26a",
+  "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3\n",
+  "python": "3.15.0 (main, Oct  9 2026, 11:16:41) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "platform": "darwin",
+  "suite_count": 28,
+  "scope": "local replay of hosted Python commands; not a hosted CI run"
+}

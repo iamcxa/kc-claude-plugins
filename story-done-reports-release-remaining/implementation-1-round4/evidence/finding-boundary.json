@@ -1,0 +1,9 @@
+{
+  "classification": "Needs decision",
+  "released_user_normal_workflow": "Repository maintainer running the kc-dev-flow-2 unit-tests workflow on a feature PR",
+  "observable_harm": "The required local workflow replay cannot pass: test_laws_check.py exits 1 with nine failing cases",
+  "protected_boundary": "contract[.github/workflows/kc-dev-flow-2-tests.yml#unit-tests]: run the package law-check suite; the task permits no manual file changes in this round",
+  "trigger_evidence": "laws-baseline-control.json and 24-test_laws_check.log bind producer base pass, combined candidate failure, missing module and copy-list location",
+  "scope_owner": "First Officer / Captain",
+  "proposed_bounded_change": "Only after authorization, add workflow_extensions.py to the sandbox dependency-copy list in test_laws_check.py; no product logic or assertion changes"
+}

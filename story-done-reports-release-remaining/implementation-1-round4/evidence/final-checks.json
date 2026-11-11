@@ -1,0 +1,15 @@
+{
+  "head": "e079d0c555fde855527a82c7a497a4d07e6e4c04",
+  "local_commands": 28,
+  "passed": 27,
+  "failed": [
+    "test_laws_check.py"
+  ],
+  "candidate_clean": true,
+  "product_fix_applied": false,
+  "proposal_only": "proposed-fixture-fix.diff",
+  "scope_decision": "pending First Officer / Captain",
+  "pr_text": "/tmp/impl-story-done-reports-release-remaining-dev2-pr.md",
+  "remote_ci": "not run",
+  "ci_cost": "not measured; no workflow edits"
+}

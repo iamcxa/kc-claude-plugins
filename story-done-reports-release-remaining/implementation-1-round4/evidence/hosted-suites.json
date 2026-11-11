@@ -1,0 +1,368 @@
+[
+  {
+    "name": "lint-skills.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/01-lint-skills.log",
+    "message": "exit 0",
+    "command": "python3 kc-dev-flow-2/scripts/lint-skills.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "seconds": 0.385
+  },
+  {
+    "name": "test_lint_skills.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/02-test_lint_skills.log",
+    "message": "exit 0; 47 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_lint_skills.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "exit": 0,
+    "seconds": 29.223
+  },
+  {
+    "name": "test_design_surfaces.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/03-test_design_surfaces.log",
+    "message": "exit 0; 222 tests; 4 skipped",
+    "command": "python3 kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "exit": 0,
+    "seconds": 22.289
+  },
+  {
+    "name": "test_adr_doc_checks.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/04-test_adr_doc_checks.log",
+    "message": "exit 0; 9 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "exit": 0,
+    "seconds": 2.429
+  },
+  {
+    "name": "test_poc_readme.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/05-test_poc_readme.log",
+    "message": "exit 0; 9 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_poc_readme.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "exit": 0,
+    "seconds": 8.599
+  },
+  {
+    "name": "test_comment_ratio.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/06-test_comment_ratio.log",
+    "message": "exit 0; 14 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "exit": 0,
+    "seconds": 17.854
+  },
+  {
+    "name": "test_number_guards.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/07-test_number_guards.log",
+    "message": "exit 0; 38 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_number_guards.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "exit": 0,
+    "seconds": 47.457
+  },
+  {
+    "name": "test_codex_review.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/08-test_codex_review.log",
+    "message": "exit 0; 36 tests",
+    "command": "python3 kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "exit": 0,
+    "seconds": 0.24
+  },
+  {
+    "name": "test_roborev_gate.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/09-test_roborev_gate.log",
+    "message": "exit 0; 5 tests",
+    "command": "python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "exit": 0,
+    "seconds": 3.042
+  },
+  {
+    "name": "test_copilot_review.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/10-test_copilot_review.log",
+    "message": "exit 0; 15 tests",
+    "command": "python3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "exit": 0,
+    "seconds": 0.174
+  },
+  {
+    "name": "test_map_footprint.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/11-test_map_footprint.log",
+    "message": "exit 0; 23 tests",
+    "command": "python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "exit": 0,
+    "seconds": 0.403
+  },
+  {
+    "name": "test_release_acceptance.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/12-test_release_acceptance.log",
+    "message": "exit 0; 122 tests",
+    "command": "python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "exit": 0,
+    "seconds": 17.046
+  },
+  {
+    "name": "test_dispatch_records.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/13-test_dispatch_records.log",
+    "message": "exit 0; 125 tests; 1 skipped",
+    "command": "python3 kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "exit": 0,
+    "seconds": 211.749
+  },
+  {
+    "name": "test_delivery_gate.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/14-test_delivery_gate.log",
+    "message": "exit 0; 208 tests; 1 skipped",
+    "command": "python3 kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "exit": 0,
+    "seconds": 135.01
+  },
+  {
+    "name": "test_validation_security.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/15-test_validation_security.log",
+    "message": "exit 0; 5 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_validation_security.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "exit": 0,
+    "seconds": 0.668
+  },
+  {
+    "name": "test_pr_watch.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/16-test_pr_watch.log",
+    "message": "exit 0; 136 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_pr_watch.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "exit": 0,
+    "seconds": 79.686
+  },
+  {
+    "name": "test_replay_dispatch.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/17-test_replay_dispatch.log",
+    "message": "exit 0; 8 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "exit": 0,
+    "seconds": 6.67
+  },
+  {
+    "name": "test_decision_ledger.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/18-test_decision_ledger.log",
+    "message": "exit 0; 23 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "exit": 0,
+    "seconds": 0.877
+  },
+  {
+    "name": "test_package_version.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/19-test_package_version.log",
+    "message": "exit 0; 6 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_package_version.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "exit": 0,
+    "seconds": 0.106
+  },
+  {
+    "name": "test_workflow_checkout.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/20-test_workflow_checkout.log",
+    "message": "exit 0; 13 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "exit": 0,
+    "seconds": 9.037
+  },
+  {
+    "name": "test_observer_check.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/21-test_observer_check.log",
+    "message": "exit 0; 19 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_observer_check.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "exit": 0,
+    "seconds": 7.645
+  },
+  {
+    "name": "test_merge_audit.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/22-test_merge_audit.log",
+    "message": "exit 0; 17 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_merge_audit.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_merge_audit.py"
+    ],
+    "exit": 0,
+    "seconds": 17.107
+  },
+  {
+    "name": "test_role_triggers.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/23-test_role_triggers.log",
+    "message": "exit 0; 49 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_role_triggers.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "exit": 0,
+    "seconds": 73.215
+  },
+  {
+    "name": "test_laws_check.py",
+    "status": "failed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/24-test_laws_check.log",
+    "message": "exit 1; 84 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_laws_check.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "exit": 1,
+    "seconds": 121.083
+  },
+  {
+    "name": "test_learning.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/25-test_learning.log",
+    "message": "exit 0; 50 tests",
+    "command": "python3 kc-dev-flow-2/scripts/test_learning.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "exit": 0,
+    "seconds": 52.863
+  },
+  {
+    "name": "test_dispatch_stage.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/26-test_dispatch_stage.log",
+    "message": "exit 0; 40 tests",
+    "command": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "exit": 0,
+    "seconds": 148.756
+  },
+  {
+    "name": "test_sd_dispatch.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/27-test_sd_dispatch.log",
+    "message": "exit 0",
+    "command": "python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root \"$GITHUB_WORKSPACE/.sd-plugin-root\"",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/tmp/opencode-story-done-round4/.sd-plugin-root"
+    ],
+    "exit": 0,
+    "seconds": 60.854
+  },
+  {
+    "name": "test_observer_recovery.py",
+    "status": "passed",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/implementation-1-round4/evidence/28-test_observer_recovery.log",
+    "message": "exit 0",
+    "command": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "exit": 0,
+    "seconds": 2.674
+  }
+]

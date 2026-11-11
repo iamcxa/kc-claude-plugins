@@ -1,0 +1,12 @@
+[
+  {
+    "name": "base",
+    "exit": 0,
+    "missing_workflow_extensions": false
+  },
+  {
+    "name": "candidate",
+    "exit": 1,
+    "missing_workflow_extensions": true
+  }
+]

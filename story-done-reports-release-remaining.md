@@ -770,3 +770,28 @@ Implemented the approved Pilot route as two local product commits; FO owns pushi
 PASSED for the combined product behavior at fd1caa475f85483cf5c4031a1e58656ff5d3eaff and fa485f008562f00ebf91deed19e58ea52bb4b4dc; this is not delivery acceptance. The six-step script passed in a fresh shell with the declared preinstalled dependencies; AC-10 stays unverified until release/rollout and a real archive.
 
 - F1 Needs decision: FO owns the missing formal sibling Candidate record. validation-1/evidence/sibling-dispatch-check.json exercises delivery_gate.py's real parser: the newest dispatch recognizes only fd1caa475f85483cf5c4031a1e58656ff5d3eaff, although its checklist authorizes the dev2 head. contract[docs/adr/0036-a-reserved-adr-may-land-on-a-named-sibling-pr-of-the-same-task.md#decision] requires that header line for a sibling to supply ADR 0076; FO must record the sibling and arrange revalidation of any rebased head before the delivery ask. No Material product finding is established by the current accepted checks.
+
+## Stage Report: implementation
+
+- DONE: Merge the pushed first-half branch into the second-half branch with a merge commit, without rebase, history rewrite or manual product-file changes.
+  e079d0c555fde855527a82c7a497a4d07e6e4c04 has parents fa485f008562f00ebf91deed19e58ea52bb4b4dc and fd1caa475f85483cf5c4031a1e58656ff5d3eaff; worktree/branch stayed assigned and clean; implementation-1-round4/evidence/merged-head.json and no-manual-change-proof.json bind the bytes.
+- DONE: Report the new head and compare its kc-dev-flow-2/docs/adr diff against origin/spacedock-ensign/story-done-reports-release-remaining with the earlier dev2 commit's diff.
+  Stacked base fd1caa475f85483cf5c4031a1e58656ff5d3eaff; dev2-original.diff and dev2-stacked.diff are byte-identical six-file patches. The producer subtree also equals #839's head; the merge changes no accepted feature bytes by hand.
+- DONE: Run the kc-dev-flow-2 suites the hosted workflow runs on the combined head and report their results.
+  All 28 Python command steps ran to completion; hosted-suites.json records direct exits: 27 pass, 1 fails. The 122-test consumer and all three pinned native Spacedock suites pass. Local macOS/Python 3.15 replay only; actual hosted CI not run; runtime.json records CLI 0.27.2 and source pin 4d158a484ec73e184861067f8ed1e20087fdc26a.
+- FAILED: A fully green local hosted-workflow command matrix on the combined head.
+  test_laws_check.py: 9 of 84 tests fail (1 skip), exit 1. Its sandbox() at line 54 omits workflow_extensions.py while copying design_surfaces.py; the new import raises ModuleNotFoundError. 24-test_laws_check.log and findings.json retain this open Needs decision finding.
+- DONE: Reproduce and isolate that failure before proposing any repair.
+  laws-baseline-control.json: the same narrow case exits 0 at producer base and 1 at e079d0c555. laws-helper-probe.json: leaving assertions/product bytes unchanged, copying the existing helper only into the temporary fixture makes it pass. This is a new candidate regression, not a baseline-equal failure or sandbox denial.
+- SKIPPED: Repair the law-check test fixture or change any assertion/product source by hand.
+  Message 4 forbids manual changes and test_laws_check.py is outside the design's file list; FO was asked for scope authorization. proposed-fixture-fix.diff is an unapplied one-line proposal; candidate remains e079d0c555 and clean.
+- DONE: Update /tmp/impl-story-done-reports-release-remaining-dev2-pr.md to identify the stack and sibling.
+  The Conventional Commit title remains scoped to kc-dev-flow-2; the body names PR #839 as the kc-journey-map sibling and its branch as the PR base, records the merge head and failed workflow, and is copied to implementation-1-round4/evidence/dev2-pr.md.
+- DONE: Recheck ADR, reservation, comment and document guards with the stacked PR base.
+  ADR lint --since fd1caa475 --require 0076, fresh-fetch number guards --base fd1caa475 and comment ratio exit 0 (1.2%, max 5%); ADR 0041/0057 unaffected and 0076 retained/updated. No new ADR or workflow change; CI cost not measured.
+- SKIPPED: Product push, second Draft PR creation, RoboRev, hosted CI, new-head independent validation, release/rollout and AC-10.
+  FO owns these steps. No PR opened: no push grant. The local failing matrix must not be promoted to a passing hosted run or delivery acceptance.
+
+### Summary
+
+This supersedes the earlier implementation report for the active stacked candidate and publication preparation: dev2 is now a merge descendant of the pushed producer at e079d0c555fde855527a82c7a497a4d07e6e4c04. Both halves' accepted product bytes are preserved, but the complete local workflow exposes a previously unrun law-check fixture regression; repair scope remains with FO/Captain, and no product push occurred.

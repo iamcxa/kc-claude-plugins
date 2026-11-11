@@ -1,0 +1,156 @@
+....FFFFF..FF......................F................F............................s..
+======================================================================
+FAIL: test_check_exiting_1_with_an_unparseable_line_exits_2 (__main__.ExitContractTest.test_check_exiting_1_with_an_unparseable_line_exits_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining-dev2/kc-dev-flow-2/scripts/test_laws_check.py", line 181, in test_check_exiting_1_with_an_unparseable_line_exits_2
+    self.assertEqual(code, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_check_exiting_1_with_no_stdout_exits_2 (__main__.ExitContractTest.test_check_exiting_1_with_no_stdout_exits_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining-dev2/kc-dev-flow-2/scripts/test_laws_check.py", line 188, in test_check_exiting_1_with_no_stdout_exits_2
+    self.assertEqual(code, 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : L2 dispatch-record-complete: 0 events judged in 2d8499a6f7aa..afc2c82531d2, 0 violated
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpia6mo1mk/q1/pkg/scripts/laws_check.py", line 464, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpia6mo1mk/q1/pkg/scripts/laws_check.py", line 452, in main
+    violated, heads, violations = judge(ctx, law_id, spec)
+                                  ~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpia6mo1mk/q1/pkg/scripts/laws_check.py", line 418, in judge
+    judged, violations, note, *distinct = fn(ctx)
+                                          ~~^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpia6mo1mk/q1/pkg/scripts/laws_check.py", line 333, in l3_amendment_append_only
+    regions = raw_amendment_regions(before)
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpia6mo1mk/q1/pkg/scripts/laws_check.py", line 250, in raw_amendment_regions
+    from design_surfaces import AMENDMENT_FENCE, AMENDMENT_LEVEL, AMENDMENT_START, AMENDMENTS_HEADING
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpia6mo1mk/q1/pkg/scripts/design_surfaces.py", line 26, in <module>
+    from workflow_extensions import readme_extensions
+ModuleNotFoundError: No module named 'workflow_extensions'
+
+
+======================================================================
+FAIL: test_check_exiting_2_exits_2_naming_the_cause (__main__.ExitContractTest.test_check_exiting_2_exits_2_naming_the_cause)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining-dev2/kc-dev-flow-2/scripts/test_laws_check.py", line 167, in test_check_exiting_2_exits_2_naming_the_cause
+    self.assertEqual(code, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_check_printing_a_traceback_exits_2_not_1 (__main__.ExitContractTest.test_check_printing_a_traceback_exits_2_not_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining-dev2/kc-dev-flow-2/scripts/test_laws_check.py", line 174, in test_check_printing_a_traceback_exits_2_not_1
+    self.assertEqual(code, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_exit_2_wins_over_a_violation_and_both_print (__main__.ExitContractTest.test_exit_2_wins_over_a_violation_and_both_print)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining-dev2/kc-dev-flow-2/scripts/test_laws_check.py", line 212, in test_exit_2_wins_over_a_violation_and_both_print
+    self.assertEqual(code, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_l2_check_exiting_1_with_no_stdout_exits_2_in_either_mode (__main__.ExitContractTest.test_l2_check_exiting_1_with_no_stdout_exits_2_in_either_mode)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining-dev2/kc-dev-flow-2/scripts/test_laws_check.py", line 200, in test_l2_check_exiting_1_with_no_stdout_exits_2_in_either_mode
+    self.assertEqual(code, 2, f"{mode}: {out}")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : folder: L1 observer-before-sentinel: 0 events judged in c373e9df8024..d23845b317b6, 0 violated
+L3 amendment-append-only: 0 events judged in c373e9df8024..d23845b317b6, 0 violated
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzy1p7z8g/q2-folder/pkg/scripts/laws_check.py", line 464, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzy1p7z8g/q2-folder/pkg/scripts/laws_check.py", line 452, in main
+    violated, heads, violations = judge(ctx, law_id, spec)
+                                  ~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzy1p7z8g/q2-folder/pkg/scripts/laws_check.py", line 418, in judge
+    judged, violations, note, *distinct = fn(ctx)
+                                          ~~^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzy1p7z8g/q2-folder/pkg/scripts/laws_check.py", line 377, in l4_amendment_moves_use_fresh_ids
+    from design_surfaces import move_defects
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzy1p7z8g/q2-folder/pkg/scripts/design_surfaces.py", line 26, in <module>
+    from workflow_extensions import readme_extensions
+ModuleNotFoundError: No module named 'workflow_extensions'
+
+
+======================================================================
+FAIL: test_missing_script_exits_2 (__main__.ExitContractTest.test_missing_script_exits_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining-dev2/kc-dev-flow-2/scripts/test_laws_check.py", line 160, in test_missing_script_exits_2
+    self.assertEqual(code, 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : L2 dispatch-record-complete: 0 events judged in c373e9df8024..1dfbf30f3b6f, 0 violated
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7aq16f83/no-observer_check.py/pkg/scripts/laws_check.py", line 464, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7aq16f83/no-observer_check.py/pkg/scripts/laws_check.py", line 452, in main
+    violated, heads, violations = judge(ctx, law_id, spec)
+                                  ~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7aq16f83/no-observer_check.py/pkg/scripts/laws_check.py", line 418, in judge
+    judged, violations, note, *distinct = fn(ctx)
+                                          ~~^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7aq16f83/no-observer_check.py/pkg/scripts/laws_check.py", line 333, in l3_amendment_append_only
+    regions = raw_amendment_regions(before)
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7aq16f83/no-observer_check.py/pkg/scripts/laws_check.py", line 250, in raw_amendment_regions
+    from design_surfaces import AMENDMENT_FENCE, AMENDMENT_LEVEL, AMENDMENT_START, AMENDMENTS_HEADING
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7aq16f83/no-observer_check.py/pkg/scripts/design_surfaces.py", line 26, in <module>
+    from workflow_extensions import readme_extensions
+ModuleNotFoundError: No module named 'workflow_extensions'
+
+
+======================================================================
+FAIL: test_dispatch_records_printing_a_new_names_shape_exits_2_not_1 (__main__.L2Test.test_dispatch_records_printing_a_new_names_shape_exits_2_not_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining-dev2/kc-dev-flow-2/scripts/test_laws_check.py", line 474, in test_dispatch_records_printing_a_new_names_shape_exits_2_not_1
+    self.assertEqual(code, 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : L1 observer-before-sentinel: 0 events judged in d7ac2b2c05cf..c50e19ddcc5f, 0 violated
+L3 amendment-append-only: 0 events judged in d7ac2b2c05cf..c50e19ddcc5f, 0 violated
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpt3fi29op/l2-shape-run/pkg/scripts/laws_check.py", line 464, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpt3fi29op/l2-shape-run/pkg/scripts/laws_check.py", line 452, in main
+    violated, heads, violations = judge(ctx, law_id, spec)
+                                  ~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpt3fi29op/l2-shape-run/pkg/scripts/laws_check.py", line 418, in judge
+    judged, violations, note, *distinct = fn(ctx)
+                                          ~~^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpt3fi29op/l2-shape-run/pkg/scripts/laws_check.py", line 377, in l4_amendment_moves_use_fresh_ids
+    from design_surfaces import move_defects
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpt3fi29op/l2-shape-run/pkg/scripts/design_surfaces.py", line 26, in <module>
+    from workflow_extensions import readme_extensions
+ModuleNotFoundError: No module named 'workflow_extensions'
+
+
+======================================================================
+FAIL: test_removing_the_law_or_l2_form_classification_breaks_event_controls (__main__.L3Test.test_removing_the_law_or_l2_form_classification_breaks_event_controls)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining-dev2/kc-dev-flow-2/scripts/test_laws_check.py", line 859, in test_removing_the_law_or_l2_form_classification_breaks_event_controls
+    self.assertEqual(self.judge(repo, before, runner=runner)[0], expected)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 84 tests in 120.940s
+
+FAILED (failures=9, skipped=1)

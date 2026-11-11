@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "medium",
+    "title": "Law-check fixture omits an imported workflow helper",
+    "file": "kc-dev-flow-2/scripts/test_laws_check.py",
+    "line": 54,
+    "detail": "At e079d0c555fde855527a82c7a497a4d07e6e4c04, 9 of 84 cases fail because sandbox() copies design_surfaces.py without its newly imported workflow_extensions.py. The same narrow case passes at producer base fd1caa475f85483cf5c4031a1e58656ff5d3eaff. This is a fresh candidate regression, not a sandbox denial.",
+    "fix": "Scope decision required before changing the fixture dependency-copy list; message-4 forbids manual product edits.",
+    "status": "open"
+  }
+]

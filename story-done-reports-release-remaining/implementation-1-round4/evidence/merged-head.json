@@ -1,0 +1,27 @@
+{
+  "head": "e079d0c555fde855527a82c7a497a4d07e6e4c04",
+  "parents": [
+    "fa485f008562f00ebf91deed19e58ea52bb4b4dc",
+    "fd1caa475f85483cf5c4031a1e58656ff5d3eaff"
+  ],
+  "tree": "fec97741323bb12a1d3673480229b4b6cd44f2b3",
+  "stacked_base": "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+  "previous_dev2": "fa485f008562f00ebf91deed19e58ea52bb4b4dc",
+  "original_base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "diff_sha256": "77bcaa8c78805b4ccb520685d233b0fede5cb0bc2780baefe78e51474266054f",
+  "diffs_equal": true,
+  "clean": true,
+  "files": [
+    "docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md",
+    "kc-dev-flow-2/extensions/journey-map/EXTENSION.md",
+    "kc-dev-flow-2/extensions/release-acceptance/fixtures/journey-progress-v1.json",
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_pr_watch.py"
+  ],
+  "producer_branch": "spacedock-ensign/story-done-reports-release-remaining",
+  "dev2_branch": "spacedock-ensign/story-done-reports-release-remaining-dev2",
+  "sibling": "iamcxa/kc-claude-plugins#839",
+  "sibling_url": "https://github.com/iamcxa/kc-claude-plugins/pull/839",
+  "publication": "local only; First Officer owns push and Draft PR"
+}
