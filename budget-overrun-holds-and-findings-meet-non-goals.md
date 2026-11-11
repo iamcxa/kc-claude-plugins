@@ -34,6 +34,10 @@ gates:
                 id: briefing:budget-overrun-holds-and-findings-meet-non-goals:ideation:attempt-1:revision-1
                 digest: sha256:ff64d9910c670d54c01526d0e12ccbc0767a52892efb02559313ca7aff1b747f
                 room-ref: ./budget-overrun-holds-and-findings-meet-non-goals/review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-11T02:20:02.940552Z"
+                reason: The Captain answered the six-design question with 「這次比較複雜，一題題過審」 (host question dialog, 2026-11-11); each design gets its own question.
 started: 2026-11-11T01:44:17Z
 ---
 
