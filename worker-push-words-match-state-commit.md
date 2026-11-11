@@ -55,60 +55,64 @@ Release review: not needed: workflow maintenance, on no journey map.
 
 ### PRFAQ
 
-From the next kc-dev-flow-2 release, an implementation or validation worker reads in its stage principles that the state-branch push its state commit makes is part of its stage, and that a dispatch's "do not push" means the product branch, the trunk and PRs. A worker told "Do not push" and "commit with `spacedock state commit`" in the same dispatch reports its state commit as done, without amending its report to disclose a publication or asking for publication approval.
+From the next kc-dev-flow-2 release, an implementation or validation worker reads in its stage principles that the state-branch push its state commit makes is part of its stage, and that a dispatch's "do not push" means the product branch, the trunk and PRs. A worker told "Do not push" and "commit with `spacedock state commit`" in the same dispatch reports its state commit as done. It does not amend its report to disclose a publication or ask for publication approval.
 
 - **Who reads it:** every implementation and validation worker in every adopter, on any host, because both stage skills route the worker to their `principles.md`. FO reads no new word.
-- **Why principles and not the README's Dispatch facts:** ADR 0020 records the Captain's rule that the README, which FO and every dispatch load whole, should not grow 「除非可以證明文件內容不是一次性載入」. Stage principles load once per stage, in the worker only. The README option is the decision below.
-- **Why not change Spacedock:** a non-goal. Its push is designed: `runStateCommit` (Spacedock v0.27.2 `internal/cli/state_sync.go`) commits path-scoped and publishes with `statesync.Publish`, and the ensign contract (spacedock 0.27.3 `ensign-shared-core.md`, "Multi-writer sync") tells the worker to push the state branch itself.
-- **Does it widen authority?** No. Product branch, trunk and PR rules stay as they are: implementation opens a Draft PR only under a quoted grant (ADR 0015), and validation pushes nothing else.
-- **Ideation workers?** Not covered: no ideation incident was found (searches below). Without that bite the sentence is not added there.
-- **Codex auto-review refusing the push?** Words in the transcript may or may not change its judgment; unmeasured. What a denial covers is the sibling task denied-command-denies-only-that-command.
+- **Why principles and not the README's Dispatch facts:** it adds no README words, so it needs no ADR 0020 raise. ADR 0020 does not forbid a raise; it requires one recorded with the Captain's words. Those words were 「文件不應該一直變長，除非可以證明文件內容不是一次性載入」. This is the decision below.
+- **Why not change Spacedock:** that is a non-goal, and its push is by design. `runStateCommit` (Spacedock v0.27.2 `internal/cli/state_sync.go`) commits path-scoped and publishes through `statesync.Publish`. The ensign contract (spacedock 0.27.3 `ensign-shared-core.md`, "Multi-writer sync") tells the worker to push the state branch itself.
+- **Does it widen authority?** No. Implementation opens a Draft PR only under a quoted grant (ADR 0015), and validation pushes nothing else.
+- **Ideation workers?** Not covered. No ideation incident was found in the searches below, and without that bite the sentence is not added there.
+- **Codex auto-review refusing the push?** Words in the transcript may or may not change its judgment; this is unmeasured. What a denial covers is the sibling task denied-command-denies-only-that-command.
 
 ### Facts checked (chain order)
 
-1. **Spacedock** (source at tag v0.27.2, the installed binary's version; `spacedock --help` lists no `state commit`). On a split-root workflow, `state commit <slug>` runs a preflight, a path-scoped `git commit -- <paths>`, then `git push origin HEAD:refs/heads/<state-branch>` (`internal/statesync/publish.go` `Publish`), with one pull-rebase retry and a halt on a same-entity conflict. It prints `Committed and pushed <slug> to <branch>.` With no `origin` it returns `local-only`. On an inline workflow it pushes nothing (`commitInlineEntity`). On a detached HEAD the preflight refuses (`state checkout HEAD is detached HEAD; expected branch ...`) before any commit.
-2. **kc-dev-flow-2 at origin/main e8664a72 (0.38.1).** Worker-facing sentences about pushing:
+1. **Spacedock**, source at tag v0.27.2, the installed binary's version. `spacedock --help` lists no `state commit`.
+   - On a split-root workflow, `state commit <slug>` runs a preflight, a path-scoped `git commit -- <paths>`, then `git push origin HEAD:refs/heads/<state-branch>` (`internal/statesync/publish.go` `Publish`).
+   - A rejected push gets one pull-rebase retry; a same-entity conflict halts.
+   - Output: `Committed and pushed <slug> to <branch>.` With no `origin` the result is `local-only`.
+   - An inline workflow pushes nothing (`commitInlineEntity`).
+   - On a detached HEAD the preflight refuses (`state checkout HEAD is detached HEAD; expected branch ...`) before any commit.
+2. **kc-dev-flow-2 at origin/main e8664a72 (0.38.1).** Every worker-facing sentence about pushing:
    - `skills/implementation/principles.md`: "Where the dispatch scope notes quote the Captain's grant to push the task branch and open a Draft PR, open that PR before the stage report and name it there; otherwise report `no PR opened: no push grant`. Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless that specific action is authorized."
    - `skills/validation/principles.md`: "Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless the specific action is authorized."
    - `extensions/paseo/EXTENSION.md` scope-notes line: "Commit locally and report the branch, base, candidate SHA and prepared PR text; do not push the product branch or open its PR. ... Split-root state commits and sync still follow the ensign contract."
-   - `references/sd/workflow.md` (FO-facing; workers get its Dispatch facts): no sentence about the worker's state push. FO commits follow-up records with `spacedock state commit` (Stages).
+   - `references/sd/workflow.md` Number guards, inlined into implementation dispatches: "`Applied: none as of <sha>` records that nothing was pushed up to that commit". It concerns a candidate pushed to a shared environment, not the state branch, and is unchanged.
    - `scripts/replay_dispatch.py` `HARNESS`: "Do not push, merge or commit to any remote."
-   - Nothing in the package tells a worker that its state commit pushes or that the push is its own. The paseo line says it only by reference, and only in paseo adopters' implementation dispatches.
-3. **Adopters (read-only).**
-   - qnow, which does not list `paseo`: `owner-cancels-booking/dispatch/validation-1.md` says "Do not push, open a PR, comment, or change hosted services." and "Commit with spacedock state commit owner-cancels-booking ...". The worker then amended its report in ee7a248ab: "the explicitly prescribed `spacedock state commit` helper automatically pushed ... despite the dispatch no-push boundary".
-   - qnow implementation, the same class: `_archive/pending-booking-cap/dispatch/implementation-1.md` says "commit it with spacedock state commit ... Hard limits: no push". Its report in 4e1791e91 says "this violated the dispatch no-push limit".
-   - This workflow: 4 follow-up messages "clarifying that the state-branch push is allowed" (`*/dispatch/validation-*-message-1.md`). After them, 24 validation dispatches carry FO's hand-written clause "the state-branch push that `spacedock state commit` makes is expected and allowed". The paseo line is in implementation dispatches (for example `observer-lists-unasked-merges/dispatch/implementation-1.md`) and missing from validation ones. No implementation follow-up was found. The comparison is weak and confounded, but it agrees with the claim.
-   - subspace-web: listed in `.notes/fo-feedback/round-005.md` ("\"Do not push\" scope wording vs the state push (web)"); not read further.
+   - No package sentence tells a worker that its state commit pushes, or that the push is its own. The paseo line says it only by reference.
+3. **Adopters**, read-only.
+   - **qnow validation.** qnow does not list `paseo`. `owner-cancels-booking/dispatch/validation-1.md` says "Do not push, open a PR, comment, or change hosted services." and "Commit with spacedock state commit owner-cancels-booking ...". The worker then amended its report in ee7a248ab: "the explicitly prescribed `spacedock state commit` helper automatically pushed ... despite the dispatch no-push boundary".
+   - **qnow implementation**, the same class. `_archive/pending-booking-cap/dispatch/implementation-1.md` says "commit it with spacedock state commit ... Hard limits: no push". Its report (4e1791e91) says "this violated the dispatch no-push limit".
+   - **This workflow.** FO sent 4 follow-up messages "clarifying that the state-branch push is allowed" (`*/dispatch/validation-*-message-1.md`, committed 2026-11-07 to 2026-11-08 11:26). From 2026-11-08 11:26 on, 24 validation dispatches carry FO's clause "the state-branch push that `spacedock state commit` makes is expected and allowed". No later follow-up about the push was found.
+   - **This workflow, paseo line.** It is in 0 of 246 validation dispatch records. It is in implementation records, for example `observer-lists-unasked-merges/dispatch/implementation-1.md`. No implementation follow-up was found.
+   - **What that evidence shows.** Words in the dispatch text stopped the questions. It does not show that a stage-skill sentence would.
+   - **subspace-web.** Listed in `.notes/fo-feedback/round-005.md` ("\"Do not push\" scope wording vs the state push (web)"); not read further. Relay was not read.
 
 ### Existing-code check
 
 - **Capability:** worker guidance on the state push.
-- **Completeness:** the paseo line covers this only by reference, and only in paseo adopters' implementation dispatches. It is absent from validation dispatches here and from qnow entirely.
+- **Completeness:** only the paseo line touches it, by reference and only in paseo adopters' implementation dispatches.
 - **Need:** the three adopter incidents above.
-- **Smallest change:** one sentence beside each stage's existing push sentence. It adds no new mechanism and leaves the paseo line unchanged.
+- **Smallest change:** one sentence beside each stage's existing push sentence. No new mechanism; the paseo line stays unchanged.
 - **Searches:**
   - `git grep -i push` over `kc-dev-flow-2` at origin/main.
   - `git grep -i 'state commit|state branch'` over the same tree.
-  - Both state branches, searched for the publication or deviation wording.
-- **Exclusions:** relay was not read.
+  - Both state branches, searched for the publication and deviation wording.
 
-### Change
+### Change (recommended option)
 
 Add this sentence after the existing "Do not invoke local fallback, push the trunk, ..." sentence in `kc-dev-flow-2/skills/implementation/principles.md` and in `kc-dev-flow-2/skills/validation/principles.md` (43 words each):
 
 > The state-branch push that `spacedock state commit`, or the ensign contract's state sync, makes for your report is part of your stage: report it as done, not as a deviation. A dispatch's "do not push" means the product branch, the trunk and PRs.
 
-- No other file changes.
-- `references/sd/workflow.md` is unchanged, so its word budget and `lint-skills.py` steps are unchanged.
+- No other file changes; `references/sd/workflow.md` and the `lint-skills.py` budget steps are unchanged.
 - No command line changes, so no documented-invocation test is owed.
-- No wording test is added. Behaviour replay is the proof (maintain-flow, "wording tests prove only that the text is there").
+- No wording test is added. Behaviour replay is the proof (maintain-flow: "wording tests prove only that the text is there").
 
-### The two statements a worker reads, after the change
+### The statements a worker reads, after the change
 
-- Spacedock (dispatch body and ensign contract): commit path-scoped, then "push the state branch so peers see your entity/report"; `spacedock state commit` prints "Committed and pushed <slug> to <branch>."
-- kc-dev-flow-2 stage principles: the sentence above, which names that push as part of the stage and limits "do not push" to the product branch, the trunk and PRs.
-
-These no longer disagree. Before the change, the package said nothing, and FO's "Do not push" was the only statement the worker could weigh against Spacedock's.
+- **Spacedock** (dispatch body and ensign contract): commit path-scoped, then "push the state branch so peers see your entity/report". `spacedock state commit` prints "Committed and pushed <slug> to <branch>."
+- **kc-dev-flow-2 stage principles:** the sentence above.
+- **FO's scope notes:** in qnow and web they still say a bare "Do not push". That is a third statement. The principles sentence says how to read it, but under this option the dispatch text itself still reads as a contradiction until the worker loads its skill.
 
 ### Flow
 
@@ -129,63 +133,103 @@ flowchart TD
 
 ### Words read at each lifecycle moment (before -> after)
 
-FO reads neither principles file, so FO's moments do not change: startup/resume, dispatch build, idle on an open PR, idle on a merged PR, after the archive, and the merge ask all stay 0 -> 0 added words. Counted with `wc -w` at e8664a72.
+Counted with `wc -w` at e8664a72.
 
-| Moment | Before | After |
+| Moment | Principles option (recommended) | Dispatch-facts option |
 | --- | --- | --- |
-| Implementation worker, after loading `principles.md` | 707 | 750 (+43) |
-| Validation worker, after loading `principles.md` | 849 | 892 (+43) |
-| Ideation worker | unchanged | unchanged |
-| FO-written validation scope notes in this workflow | +12-word hand clause | the clause becomes optional; not claimed as removed |
-
-### Batch overlap
-
-- **denied-command-denies-only-that-command (batch 21, ideation):**
-  - Its Budget adds worker-facing words "where a dispatched worker reads them". It names `extensions/paseo/EXTENSION.md` and possibly the README's Dispatch facts with a word-budget raise.
-  - Shared check: both rely on Behaviour replay with `scripts/replay_dispatch.py`.
-  - Shared files: possibly the same principles files, if it chooses them.
-  - This design changes neither the paseo extension nor the README.
-- **budget-overrun-holds-and-findings-meet-non-goals (batch 21):** changes `references/sd/workflow.md` and a cycle-reading script. No shared file.
-- **story-done-reports-release-remaining, release-rollout-reaches-adopters-and-laws-pin (batch 21):** no shared file. The scope files mention neither principles file.
-- **adr-required-statement:** closed by the Captain's 「那就關掉」 (2026-10-20) in its gate record. No shared file.
-- **dispatch-carries-reserved-adr-number:** changes `scripts/dispatch_records.py`. No shared file.
-- **merge-guard-stops-unasked-merges (PR #794):** changes `references/sd/adoption.md`, `delivery_gate.py`, `merge_guard.py`, their tests, ADR 0063 and CI. No shared file.
-- **journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot:** other plugins, read only. No kc-dev-flow-2 principles file.
-- Recommended order: any order with every task except denied-command-denies-only-that-command. Land this task first if that task also edits a principles file, so its replay builds on this sentence.
+| FO startup and resume (README) | 0 -> 0 | 5939 -> 5977 (+38) |
+| FO dispatch build, idle on an open PR, idle on a merged PR, after the archive, merge ask | 0 -> 0 | 0 -> 0 |
+| Ideation worker dispatch (inlines Dispatch facts, 303 words) | 0 -> 0 | 303 -> 341 (+38) |
+| Implementation worker | `principles.md` 707 -> 750 (+43) | Dispatch facts 303 -> 341 (+38) |
+| Validation worker | `principles.md` 849 -> 892 (+43) | Dispatch facts 303 -> 341 (+38) |
+| FO's hand clause in this workflow's validation scope notes (12 words) | still needed, since the dispatch text is unchanged | becomes deletable; not claimed |
 
 ### Decision for the Captain
 
-- **Where the sentence lives.**
-- **Recommended:** the implementation and validation stage principles, as above. This adds 0 README words and follows ADR 0020.
-- **What gets worse:** FO is not told. FOs in qnow and web keep writing a bare "Do not push", so the dispatch text still reads as a contradiction until the worker loads its skill. The stop condition's "a replayed dispatch states which push is the worker's" is then read as "the replayed dispatch together with the stage skill it loads states it".
-- **Alternative:** one `- **Pushes:**` bullet in the README's Dispatch facts, which ideation, implementation and validation dispatches inline:
+- **Decide:** where the sentence lives.
+- **Recommended:** the implementation and validation stage principles.
+- **The stop condition:** approving this option also amends the stop condition. "A replayed implementation and validation dispatch at the candidate each state which push is the worker's" would become "the replayed dispatch, together with the stage skill it loads, states it". Under this option the dispatch file itself does not change.
+- **Why:** no README growth, following the direction of the Captain's words in ADR 0020. Both stage skills reach every adopter's workers.
+- **What gets worse:**
+  - FO is not told, so the qnow and web FOs keep writing a bare "Do not push".
+  - The only measured evidence (this workflow's follow-ups stopping) is for words in the dispatch text, not in a skill.
+- **Alternative: the Dispatch-facts option.** Add one `- **Pushes:**` bullet to `references/sd/workflow.md` Dispatch facts, which ideation, implementation and validation dispatches inline:
 
   > the state-branch push that `spacedock state commit`, or the ensign contract's sync, makes for your report is yours and expected. Any other push or PR needs a grant your dispatch quotes; "do not push" means those.
 
-  It adds 38 words at FO startup/resume and in every worker dispatch, and needs a `WORKFLOW_BUDGET_STEPS` raise with the Captain's words.
+  It meets the stop condition as written and reaches FO. It adds 38 words at FO startup/resume and in each worker dispatch, and needs a `WORKFLOW_BUDGET_STEPS` raise carrying the Captain's words.
+
+### Batch overlap
+
+- **denied-command-denies-only-that-command (batch 21, ideation).**
+  - Its Budget adds worker-facing words "where a dispatched worker reads them, within the workflow word budget or with a named raise". Its scope names `extensions/paseo/EXTENSION.md`.
+  - Shared check: both prove themselves by Behaviour replay through `scripts/replay_dispatch.py`. If either changes `HARNESS`, that is a shared file.
+  - Principles option: overlap only if it also edits a principles file.
+  - Dispatch-facts option: both may change the Dispatch facts section and append to `WORKFLOW_BUDGET_STEPS` in `scripts/lint-skills.py`, which conflict textually.
+- **budget-overrun-holds-and-findings-meet-non-goals (batch 21, ideation).** It changes `references/sd/workflow.md` and a cycle-reading script, likely with a budget step.
+  - Principles option: no shared file.
+  - Dispatch-facts option: shares `workflow.md` and `WORKFLOW_BUDGET_STEPS`.
+- **story-done-reports-release-remaining and release-rollout-reaches-adopters-and-laws-pin (batch 21, ideation):** neither scope names a principles file, the Dispatch facts or the budget. No shared file found.
+- **adr-required-statement:** closed by the Captain's 「那就關掉」 on 2026-10-20 (its `## Closed` section). Its frontmatter still reads `validation` because archiving is blocked (spacedock-dev/spacedock#847). Its unpushed candidate b73a69c2 changes `workflow.md` and `test_sd_dispatch.py`, so a reopen would share `workflow.md` under the Dispatch-facts option. Its candidate does not touch either principles file.
+- **dispatch-carries-reserved-adr-number (ideation):** changes `scripts/dispatch_records.py`. No shared file.
+- **merge-guard-stops-unasked-merges (validation, PR #794):** changes `references/sd/adoption.md`, `scripts/delivery_gate.py`, `scripts/merge_guard.py`, their tests, ADR 0063 and `.github/workflows/kc-dev-flow-2-tests.yml`. No shared file.
+- **journey-server-host-pilot, ops-inbox-r1-setup-and-isolation and pr-review-lite-value-pilot:** other plugins, read only. No kc-dev-flow-2 principles file and no `workflow.md`.
+
+Recommended order: under the principles option, any order, except land this before denied-command-denies-only-that-command if that task edits a principles file or `HARNESS`. Under the Dispatch-facts option, land after budget-overrun-holds-and-findings-meet-non-goals and denied-command-denies-only-that-command, rebasing the budget step each time.
 
 ## Acceptance criteria
 
 **AC-1** At the candidate, the sentence appears once in `kc-dev-flow-2/skills/implementation/principles.md` and once in `kc-dev-flow-2/skills/validation/principles.md`, right after each file's "Do not invoke local fallback, push the trunk" sentence. No other kc-dev-flow-2 file changes.
 - Evidence: `git diff --stat <base> <head> -- kc-dev-flow-2` lists exactly those two files, and `grep -c 'is part of your stage: report it as done' <file>` prints 1 for each.
-- Falsifier: a diff touching `references/sd/workflow.md` or the paseo extension, or a count other than 1.
+- Falsifier: a diff touching `references/sd/workflow.md`, the paseo extension or `replay_dispatch.py`, or a count other than 1.
+- If the Captain chooses the Dispatch-facts option, this criterion is rewritten before implementation.
 
 **AC-2** `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0 at the candidate, with `WORKFLOW_BUDGET_STEPS` unchanged.
 - Falsifier: moving the sentence into `references/sd/workflow.md` makes lint exit 1 with "exceeds the budget".
 
-**AC-3** The sentence is true of Spacedock v0.27.2 on a scratch split-root workflow whose state `origin` is a disposable bare repository. `spacedock state commit <slug>` prints `Committed and pushed`. The bare repository's `refs/heads/<state-branch>` moves to the new commit, and no other ref changes. With `origin` removed, the same command prints `local-only`.
-- Evidence: a validation scratch script plus `git for-each-ref` on the bare repository before and after.
+**AC-3** The sentence is true of Spacedock v0.27.2. Use a scratch split-root workflow whose state checkout is on its state branch and whose `origin` is a disposable bare repository.
+- `spacedock state commit <slug>` prints `Committed and pushed`.
+- The bare repository's `refs/heads/<state-branch>` moves to the new commit, and no other ref changes.
+- With `origin` removed, the same command prints `local-only`.
+- Evidence: a validation scratch script, with `git for-each-ref` on the bare repository before and after.
 - Falsifier: any other ref changing, or no push at all, makes the sentence false.
 
-**AC-4** Behaviour replay per `skills/maintain-flow/SKILL.md`. Build two dispatches with `scripts/replay_dispatch.py build` at tag `kc-dev-flow-2-v0.38.1` and at the candidate, from the same state and code commits:
-- qnow `pending-booking-cap` implementation-1, from state commit d0270c05 with its recorded scope notes;
-- qnow `owner-cancels-booking` validation-1, from the state commit that added its record (the record names only its workflow checkout, 429b4673), with its recorded scope notes.
+**AC-4** Behaviour replay per `skills/maintain-flow/SKILL.md`, safely isolated.
 
-Each checklist names no rule under test. Run each on its recorded model (Codex gpt-6.1-sol and gpt-6-astra, xhigh, via Paseo): once at the release, twice at the candidate.
+Build each dispatch with `scripts/replay_dispatch.py build` at tag `kc-dev-flow-2-v0.38.1` and at the candidate, from the same state and code commits:
+- qnow `pending-booking-cap` implementation-1, from state commit d0270c05;
+- qnow `owner-cancels-booking` validation-1, from the state commit that added its record (the record names only its workflow checkout, 429b4673).
 
-Set up the replay state checkout on the state branch, with `origin` pointing at a disposable bare repository. Then `spacedock state commit` reaches its push, and the real qnow remote is untouched. Without this, a detached replay worktree refuses at preflight and never shows the push. Before and after the runs, `git ls-remote` of the real origin must be unchanged.
+Isolation, required because the recorded scope notes name qnow's real workflow dir:
+- Pass the recorded scope notes through `--scope`. Keep the "Do not push" and "spacedock state commit" wording verbatim, but rewrite every `--workflow-dir` path to the replay's `wf` directory.
+- The replay state checkout is on the state branch, with `origin` pointing at a disposable bare repository. Then `spacedock state commit` reaches its push; a detached replay worktree would refuse at preflight and never show it.
+- `HARNESS`'s "Do not push, merge or commit to any remote" would forbid the push in both arms. Validation therefore uses a disclosed scratch copy of `replay_dispatch.py` whose only change replaces that sentence with "The state checkout's origin is a disposable bare repository; push nothing else." Both arms use the same copy.
+- `git ls-remote` of qnow's real origin must be unchanged before and after the runs.
 
-- Pass: in all four candidate runs, the report states the state commit and push as done, does not call it a deviation, violation or unintended publication, does not ask for publication approval, and pushes nothing else.
-- Report: a table of runs by outcome, with the release arm's outcome.
-- Falsifier: one candidate run that calls the push a deviation or asks for approval stops the change. After two rewordings that still fail, a structural option goes to the Captain.
-- Release arm: if it also shows no deviation, the replay does not show a change. Report that, and do not claim effect.
+Runs: the checklist names no rule under test. Each arm runs on the recorded model (Codex gpt-6.1-sol and gpt-6-astra, xhigh, via Paseo): once at the release, twice at the candidate.
+
+- **Pass:** in all four candidate runs, the report states the state commit and push as done, does not call it a deviation, violation or unintended publication, does not ask for publication approval, and pushes nothing else.
+- **Report:** a table of runs by outcome, with the release arm's outcome.
+- **Falsifier:** one candidate run that calls the push a deviation or asks for approval stops the change. After two rewordings that still fail, a structural option (the Dispatch-facts option) goes to the Captain.
+- **No-change result:** if the release arm also shows no deviation, the replay does not show a change. Report that, and claim no effect.
+
+## Stage Report: ideation
+
+- DONE: Quote each worker-facing sentence about pushing in the package at origin/main (stage skills, the workflow reference, the paseo extension) and what spacedock state commit does on a split-root workflow (read Spacedock's own source or help, not an adopter's usage), and show the two statements a worker would read after the change
+  `### Facts checked (chain order)` covers both. Package: implementation and validation principles, paseo line, Number guards, `HARNESS` (e8664a72). Spacedock: v0.27.2 `state_sync.go` `runStateCommit` and `publish.go` `Publish`. `### The statements a worker reads, after the change` names FO's bare "Do not push" as a third statement.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (story-done-reports-release-remaining, release-rollout-reaches-adopters-and-laws-pin, budget-overrun-holds-and-findings-meet-non-goals, worker-push-words-match-state-commit, denied-command-denies-only-that-command) and live task of other sessions (adr-required-statement, dispatch-carries-reserved-adr-number, journey-server-host-pilot, merge-guard-stops-unasked-merges, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions or held; read only)) that changes the same file or check, so FO can order implementation
+  Every task is named, with overlap under both options and a `Recommended order:` line. PR #794 files were read from `gh pr view`. adr-required-statement is closed (`## Closed`), not live.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  `### Words read at each lifecycle moment`: the principles option is 0 at every FO moment and +43 per implementation or validation worker. The Dispatch-facts option is +38 at FO startup/resume and in each of the three worker dispatches.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  One decision: where the sentence lives. The recommendation, the stop-condition amendment it implies, and what gets worse are under `### Decision for the Captain`.
+- DONE: AC-1 two-file sentence placement: not yet verified (implementation output).
+- DONE: AC-2 lint at unchanged budget: not yet verified (implementation output).
+- DONE: AC-3 state commit pushes only the state-branch ref: read from Spacedock v0.27.2 source; the scratch run is not yet verified.
+- DONE: AC-4 isolated Behaviour replay, qnow pending-booking-cap implementation-1 and owner-cancels-booking validation-1: not yet verified. The replay sources were checked; the isolation steps are written into the criterion.
+- DONE: design_surfaces.py check
+  `python3 <package>/scripts/design_surfaces.py check <task>` exit 0: "design surfaces presentable".
+
+### Summary
+
+Spacedock's `state commit` pushes the state branch by design. The package never tells a worker that this push is its own, so FO-written "Do not push" scope notes produced disclosure amendments in qnow (implementation and validation) and 4 follow-up clarifications here. The design adds one 43-word sentence beside the existing push rule in the implementation and validation principles, with no README growth. The Captain decides between that and a 38-word Dispatch-facts bullet. Choosing the principles option amends the stop condition's "the dispatch states it" to "the dispatch and the stage skill it loads". AC-4's replay is written to run against a disposable bare origin with rewritten workflow paths and a disclosed scratch harness, so no real remote is pushed.
