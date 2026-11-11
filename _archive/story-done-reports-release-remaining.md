@@ -3,7 +3,7 @@ title: When a story's task is archived, FO tells the Captain how much of the rel
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -85,10 +85,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-11), answering 「決定：合併 #839（故事進度的前半：旅程地圖的進度工具改成回報「這個故事和這個切片各有幾張已開的任務做完」，並列出完成它的 PR）嗎？建議合併。同意即接受：這一半合併後還不會自動回報，要等後半 #843（任務必須標故事、歸檔後提醒回報）合併並發版才生效，#843 我會另外問你；在 relay 上的真實歸檔回報要等發版後才驗；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit fd1caa475f85483cf5c4031a1e58656ff5d3eaff, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-11T01:22:31Z
 worktree: .worktrees/spacedock-ensign-story-done-reports-release-remaining
 pr: pr-merge:843
+verdict: PASSED
+completed: 2026-11-11T08:05:12Z
+archived: 2026-11-11T08:05:12Z
 ---
 
 ## Scope
