@@ -259,7 +259,10 @@ This change adds a capability: a progress report at archive, and pull request re
 - Added step (see `### Added step`):
   - `scripts/design_surfaces.py`: the seed-mode `Story:` rule, gated on the workflow
     README listing `journey-map`.
+  - `scripts/design_surfaces.py` default check: the `Story:` and frontmatter consistency
+    rule.
   - `scripts/test_design_surfaces.py`: its cases.
+  - `scripts/test_pr_watch.py`: the idle-look case (AC-13).
   - `extensions/journey-map/EXTENSION.md`: one backlog bullet (46 words). "four points"
     becomes "five points", and the definition sentence ends ", except the progress report
     and the story line" (+4 more).
@@ -294,8 +297,17 @@ admitted since the step landed.
   - It refuses: no `Story:` line; an empty value; `none` with no reason; a line inside a
     code fence.
   - It accepts any other `Story: <token> …`.
-  - It does not check that the story is on the map, or that the line agrees with the
-    frontmatter set later. The Release review owns membership.
+  - It does not check that the story is on the map; the Release review owns membership.
+- **The line and the counted fields stay together: a consistency rule in the design
+  check.** The report counts frontmatter, not the line. So the default `design_surfaces.py
+  check`, which FO runs before every ideation gate, refuses when:
+  - a `Story: <id> …` line's `<id>` differs from the frontmatter `journey-story`, or
+    `journey-story` is empty (FO approved it into a story but never set the fields);
+  - `Story: none: …` sits beside a non-empty `journey-story`.
+
+  It applies only where `journey-map` is listed. Its refusal is "'Story:' names `<id>`
+  but journey-story is `<value>`", 9 words plus the values. Limit: a task on the POC
+  route has no ideation gate, so its line and fields are not compared.
   - Other places considered:
     - W2, an FO alignment line with no check. It costs no code, but it is a prose step FO
       can skip, the same failure as today.
@@ -318,8 +330,18 @@ admitted since the step landed.
   - The report's release line says `complete by filed tasks` only when every story has
     every filed task done and every release task with no story is done. It still says
     "filed", which is not delivery acceptance.
-- **New tasks only** (ADR 0041's rule for the seed check). Archived tasks are not
-  backfilled. Relay's interim practice already chose not to backfill completed tasks.
+- **Reach and rollout.** The rule reaches what the seed check already reaches: every
+  backlog task that still needs preparation. Archived tasks and tasks past backlog are not
+  checked or backfilled; relay's interim practice already chose not to backfill completed
+  tasks. Existing backlog tasks are reached too, not only new ones. On the day it ships,
+  the idle look names relay's 31 and qnow's 11 backlog tasks that have FO alignment and
+  no `Story:` line (measured below), and keeps naming them at every look until each gets
+  one. Rollout step: when an adopter takes the release, its FO writes the line on each
+  named task in one pass (31 lines on relay, 11 on qnow).
+  - Profiles: `seeds()` does not filter by profile, so POC-profile tasks in these
+    workflows are reached (relay 2, qnow 1 among the named).
+  - A separate POC workflow (no ideation stage) is not reached: `seeds()` returns
+    nothing there.
 - **What it takes from journey-map-progress-and-provenance.** All of Gap 1: relay's
   suggestion "every task records its story or `no story: <reason>` at the backlog gate,
   and the seed check refuses neither". It leaves:
@@ -341,7 +363,10 @@ admitted since the step landed.
     check reads presence and form only. ADR 0041 otherwise stands.
   - Consequences: skipping the seed check still bypasses the refusal, but the idle look
     names the task. A wrong story id passes until the Release review. Archived tasks keep
-    no record.
+    no record. Existing backlog tasks are named until each gets its line.
+  - Lands ADR: ruling "in a journey-map workflow a backlog task records its story or
+    none, and both pass", short title "a journey workflow's new seed records its story or
+    none".
 
 ```mermaid
 flowchart TD
@@ -357,7 +382,7 @@ flowchart TD
 ```
 
 **Would have been refused** (replay over every task, live and archived; the step itself
-checks new seeds only). Command: `python3 -I` over each state's `*.md`, `*/index.md` and
+checks only backlog tasks that still need preparation). Command: `python3 -I` over each state's `*.md`, `*/index.md` and
 `_archive/` with PyYAML frontmatter, at relay state 77f5bb4e, qnow state 03838f9 and this
 workflow's state 10149f1c5, 2026-11-11.
 
@@ -367,9 +392,17 @@ workflow's state 10149f1c5, 2026-11-11.
 | qnow dev2 | 163 (94 / 69) | 163 | 90 / 58 | 81 (79 by substance) |
 | this workflow (journey-map not listed: 0 refused) | 230 (79 / 151) | 230 | 77 / 145 | 55 if it were listed |
 
-The upper bound counts backlog tasks. The idle look checks only those whose readiness is
-`needs-preparation`, a status not measured here. Each of those gets a line once, the next
-time FO prepares its gate.
+Measured reach of the idle look (`spacedock status --next --json` `ready_gates` rows at
+`backlog` / `needs-preparation`, on the replays with each adopter's README; relay code
+0fce822 state 77f5bb4e, qnow code ebc59cf state 03838f9):
+- relay: 33 rows. 31 have FO alignment and no `Story:` line (pilot 22, prod 5, poc 2, no
+  profile 2) and would be named. 2 have no FO alignment, which `seeds()` skips.
+- qnow: 80 rows. 11 would be named (pilot 9, prod 1, poc 1). 69 have no FO alignment and
+  are skipped.
+
+Both relay `Story:` lines sit under `## FO alignment`, unfenced
+(`_archive/entry-without-name-field.md`, `_archive/own-comments-follow-account.md`), and
+each agrees with its frontmatter `journey-story`; so 135 stands for the stricter rule.
 
 ### Flow
 
@@ -398,7 +431,8 @@ flowchart TD
 | Startup: journey-map `EXTENSION.md` | 612 | 726 (+50 archive bullet, +9 Needs, +46 backlog bullet, +9 definition) | 726 |
 | Backlog seed check, each new task (journey-map workflows) | 0 for a story | 0 when the line is present; 20 words of refusal when it is missing | same |
 | Idle look: existing seed-check `next:` line | fires on a missing bound | same words; also fires for a backlog task with no `Story:` line (upper bound 33 relay, 81 qnow at first look) | same |
-| Backlog gate on a journey task: Release review bullet | 420 | 420 | 441 |
+| Backlog gate on a journey task: Release review bullet, plus the new EXTENSION.md backlog bullet | 420 | 466 (+46) | 487 |
+| Ideation gate: design check output | unchanged | 0 when line and fields agree; 9 words plus values when they differ | same |
 | After the archive: instructions | 50 (fold bullet) | 100 | 100 |
 | After the archive: script output | fold draft diff (not measured); no progress output | + report, at most 9 lines and 160 words | same |
 | Idle looks (`pr_watch.py tasks`) | unchanged | unchanged | unchanged |
@@ -434,7 +468,10 @@ Read at state commit 045694484 (2026-11-11, after a re-pull), and again at 10149
   `lib/schemas.mjs`, `lib/schemas.test.mjs`, `lib/contract-versions.json`,
   `skills/kc-journey-progress/SKILL.md`.
 - `kc-dev-flow-2/extensions/journey-map/EXTENSION.md`, `kc-dev-flow-2/scripts/design_surfaces.py`,
-  `kc-dev-flow-2/scripts/test_design_surfaces.py`, `docs/adr/<number>-a-journey-workflows-new-seed-records-its-story-or-none.md`.
+  `kc-dev-flow-2/scripts/test_design_surfaces.py`, `kc-dev-flow-2/scripts/test_pr_watch.py`,
+  `docs/adr/<number>-a-journey-workflows-new-seed-records-its-story-or-none.md`.
+- Budget: still two PRs. The kc-journey-map PR holds the reader. The kc-dev-flow-2 PR
+  holds the extension bullets, the seed and design rules, their tests and the ADR file.
 - Shared index: the ADR numbers FO reserves (one number for this task).
 
 | Task | Its files or checks (from its task file) | Shared with this design |
@@ -445,7 +482,7 @@ Read at state commit 045694484 (2026-11-11, after a re-pull), and again at 10149
 | denied-command-denies-only-that-command (ideation) | `extensions/paseo/EXTENSION.md`, Dispatch facts; its overlap note names this task's journey-map EXTENSION.md as "no shared file" | none |
 | journey-map-progress-and-provenance (backlog, read only) | `progress.mjs`, `journey-progress.mjs`, the journey-progress schema | same files and schema; this task first, so that one designs on journey-progress 1.1.0 |
 | adr-required-statement (validation) | workflow.md, `docs/dev2/README.md`, `lint-skills.py`, `design_surfaces.py`, an FO `Product ruling:` line at backlog, the ADR index | `design_surfaces.py` and another FO backlog alignment line; the ADR numbers; under C1 also workflow.md and the budget |
-| dispatch-carries-reserved-adr-number (ideation) | `pr_watch.py`, learning.md; notes `design_surfaces.py` is imported by dispatch checking | the ADR number reservation; rerun its dispatch tests after the `design_surfaces.py` change; the D1 `pr_watch.py` alternative would share `tasks` |
+| dispatch-carries-reserved-adr-number (ideation) | `pr_watch.py` (and its test), learning.md; notes `design_surfaces.py` is imported by dispatch checking | `test_pr_watch.py` (one added case here); the ADR number reservation; rerun its dispatch tests after the `design_surfaces.py` change; the D1 `pr_watch.py` alternative would share `tasks` |
 | journey-server-host-pilot (validation) | `render.mjs`, kc-journey-map README, host scripts, `JOURNEY_API` | none; A2 or B2 would share `render.mjs` or `records.mjs` and the host seam |
 | merge-guard-stops-unasked-merges (validation) | workflow.md, learning.md, `lint-skills.py`, `docs/adr/` | the ADR numbers |
 | ops-inbox-r1-setup-and-isolation (implementation) | kc-ops-inbox's own `contract-versions.json` (cites kc-journey-map's as precedent), `docs/adr/` | the ADR numbers |
@@ -541,7 +578,7 @@ with `npm ci` done.
 
 **AC-8** — The schema version moves with the field table. Evidence: `node <cand>/lib/schemas.mjs journey-progress` prints the `members` rows; `contract-versions.json` names `journey-progress` current 1.1.0 with a new hash and keeps 1.0.0. The kc-journey-map schema test exits 0. Falsifier: removing the version entry while keeping the rows makes that test fail.
 
-**AC-9** — The kc-dev-flow-2 steps are as designed, and nothing else in the FO reading changes. Evidence: `git diff origin/main -- kc-dev-flow-2/` touches only `extensions/journey-map/EXTENSION.md`, `scripts/design_surfaces.py` and `scripts/test_design_surfaces.py`; `wc -w` of EXTENSION.md is 612 before and at most 726 after, and its Joins line says five points; `references/sd/workflow.md` is byte-identical. FO's after-archive step is run by hand on the relay replay of AC-1 by copying the bullet's command verbatim, and it prints AC-1's lines. Falsifier: a candidate that also edits workflow.md fails the diff check.
+**AC-9** — The kc-dev-flow-2 steps are as designed, and nothing else in the FO reading changes. Evidence: `git diff origin/main -- kc-dev-flow-2/` touches only `extensions/journey-map/EXTENSION.md`, `scripts/design_surfaces.py`, `scripts/test_design_surfaces.py` and `scripts/test_pr_watch.py`; `wc -w` of EXTENSION.md is 612 before and at most 726 after, and its Joins line says five points; `references/sd/workflow.md` is byte-identical. FO's after-archive step is run by hand on the relay replay of AC-1 by copying the bullet's command verbatim, and it prints AC-1's lines. Falsifier: a candidate that also edits workflow.md fails the diff check.
 
 **AC-10** (stop condition, real use) — On relay, after both releases reach it, the next archive of a task on a declared story has FO's archive message carrying the report lines, or `journey progress not run: <reason>`. Evidence: the archive message quoted with its task slug. Not yet verified: this needs the release and rollout (see release-rollout-reaches-adopters-and-laws-pin); validation may record it as an unverified future check.
 
@@ -556,7 +593,9 @@ The same seed without a `Story:` line under a README that does not list `journey
 
 **AC-12** — The replay counts match. Evidence: with the candidate `design_surfaces.py check --seed` run over every task of the relay replay (state 77f5bb4e with relay's README), the qnow replay (state 03838f9 with qnow's README) and this workflow (state 10149f1c5), the number of tasks whose output carries the `Story:` refusal is 135, 163 and 0. Falsifier: a check that applies to every workflow prints 230 for this one.
 
-**AC-13** — The idle look names a backlog task with no story record. Evidence: a `test_pr_watch.py` case at the candidate: a workflow listing `journey-map` with one backlog task that needs preparation and has every seed bound but no `Story:` line. `pr_watch.py tasks` prints the existing `next: the seed check fails for these backlog tasks (<slug>)` line. With `Story: none: test` added, it prints no seed line. Falsifier: a seed check that ignores `Story:` leaves the first run silent.
+**AC-13** — The idle look names a backlog task with no story record, and on the replays it names 31 relay and 11 qnow tasks. Evidence: a `test_pr_watch.py` case at the candidate: a workflow listing `journey-map` with one backlog task that needs preparation and has every seed bound but no `Story:` line. `pr_watch.py tasks` prints the existing `next: the seed check fails for these backlog tasks (<slug>)` line. With `Story: none: test` added, it prints no seed line. Falsifier: a seed check that ignores `Story:` leaves the first run silent.
+
+**AC-15** — The line and the counted fields agree before the ideation gate. Evidence: `test_design_surfaces.py` default-mode cases in a journey-map workflow: `Story: inbox-home (owner-account)` with `journey-story: inbox-home` exits 0; with `journey-story` empty, or `switch-any-account`, exits 1 with the `'Story:' names` message; `Story: none: infra` with `journey-story: inbox-home` exits 1; the same files under a README without `journey-map` exit 0. Replay: the default check on relay's two archived tasks that carry `Story:` reports no `Story:` error. Falsifier: a check that compares only presence passes the empty-field case.
 
 **AC-14** — The ADR lands with the rule. Evidence: the kc-dev-flow-2 PR adds `docs/adr/<reserved number>-a-journey-workflows-new-seed-records-its-story-or-none.md` with the Captain's words from this task's ideation resolution and `Protects:` naming `design_surfaces.py`, and the repository's ADR lint exits 0 on it. Falsifier: the rule merged without that file fails the ADR check the PR runs.
 
@@ -589,14 +628,12 @@ The measurements show today's progress count is almost entirely unverified on th
 
 ## Stage Report: ideation (cycle 2)
 
-Supersedes the first ideation report above. Dispatch: `dispatch/ideation-1-message-1.md`, after the Captain's revise.
-
 - DONE: The Captain sent the design back at the ideation gate (read the gate resolution reason in the task file; pull the state checkout first): keep D1 to D3 as designed and add one step, each task at the backlog gate records the story it belongs to, or that it belongs to no story with the reason, and neither is refused; say where it is checked (the seed check in kc-dev-flow-2/scripts/design_surfaces.py, FO's backlog alignment lines, or another place), what it costs each task, and how the report counts tasks that record no story
-  `### Added step` covers it. D1–D3 are unchanged. The `Story:` line goes under `## FO alignment`, and the `design_surfaces.py check --seed` rule applies only where `journey-map` is listed; the idle look already runs that check. It costs one line of 2–10 words per task, plus 20 refusal words only when the line is missing. The report gains a "release tasks with no story" line and "complete by filed tasks". An ADR draft extends ADR 0041.
+  `### Added step` covers it. D1–D3 are unchanged. The `Story:` line goes under `## FO alignment`, and the `design_surfaces.py check --seed` rule applies only where `journey-map` is listed; the idle look already runs that check. A design-check rule keeps the line and the counted frontmatter in agreement (AC-15). It costs one line of 2–10 words per task, plus 20 refusal words only when the line is missing. The report gains a "release tasks with no story" line and "complete by filed tasks". An ADR draft extends ADR 0041.
 - DONE: Read the backlog task journey-map-progress-and-provenance, its Gap 1 and the relay evidence it holds, say what this step takes from it and what it leaves, and measure on relay, qnow and this workflow how many live and archived tasks would have been refused
   It takes all of Gap 1 and leaves Gap 2, Gap 3, the relay backfill (20/12/2 of 49 tasks) and the evidence ladder. Would have been refused, with no `Story:` line: relay 135 of 137, qnow 163 of 163, this workflow 0 (journey-map not listed; 230 if it were). By substance: relay 35 live and 45 archived, qnow 90 and 58.
 - DONE: Update the acceptance criteria, the batch overlap and the words FO reads for the added step, and append a complete new ideation stage report that supersedes the earlier one
-  AC-5 and AC-9 are updated and AC-11–AC-14 added. The overlap was re-read at 10149f1c5: `design_surfaces.py` is shared with adr-required-statement and budget-overrun, and the ADR numbers with 4 tasks. EXTENSION.md 612→726. There is a seed-check row and an idle-look row. This report supersedes the first.
+  AC-5, AC-9 and AC-13 are updated and AC-11–AC-15 added; the idle look would name relay 31 and qnow 11 existing backlog tasks (measured with `--next --json`), and the rollout step is one pass. The overlap was re-read at 10149f1c5: `design_surfaces.py` is shared with adr-required-statement and budget-overrun, and the ADR numbers with 4 tasks. EXTENSION.md 612→726. There is a seed-check row and an idle-look row. This report supersedes the first.
 - DONE: Per the Captain's Result line, compare the choices side by side for him to pick at the gate, each with what gets worse (D1–D3, measured on relay, qnow and this repository, reader run on a real map)
   Unchanged from cycle 1; the Captain kept D1 to D3 as designed.
 - DONE: A `### Batch overlap` section naming each file the design would change and each other batch task and live task of other sessions that changes the same file or check
@@ -604,7 +641,7 @@ Supersedes the first ideation report above. Dispatch: `dispatch/ideation-1-messa
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md
   EXTENSION.md 612→726, after-archive 50→100 plus a report of at most 160 words, seed refusal 20 words only on a miss, workflow.md 5939 unchanged.
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
-  AC-1–AC-14 below. No new Captain decision: where the step is checked (W1) is recommended inside the design with W2 and W3, as the dispatch asked.
+  AC-1–AC-15 below. No new Captain decision: where the step is checked (W1) is recommended inside the design with W2 and W3, as the dispatch asked.
 - DONE: AC-1 declared story completion report: not yet verified (needs `--report`). The count it reads was exercised in cycle 1: owner-account went from 0 to 1 of 4.
 - DONE: AC-2 status, acceptance and walk prompt unchanged: not yet verified. continuity-latest is all done and unclaimed (measured).
 - DONE: AC-3 filed-task counts: not yet verified (expected 11/6/167 from the state listing).
@@ -617,11 +654,14 @@ Supersedes the first ideation report above. Dispatch: `dispatch/ideation-1-messa
 - DONE: AC-10 real archive on relay: future check after release and rollout.
 - DONE: AC-11 seed check accepts both forms and refuses a missing line: not yet verified (no candidate yet). Relay's 2 existing `Story:` lines match the accepted form.
 - DONE: AC-12 replay counts 135/163/0: the expected values were measured on 2026-11-11 by the count above; the candidate run is not yet verified.
-- DONE: AC-13 idle look names a backlog task with no story record: not yet verified. The `seeds()` path in `pr_watch.py` was read at origin/main and runs `check --seed` on backlog tasks needing preparation.
+- DONE: AC-13 idle look names a backlog task with no story record: not yet verified on the candidate. The `seeds()` path in `pr_watch.py` was read at origin/main; the expected 31/11 come from the replay `--next --json` rows.
 - DONE: AC-14 ADR lands: not yet verified (the draft is in `### Added step`; number unreserved).
+- DONE: AC-15 line and fields agree at the design check: not yet verified. Relay's 2 existing `Story:` lines agree with their `journey-story` (read 2026-11-11).
 - DONE: design_surfaces.py check
-  Cycle 2 run printed "story-done-reports-release-remaining.md: design surfaces presentable", exit 0; `spacedock status --read --ac-scan` lists AC-1–AC-14 all `unevidenced=false`.
+  Cycle 2 run printed "story-done-reports-release-remaining.md: design surfaces presentable", exit 0; `spacedock status --read --ac-scan` lists AC-1–AC-15 all `unevidenced=false`.
+
+This report supersedes the first ideation report above. Dispatch: `dispatch/ideation-1-message-1.md`, after the Captain's revise.
 
 ### Summary
 
-The design is kept and one step added on the Captain's revise. Every new task in a workflow listing journey-map writes `Story: <story id> (<release id>)` or `Story: none: <reason>` under FO alignment; the existing seed check refuses only a missing line, and the idle look already runs that check. Measured on today's state, the line would be missing on 135 of 137 relay tasks and 163 of 163 qnow tasks; this workflow is unaffected. The rule applies to new seeds only, takes Gap 1 of journey-map-progress-and-provenance whole, and comes with an ADR draft that extends ADR 0041.
+The design is kept and one step added on the Captain's revise. Every new task in a workflow listing journey-map writes `Story: <story id> (<release id>)` or `Story: none: <reason>` under FO alignment; the existing seed check refuses only a missing line, and the idle look already runs that check. Measured on today's state, the line would be missing on 135 of 137 relay tasks and 163 of 163 qnow tasks; this workflow is unaffected. The rule reaches backlog tasks that still need preparation (31 existing relay and 11 qnow tasks are named on the day it ships, then one rollout pass), a design-check rule keeps the line and the counted fields together, and it takes Gap 1 of journey-map-progress-and-provenance whole, and comes with an ADR draft that extends ADR 0041.
