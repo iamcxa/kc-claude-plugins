@@ -67,6 +67,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:story-done-reports-release-remaining:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:story-done-reports-release-remaining-validation-1
+              briefing:
+                id: briefing:story-done-reports-release-remaining:validation:attempt-1:revision-1
+                digest: sha256:62597bebf43ce613e90f238e6cb16ede5d7ef73e4a8209927088164c3c65ff02
+                room-ref: ./story-done-reports-release-remaining/review/validation/briefing-1
 started: 2026-11-11T01:22:31Z
 worktree: .worktrees/spacedock-ensign-story-done-reports-release-remaining
 pr: iamcxa/kc-claude-plugins#839

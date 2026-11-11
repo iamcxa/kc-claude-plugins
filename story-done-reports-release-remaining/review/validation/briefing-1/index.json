@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:story-done-reports-release-remaining:validation:attempt-1:revision-1",
+  "question": "決定：合併 #839（故事進度的前半：旅程地圖的進度工具改成回報「這個故事和這個切片各有幾張已開的任務做完」，並列出完成它的 PR）嗎？建議合併。同意即接受：這一半合併後還不會自動回報，要等後半 #843（任務必須標故事、歸檔後提醒回報）合併並發版才生效，#843 我會另外問你；在 relay 上的真實歸檔回報要等發版後才驗；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit fd1caa475f85483cf5c4031a1e58656ff5d3eaff, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:story-done-reports-release-remaining:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/12c272d1fcedf56086e14505477af98e51971a5d/story-done-reports-release-remaining.md",
+      "rev": "sha256:74608098450b916f154b34ad329dad92c3c8e0b1225c15364e27854355a3ed5e",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 1\nUnchecked counts: 1\nDelivery of story-done-reports-release-remaining, PR #839 (first of two; sibling PR #843 is stacked on it and is asked separately), batch 21.\nSufficiency: the progress tool reports, for one story and its release, how many filed tasks are done, which stories are done or in progress, and the pull requests that finished each, in a short report, with schema 1.1.0; all criteria hold except AC-10, the permitted later check (validation-2 report, Astra, 2026-11-11, PASSED at fd1caa475 and 01d23393e; acceptance script run by FO 2026-11-11, exit 0).\nNecessity: kc-journey-map/lib/contract-versions.json, journey-progress.mjs, progress.mjs, progress.test.mjs, schemas.mjs, schemas.test.mjs and kc-journey-map/skills/kc-journey-progress/SKILL.md change against origin/main (gh pr view 839 file list, FO read 2026-11-11; judged in the validation-2 report, Astra, 2026-11-11).\nAcceptance, run by FO in a fresh shell 2026-11-11, exit 0: env -u GIT_DIR -u GIT_WORK_TREE bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/validation-2/evidence/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-11, exit 0: gh pr view 839 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nExternal rounds: 1.\nExternal round sources: Codex Review comment says no major issues on fd1caa475 (FO read 2026-11-11, evidence=comment:6787039369).\nSecond reviewer: Copilot because the PR changes the progress tool's output contract that other packages read.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5853866729\nCopilot retry: available when the Captain confirms quota is back.\nRoboRev: clean on fd1caa475, evidence=roborev:1742 (FO run 2026-11-11).\nCI: eight checks on fd1caa475 finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr view statusCheckRollup, read by FO 2026-11-11).\nValidation rounds: 2. validation-1 PASSED the combined tree and left one Needs decision finding, settled by Captain amendment 2; validation-2 PASSED at both heads with no new classified finding.\nCaptain amendments: 2. Amendment 1 updates the sample file and leaves the test alone; amendment 2 registers both PRs as candidates and reruns validation.\nNot verified: AC-10, a real adopter archive report after release; nothing reports by itself until PR #843 merges and a release ships."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:story-done-reports-release-remaining:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/12c272d1fcedf56086e14505477af98e51971a5d/story-done-reports-release-remaining/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:6728dd68dfb5ec1558ad475ee658a11b6202717498fafbdc50e7d1d34a62ccff"
+    }
+  ]
+}
