@@ -1,0 +1,20 @@
+{
+  "class": "never",
+  "head": "0a5c37f091daec6909a76d443219c655b17d534e",
+  "model": "not run",
+  "necessity": "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md, kc-dev-flow-2/scripts/dispatch_records.py and kc-dev-flow-2/scripts/test_dispatch_records.py change against origin/main (imp",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'PASSED at 0a5c37f091daec6909a76d443219c655b17d534e; validation/candidate.json bi'",
+    "point: deferred: 'Validation rounds: 1. PASSED at 0a5c37f09'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_records.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#844",
+  "sufficiency": "on the recorded histories the task names, the repaired ones now clear and the unrepaired ones and one real unruled history stay held, and every other event on the six pinned state branches is unchange",
+  "time": "2026-11-11T08:38:56Z",
+  "verdict": "ask"
+}
