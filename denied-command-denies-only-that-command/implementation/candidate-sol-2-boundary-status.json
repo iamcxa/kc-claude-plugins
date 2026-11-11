@@ -1,0 +1,11 @@
+{
+  "key": "candidate-sol-2",
+  "id": "61d52bb0-301a-4a5e-8d54-d6187c76d48b",
+  "status": "running",
+  "sessionId": "01a1c8cb-e6aa-7fc1-a24b-560eefe837e4",
+  "turn": {
+    "turnId": "codex-turn-0",
+    "startedAt": "2026-11-11T04:09:28.782Z"
+  },
+  "pending": []
+}

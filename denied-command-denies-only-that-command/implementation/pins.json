@@ -1,0 +1,9 @@
+{
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "candidate": "4de97af6885d6e8aad3ed867fd56de50e14d6c05",
+  "release": "kc-dev-flow-2-v0.38.1",
+  "state_commit": "f3210a9de759b66294459f29ba7597fc408b7b0a",
+  "state_repo": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+  "code_repo": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-denied-command-denies-only-that-command",
+  "task": "codex-security-only-prompts-code-review"
+}

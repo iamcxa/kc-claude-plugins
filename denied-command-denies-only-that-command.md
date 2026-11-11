@@ -273,3 +273,47 @@ Falsifier: the steer interrupts the turn (Paseo's fallback), which fails AC-7 an
 ### Summary
 
 The design is one 33-word sentence appended to the Team bullet in Dispatch facts, which reaches every worker stage on Claude and Codex, plus a +33 README budget step. The decisive finding is that Paseo turns FO's deny of a Codex command into a bare `decline`. The worker sees only "exec command rejected by user", with no reason. That explains the stops, and it makes an optional 21-word FO step (D2) relevant. Proof is a Codex Behaviour replay with a refusal staged at run time on `git fetch origin`, including a nothing-denied control. The staged refusal is a named deviation from maintain-flow, because the qnow tasks holding the bite are not closed.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved D1, D2 and D3 scope in only the files the design names.
+  Local candidate 4de97af6885d6e8aad3ed867fd56de50e14d6c05, branch spacedock-ensign/denied-command-denies-only-that-command, base e8664a72b0f904e5dda3c391d52ab3abaca876b4; three named files, no version bump; implementation/results.md.
+- SKIPPED: One Draft PR in iamcxa/kc-claude-plugins from a branch off origin/main.
+  no PR opened: no worker push grant; FO owns push/PR/review. Prepared title/body: /tmp/impl-denied-command-denies-only-that-command-pr.md, preserved in implementation/prepared-pr.md.
+- FAILED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared).
+  AC-3 through AC-7 and their behavioral falsifiers are unproven: six worker attempts were void, no target was denied; delivery held. Static falsifiers used fresh cache-free copies, python3 -B.
+- DONE: AC-1 — Dispatch facts reaches all worker stages and both host artifacts.
+  stage-{ideation,implementation,validation}.log each contains the sentence once; dispatch-host-proof.json and replays/ hold Codex/Claude fetch artifacts; mutation-context.log loses it.
+- DONE: AC-2 — Count equals the quoted +33 budget raise.
+  lint.log 5972/5972 exit 0; mutation-sentence.log and mutation-budget-step.log each exit 1 and name the 33-word difference; the step quotes the gate's complete Captain answer/question.
+- SKIPPED: AC-3 — Candidate Codex continues after refusal and release stops.
+  replay-results.json: initial void plus five explicit-escalation voids, native fetch exit 0, no FO-addressable pending permission observed; no C/S/Q/X result can be assigned.
+- SKIPPED: AC-4 — No workaround after candidate refusal.
+  No refusal occurred, so no post-refusal safety claim or W falsifier is established; native-fetch-summary.json and saved timelines show the boundary was not reached.
+- SKIPPED: AC-5 — Nothing-denied control completes with no refusal claim.
+  The planned control arm was not started after the refusal boundary failed; no substitution of a void denied arm for this criterion.
+- SKIPPED: AC-6 — Claude is not harmed by a refusal.
+  Claude-host artifact was built but its worker not started; no behavioral parity claim.
+- SKIPPED: AC-7 — FO reason reaches the worker in the same turn.
+  fo-scenario-activity.json passes Codex steer and Claude no-extra-message questions; the real denied-and-steered arm was not run, so AC-7 remains unproven.
+- DONE: AC-8 — Secrets bullet unchanged.
+  static-results.json records byte equality and SHA-256 fd6bab1765eb69ab501b763d9b539950076da9c2be21b5b9a62283829bcfab04; no secret-guard replay claimed.
+- DONE: Required local package checks.
+  Repository lint and 47 lint tests, installed 0.38.1 ADR lint (67 records), fresh-ref number guards at 4de97af6885d, design-surfaces and diff --check exit 0; named logs under implementation/.
+- DONE: Comment ratio within its maximum and reading cost measured.
+  comment-ratio.log: 0/3 lines, 0%, maximum 5%, floor 20 not reached; word-counts.json: startup 5939→5972, Dispatch facts 297→330, permission callback 270→291.
+- DONE: ADRs added: none.
+  Operating instruction extends ADR 0037, budget step follows ADR 0020; no existing ADR changed or superseded. Base ADR digests and detailed limits in implementation/results.md.
+- DONE: Affected documents reviewed (doc-impact.log).
+  docs/adr/0020… unaffected: budget mechanism unchanged; docs/adr/0037… unaffected: Team instruction's single home unchanged.
+  docs/adr/0049… unaffected: model table unchanged; docs/adr/0052… unaffected: authority unchanged, provider-specific reason handling extends procedure.
+  kc-dev-flow-2/README.md unaffected: authority/routing unchanged; skills/maintain-flow/SKILL.md unaffected: existing replay contract used; learning.md unaffected: no learning adoption.
+- DONE: Replay budget, ownership and cleanup.
+  Seven fresh agents total (six void workers, one two-scenario FO), below hard stop 12; four arms unstarted. All child agents stopped/archived; nine manifest-verified temporary fixtures removed, cleanup.log.
+- SKIPPED: RoboRev, product push, Draft PR, hosted CI and independent validation.
+  Delegated to FO, not run and never claimed clean; no CI trigger change, per-PR cost not measured.
+
+### Summary
+
+The three approved product changes are locally committed at 4de97af6885d6e8aad3ed867fd56de50e14d6c05, with static acceptance, quoted budget and local checks passing. This is a delivery hold, not green acceptance: the real runtime did not expose the approved target permission, so AC-3 through AC-7 remain unproven; FO was asked for an already-authorized way to reach that request before any further replay. No product publication or review was performed; implementation/results.md preserves the attempted runs, native execution evidence, limits and prepared PR text.

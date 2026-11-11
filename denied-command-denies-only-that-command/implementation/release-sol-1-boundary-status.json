@@ -1,0 +1,11 @@
+{
+  "key": "release-sol-1",
+  "id": "4f12a248-d4b9-4c92-9c6a-123feb211f79",
+  "status": "running",
+  "sessionId": "01a1c8cb-c9af-7762-add2-2c141f358895",
+  "turn": {
+    "turnId": "codex-turn-0",
+    "startedAt": "2026-11-11T04:09:21.447Z"
+  },
+  "pending": []
+}

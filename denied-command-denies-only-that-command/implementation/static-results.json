@@ -1,0 +1,37 @@
+[
+  {
+    "name": "AC-1 ideation",
+    "status": "passed",
+    "evidence": "stage-ideation.log; sentence count 1"
+  },
+  {
+    "name": "AC-1 implementation",
+    "status": "passed",
+    "evidence": "stage-implementation.log; sentence count 1"
+  },
+  {
+    "name": "AC-1 validation",
+    "status": "passed",
+    "evidence": "stage-validation.log; sentence count 1"
+  },
+  {
+    "name": "AC-1 context removal falsifier",
+    "status": "passed",
+    "evidence": "mutation-context.log; ideation loses sentence"
+  },
+  {
+    "name": "AC-2 sentence removal falsifier",
+    "status": "passed",
+    "evidence": "mutation-sentence.log; lint exit 1, 33 words under budget"
+  },
+  {
+    "name": "AC-2 budget-step removal falsifier",
+    "status": "passed",
+    "evidence": "mutation-budget-step.log; lint exit 1, 33 words over budget"
+  },
+  {
+    "name": "AC-8 Secrets bullet bytes",
+    "status": "passed",
+    "evidence": "sha256 fd6bab1765eb69ab501b763d9b539950076da9c2be21b5b9a62283829bcfab04"
+  }
+]

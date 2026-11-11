@@ -1,0 +1,12 @@
+[
+  {
+    "name": "candidate-sol-1",
+    "fetch_count": 1,
+    "host": "codex"
+  },
+  {
+    "name": "candidate-claude-1",
+    "fetch_count": 1,
+    "host": "claude"
+  }
+]

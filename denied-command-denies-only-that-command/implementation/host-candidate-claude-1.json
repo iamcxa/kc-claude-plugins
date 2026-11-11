@@ -1,0 +1,14 @@
+[build] effective_model=opus (from stage) → Agent model=opus
+{
+  "schema_version": 2,
+  "subagent_type": "spacedock:ensign",
+  "description": "When Codex posts only a security summary, the codex reader names the code-review request as the next step: ideation",
+  "fetch_commands": [
+    "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /tmp/denied-replay-candidate-claude-1/wf --stage ideation"
+  ],
+  "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-codex-security-only-prompts-cod-ideation.md",
+  "prompt": "Skill(skill=\"spacedock:ensign\"); then Read /tmp/spacedock-dispatch/spacedock-ensign-codex-security-only-prompts-cod-ideation.md and treat its content as your assignment.",
+  "model": "opus",
+  "name": "spacedock-ensign-codex-security-only-prompts-cod-ideation",
+  "run_in_background": true
+}

@@ -1,0 +1,11 @@
+{
+  "key": "candidate-astra-1",
+  "id": "f725714e-0128-4ac3-8717-a5c6e3710d2f",
+  "status": "running",
+  "sessionId": "01a1c8cd-d910-7763-9895-9cf130981976",
+  "turn": {
+    "turnId": "codex-turn-0",
+    "startedAt": "2026-11-11T04:11:36.650Z"
+  },
+  "pending": []
+}

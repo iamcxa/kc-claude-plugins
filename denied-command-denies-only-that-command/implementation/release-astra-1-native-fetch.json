@@ -1,0 +1,52 @@
+{
+  "name": "release-astra-1",
+  "calls": [
+    {
+      "timestamp": "2026-11-11T04:09:51.289Z",
+      "ordinal": 19,
+      "type": "response_item",
+      "payload": {
+        "type": "custom_tool_call",
+        "id": "ctc_015b166e79237ae8016af3ea8ddfd087d0a57087cd45f571b4",
+        "status": "completed",
+        "call_id": "call_4d2842db16a348a7aa27460525851201",
+        "name": "exec",
+        "input": "text(await tools.exec_command({cmd:\"git -C /tmp/denied-replay-release-astra-1/code fetch origin\",sandbox_permissions:\"require_escalated\",justification:\"\u662f\u5426\u5141\u8a31\u6d3e\u5de5\u6307\u5b9a\u7684\u55ae\u6b21 git fetch origin\uff0c\u4ee5\u6838\u5c0d\u9060\u7aef\u4e3b\u7dda\u7a0b\u5f0f\u78bc\uff1f\",\"max_output_tokens\":1000}));\n",
+        "internal_chat_message_metadata_passthrough": {
+          "turn_id": "01a1c8cc-05e6-7af3-9b8c-c96314c2ff3e",
+          "create_time": 1794370189.9215443
+        }
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "timestamp": "2026-11-11T04:09:52.430Z",
+      "ordinal": 22,
+      "type": "response_item",
+      "payload": {
+        "type": "custom_tool_call_output",
+        "id": "ctco_01a1c8cc-442e-7da0-8f25-861590304cb3",
+        "call_id": "call_4d2842db16a348a7aa27460525851201",
+        "output": [
+          {
+            "type": "input_text",
+            "text": "Script completed\nWall time 1.1 seconds\nOutput:\n"
+          },
+          {
+            "type": "input_text",
+            "text": "{\"chunk_id\":\"848d87\",\"wall_time_seconds\":0.68979625,\"exit_code\":0,\"original_token_count\":0,\"output\":\"\"}"
+          }
+        ],
+        "internal_chat_message_metadata_passthrough": {
+          "turn_id": "01a1c8cc-05e6-7af3-9b8c-c96314c2ff3e",
+          "create_time": 1794370192.430887
+        }
+      },
+      "metadata": {
+        "client_authored": false,
+        "fallback_token_limit_override": 12000
+      }
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+[
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "log": "/tmp/denied-command-evidence/lint.log",
+    "tail": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5972 of 5972 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n"
+  },
+  {
+    "name": "lint-tests",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "exit": 0,
+    "log": "/tmp/denied-command-evidence/lint-tests.log",
+    "tail": "_cannot_declare_ideation_active) ... ok\ntest_reversed_routing_markers (__main__.RouteMutationTests.test_reversed_routing_markers) ... ok\ntest_role_binding_and_model_policy (__main__.RouteMutationTests.test_role_binding_and_model_policy) ... ok\ntest_script_named_by_link_label_only (__main__.RouteMutationTests.test_script_named_by_link_label_only) ... ok\ntest_the_chat_only_list_must_exist (__main__.RouteMutationTests.test_the_chat_only_list_must_exist) ... ok\ntest_the_chat_only_list_must_hold_a_rule (__main__.RouteMutationTests.test_the_chat_only_list_must_hold_a_rule) ... ok\ntest_the_known_overlap_is_listed_and_a_new_one_is_not (__main__.RouteMutationTests.test_the_known_overlap_is_listed_and_a_new_one_is_not) ... ok\ntest_unknown_profile (__main__.RouteMutationTests.test_unknown_profile) ... ok\ntest_valid_scaffold (__main__.RouteMutationTests.test_valid_scaffold) ... ok\ntest_workflow_equal_to_its_word_budget_passes_and_prints_the_count (__main__.RouteMutationTests.test_workflow_equal_to_its_word_budget_passes_and_prints_the_count) ... ok\ntest_workflow_over_its_word_budget (__main__.RouteMutationTests.test_workflow_over_its_word_budget) ... ok\ntest_workflow_under_its_word_budget_names_the_cut_step (__main__.RouteMutationTests.test_workflow_under_its_word_budget_names_the_cut_step) ... ok\ntest_wrong_shared_principle (__main__.RouteMutationTests.test_wrong_shared_principle) ... ok\n\n----------------------------------------------------------------------\nRan 47 tests in 11.200s\n\nOK\n"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4"
+    ],
+    "exit": 0,
+    "log": "/tmp/denied-command-evidence/adr-lint.log",
+    "tail": "67 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-denied-command-denies-only-that-command/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/denied-command-denies-only-that-command.md"
+    ],
+    "exit": 0,
+    "log": "/tmp/denied-command-evidence/number-guards.log",
+    "tail": "warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible\nmigration guard skipped: no migrations-path declared\nPASS: no findings\nbase e8664a72b0f9 head e8664a72b0f9 merge-base e8664a72b0f9\n"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/denied-command-denies-only-that-command.md"
+    ],
+    "exit": 0,
+    "log": "/tmp/denied-command-evidence/design-surfaces.log",
+    "tail": "denied-command-denies-only-that-command.md: design surfaces presentable\nscope check not run: stage is implementation, not ideation\n"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-denied-command-denies-only-that-command",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "log": "/tmp/denied-command-evidence/diff-check.log",
+    "tail": ""
+  }
+]
