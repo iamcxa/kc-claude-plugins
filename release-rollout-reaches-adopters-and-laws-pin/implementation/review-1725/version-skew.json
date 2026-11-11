@@ -1,0 +1,12 @@
+{
+  "old": {
+    "ref": "22219a3e4bc48a69a893bd757923e8c034d1ba6e",
+    "exit": 0,
+    "output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 1 events judged in 20ad6d996375..2010479cc811, 0 violated\n"
+  },
+  "new": {
+    "ref": "2d8277985a4539a51f106dbffd2f7c76cf223702",
+    "exit": 1,
+    "output": "L1 observer-before-sentinel: 0 events judged (README lists no learn)\nL2 dispatch-record-complete: 1 events judged in 20ad6d996375..2010479cc811, 1 violated\nviolation: L2 dispatch-record-complete record=t/dispatch/implementation-2.md commit=2010479cc811 roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /pkg/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'\nL3 amendment-append-only: 0 events judged in 20ad6d996375..2010479cc811, 0 violated\nL4 amendment-moves-use-fresh-ids: 0 events judged in 20ad6d996375..2010479cc811, 0 violated\n"
+  }
+}

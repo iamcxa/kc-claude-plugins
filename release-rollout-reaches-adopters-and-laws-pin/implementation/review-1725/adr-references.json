@@ -1,0 +1,12 @@
+{
+  "docs/adr/0075-release-rollout-reports-adopters-and-laws-pin.md": {
+    "commit": "a1a35a714510683a44a2ac5ec02241e7cb354f80",
+    "sha256": "b29efa3b1951dd69ce3117376fabf5b8a0eed325eda8840c7b318721f8c6ca62",
+    "status": "Accepted"
+  },
+  "docs/adr/0017-history-laws-judge-only-the-events-a-push-adds.md": {
+    "commit": "a1a35a714510683a44a2ac5ec02241e7cb354f80",
+    "sha256": "e1a9df13814fa88e3a30668c7c742a161126dc15c5a724c2ebd38613422f8393",
+    "status": "Accepted"
+  }
+}

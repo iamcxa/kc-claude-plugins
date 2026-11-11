@@ -302,3 +302,35 @@ The design extends the existing `package_version.py` with a read-only `rollout` 
 ### Summary
 
 The read-only release command now reports workflow sync and installed-laws pin debt using a maintainer-supplied local list, with unreadable rows explicit and search treated as a cross-check. Captain amendment 1 keeps that list committed nowhere; 17 tests, eight mutation controls, byte comparisons, required checks and the final-candidate live read passed. Product publication, Draft PR, RoboRev, hosted CI and independent validation remain with FO; no adopter was changed.
+
+
+## Stage Report: implementation
+
+- DONE: Judge RoboRev job 1725 on candidate a1a35a714 against the approved design before changing code.
+  `implementation/review-1725/adjudication.md`: the reported comparison is factual and matches AC-4's released-tag target; the separate D1/D3 execution rule waits for the merged README. Recommended disposition: keep the approved comparison; FO owns accepting/declining the High finding.
+- DONE: Say which reading the design supports, whether a newer laws check with an older README can misjudge, and what the report prints for both debts.
+  `both-owed.log` prints `README:0.38.0 released:0.38.1 sync owed; laws: <old-sha> pin owed`, exit 1; actual 0.26.0/0.38.1 checker probe on the same old README/range exits 0/1 because newer extension-instruction enforcement rejects an old-valid second dispatch (`version-skew.json`).
+- DONE: Return a criterion-changing repair to FO as a decision for the Captain; preserve the candidate and criteria.
+  A throwaway change from latest-release target to `tags[have]` fails all three existing AC-4 laws-file subcases (`readme-target-violates-ac4.log`); no product or criterion change, no product commit, no product push. Candidate remains `a1a35a714510683a44a2ac5ec02241e7cb354f80` on the assigned branch; base remains `e8664a72b0f904e5dda3c391d52ab3abaca876b4`.
+- DONE: Original AC-1, AC-2 and AC-6 row identity, read failure and search diagnostics remain covered.
+  All 17 package_version tests reran successfully (`review-1725/tests.log`); the prior exact-row/drop-row, swallowed-read and silent-search mutation evidence remains in the parent implementation folder at this same candidate, not rerun this round.
+- DONE: Original AC-3, AC-4 and AC-5 content comparison, laws debt and byte compatibility remain covered.
+  The same 17 tests pass; AC-4's counter-proposal fails three subcases. Original eight stdout comparisons and their mutation remain bound to this unchanged candidate; no dispatch output or existing test method was edited.
+- DONE: Original AC-10 and AC-11 implement Captain amendment 1 and local-only list ownership.
+  Repository skill lint reran at 5939/5939; no product docs/list changed. Parent word-count evidence remains release docs 778→897 plus 112 report words, adoption 70→95, other lifecycle deltas 0; local-list and missing-list evidence retained without rerunning it.
+- DONE: Required ADR and comment checks at the unchanged candidate; retain original number-guard evidence.
+  Required ADR 0075 lint exits 0 (68 records); comment ratio 313 code lines/one comment, 0.3% under 5%; accepted ADR 0075/0017 hashes recorded in review-1725/adr-references.json. Parent number-guard PASS at this candidate is retained, not rerun.
+- DONE: Append a complete superseding implementation report and update the prepared PR text.
+  This report; `/tmp/impl-release-rollout-reaches-adopters-and-laws-pin-pr.md` now distinguishes released-tag debt from post-merge pin writes, records probes and the unresolved review disposition. Draft PR #838 exists per FO; no external comment or edit was sent.
+- DONE: Preserve artifact scope and concurrent state ownership.
+  Product worktree is clean; no new files or edits in its six-file diff. Only this task's report and review evidence are committed path-scoped; the sibling worker-push-words-match-state-commit state edit is left alone. No ADR, version, CI, law or adopter change.
+- SKIPPED: Repair the product comparator and write a new product commit.
+  The requested comparator change would alter AC-4; dispatch requires stopping and returning that decision. A prospective repair was exercised only in a throwaway copy; no empty commit made.
+- SKIPPED: Original AC-8 live run and independent validator's two selections in this assessment round.
+  The parent final-candidate live summary (11 listed, four private unlisted, exit 0) and private /tmp output remain; no current live re-read claimed. Validator-selected rows remain due; no adopter was changed, including Captain-authorised qnow removal at dce0a96c0.
+- SKIPPED: Product push, RoboRev rerun, review disposition and hosted CI; behavior replay and billed CI cost.
+  FO owns publication/review on #838. Local `roborev show --job 1725` failed on sandbox access to its daemon log; review text comes from FO's recorded dispatch, not an independent daemon read. No clean review claimed; no new model replay; per-PR CI cost not measured, no CI workflow changed.
+
+### Summary
+
+This report supersedes the earlier implementation report, retaining its evidence at the unchanged candidate and replacing its outdated no-PR/no-review status with FO's Draft PR #838 and forwarded High finding. The reported early pin debt matches AC-4, while a real-checker probe confirms why moving the pin must wait for README merge; changing the comparator to the README release breaks that approved criterion. No product repair or criterion rewrite was made; the comparator decision and final finding disposition return to FO/Captain, with a clean product worktree and updated handoff text.
