@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:ideation-checks-external-prior-art:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:ideation-checks-external-prior-art-backlog-1
+              briefing:
+                id: briefing:ideation-checks-external-prior-art:backlog:attempt-1:revision-1
+                digest: sha256:35a98c1f4614958293dd54cd4bf316baa20ed857f05d0ed464c7dbd072fd3671
+                room-ref: ./ideation-checks-external-prior-art/review/backlog/briefing-1
 ---
 
 ## Scope
