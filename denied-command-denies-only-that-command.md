@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:denied-command-denies-only-that-command:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:denied-command-denies-only-that-command-backlog-1
+              briefing:
+                id: briefing:denied-command-denies-only-that-command:backlog:attempt-1:revision-1
+                digest: sha256:5e90859c0bda53830c6e3722375635673ab295ffa15f3f1e2e989ee026e9e6d3
+                room-ref: ./denied-command-denies-only-that-command/review/backlog/briefing-1
 ---
 
 ## Scope

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:denied-command-denies-only-that-command:backlog:attempt-1:revision-1",
+  "question": "決定：第 21 批這五張要不要進設計階段。我建議五張都核准：故事做完回報切片進度、發版後鋪開到採用 repo 與法規檢查、超預算要停與重大發現先對照不做清單、工人收到的推送說明與狀態提交工具一致、拒絕一個指令不等於全停。核准代表接受每張任務檔寫的範圍、預算與停止條件，並各派一個設計工人；不代表接受任何設計或修法。前三張標了方向要先對齊，派工前我會各問你一題。",
+  "artifacts": [
+    {
+      "id": "artifact:denied-command-denies-only-that-command:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3c79dd97a9e1c0e46ede3f6e28bbcda876e1fed3/denied-command-denies-only-that-command.md",
+      "rev": "sha256:ddf970461f1e7466471eb494a938dddadc4e21748a718e24341429aa67ca4318",
+      "mediaType": "text/markdown",
+      "summary": "Batch 21 backlog sitting, five seeds filed 2026-11-11 after the Captain chose the batch members in the host question dialog. This seed: denied-command-denies-only-that-command. design_surfaces.py check --seed exit 0 (FO run 2026-11-11). Each seed names its source words, its bite with who observed it and whether FO re-ran it, non-goals, budget and stop condition. Ideation owes the replay or measurement its stop condition names. Three seeds record alignment as needed and FO asks the Captain before dispatching their ideation; two record it as not needed."
+    }
+  ]
+}
