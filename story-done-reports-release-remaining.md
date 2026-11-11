@@ -3,7 +3,7 @@ title: When a story's task is archived, FO tells the Captain how much of the rel
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
