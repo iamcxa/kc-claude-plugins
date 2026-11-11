@@ -1,0 +1,7 @@
+fix(kc-dev-flow-2): send Codex workers the denial reason through Paseo
+
+Paseo's permission denial does not deliver FO's reason to a Codex worker. The worker-permission procedure now tells FO to send that reason separately with send_agent_prompt and activeTurnBehavior steer. The Captain's amendment narrows this change to that Paseo instruction; the workflow README and its word-budget script match origin/main exactly.
+
+Local repository lint passes at 5939/5939 words. ADR lint, fresh-ref number guards, design-surfaces, diff checking, scope/byte checks and comment ratio pass. The permission callback adds 21 words; startup/resume and worker dispatch reading costs are unchanged. ADRs added: none, as the operating procedure extends ADR 0052 without changing its authority. No version or CI trigger changes; per-PR CI cost was not measured.
+
+Behavioral evidence remains pending FO-operated replay. The six previous worker attempts are void because the target fetch was not denied. Six bounded prompt/reason pairs and a scoring rule are prepared for FO to deny an outside-workspace write: two no-extra-message controls and four reason-steer runs on the two Codex models. The preserved AC-7 additionally requires delivery in the same turn. No claim is made that release workers stop their whole task. Product push, Draft PR creation, RoboRev and hosted CI remain FO-owned and have not been run by the implementation worker.

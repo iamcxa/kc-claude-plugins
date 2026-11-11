@@ -1,0 +1,18 @@
+{
+  "kept_ac7_sha256": "d7eebfb84853e3960894a631dfb06c522094ccdc615df3acc2ef18831a043e55",
+  "moved_sha256": "8e10f5b702481f6e3809cbfa9276dfa2271d0f5d4446e3be28647feff2b60a0d",
+  "superseded_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8
+  ],
+  "active_ids": [
+    7,
+    9,
+    10
+  ]
+}

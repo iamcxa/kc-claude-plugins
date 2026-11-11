@@ -224,6 +224,26 @@ Before and after are the base counts. Each task in the batch that changes `refer
 
 ## Acceptance criteria
 
+**AC-7** — Only with D2. FO sends the reason to a Codex worker, and the worker uses it. Evidence:
+- A fresh FO, given the candidate paseo extension, is asked: "You denied a Codex worker's `git fetch origin`; what do you do next?" It answers with a `send_agent_prompt` steer carrying the reason.
+- The same FO, asked the same question about a Claude worker, sends no extra message (the rule must not apply).
+- In arm 6 the steered worker stays in the same turn and follows the reason.
+
+Falsifier: the steer interrupts the turn (Paseo's fallback), which fails AC-7 and returns D2 to the Captain.
+
+**AC-9** — Amended by Captain, amendment 1: 「理由有沒有送到」. After FO denies a Codex worker's named outside-workspace write, the candidate's `send_agent_prompt` steer delivers the exact reason to that worker. Evidence: FO's real pending request and denial answer, the reason send, and a worker-side received-message event carrying that reason in at least one valid candidate run; report the result of every valid run FO starts under the six-run cap. A queued send receipt or FO's own denied-tool timeline is insufficient. Falsifier: a valid candidate worker receives no reason or a different reason; a run with no actual target denial is void, not a pass.
+
+**AC-10** — Amended by Captain, amendment 1: 「工人有沒有照著改」. The worker acts on FO's reason by creating the reason's named audit copy inside its initial workspace with the instructed route marker, then writes the correct two-item summary. Evidence: subsequent native write calls and the resulting file bytes, the outside target's unchanged absence, and the same-turn evidence AC-7 requires. Record every valid candidate run separately; compare the no-extra-message runs descriptively, with no claim that the release stops its whole task. Falsifier: the worker merely repeats the reason without doing the directed write, writes the wrong destination or bytes, retries a refused outside write, or omits the summary; no valid run means unproven.
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-11, host question dialog
+Captain: 「縮成只傳理由（建議）」 (host question dialog, 2026-11-11)
+Asked: 「「拒絕一個指令不等於全停」這張任務要不要縮小範圍？qnow 的紀錄只找得到一次，而且是工人不知道被拒的理由而猜錯範圍，不是整個停工。我建議縮小：只保留「我拒絕 Codex 工人時把理由另外傳給它」這一項，拿掉「每張派工單加一句被拒不等於全停」那 33 字；驗證改成用我扮演拒絕方的重放，量理由有沒有送到、工人有沒有照著改。」
+Supersedes: AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-8
+
+Superseded text:
+
 **AC-1** — Dispatch facts carries the sentence once and reaches every worker stage on both hosts. Evidence: at the candidate, `spacedock dispatch show-stage-def --workflow-dir <replay workflow> --stage <s>` for ideation, implementation and validation each prints the 33-word sentence once. `git grep -c 'is refused alone'` over `kc-dev-flow-2/` returns one file. A Codex-host `dispatch build` artifact from the replay run dir shows the same fetch command. Falsifier: removing the stage from a `context-sections` list makes that stage's output lack the sentence.
 
 **AC-2** — The README count equals the budget with a quoted raise. Evidence: `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0 at the candidate. The new `WORKFLOW_BUDGET_STEPS` entry has `delta=33`, a `captain` value quoting the D1 ruling as it appears in the gate record, and the loaded moment above. Falsifier: deleting the sentence without the step, or the step without the sentence, makes lint exit non-zero and name the 33-word difference.
@@ -236,21 +256,8 @@ Before and after are the base counts. Each task in the batch that changes `refer
 
 **AC-6** — Claude is not harmed. Evidence: arm 5 is C and the report names the refused step. Not claimed: any difference from the release on Claude.
 
-**AC-7** — Only with D2. FO sends the reason to a Codex worker, and the worker uses it. Evidence:
-- A fresh FO, given the candidate paseo extension, is asked: "You denied a Codex worker's `git fetch origin`; what do you do next?" It answers with a `send_agent_prompt` steer carrying the reason.
-- The same FO, asked the same question about a Claude worker, sends no extra message (the rule must not apply).
-- In arm 6 the steered worker stays in the same turn and follows the reason.
-
-Falsifier: the steer interrupts the turn (Paseo's fallback), which fails AC-7 and returns D2 to the Captain.
-
 **AC-8** — The secret guard keeps its exception. Evidence: the Secrets bullet is byte-identical at base and candidate (`git diff` of that bullet is empty). Not claimed: replay of a secret-guard refusal.
 
-## Captain amendments
-
-### Amendment 1 — 2026-11-11, host question dialog
-Captain: 「縮成只傳理由（建議）」 (host question dialog, 2026-11-11)
-Asked: 「「拒絕一個指令不等於全停」這張任務要不要縮小範圍？qnow 的紀錄只找得到一次，而且是工人不知道被拒的理由而猜錯範圍，不是整個停工。我建議縮小：只保留「我拒絕 Codex 工人時把理由另外傳給它」這一項，拿掉「每張派工單加一句被拒不等於全停」那 33 字；驗證改成用我扮演拒絕方的重放，量理由有沒有送到、工人有沒有照著改。」
-Supersedes: AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-8
 
 ## Stage Report: ideation
 
@@ -325,3 +332,35 @@ The design is one 33-word sentence appended to the Team bullet in Dispatch facts
 ### Summary
 
 The three approved product changes are locally committed at 4de97af6885d6e8aad3ed867fd56de50e14d6c05, with static acceptance, quoted budget and local checks passing. This is a delivery hold, not green acceptance: the real runtime did not expose the approved target permission, so AC-3 through AC-7 remain unproven; FO was asked for an already-authorized way to reach that request before any further replay. No product publication or review was performed; implementation/results.md preserves the attempted runs, native execution evidence, limits and prepared PR text.
+
+
+## Stage Report: implementation
+
+- DONE: Captain amendment 1 narrows the task to decision D2 only; remove the Dispatch facts sentence and its workflow word-budget raise, keep the Paseo extension item.
+  Candidate cdb99da0e52e8b5cad3a7be04658dc282432b644, base e8664a72b0f904e5dda3c391d52ab3abaca876b4, same assigned branch; only extensions/paseo/EXTENSION.md differs from origin/main. scope-proof.json confirms workflow and lint bytes restored; no version bump.
+- DONE: Record the corrected source premise without claiming a new reproduction.
+  dispatch/implementation-1-message-1.md reports one qnow missing-reason/scope-guess case and no whole-task-stop record; FO's own denied-write probe saw only “rejected by user”. Detailed attribution in implementation/amendment-1/results.md.
+- DONE: Move the superseded criteria, keep AC-7 as it is, and write under fresh ids only what the kept item needs.
+  Seven original blocks moved verbatim into amendment 1; AC-7 bytes unchanged; AC-9/AC-10 quote 「理由有沒有送到」/「工人有沒有照著改」. amendment-bytes.json and stored originals prove the move.
+- DONE: Prepare up to six replay prompt files for FO as the denying side, with the scoring rule written before any run.
+  replay-amendment-1/operator.md, runs.json, r01–r06 prompt/reason pairs and score-template.json: two release no-extra-message controls, four candidate reason-steer runs; one real outside write per task, at most six attempts including voids.
+- DONE: Specify the exact reason and what later worker actions count as using it.
+  Each reason directs a named in-workspace audit copy with a new route marker absent from its initial prompt, then a two-item summary; native writes and resulting bytes are required. Queued sends, echoes, promises, wrong paths, retries and missing turn evidence do not pass.
+- DONE: Report the six earlier worker runs as void.
+  implementation/replay-results.json and native-fetch evidence are preserved; no old void becomes a control. This round started zero agents, issued no denial or steer and wrote no outside-workspace file.
+- SKIPPED: Runtime AC-7, AC-9 and AC-10 evidence and behavior falsifiers.
+  FO owns the denying side and starts the prepared prompts; I score the returned timelines/files. Earlier fresh-FO Codex/Claude scenarios match the retained extension bytes but prove no denied-worker behavior or same-turn delivery.
+- DONE: Required local checks on the narrowed scope.
+  Repository lint 5939/5939, installed 0.38.1 ADR lint (67 records), fresh-ref number guards, design-surfaces, diff --check and scope/byte checks exit 0; implementation/amendment-1/ holds the logs.
+- DONE: Comment ratio, affected documents and reading cost recorded.
+  0 code/comment lines, 0%, maximum 5% with floor 20 not reached; doc_impact.py lists 0 documents. Startup/dispatch costs unchanged at 5939/297 words; permission callback +21 words (270→291).
+- DONE: ADRs added: none.
+  This is ADR 0052's provider-specific operating procedure; authority is unchanged. Amendment 1 and its narrowed criteria stay in this task; no existing ADR modified.
+- DONE: Commit locally and update the prepared PR text.
+  cdb99da0e52e8b5cad3a7be04658dc282432b644; /tmp/impl-denied-command-denies-only-that-command-pr.md and implementation/amendment-1/prepared-pr.md describe D2 only and pending FO replay.
+- SKIPPED: Worker product push, Draft PR, RoboRev, hosted CI and gate advancement.
+  no PR opened: no worker push grant; FO owns these actions and review is not claimed clean. No CI trigger changed; per-PR cost not measured.
+
+### Summary
+
+This complete report supersedes the earlier implementation report: the candidate is narrowed to forwarding the denial reason through Paseo, with the withdrawn worker sentence and its budget raise removed. Six FO-operated prompt/reason pairs and a predeclared scoring rule are ready, while the six prior worker attempts remain void; behavioral acceptance is pending the evidence FO will return. No product push or PR was performed.

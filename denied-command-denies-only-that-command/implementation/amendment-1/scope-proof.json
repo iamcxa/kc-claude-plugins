@@ -1,0 +1,19 @@
+{
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "previous_candidate": "4de97af6885d6e8aad3ed867fd56de50e14d6c05",
+  "scope_before": "three product files; rejected scope equality",
+  "scope_after": "only Paseo extension differs from origin/main",
+  "workflow_and_budget": "byte-identical to origin/main",
+  "extension_sha256": "504d105493394a1441e406177ea33356404d05a8ccda97a09ce4be8afbf9d011",
+  "AC7": "byte-identical",
+  "superseded_blocks": "seven moved verbatim",
+  "active_criteria": [
+    7,
+    9,
+    10
+  ],
+  "new_prompts": 6,
+  "candidate_reason_runs": 4,
+  "release_no_extra_message_runs": 2,
+  "replay_started_this_round": 0
+}

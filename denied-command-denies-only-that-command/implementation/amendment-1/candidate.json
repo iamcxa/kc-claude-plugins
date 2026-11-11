@@ -1,0 +1,16 @@
+{
+  "candidate": "cdb99da0e52e8b5cad3a7be04658dc282432b644",
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "product_branch": "spacedock-ensign/denied-command-denies-only-that-command",
+  "changed_product_paths": [
+    "kc-dev-flow-2/extensions/paseo/EXTENSION.md"
+  ],
+  "extension_sha256": "504d105493394a1441e406177ea33356404d05a8ccda97a09ce4be8afbf9d011",
+  "release_ref": "kc-dev-flow-2-v0.38.1",
+  "prior_worker_attempts": 6,
+  "prior_worker_result": "void",
+  "new_worker_attempt_cap": 6,
+  "new_attempts_started": 0,
+  "denying_side": "First Officer",
+  "source_assignment": "dispatch/implementation-1-message-1.md"
+}
