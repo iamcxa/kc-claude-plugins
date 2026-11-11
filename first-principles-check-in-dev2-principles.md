@@ -15,6 +15,10 @@ gates:
                 id: briefing:first-principles-check-in-dev2-principles:backlog:attempt-1:revision-1
                 digest: sha256:41a7e4e0e039a9909cc26c4af95d7ebfa9165a4dd3a4e2793941a93985328029
                 room-ref: ./first-principles-check-in-dev2-principles/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-11T01:57:13.794406Z"
+                reason: The Captain answered the joint question with a question of his own, then chose 「前兩張合併，查現成做法獨立（建議）」 (host question dialog, 2026-11-11), so the joint backlog question no longer matches what is being decided.
 ---
 
 ## Scope
@@ -26,6 +30,7 @@ gates:
 - Open for the design, his to gate: which file holds it (stage principles, FO's backlog alignment lines, or both), the wording, where it is forced and not only stated, its cost per task, whether it would have caught the inbox case with what was known on 2026-10-19 to 2026-10-23, and what it removes or replaces so the flow does not only grow.
 - Related: the without-it test in the Captain's global instructions; the journey-map release-review interrogation; backlog task ideation-checks-external-prior-art.
 - Asked by the relaying session: one short message with the outcome, since the inbox task is the test case.
+- Folded: the Captain chose 「前兩張合併，查現成做法獨立（建議）」 (host question dialog, 2026-11-11); this task's questions and its ops-inbox case are now designed in budget-overrun-holds-and-findings-meet-non-goals under that task's Captain amendment 2. This file stays in backlog as the record of the source words and is not dispatched.
 - Non-goals: repairing ops-inbox-r1-setup-and-isolation; installing a global agent.
 
 ## Budget
