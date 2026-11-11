@@ -816,7 +816,7 @@ def exercise(base, binary, sd_root):
         entity.write_text(template.replace("<task-id>", slug).replace("<selected-profile>", profile)
                           .replace("<bounded outcome>", "Synthetic CLI fixture, not product acceptance")
                           .replace("<exclusions>", "no migrations")
-                          .replace("<approved bound>", "one fixture")
+                          .replace("<approved bound>", "one cycle per stage")
                           .replace("<when to return to the Captain>", "upstream change needed")
                           .replace("status: backlog", f"status: {stage}"))
         run(["git", "-C", state, "add", "--", entity.name])
@@ -986,12 +986,12 @@ def exercise(base, binary, sd_root):
         assert all(f"missing required body field: {field}" in unfilled.stdout
                    for field in ("Non-goals", "Budget", "Stop condition")), unfilled.stdout
         template_seed.write_text((template + FO_RECORD).replace("<exclusions>", "migrations")
-                                 .replace("<approved bound>", "one fixture")
+                                 .replace("<approved bound>", "one cycle per stage")
                                  .replace("<when to return to the Captain>", "upstream change"))
         run(["python3", "-B", checker, "check", "--seed", template_seed], repo)
 
         def parity(body, extra=""):
-            entity.write_text(header + body + report + extra)
+            entity.write_text(header + "\n## Design\n\n### Worth questions\nAsked: fixture request; without: count absent; premise: count varies, inspect one fixture.\n" + body + report + extra)
             scanned = run([binary, "status", "--workflow-dir", repo, "--read", entity.stem, "--ac-scan", "--json"],
                           repo, expected=None)
             ids = [ac["id"] for ac in json.loads(scanned.stdout)["acs"]] if scanned.returncode == 0 else []
@@ -1046,7 +1046,7 @@ def exercise(base, binary, sd_root):
 
         backlog = run([binary, "dispatch", "show-stage-def", "--workflow-dir", repo, "--stage", "backlog"], repo).stdout
         assert SEED_STEP in backlog, "backlog stage definition lacks the seed check"
-        bounds = "\n## Scope\nNon-goals: migrations\nBudget: one fixture\nStop condition: upstream changes\n"
+        bounds = "\n## Scope\nNon-goals: migrations\nBudget: one cycle per stage\nStop condition: upstream changes\n"
         checker = ROOT / "scripts/design_surfaces.py"
         for folder in (False, True):
             for stored in (False, True):
@@ -1060,7 +1060,7 @@ def exercise(base, binary, sd_root):
                 before = created.read_bytes()
                 run(["python3", "-B", checker, "check", "--seed", created], repo)
                 assert created.read_bytes() == before, "seed check mutated native task"
-                created.write_text(created.read_text().replace("Budget: one fixture\n", ""))
+                created.write_text(created.read_text().replace("Budget: one cycle per stage\n", ""))
                 missing = run(["python3", "-B", checker, "check", "--seed", created], repo, expected=1)
                 assert "missing required body field: Budget" in missing.stdout, missing.stdout
         bad = run([binary, "new", "--workflow-dir", repo, f"mismatch-{token}"],

@@ -114,6 +114,94 @@ class DispatchStageTests(unittest.TestCase):
                           "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
                           "--spacedock", BINARY, *extra], expected)
 
+    def test_budget_line_and_spent_cycles_are_printed_before_build(self):
+        for value, suffix in (("One cycle per stage.", ""),):
+            with self.subTest(value=value):
+                self.entity.write_text(self.entity.read_text() + f"\n## Budget\n- {value}\n")
+                self.set_stage("implementation")
+                result = self.build("implementation", ("--symptom", "none"))
+                self.assertIn(f"budget: Budget: {value}; spent implementation 1, validation 0{suffix}", result.stderr)
+                self.assertIn(f"Budget: {value}\n", self.record("implementation").read_text())
+                self.assertTrue(Path(json.loads(result.stdout)["dispatch_file_path"]).is_file())
+
+    def test_uncountable_budget_stdout_is_forwarded(self):
+        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- at most 3 days\n")
+        self.set_stage("validation")
+        result = self.build("validation", ("--candidate", "a" * 40, "--symptom", "none"))
+        self.assertIn("budget: Budget: at most 3 days; spent implementation 0, validation 1; states no cycles", result.stderr)
+        self.assertIn("Budget: at most 3 days\n", self.record("validation").read_text())
+
+    def test_worth_requirement_uses_native_stage_for_yaml_status_values(self):
+        original = self.entity.read_text()
+        design = ("\n## PRFAQ\nA bounded CLI result.\n\n## Acceptance criteria\n"
+                  "**AC-1** Bounded result. Evidence: one CLI run.\n")
+        for path in (self.entity, self.folder / "index.md"):
+            path.parent.mkdir(exist_ok=True)
+            for status in ("ideation", "ideation # ready for review", "'ideation' # review", '"ideation" # review'):
+                with self.subTest(status=status, path=path.name):
+                    text = original.replace("status: ideation", "status: " + status) + design
+                    path.write_text(text)
+                    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
+                                        "--read", path, "--json"])
+                    self.assertEqual(json.loads(native.stdout)["frontmatter"]["status"], "ideation")
+                    checker = ROOT / "scripts/design_surfaces.py"
+                    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+                    self.assertIn("design needs '### Worth questions'", refused.stdout)
+                    self.assertEqual(path.read_text(), text)
+                    path.write_text(text.replace("## PRFAQ\n", "## PRFAQ\n### Worth questions\nAsked, without, premise.\n"))
+                    self.call([sys.executable, "-B", checker, "check", path])
+
+    def test_unreadable_native_stage_does_not_make_design_presentable(self):
+        self.entity.write_text(self.entity.read_text().replace("status: ideation", "status: ideation # review")
+                               + "\n## PRFAQ\nresult\n## Acceptance criteria\n**AC-1** result\n")
+        binary = self.base / "unreadable-stage"
+        cases = (None, "not json", json.dumps({"command": "read", "path": str(self.entity), "frontmatter": {"status": 1}}),
+                 json.dumps({"command": "read", "path": "/another/task.md", "frontmatter": {"status": "done"}}))
+        for output in cases:
+            with self.subTest(output=output):
+                if output is not None:
+                    binary.write_text(f"#!{sys.executable}\nprint({output!r})\n")
+                    binary.chmod(0o755)
+                result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
+                                   expected=1, child_env={**self.env, "SPACEDOCK_BIN": str(binary)})
+                self.assertIn("cannot read stage for Worth questions", result.stdout)
+                self.assertNotIn("design surfaces presentable", result.stdout)
+
+    def test_budget_hold_removes_record_and_skips_build_until_amended(self):
+        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- One cycle per stage.\n")
+        self.set_stage("implementation")
+        self.build("implementation", ("--symptom", "none"))
+        held = self.build("implementation", ("--symptom", "failing contract", "--spacedock", self.spy), expected=1)
+        self.assertIn("budget exceeded; hold for the Captain", held.stderr)
+        self.assertIn("Symptom: failing contract", held.stderr)
+        self.assertEqual(held.stdout, "")
+        self.assertFalse(self.marker.exists())
+        self.assertFalse(self.record("implementation", 2).exists())
+        self.entity.write_text(self.entity.read_text() + "\n## Captain amendments\n"
+                               "### Amendment 1 — 2026-11-11, chat\nCaptain: 「approved」\n"
+                               "Asked: approve two cycles per stage\nBudget: two cycles per stage\nSupersedes: none\n")
+        self.commit_task()
+        self.checklist.write_text(self.checklist.read_text() + "Captain amendment 1\n")
+        resumed = self.build("implementation", ("--symptom", "failing contract", "--spacedock", self.spy))
+        self.assertTrue(self.marker.exists())
+        self.assertIn("spent implementation 2, validation 0", resumed.stderr)
+        self.assertIn("Budget: two cycles per stage\n", self.record("implementation", 2).read_text())
+
+    def test_total_cap_holds_before_build_and_keeps_existing_results(self):
+        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 240 累計代理分鐘、最多 1 次派工，含一輪修正\n")
+        self.set_stage("implementation")
+        first = self.build("implementation", ("--symptom", "none"))
+        self.assertIn("total dispatches 1", first.stderr)
+        self.assertIn("minutes not counted", first.stderr)
+        results = self.repo / "results.txt"
+        results.write_text("retained work")
+        held = self.build("implementation", ("--symptom", "new gap", "--spacedock", self.spy), expected=1)
+        self.assertIn("keep the results, report the remaining work and stop adding", held.stderr)
+        self.assertIn("unless the Captain replaces this outcome", held.stderr)
+        self.assertEqual(results.read_text(), "retained work")
+        self.assertFalse(self.marker.exists())
+        self.assertFalse(self.record("implementation", 2).exists())
+
     def test_role_commits_complete_record_before_printing_exact_inputs(self):
         dispatched = self.git(self.workflow, "rev-parse", "HEAD")
         result = self.role(extra=("--roster", "fixture roster", "--note", "role fixture"))
@@ -233,7 +321,8 @@ class DispatchStageTests(unittest.TestCase):
         record = self.record(kind)
         disk = record.read_bytes()
         dispatched = self.git(self.workflow, "rev-parse", "HEAD")
-        expected = (f"# {kind}-1\nDispatched: {dispatched} (workflow checkout)\nModel: opus\n\n"
+        expected = (f"# {kind}-1\nDispatched: {dispatched} (workflow checkout)\nModel: opus\n"
+                    + ("" if role else "Budget: not recorded\n") + "\n"
                     "## Checklist\n").encode("utf-8") + checklist + b"\n## Scope notes\n" + notes
         self.assertIn(checklist, disk)
         self.assertIn(notes, disk)
@@ -292,7 +381,7 @@ class DispatchStageTests(unittest.TestCase):
         self.call([sys.executable, "-B", CHECKER, "--names", "--strict", record])
         text = record.read_text()
         self.assertIn(f"Dispatched: {dispatched} (workflow checkout, README fixture)", text)
-        self.assertIn("Model: fixture-model\nRoster: fixture roster", text)
+        self.assertIn("Model: fixture-model\nBudget: not recorded\nRoster: fixture roster", text)
         received = Path(envelope["dispatch_file_path"]).read_text()
         for heading, source in (("Checklist", self.checklist), ("Scope notes", self.notes)):
             section = text.split(f"## {heading}\n", 1)[1].split("\n## ", 1)[0]
@@ -459,9 +548,8 @@ class DispatchStageTests(unittest.TestCase):
         result = self.build("implementation", ("--symptom", "same failure", "--note", "second round",
                                                 "--spacedock", observer), stderr_path=stderr_path)
         marker = f'{self.record("implementation", 2)}:1: step back: 2 implementation dispatches name symptom "same failure";'
-        questions = ("is what I am solving still the outcome first asked for",
-                     "can this gap be tested now, or am I waiting",
-                     "what breaks if this criterion or process is deleted?")
+        questions = ("which Captain words does this serve", "what breaks without it",
+                     "which single premise would make the task unneeded, and what cheap test checks it now?")
         before_build = json.loads(observation.read_text())["stderr"]
         for text in (marker, *questions):
             self.assertEqual(result.stderr.count(text), 1, "successful check reminder was lost or duplicated")

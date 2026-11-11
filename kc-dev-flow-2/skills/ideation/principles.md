@@ -14,6 +14,7 @@ Prefer the smallest working mechanism for the accepted goal. Before proposing an
 existing-code capability change, apply the [bounded existing-code check](../implementation/principles.md#existing-code-capability-check);
 use or repair what exists before adding a replacement. Record its conclusion in
 the same design, with a proportional observation showing why the change is needed.
+In `### Worth questions`, answer per scope part: which Captain words it serves; what breaks without it; which single premise would make the task unneeded and what cheap test checks it now. Name parts serving no Captain words for him to keep or cut.
 Use one PRFAQ with a future-facing proposition, short FAQ and acceptance evidence
 plan. Mermaid must match the prose's actors, order, alternatives and stops.
 When another task is live in the workflow, end the design with `### Batch overlap`: for each such task, the files, checks, tables and numbered records both would change, counting a shared index such as an ADR list, then a `Recommended order:` line; write `none` when none.

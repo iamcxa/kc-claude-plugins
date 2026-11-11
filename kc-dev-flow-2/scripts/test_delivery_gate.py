@@ -2584,7 +2584,7 @@ class OwedRoleCallTests(unittest.TestCase):
         text = ALIGNED + report * 2
         result = run_check(task=text, setup=committed(text), roles=True)
         self.assertEqual(result.code, 0, result.out)
-        self.assertIn("before the next step, answer: is what I am solving still the outcome first asked for", result.out)
+        self.assertIn("before the next step, answer: which Captain words does this serve", result.out)
         self.assertLess(result.out.index("before the next step"), result.out.index("record:"))
         self.assertEqual(result.out.splitlines()[-1], gate.ASK)
         broken = run_check(task=text, setup=committed(text), roles=True, facts=dict(isDraft=True))
