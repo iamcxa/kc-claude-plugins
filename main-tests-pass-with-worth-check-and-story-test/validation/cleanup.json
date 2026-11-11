@@ -1,9 +1,10 @@
 {
   "removed": [
     "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/validate-pr846-9e9q9ssp",
-    "/tmp/pr846-captain.IBZdr2"
-  ],
-  "pending": [
+    "/tmp/pr846-captain.IBZdr2",
     "/tmp/validate-pr846-df6nwftd"
-  ]
+  ],
+  "pending": [],
+  "evidence_commit_before_removal": "ab05424b16e36a6cd6d8405533a8d8b40782f063",
+  "verified_utc": "2026-11-11T09:58:33.197239+00:00"
 }
