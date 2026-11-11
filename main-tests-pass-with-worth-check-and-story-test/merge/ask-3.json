@@ -1,0 +1,17 @@
+{
+  "class": "never",
+  "head": "9b9be172c7cb2453ae74a79f10322344bf9ab32f",
+  "model": "not run",
+  "necessity": "kc-dev-flow-2/scripts/test_design_surfaces.py changes against origin/main, fixture text only (impl_ship.sh file list, FO run 2026-11-11; assertion equality judged in the validation report, Astra, 2026",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'PASSED for the exact candidate: completing'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'kc-dev-flow-2/scripts/test_design_surfaces.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#846",
+  "sufficiency": "the Story test that failed on main passes at the candidate with and without a spacedock program on PATH, the full design-surfaces suite passes, and the refusal when a stage cannot be read is unchanged",
+  "time": "2026-11-11T10:05:42Z",
+  "verdict": "ask"
+}
