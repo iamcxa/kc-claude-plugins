@@ -43,6 +43,17 @@ gates:
                 id: briefing:budget-overrun-holds-and-findings-meet-non-goals:ideation:attempt-2:revision-1
                 digest: sha256:d2ebb63ded08f2c88c2ff556513df93b3d79efb84af4f5b86eb9cae70de5ab7a
                 room-ref: ./budget-overrun-holds-and-findings-meet-non-goals/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:budget-overrun-holds-and-findings-meet-non-goals:ideation:2
+                briefing: briefing:budget-overrun-holds-and-findings-meet-non-goals:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-11T02:46:58.662401Z"
+                decision: approve
+                reason: 'The Captain chose 「照建議核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要核准「預算是什麼」（已併入第一性原理）的設計並開始實作。我建議照設計的建議核准：預算改用可數的輪數寫，新任務必須用這個寫法；每次實作與驗證派工顯示預算和已花幾輪，第一次超過就停下來，由我帶著三個「值不值得」的問題的答案來問你；同樣三題在每份設計裡必答，檢查會擋缺漏；原本的退一步提醒對這類任務取消，不另外加重大發現的規則。核准即接受這三項；它的代價是你會被問得比現在多。」. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-11T01:44:17Z
 ---
 
