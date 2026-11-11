@@ -43,6 +43,8 @@ All required local checks exit 0 at the new candidate: repository lint 5939/5939
 
 ADRs added: none. ADR 0052 owns this operating procedure; default reason forwarding changes no permission authority or Captain hold. ADRs 0005/0016/0057 govern the moved and freshly numbered criteria, and ADR 0026's role check passed.
 
+The post-commit role check also exits 0 and emits its nonblocking two-amendment step-back reminder; step-back.md answers all three questions before handoff (checks/role-triggers-after-commit.log). No additional role call is held.
+
 ## Handoff
 
 The new PR title/body is /tmp/impl-denied-command-denies-only-that-command-pr.md and prepared-pr.md. No product push, PR edit, comment, review request, new RoboRev, hosted CI, merge or gate advancement was performed. FO owns pushing this commit to PR #842, rerunning RoboRev and the independent validator re-review. No CI trigger changed and per-PR CI cost was not measured. State evidence and the complete superseding implementation report are committed and synced separately.
