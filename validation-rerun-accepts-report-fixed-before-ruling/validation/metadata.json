@@ -1,0 +1,51 @@
+{
+  "candidate": "7d75d65ef317fc5c426eb7b0975d93a72d50acaa",
+  "base": "8c714a370867eccb0d26a589c5149ad3e0c911b4",
+  "sha256": {
+    "kc-dev-flow-2/scripts/dispatch_records.py": "24c38c6e92c98716e3b5194d97fa2ae4cfcebc363a8fa62f0f03de7bd8978eb9",
+    "kc-dev-flow-2/scripts/test_dispatch_records.py": "f935da94965c09773225c8883bef61736d18c3c6a4e4e4ca501978db3fb4f626",
+    "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md": "98b42893536879b66eb945c8ca5546f142bd89f1b08d68d41a9cb61c7ba7eea0"
+  },
+  "verdict": "PASSED",
+  "corpus": {
+    "tasks": 26,
+    "changes": 10,
+    "unintended_changes": 0,
+    "mutant_unintended_changes": 12
+  },
+  "test_results": [
+    {
+      "name": "records-tests",
+      "status": "passed",
+      "message": "Ran 125 tests in 101.909s\n\nOK (skipped=1)",
+      "file": "validation/records-tests.log"
+    },
+    {
+      "name": "real-builder-retry",
+      "status": "passed",
+      "message": "Ran 1 test in 33.058s\n\nOK",
+      "file": "validation/real-builder-retry.log"
+    },
+    {
+      "name": "dispatch-stage-retry",
+      "status": "passed",
+      "message": "Ran 40 tests in 128.325s\n\nOK",
+      "file": "validation/dispatch-stage-retry.log"
+    },
+    {
+      "name": "laws-check",
+      "status": "passed",
+      "message": "Ran 84 tests in 104.589s\n\nOK (skipped=1)",
+      "file": "validation/laws-check.log"
+    }
+  ],
+  "mutation_count": 8,
+  "acceptance_exit": 0,
+  "limits": [
+    "one optional laws external-source fixture skipped",
+    "native builder fixture passed separately",
+    "historical corpus pinned to implementation revisions",
+    "authenticity and semantic verdict remain with FO",
+    "not merge, release or adoption proof"
+  ]
+}

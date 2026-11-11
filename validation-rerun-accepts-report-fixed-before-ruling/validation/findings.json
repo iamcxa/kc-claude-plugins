@@ -1,0 +1,10 @@
+[
+  {
+    "severity": "info",
+    "title": "Deferred risk: hand-authored resolution plus withdrawal reuses one identity",
+    "file": "kc-dev-flow-2/scripts/dispatch_records.py",
+    "line": 480,
+    "detail": "Synthetic invalid history can pass, but native Spacedock refuses withdrawal after resolution with frozen closed. No supported trigger established. Material only if native behavior or real supported history supplies this combination.",
+    "status": "open"
+  }
+]

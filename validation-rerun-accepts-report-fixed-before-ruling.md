@@ -275,3 +275,35 @@ The 0.38.0 refusal is reproduced on qnow's real state history. The design repair
 ### Summary
 
 Pilot implementation is locally complete at the pinned candidate: pre-ruling corrections retain one report only while the ordered verdict words stay unchanged, and the clearing ruling must follow the final text. The real qnow replay, frozen four-branch corpus, package tests and falsifiers support that boundary; FO still owns publication, RoboRev, hosted CI and independent validation. This is the first implementation report and supersedes no earlier implementation report.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #834 head 7d75d65e against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at `7d75d65ef317fc5c426eb7b0975d93a72d50acaa`, base `8c714a370867eccb0d26a589c5149ad3e0c911b4`; `validation/evidence.md`, `metadata.json`, `acceptance.json` bind six criteria, exact hashes and limits. Eight mutation assertions plus real-history, corpus and ADR counterexamples were rerun independently.
+- DONE: Replay the recorded qnow history yourself from /Users/kent/conductor/repos/qnow (read-only; origin/spacedock-state/dev2) with the task's ideation/replay.sh at the kc-dev-flow-2-v0.38.0 tag and at the candidate; placement: the Captain approved dispatching workers from the First Officer's workspace until the task-workspace sandbox is repaired (host question dialog, 2026-11-11)
+  `validation/replay-original.log`, `replay-raw.json`: recorded tag/candidate 2/0; post-ruling rewrite 2/2; verdict flip 2/2; before amendment 2/1. Raw output verifies the token hidden by the ideation helper's flip-row filter; qnow was read-only and all replay mutations stayed in temporary clones.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `validation/acceptance.sh` has four steps; exact fresh-shell invocation and expectations are in `validation/evidence.md`. `validation/acceptance.log` / `acceptance.exit`: exit 0. Required installed ADR lint with --since `8c714a370867eccb0d26a589c5149ad3e0c911b4` --require 0045 exits 0 (`validation/adr-lint.log`); F1 below is Deferred risk.
+- DONE: AC-1 recorded history clears only at the candidate.
+  `validation/replay-mutant.log` restores blanket refusal and makes the candidate exit 2; `validation/AC-1-any-rewrite.log` fails its success assertion.
+- DONE: AC-2 after-entry and same-commit corrections remain refused in supported workflows.
+  `validation/AC-2-identities.log` and `AC-2-same-commit.log` fail when each protection is removed. `validation/native-withdrawal.json` independently confirms the unsupported identity-collision trigger cannot be produced by native withdrawal.
+- DONE: AC-3 verdict-word changes and unreadable rewritten verdicts remain refused.
+  `validation/AC-3-verdict-list.log` and `AC-3-unreadable.log` kill omitted ordered-word/empty-word checks; `replay-raw.json` independently observes the actual qnow verdict-flip refusal.
+- DONE: AC-4 final-text timing and old-text-return guards hold.
+  `validation/AC-4-final-clock.log` and `AC-4-old-text-return.log` kill the wrong clock and missing ancestry checks; the no-ruling fixture names the final-text commit.
+- DONE: AC-5 recovery wording and historical outcome boundary hold.
+  `validation/corpus.log`: 26 tasks, ten intended changes, no other changes, at four pinned revisions (`sources.json`); `AC-5-recovery.log` and `corpus-mutant.log` detect altered wording and unintended changes.
+- DONE: AC-6 ADR 0045 records both approved decisions.
+  `validation/adr-source-check.log` binds both complete Captain questions/replies; deleting the sole amendment fails `validation/adr-mutant.log`; no new ADR file or number.
+- DONE: Full tests, applicable guards, affected documents and exact candidate were checked.
+  `validation/records-tests.log`: 125 tests, one native-builder skip then separately passed in `real-builder-retry.log`; `dispatch-stage-retry.log`: 40 tests; `laws-check.log`: 84 tests, one optional external-source skip. `checks.json` records all required checks exit 0; `doc-impact.json` matches all implementation dispositions; `comment-ratio.log`: 136 code / 0 comment lines, 0.0%.
+- SKIPPED: Optional external-record laws fixture and FO-owned RoboRev, gate disposition and delivery.
+  No DEV2_OBLIGATION_SOURCES supplied; frozen corpus and live qnow replay were run independently. `validation/pr.json` freshly confirms OPEN PR #834 at the candidate and records hosted checks; neither that snapshot nor this verdict grants merge/release/adoption. CI cost per PR not measured; no CI change.
+- F1 Deferred risk: hand-authored resolution plus withdrawal on one already-known gate attempt shares an identity; artificial late correction then clears.
+  Released user / normal workflow: no supported trigger; observable harm: artificial tag exit 2 / candidate exit 0; boundary: value-ac[AC-2] after-entry corrections must refuse; trigger: `validation/withdrawal-probe.log`. Real native prepare/record/withdraw refuses the combination as frozen closed (`native-withdrawal.json`); Material only if supported native behavior or actual supported history supplies it.
+
+### Summary
+
+PASSED for pilot at `7d75d65ef317fc5c426eb7b0975d93a72d50acaa`: the recorded qnow correction clears after its later amendment, and all accepted timing/verdict/output/ADR conditions and falsifiers were independently exercised. An initial synthetic suspicion was checked through the real native entrance and classified Deferred risk, not a repair request; approved semantic-verdict/open-finding limits and the optional source-fixture skip remain explicit in `validation/evidence.md`. Product worktree stays clean and unchanged; only this task's report/evidence is committed, with FO/Captain gate and delivery work remaining.
+

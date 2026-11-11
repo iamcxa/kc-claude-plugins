@@ -1,0 +1,26 @@
+  plugin-state _archive/read-adr-honors-adr-folder.md ['cleared', 'needs-ruling']
+  plugin-state _archive/release-walk-due-trigger.md ['rewritten-report', 'needs-ruling']
+plugin-state open-decision tasks: 2 changed: 2
+  qnow _archive/billing-plan-model.md ['cleared', 'needs-ruling']
+  qnow _archive/landing-page-and-trial-requests.md ['rewritten-report', 'needs-ruling']
+  qnow _archive/landing-visual-polish.md ['rewritten-report', 'needs-ruling']
+  qnow _archive/preview-sign-in-wildcard.md ['rewritten-report', 'needs-ruling']
+  qnow _archive/staff-multi-branch.md ['rewritten-report', 'needs-ruling']
+  qnow owner-cancels-booking.md ['rewritten-report', 'needs-ruling']
+qnow open-decision tasks: 6 changed: 6
+  relay _archive/continuity-earlier-comments-beside-latest.md ['cleared', 'needs-ruling']
+  relay _archive/production-retention-sweep.md ['cleared', 'needs-ruling']
+  relay _archive/refused-decision-keeps-comments.md ['rewritten-report', 'needs-ruling']
+relay open-decision tasks: 6 changed: 3
+  web _archive/account-menu-offers-paired-computers.md ['cleared', 'needs-ruling']
+  web _archive/account-menu-stays-above-the-composer.md ['cleared', 'needs-ruling']
+  web _archive/app-frame-contrasts-with-document.md ['cleared', 'needs-ruling']
+  web _archive/browser-tests-fit-their-time-limit-on-any-runner.md ['cleared', 'needs-ruling']
+  web _archive/diagram-links-open-through-confirm.md ['rewritten-report', 'needs-ruling']
+  web _archive/diagram-opens-larger-to-zoom.md ['cleared', 'needs-ruling']
+  web _archive/earlier-version-and-chrome-polish-from-relay.md ['rewritten-report', 'needs-ruling']
+  web _archive/keyboard-popup-test-stops-failing.md ['cleared', 'needs-ruling']
+  web _archive/requester-name-is-safe-and-fits.md ['cleared', 'needs-ruling']
+  web _archive/review-page-reads-as-an-app.md ['rewritten-report', 'rewritten-report-verdict-unreadable at 12beb7d3f35e620224081e059dd1d81e72671788']
+  web _archive/send-on-add-joint-fixes.md ['cleared', 'needs-ruling']
+web open-decision tasks: 12 changed: 11

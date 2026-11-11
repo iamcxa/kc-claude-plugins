@@ -1,0 +1,32 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "evidence": "validation/evidence.md"
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "evidence": "validation/evidence.md"
+  },
+  {
+    "name": "AC-3",
+    "status": "passed",
+    "evidence": "validation/evidence.md"
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "evidence": "validation/evidence.md"
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "evidence": "validation/evidence.md"
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "evidence": "validation/evidence.md"
+  }
+]

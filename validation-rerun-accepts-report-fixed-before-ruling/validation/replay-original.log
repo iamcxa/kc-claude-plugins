@@ -1,0 +1,6 @@
+qnow-recorded-history tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+qnow-recorded-history candidate exit=0 <no ruling line>
+rewrite-after-ruling tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+rewrite-after-ruling candidate exit=2 validation-2.md:1: validation report 1 changed after a Captain ruling or gate entry (rewritten-report-after-ruling at 6fddfe3db28ee0c57d3ae44f0ba9ddf6403b4b54)
+pre-ruling-verdict-flip tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+pre-ruling-verdict-flip candidate exit=2 <no ruling line>

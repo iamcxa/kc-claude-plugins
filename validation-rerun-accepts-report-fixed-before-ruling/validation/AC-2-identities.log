@@ -1,0 +1,57 @@
+FFFF
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: validation\n      attempts:\n        - id: gate-attempt:task-validation-1\n          resolution:\n            by: person:captain\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-2-identities/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1248, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    out = self.assert_hold(2)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-2-identities/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 1 != 2 : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6jruw1we/state-2/task/dispatch/validation-2.md:1: validation rerun needs a later Captain ruling for report 1 at 42d3ce1d80afdd43cde6c28445cf32af70e8e4ae findings F1; hold dispatch, record the ruling, then run this check again
+For an older free-form ruling, verify its original question and reply, preserve them, and record it as a native gate or Captain amendment before rerunning; if unavailable, hold for the Captain.
+
+
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: ideation\n      attempts:\n        - id: gate-attempt:task-ideation-1\n          resolution:\n            by: person:captain\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-2-identities/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1248, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    out = self.assert_hold(2)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-2-identities/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 1 != 2 : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6jruw1we/state-3/task/dispatch/validation-2.md:1: validation rerun needs a later Captain ruling for report 1 at 3254c5f8054b9b285ac76b84e01f2bf76da355df findings F1; hold dispatch, record the ruling, then run this check again
+For an older free-form ruling, verify its original question and reply, preserve them, and record it as a native gate or Captain amendment before rerunning; if unavailable, hold for the Captain.
+
+
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: validation\n      attempts:\n        - id: gate-attempt:task-validation-1\n          resolution:\n            by: agent:first-officer\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-2-identities/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1248, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    out = self.assert_hold(2)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-2-identities/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 1 != 2 : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6jruw1we/state-4/task/dispatch/validation-2.md:1: validation rerun needs a later Captain ruling for report 1 at d05b304122e1630e783be8457882f34265ff28f0 findings F1; hold dispatch, record the ruling, then run this check again
+For an older free-form ruling, verify its original question and reply, preserve them, and record it as a native gate or Captain amendment before rerunning; if unavailable, hold for the Captain.
+
+
+======================================================================
+FAIL: test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused (__main__.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused) (native='gates:\n  records:\n    - stage: validation\n      attempts:\n        - id: gate-attempt:task-validation-1\n          withdrawal:\n            by: person:captain\n            at: 2026-10-29\n            reason: Proceed\n            decision: hold\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-2-identities/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1248, in test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused
+    out = self.assert_hold(2)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-2-identities/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 1 != 2 : /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6jruw1we/state-5/task/dispatch/validation-2.md:1: validation rerun needs a later Captain ruling for report 1 at 840ac187ae73670b95712e7dd2aedba1e6d59f30 findings F1; hold dispatch, record the ruling, then run this check again
+For an older free-form ruling, verify its original question and reply, preserve them, and record it as a native gate or Captain amendment before rerunning; if unavailable, hold for the Captain.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 2.368s
+
+FAILED (failures=4)

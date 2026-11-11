@@ -1,0 +1,112 @@
+[
+  {
+    "name": "adr-lint",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8c714a370867eccb0d26a589c5149ad3e0c911b4",
+      "--require",
+      "0045"
+    ]
+  },
+  {
+    "name": "number-guards",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/tmp/validation-pr834-7d75d65e/candidate",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-accepts-report-fixed-before-ruling.md",
+      "--base",
+      "8c714a370867eccb0d26a589c5149ad3e0c911b4",
+      "--head",
+      "7d75d65ef317fc5c426eb7b0975d93a72d50acaa"
+    ]
+  },
+  {
+    "name": "comment-ratio",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.0/scripts/comment_ratio.py",
+      "8c714a370867eccb0d26a589c5149ad3e0c911b4",
+      "7d75d65ef317fc5c426eb7b0975d93a72d50acaa",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ]
+  },
+  {
+    "name": "doc-impact",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.0/scripts/doc_impact.py",
+      "8c714a370867eccb0d26a589c5149ad3e0c911b4",
+      "7d75d65ef317fc5c426eb7b0975d93a72d50acaa",
+      "--repo",
+      "/tmp/validation-pr834-7d75d65e/candidate",
+      "--json"
+    ]
+  },
+  {
+    "name": "design-surfaces",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-accepts-report-fixed-before-ruling.md"
+    ]
+  },
+  {
+    "name": "lint-skills",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ]
+  },
+  {
+    "name": "adr-source-check",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-accepts-report-fixed-before-ruling/implementation/adr-source-check.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-accepts-report-fixed-before-ruling.md",
+      "/tmp/validation-pr834-7d75d65e/candidate/docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md"
+    ]
+  },
+  {
+    "name": "dispatch-records",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-accepts-report-fixed-before-ruling"
+    ]
+  }
+]

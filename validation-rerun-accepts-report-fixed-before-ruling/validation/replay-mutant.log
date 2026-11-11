@@ -1,0 +1,6 @@
+qnow-recorded-history tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+qnow-recorded-history candidate exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+rewrite-after-ruling tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+rewrite-after-ruling candidate exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+pre-ruling-verdict-flip tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+pre-ruling-verdict-flip candidate exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report

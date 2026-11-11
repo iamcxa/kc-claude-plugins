@@ -1,0 +1,92 @@
+[
+  {
+    "name": "AC-1-any-rewrite",
+    "status": "passed",
+    "message": "mutant test exit=1; assertion failure required",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-1-any-rewrite/kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "LiveValidationRulingTests.test_correction_before_later_ruling_clears"
+    ]
+  },
+  {
+    "name": "AC-2-identities",
+    "status": "passed",
+    "message": "mutant test exit=1; assertion failure required",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-2-identities/kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused"
+    ]
+  },
+  {
+    "name": "AC-2-same-commit",
+    "status": "passed",
+    "message": "mutant test exit=1; assertion failure required",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-2-same-commit/kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "LiveValidationRulingTests.test_correction_committed_beside_amendment_is_refused"
+    ]
+  },
+  {
+    "name": "AC-3-verdict-list",
+    "status": "passed",
+    "message": "mutant test exit=1; assertion failure required",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-3-verdict-list/kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused"
+    ]
+  },
+  {
+    "name": "AC-3-unreadable",
+    "status": "passed",
+    "message": "mutant test exit=1; assertion failure required",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-3-unreadable/kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "LiveValidationRulingTests.test_rewritten_report_without_verdict_word_is_refused"
+    ]
+  },
+  {
+    "name": "AC-4-final-clock",
+    "status": "passed",
+    "message": "mutant test exit=1; assertion failure required",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-4-final-clock/kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "LiveValidationRulingTests.test_corrected_report_without_ruling_names_final_text_commit"
+    ]
+  },
+  {
+    "name": "AC-4-old-text-return",
+    "status": "passed",
+    "message": "mutant test exit=1; assertion failure required",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-4-old-text-return/kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "LiveValidationRulingTests.test_old_text_returning_after_final_text_cannot_reset_clock"
+    ]
+  },
+  {
+    "name": "AC-5-recovery",
+    "status": "passed",
+    "message": "mutant test exit=1; assertion failure required",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-5-recovery/kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused",
+      "LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused",
+      "LiveValidationRulingTests.test_rewritten_report_without_verdict_word_is_refused"
+    ]
+  }
+]

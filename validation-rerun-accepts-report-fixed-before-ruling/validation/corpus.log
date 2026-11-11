@@ -1,0 +1,14 @@
+  plugin-state _archive/release-walk-due-trigger.md ['rewritten-report', 'cleared']
+plugin-state open-decision tasks: 2 changed: 1
+  qnow _archive/landing-page-and-trial-requests.md ['rewritten-report', 'cleared']
+  qnow _archive/landing-visual-polish.md ['rewritten-report', 'cleared']
+  qnow _archive/preview-sign-in-wildcard.md ['rewritten-report', 'cleared']
+  qnow _archive/staff-multi-branch.md ['rewritten-report', 'cleared']
+  qnow owner-cancels-booking.md ['rewritten-report', 'cleared']
+qnow open-decision tasks: 6 changed: 5
+  relay _archive/refused-decision-keeps-comments.md ['rewritten-report', 'cleared']
+relay open-decision tasks: 6 changed: 1
+  web _archive/diagram-links-open-through-confirm.md ['rewritten-report', 'cleared']
+  web _archive/earlier-version-and-chrome-polish-from-relay.md ['rewritten-report', 'needs-ruling']
+  web _archive/review-page-reads-as-an-app.md ['rewritten-report', 'rewritten-report-verdict-unreadable at 12beb7d3f35e620224081e059dd1d81e72671788']
+web open-decision tasks: 12 changed: 3

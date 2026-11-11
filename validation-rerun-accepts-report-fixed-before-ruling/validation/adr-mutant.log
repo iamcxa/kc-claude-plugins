@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/validation-rerun-accepts-report-fixed-before-ruling/implementation/adr-source-check.py", line 10, in <module>
+    assert adr.count('Amended 2026-11-11') == 1
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

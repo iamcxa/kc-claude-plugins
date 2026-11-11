@@ -1,0 +1,18 @@
+Evidence: /tmp/pr834-acceptance.Oab4eW
+Step 1 candidate=7d75d65ef317fc5c426eb7b0975d93a72d50acaa
+qnow-recorded-history tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+qnow-recorded-history candidate exit=0 <no ruling line>
+rewrite-after-ruling tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+rewrite-after-ruling candidate exit=2 validation-2.md:1: validation report 1 changed after a Captain ruling or gate entry (rewritten-report-after-ruling at b4d1f0d62c556851edb1d91e051248cc026ed301)
+pre-ruling-verdict-flip tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+pre-ruling-verdict-flip candidate exit=2 <no ruling line>
+Step 2 PASS: recorded history allowed; late rewrite and verdict flip refused
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 7.752s
+
+OK
+67 ADR file(s) checked, 0 legacy
+Step 3 PASS: focused tests and ADR lint
+PASS: native Spacedock refuses withdrawal of an already-resolved attempt
+Step 4 PASS: unsupported double-entry history cannot arise via native withdrawal

@@ -1,0 +1,23 @@
+Evidence: /tmp/pr834-acceptance.hwxoEO
+Step 1 candidate=7d75d65ef317fc5c426eb7b0975d93a72d50acaa
+qnow-recorded-history tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+qnow-recorded-history candidate exit=0 <no ruling line>
+rewrite-after-ruling tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+rewrite-after-ruling candidate exit=2 validation-2.md:1: validation report 1 changed after a Captain ruling or gate entry (rewritten-report-after-ruling at 946792a6580cdd3279cdd3be45a8c7a2d33d6fe6)
+pre-ruling-verdict-flip tag exit=2 validation-2.md:1: cannot verify validation ruling order: rewritten-report
+pre-ruling-verdict-flip candidate exit=2 <no ruling line>
+Step 2 PASS: recorded history allowed; late rewrite and verdict flip refused
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 8.115s
+
+OK
+67 ADR file(s) checked, 0 legacy
+Step 3 PASS: focused tests and ADR lint
+tag exit=2 /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpok58yrnw/state-2/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+candidate exit=0 <no output>
+native entries: [{"stage": "ideation", "attempt": "gate-attempt:task-ideation-1", "kind": "resolution", "room": null, "by": "person:captain", "at": "2026-10-29", "reason": "Proceed", "decision": "hold"}, {"stage": "ideation", "attempt": "gate-attempt:task-ideation-1", "kind": "withdrawal", "room": null, "by": "person:captain", "at": "2026-10-30", "reason": "Withdraw prior approval"}]
+timeline: 711009e685b54e74298e34490e752f260c7e68d9 3c8365714c8f2fa6a85fd573e7fab7110e5a1001 cb5cf7e2dd32669111db6aee9108fc1778ca32b3 44e732f96606f45130bdc95234a8532c18ce7f8d
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+AssertionError: FAIL AC-2: a report rewritten after withdrawal of an existing gate is accepted

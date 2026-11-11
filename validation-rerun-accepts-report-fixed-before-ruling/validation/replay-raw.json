@@ -1,0 +1,58 @@
+[
+  {
+    "case": "recorded",
+    "version": "tag",
+    "exit": 2,
+    "stdout": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n",
+    "stderr": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  {
+    "case": "recorded",
+    "version": "candidate",
+    "exit": 0,
+    "stdout": "",
+    "stderr": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  {
+    "case": "post-ruling",
+    "version": "tag",
+    "exit": 2,
+    "stdout": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n",
+    "stderr": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  {
+    "case": "post-ruling",
+    "version": "candidate",
+    "exit": 2,
+    "stdout": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: validation report 1 changed after a Captain ruling or gate entry (rewritten-report-after-ruling at 6fddfe3db28ee0c57d3ae44f0ba9ddf6403b4b54); hold dispatch and bring it to the Captain\n",
+    "stderr": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  {
+    "case": "verdict-flip",
+    "version": "tag",
+    "exit": 2,
+    "stdout": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n",
+    "stderr": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  {
+    "case": "verdict-flip",
+    "version": "candidate",
+    "exit": 2,
+    "stdout": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: Captain amendment 1 named in no dispatch checklist; write 'Captain amendment 1' in a checklist line of this record, then run this check again\n/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: validation report 1 changed its PASSED or REJECTED words (rewritten-report-verdict-changed at c4185f45c09f073fdd831d63adaaa56d34c966c6); hold dispatch and bring it to the Captain\n",
+    "stderr": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  {
+    "case": "ee7a248ab",
+    "version": "tag",
+    "exit": 2,
+    "stdout": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO\n",
+    "stderr": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  },
+  {
+    "case": "ee7a248ab",
+    "version": "candidate",
+    "exit": 1,
+    "stdout": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: validation rerun needs a later Captain ruling for report 1 at ee7a248aba3b164f0a6eea2d3f7a32ad8c038270 findings F1,F4; hold dispatch, record the ruling, then run this check again\nFor an older free-form ruling, verify its original question and reply, preserve them, and record it as a native gate or Captain amendment before rerunning; if unavailable, hold for the Captain.\n",
+    "stderr": "/tmp/validation-pr834-7d75d65e/replay-original/qnow/owner-cancels-booking/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'\n"
+  }
+]

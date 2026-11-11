@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_old_text_returning_after_final_text_cannot_reset_clock (__main__.LiveValidationRulingTests.test_old_text_returning_after_final_text_cannot_reset_clock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-4-old-text-return/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1296, in test_old_text_returning_after_final_text_cannot_reset_clock
+    out = self.assert_hold(2)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/validation-pr834-7d75d65e/evidence/mutants/AC-4-old-text-return/kc-dev-flow-2/scripts/test_dispatch_records.py", line 1138, in assert_hold
+    self.assertEqual(result, code, out)
+AssertionError: 0 != 2 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.882s
+
+FAILED (failures=1)

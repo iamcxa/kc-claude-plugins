@@ -1,0 +1,221 @@
+diff --git a/docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md b/docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md
+index 6eb5ce019..f7e584cf0 100644
+--- a/docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md
++++ b/docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md
+@@ -60,6 +60,8 @@ reason, without a withdrawal; amendments use the shared numbered-entry grammar.
+ Editing an older entry does not make it later. Same-commit records do not clear
+ the finding. Missing, shallow or ambiguous required history is an evidence hold.
+ 
++Amended 2026-11-11 (Captain: 「裁示前的補改都算，結論不能改（建議）」, answering 「驗證報告被補改過之後，哪些補改還算同一份報告、可以繼續派驗證？我建議：你第一次裁示之前的補改都算，但不能改變報告的結論（通過或退回）；裁示之後才改的照舊拒絕。這是設計的方向，細節與證明仍在設計關卡由你核准。」 in the host question dialog; then 「核准（建議）」, answering 「決定：要不要核准「驗證報告在你裁示前被補改過，仍可再派驗證」的設計並開始實作。我建議核准：設計照你選的方向做，用 qnow 的真實歷史重放過三種情況，結果都符合預期。核准即接受設計裡兩項建議：一、「結論沒變」的判法是每一版報告裡 PASSED 與 REJECTED 這兩個字的出現順序完全相同；二、把這次改動記成 ADR 0045（驗證重跑前必須有你之後的裁示）的一段原地增補，不開新編號。核准後我派實作工人。」 at the ideation gate): a validation report edited in place still counts as the report a later ruling answers when every correction, including the commit that first carries the final text, precedes the first Captain record or gate entry recorded after the report appeared, and every version carries the same ordered, non-empty list of whole-word `PASSED` and `REJECTED` tokens. The later supported ruling must first appear strictly after the commit where the final text first appears. Otherwise the check holds with `rewritten-report-after-ruling`, `rewritten-report-verdict-changed` or `rewritten-report-verdict-unreadable`. The check still runs only while the newest report has an open Needs decision finding.
++
+ This predicate runs through `--names`, not `--newest` or the historical snapshot
+ caller. Passing establishes structure and order; the First Officer still checks
+ the original question and reply, per-finding coverage and permission for the
+diff --git a/kc-dev-flow-2/scripts/dispatch_records.py b/kc-dev-flow-2/scripts/dispatch_records.py
+index c51ce7c2a..7cf1cc4dd 100755
+--- a/kc-dev-flow-2/scripts/dispatch_records.py
++++ b/kc-dev-flow-2/scripts/dispatch_records.py
+@@ -41,7 +41,8 @@ A record whose task file is absent is not judged by task-fact checks.
+ it exits 2 for a record outside task/dispatch or without an adjacent task file, after running the existing checks.
+ --names also refuses a live validation rerun with open F-numbered Needs decision findings until a later
+ committed native Captain validation resolution or Captain amendment exists (ADR 0045). It skips this predicate
+-for non-git snapshots; missing or ambiguous required git history exits 2.
++for non-git snapshots; pre-ruling corrections must preserve the ordered non-empty PASSED/REJECTED word list,
++and the ruling must follow the final text's first commit; missing or ambiguous required git history exits 2.
+ --newest runs that scan on the file added by the latest commit that adds a file under <slug>/dispatch/, read as it
+ is on disk: exit 0 when it is clean or the task has no record, 1 when a name is found, 2 when git cannot read the state.
+ --coverage checks presence for a declared ideation, implementation or validation stage after an unfenced report:
+@@ -422,7 +423,7 @@ def later_captain_ruling(root, task, text, selected):
+     if len(reports) <= ordinal or reports[ordinal] != selected[-1]:
+         raise RulingHistoryError("uncommitted-report")
+     _, committed = captain_records(pinned, slug)
+-    first, introduced, absent = {}, [], []
++    first, introduced, absent, versions = {}, [], [], []
+     commits = ruling_git(root, "log", "--full-history", "--reverse", "--topo-order", "--format=%H",
+                          head, "--", *paths).splitlines()
+     for commit in commits:
+@@ -431,13 +432,12 @@ def later_captain_ruling(root, task, text, selected):
+             absent.append(commit)
+             continue
+         reports = validation_reports(snapshot)
++        identities, _ = captain_records(snapshot, slug)
+         if len(reports) > ordinal:
+-            if reports[ordinal] != selected[-1]:
+-                raise RulingHistoryError("rewritten-report")
+             introduced.append(commit)
++            versions.append((commit, reports[ordinal], identities))
+         else:
+             absent.append(commit)
+-        identities, _ = captain_records(snapshot, slug)
+         for key in identities:
+             first.setdefault(key, []).append(commit)
+     if not introduced:
+@@ -459,6 +459,28 @@ def later_captain_ruling(root, task, text, selected):
+     report_commit = origins[0]
+     if any(ancestor(report_commit, commit) for commit in absent):
+         raise RulingHistoryError("discontinuous-report-history")
++    stale = [(c, ids) for c, report, ids in versions if report != selected[-1]]
++    if stale:
++        final_commits = [c for c, report, _ in versions if report == selected[-1]]
++        words = re.findall(r"\b(PASSED|REJECTED)\b", selected[-1])
++        if not words:
++            raise RulingHistoryError(f"rewritten-report-verdict-unreadable at {final_commits[0]}")
++        if any(re.findall(r"\b(PASSED|REJECTED)\b", report) != words for _, report, _ in versions):
++            raise RulingHistoryError(f"rewritten-report-verdict-changed at {final_commits[0]}")
++        settled = []
++        for commit in final_commits:
++            if not any(ancestor(prior, commit) for prior in settled):
++                settled.append(commit)
++        if len(settled) != 1:
++            raise RulingHistoryError("ambiguous-report-origin")
++        known = next(ids for c, _, ids in versions if c == report_commit)
++        settled_ids = next(ids for c, _, ids in versions if c == settled[0])
++        if settled_ids - known:
++            raise RulingHistoryError(f"rewritten-report-after-ruling at {settled[0]}")
++        for commit, identities in stale:
++            if identities - known or ancestor(settled[0], commit):
++                raise RulingHistoryError(f"rewritten-report-after-ruling at {commit}")
++        report_commit = settled[0]
+     for key in current & committed:
+         appearances = first.get(key, [])
+         if appearances and all(c != report_commit and ancestor(report_commit, c) for c in appearances):
+@@ -493,7 +515,15 @@ def check_validation_rulings(files):
+                       f"findings {','.join(findings)}; hold dispatch, record the ruling, then run this check again")
+                 status, refused = max(status, 1), True
+         except (RulingHistoryError, OSError, ValueError) as error:
+-            print(f"{file}:1: cannot verify validation ruling order: {error}; hold dispatch and report the missing history to FO")
++            rewrite = {
++                "rewritten-report-after-ruling": "changed after a Captain ruling or gate entry",
++                "rewritten-report-verdict-changed": "changed its PASSED or REJECTED words",
++                "rewritten-report-verdict-unreadable": "was rewritten and has no PASSED or REJECTED word",
++            }.get(str(error).split(" at ")[0])
++            if rewrite:
++                print(f"{file}:1: validation report {len(reports)} {rewrite} ({error}); hold dispatch and bring it to the Captain")
++            else:
++                print(f"{file}:1: cannot verify validation ruling order: {error}; hold dispatch and report the missing history to FO")
+             status = 2
+     if refused:
+         print(RECOVERY)
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_records.py b/kc-dev-flow-2/scripts/test_dispatch_records.py
+index d39de643b..4dc07d116 100644
+--- a/kc-dev-flow-2/scripts/test_dispatch_records.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_records.py
+@@ -1214,10 +1214,114 @@ class LiveValidationRulingTests(unittest.TestCase):
+         self.save(REPORT.replace("settle", "choose"))
+         self.assert_hold(2)
+ 
+-    def test_rewritten_or_deleted_then_reintroduced_report_cannot_reset_clock(self):
+-        self.save(REPORT.replace("settle", "choose"), native_ruling())
+-        self.commit("rewrite report")
+-        self.assert_hold(2)
++    def test_correction_before_later_ruling_clears(self):
++        original = REPORT + "\nREJECTED\n"
++        self.new_state(original)
++        corrected = original.replace("settle", "choose")
++        self.save(corrected)
++        self.commit("correct report before ruling")
++        self.assert_hold()
++        self.save(corrected, native_ruling())
++        self.commit("later Captain ruling")
++        self.assertEqual(self.cli(), (0, ""))
++
++    def test_corrected_report_without_ruling_names_final_text_commit(self):
++        original = REPORT + "\nREJECTED\n"
++        self.new_state(original)
++        origin = self.git("rev-parse", "HEAD")
++        self.save(original.replace("settle", "choose"))
++        final = self.commit("final report text")
++        out = self.assert_hold()
++        self.assertIn(f"report 1 at {final} findings F1;", out)
++        self.assertNotIn(origin, out)
++
++    def test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused(self):
++        for native in (native_ruling(), native_ruling(stage="ideation"),
++                       native_ruling(actor="agent:first-officer"), native_ruling(kind="withdrawal")):
++            with self.subTest(native=native):
++                original = REPORT + "\nREJECTED\n"
++                self.new_state(original)
++                self.save(original, native)
++                self.commit("record gate entry")
++                self.save(original.replace("settle", "choose"), native)
++                changed = self.commit("correct report after gate entry")
++                out = self.assert_hold(2)
++                self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
++                self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
++
++    def test_correction_committed_beside_amendment_is_refused(self):
++        original = REPORT + "\nREJECTED\n"
++        self.new_state(original)
++        self.save(original.replace("settle", "choose") + AMENDMENT)
++        changed = self.commit("correct report and record amendment together")
++        self.record.write_text(self.record.read_text().replace("Independent verdict", "Captain amendment 1; Independent verdict"))
++        out = self.assert_hold(2)
++        self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
++        self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
++
++    def test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused(self):
++        for before, after in (("REJECTED", "PASSED"), ("REJECTED", "REJECTED PASSED"),
++                              ("REJECTED PASSED", "PASSED REJECTED")):
++            with self.subTest(before=before, after=after):
++                original = REPORT + f"\n{before}\n"
++                corrected = REPORT + f"\n{after}\n"
++                self.new_state(original)
++                self.save(corrected)
++                changed = self.commit("change verdict words before ruling")
++                self.save(corrected, native_ruling())
++                self.commit("later ruling cannot clear changed verdict")
++                out = self.assert_hold(2)
++                self.assertIn(f"rewritten-report-verdict-changed at {changed}", out)
++                self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
++
++    def test_rewritten_report_without_verdict_word_is_refused(self):
++        self.save(REPORT.replace("settle", "choose"))
++        changed = self.commit("correct report with no verdict word")
++        out = self.assert_hold(2)
++        self.assertIn(f"rewritten-report-verdict-unreadable at {changed}", out)
++        self.assertTrue(out.rstrip().endswith("hold dispatch and bring it to the Captain"), out)
++
++    def test_old_text_returning_after_final_text_cannot_reset_clock(self):
++        original = REPORT + "\nREJECTED\n"
++        corrected = original.replace("settle", "choose")
++        self.new_state(original)
++        self.save(corrected)
++        self.commit("first final text")
++        self.save(original)
++        reverted = self.commit("return to old text")
++        self.save(corrected)
++        self.commit("restore final text")
++        self.save(corrected, native_ruling())
++        self.commit("later ruling")
++        out = self.assert_hold(2)
++        self.assertIn(f"rewritten-report-after-ruling at {reverted}", out)
++
++    def test_ruling_between_two_corrections_still_refuses(self):
++        original = REPORT + "\nREJECTED\n"
++        corrected = original.replace("settle", "choose")
++        self.new_state(original)
++        self.save(corrected)
++        self.commit("first correction")
++        self.save(corrected, native_ruling())
++        self.commit("Captain rules on first correction")
++        self.save(corrected.replace("choose", "decide"), native_ruling())
++        changed = self.commit("second correction after ruling")
++        out = self.assert_hold(2)
++        self.assertIn(f"rewritten-report-after-ruling at {changed}", out)
++
++    def test_old_gate_and_prepared_briefing_allow_pre_ruling_correction(self):
++        original = REPORT + "\nREJECTED\n"
++        for native in (native_ruling(stage="ideation"),
++                       native_ruling().split("          resolution:")[0] + "          briefing:\n            id: waiting\n"):
++            with self.subTest(native=native):
++                self.new_state(original, native)
++                corrected = original.replace("settle", "choose")
++                self.save(corrected, native)
++                self.commit("correction without new ruling identity")
++                self.save(corrected + AMENDMENT, native)
++                self.commit("later amendment")
++                self.record.write_text(self.record.read_text().replace("Independent verdict", "Captain amendment 1; Independent verdict"))
++                self.assertEqual(self.cli(), (0, ""))
+ 
+     def test_deleted_then_reintroduced_report_is_an_evidence_error(self):
+         self.save("## Scope\nWork\n")

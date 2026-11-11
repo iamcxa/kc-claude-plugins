@@ -1,0 +1,30 @@
+[
+  {
+    "name": "plugin-state",
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+    "head": "e719311cf221a5a03d46d329c9b7bfe1b0862a9b",
+    "frozen_path": "/tmp/opencode/validation-rerun-implementation/frozen-corpora/plugin-state",
+    "validation_path": "/tmp/validation-pr834-7d75d65e/corpora/plugin-state"
+  },
+  {
+    "name": "qnow",
+    "path": "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state",
+    "head": "9e3c2f86f3fad30924c82d5ade69c2e348508f75",
+    "frozen_path": "/tmp/opencode/validation-rerun-implementation/frozen-corpora/qnow",
+    "validation_path": "/tmp/validation-pr834-7d75d65e/corpora/qnow"
+  },
+  {
+    "name": "relay",
+    "path": "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state",
+    "head": "423a6503b724c8037851b2174190ffc417807c94",
+    "frozen_path": "/tmp/opencode/validation-rerun-implementation/frozen-corpora/relay",
+    "validation_path": "/tmp/validation-pr834-7d75d65e/corpora/relay"
+  },
+  {
+    "name": "web",
+    "path": "/Users/kent/conductor/workspaces/subspace-web/dev2-fo/docs/dev2/.spacedock-state",
+    "head": "faf28a257b22f92b4036cff8518a80ff10cd0fd2",
+    "frozen_path": "/tmp/opencode/validation-rerun-implementation/frozen-corpora/web",
+    "validation_path": "/tmp/validation-pr834-7d75d65e/corpora/web"
+  }
+]

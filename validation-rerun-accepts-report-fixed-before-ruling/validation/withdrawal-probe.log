@@ -1,0 +1,4 @@
+tag exit=2 /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6zdmv2pf/state-2/task/dispatch/validation-2.md:1: cannot verify validation ruling order: rewritten-report; hold dispatch and report the missing history to FO
+candidate exit=0 <no output>
+native entries: [{"stage": "ideation", "attempt": "gate-attempt:task-ideation-1", "kind": "resolution", "room": null, "by": "person:captain", "at": "2026-10-29", "reason": "Proceed", "decision": "hold"}, {"stage": "ideation", "attempt": "gate-attempt:task-ideation-1", "kind": "withdrawal", "room": null, "by": "person:captain", "at": "2026-10-30", "reason": "Withdraw prior approval"}]
+timeline: a816933459ff92230c39da524dbbe92edcc69c3b 64281fbf7c14f07e931cef3a6f1bd73aab2f662e 7d9c9becfb10989d0db950878c233a9f10f49752 5bb172fcb6cf44d6e6500efc019498e1100d0bcb
