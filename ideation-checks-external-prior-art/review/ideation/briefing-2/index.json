@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ideation-checks-external-prior-art:ideation:attempt-2:revision-1",
+  "question": "決定：要不要核准「設計階段先查現成的標準與做法」的設計並開始實作。我建議照設計的建議核准：三種做法先跑重放，由事先講好的規則決定出哪一種，優先採「只在要發明新機制時才查」，它沒通過就退到「每份設計寫一行」，兩種都沒通過就不開 PR；查的範圍是工人已知的加上這個 repo 自己用到的套件，不上網搜尋；動套件之前先把提案和重放計畫傳給 qnow 的 First Officer 確認。核准即接受這兩項，以及重放要跑 21 次 Codex 工人和 7 次審查員。",
+  "artifacts": [
+    {
+      "id": "artifact:ideation-checks-external-prior-art:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/a75c27529bfaf07a0e939c8d788f89227b18ddf2/ideation-checks-external-prior-art.md",
+      "rev": "sha256:6ed24f107d68eb544222c3cc4926fa89cd3c47506aa4b4a631342f988dbd1e43",
+      "mediaType": "text/markdown",
+      "summary": "Batch 21 ideation sitting, one design per question on the Captain's word. FO ran design_surfaces.py check: exit 0 (2026-11-11). The worker's report, not re-run by FO: the chain check (no prior-art duty in Spacedock, kc-dev-flow-2, v1 or the adopters), that the approved qnow design names no standard although qnow's API already uses AbortController, and the word counts (+59, +26, +11). The replay was designed, not run; no criterion is verified. Decisions D1 (which option, decided by a pre-registered replay rule) and D2 (no web search) each carry a recommendation and what gets worse in the task file. AC-1 makes the qnow dev2 FO's confirmation of the proposal a condition before any package edit."
+    }
+  ]
+}

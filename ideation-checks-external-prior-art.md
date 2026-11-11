@@ -47,6 +47,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-11T02:20:14.025866Z"
                 reason: The Captain answered the six-design question with 「這次比較複雜，一題題過審」 (host question dialog, 2026-11-11); each design gets its own question.
+            - id: gate-attempt:ideation-checks-external-prior-art-ideation-2
+              briefing:
+                id: briefing:ideation-checks-external-prior-art:ideation:attempt-2:revision-1
+                digest: sha256:ace0bb97d9a681f384b1c1e71f216f3ca9ce32472d325d329e346cc26cbbba0b
+                room-ref: ./ideation-checks-external-prior-art/review/ideation/briefing-2
 started: 2026-11-11T02:01:14Z
 ---
 
