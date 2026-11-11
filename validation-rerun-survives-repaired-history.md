@@ -53,6 +53,17 @@ gates:
                 id: briefing:validation-rerun-survives-repaired-history:validation:attempt-1:revision-1
                 digest: sha256:7fd6e4ad931e37f99f7656791ddd66606c286a4013e233ff080304789bb2c333
                 room-ref: ./validation-rerun-survives-repaired-history/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:validation-rerun-survives-repaired-history:validation:1
+                briefing: briefing:validation-rerun-survives-repaired-history:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-11T08:42:50.659305Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-11), answering 「決定：合併 #844（優先任務：任務歷史裡有一個後來已修好的格式錯誤時，驗證重跑的檢查不再永久擋住；這是擋住 qnow 的那個問題）嗎？建議合併。同意即接受：放行用的是你在設計關卡核准的判法（讀不懂的舊版本只有排在驗證報告當時或之前、而且原文裡出現用來放行的那筆裁示編號時才擋）；三種罕見的歷史形狀仍然永久擋住；ADR 0045 是原地增補一段、沒有新編號；qnow 要等發版並同步後才解開；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit 0a5c37f091daec6909a76d443219c655b17d534e, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-11T06:21:35Z
 worktree: .worktrees/spacedock-ensign-validation-rerun-survives-repaired-history
 pr: iamcxa/kc-claude-plugins#844
