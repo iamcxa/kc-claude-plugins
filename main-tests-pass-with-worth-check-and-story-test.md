@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-11T09:02:13Z
+worktree: .worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test
 ---
 
 ## Scope
