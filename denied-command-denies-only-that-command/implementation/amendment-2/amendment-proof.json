@@ -1,0 +1,18 @@
+{
+  "source_state_commit": "04b1a9133f972f689055157fe28570c40e642824",
+  "superseded": [
+    "AC-7",
+    "AC-10"
+  ],
+  "replacement": [
+    "AC-11",
+    "AC-12"
+  ],
+  "AC-9_unchanged": true,
+  "moved_blocks": {
+    "AC-7": "d7eebfb84853e3960894a631dfb06c522094ccdc615df3acc2ef18831a043e55",
+    "AC-10": "a54fa7b57d8caa1d6a6200e03b2c0e385f7987b19b782a0e65636ddfbb5f3b29"
+  },
+  "AC-12_change": "fresh id and amendment marker; same-turn cross-reference now AC-11; other words retained",
+  "frontmatter_unchanged": true
+}

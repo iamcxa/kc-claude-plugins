@@ -1,0 +1,17 @@
+[
+  {
+    "name": "AC-11 \u2014 default send, named source-confirmed exception and unchanged same-turn mechanism",
+    "status": "passed",
+    "note": "Source-inspected instruction satisfies the Captain amendment; Codex same-turn send uses preserved native evidence. Default for other providers rests on source reading/policy, not a run."
+  },
+  {
+    "name": "AC-9 \u2014 exact reason reaches Codex",
+    "status": "passed",
+    "note": "Criterion and fixed six-run packet unchanged; preserved four exact native receipts, no new run."
+  },
+  {
+    "name": "AC-12 \u2014 Codex acts on the reason without retry",
+    "status": "passed",
+    "note": "AC-10 restated under fresh id with only amendment marker/reference updated; preserved four exact writes and summaries in original turns; six absent outside targets/no retry. No new-provider runtime proof claimed."
+  }
+]

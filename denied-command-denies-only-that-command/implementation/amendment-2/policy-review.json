@@ -1,0 +1,33 @@
+{
+  "basis": "Manual source-level review of the instruction and recorded design source; no runtime reader test or new replay.",
+  "before_change": "The previous sentence limits the extra send to Codex and neither states the default for an unconfirmed provider nor names a confirmed delivery exception.",
+  "after_change": "Send is default; provider-confirmed denial-message delivery is the exception; same send_agent_prompt (activeTurnBehavior steer) as tested.",
+  "providers": [
+    {
+      "provider": "Codex",
+      "instruction": "send reason",
+      "evidence": "Six FO-operated native logs show rejected-by-user without the denial reason; four candidate steers receive and use the reason in the original turn. Preserved under implementation/fo-replay-scoring/native/.",
+      "runtime_proof": "existing six controlled outside-write runs only; no new run"
+    },
+    {
+      "provider": "Claude",
+      "instruction": "confirmed-delivery exception; no extra send",
+      "evidence": "Design Facts checked item 3: Paseo Claude resolveDeniedPermission returns behavior deny, response.message and interrupt. Source read in Paseo 0.15.4, not a runtime replay.",
+      "runtime_proof": "untested"
+    },
+    {
+      "provider": "Gemini or another unconfirmed provider",
+      "instruction": "send reason by default",
+      "evidence": "Captain default-send amendment. Non-Codex policy is source-informed, not replay-proven; no evidence here confirms Gemini denial-message forwarding or same-turn behavior.",
+      "runtime_proof": "untested"
+    }
+  ],
+  "past_FO_scenario_limit": "The preserved fresh-FO scenario read the previous sentence. Its interpretation result is historical, not a fresh-reader proof of this rewording.",
+  "run_cap": {
+    "earlier_void_worker_attempts": 6,
+    "valid_FO_operated_runs": 6,
+    "new_replay_workers": 0,
+    "total_worker_attempts": 12
+  },
+  "raw_rollouts_newly_copied": 0
+}

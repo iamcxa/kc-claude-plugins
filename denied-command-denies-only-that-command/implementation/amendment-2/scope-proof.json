@@ -1,0 +1,19 @@
+{
+  "candidate": "d22a01d5e8d334f6f4e8a2c5853f8f6abeddc89a",
+  "parent": "cdb99da0e52e8b5cad3a7be04658dc282432b644",
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "origin_main": "546a136386c94c58e430c91a6f3457b38bd73880",
+  "branch": "spacedock-ensign/denied-command-denies-only-that-command",
+  "changed_files": [
+    "kc-dev-flow-2/extensions/paseo/EXTENSION.md"
+  ],
+  "change_from_previous": "one sentence only; reverting that sentence reproduces the previous file bytes",
+  "same_send_tool_and_flag": true,
+  "extension_sha256": "19e8b951a05b9b755e23015e7a6bfacbc909d66e3fdb029d98d5cdcc7b6f9f7f",
+  "product_worktree_clean": true,
+  "unchanged": {
+    "kc-dev-flow-2/references/sd/workflow.md": true,
+    "kc-dev-flow-2/scripts/lint-skills.py": true,
+    "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md": true
+  }
+}

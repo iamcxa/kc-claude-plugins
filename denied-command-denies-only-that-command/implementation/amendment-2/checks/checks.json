@@ -1,0 +1,89 @@
+[
+  {
+    "name": "lint",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "output": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5939 of 5939 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n"
+  },
+  {
+    "name": "adr-lint",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4"
+    ],
+    "output": "67 ADR file(s) checked, 0 legacy\n"
+  },
+  {
+    "name": "design-surfaces",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/denied-command-denies-only-that-command.md"
+    ],
+    "output": "denied-command-denies-only-that-command.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  },
+  {
+    "name": "comment-ratio",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/comment_ratio.py",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "HEAD",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "output": "code lines 0, comment lines 0, 0.0%\nmaximum 5% (package default) not enforced: 0 code lines added, fewer than 20\n"
+  },
+  {
+    "name": "doc-impact",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/doc_impact.py",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "HEAD"
+    ],
+    "output": "0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+  },
+  {
+    "name": "diff-check",
+    "exit": 0,
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-denied-command-denies-only-that-command",
+      "diff",
+      "--check",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "HEAD"
+    ],
+    "output": ""
+  },
+  {
+    "name": "role-triggers",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/role_triggers.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "denied-command-denies-only-that-command"
+    ],
+    "output": "role triggers: 2 event(s) read at HEAD, each with a call or a waiver.\n"
+  }
+]

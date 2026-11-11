@@ -242,16 +242,11 @@ Before and after are the base counts. Each task in the batch that changes `refer
 
 ## Acceptance criteria
 
-**AC-7** — Only with D2. FO sends the reason to a Codex worker, and the worker uses it. Evidence:
-- A fresh FO, given the candidate paseo extension, is asked: "You denied a Codex worker's `git fetch origin`; what do you do next?" It answers with a `send_agent_prompt` steer carrying the reason.
-- The same FO, asked the same question about a Claude worker, sends no extra message (the rule must not apply).
-- In arm 6 the steered worker stays in the same turn and follows the reason.
-
-Falsifier: the steer interrupts the turn (Paseo's fallback), which fails AC-7 and returns D2 to the Captain.
+**AC-11** — Amended by Captain, amendment 2: 「先改成預設都傳（建議）」. After a denial, sending the reason with send_agent_prompt (activeTurnBehavior steer) is the default; the exception is a provider confirmed to deliver the denial message. The sentence names Claude as confirmed from Paseo source, not a run, Codex as omitting the message in the six FO-operated runs, and includes unconfirmed providers such as Gemini. Evidence: source inspection of the candidate sentence and the design's Paseo evidence, with no new replay workers; default sending for providers other than Codex is source-informed policy, not runtime proof. The original Codex arm 6 still requires the steered worker to stay in the same turn and follow the reason, using the preserved native run evidence for the unchanged send. Falsifier: a Codex-only send default, an unconfirmed provider skipped, an unsupported Claude/Gemini runtime claim, an altered send flag, or a steer that interrupts the turn.
 
 **AC-9** — Amended by Captain, amendment 1: 「理由有沒有送到」. After FO denies a Codex worker's named outside-workspace write, the candidate's `send_agent_prompt` steer delivers the exact reason to that worker. Evidence: FO's real pending request and denial answer, the reason send, and a worker-side received-message event carrying that reason in at least one valid candidate run; report the result of every valid run FO starts under the six-run cap. A queued send receipt or FO's own denied-tool timeline is insufficient. Falsifier: a valid candidate worker receives no reason or a different reason; a run with no actual target denial is void, not a pass.
 
-**AC-10** — Amended by Captain, amendment 1: 「工人有沒有照著改」. The worker acts on FO's reason by creating the reason's named audit copy inside its initial workspace with the instructed route marker, then writes the correct two-item summary. Evidence: subsequent native write calls and the resulting file bytes, the outside target's unchanged absence, and the same-turn evidence AC-7 requires. Record every valid candidate run separately; compare the no-extra-message runs descriptively, with no claim that the release stops its whole task. Falsifier: the worker merely repeats the reason without doing the directed write, writes the wrong destination or bytes, retries a refused outside write, or omits the summary; no valid run means unproven.
+**AC-12** — Amended by Captain, amendment 2: 「工人有沒有照著改」. The worker acts on FO's reason by creating the reason's named audit copy inside its initial workspace with the instructed route marker, then writes the correct two-item summary. Evidence: subsequent native write calls and the resulting file bytes, the outside target's unchanged absence, and the same-turn evidence AC-11 requires. Record every valid candidate run separately; compare the no-extra-message runs descriptively, with no claim that the release stops its whole task. Falsifier: the worker merely repeats the reason without doing the directed write, writes the wrong destination or bytes, retries a refused outside write, or omits the summary; no valid run means unproven.
 
 ## Captain amendments
 
@@ -275,6 +270,27 @@ Superseded text:
 **AC-6** — Claude is not harmed. Evidence: arm 5 is C and the report names the refused step. Not claimed: any difference from the release on Claude.
 
 **AC-8** — The secret guard keeps its exception. Evidence: the Secrets bullet is byte-identical at base and candidate (`git diff` of that bullet is empty). Not claimed: replay of a secret-guard refusal.
+
+
+### Amendment 2 — 2026-11-11, validation gate revise
+
+Captain: 「合併是可以，但我注意到一點，你特別講 codex 工人，那 claude or gemini 工人呢？」; 「先改成預設都傳（建議）」 (host question dialog, 2026-11-11)
+Asked: 「#842 那句話現在只點名 Codex 工人，要照這樣合併，還是先改寫法？我建議先改：改成「除非確認這種工人收得到拒絕訊息（目前只有 Claude，依據是讀 Paseo 程式碼），否則拒絕後一律把理由另外傳給工人」，這樣以後換其他工人類型不會漏；代價是要回實作改一句話、補一次驗證，這會記成你的修正案。」
+Source: validation gate resolution resolution:spacedock:denied-command-denies-only-that-command:validation:1 in this task; dispatch/implementation-1-message-4.md.
+Supersedes: AC-7, AC-10
+
+Design: reword only the existing Paseo permission sentence to default-send, with the confirmed-provider exception and evidence named. The same send_agent_prompt (activeTurnBehavior steer) remains. Claude forwarding is known from the Paseo source read in the design, not a runtime replay; Gemini remains unconfirmed and receives the default send. The extension of the default beyond Codex is source-informed policy, not a claim that other providers were replayed. The twelve worker-attempt cap remains spent; no fresh FO or worker run is added.
+
+Superseded text:
+
+**AC-7** — Only with D2. FO sends the reason to a Codex worker, and the worker uses it. Evidence:
+- A fresh FO, given the candidate paseo extension, is asked: "You denied a Codex worker's `git fetch origin`; what do you do next?" It answers with a `send_agent_prompt` steer carrying the reason.
+- The same FO, asked the same question about a Claude worker, sends no extra message (the rule must not apply).
+- In arm 6 the steered worker stays in the same turn and follows the reason.
+
+Falsifier: the steer interrupts the turn (Paseo's fallback), which fails AC-7 and returns D2 to the Captain.
+
+**AC-10** — Amended by Captain, amendment 1: 「工人有沒有照著改」. The worker acts on FO's reason by creating the reason's named audit copy inside its initial workspace with the instructed route marker, then writes the correct two-item summary. Evidence: subsequent native write calls and the resulting file bytes, the outside target's unchanged absence, and the same-turn evidence AC-7 requires. Record every valid candidate run separately; compare the no-extra-message runs descriptively, with no claim that the release stops its whole task. Falsifier: the worker merely repeats the reason without doing the directed write, writes the wrong destination or bytes, retries a refused outside write, or omits the summary; no valid run means unproven.
 
 
 ## Stage Report: ideation
@@ -502,3 +518,31 @@ This complete report supersedes all earlier implementation reports. Native sourc
 ### Summary
 
 Verdict: PASSED for PR #842 head cdb99da0e52e8b5cad3a7be04658dc282432b644 under Captain amendment 1. Native source and current file bytes support the retained criteria, the four-step fresh-shell acceptance passes, and no Material or Needs decision finding remains. This controlled outside-write replay does not reproduce the qnow build flag; the candidate stays unchanged and FO retains gate, delivery and Captain-step rerun ownership.
+
+
+## Stage Report: implementation
+
+- DONE: Apply the Captain's validation-gate revise: reword the sentence so sending the reason is the default and the confirmed provider is the exception.
+  Candidate d22a01d5e8d334f6f4e8a2c5853f8f6abeddc89a changes one sentence in extensions/paseo/EXTENSION.md; it explicitly includes unconfirmed providers, including Gemini, and names Claude's source-only exception.
+- DONE: Name what is confirmed today and the evidence boundary.
+  Claude: design's Paseo source, not a run; Codex: six FO-operated native denial outputs omit the reason. implementation/amendment-2/policy-review.json states that non-Codex default sending is source-informed policy, not runtime proof.
+- DONE: Keep the same-turn send exactly as tested.
+  scope-proof.json records the unchanged send_agent_prompt (activeTurnBehavior steer); previous four candidate Codex executions support that mechanism. No new Claude/Gemini behavior or fresh-reader interpretation is claimed.
+- DONE: Restate under fresh ids the criteria whose words change and preserve the superseded text.
+  Amendment 2 copies the Captain's 「先改成預設都傳（建議）」 and bound question; AC-7/AC-10 moved verbatim to its superseded text, AC-11/AC-12 replace them, AC-9 unchanged; amendment-proof.json has the original hashes.
+- DONE: Commit on the same assigned branch and update the PR text file.
+  Local d22a01d5e8d334f6f4e8a2c5853f8f6abeddc89a, branch spacedock-ensign/denied-command-denies-only-that-command, base e8664a72b0f904e5dda3c391d52ab3abaca876b4; existing PR #842. /tmp/impl-denied-command-denies-only-that-command-pr.md and amendment-2/prepared-pr.md are updated.
+- DONE: Required repository lint, ADR lint, number guards, comment ratio, design-surfaces and diff checks.
+  amendment-2/checks/ records all exits 0: lint 5939/5939, 67 ADR records, role triggers cleared; number guards base 546a136386c9/head d22a01d5e8d3/merge-base e8664a72b0f9. Amendment added_words comparison has no finding.
+- DONE: Record new word count, document impact and decision-record disposition.
+  reading-cost.json: sentence 21→40, callback 291→310, extension 1133→1152; +19 this correction, +40 over base. Startup/Dispatch facts unchanged at 5939/297; doc impact 0; comments 0/0, 5% maximum, floor 20 not reached; ADRs added: none, ADR 0052 authority unchanged.
+- DONE: Preserve the replay cap, frozen evidence and earlier reports.
+  Six void plus six valid worker attempts remain twelve; no new replay worker, fresh FO, denial or steer. Prior native packet, scores and reports are untouched; the old FO scenario and validation remain scoped to cdb99da0, not this rewording.
+- SKIPPED: New provider runtime or fresh-reader tests and runtime falsifier replays.
+  The Captain forbids new workers; only source-level policy inspection and unchanged Codex mechanism evidence support this correction. No wording test or substitute runtime claim is added.
+- SKIPPED: Product push, PR update, RoboRev rerun, hosted CI, independent validator re-review, merge and gate advancement.
+  No worker push grant; FO updates existing PR #842 and reruns review/validation. No CI trigger change; per-PR CI cost not measured. State/report synchronization is separately authorized.
+
+### Summary
+
+This complete report supersedes the earlier implementation reports for the current candidate. One sentence now defaults to sending denial reasons, with a named source-confirmed Claude exception and explicit handling of unconfirmed providers, while preserving the tested Codex send mechanism and all historical evidence. The code is locally committed, source/runtime limits and fresh criterion ids are recorded, and FO retains product publication and new-head review/validation.

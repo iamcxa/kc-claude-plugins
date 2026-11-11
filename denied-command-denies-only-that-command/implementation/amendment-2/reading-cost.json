@@ -1,0 +1,23 @@
+{
+  "method": "whitespace-delimited words, matching wc -w",
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "previous": "cdb99da0e52e8b5cad3a7be04658dc282432b644",
+  "candidate": "d22a01d5e8d334f6f4e8a2c5853f8f6abeddc89a",
+  "extension_base_words": 1112,
+  "extension_previous_words": 1133,
+  "extension_candidate_words": 1152,
+  "callback_base_words": 270,
+  "callback_previous_words": 291,
+  "callback_candidate_words": 310,
+  "replacement_sentence_previous_words": 21,
+  "replacement_sentence_candidate_words": 40,
+  "delta_vs_previous": 19,
+  "delta_vs_base": 40,
+  "workflow_words": 5939,
+  "dispatch_facts_words": 297,
+  "unchanged": {
+    "kc-dev-flow-2/references/sd/workflow.md": true,
+    "kc-dev-flow-2/scripts/lint-skills.py": true,
+    "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md": true
+  }
+}
