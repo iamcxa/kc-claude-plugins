@@ -1,0 +1,23 @@
+{
+  "class": "never",
+  "head": "7d75d65ef317fc5c426eb7b0975d93a72d50acaa",
+  "model": "not run",
+  "necessity": "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md, kc-dev-flow-2/scripts/dispatch_records.py and kc-dev-flow-2/scripts/test_dispatch_records.py change against origin/main (git",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '`validation/acceptance.sh` has four steps; exact fresh-shell'",
+    "point: deferred: '- F1 Deferred risk: hand-authored resolution'",
+    "point: deferred: 'PASSED for pilot at `7d75d65ef317fc5c426eb7b0975d93a72d50acaa`: the'",
+    "point: deferred: 'Validation rounds: 1. validation-1 PASSED at'",
+    "point: deferred: 'FO declines: F1 of validation-1, a'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_records.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#834",
+  "sufficiency": "the recorded qnow history is refused at the kc-dev-flow-2-v0.38.0 tag and dispatched at the candidate, a rewrite after a ruling and a pre-ruling verdict flip are refused at both, and all six criteria ",
+  "time": "2026-11-11T00:24:24Z",
+  "verdict": "ask"
+}
