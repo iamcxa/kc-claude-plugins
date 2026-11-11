@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-11T06:21:35Z
+worktree: .worktrees/spacedock-ensign-validation-rerun-survives-repaired-history
 ---
 
 ## Scope
