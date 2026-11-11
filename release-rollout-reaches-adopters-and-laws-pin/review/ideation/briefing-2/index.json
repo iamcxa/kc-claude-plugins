@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-rollout-reaches-adopters-and-laws-pin:ideation:attempt-2:revision-1",
+  "question": "決定：要不要核准「發版後鋪開到採用 repo 與法規檢查」的設計並開始實作。我建議照設計的建議核准：每次發版後跑一個唯讀指令，列出每個採用 repo 的說明檔和法規釘選要不要動；法規檢查維持你點名才裝，釘選在每次說明檔同步合併後跟著移；採用 repo 的清單放在這個 repo 狀態分支的一個檔案，只列已經公開提過的；由我在你每次發版說一聲後派同步 PR，你合併後我移釘選。核准即接受這三項。",
+  "artifacts": [
+    {
+      "id": "artifact:release-rollout-reaches-adopters-and-laws-pin:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/9f734692329957f882b62d07e3f6c32f6240e406/release-rollout-reaches-adopters-and-laws-pin.md",
+      "rev": "sha256:ca1622f4021da95552df86135794a069d81e2505ce74f073c8ad9a41dde3a280",
+      "mediaType": "text/markdown",
+      "summary": "Batch 21 ideation sitting, one design per question on the Captain's word. FO ran design_surfaces.py check: exit 0 (2026-11-11). The worker's report, not re-run by FO: the qnow laws trial read (14 runs, 1 failure that was a real violation, 15 billed minutes), the monthly cost arithmetic from a 10-hour sample, the adopter search, and the release history counts; no criterion is verified against a candidate. Decisions D1 (laws install and pin), D2 (where the adopter list lives) and D3 (who opens sync PRs and moves pins) each carry a recommendation and what gets worse in the task file. Not read by the worker: whether the Captain's account has a payment method, and what the organization pays."
+    }
+  ]
+}

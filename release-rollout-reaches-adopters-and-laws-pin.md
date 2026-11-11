@@ -38,6 +38,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-11T02:19:58.729561Z"
                 reason: The Captain answered the six-design question with 「這次比較複雜，一題題過審」 (host question dialog, 2026-11-11); each design gets its own question.
+            - id: gate-attempt:release-rollout-reaches-adopters-and-laws-pin-ideation-2
+              briefing:
+                id: briefing:release-rollout-reaches-adopters-and-laws-pin:ideation:attempt-2:revision-1
+                digest: sha256:acb939d10bbb7c3c5cb309053445198f1a50694dd67002ca94c1137014c480d9
+                room-ref: ./release-rollout-reaches-adopters-and-laws-pin/review/ideation/briefing-2
 started: 2026-11-11T01:25:39Z
 ---
 
