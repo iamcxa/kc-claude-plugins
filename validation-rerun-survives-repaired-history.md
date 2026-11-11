@@ -3,7 +3,7 @@ title: A validation rerun is dispatched when the task's history holds a form err
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
