@@ -1,0 +1,23 @@
+{
+  "evidence_commit": "5f25fa8d3e0226c18a2687948b3d224c09c86b1d",
+  "commit_paths_scoped": true,
+  "removed_root": "/tmp/pr841-validation-2-20261111",
+  "removed_direct_child_directories": [
+    "/tmp/pr841-validation-2-20261111/adr-mutant",
+    "/tmp/pr841-validation-2-20261111/candidate",
+    "/tmp/pr841-validation-2-20261111/corpus-md",
+    "/tmp/pr841-validation-2-20261111/rejected",
+    "/tmp/pr841-validation-2-20261111/tmp",
+    "/tmp/pr841-validation-2-20261111/base"
+  ],
+  "removed_root_files": [
+    "/tmp/pr841-validation-2-20261111/candidate.tar",
+    "/tmp/pr841-validation-2-20261111/rejected.tar",
+    "/tmp/pr841-validation-2-20261111/base.tar",
+    "/tmp/pr841-validation-2-20261111/old-design.md"
+  ],
+  "all_descendants_removed": true,
+  "root_absent": true,
+  "checked_at": "2026-11-11T07:55:39.098064+00:00",
+  "retained_tmp_supporting_copies": false
+}
