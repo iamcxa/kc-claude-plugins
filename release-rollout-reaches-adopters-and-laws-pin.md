@@ -62,6 +62,17 @@ gates:
                 id: briefing:release-rollout-reaches-adopters-and-laws-pin:validation:attempt-1:revision-1
                 digest: sha256:7143714209fa7026e14ebd0d3c447c200c74441b591129306c5f0622ce47cab3
                 room-ref: ./release-rollout-reaches-adopters-and-laws-pin/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-rollout-reaches-adopters-and-laws-pin:validation:1
+                briefing: briefing:release-rollout-reaches-adopters-and-laws-pin:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-11T04:56:29.082831Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-11), answering 「決定：合併 #838（每次發版後用一個唯讀指令列出每個採用 repo 的流程說明檔和法規釘選要不要動；兩樣都落後時明寫先同步說明檔、合併後再移釘選；採用清單只留在你的本機）嗎？建議合併。同意即接受：指令只報告、不會自己去同步或移釘選；清單檔不存在或讀不到會報錯；沒被你點名的採用 repo 不會有法規檢查；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit 61529999eb4184b44328fe2fbad545b1b0b0ed92, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-11T01:25:39Z
 worktree: .worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin
 pr: iamcxa/kc-claude-plugins#838
