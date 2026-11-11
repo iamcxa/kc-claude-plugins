@@ -56,6 +56,7 @@ gates:
                 state: consumed
 started: 2026-11-11T01:25:39Z
 worktree: .worktrees/spacedock-ensign-release-rollout-reaches-adopters-and-laws-pin
+pr: iamcxa/kc-claude-plugins#838
 ---
 
 ## Scope
