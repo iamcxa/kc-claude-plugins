@@ -1,0 +1,20 @@
+/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state: with impl/val records and a Budget line 60; cycle bound read 0; held at first overrun 0; first hold at {}
+/tmp/bscan/qnow: with impl/val records and a Budget line 7; cycle bound read 7; held at first overrun 7; first hold at {('implementation', 3): 1, ('implementation', 2): 6}
+/tmp/bscan/subspace-relay: with impl/val records and a Budget line 32; cycle bound read 23; held at first overrun 11; first hold at {('implementation', 2): 9, ('validation', 2): 2}
+/tmp/bscan/subspace-web: with impl/val records and a Budget line 24; cycle bound read 20; held at first overrun 5; first hold at {('validation', 2): 2, ('implementation', 2): 3}
+
+dev2 all dev2 tasks 230 | impl>=1 134
+  hold@2nd impl 89 | hold@3rd 65 | hold@4th 43 | CE 4 repair passes (impl>=5) 36
+  any Material validation 12 (findings 18 ) | step-back 2 Material validations 3
+qnow all dev2 tasks 163 | impl>=1 72
+  hold@2nd impl 57 | hold@3rd 44 | hold@4th 31 | CE 4 repair passes (impl>=5) 22
+  any Material validation 7 (findings 18 ) | step-back 2 Material validations 3
+subspace-relay all dev2 tasks 136 | impl>=1 90
+  hold@2nd impl 54 | hold@3rd 25 | hold@4th 20 | CE 4 repair passes (impl>=5) 9
+  any Material validation 6 (findings 21 ) | step-back 2 Material validations 4
+subspace-web all dev2 tasks 76 | impl>=1 62
+  hold@2nd impl 35 | hold@3rd 18 | hold@4th 9 | CE 4 repair passes (impl>=5) 4
+  any Material validation 17 (findings 49 ) | step-back 2 Material validations 6
+dev2 archive dev2 tasks 151 | impl>=1 128
+  hold@2nd impl 84 | hold@3rd 61 | hold@4th 41 | CE 4 repair passes (impl>=5) 34
+  any Material validation 12 (findings 18 ) | step-back 2 Material validations 3
