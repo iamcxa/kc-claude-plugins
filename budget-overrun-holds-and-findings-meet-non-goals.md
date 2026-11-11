@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:budget-overrun-holds-and-findings-meet-non-goals:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:budget-overrun-holds-and-findings-meet-non-goals-backlog-1
+              briefing:
+                id: briefing:budget-overrun-holds-and-findings-meet-non-goals:backlog:attempt-1:revision-1
+                digest: sha256:bbf8876b9320ba4494fa6be7f4b921e4caa1951ace37a9a08e67bc99211a9ad9
+                room-ref: ./budget-overrun-holds-and-findings-meet-non-goals/review/backlog/briefing-1
 ---
 
 ## Scope
