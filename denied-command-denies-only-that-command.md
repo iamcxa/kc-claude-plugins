@@ -78,6 +78,7 @@ pr: iamcxa/kc-claude-plugins#842
 
 Alignment: not needed before ideation; the Captain approved filing it and the outcome is one worker-facing rule.
 Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-11: amendment 1 removes the README sentence and the criteria that prove it and keeps the one item the design already describes (D2); it adds nothing to the build.
+Reviewer: kc-dev-flow-2:chief-engineer not run: the five implementation reports are one build, one hand-back when the replay could not reach a refusal, the Captain's own step-back that narrowed the task (amendment 1, after FO read the qnow records and probed the refusal with him in chat), and two scoring rounds of the six FO-operated runs; the candidate is one changed sentence in the paseo extension, RoboRev job 1735 is clean, and the next step is the independent validation this dispatch builds.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
