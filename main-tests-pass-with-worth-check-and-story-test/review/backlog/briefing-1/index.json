@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:main-tests-pass-with-worth-check-and-story-test:backlog:attempt-1:revision-1",
+  "question": "決定：要不要讓「修好 main 上壞掉的那一項測試」這張任務插隊進入設計階段。我建議核准。核准代表接受任務檔寫的範圍（只修造成這次失敗的地方，不動你在 #841 已接受不修的那四件事）、預算（設計、實作、驗證各一輪，一個 PR）與停止條件（PR 的測試全過，而且我在請你合併前，先在「合併進 main 之後的結果」上重跑同一組測試），並派一個設計工人查清楚錯在測試還是錯在檢查本身。不代表接受任何修法。",
+  "artifacts": [
+    {
+      "id": "artifact:main-tests-pass-with-worth-check-and-story-test:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1af464248710902ba1b988a1870fb4f008be14e7/main-tests-pass-with-worth-check-and-story-test.md",
+      "rev": "sha256:6d665956fc3793aa2423dc3fdde9fceb0ce313a2579206fd4b8231ea4469749e",
+      "mediaType": "text/markdown",
+      "summary": "Backlog admission of main-tests-pass-with-worth-check-and-story-test, a priority exception inside batch 21.\nBite: one of 226 tests fails on main 571a7bd8a after PR #841 merged (gh run view 42991036147 --log-failed, FO read 2026-11-11); the run on the commit before passed.\nBudget: one ideation, one implementation and one validation cycle, one package PR.\nAlignment: not needed; the Captain chose the forward fix in the question quoted under Scope."
+    }
+  ]
+}

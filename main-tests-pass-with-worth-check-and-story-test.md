@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:main-tests-pass-with-worth-check-and-story-test:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:main-tests-pass-with-worth-check-and-story-test-backlog-1
+              briefing:
+                id: briefing:main-tests-pass-with-worth-check-and-story-test:backlog:attempt-1:revision-1
+                digest: sha256:f5f45e2c049769237934fa09f12e14bce71a10d6bcbc1f6e87cd3ff31a94024b
+                room-ref: ./main-tests-pass-with-worth-check-and-story-test/review/backlog/briefing-1
 ---
 
 ## Scope
