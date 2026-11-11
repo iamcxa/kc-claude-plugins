@@ -1,0 +1,107 @@
+[
+  {
+    "name": "AC-1 archive report",
+    "status": "passed",
+    "evidence": "AC1-before.stdout; AC1-after.stdout; AC1-set.stdout",
+    "half": "producer + dev2 instruction",
+    "falsifier": "Before native status --set, 0/1 and 0/4; after it, 1/1 and 1/4 with PR #999."
+  },
+  {
+    "name": "AC-2 preserved acceptance",
+    "status": "passed",
+    "evidence": "relay/qnow-base.json and -final.stdout; both *-due-*.stdout; matrix-12-test_release_acceptance.log",
+    "half": "producer + consumer",
+    "falsifier": "AC2-members-as-declared.log; native reverse replay in replay-falsifiers.json."
+  },
+  {
+    "name": "AC-3 filed members",
+    "status": "passed",
+    "evidence": "progress-replay-result.json",
+    "half": "producer",
+    "falsifier": "AC3-declared-members-only.log; native count-of-3 reverse replay in replay-falsifiers.json."
+  },
+  {
+    "name": "AC-4 PR refs",
+    "status": "passed",
+    "evidence": "journey-tests.log; node22-tests-complete-export.log",
+    "half": "producer",
+    "falsifier": "AC4-drop-url-rule.log rejects raw URL."
+  },
+  {
+    "name": "AC-5 no-story and off-map separation",
+    "status": "passed",
+    "evidence": "AC5-release-only.stdout; off-map-replay.log",
+    "half": "producer",
+    "falsifier": "AC5-drop-release-only.log; separate off-map control preserves 4/8 release-only."
+  },
+  {
+    "name": "AC-6 short report",
+    "status": "passed",
+    "evidence": "AC6-short.stdout; progress-replay-result.json",
+    "half": "producer",
+    "falsifier": "AC6-unbounded-lists.log rejects unlimited story/ref lists."
+  },
+  {
+    "name": "AC-7 explicit failure",
+    "status": "passed",
+    "evidence": "failure-signals.json; AC7-*.stdout; replay-runs.json",
+    "half": "producer + dev2 instruction",
+    "falsifier": "AC7-silent-failed-read.log rejects exit 0 on failed observation."
+  },
+  {
+    "name": "AC-8 versioned schema",
+    "status": "passed",
+    "evidence": "schema.log; journey-tests.log",
+    "half": "producer",
+    "falsifier": "AC8-remove-version-bump.log rejects changed fields without version."
+  },
+  {
+    "name": "AC-9 scope and reading",
+    "status": "passed",
+    "evidence": "exact-bytes.json; dev2.diff; AC1-after.stdout",
+    "half": "dev2",
+    "falsifier": "remaining-mutations.json rejects workflow edit; unchanged workflow bytes and 612-to-713 word bound."
+  },
+  {
+    "name": "AC-10 real adopter archive",
+    "status": "untested",
+    "evidence": "Explicit future check in accepted task; no released rollout or real FO message",
+    "half": "future real use",
+    "falsifier": "Not attempted; temporary native archive is not real adopter evidence."
+  },
+  {
+    "name": "AC-11 Story admission",
+    "status": "passed",
+    "evidence": "matrix-03-test_design_surfaces.log",
+    "half": "dev2",
+    "falsifier": "AC11-unlisted-workflows.log; AC11-none-without-reason.log."
+  },
+  {
+    "name": "AC-12 historical seed counts",
+    "status": "passed",
+    "evidence": "seed-replay.json; seed-replay.log",
+    "half": "dev2",
+    "falsifier": "AC12-force-all-workflows.json refuses 230 local tasks instead of 0."
+  },
+  {
+    "name": "AC-13 idle look",
+    "status": "passed",
+    "evidence": "matrix-16-test_pr_watch.log; seed-replay.json",
+    "half": "dev2",
+    "falsifier": "AC13-skip-story-rule.log rejects silently missing backlog reminder."
+  },
+  {
+    "name": "AC-14 decision record",
+    "status": "passed",
+    "evidence": "adr-lint.log; docs/adr/0076... at exact head",
+    "half": "dev2 ADR",
+    "falsifier": "AC14-missing-adr.log exits 1 with required record missing."
+  },
+  {
+    "name": "AC-15 Story field agreement",
+    "status": "passed",
+    "evidence": "matrix-03-test_design_surfaces.log; seed-replay.json archived records",
+    "half": "dev2",
+    "falsifier": "AC15-compare-presence-only.log accepts wrong field and therefore fails test."
+  }
+]

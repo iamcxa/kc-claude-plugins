@@ -1,0 +1,29 @@
+FFF.
+======================================================================
+FAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (__main__.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows) (record='Story: inbox-home (owner-account)\n', story='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/story-release-validation-2/mutants/AC15-compare-presence-only/scripts/test_design_surfaces.py", line 326, in test_design_compares_story_record_to_counted_field_only_in_map_workflows
+    self.assertTrue(any("'Story:' names" in e for e in self.check(record, story, seed=False)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (__main__.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows) (record='Story: inbox-home (owner-account)\n', story='switch-any-account')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/story-release-validation-2/mutants/AC15-compare-presence-only/scripts/test_design_surfaces.py", line 326, in test_design_compares_story_record_to_counted_field_only_in_map_workflows
+    self.assertTrue(any("'Story:' names" in e for e in self.check(record, story, seed=False)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (__main__.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows) (record='Story: none: infra\n', story='inbox-home')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/story-release-validation-2/mutants/AC15-compare-presence-only/scripts/test_design_surfaces.py", line 326, in test_design_compares_story_record_to_counted_field_only_in_map_workflows
+    self.assertTrue(any("'Story:' names" in e for e in self.check(record, story, seed=False)))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.043s
+
+FAILED (failures=3)

@@ -1,0 +1,14 @@
+E
+======================================================================
+ERROR: test_real_seed_subprocess_names_a_map_task_missing_its_story_record (__main__.TasksTests.test_real_seed_subprocess_names_a_map_task_missing_its_story_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/story-release-validation-2/mutants/AC13-skip-story-rule/scripts/test_pr_watch.py", line 1816, in test_real_seed_subprocess_names_a_map_task_missing_its_story_record
+    self.assertIn("(story-needed)", self.seed_lines(lines)[0])
+                                    ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+----------------------------------------------------------------------
+Ran 1 test in 0.657s
+
+FAILED (errors=1)

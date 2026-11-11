@@ -1,0 +1,116 @@
+...FFFFF..FF.
+======================================================================
+FAIL: test_check_exiting_1_with_an_unparseable_line_exits_2 (__main__.ExitContractTest.test_check_exiting_1_with_an_unparseable_line_exits_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/story-release-validation-2/repair-before/kc-dev-flow-2/scripts/test_laws_check.py", line 181, in test_check_exiting_1_with_an_unparseable_line_exits_2
+    self.assertEqual(code, 2)
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_check_exiting_1_with_no_stdout_exits_2 (__main__.ExitContractTest.test_check_exiting_1_with_no_stdout_exits_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/story-release-validation-2/repair-before/kc-dev-flow-2/scripts/test_laws_check.py", line 188, in test_check_exiting_1_with_no_stdout_exits_2
+    self.assertEqual(code, 2, out)
+AssertionError: 1 != 2 : L2 dispatch-record-complete: 0 events judged in 022e1d2d2c53..995f6aff987c, 0 violated
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpmeoobynw/q1/pkg/scripts/laws_check.py", line 464, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpmeoobynw/q1/pkg/scripts/laws_check.py", line 452, in main
+    violated, heads, violations = judge(ctx, law_id, spec)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpmeoobynw/q1/pkg/scripts/laws_check.py", line 418, in judge
+    judged, violations, note, *distinct = fn(ctx)
+                                          ^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpmeoobynw/q1/pkg/scripts/laws_check.py", line 333, in l3_amendment_append_only
+    regions = raw_amendment_regions(before)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpmeoobynw/q1/pkg/scripts/laws_check.py", line 250, in raw_amendment_regions
+    from design_surfaces import AMENDMENT_FENCE, AMENDMENT_LEVEL, AMENDMENT_START, AMENDMENTS_HEADING
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpmeoobynw/q1/pkg/scripts/design_surfaces.py", line 26, in <module>
+    from workflow_extensions import readme_extensions
+ModuleNotFoundError: No module named 'workflow_extensions'
+
+
+======================================================================
+FAIL: test_check_exiting_2_exits_2_naming_the_cause (__main__.ExitContractTest.test_check_exiting_2_exits_2_naming_the_cause)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/story-release-validation-2/repair-before/kc-dev-flow-2/scripts/test_laws_check.py", line 167, in test_check_exiting_2_exits_2_naming_the_cause
+    self.assertEqual(code, 2)
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_check_printing_a_traceback_exits_2_not_1 (__main__.ExitContractTest.test_check_printing_a_traceback_exits_2_not_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/story-release-validation-2/repair-before/kc-dev-flow-2/scripts/test_laws_check.py", line 174, in test_check_printing_a_traceback_exits_2_not_1
+    self.assertEqual(code, 2)
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_exit_2_wins_over_a_violation_and_both_print (__main__.ExitContractTest.test_exit_2_wins_over_a_violation_and_both_print)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/story-release-validation-2/repair-before/kc-dev-flow-2/scripts/test_laws_check.py", line 212, in test_exit_2_wins_over_a_violation_and_both_print
+    self.assertEqual(code, 2)
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_l2_check_exiting_1_with_no_stdout_exits_2_in_either_mode (__main__.ExitContractTest.test_l2_check_exiting_1_with_no_stdout_exits_2_in_either_mode)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/story-release-validation-2/repair-before/kc-dev-flow-2/scripts/test_laws_check.py", line 200, in test_l2_check_exiting_1_with_no_stdout_exits_2_in_either_mode
+    self.assertEqual(code, 2, f"{mode}: {out}")
+AssertionError: 1 != 2 : folder: L1 observer-before-sentinel: 0 events judged in c699398c327a..1359d0ca54cd, 0 violated
+L3 amendment-append-only: 0 events judged in c699398c327a..1359d0ca54cd, 0 violated
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7rnlupbh/q2-folder/pkg/scripts/laws_check.py", line 464, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7rnlupbh/q2-folder/pkg/scripts/laws_check.py", line 452, in main
+    violated, heads, violations = judge(ctx, law_id, spec)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7rnlupbh/q2-folder/pkg/scripts/laws_check.py", line 418, in judge
+    judged, violations, note, *distinct = fn(ctx)
+                                          ^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7rnlupbh/q2-folder/pkg/scripts/laws_check.py", line 377, in l4_amendment_moves_use_fresh_ids
+    from design_surfaces import move_defects
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7rnlupbh/q2-folder/pkg/scripts/design_surfaces.py", line 26, in <module>
+    from workflow_extensions import readme_extensions
+ModuleNotFoundError: No module named 'workflow_extensions'
+
+
+======================================================================
+FAIL: test_missing_script_exits_2 (__main__.ExitContractTest.test_missing_script_exits_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/story-release-validation-2/repair-before/kc-dev-flow-2/scripts/test_laws_check.py", line 160, in test_missing_script_exits_2
+    self.assertEqual(code, 2, out)
+AssertionError: 1 != 2 : L2 dispatch-record-complete: 0 events judged in 75b8c15bdd8f..348e3ef5f790, 0 violated
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3ftjegpr/no-observer_check.py/pkg/scripts/laws_check.py", line 464, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3ftjegpr/no-observer_check.py/pkg/scripts/laws_check.py", line 452, in main
+    violated, heads, violations = judge(ctx, law_id, spec)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3ftjegpr/no-observer_check.py/pkg/scripts/laws_check.py", line 418, in judge
+    judged, violations, note, *distinct = fn(ctx)
+                                          ^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3ftjegpr/no-observer_check.py/pkg/scripts/laws_check.py", line 333, in l3_amendment_append_only
+    regions = raw_amendment_regions(before)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3ftjegpr/no-observer_check.py/pkg/scripts/laws_check.py", line 250, in raw_amendment_regions
+    from design_surfaces import AMENDMENT_FENCE, AMENDMENT_LEVEL, AMENDMENT_START, AMENDMENTS_HEADING
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3ftjegpr/no-observer_check.py/pkg/scripts/design_surfaces.py", line 26, in <module>
+    from workflow_extensions import readme_extensions
+ModuleNotFoundError: No module named 'workflow_extensions'
+
+
+----------------------------------------------------------------------
+Ran 13 tests in 20.316s
+
+FAILED (failures=7)

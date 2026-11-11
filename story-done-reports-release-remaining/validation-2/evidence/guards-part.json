@@ -1,0 +1,46 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+      "--require",
+      "0076"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "adr-lint.log"
+  },
+  {
+    "name": "dev2-doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/doc_impact.py",
+      "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+      "01d23393ebe5bfd63d8bcafc01859c3b146021d2",
+      "--json"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "dev2-doc-impact.log"
+  },
+  {
+    "name": "producer-doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/doc_impact.py",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+      "--json"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "producer-doc-impact.log"
+  }
+]

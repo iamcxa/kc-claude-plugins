@@ -1,0 +1,8 @@
+{
+  "candidates": [
+    "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+    "01d23393ebe5bfd63d8bcafc01859c3b146021d2"
+  ],
+  "record": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/dispatch/validation-2.md",
+  "previous_finding": "F1 closed: both pushed heads recorded"
+}

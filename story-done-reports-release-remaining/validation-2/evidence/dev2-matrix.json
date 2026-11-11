@@ -1,0 +1,312 @@
+[
+  {
+    "name": "lint-skills.py",
+    "command": "python3 kc-dev-flow-2/scripts/lint-skills.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-01-lint-skills.log"
+  },
+  {
+    "name": "test_lint_skills.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_lint_skills.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-02-test_lint_skills.log"
+  },
+  {
+    "name": "test_design_surfaces.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-03-test_design_surfaces.log"
+  },
+  {
+    "name": "test_adr_doc_checks.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-04-test_adr_doc_checks.log"
+  },
+  {
+    "name": "test_poc_readme.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_poc_readme.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-05-test_poc_readme.log"
+  },
+  {
+    "name": "test_comment_ratio.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-06-test_comment_ratio.log"
+  },
+  {
+    "name": "test_number_guards.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_number_guards.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-07-test_number_guards.log"
+  },
+  {
+    "name": "test_codex_review.py",
+    "command": "python3 kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-08-test_codex_review.log"
+  },
+  {
+    "name": "test_roborev_gate.py",
+    "command": "python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-09-test_roborev_gate.log"
+  },
+  {
+    "name": "test_copilot_review.py",
+    "command": "python3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-10-test_copilot_review.log"
+  },
+  {
+    "name": "test_map_footprint.py",
+    "command": "python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-11-test_map_footprint.log"
+  },
+  {
+    "name": "test_release_acceptance.py",
+    "command": "python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-12-test_release_acceptance.log"
+  },
+  {
+    "name": "test_dispatch_records.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-13-test_dispatch_records.log"
+  },
+  {
+    "name": "test_delivery_gate.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-14-test_delivery_gate.log"
+  },
+  {
+    "name": "test_validation_security.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_validation_security.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-15-test_validation_security.log"
+  },
+  {
+    "name": "test_pr_watch.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_pr_watch.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-16-test_pr_watch.log"
+  },
+  {
+    "name": "test_replay_dispatch.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-17-test_replay_dispatch.log"
+  },
+  {
+    "name": "test_decision_ledger.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-18-test_decision_ledger.log"
+  },
+  {
+    "name": "test_package_version.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_package_version.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-19-test_package_version.log"
+  },
+  {
+    "name": "test_workflow_checkout.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-20-test_workflow_checkout.log"
+  },
+  {
+    "name": "test_observer_check.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_observer_check.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-21-test_observer_check.log"
+  },
+  {
+    "name": "test_merge_audit.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_merge_audit.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_merge_audit.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-22-test_merge_audit.log"
+  },
+  {
+    "name": "test_role_triggers.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_role_triggers.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-23-test_role_triggers.log"
+  },
+  {
+    "name": "test_laws_check.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_laws_check.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-24-test_laws_check.log"
+  },
+  {
+    "name": "test_learning.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_learning.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-25-test_learning.log"
+  },
+  {
+    "name": "test_dispatch_stage.py",
+    "command": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-26-test_dispatch_stage.log"
+  },
+  {
+    "name": "test_sd_dispatch.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root \"$GITHUB_WORKSPACE/.sd-plugin-root\"",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/tmp/story-release-validation-2/candidate/.sd-plugin-root"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-27-test_sd_dispatch.log"
+  },
+  {
+    "name": "test_observer_recovery.py",
+    "command": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-28-test_observer_recovery.log"
+  }
+]

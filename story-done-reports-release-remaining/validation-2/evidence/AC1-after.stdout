@@ -1,0 +1,7 @@
+journey progress: spacedock-review/owner-account after inbox-home (done)
+story inbox-home: 1 of 1 filed tasks done; declared: exists
+pull requests: spacedock-dev/subspace-relay#999
+release owner-account: 1 of 4 stories have every filed task done; 1 in progress; 2 have no task
+done: inbox-home (spacedock-dev/subspace-relay#999)
+in progress: switch-any-account 0/1
+canvas: not redrawn; draw it with kc-journey-progress

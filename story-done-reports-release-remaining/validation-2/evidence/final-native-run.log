@@ -1,0 +1,4 @@
+all workflow commands ended; starting final independent native checks
+progress-final: exit 0
+falsifiers-final: exit 0
+acceptance-final: exit 0

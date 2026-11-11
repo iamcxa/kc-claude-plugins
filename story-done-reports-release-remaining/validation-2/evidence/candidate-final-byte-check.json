@@ -1,0 +1,9 @@
+{
+  "candidate": "01d23393ebe5bfd63d8bcafc01859c3b146021d2",
+  "all_changed_paths_match_export": true,
+  "files": 13,
+  "no_product_edits": true,
+  "all_tracked_files_match": true,
+  "command": "git diff --exit-code -- with GIT_DIR at the read-only repository, GIT_WORK_TREE=candidate export and GIT_INDEX_FILE=candidate.index populated from 01d23393",
+  "exit": 0
+}

@@ -1,0 +1,12 @@
+
+> kc-journey-map-canvas@0.0.0 doctor
+> node lib/doctor.mjs
+
+ok    node           v22.13.0
+ok    dependencies   installed
+FAIL  port 5858      in use (doc API)
+      -> stop the other canvas, or free the port — several sessions cannot share one
+FAIL  port 3737      in use (canvas)
+      -> stop the other canvas, or free the port — several sessions cannot share one
+
+2 check(s) failed. Resolve these prerequisites, or provide the journey YAML and Markdown without a canvas.

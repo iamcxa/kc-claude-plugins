@@ -1,0 +1,12 @@
+[
+  {
+    "name": "AC2-live-members-as-declared",
+    "status": "passed",
+    "message": "mutant changes declared status/acceptance on continuity-latest"
+  },
+  {
+    "name": "AC3-live-declared-list-only",
+    "status": "passed",
+    "message": "mutant counts 3 declared tasks instead of 6 filed tasks"
+  }
+]

@@ -1,0 +1,11 @@
+200 101 shapes -> {"roomId":"smoke-92595","put":102,"removed":0,"clock":1}
+  r1: covers 3/3 activities
+  r2: covers 2/3 activities  not touched: collect
+ok  97 shapes across 4 pages: Function map, RELEASE 1 — Reserve and collect — stories, flow & constraints, RELEASE 2 — Plan the visit — stories, flow & constraints, Story map
+ok  round trip clean
+ok  board: false removes its board page and nothing else
+ok  an edited card on a stale board page stops the render
+ok  a board page holding a hand-made note is kept with it, even with --force
+ok  a hand-made note moved 500 with the card it was drawn on
+ok  asset round trip
+ok  save confined

@@ -1,0 +1,37 @@
+.FFFF
+======================================================================
+FAIL: test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows (__main__.JourneyStoryTests.test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows) (record='Story: none\n', folder=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/story-release-validation-2/mutants/AC11-none-without-reason/scripts/test_design_surfaces.py", line 315, in test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows
+    self.assertTrue(any("needs a 'Story:' line" in e for e in self.check(record, folder=folder)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows (__main__.JourneyStoryTests.test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows) (record='Story: none:\n', folder=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/story-release-validation-2/mutants/AC11-none-without-reason/scripts/test_design_surfaces.py", line 315, in test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows
+    self.assertTrue(any("needs a 'Story:' line" in e for e in self.check(record, folder=folder)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows (__main__.JourneyStoryTests.test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows) (record='Story: none\n', folder=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/story-release-validation-2/mutants/AC11-none-without-reason/scripts/test_design_surfaces.py", line 315, in test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows
+    self.assertTrue(any("needs a 'Story:' line" in e for e in self.check(record, folder=folder)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows (__main__.JourneyStoryTests.test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows) (record='Story: none:\n', folder=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/story-release-validation-2/mutants/AC11-none-without-reason/scripts/test_design_surfaces.py", line 315, in test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows
+    self.assertTrue(any("needs a 'Story:' line" in e for e in self.check(record, folder=folder)))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.150s
+
+FAILED (failures=4)

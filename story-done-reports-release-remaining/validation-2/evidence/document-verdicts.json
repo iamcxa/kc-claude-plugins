@@ -1,0 +1,17 @@
+[
+  {
+    "doc": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+    "verdict": "unaffected",
+    "reason": "Its three seed bounds remain unchanged; Story is a separate opt-in workflow rule."
+  },
+  {
+    "doc": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+    "verdict": "unaffected",
+    "reason": "Amendment comparison remains unchanged; its module import now works without the Story-only helper."
+  },
+  {
+    "doc": "docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md",
+    "verdict": "updated",
+    "reason": "Captain words and Protects match the task ideation ruling; the new check runs at seed and design with the scoped helper."
+  }
+]

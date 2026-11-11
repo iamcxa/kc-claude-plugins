@@ -1,0 +1,11 @@
+{
+  "candidate": "01d23393ebe5bfd63d8bcafc01859c3b146021d2",
+  "platform": "macOS arm64; local command replay, not Ubuntu hosted execution",
+  "python": "Python 3.11.14",
+  "node24": "v24.18.0",
+  "node22": "v22.13.0",
+  "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3\n",
+  "spacedock_source": "4d158a484ec73e184861067f8ed1e20087fdc26a",
+  "candidate_dependencies": "fresh npm ci, both Node versions",
+  "setup_limit": "Hosted Linux x86_64 installation uses native preinstalled Spacedock 0.27.2 on macOS; checkout action is replaced by exact git archive; no Ubuntu host asserted."
+}

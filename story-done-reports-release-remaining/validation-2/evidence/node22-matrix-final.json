@@ -1,0 +1,48 @@
+[
+  {
+    "name": "install",
+    "command": "npm ci",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-install.log",
+    "node": "22.13.0"
+  },
+  {
+    "name": "doctor",
+    "command": "npm run doctor",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-doctor-isolated.log",
+    "node": "22.13.0",
+    "initial_exit": 1,
+    "initial_log": "node22-doctor.log",
+    "reason": "existing listeners; supported isolated port settings 63791/63792"
+  },
+  {
+    "name": "typecheck",
+    "command": "npm run typecheck",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-typecheck.log",
+    "node": "22.13.0"
+  },
+  {
+    "name": "tests",
+    "command": "node --test lib/*.test.mjs",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-tests-complete-export.log",
+    "node": "22.13.0",
+    "initial_exit": 1,
+    "initial_log": "node22-tests.log",
+    "reason": "complete exact-head repository export restores the root ADR fixture omitted by setup"
+  },
+  {
+    "name": "smoke",
+    "command": "bash scripts/canvas-smoke.sh",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-smoke.log",
+    "node": "22.13.0"
+  }
+]

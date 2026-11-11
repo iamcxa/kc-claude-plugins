@@ -1,0 +1,71 @@
+{
+  "head": "01d23393ebe5bfd63d8bcafc01859c3b146021d2",
+  "producer": "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+  "merge_base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "files": [
+    {
+      "path": "docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md",
+      "sha256": "f9131ac1c94459a11f4f051619765f3f8eedb076cb93286e58b2da4e3e9cf1b2"
+    },
+    {
+      "path": "kc-dev-flow-2/extensions/journey-map/EXTENSION.md",
+      "sha256": "a35183e241384bf71ad033a885a15dfdac6ca150fe74e5d20dc48ead8f8beaf4"
+    },
+    {
+      "path": "kc-dev-flow-2/extensions/release-acceptance/fixtures/journey-progress-v1.json",
+      "sha256": "1f42b707e3764b952a11abf284ef56b0d70056eb495cffe01531c33e21645fd1"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/design_surfaces.py",
+      "sha256": "1638ffbc609cb864ce4e4a84b426c6f89e0961b6c8dd82e0aee6b4864b22b831"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "sha256": "64ea6f026b466613de54c55b50f1ba8c810d2c2a20c1c5473c27ab4032bbbfae"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "sha256": "fc347525eb71b1f9387d4b9e5f842cfceb98c8c6cfe8e06992bcbfc8f678276c"
+    },
+    {
+      "path": "kc-journey-map/lib/contract-versions.json",
+      "sha256": "f5b31bfc8d76cd8cfc021e1fff3dcfbe6e722b740e0ebbf0b31e23eed4e7da7e"
+    },
+    {
+      "path": "kc-journey-map/lib/journey-progress.mjs",
+      "sha256": "0450be1bbecb4f3e1309ffe3035af63fc7584cf9d7f87152df91332b41bef8af"
+    },
+    {
+      "path": "kc-journey-map/lib/progress.mjs",
+      "sha256": "5f0a93303c1a387dc15b28c0637727a99836643914c263d44fc9cf66991fd201"
+    },
+    {
+      "path": "kc-journey-map/lib/progress.test.mjs",
+      "sha256": "25cc768cf5eb60432fd7449afd352d7f3aa36058af43aae416d991de41ac6965"
+    },
+    {
+      "path": "kc-journey-map/lib/schemas.mjs",
+      "sha256": "489f862bc080f2fe6691d1c470b7082bd66d00493f3cd9fd2b5fdf3edd1a6372"
+    },
+    {
+      "path": "kc-journey-map/lib/schemas.test.mjs",
+      "sha256": "e14a1cd4238cfda3e5b67904588240e6a3a90bbac83f663c8ce22bcd606ce048"
+    },
+    {
+      "path": "kc-journey-map/skills/kc-journey-progress/SKILL.md",
+      "sha256": "96f01707857acae9a3d73a8151e186344b15ab5faa999f9c9c17d18aa3a74f5d"
+    }
+  ],
+  "words": {
+    "before": 612,
+    "after": 713
+  },
+  "unchanged": [
+    "whole-document consumer test",
+    "consumer contract registry",
+    "workflow reading",
+    "laws tests and fixtures",
+    "CI definitions"
+  ],
+  "sample_change": "members additions only"
+}

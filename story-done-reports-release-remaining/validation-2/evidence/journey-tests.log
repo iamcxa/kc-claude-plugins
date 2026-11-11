@@ -1,0 +1,356 @@
+✔ addStory inserts exactly one story line under the named step and touches nothing else (1064.15425ms)
+✔ addStory writes gap status and no evidence, and the file still lints clean for the new story (1485.569708ms)
+✔ addStory creates a stories list on a step that has none yet (859.863459ms)
+✔ addStory matches a block-style sibling instead of defaulting to flow (787.138083ms)
+✔ addStory refuses an unknown step (671.337625ms)
+✔ addStory refuses a duplicate story id (677.219542ms)
+✔ addStory refuses missing stepId, id or card (596.488833ms)
+✔ addStory appends only the new story to a file whose wrapping and indentation it would not choose (521.468708ms)
+✔ addStory adds a stories list to a step that has none, in the indentation the file already uses (483.524834ms)
+✔ guide includes actionable tools and safety without disclosing unrelated configuration (2.3625ms)
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./host/node-human-config" without a file extension (server/client-api-proxy.ts:2:33). Add the file extension
+  - import "./human-store" without a file extension (server/host/node-human-config.ts:2:37). Add the file extension
+  - import "./core" without a file extension (server/host/human-store.ts:1:42). Add the file extension
+  - import "./security-store" without a file extension (server/host/human-store.ts:2:24). Add the file extension
+  - import "./core" without a file extension (server/host/security-store.ts:1:27). Add the file extension
+  - import "./human-store" without a file extension (server/host/security-store.ts:2:35). Add the file extension
+  - import "./policy" without a file extension (server/host/security-store.ts:3:39). Add the file extension
+  - import "./stream-lease" without a file extension (server/host/security-store.ts:4:34). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./host/node-human-config" without a file extension (server/client-api-proxy.ts:2:33). Add the file extension
+  - import "./human-store" without a file extension (server/host/node-human-config.ts:2:37). Add the file extension
+  - import "./core" without a file extension (server/host/human-store.ts:1:42). Add the file extension
+  - import "./security-store" without a file extension (server/host/human-store.ts:2:24). Add the file extension
+  - import "./core" without a file extension (server/host/security-store.ts:1:27). Add the file extension
+  - import "./human-store" without a file extension (server/host/security-store.ts:2:35). Add the file extension
+  - import "./policy" without a file extension (server/host/security-store.ts:3:39). Add the file extension
+  - import "./stream-lease" without a file extension (server/host/security-store.ts:4:34). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+✔ real share and operator entrances generate guides per request with private opt-in and no guide forwarding (4727.626042ms)
+✔ browser operations have an explicit method contract, including returned provider navigation (3.69175ms)
+✔ each active mode forwards exactly its required client operations and denies optional probes (47.224542ms)
+✔ explicit capabilities also require private backend authorization and configured scope (1.031167ms)
+✔ unknown routes, methods, endpoint suffixes and normalized traversal stay closed (2.759417ms)
+✔ request spelling lint rejects window/global fetch, aliases, alternate transports and unknown methods (7656.405042ms)
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./host/node-human-config" without a file extension (server/client-api-proxy.ts:2:33). Add the file extension
+  - import "./human-store" without a file extension (server/host/node-human-config.ts:2:37). Add the file extension
+  - import "./core" without a file extension (server/host/human-store.ts:1:42). Add the file extension
+  - import "./security-store" without a file extension (server/host/human-store.ts:2:24). Add the file extension
+  - import "./core" without a file extension (server/host/security-store.ts:1:27). Add the file extension
+  - import "./human-store" without a file extension (server/host/security-store.ts:2:35). Add the file extension
+  - import "./policy" without a file extension (server/host/security-store.ts:3:39). Add the file extension
+  - import "./stream-lease" without a file extension (server/host/security-store.ts:4:34). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./host/node-human-config" without a file extension (server/client-api-proxy.ts:2:33). Add the file extension
+  - import "./human-store" without a file extension (server/host/node-human-config.ts:2:37). Add the file extension
+  - import "./core" without a file extension (server/host/human-store.ts:1:42). Add the file extension
+  - import "./security-store" without a file extension (server/host/human-store.ts:2:24). Add the file extension
+  - import "./core" without a file extension (server/host/security-store.ts:1:27). Add the file extension
+  - import "./human-store" without a file extension (server/host/security-store.ts:2:35). Add the file extension
+  - import "./policy" without a file extension (server/host/security-store.ts:3:39). Add the file extension
+  - import "./stream-lease" without a file extension (server/host/security-store.ts:4:34). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./host/node-human-config" without a file extension (server/client-api-proxy.ts:2:33). Add the file extension
+  - import "./human-store" without a file extension (server/host/node-human-config.ts:2:37). Add the file extension
+  - import "./core" without a file extension (server/host/human-store.ts:1:42). Add the file extension
+  - import "./security-store" without a file extension (server/host/human-store.ts:2:24). Add the file extension
+  - import "./core" without a file extension (server/host/security-store.ts:1:27). Add the file extension
+  - import "./human-store" without a file extension (server/host/security-store.ts:2:35). Add the file extension
+  - import "./policy" without a file extension (server/host/security-store.ts:3:39). Add the file extension
+  - import "./stream-lease" without a file extension (server/host/security-store.ts:4:34). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+✔ real share config derives its browser entry and policy from backend configuration (313.944375ms)
+[1;41;97m[tldraw][m [31;1mYou have multiple instances of some tldraw libraries active. This can lead to bugs and unexpected behavior. [m
+
+This usually means that your bundler is misconfigured, and is importing the same library multiple times - usually once as an ES Module, and once as a CommonJS module.
+
+The following libraries have been imported multiple times:
+  • ❌ [1m@tldraw/utils[m v5.4.0: 
+      1. ES Modules
+      2. ES Modules
+  • ❌ [1m@tldraw/validate[m v5.4.0: 
+      1. ES Modules
+      2. ES Modules
+  • ❌ [1m@tldraw/state[m v5.4.0: 
+      1. ES Modules
+      2. ES Modules
+  • ❌ [1m@tldraw/store[m v5.4.0: 
+      1. ES Modules
+      2. ES Modules
+  • ❌ [1m@tldraw/tlschema[m v5.4.0: 
+      1. ES Modules
+      2. ES Modules
+
+You should configure your bundler to only import one version of each library.
+✔ the function map draws all four lanes (259.187459ms)
+✔ a step nobody modelled is drawn as a gap, not left blank (26.270541ms)
+✔ every event gets its own shape, in the order the file lists them (0.748292ms)
+✔ event stickies do not overlap each other (0.280417ms)
+✔ no page claims a shape id another page already uses, with every projection selected (37.022625ms)
+✔ the function map is opt-in: selection decides, never the file content (117.653292ms)
+✔ six exists stories: broken proposes unverified, missing-entry-point proposes gap, works and not-reachable propose no status change (1075.880875ms)
+✔ a missing-entry-point story already unverified proposes gap, a gap or broken-but-unverified story proposes nothing, and a clean walk proposes nothing (1344.544333ms)
+✔ a wrong schema string, a story off the release, a result outside the four, another journey and an unknown release exit 1 and name the cause (3980.498292ms)
+✔ the packaged fictional journey passes every lint (15.135333ms)
+✔ every fictional story is explicitly unverified (172.721625ms)
+✔ a release contract generates for every packaged release (19.961209ms)
+✔ the packaged native snapshot matches the source across all projections (106.066334ms)
+✔ flow shape: only the folded question line changes, with answer, status and source (259.649709ms)
+✔ block shape: whole-file re-serialization rewrites the file, the fold adds lines inside the question only (481.153958ms)
+✔ block shape: a last question in a file with no trailing newline is folded onto its own lines (172.010667ms)
+✔ folding twice gives the same bytes and reports already (4.438791ms)
+✔ a different existing answer or source is a conflict and writes nothing for that question (158.560875ms)
+✔ an answer reworded or a status changed after folding is a conflict, not already, and writes nothing (98.730375ms)
+✔ a story id or question id that matches twice is refused naming both, and the command writes no draft (2219.613583ms)
+✔ a deferred question keeps its because and becomes answered (3.80675ms)
+✔ a missing story, question or journey is listed and the draft is unchanged (1.294167ms)
+✔ footprint files: another major is refused naming it, growth is accepted, an unknown kind is skipped (1.093042ms)
+✔ the command writes only the draft, refuses an existing draft, and exits 1 on a conflict (3803.63975ms)
+✔ the model reads a folded question's source back (2.2295ms)
+✔ actual handoff emits the existing brief after recorded acceptance; map source remains unchanged (1830.0245ms)
+✔ actual handoff refuses missing appetite without emitting a brief (811.845459ms)
+✔ actual handoff refuses oversized without emitting a brief (1389.5665ms)
+✔ actual handoff refuses unsupported estimate without emitting a brief (1575.832958ms)
+✔ actual handoff refuses optional retained story without emitting a brief (787.970375ms)
+✔ actual handoff refuses incomplete journey without emitting a brief (644.224417ms)
+✔ actual handoff refuses lost constraint without emitting a brief (313.328042ms)
+✔ actual handoff refuses unavailable external dependency without emitting a brief (648.447833ms)
+✔ actual handoff refuses unsupported dependency without emitting a brief (368.450084ms)
+✔ actual handoff refuses unresolved decision without emitting a brief (469.39825ms)
+✔ actual handoff refuses missing acceptance without emitting a brief (551.234792ms)
+✔ actual handoff refuses changed accepted premises without emitting a brief (436.89475ms)
+✔ actual handoff refuses changed brief without emitting a brief (330.374875ms)
+✔ actual handoff refuses changed source without emitting a brief (532.578667ms)
+✔ actual handoff refuses silent deletion without emitting a brief (333.924125ms)
+✔ actual handoff refuses missing deferral without emitting a brief (493.651833ms)
+✔ an open question on a selected story refuses handoff; an answered or deferred one does not (847.091625ms)
+✔ an earlier output is not silently overwritten or presented as a current pass (361.836167ms)
+✔ a proven available external capability does not force extra stories into the slice (385.830083ms)
+✔ the first cut may assign unplaced whole-map stories and retain deferred requirements (211.967417ms)
+✔ a release of more than five stories that do not exist yet is not refused for its count (355.831ms)
+✔ recording slice_because or slice_limit after the pre-cut copy does not refuse the handoff (327.858375ms)
+✔ board on a non-selected release is not a change to it; any other field still is (342.649917ms)
+✔ counts a fixture the way the baselines count a real map (712.496375ms)
+✔ an archived footprint the map does not hold is unfolded, and folding it makes the count 0 (107.693166ms)
+✔ a conflict, a missing question and a missing story stay unfolded with their reason (85.540042ms)
+✔ open questions on a story whose tasks are all archived are stale-open; a live task or a deferral clears them (297.369208ms)
+✔ footprints on a live task are pending and do not change the exit status (29.368417ms)
+✔ a duplicate story id is reported and fails the run; the output carries no timestamp and is stable (355.605708ms)
+✔ changing one answer text on a copy moves unsourced by one (32.424375ms)
+✔ an answer sourced by a release preparation is not unsourced (86.321709ms)
+✔ the command exits 1 on a duplicate story id and 0 on distinct ids (3714.47375ms)
+✔ a reworded answer counts as unfolded and fails; a directory with no README is a path error (2027.021083ms)
+✔ the record path sits beside the journey file and names the journey, so two journeys in one directory get two paths (3213.685208ms)
+✔ a complete record on a fully answered map passes (845.363834ms)
+✔ check refuses a heading naming another journey (543.535833ms)
+✔ check refuses a heading naming a release the map lacks (367.10425ms)
+✔ check refuses a missing Interrogation line (303.483666ms)
+✔ check refuses an Interrogation line lacking a count (411.931083ms)
+✔ check refuses an Interrogation line naming no codex arm (271.079333ms)
+✔ check refuses a plain arm without its reason (160.316792ms)
+✔ check refuses an interrogation that did not run (331.80175ms)
+✔ check refuses an open question on a release story (135.052ms)
+✔ check refuses a release answer sourced to another release (210.741833ms)
+✔ check refuses a release answer with empty words (271.39525ms)
+✔ check refuses a release answer with no date (281.473417ms)
+✔ check refuses a question holding both answer and doc (352.471667ms)
+✔ check refuses a task naming a story not on the release (219.506875ms)
+✔ check refuses a Carries id that is no release question on its story (148.047125ms)
+✔ check refuses a Carries entry that is not an ADR owed line (147.614667ms)
+✔ check refuses a record without its Reviewed line (189.270334ms)
+✔ check refuses a record without its Map edit section (113.096375ms)
+✔ check refuses a record without its Walk section (198.161333ms)
+✔ check refuses a record without its Holes section (561.812166ms)
+✔ check refuses a record without its Slice section (139.221917ms)
+✔ check refuses a record whose sections are out of order (450.427625ms)
+✔ check refuses an answer whose source kind is not a schema kind (370.536ms)
+✔ check refuses an Interrogation line with a plain arm and no lens arm (113.210208ms)
+✔ check refuses a release source.date that is not text (225.131125ms)
+✔ check refuses a release source.date that is not a date (260.830958ms)
+✔ check refuses a release source.date that is not a calendar day (93.375417ms)
+✔ check refuses a release source.words that is not text (112.527625ms)
+✔ check refuses a Tasks table without its separator row (121.149292ms)
+✔ check refuses an off-release first task row in a table without its separator row (106.306583ms)
+✔ check refuses an ADR owed entry whose question already holds doc (126.856459ms)
+✔ a story moved between releases keeps its earlier ruling source.ref, and a ruling made at this interrogation must still name this release (719.013667ms)
+✔ a question with neither answer nor doc is refused as the order check and as a release question (103.018083ms)
+✔ the pre-task path: open questions refuse the handoff, answers and a record pass the check, and a pre-cut copy taken after the answers hands off (879.51225ms)
+✔ r1 of the book-pickup example lists only its stories in step order, with the release goal as the proof line (2688.373875ms)
+✔ swapping two steps in a copy of the map swaps the walk order (876.5465ms)
+✔ story order inside one step follows the map, and a rule the map lacks reads as its id (436.842541ms)
+✔ an unknown release, a release with no goal and a release with no stories are refused with exit 1; no arguments exit 2 (1500.15925ms)
+✔ source.commit is the last commit touching the file, and null once the file has uncommitted edits (1865.698292ms)
+✔ the example printed in accept-release.md is what the walk prints for r1 (489.074208ms)
+✔ lintNoStatus fires on a story with no status field, not on one with an explicit gap (92.794875ms)
+✔ a bare-string story cannot carry a status, so it fires the same lint (0.120708ms)
+✔ lintExistsWithoutEvidence fires only on exists with no evidence (0.141834ms)
+✔ lintEvidenceNotFound fires when the cited symbol no longer greps, and passes when it does (783.199625ms)
+✔ a symbol that greps only inside the journey file itself is still reported missing (542.286292ms)
+✔ evidence that greps only in prose is reported missing, even though the string exists (599.063166ms)
+✔ evidence found only in a shell script or a CI workflow still counts, since both are executable (582.045333ms)
+✔ lintJourney combines all three and reports nothing against a clean model (367.212125ms)
+✔ lint rejects unsupported status and accepts gap, unverified and exists (409.394625ms)
+✔ lintExistsWithOpenQuestion fires on exists with an unanswered question, not on an answered one (0.311292ms)
+✔ the singular question field is sugar, so it reaches the same gate (0.123292ms)
+✔ a question answered only by a doc link does not hold a story back (0.05975ms)
+✔ a deferred question with a because does not hold a story back — the reason becomes its answer (0.04925ms)
+✔ a legacy "answered" status with no answer text or doc still holds a story back (0.252417ms)
+✔ a mistyped question status is caught, not silently read as settled (0.27725ms)
+✔ a deferred question without a because is caught (0.119625ms)
+✔ open, answered, and a reasoned deferral all pass lintQuestionStatus (0.0995ms)
+✔ a card past the text limit is reported as advisory, and a short one is not (0.673125ms)
+✔ a long flow line, step note, rule or status field is reported as advisory (0.240583ms)
+✔ evidence qualified with another repository greps that repository, Go included (1084.700458ms)
+✔ evidence naming a repository that was not passed is refused, not grepped in the primary repo (342.127542ms)
+✔ a repository passed with a ref greps that ref, not the working tree (891.524875ms)
+✔ a release with more than five stories that do not exist yet is reported, five is not (0.319ms)
+✔ stories that already exist are not counted (0.103ms)
+✔ a story with no status counts as not existing, and a story with no release counts for no release (0.079958ms)
+✔ slice_limit replaces the default and anything but a positive integer is a violation (0.384417ms)
+✔ slice_because turns the advisory into an accepted line, an empty one does not (0.944167ms)
+✔ journey-lint prints the slice-size line and its exit code is unchanged by it (1189.522875ms)
+✔ a board value that is present and not a boolean is a violation naming the release (0.390209ms)
+✔ journey-lint exits 1 on a non-boolean board and names the release (316.998458ms)
+✔ filed membership counts undeclared tasks and formats completed task pull requests (1.691625ms)
+✔ archive report uses filed counts without changing declarations, acceptance, or source bytes (6712.122458ms)
+✔ report separates release-only tasks and unknown stories and bounds lists (5267.926041ms)
+✔ real archived reader distinguishes task/story ratios, full identities, and reopening (997.398167ms)
+✔ an id-style: slug workflow reads tasks by slug and still refuses what it cannot identify (1059.068958ms)
+✔ declaration fields a member had cleared do not count as a second declaration (225.719709ms)
+✔ real records refuse missing, partial, conflicting, duplicate, malformed, and short-ID scope (3509.513041ms)
+✔ actual partial page, missing CLI, and implicit or empty journey scope cannot complete (1011.49525ms)
+✔ derived projections use three borders without entering story wording or source readback (250.294916ms)
+✔ actual refresh CLI draws to isolated canvas and native-compatible readback preserves bytes (3004.925ms)
+✔ a task naming this journey but a release and story the map does not hold is an orphan (0.25275ms)
+✔ the real reader lists orphans from the task listing and the refresh CLI exits 1 on them (2054.864792ms)
+✔ a release-acceptance task with no journey fields is not an orphan; with a journey and release but no story it is (2082.578083ms)
+✔ a freshly rendered board reports no drift (57.368959ms)
+✔ two stories may each carry a question q1 without reading as duplicated or deleted (34.730542ms)
+✔ rewording an activity on the story map is seen (4.585458ms)
+✔ dragging a story up inside its band is a priority change (2.375959ms)
+✔ dragging a story across a release line is read as a release change (27.82425ms)
+✔ a release change is written into the file (23.704584ms)
+✔ the two pages disagreeing about one card is a conflict, not a winner (27.509291ms)
+✔ the two pages in different column orders is a conflict (0.872709ms)
+✔ a hand-added card is placed under the column it sits beneath (49.37ms)
+✔ a card straddling two columns is reported, never guessed (19.772209ms)
+✔ a story dragged up is reordered in the file (3.855166ms)
+✔ a reworded story is rewritten in the file (28.299584ms)
+✔ a conflict is refused and nothing is written (5.604458ms)
+✔ a story written in object form is reworded too (4.337625ms)
+✔ with no selection, buildAllPages draws the story map alone (31.950041ms)
+✔ an empty selection falls back to the default rather than rendering nothing (9.713375ms)
+✔ selecting the journey board draws one page per release, alongside the story map (65.168875ms)
+✔ fresh release boards and story map share story ids without duplicates or drift (15.187042ms)
+✔ editing a release story round-trips its identity and leaves the original file alone with save-as (5.348209ms)
+✔ different story edits across projections are refused; matching edits apply once (2.56275ms)
+✔ a story duplicated within a release page is ambiguous even if the map has an edit (53.030291ms)
+✔ activity headings target activity rather than card and detect competing release edits (0.926209ms)
+✔ a release-only board cannot reorder the full journey or change membership and priority (0.353708ms)
+✔ hand-added notes use the activity span on their own release page (2.213459ms)
+✔ legacy numbered step cards remain readable (5.172583ms)
+✔ stories with the same wording are written by id, not by first text match (8.274208ms)
+✔ a bare-string story on the whole-journey board can be reworded (52.421125ms)
+✔ a stale story wording diff does not overwrite a newer file edit (7.082125ms)
+✔ stale activity wording is refused while current wording applies (7.580542ms)
+✔ stale card wording is refused while current wording applies (141.03175ms)
+✔ a hand-added note under a story becomes a new question (0.847708ms)
+✔ a hand-added note beside an open question becomes its answer (0.746708ms)
+✔ editing a generated question note updates its ask (8.956584ms)
+✔ editing a generated answer note updates its answer and doc (0.922375ms)
+✔ deleting a generated question note is reported, not silently applied (5.059875ms)
+✔ deleting a generated answer note is reported, not silently applied (1.048167ms)
+✔ a note exactly on a neighbouring story column is its question, not the open answer slot 20px away (1.180208ms)
+✔ the mirror: a note exactly on the open answer slot is that answer, not the neighbouring column (0.801125ms)
+✔ a note exactly between the two slots is reported, never guessed (0.711917ms)
+✔ an unrelated hand-added note is not read as a question or answer (24.006709ms)
+✔ a new question is appended to the story it belongs to (10.583792ms)
+✔ a new answer is attached to its question, upgrading question sugar to a map (3.701042ms)
+✔ applying a new question reports only its own shape as absorbed, leaving an unrelated note alone (2.611667ms)
+✔ a room whose r2 board page was removed reports no drift for it; a kept page with a human note reports it unclaimed (0.999ms)
+✔ releaseContractRows scopes to one release only, in step/story order (1.0055ms)
+✔ buildReleaseContract carries status, evidence and rule ids per story (0.573375ms)
+✔ an unknown release throws rather than generating an empty contract (0.356583ms)
+✔ release contract preserves all three story states (2.231458ms)
+✔ the contract column carries only open questions, so it reads as what is still missing (0.7145ms)
+✔ a story whose questions are all answered shows an empty column, not a stale one (0.186459ms)
+✔ release boards show exactly the selected stories in yellow, grouped by green activities (4.261375ms)
+✔ an activity or story card is structurally identical between the story map and the release board for the same node (122.198042ms)
+✔ the release board draws no lane boxes (0.891667ms)
+✔ each step gets one flow box and one constraint box, several lines becoming a bullet list (0.661291ms)
+✔ a question is drawn as its own note, straight below its story, with no connector (0.454375ms)
+✔ a grown story or question pushes the notes below it down instead of covering them (41.355083ms)
+✔ an answered question draws an answer note to its right on the same row; an unanswered one draws none (34.503792ms)
+✔ long lines have fitted flow/constraint cards, and cards stack top to bottom: activity, flow, constraints, stories, questions (0.845583ms)
+✔ unsliced journeys retain unassigned stories and activities without stories (18.226709ms)
+✔ both projections border all three states and count exists alone; the release board folds its legend into one top-left panel (7.929125ms)
+✔ story border geometry follows measured height and scale without moving the story (0.300708ms)
+✔ a partial redraw does not delete another page it did not draw (42.177292ms)
+✔ a partial redraw removes a stale question connector along with its bindings (140.342125ms)
+✔ a removed story takes its nested status border with it (4.56225ms)
+✔ every record validates against the tldraw schema (189.349292ms)
+✔ a note grows to fit its text, and a full-width character counts as two columns (0.224792ms)
+✔ the status sits in the header row beside the release, whatever the questions below (0.576375ms)
+✔ every board page carries an index key tldraw accepts, however many releases there are (2.391166ms)
+✔ a generated shape edited on the canvas blocks the render that would overwrite it (0.227292ms)
+✔ a release with board false gets no board page and keeps its story-map band (1.281458ms)
+✔ every release opting out draws no board; no releases key draws the whole-journey board (0.316542ms)
+✔ a re-render retires board pages it no longer draws: opted out, removed from the file, and the whole-journey page (2.441583ms)
+✔ a stale board page holding a hand-drawn shape is kept with it; other pages are never touched (2.396834ms)
+✔ a render that does not select journey-board removes no board page (2.248458ms)
+✔ a generated card edited on a stale board page stops the render (112.02975ms)
+✔ the render never removes the last page in the room (25.229833ms)
+✔ a re-render moves a hand-drawn shape with the cards it overlaps and lists the one it cannot place (566.457583ms)
+✔ a render leaves a shape on a page it did not draw, and a second render of the same file carries nothing (162.577042ms)
+✔ a render refused for a hand-edited card writes nothing and carries nothing (124.848292ms)
+✔ the render CLI prints one line per carried and per stranded shape (989.972ms)
+✔ a shape over cards that move differently is returned as cards-disagree, never moved (0.239417ms)
+✔ a shape over a card this render removes is returned as card-removed, never moved (0.064708ms)
+✔ a shape that overlaps no card with positive area is in neither list (0.08175ms)
+✔ a shape over a card that stays put is not carried and not listed (0.043833ms)
+✔ the recorded incident: 8 shapes are carried, 7 to where the hand repair put them (5.3535ms)
+✔ parses a simple ref and path with a chapter (0.976209ms)
+✔ parses without a chapter (0.137ms)
+✔ rejects a non-blob GitHub URL (0.861083ms)
+✔ rejects a non-GitHub URL (0.083125ms)
+✔ rejects a ref-only match with no path segment (0.063416ms)
+✔ candidate splits try the longest ref prefix first, for a branch name containing "/" (0.111208ms)
+✔ candidate splits cover a single-segment ref and multi-segment path (0.070875ms)
+✔ isSafeGitToken accepts an ordinary ref or path (0.06825ms)
+✔ isSafeGitToken rejects a leading dash (git flag injection) (0.073ms)
+✔ isSafeGitToken rejects a ".." path segment (filesystem escape) (0.115208ms)
+✔ isSafeGitToken rejects empty or non-string input (0.067125ms)
+✔ the table and version print and the recorded hash binds them (440.921ms)
+✔ an edited table with an unchanged version exits 1 naming the schema (291.132ms)
+✔ a bumped version with no recorded hash exits 1 (176.593833ms)
+✔ the printed history pointers name files that exist and a runnable command (631.007125ms)
+✔ release-walk prints its table and version, and an edited table with an unchanged version exits 1 (353.094125ms)
+✔ journey-progress registers its printed table and refuses an unversioned shape edit (460.186083ms)
+✔ the progress producer preserves the registered keys and acceptance meanings (1858.317333ms)
+✔ the README and SKILL.md send a reader to the schema command, the CHANGELOG and the ADR, and say when (2.159083ms)
+✔ the story map draws every element the method calls for (3.412583ms)
+✔ a story is drawn in its own release band, not its declaring order (68.977833ms)
+✔ a release line spans every activity, not a range of them (144.287209ms)
+✔ a story with no release is drawn in an UNASSIGNED band, never dropped (7.160792ms)
+✔ bands do not overlap (10.37025ms)
+✔ both pages render from one model and never share a shape id (21.110125ms)
+✔ no shape carries a note fontSizeAdjustment of 0 (3.882042ms)
+✔ a map past the 61st shape still gets valid ordered unique indexes (105.299584ms)
+✔ story map borders all three states and counts exists alone (0.758ms)
+✔ the story map draws no question, answer or connector, even when stories carry questions (0.50525ms)
+✔ the one-journey banner is tall enough for its sentence (0.386583ms)
+✔ no drawn label is shorter than the text inside it (0.387958ms)
+✔ a CJK label is measured by the width its glyphs take, not how many there are (0.075041ms)
+ℹ tests 276
+ℹ suites 0
+ℹ pass 276
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 34060.51

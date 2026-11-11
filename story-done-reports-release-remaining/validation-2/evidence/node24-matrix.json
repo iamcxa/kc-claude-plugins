@@ -1,0 +1,50 @@
+[
+  {
+    "name": "install",
+    "command": "npm ci",
+    "exit": 0,
+    "status": "passed",
+    "log": "npm-ci-network.log",
+    "node": "24.18.0",
+    "environment": {}
+  },
+  {
+    "name": "doctor",
+    "command": "npm run doctor",
+    "exit": 0,
+    "status": "passed",
+    "log": "node24-doctor-isolated.log",
+    "node": "24.18.0",
+    "environment": {
+      "JOURNEY_API_PORT": "63791",
+      "JOURNEY_CANVAS_PORT": "63792"
+    }
+  },
+  {
+    "name": "typecheck",
+    "command": "npm run typecheck",
+    "exit": 0,
+    "status": "passed",
+    "log": "journey-typecheck.log",
+    "node": "24.18.0",
+    "environment": {}
+  },
+  {
+    "name": "tests",
+    "command": "node --test lib/*.test.mjs",
+    "exit": 0,
+    "status": "passed",
+    "log": "journey-tests.log",
+    "node": "24.18.0",
+    "environment": {}
+  },
+  {
+    "name": "smoke",
+    "command": "bash scripts/canvas-smoke.sh",
+    "exit": 0,
+    "status": "passed",
+    "log": "journey-smoke.log",
+    "node": "24.18.0",
+    "environment": {}
+  }
+]

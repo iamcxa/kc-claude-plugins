@@ -1,0 +1,14 @@
+[
+  {
+    "name": "relay",
+    "code": "0fce82296710d7bf3b89c2871adefd71db2e2957",
+    "metadata": "/tmp/story-release-validation-2/relay-code-history",
+    "reason": "restore replay code HEAD omitted by archive; state history already pinned; no task or expectation change"
+  },
+  {
+    "name": "qnow",
+    "code": "ebc59cf96fdd5303e0dfccb1559d6048724e33ae",
+    "metadata": "/tmp/story-release-validation-2/qnow-code-history",
+    "reason": "restore replay code HEAD omitted by archive; state history already pinned; no task or expectation change"
+  }
+]

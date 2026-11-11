@@ -1,0 +1,30 @@
+✖ report separates release-only tasks and unknown stories and bounds lists (2567.422333ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2729.183958
+
+✖ failing tests:
+
+test at lib/progress.test.mjs:94:1
+✖ report separates release-only tasks and unknown stories and bounds lists (2567.422333ms)
+  AssertionError [ERR_ASSERTION]: The input was expected to not match the regular expression /story-5\b/. Input:
+  
+  'done: story-0 (team/project#1, team/project#2, team/project#3), story-1 (team/project#5), story-2 (team/project#9), story-3 (team/project#13), story-4 (team/project#17), story-5 (team/project#21), story-6 (team/project#25), story-7 (team/project#29), story-8 (team/project#33), story-9 (team/project#37), story-10 (team/project#41), story-11 (team/project#45), story-12 (team/project#49), story-13 (team/project#53), and 9 more'
+  
+      at TestContext.<anonymous> (file:///private/tmp/story-release-validation-2/mutants/AC6-unbounded-lists/lib/progress.test.mjs:108:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'done: story-0 (team/project#1, team/project#2, team/project#3), story-1 (team/project#5), story-2 (team/project#9), story-3 (team/project#13), story-4 (team/project#17), story-5 (team/project#21), story-6 (team/project#25), story-7 (team/project#29), story-8 (team/project#33), story-9 (team/project#37), story-10 (team/project#41), story-11 (team/project#45), story-12 (team/project#49), story-13 (team/project#53), and 9 more',
+    expected: /story-5\b/,
+    operator: 'doesNotMatch',
+    diff: 'simple'
+  }

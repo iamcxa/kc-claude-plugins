@@ -1,0 +1,12 @@
+{
+  "candidate": "01d23393ebe5bfd63d8bcafc01859c3b146021d2",
+  "merge_parent": "e079d0c555fde855527a82c7a497a4d07e6e4c04",
+  "merge_parents": [
+    "fa485f008562f00ebf91deed19e58ea52bb4b4dc",
+    "fd1caa475f85483cf5c4031a1e58656ff5d3eaff"
+  ],
+  "original_dev2": "fa485f008562f00ebf91deed19e58ea52bb4b4dc",
+  "only_original_byte_change": "workflow_extensions import moved into check_story_record",
+  "original_other_files_unchanged": 5,
+  "producer_subtree_unchanged": true
+}

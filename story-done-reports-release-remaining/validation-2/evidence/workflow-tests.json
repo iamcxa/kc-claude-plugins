@@ -1,0 +1,462 @@
+[
+  {
+    "name": "lint-skills.py",
+    "command": "python3 kc-dev-flow-2/scripts/lint-skills.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-01-lint-skills.log",
+    "message": "exit 0",
+    "file": "matrix-01-lint-skills.log"
+  },
+  {
+    "name": "test_lint_skills.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_lint_skills.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-02-test_lint_skills.log",
+    "message": "exit 0; 47 tests",
+    "file": "matrix-02-test_lint_skills.log"
+  },
+  {
+    "name": "test_design_surfaces.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-03-test_design_surfaces.log",
+    "message": "exit 0; 222 tests; OK (skipped=4)",
+    "file": "matrix-03-test_design_surfaces.log"
+  },
+  {
+    "name": "test_adr_doc_checks.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-04-test_adr_doc_checks.log",
+    "message": "exit 0; 9 tests",
+    "file": "matrix-04-test_adr_doc_checks.log"
+  },
+  {
+    "name": "test_poc_readme.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_poc_readme.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-05-test_poc_readme.log",
+    "message": "exit 0; 9 tests",
+    "file": "matrix-05-test_poc_readme.log"
+  },
+  {
+    "name": "test_comment_ratio.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-06-test_comment_ratio.log",
+    "message": "exit 0; 14 tests",
+    "file": "matrix-06-test_comment_ratio.log"
+  },
+  {
+    "name": "test_number_guards.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_number_guards.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-07-test_number_guards.log",
+    "message": "exit 0; 38 tests",
+    "file": "matrix-07-test_number_guards.log"
+  },
+  {
+    "name": "test_codex_review.py",
+    "command": "python3 kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-08-test_codex_review.log",
+    "message": "exit 0; 36 tests",
+    "file": "matrix-08-test_codex_review.log"
+  },
+  {
+    "name": "test_roborev_gate.py",
+    "command": "python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-09-test_roborev_gate.log",
+    "message": "exit 0; 5 tests",
+    "file": "matrix-09-test_roborev_gate.log"
+  },
+  {
+    "name": "test_copilot_review.py",
+    "command": "python3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-10-test_copilot_review.log",
+    "message": "exit 0; 15 tests",
+    "file": "matrix-10-test_copilot_review.log"
+  },
+  {
+    "name": "test_map_footprint.py",
+    "command": "python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-11-test_map_footprint.log",
+    "message": "exit 0; 23 tests",
+    "file": "matrix-11-test_map_footprint.log"
+  },
+  {
+    "name": "test_release_acceptance.py",
+    "command": "python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-12-test_release_acceptance.log",
+    "message": "exit 0; 122 tests",
+    "file": "matrix-12-test_release_acceptance.log"
+  },
+  {
+    "name": "test_dispatch_records.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-13-test_dispatch_records.log",
+    "message": "exit 0; 125 tests; OK (skipped=1)",
+    "file": "matrix-13-test_dispatch_records.log"
+  },
+  {
+    "name": "test_delivery_gate.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-14-test_delivery_gate.log",
+    "message": "exit 0; 208 tests; OK (skipped=1)",
+    "file": "matrix-14-test_delivery_gate.log"
+  },
+  {
+    "name": "test_validation_security.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_validation_security.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-15-test_validation_security.log",
+    "message": "exit 0; 5 tests",
+    "file": "matrix-15-test_validation_security.log"
+  },
+  {
+    "name": "test_pr_watch.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_pr_watch.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-16-test_pr_watch.log",
+    "message": "exit 0; 136 tests",
+    "file": "matrix-16-test_pr_watch.log"
+  },
+  {
+    "name": "test_replay_dispatch.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-17-test_replay_dispatch.log",
+    "message": "exit 0; 8 tests",
+    "file": "matrix-17-test_replay_dispatch.log"
+  },
+  {
+    "name": "test_decision_ledger.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-18-test_decision_ledger.log",
+    "message": "exit 0; 23 tests",
+    "file": "matrix-18-test_decision_ledger.log"
+  },
+  {
+    "name": "test_package_version.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_package_version.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-19-test_package_version.log",
+    "message": "exit 0; 6 tests",
+    "file": "matrix-19-test_package_version.log"
+  },
+  {
+    "name": "test_workflow_checkout.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-20-test_workflow_checkout.log",
+    "message": "exit 0; 13 tests",
+    "file": "matrix-20-test_workflow_checkout.log"
+  },
+  {
+    "name": "test_observer_check.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_observer_check.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-21-test_observer_check.log",
+    "message": "exit 0; 19 tests",
+    "file": "matrix-21-test_observer_check.log"
+  },
+  {
+    "name": "test_merge_audit.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_merge_audit.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_merge_audit.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-22-test_merge_audit.log",
+    "message": "exit 0; 17 tests",
+    "file": "matrix-22-test_merge_audit.log"
+  },
+  {
+    "name": "test_role_triggers.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_role_triggers.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-23-test_role_triggers.log",
+    "message": "exit 0; 49 tests",
+    "file": "matrix-23-test_role_triggers.log"
+  },
+  {
+    "name": "test_laws_check.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_laws_check.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-24-test_laws_check.log",
+    "message": "exit 0; 84 tests; OK (skipped=1)",
+    "file": "matrix-24-test_laws_check.log"
+  },
+  {
+    "name": "test_learning.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_learning.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-25-test_learning.log",
+    "message": "exit 0; 50 tests",
+    "file": "matrix-25-test_learning.log"
+  },
+  {
+    "name": "test_dispatch_stage.py",
+    "command": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-26-test_dispatch_stage.log",
+    "message": "exit 0; 40 tests",
+    "file": "matrix-26-test_dispatch_stage.log"
+  },
+  {
+    "name": "test_sd_dispatch.py",
+    "command": "python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root \"$GITHUB_WORKSPACE/.sd-plugin-root\"",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/tmp/story-release-validation-2/candidate/.sd-plugin-root"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-27-test_sd_dispatch.log",
+    "message": "exit 0",
+    "file": "matrix-27-test_sd_dispatch.log"
+  },
+  {
+    "name": "test_observer_recovery.py",
+    "command": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "argv": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "matrix-28-test_observer_recovery.log",
+    "message": "exit 0",
+    "file": "matrix-28-test_observer_recovery.log"
+  },
+  {
+    "name": "install",
+    "command": "npm ci",
+    "exit": 0,
+    "status": "passed",
+    "log": "npm-ci-network.log",
+    "node": "24.18.0",
+    "environment": {}
+  },
+  {
+    "name": "doctor",
+    "command": "npm run doctor",
+    "exit": 0,
+    "status": "passed",
+    "log": "node24-doctor-isolated.log",
+    "node": "24.18.0",
+    "environment": {
+      "JOURNEY_API_PORT": "63791",
+      "JOURNEY_CANVAS_PORT": "63792"
+    }
+  },
+  {
+    "name": "typecheck",
+    "command": "npm run typecheck",
+    "exit": 0,
+    "status": "passed",
+    "log": "journey-typecheck.log",
+    "node": "24.18.0",
+    "environment": {}
+  },
+  {
+    "name": "tests",
+    "command": "node --test lib/*.test.mjs",
+    "exit": 0,
+    "status": "passed",
+    "log": "journey-tests.log",
+    "node": "24.18.0",
+    "environment": {}
+  },
+  {
+    "name": "smoke",
+    "command": "bash scripts/canvas-smoke.sh",
+    "exit": 0,
+    "status": "passed",
+    "log": "journey-smoke.log",
+    "node": "24.18.0",
+    "environment": {}
+  },
+  {
+    "name": "install",
+    "command": "npm ci",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-install.log",
+    "node": "22.13.0"
+  },
+  {
+    "name": "doctor",
+    "command": "npm run doctor",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-doctor-isolated.log",
+    "node": "22.13.0",
+    "initial_exit": 1,
+    "initial_log": "node22-doctor.log",
+    "reason": "existing listeners; supported isolated port settings 63791/63792"
+  },
+  {
+    "name": "typecheck",
+    "command": "npm run typecheck",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-typecheck.log",
+    "node": "22.13.0"
+  },
+  {
+    "name": "tests",
+    "command": "node --test lib/*.test.mjs",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-tests-complete-export.log",
+    "node": "22.13.0",
+    "initial_exit": 1,
+    "initial_log": "node22-tests.log",
+    "reason": "complete exact-head repository export restores the root ADR fixture omitted by setup"
+  },
+  {
+    "name": "smoke",
+    "command": "bash scripts/canvas-smoke.sh",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-smoke.log",
+    "node": "22.13.0"
+  }
+]

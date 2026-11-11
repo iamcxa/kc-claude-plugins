@@ -1,0 +1,5 @@
+install: exit 0
+doctor: exit 1
+typecheck: exit 0
+tests: exit 1
+smoke: exit 0

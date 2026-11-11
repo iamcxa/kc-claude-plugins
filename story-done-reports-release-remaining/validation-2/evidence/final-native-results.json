@@ -1,0 +1,36 @@
+[
+  {
+    "name": "progress-final",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/story-release-validation-2/scripts/replay_progress.py"
+    ],
+    "exit": 0,
+    "seconds": 138.64,
+    "log": "progress-final.log"
+  },
+  {
+    "name": "falsifiers-final",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/story-release-validation-2/scripts/replay_falsifiers.py"
+    ],
+    "exit": 0,
+    "seconds": 31.413,
+    "log": "falsifiers-final.log"
+  },
+  {
+    "name": "acceptance-final",
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/tmp/story-release-validation-2/acceptance.sh"
+    ],
+    "exit": 0,
+    "seconds": 70.341,
+    "log": "acceptance-final.log"
+  }
+]

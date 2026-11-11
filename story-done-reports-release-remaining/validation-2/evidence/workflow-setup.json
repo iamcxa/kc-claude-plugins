@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Git checkout/setup-node actions",
+    "status": "substituted",
+    "exit": 0,
+    "detail": "Exact #843 tree from git archive; official Node 22.13.0 darwin arm64 archive checksum verified; installed Node 24.18.0."
+  },
+  {
+    "name": "Install pinned Spacedock (both workflow Linux shell blocks)",
+    "status": "substituted",
+    "exit": null,
+    "detail": "Linux amd64 artifact installation was not run on macOS. Native installed Spacedock 0.27.2 is used; .sd-plugin-root exported from the same pinned commit 4d158a484ec73e184861067f8ed1e20087fdc26a. Hosted installation success is read evidence in hosted-dev2.json and hosted-journey.json."
+  }
+]

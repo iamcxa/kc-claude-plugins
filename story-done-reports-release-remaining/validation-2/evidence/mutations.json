@@ -1,0 +1,68 @@
+[
+  {
+    "name": "AC2-members-as-declared",
+    "status": "passed",
+    "message": "mutant exit 1; expected a test failure",
+    "mutation": "lib/progress.mjs: return result\n -> if (members.length && done.length === members.length) result.status = \"exists\"\n\t\treturn result\n"
+  },
+  {
+    "name": "AC3-declared-members-only",
+    "status": "passed",
+    "message": "mutant exit 1; expected a test failure",
+    "mutation": "lib/progress.mjs: const members = tasks.filter((t) => key(tuple(t)) === key(identity)) -> const members = tasks.filter((t) => key(tuple(t)) === key(identity)).filter((t) => t[\"journey-required-tasks\"])"
+  },
+  {
+    "name": "AC4-drop-url-rule",
+    "status": "passed",
+    "message": "mutant exit 1; expected a test failure",
+    "mutation": "lib/progress.mjs: if (url) return `${url[1]}#${url[2]}` -> if (false) return `${url[1]}#${url[2]}`"
+  },
+  {
+    "name": "AC5-drop-release-only",
+    "status": "passed",
+    "message": "mutant exit 1; expected a test failure",
+    "mutation": "lib/progress.mjs: ...(noStory.length ? -> ...(false ?"
+  },
+  {
+    "name": "AC6-unbounded-lists",
+    "status": "passed",
+    "message": "mutant exit 1; expected a test failure",
+    "mutation": "lib/progress.mjs: rows.slice(0, limit) -> rows.slice()"
+  },
+  {
+    "name": "AC7-silent-failed-read",
+    "status": "passed",
+    "message": "mutant exit 1; expected a test failure",
+    "mutation": "lib/progress.mjs: if (progress.diagnostic) throw Object.assign(new Error(progress.diagnostic), { exitCode: 1 }) -> if (progress.diagnostic) return 'unavailable'"
+  },
+  {
+    "name": "AC8-remove-version-bump",
+    "status": "passed",
+    "message": "mutant exit 1; expected a test failure",
+    "mutation": "lib/contract-versions.json: \"current\": \"1.1.0\",\n    \"versions\": {\n      \"1.0.0\": \"c1739 -> \"current\": \"1.0.0\",\n    \"versions\": {\n      \"1.0.0\": \"c1739"
+  },
+  {
+    "name": "AC11-unlisted-workflows",
+    "status": "passed",
+    "message": "mutant exit 1; expected a test failure",
+    "mutation": "scripts/design_surfaces.py: if \"journey-map\" not in readme_extensions(readme): -> if False:"
+  },
+  {
+    "name": "AC11-none-without-reason",
+    "status": "passed",
+    "message": "mutant exit 1; expected a test failure",
+    "mutation": "scripts/design_surfaces.py: if not named or (named in (\"none\", \"none:\") and not re.match(r\"^none:[ \\t]*\\S\", value)): -> if not named:"
+  },
+  {
+    "name": "AC13-skip-story-rule",
+    "status": "passed",
+    "message": "mutant exit 1; expected a test failure",
+    "mutation": "scripts/design_surfaces.py: errors.extend(check_story_record(path, text, seed)) -> errors.extend([])"
+  },
+  {
+    "name": "AC15-compare-presence-only",
+    "status": "passed",
+    "message": "mutant exit 1; expected a test failure",
+    "mutation": "scripts/design_surfaces.py: if (named == \"none:\" and story) or (named != \"none:\" and named != story): -> if False:"
+  }
+]

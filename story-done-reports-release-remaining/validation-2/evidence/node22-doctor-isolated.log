@@ -1,0 +1,10 @@
+
+> kc-journey-map-canvas@0.0.0 doctor
+> node lib/doctor.mjs
+
+ok    node           v22.13.0
+ok    dependencies   installed
+ok    port 63791     free (doc API)
+ok    port 63792     free (canvas)
+
+Ready. npm run canvas

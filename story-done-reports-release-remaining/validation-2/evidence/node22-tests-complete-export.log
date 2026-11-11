@@ -1,0 +1,1459 @@
+TAP version 13
+# Subtest: addStory inserts exactly one story line under the named step and touches nothing else
+ok 1 - addStory inserts exactly one story line under the named step and touches nothing else
+  ---
+  duration_ms: 947.357166
+  ...
+# Subtest: addStory writes gap status and no evidence, and the file still lints clean for the new story
+ok 2 - addStory writes gap status and no evidence, and the file still lints clean for the new story
+  ---
+  duration_ms: 1258.90525
+  ...
+# Subtest: addStory creates a stories list on a step that has none yet
+ok 3 - addStory creates a stories list on a step that has none yet
+  ---
+  duration_ms: 818.762125
+  ...
+# Subtest: addStory matches a block-style sibling instead of defaulting to flow
+ok 4 - addStory matches a block-style sibling instead of defaulting to flow
+  ---
+  duration_ms: 1141.251833
+  ...
+# Subtest: addStory refuses an unknown step
+ok 5 - addStory refuses an unknown step
+  ---
+  duration_ms: 912.169375
+  ...
+# Subtest: addStory refuses a duplicate story id
+ok 6 - addStory refuses a duplicate story id
+  ---
+  duration_ms: 767.907208
+  ...
+# Subtest: addStory refuses missing stepId, id or card
+ok 7 - addStory refuses missing stepId, id or card
+  ---
+  duration_ms: 664.481333
+  ...
+# Subtest: addStory appends only the new story to a file whose wrapping and indentation it would not choose
+ok 8 - addStory appends only the new story to a file whose wrapping and indentation it would not choose
+  ---
+  duration_ms: 750.118959
+  ...
+# Subtest: addStory adds a stories list to a step that has none, in the indentation the file already uses
+ok 9 - addStory adds a stories list to a step that has none, in the indentation the file already uses
+  ---
+  duration_ms: 710.64675
+  ...
+# Subtest: guide includes actionable tools and safety without disclosing unrelated configuration
+ok 10 - guide includes actionable tools and safety without disclosing unrelated configuration
+  ---
+  duration_ms: 1.336834
+  ...
+# (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+#   - import "./host/node-human-config" without a file extension (server/client-api-proxy.ts:2:33). Add the file extension
+#   - import "./human-store" without a file extension (server/host/node-human-config.ts:2:37). Add the file extension
+#   - import "./core" without a file extension (server/host/human-store.ts:1:42). Add the file extension
+#   - import "./security-store" without a file extension (server/host/human-store.ts:2:24). Add the file extension
+#   - import "./core" without a file extension (server/host/security-store.ts:1:27). Add the file extension
+#   - import "./human-store" without a file extension (server/host/security-store.ts:2:35). Add the file extension
+#   - import "./policy" without a file extension (server/host/security-store.ts:3:39). Add the file extension
+#   - import "./stream-lease" without a file extension (server/host/security-store.ts:4:34). Add the file extension
+# Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+# (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+#   - import "./host/node-human-config" without a file extension (server/client-api-proxy.ts:2:33). Add the file extension
+#   - import "./human-store" without a file extension (server/host/node-human-config.ts:2:37). Add the file extension
+#   - import "./core" without a file extension (server/host/human-store.ts:1:42). Add the file extension
+#   - import "./security-store" without a file extension (server/host/human-store.ts:2:24). Add the file extension
+#   - import "./core" without a file extension (server/host/security-store.ts:1:27). Add the file extension
+#   - import "./human-store" without a file extension (server/host/security-store.ts:2:35). Add the file extension
+#   - import "./policy" without a file extension (server/host/security-store.ts:3:39). Add the file extension
+#   - import "./stream-lease" without a file extension (server/host/security-store.ts:4:34). Add the file extension
+# Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+# Subtest: real share and operator entrances generate guides per request with private opt-in and no guide forwarding
+ok 11 - real share and operator entrances generate guides per request with private opt-in and no guide forwarding
+  ---
+  duration_ms: 4314.750958
+  ...
+# Subtest: browser operations have an explicit method contract, including returned provider navigation
+ok 12 - browser operations have an explicit method contract, including returned provider navigation
+  ---
+  duration_ms: 1.602125
+  ...
+# Subtest: each active mode forwards exactly its required client operations and denies optional probes
+ok 13 - each active mode forwards exactly its required client operations and denies optional probes
+  ---
+  duration_ms: 100.337459
+  ...
+# Subtest: explicit capabilities also require private backend authorization and configured scope
+ok 14 - explicit capabilities also require private backend authorization and configured scope
+  ---
+  duration_ms: 0.437334
+  ...
+# Subtest: unknown routes, methods, endpoint suffixes and normalized traversal stay closed
+ok 15 - unknown routes, methods, endpoint suffixes and normalized traversal stay closed
+  ---
+  duration_ms: 0.56175
+  ...
+# Subtest: request spelling lint rejects window/global fetch, aliases, alternate transports and unknown methods
+ok 16 - request spelling lint rejects window/global fetch, aliases, alternate transports and unknown methods
+  ---
+  duration_ms: 17486.986375
+  ...
+# (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+#   - import "./host/node-human-config" without a file extension (server/client-api-proxy.ts:2:33). Add the file extension
+#   - import "./human-store" without a file extension (server/host/node-human-config.ts:2:37). Add the file extension
+#   - import "./core" without a file extension (server/host/human-store.ts:1:42). Add the file extension
+#   - import "./security-store" without a file extension (server/host/human-store.ts:2:24). Add the file extension
+#   - import "./core" without a file extension (server/host/security-store.ts:1:27). Add the file extension
+#   - import "./human-store" without a file extension (server/host/security-store.ts:2:35). Add the file extension
+#   - import "./policy" without a file extension (server/host/security-store.ts:3:39). Add the file extension
+#   - import "./stream-lease" without a file extension (server/host/security-store.ts:4:34). Add the file extension
+# Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+# [1;41;97m[tldraw][m [31;1mYou have multiple instances of some tldraw libraries active. This can lead to bugs and unexpected behavior. [m
+# This usually means that your bundler is misconfigured, and is importing the same library multiple times - usually once as an ES Module, and once as a CommonJS module.
+# The following libraries have been imported multiple times:
+#   • ❌ [1m@tldraw/utils[m v5.4.0: 
+#       1. ES Modules
+#       2. ES Modules
+#   • ❌ [1m@tldraw/validate[m v5.4.0: 
+#       1. ES Modules
+#       2. ES Modules
+#   • ❌ [1m@tldraw/state[m v5.4.0: 
+#       1. ES Modules
+#       2. ES Modules
+#   • ❌ [1m@tldraw/store[m v5.4.0: 
+#       1. ES Modules
+#       2. ES Modules
+#   • ❌ [1m@tldraw/tlschema[m v5.4.0: 
+#       1. ES Modules
+#       2. ES Modules
+# You should configure your bundler to only import one version of each library.
+# (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+#   - import "./host/node-human-config" without a file extension (server/client-api-proxy.ts:2:33). Add the file extension
+#   - import "./human-store" without a file extension (server/host/node-human-config.ts:2:37). Add the file extension
+#   - import "./core" without a file extension (server/host/human-store.ts:1:42). Add the file extension
+#   - import "./security-store" without a file extension (server/host/human-store.ts:2:24). Add the file extension
+#   - import "./core" without a file extension (server/host/security-store.ts:1:27). Add the file extension
+#   - import "./human-store" without a file extension (server/host/security-store.ts:2:35). Add the file extension
+#   - import "./policy" without a file extension (server/host/security-store.ts:3:39). Add the file extension
+#   - import "./stream-lease" without a file extension (server/host/security-store.ts:4:34). Add the file extension
+# Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+# (!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+#   - import "./host/node-human-config" without a file extension (server/client-api-proxy.ts:2:33). Add the file extension
+#   - import "./human-store" without a file extension (server/host/node-human-config.ts:2:37). Add the file extension
+#   - import "./core" without a file extension (server/host/human-store.ts:1:42). Add the file extension
+#   - import "./security-store" without a file extension (server/host/human-store.ts:2:24). Add the file extension
+#   - import "./core" without a file extension (server/host/security-store.ts:1:27). Add the file extension
+#   - import "./human-store" without a file extension (server/host/security-store.ts:2:35). Add the file extension
+#   - import "./policy" without a file extension (server/host/security-store.ts:3:39). Add the file extension
+#   - import "./stream-lease" without a file extension (server/host/security-store.ts:4:34). Add the file extension
+# Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+# Subtest: real share config derives its browser entry and policy from backend configuration
+ok 17 - real share config derives its browser entry and policy from backend configuration
+  ---
+  duration_ms: 1028.096875
+  ...
+# Subtest: the function map draws all four lanes
+ok 18 - the function map draws all four lanes
+  ---
+  duration_ms: 1.851333
+  ...
+# Subtest: a step nobody modelled is drawn as a gap, not left blank
+ok 19 - a step nobody modelled is drawn as a gap, not left blank
+  ---
+  duration_ms: 0.564958
+  ...
+# Subtest: every event gets its own shape, in the order the file lists them
+ok 20 - every event gets its own shape, in the order the file lists them
+  ---
+  duration_ms: 131.734166
+  ...
+# Subtest: event stickies do not overlap each other
+ok 21 - event stickies do not overlap each other
+  ---
+  duration_ms: 80.25975
+  ...
+# Subtest: no page claims a shape id another page already uses, with every projection selected
+ok 22 - no page claims a shape id another page already uses, with every projection selected
+  ---
+  duration_ms: 219.35425
+  ...
+# Subtest: the function map is opt-in: selection decides, never the file content
+ok 23 - the function map is opt-in: selection decides, never the file content
+  ---
+  duration_ms: 35.388667
+  ...
+# Subtest: six exists stories: broken proposes unverified, missing-entry-point proposes gap, works and not-reachable propose no status change
+ok 24 - six exists stories: broken proposes unverified, missing-entry-point proposes gap, works and not-reachable propose no status change
+  ---
+  duration_ms: 984.632667
+  ...
+# Subtest: a missing-entry-point story already unverified proposes gap, a gap or broken-but-unverified story proposes nothing, and a clean walk proposes nothing
+ok 25 - a missing-entry-point story already unverified proposes gap, a gap or broken-but-unverified story proposes nothing, and a clean walk proposes nothing
+  ---
+  duration_ms: 1950.354958
+  ...
+# Subtest: a wrong schema string, a story off the release, a result outside the four, another journey and an unknown release exit 1 and name the cause
+ok 26 - a wrong schema string, a story off the release, a result outside the four, another journey and an unknown release exit 1 and name the cause
+  ---
+  duration_ms: 5631.048292
+  ...
+# Subtest: the packaged fictional journey passes every lint
+ok 27 - the packaged fictional journey passes every lint
+  ---
+  duration_ms: 269.702917
+  ...
+# Subtest: every fictional story is explicitly unverified
+ok 28 - every fictional story is explicitly unverified
+  ---
+  duration_ms: 3.745542
+  ...
+# Subtest: a release contract generates for every packaged release
+ok 29 - a release contract generates for every packaged release
+  ---
+  duration_ms: 43.675667
+  ...
+# Subtest: the packaged native snapshot matches the source across all projections
+ok 30 - the packaged native snapshot matches the source across all projections
+  ---
+  duration_ms: 102.452209
+  ...
+# Subtest: flow shape: only the folded question line changes, with answer, status and source
+ok 31 - flow shape: only the folded question line changes, with answer, status and source
+  ---
+  duration_ms: 211.982709
+  ...
+# Subtest: block shape: whole-file re-serialization rewrites the file, the fold adds lines inside the question only
+ok 32 - block shape: whole-file re-serialization rewrites the file, the fold adds lines inside the question only
+  ---
+  duration_ms: 21.952875
+  ...
+# Subtest: block shape: a last question in a file with no trailing newline is folded onto its own lines
+ok 33 - block shape: a last question in a file with no trailing newline is folded onto its own lines
+  ---
+  duration_ms: 3.26325
+  ...
+# Subtest: folding twice gives the same bytes and reports already
+ok 34 - folding twice gives the same bytes and reports already
+  ---
+  duration_ms: 88.1815
+  ...
+# Subtest: a different existing answer or source is a conflict and writes nothing for that question
+ok 35 - a different existing answer or source is a conflict and writes nothing for that question
+  ---
+  duration_ms: 112.902125
+  ...
+# Subtest: an answer reworded or a status changed after folding is a conflict, not already, and writes nothing
+ok 36 - an answer reworded or a status changed after folding is a conflict, not already, and writes nothing
+  ---
+  duration_ms: 218.574875
+  ...
+# Subtest: a story id or question id that matches twice is refused naming both, and the command writes no draft
+ok 37 - a story id or question id that matches twice is refused naming both, and the command writes no draft
+  ---
+  duration_ms: 2264.59475
+  ...
+# Subtest: a deferred question keeps its because and becomes answered
+ok 38 - a deferred question keeps its because and becomes answered
+  ---
+  duration_ms: 12.070083
+  ...
+# Subtest: a missing story, question or journey is listed and the draft is unchanged
+ok 39 - a missing story, question or journey is listed and the draft is unchanged
+  ---
+  duration_ms: 6.352916
+  ...
+# Subtest: footprint files: another major is refused naming it, growth is accepted, an unknown kind is skipped
+ok 40 - footprint files: another major is refused naming it, growth is accepted, an unknown kind is skipped
+  ---
+  duration_ms: 9.250625
+  ...
+# Subtest: the command writes only the draft, refuses an existing draft, and exits 1 on a conflict
+ok 41 - the command writes only the draft, refuses an existing draft, and exits 1 on a conflict
+  ---
+  duration_ms: 4385.26425
+  ...
+# Subtest: the model reads a folded question's source back
+ok 42 - the model reads a folded question's source back
+  ---
+  duration_ms: 3.237667
+  ...
+# Subtest: actual handoff emits the existing brief after recorded acceptance; map source remains unchanged
+ok 43 - actual handoff emits the existing brief after recorded acceptance; map source remains unchanged
+  ---
+  duration_ms: 1469.8275
+  ...
+# Subtest: actual handoff refuses missing appetite without emitting a brief
+ok 44 - actual handoff refuses missing appetite without emitting a brief
+  ---
+  duration_ms: 1600.235042
+  ...
+# Subtest: actual handoff refuses oversized without emitting a brief
+ok 45 - actual handoff refuses oversized without emitting a brief
+  ---
+  duration_ms: 1879.056666
+  ...
+# Subtest: actual handoff refuses unsupported estimate without emitting a brief
+ok 46 - actual handoff refuses unsupported estimate without emitting a brief
+  ---
+  duration_ms: 1104.706709
+  ...
+# Subtest: actual handoff refuses optional retained story without emitting a brief
+ok 47 - actual handoff refuses optional retained story without emitting a brief
+  ---
+  duration_ms: 1225.590792
+  ...
+# Subtest: actual handoff refuses incomplete journey without emitting a brief
+ok 48 - actual handoff refuses incomplete journey without emitting a brief
+  ---
+  duration_ms: 731.981084
+  ...
+# Subtest: actual handoff refuses lost constraint without emitting a brief
+ok 49 - actual handoff refuses lost constraint without emitting a brief
+  ---
+  duration_ms: 664.597458
+  ...
+# Subtest: actual handoff refuses unavailable external dependency without emitting a brief
+ok 50 - actual handoff refuses unavailable external dependency without emitting a brief
+  ---
+  duration_ms: 788.629875
+  ...
+# Subtest: actual handoff refuses unsupported dependency without emitting a brief
+ok 51 - actual handoff refuses unsupported dependency without emitting a brief
+  ---
+  duration_ms: 456.044708
+  ...
+# Subtest: actual handoff refuses unresolved decision without emitting a brief
+ok 52 - actual handoff refuses unresolved decision without emitting a brief
+  ---
+  duration_ms: 842.827583
+  ...
+# Subtest: actual handoff refuses missing acceptance without emitting a brief
+ok 53 - actual handoff refuses missing acceptance without emitting a brief
+  ---
+  duration_ms: 920.71775
+  ...
+# Subtest: actual handoff refuses changed accepted premises without emitting a brief
+ok 54 - actual handoff refuses changed accepted premises without emitting a brief
+  ---
+  duration_ms: 1294.846792
+  ...
+# Subtest: actual handoff refuses changed brief without emitting a brief
+ok 55 - actual handoff refuses changed brief without emitting a brief
+  ---
+  duration_ms: 1232.762916
+  ...
+# Subtest: actual handoff refuses changed source without emitting a brief
+ok 56 - actual handoff refuses changed source without emitting a brief
+  ---
+  duration_ms: 1204.164542
+  ...
+# Subtest: actual handoff refuses silent deletion without emitting a brief
+ok 57 - actual handoff refuses silent deletion without emitting a brief
+  ---
+  duration_ms: 1449.173625
+  ...
+# Subtest: actual handoff refuses missing deferral without emitting a brief
+ok 58 - actual handoff refuses missing deferral without emitting a brief
+  ---
+  duration_ms: 1018.552916
+  ...
+# Subtest: an open question on a selected story refuses handoff; an answered or deferred one does not
+ok 59 - an open question on a selected story refuses handoff; an answered or deferred one does not
+  ---
+  duration_ms: 2362.24475
+  ...
+# Subtest: an earlier output is not silently overwritten or presented as a current pass
+ok 60 - an earlier output is not silently overwritten or presented as a current pass
+  ---
+  duration_ms: 1815.28825
+  ...
+# Subtest: a proven available external capability does not force extra stories into the slice
+ok 61 - a proven available external capability does not force extra stories into the slice
+  ---
+  duration_ms: 910.665
+  ...
+# Subtest: the first cut may assign unplaced whole-map stories and retain deferred requirements
+ok 62 - the first cut may assign unplaced whole-map stories and retain deferred requirements
+  ---
+  duration_ms: 844.100083
+  ...
+# Subtest: a release of more than five stories that do not exist yet is not refused for its count
+ok 63 - a release of more than five stories that do not exist yet is not refused for its count
+  ---
+  duration_ms: 773.59325
+  ...
+# Subtest: recording slice_because or slice_limit after the pre-cut copy does not refuse the handoff
+ok 64 - recording slice_because or slice_limit after the pre-cut copy does not refuse the handoff
+  ---
+  duration_ms: 635.646458
+  ...
+# Subtest: board on a non-selected release is not a change to it; any other field still is
+ok 65 - board on a non-selected release is not a change to it; any other field still is
+  ---
+  duration_ms: 1459.414792
+  ...
+# Subtest: counts a fixture the way the baselines count a real map
+ok 66 - counts a fixture the way the baselines count a real map
+  ---
+  duration_ms: 62.311333
+  ...
+# Subtest: an archived footprint the map does not hold is unfolded, and folding it makes the count 0
+ok 67 - an archived footprint the map does not hold is unfolded, and folding it makes the count 0
+  ---
+  duration_ms: 270.660541
+  ...
+# Subtest: a conflict, a missing question and a missing story stay unfolded with their reason
+ok 68 - a conflict, a missing question and a missing story stay unfolded with their reason
+  ---
+  duration_ms: 22.571875
+  ...
+# Subtest: open questions on a story whose tasks are all archived are stale-open; a live task or a deferral clears them
+ok 69 - open questions on a story whose tasks are all archived are stale-open; a live task or a deferral clears them
+  ---
+  duration_ms: 51.973375
+  ...
+# Subtest: footprints on a live task are pending and do not change the exit status
+ok 70 - footprints on a live task are pending and do not change the exit status
+  ---
+  duration_ms: 50.375584
+  ...
+# Subtest: a duplicate story id is reported and fails the run; the output carries no timestamp and is stable
+ok 71 - a duplicate story id is reported and fails the run; the output carries no timestamp and is stable
+  ---
+  duration_ms: 212.802542
+  ...
+# Subtest: changing one answer text on a copy moves unsourced by one
+ok 72 - changing one answer text on a copy moves unsourced by one
+  ---
+  duration_ms: 67.295584
+  ...
+# Subtest: an answer sourced by a release preparation is not unsourced
+ok 73 - an answer sourced by a release preparation is not unsourced
+  ---
+  duration_ms: 115.364916
+  ...
+# Subtest: the command exits 1 on a duplicate story id and 0 on distinct ids
+ok 74 - the command exits 1 on a duplicate story id and 0 on distinct ids
+  ---
+  duration_ms: 4314.524375
+  ...
+# Subtest: a reworded answer counts as unfolded and fails; a directory with no README is a path error
+ok 75 - a reworded answer counts as unfolded and fails; a directory with no README is a path error
+  ---
+  duration_ms: 3278.862583
+  ...
+# Subtest: the record path sits beside the journey file and names the journey, so two journeys in one directory get two paths
+ok 76 - the record path sits beside the journey file and names the journey, so two journeys in one directory get two paths
+  ---
+  duration_ms: 3255.111
+  ...
+# Subtest: a complete record on a fully answered map passes
+ok 77 - a complete record on a fully answered map passes
+  ---
+  duration_ms: 1040.0685
+  ...
+# Subtest: check refuses a heading naming another journey
+ok 78 - check refuses a heading naming another journey
+  ---
+  duration_ms: 418.932792
+  ...
+# Subtest: check refuses a heading naming a release the map lacks
+ok 79 - check refuses a heading naming a release the map lacks
+  ---
+  duration_ms: 537.080625
+  ...
+# Subtest: check refuses a missing Interrogation line
+ok 80 - check refuses a missing Interrogation line
+  ---
+  duration_ms: 609.837208
+  ...
+# Subtest: check refuses an Interrogation line lacking a count
+ok 81 - check refuses an Interrogation line lacking a count
+  ---
+  duration_ms: 689.097333
+  ...
+# Subtest: check refuses an Interrogation line naming no codex arm
+ok 82 - check refuses an Interrogation line naming no codex arm
+  ---
+  duration_ms: 595.508833
+  ...
+# Subtest: check refuses a plain arm without its reason
+ok 83 - check refuses a plain arm without its reason
+  ---
+  duration_ms: 320.453667
+  ...
+# Subtest: check refuses an interrogation that did not run
+ok 84 - check refuses an interrogation that did not run
+  ---
+  duration_ms: 323.758708
+  ...
+# Subtest: check refuses an open question on a release story
+ok 85 - check refuses an open question on a release story
+  ---
+  duration_ms: 347.357584
+  ...
+# Subtest: check refuses a release answer sourced to another release
+ok 86 - check refuses a release answer sourced to another release
+  ---
+  duration_ms: 517.556333
+  ...
+# Subtest: check refuses a release answer with empty words
+ok 87 - check refuses a release answer with empty words
+  ---
+  duration_ms: 682.318625
+  ...
+# Subtest: check refuses a release answer with no date
+ok 88 - check refuses a release answer with no date
+  ---
+  duration_ms: 712.293167
+  ...
+# Subtest: check refuses a question holding both answer and doc
+ok 89 - check refuses a question holding both answer and doc
+  ---
+  duration_ms: 498.304625
+  ...
+# Subtest: check refuses a task naming a story not on the release
+ok 90 - check refuses a task naming a story not on the release
+  ---
+  duration_ms: 758.589042
+  ...
+# Subtest: check refuses a Carries id that is no release question on its story
+ok 91 - check refuses a Carries id that is no release question on its story
+  ---
+  duration_ms: 616.084459
+  ...
+# Subtest: check refuses a Carries entry that is not an ADR owed line
+ok 92 - check refuses a Carries entry that is not an ADR owed line
+  ---
+  duration_ms: 503.459584
+  ...
+# Subtest: check refuses a record without its Reviewed line
+ok 93 - check refuses a record without its Reviewed line
+  ---
+  duration_ms: 459.457666
+  ...
+# Subtest: check refuses a record without its Map edit section
+ok 94 - check refuses a record without its Map edit section
+  ---
+  duration_ms: 539.675833
+  ...
+# Subtest: check refuses a record without its Walk section
+ok 95 - check refuses a record without its Walk section
+  ---
+  duration_ms: 380.53475
+  ...
+# Subtest: check refuses a record without its Holes section
+ok 96 - check refuses a record without its Holes section
+  ---
+  duration_ms: 380.744583
+  ...
+# Subtest: check refuses a record without its Slice section
+ok 97 - check refuses a record without its Slice section
+  ---
+  duration_ms: 377.830167
+  ...
+# Subtest: check refuses a record whose sections are out of order
+ok 98 - check refuses a record whose sections are out of order
+  ---
+  duration_ms: 597.152125
+  ...
+# Subtest: check refuses an answer whose source kind is not a schema kind
+ok 99 - check refuses an answer whose source kind is not a schema kind
+  ---
+  duration_ms: 782.73025
+  ...
+# Subtest: check refuses an Interrogation line with a plain arm and no lens arm
+ok 100 - check refuses an Interrogation line with a plain arm and no lens arm
+  ---
+  duration_ms: 735.594542
+  ...
+# Subtest: check refuses a release source.date that is not text
+ok 101 - check refuses a release source.date that is not text
+  ---
+  duration_ms: 540.4375
+  ...
+# Subtest: check refuses a release source.date that is not a date
+ok 102 - check refuses a release source.date that is not a date
+  ---
+  duration_ms: 481.45225
+  ...
+# Subtest: check refuses a release source.date that is not a calendar day
+ok 103 - check refuses a release source.date that is not a calendar day
+  ---
+  duration_ms: 386.544333
+  ...
+# Subtest: check refuses a release source.words that is not text
+ok 104 - check refuses a release source.words that is not text
+  ---
+  duration_ms: 316.699417
+  ...
+# Subtest: check refuses a Tasks table without its separator row
+ok 105 - check refuses a Tasks table without its separator row
+  ---
+  duration_ms: 481.093542
+  ...
+# Subtest: check refuses an off-release first task row in a table without its separator row
+ok 106 - check refuses an off-release first task row in a table without its separator row
+  ---
+  duration_ms: 710.469
+  ...
+# Subtest: check refuses an ADR owed entry whose question already holds doc
+ok 107 - check refuses an ADR owed entry whose question already holds doc
+  ---
+  duration_ms: 581.497875
+  ...
+# Subtest: a story moved between releases keeps its earlier ruling source.ref, and a ruling made at this interrogation must still name this release
+ok 108 - a story moved between releases keeps its earlier ruling source.ref, and a ruling made at this interrogation must still name this release
+  ---
+  duration_ms: 1498.863333
+  ...
+# Subtest: a question with neither answer nor doc is refused as the order check and as a release question
+ok 109 - a question with neither answer nor doc is refused as the order check and as a release question
+  ---
+  duration_ms: 428.557958
+  ...
+# Subtest: the pre-task path: open questions refuse the handoff, answers and a record pass the check, and a pre-cut copy taken after the answers hands off
+ok 110 - the pre-task path: open questions refuse the handoff, answers and a record pass the check, and a pre-cut copy taken after the answers hands off
+  ---
+  duration_ms: 2194.275833
+  ...
+# Subtest: r1 of the book-pickup example lists only its stories in step order, with the release goal as the proof line
+ok 111 - r1 of the book-pickup example lists only its stories in step order, with the release goal as the proof line
+  ---
+  duration_ms: 3528.261542
+  ...
+# Subtest: swapping two steps in a copy of the map swaps the walk order
+ok 112 - swapping two steps in a copy of the map swaps the walk order
+  ---
+  duration_ms: 660.008292
+  ...
+# Subtest: story order inside one step follows the map, and a rule the map lacks reads as its id
+ok 113 - story order inside one step follows the map, and a rule the map lacks reads as its id
+  ---
+  duration_ms: 1045.311875
+  ...
+# Subtest: an unknown release, a release with no goal and a release with no stories are refused with exit 1; no arguments exit 2
+ok 114 - an unknown release, a release with no goal and a release with no stories are refused with exit 1; no arguments exit 2
+  ---
+  duration_ms: 1934.101333
+  ...
+# Subtest: source.commit is the last commit touching the file, and null once the file has uncommitted edits
+ok 115 - source.commit is the last commit touching the file, and null once the file has uncommitted edits
+  ---
+  duration_ms: 2898.884584
+  ...
+# Subtest: the example printed in accept-release.md is what the walk prints for r1
+ok 116 - the example printed in accept-release.md is what the walk prints for r1
+  ---
+  duration_ms: 700.928542
+  ...
+# Subtest: lintNoStatus fires on a story with no status field, not on one with an explicit gap
+ok 117 - lintNoStatus fires on a story with no status field, not on one with an explicit gap
+  ---
+  duration_ms: 9.730583
+  ...
+# Subtest: a bare-string story cannot carry a status, so it fires the same lint
+ok 118 - a bare-string story cannot carry a status, so it fires the same lint
+  ---
+  duration_ms: 0.107959
+  ...
+# Subtest: lintExistsWithoutEvidence fires only on exists with no evidence
+ok 119 - lintExistsWithoutEvidence fires only on exists with no evidence
+  ---
+  duration_ms: 0.106417
+  ...
+# Subtest: lintEvidenceNotFound fires when the cited symbol no longer greps, and passes when it does
+ok 120 - lintEvidenceNotFound fires when the cited symbol no longer greps, and passes when it does
+  ---
+  duration_ms: 1138.232
+  ...
+# Subtest: a symbol that greps only inside the journey file itself is still reported missing
+ok 121 - a symbol that greps only inside the journey file itself is still reported missing
+  ---
+  duration_ms: 915.314125
+  ...
+# Subtest: evidence that greps only in prose is reported missing, even though the string exists
+ok 122 - evidence that greps only in prose is reported missing, even though the string exists
+  ---
+  duration_ms: 972.645166
+  ...
+# Subtest: evidence found only in a shell script or a CI workflow still counts, since both are executable
+ok 123 - evidence found only in a shell script or a CI workflow still counts, since both are executable
+  ---
+  duration_ms: 865.560167
+  ...
+# Subtest: lintJourney combines all three and reports nothing against a clean model
+ok 124 - lintJourney combines all three and reports nothing against a clean model
+  ---
+  duration_ms: 970.304709
+  ...
+# Subtest: lint rejects unsupported status and accepts gap, unverified and exists
+ok 125 - lint rejects unsupported status and accepts gap, unverified and exists
+  ---
+  duration_ms: 642.927334
+  ...
+# Subtest: lintExistsWithOpenQuestion fires on exists with an unanswered question, not on an answered one
+ok 126 - lintExistsWithOpenQuestion fires on exists with an unanswered question, not on an answered one
+  ---
+  duration_ms: 0.528334
+  ...
+# Subtest: the singular question field is sugar, so it reaches the same gate
+ok 127 - the singular question field is sugar, so it reaches the same gate
+  ---
+  duration_ms: 0.145375
+  ...
+# Subtest: a question answered only by a doc link does not hold a story back
+ok 128 - a question answered only by a doc link does not hold a story back
+  ---
+  duration_ms: 0.110875
+  ...
+# Subtest: a deferred question with a because does not hold a story back — the reason becomes its answer
+ok 129 - a deferred question with a because does not hold a story back — the reason becomes its answer
+  ---
+  duration_ms: 0.053459
+  ...
+# Subtest: a legacy "answered" status with no answer text or doc still holds a story back
+ok 130 - a legacy "answered" status with no answer text or doc still holds a story back
+  ---
+  duration_ms: 0.058333
+  ...
+# Subtest: a mistyped question status is caught, not silently read as settled
+ok 131 - a mistyped question status is caught, not silently read as settled
+  ---
+  duration_ms: 0.084292
+  ...
+# Subtest: a deferred question without a because is caught
+ok 132 - a deferred question without a because is caught
+  ---
+  duration_ms: 1.812959
+  ...
+# Subtest: open, answered, and a reasoned deferral all pass lintQuestionStatus
+ok 133 - open, answered, and a reasoned deferral all pass lintQuestionStatus
+  ---
+  duration_ms: 0.857292
+  ...
+# Subtest: a card past the text limit is reported as advisory, and a short one is not
+ok 134 - a card past the text limit is reported as advisory, and a short one is not
+  ---
+  duration_ms: 15.383709
+  ...
+# Subtest: a long flow line, step note, rule or status field is reported as advisory
+ok 135 - a long flow line, step note, rule or status field is reported as advisory
+  ---
+  duration_ms: 4.322708
+  ...
+# Subtest: evidence qualified with another repository greps that repository, Go included
+ok 136 - evidence qualified with another repository greps that repository, Go included
+  ---
+  duration_ms: 1374.657542
+  ...
+# Subtest: evidence naming a repository that was not passed is refused, not grepped in the primary repo
+ok 137 - evidence naming a repository that was not passed is refused, not grepped in the primary repo
+  ---
+  duration_ms: 530.520625
+  ...
+# Subtest: a repository passed with a ref greps that ref, not the working tree
+ok 138 - a repository passed with a ref greps that ref, not the working tree
+  ---
+  duration_ms: 1590.155917
+  ...
+# Subtest: a release with more than five stories that do not exist yet is reported, five is not
+ok 139 - a release with more than five stories that do not exist yet is reported, five is not
+  ---
+  duration_ms: 0.506
+  ...
+# Subtest: stories that already exist are not counted
+ok 140 - stories that already exist are not counted
+  ---
+  duration_ms: 0.127666
+  ...
+# Subtest: a story with no status counts as not existing, and a story with no release counts for no release
+ok 141 - a story with no status counts as not existing, and a story with no release counts for no release
+  ---
+  duration_ms: 0.081959
+  ...
+# Subtest: slice_limit replaces the default and anything but a positive integer is a violation
+ok 142 - slice_limit replaces the default and anything but a positive integer is a violation
+  ---
+  duration_ms: 0.572667
+  ...
+# Subtest: slice_because turns the advisory into an accepted line, an empty one does not
+ok 143 - slice_because turns the advisory into an accepted line, an empty one does not
+  ---
+  duration_ms: 0.094333
+  ...
+# Subtest: journey-lint prints the slice-size line and its exit code is unchanged by it
+ok 144 - journey-lint prints the slice-size line and its exit code is unchanged by it
+  ---
+  duration_ms: 3570.743917
+  ...
+# Subtest: a board value that is present and not a boolean is a violation naming the release
+ok 145 - a board value that is present and not a boolean is a violation naming the release
+  ---
+  duration_ms: 0.729834
+  ...
+# Subtest: journey-lint exits 1 on a non-boolean board and names the release
+ok 146 - journey-lint exits 1 on a non-boolean board and names the release
+  ---
+  duration_ms: 737.7395
+  ...
+# Subtest: filed membership counts undeclared tasks and formats completed task pull requests
+ok 147 - filed membership counts undeclared tasks and formats completed task pull requests
+  ---
+  duration_ms: 1.836
+  ...
+# Subtest: archive report uses filed counts without changing declarations, acceptance, or source bytes
+ok 148 - archive report uses filed counts without changing declarations, acceptance, or source bytes
+  ---
+  duration_ms: 10982.292
+  ...
+# Subtest: report separates release-only tasks and unknown stories and bounds lists
+ok 149 - report separates release-only tasks and unknown stories and bounds lists
+  ---
+  duration_ms: 8017.202
+  ...
+# Subtest: real archived reader distinguishes task/story ratios, full identities, and reopening
+ok 150 - real archived reader distinguishes task/story ratios, full identities, and reopening
+  ---
+  duration_ms: 1505.068208
+  ...
+# Subtest: an id-style: slug workflow reads tasks by slug and still refuses what it cannot identify
+ok 151 - an id-style: slug workflow reads tasks by slug and still refuses what it cannot identify
+  ---
+  duration_ms: 2297.572708
+  ...
+# Subtest: declaration fields a member had cleared do not count as a second declaration
+ok 152 - declaration fields a member had cleared do not count as a second declaration
+  ---
+  duration_ms: 634.283292
+  ...
+# Subtest: real records refuse missing, partial, conflicting, duplicate, malformed, and short-ID scope
+ok 153 - real records refuse missing, partial, conflicting, duplicate, malformed, and short-ID scope
+  ---
+  duration_ms: 8230.167583
+  ...
+# Subtest: actual partial page, missing CLI, and implicit or empty journey scope cannot complete
+ok 154 - actual partial page, missing CLI, and implicit or empty journey scope cannot complete
+  ---
+  duration_ms: 2123.736791
+  ...
+# Subtest: derived projections use three borders without entering story wording or source readback
+ok 155 - derived projections use three borders without entering story wording or source readback
+  ---
+  duration_ms: 439.149125
+  ...
+# Subtest: actual refresh CLI draws to isolated canvas and native-compatible readback preserves bytes
+ok 156 - actual refresh CLI draws to isolated canvas and native-compatible readback preserves bytes
+  ---
+  duration_ms: 6411.358083
+  ...
+# Subtest: a task naming this journey but a release and story the map does not hold is an orphan
+ok 157 - a task naming this journey but a release and story the map does not hold is an orphan
+  ---
+  duration_ms: 0.227625
+  ...
+# Subtest: the real reader lists orphans from the task listing and the refresh CLI exits 1 on them
+ok 158 - the real reader lists orphans from the task listing and the refresh CLI exits 1 on them
+  ---
+  duration_ms: 2966.0555
+  ...
+# Subtest: a release-acceptance task with no journey fields is not an orphan; with a journey and release but no story it is
+ok 159 - a release-acceptance task with no journey fields is not an orphan; with a journey and release but no story it is
+  ---
+  duration_ms: 4817.691667
+  ...
+# Subtest: a freshly rendered board reports no drift
+ok 160 - a freshly rendered board reports no drift
+  ---
+  duration_ms: 10.598625
+  ...
+# Subtest: two stories may each carry a question q1 without reading as duplicated or deleted
+ok 161 - two stories may each carry a question q1 without reading as duplicated or deleted
+  ---
+  duration_ms: 4.599625
+  ...
+# Subtest: rewording an activity on the story map is seen
+ok 162 - rewording an activity on the story map is seen
+  ---
+  duration_ms: 44.369958
+  ...
+# Subtest: dragging a story up inside its band is a priority change
+ok 163 - dragging a story up inside its band is a priority change
+  ---
+  duration_ms: 0.95025
+  ...
+# Subtest: dragging a story across a release line is read as a release change
+ok 164 - dragging a story across a release line is read as a release change
+  ---
+  duration_ms: 0.785834
+  ...
+# Subtest: a release change is written into the file
+ok 165 - a release change is written into the file
+  ---
+  duration_ms: 53.284792
+  ...
+# Subtest: the two pages disagreeing about one card is a conflict, not a winner
+ok 166 - the two pages disagreeing about one card is a conflict, not a winner
+  ---
+  duration_ms: 1.024625
+  ...
+# Subtest: the two pages in different column orders is a conflict
+ok 167 - the two pages in different column orders is a conflict
+  ---
+  duration_ms: 0.719792
+  ...
+# Subtest: a hand-added card is placed under the column it sits beneath
+ok 168 - a hand-added card is placed under the column it sits beneath
+  ---
+  duration_ms: 0.990583
+  ...
+# Subtest: a card straddling two columns is reported, never guessed
+ok 169 - a card straddling two columns is reported, never guessed
+  ---
+  duration_ms: 1.113
+  ...
+# Subtest: a story dragged up is reordered in the file
+ok 170 - a story dragged up is reordered in the file
+  ---
+  duration_ms: 12.409875
+  ...
+# Subtest: a reworded story is rewritten in the file
+ok 171 - a reworded story is rewritten in the file
+  ---
+  duration_ms: 30.52925
+  ...
+# Subtest: a conflict is refused and nothing is written
+ok 172 - a conflict is refused and nothing is written
+  ---
+  duration_ms: 10.333459
+  ...
+# Subtest: a story written in object form is reworded too
+ok 173 - a story written in object form is reworded too
+  ---
+  duration_ms: 4.23625
+  ...
+# Subtest: with no selection, buildAllPages draws the story map alone
+ok 174 - with no selection, buildAllPages draws the story map alone
+  ---
+  duration_ms: 0.511792
+  ...
+# Subtest: an empty selection falls back to the default rather than rendering nothing
+ok 175 - an empty selection falls back to the default rather than rendering nothing
+  ---
+  duration_ms: 0.281542
+  ...
+# Subtest: selecting the journey board draws one page per release, alongside the story map
+ok 176 - selecting the journey board draws one page per release, alongside the story map
+  ---
+  duration_ms: 3.626042
+  ...
+# Subtest: fresh release boards and story map share story ids without duplicates or drift
+ok 177 - fresh release boards and story map share story ids without duplicates or drift
+  ---
+  duration_ms: 0.844875
+  ...
+# Subtest: editing a release story round-trips its identity and leaves the original file alone with save-as
+ok 178 - editing a release story round-trips its identity and leaves the original file alone with save-as
+  ---
+  duration_ms: 5.5965
+  ...
+# Subtest: different story edits across projections are refused; matching edits apply once
+ok 179 - different story edits across projections are refused; matching edits apply once
+  ---
+  duration_ms: 3.306584
+  ...
+# Subtest: a story duplicated within a release page is ambiguous even if the map has an edit
+ok 180 - a story duplicated within a release page is ambiguous even if the map has an edit
+  ---
+  duration_ms: 1.040625
+  ...
+# Subtest: activity headings target activity rather than card and detect competing release edits
+ok 181 - activity headings target activity rather than card and detect competing release edits
+  ---
+  duration_ms: 39.614583
+  ...
+# Subtest: a release-only board cannot reorder the full journey or change membership and priority
+ok 182 - a release-only board cannot reorder the full journey or change membership and priority
+  ---
+  duration_ms: 0.550958
+  ...
+# Subtest: hand-added notes use the activity span on their own release page
+ok 183 - hand-added notes use the activity span on their own release page
+  ---
+  duration_ms: 13.943
+  ...
+# Subtest: legacy numbered step cards remain readable
+ok 184 - legacy numbered step cards remain readable
+  ---
+  duration_ms: 0.24075
+  ...
+# Subtest: stories with the same wording are written by id, not by first text match
+ok 185 - stories with the same wording are written by id, not by first text match
+  ---
+  duration_ms: 24.426041
+  ...
+# Subtest: a bare-string story on the whole-journey board can be reworded
+ok 186 - a bare-string story on the whole-journey board can be reworded
+  ---
+  duration_ms: 28.590291
+  ...
+# Subtest: a stale story wording diff does not overwrite a newer file edit
+ok 187 - a stale story wording diff does not overwrite a newer file edit
+  ---
+  duration_ms: 19.130041
+  ...
+# Subtest: stale activity wording is refused while current wording applies
+ok 188 - stale activity wording is refused while current wording applies
+  ---
+  duration_ms: 14.744666
+  ...
+# Subtest: stale card wording is refused while current wording applies
+ok 189 - stale card wording is refused while current wording applies
+  ---
+  duration_ms: 173.437209
+  ...
+# Subtest: a hand-added note under a story becomes a new question
+ok 190 - a hand-added note under a story becomes a new question
+  ---
+  duration_ms: 0.982958
+  ...
+# Subtest: a hand-added note beside an open question becomes its answer
+ok 191 - a hand-added note beside an open question becomes its answer
+  ---
+  duration_ms: 1.017166
+  ...
+# Subtest: editing a generated question note updates its ask
+ok 192 - editing a generated question note updates its ask
+  ---
+  duration_ms: 0.704791
+  ...
+# Subtest: editing a generated answer note updates its answer and doc
+ok 193 - editing a generated answer note updates its answer and doc
+  ---
+  duration_ms: 0.7655
+  ...
+# Subtest: deleting a generated question note is reported, not silently applied
+ok 194 - deleting a generated question note is reported, not silently applied
+  ---
+  duration_ms: 23.071875
+  ...
+# Subtest: deleting a generated answer note is reported, not silently applied
+ok 195 - deleting a generated answer note is reported, not silently applied
+  ---
+  duration_ms: 1.372375
+  ...
+# Subtest: a note exactly on a neighbouring story column is its question, not the open answer slot 20px away
+ok 196 - a note exactly on a neighbouring story column is its question, not the open answer slot 20px away
+  ---
+  duration_ms: 2.113584
+  ...
+# Subtest: the mirror: a note exactly on the open answer slot is that answer, not the neighbouring column
+ok 197 - the mirror: a note exactly on the open answer slot is that answer, not the neighbouring column
+  ---
+  duration_ms: 7.473333
+  ...
+# Subtest: a note exactly between the two slots is reported, never guessed
+ok 198 - a note exactly between the two slots is reported, never guessed
+  ---
+  duration_ms: 11.960625
+  ...
+# Subtest: an unrelated hand-added note is not read as a question or answer
+ok 199 - an unrelated hand-added note is not read as a question or answer
+  ---
+  duration_ms: 0.733625
+  ...
+# Subtest: a new question is appended to the story it belongs to
+ok 200 - a new question is appended to the story it belongs to
+  ---
+  duration_ms: 62.225875
+  ...
+# Subtest: a new answer is attached to its question, upgrading question sugar to a map
+ok 201 - a new answer is attached to its question, upgrading question sugar to a map
+  ---
+  duration_ms: 4.5145
+  ...
+# Subtest: applying a new question reports only its own shape as absorbed, leaving an unrelated note alone
+ok 202 - applying a new question reports only its own shape as absorbed, leaving an unrelated note alone
+  ---
+  duration_ms: 3.10225
+  ...
+# Subtest: a room whose r2 board page was removed reports no drift for it; a kept page with a human note reports it unclaimed
+ok 203 - a room whose r2 board page was removed reports no drift for it; a kept page with a human note reports it unclaimed
+  ---
+  duration_ms: 0.753125
+  ...
+# Subtest: releaseContractRows scopes to one release only, in step/story order
+ok 204 - releaseContractRows scopes to one release only, in step/story order
+  ---
+  duration_ms: 0.883541
+  ...
+# Subtest: buildReleaseContract carries status, evidence and rule ids per story
+ok 205 - buildReleaseContract carries status, evidence and rule ids per story
+  ---
+  duration_ms: 0.388542
+  ...
+# Subtest: an unknown release throws rather than generating an empty contract
+ok 206 - an unknown release throws rather than generating an empty contract
+  ---
+  duration_ms: 0.301
+  ...
+# Subtest: release contract preserves all three story states
+ok 207 - release contract preserves all three story states
+  ---
+  duration_ms: 0.270875
+  ...
+# Subtest: the contract column carries only open questions, so it reads as what is still missing
+ok 208 - the contract column carries only open questions, so it reads as what is still missing
+  ---
+  duration_ms: 0.106333
+  ...
+# Subtest: a story whose questions are all answered shows an empty column, not a stale one
+ok 209 - a story whose questions are all answered shows an empty column, not a stale one
+  ---
+  duration_ms: 0.185
+  ...
+# Subtest: release boards show exactly the selected stories in yellow, grouped by green activities
+ok 210 - release boards show exactly the selected stories in yellow, grouped by green activities
+  ---
+  duration_ms: 3.910208
+  ...
+# Subtest: an activity or story card is structurally identical between the story map and the release board for the same node
+ok 211 - an activity or story card is structurally identical between the story map and the release board for the same node
+  ---
+  duration_ms: 2.385167
+  ...
+# Subtest: the release board draws no lane boxes
+ok 212 - the release board draws no lane boxes
+  ---
+  duration_ms: 33.023125
+  ...
+# Subtest: each step gets one flow box and one constraint box, several lines becoming a bullet list
+ok 213 - each step gets one flow box and one constraint box, several lines becoming a bullet list
+  ---
+  duration_ms: 6.981042
+  ...
+# Subtest: a question is drawn as its own note, straight below its story, with no connector
+ok 214 - a question is drawn as its own note, straight below its story, with no connector
+  ---
+  duration_ms: 4.432708
+  ...
+# Subtest: a grown story or question pushes the notes below it down instead of covering them
+ok 215 - a grown story or question pushes the notes below it down instead of covering them
+  ---
+  duration_ms: 22.243834
+  ...
+# Subtest: an answered question draws an answer note to its right on the same row; an unanswered one draws none
+ok 216 - an answered question draws an answer note to its right on the same row; an unanswered one draws none
+  ---
+  duration_ms: 3.375209
+  ...
+# Subtest: long lines have fitted flow/constraint cards, and cards stack top to bottom: activity, flow, constraints, stories, questions
+ok 217 - long lines have fitted flow/constraint cards, and cards stack top to bottom: activity, flow, constraints, stories, questions
+  ---
+  duration_ms: 1.34625
+  ...
+# Subtest: unsliced journeys retain unassigned stories and activities without stories
+ok 218 - unsliced journeys retain unassigned stories and activities without stories
+  ---
+  duration_ms: 1.354916
+  ...
+# Subtest: both projections border all three states and count exists alone; the release board folds its legend into one top-left panel
+ok 219 - both projections border all three states and count exists alone; the release board folds its legend into one top-left panel
+  ---
+  duration_ms: 2.80375
+  ...
+# Subtest: story border geometry follows measured height and scale without moving the story
+ok 220 - story border geometry follows measured height and scale without moving the story
+  ---
+  duration_ms: 26.519291
+  ...
+# Subtest: a partial redraw does not delete another page it did not draw
+ok 221 - a partial redraw does not delete another page it did not draw
+  ---
+  duration_ms: 16.48025
+  ...
+# Subtest: a partial redraw removes a stale question connector along with its bindings
+ok 222 - a partial redraw removes a stale question connector along with its bindings
+  ---
+  duration_ms: 0.792125
+  ...
+# Subtest: a removed story takes its nested status border with it
+ok 223 - a removed story takes its nested status border with it
+  ---
+  duration_ms: 0.580125
+  ...
+# Subtest: every record validates against the tldraw schema
+ok 224 - every record validates against the tldraw schema
+  ---
+  duration_ms: 84.51925
+  ...
+# Subtest: a note grows to fit its text, and a full-width character counts as two columns
+ok 225 - a note grows to fit its text, and a full-width character counts as two columns
+  ---
+  duration_ms: 24.9085
+  ...
+# Subtest: the status sits in the header row beside the release, whatever the questions below
+ok 226 - the status sits in the header row beside the release, whatever the questions below
+  ---
+  duration_ms: 0.571875
+  ...
+# Subtest: every board page carries an index key tldraw accepts, however many releases there are
+ok 227 - every board page carries an index key tldraw accepts, however many releases there are
+  ---
+  duration_ms: 1.761542
+  ...
+# Subtest: a generated shape edited on the canvas blocks the render that would overwrite it
+ok 228 - a generated shape edited on the canvas blocks the render that would overwrite it
+  ---
+  duration_ms: 0.217333
+  ...
+# Subtest: a release with board false gets no board page and keeps its story-map band
+ok 229 - a release with board false gets no board page and keeps its story-map band
+  ---
+  duration_ms: 1.979333
+  ...
+# Subtest: every release opting out draws no board; no releases key draws the whole-journey board
+ok 230 - every release opting out draws no board; no releases key draws the whole-journey board
+  ---
+  duration_ms: 0.325459
+  ...
+# Subtest: a re-render retires board pages it no longer draws: opted out, removed from the file, and the whole-journey page
+ok 231 - a re-render retires board pages it no longer draws: opted out, removed from the file, and the whole-journey page
+  ---
+  duration_ms: 2.140792
+  ...
+# Subtest: a stale board page holding a hand-drawn shape is kept with it; other pages are never touched
+ok 232 - a stale board page holding a hand-drawn shape is kept with it; other pages are never touched
+  ---
+  duration_ms: 10.773875
+  ...
+# Subtest: a render that does not select journey-board removes no board page
+ok 233 - a render that does not select journey-board removes no board page
+  ---
+  duration_ms: 12.569625
+  ...
+# Subtest: a generated card edited on a stale board page stops the render
+ok 234 - a generated card edited on a stale board page stops the render
+  ---
+  duration_ms: 1.718875
+  ...
+# Subtest: the render never removes the last page in the room
+ok 235 - the render never removes the last page in the room
+  ---
+  duration_ms: 20.392625
+  ...
+# Subtest: a re-render moves a hand-drawn shape with the cards it overlaps and lists the one it cannot place
+ok 236 - a re-render moves a hand-drawn shape with the cards it overlaps and lists the one it cannot place
+  ---
+  duration_ms: 377.692792
+  ...
+# Subtest: a render leaves a shape on a page it did not draw, and a second render of the same file carries nothing
+ok 237 - a render leaves a shape on a page it did not draw, and a second render of the same file carries nothing
+  ---
+  duration_ms: 351.483208
+  ...
+# Subtest: a render refused for a hand-edited card writes nothing and carries nothing
+ok 238 - a render refused for a hand-edited card writes nothing and carries nothing
+  ---
+  duration_ms: 293.106125
+  ...
+# Subtest: the render CLI prints one line per carried and per stranded shape
+ok 239 - the render CLI prints one line per carried and per stranded shape
+  ---
+  duration_ms: 2041.159916
+  ...
+# Subtest: a shape over cards that move differently is returned as cards-disagree, never moved
+ok 240 - a shape over cards that move differently is returned as cards-disagree, never moved
+  ---
+  duration_ms: 0.229458
+  ...
+# Subtest: a shape over a card this render removes is returned as card-removed, never moved
+ok 241 - a shape over a card this render removes is returned as card-removed, never moved
+  ---
+  duration_ms: 0.065917
+  ...
+# Subtest: a shape that overlaps no card with positive area is in neither list
+ok 242 - a shape that overlaps no card with positive area is in neither list
+  ---
+  duration_ms: 0.083
+  ...
+# Subtest: a shape over a card that stays put is not carried and not listed
+ok 243 - a shape over a card that stays put is not carried and not listed
+  ---
+  duration_ms: 0.042083
+  ...
+# Subtest: the recorded incident: 8 shapes are carried, 7 to where the hand repair put them
+ok 244 - the recorded incident: 8 shapes are carried, 7 to where the hand repair put them
+  ---
+  duration_ms: 6.433666
+  ...
+# Subtest: parses a simple ref and path with a chapter
+ok 245 - parses a simple ref and path with a chapter
+  ---
+  duration_ms: 1.088791
+  ...
+# Subtest: parses without a chapter
+ok 246 - parses without a chapter
+  ---
+  duration_ms: 0.20275
+  ...
+# Subtest: rejects a non-blob GitHub URL
+ok 247 - rejects a non-blob GitHub URL
+  ---
+  duration_ms: 2.647667
+  ...
+# Subtest: rejects a non-GitHub URL
+ok 248 - rejects a non-GitHub URL
+  ---
+  duration_ms: 0.069708
+  ...
+# Subtest: rejects a ref-only match with no path segment
+ok 249 - rejects a ref-only match with no path segment
+  ---
+  duration_ms: 0.073208
+  ...
+# Subtest: candidate splits try the longest ref prefix first, for a branch name containing "/"
+ok 250 - candidate splits try the longest ref prefix first, for a branch name containing "/"
+  ---
+  duration_ms: 0.119458
+  ...
+# Subtest: candidate splits cover a single-segment ref and multi-segment path
+ok 251 - candidate splits cover a single-segment ref and multi-segment path
+  ---
+  duration_ms: 0.112542
+  ...
+# Subtest: isSafeGitToken accepts an ordinary ref or path
+ok 252 - isSafeGitToken accepts an ordinary ref or path
+  ---
+  duration_ms: 0.0645
+  ...
+# Subtest: isSafeGitToken rejects a leading dash (git flag injection)
+ok 253 - isSafeGitToken rejects a leading dash (git flag injection)
+  ---
+  duration_ms: 0.296542
+  ...
+# Subtest: isSafeGitToken rejects a ".." path segment (filesystem escape)
+ok 254 - isSafeGitToken rejects a ".." path segment (filesystem escape)
+  ---
+  duration_ms: 0.336209
+  ...
+# Subtest: isSafeGitToken rejects empty or non-string input
+ok 255 - isSafeGitToken rejects empty or non-string input
+  ---
+  duration_ms: 0.107584
+  ...
+# Subtest: the table and version print and the recorded hash binds them
+ok 256 - the table and version print and the recorded hash binds them
+  ---
+  duration_ms: 294.312833
+  ...
+# Subtest: an edited table with an unchanged version exits 1 naming the schema
+ok 257 - an edited table with an unchanged version exits 1 naming the schema
+  ---
+  duration_ms: 378.2955
+  ...
+# Subtest: a bumped version with no recorded hash exits 1
+ok 258 - a bumped version with no recorded hash exits 1
+  ---
+  duration_ms: 267.35025
+  ...
+# Subtest: the printed history pointers name files that exist and a runnable command
+ok 259 - the printed history pointers name files that exist and a runnable command
+  ---
+  duration_ms: 1247.795458
+  ...
+# Subtest: release-walk prints its table and version, and an edited table with an unchanged version exits 1
+ok 260 - release-walk prints its table and version, and an edited table with an unchanged version exits 1
+  ---
+  duration_ms: 846.994
+  ...
+# Subtest: journey-progress registers its printed table and refuses an unversioned shape edit
+ok 261 - journey-progress registers its printed table and refuses an unversioned shape edit
+  ---
+  duration_ms: 558.647417
+  ...
+# Subtest: the progress producer preserves the registered keys and acceptance meanings
+ok 262 - the progress producer preserves the registered keys and acceptance meanings
+  ---
+  duration_ms: 4479.892792
+  ...
+# Subtest: the README and SKILL.md send a reader to the schema command, the CHANGELOG and the ADR, and say when
+ok 263 - the README and SKILL.md send a reader to the schema command, the CHANGELOG and the ADR, and say when
+  ---
+  duration_ms: 3.389625
+  ...
+# Subtest: the story map draws every element the method calls for
+ok 264 - the story map draws every element the method calls for
+  ---
+  duration_ms: 3.593625
+  ...
+# Subtest: a story is drawn in its own release band, not its declaring order
+ok 265 - a story is drawn in its own release band, not its declaring order
+  ---
+  duration_ms: 1.832167
+  ...
+# Subtest: a release line spans every activity, not a range of them
+ok 266 - a release line spans every activity, not a range of them
+  ---
+  duration_ms: 1.027791
+  ...
+# Subtest: a story with no release is drawn in an UNASSIGNED band, never dropped
+ok 267 - a story with no release is drawn in an UNASSIGNED band, never dropped
+  ---
+  duration_ms: 63.502292
+  ...
+# Subtest: bands do not overlap
+ok 268 - bands do not overlap
+  ---
+  duration_ms: 45.03525
+  ...
+# Subtest: both pages render from one model and never share a shape id
+ok 269 - both pages render from one model and never share a shape id
+  ---
+  duration_ms: 2.157125
+  ...
+# Subtest: no shape carries a note fontSizeAdjustment of 0
+ok 270 - no shape carries a note fontSizeAdjustment of 0
+  ---
+  duration_ms: 5.95225
+  ...
+# Subtest: a map past the 61st shape still gets valid ordered unique indexes
+ok 271 - a map past the 61st shape still gets valid ordered unique indexes
+  ---
+  duration_ms: 14.497084
+  ...
+# Subtest: story map borders all three states and counts exists alone
+ok 272 - story map borders all three states and counts exists alone
+  ---
+  duration_ms: 0.912459
+  ...
+# Subtest: the story map draws no question, answer or connector, even when stories carry questions
+ok 273 - the story map draws no question, answer or connector, even when stories carry questions
+  ---
+  duration_ms: 0.74
+  ...
+# Subtest: the one-journey banner is tall enough for its sentence
+ok 274 - the one-journey banner is tall enough for its sentence
+  ---
+  duration_ms: 0.426584
+  ...
+# Subtest: no drawn label is shorter than the text inside it
+ok 275 - no drawn label is shorter than the text inside it
+  ---
+  duration_ms: 0.398667
+  ...
+# Subtest: a CJK label is measured by the width its glyphs take, not how many there are
+ok 276 - a CJK label is measured by the width its glyphs take, not how many there are
+  ---
+  duration_ms: 3.15325
+  ...
+1..276
+# tests 276
+# suites 0
+# pass 276
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 58389.711833

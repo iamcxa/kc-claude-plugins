@@ -1,0 +1,167 @@
+[
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/lint-skills.py",
+    "validation_1": "run recorded"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_lint_skills.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "validation_1": "run recorded"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_poc_readme.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_number_guards.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "validation_1": "run recorded"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "validation_1": "run recorded"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_validation_security.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_pr_watch.py",
+    "validation_1": "run recorded"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_package_version.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_observer_check.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_merge_audit.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_role_triggers.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_laws_check.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_learning.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root \"$GITHUB_WORKSPACE/.sd-plugin-root\"",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-dev-flow-2-tests.yml",
+    "command": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-journey-map-tests.yml",
+    "command": "npm ci",
+    "validation_1": "installation attempt cancelled; not passed"
+  },
+  {
+    "workflow": "kc-journey-map-tests.yml",
+    "command": "npm run doctor",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-journey-map-tests.yml",
+    "command": "npm run typecheck",
+    "validation_1": "no run record"
+  },
+  {
+    "workflow": "kc-journey-map-tests.yml",
+    "command": "node --test lib/*.test.mjs",
+    "validation_1": "only progress/schema subset; not this full command"
+  },
+  {
+    "workflow": "kc-journey-map-tests.yml",
+    "command": "bash scripts/canvas-smoke.sh",
+    "validation_1": "no run record"
+  }
+]

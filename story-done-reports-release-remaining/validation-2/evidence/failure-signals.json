@@ -1,0 +1,30 @@
+[
+  {
+    "name": "AC7-old-cli",
+    "command": [
+      "/Users/kent/n/bin/node",
+      "/tmp/story-release-validation-2/base/kc-journey-map/lib/journey-progress.mjs",
+      "/tmp/story-release-validation-2/replays/relay/docs/journey/spacedock-review.yaml",
+      "--workflow-dir",
+      "/tmp/story-release-validation-2/replays/relay/docs/dev2",
+      "--report",
+      "inbox-home"
+    ],
+    "exit": 2,
+    "expected": 2
+  },
+  {
+    "name": "AC7-no-spacedock",
+    "command": [
+      "/Users/kent/n/bin/node",
+      "/tmp/story-release-validation-2/candidate/kc-journey-map/lib/journey-progress.mjs",
+      "/tmp/story-release-validation-2/replays/relay/docs/journey/spacedock-review.yaml",
+      "--workflow-dir",
+      "/tmp/story-release-validation-2/replays/relay/docs/dev2",
+      "--report",
+      "inbox-home"
+    ],
+    "exit": 1,
+    "expected": 1
+  }
+]

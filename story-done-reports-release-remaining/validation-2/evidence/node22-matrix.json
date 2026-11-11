@@ -1,0 +1,42 @@
+[
+  {
+    "name": "install",
+    "command": "npm ci",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-install.log",
+    "node": "22.13.0"
+  },
+  {
+    "name": "doctor",
+    "command": "npm run doctor",
+    "exit": 1,
+    "status": "failed",
+    "log": "node22-doctor.log",
+    "node": "22.13.0"
+  },
+  {
+    "name": "typecheck",
+    "command": "npm run typecheck",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-typecheck.log",
+    "node": "22.13.0"
+  },
+  {
+    "name": "tests",
+    "command": "node --test lib/*.test.mjs",
+    "exit": 1,
+    "status": "failed",
+    "log": "node22-tests.log",
+    "node": "22.13.0"
+  },
+  {
+    "name": "smoke",
+    "command": "bash scripts/canvas-smoke.sh",
+    "exit": 0,
+    "status": "passed",
+    "log": "node22-smoke.log",
+    "node": "22.13.0"
+  }
+]

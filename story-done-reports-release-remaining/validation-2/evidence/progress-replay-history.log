@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/story-release-validation-2/run-replay.py", line 7, in <module>
+    assert json.loads(p.stdout)['diagnostic'] is None,(p.returncode,p.stderr,p.stdout[:500])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (1, '', '{\n  "schema": "journey-progress/v1",\n  "journey": "spacedock-review",\n  "source": "/tmp/story-release-validation-2/replays/relay/docs/dev2",\n  "observedAt": "2026-11-11T06:58:34.287Z",\n  "diagnostic": "Local task observation unavailable: spawnSync spacedock ETIMEDOUT",\n  "orphans": [\n    {\n      "slug": "ci-only-pr-runtime-check",\n      "id": "ci-only-pr-runtime-check",\n      "release": "",\n      "story": ""\n    },\n    {\n      "slug": "decision-leg-split",\n      "id": "decision-leg-split",\n     ')

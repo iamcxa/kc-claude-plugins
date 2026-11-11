@@ -1,0 +1,9 @@
+both old reader snapshots collected
+Traceback (most recent call last):
+  File "/tmp/story-release-validation-2/scripts/replay_progress.py", line 19, in <module>
+    relay=json.loads((OUT/'relay-final.stdout').read_text()) if os.getenv('REUSE_OBSERVATION') else observe('relay');qnow=json.loads((OUT/'qnow-final.stdout').read_text()) if os.getenv('REUSE_OBSERVATION') else observe('qnow')
+                                                                                                    ^^^^^^^^^^^^^^^^
+  File "/tmp/story-release-validation-2/scripts/replay_progress.py", line 18, in observe
+    p=run(name+'-final',args(name));d=json.loads(p.stdout);assert d['diagnostic'] is None,d['diagnostic'];return d
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Local task observation unavailable: spawnSync spacedock ETIMEDOUT

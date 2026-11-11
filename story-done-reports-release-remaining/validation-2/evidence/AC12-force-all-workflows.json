@@ -1,0 +1,5 @@
+{
+  "name": "AC12 force rule on unlisted workflow",
+  "status": "passed",
+  "message": "mutant refuses 230; candidate refuses 0; python3 -B, fresh cache-free mutant"
+}

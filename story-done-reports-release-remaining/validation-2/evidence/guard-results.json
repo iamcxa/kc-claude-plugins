@@ -1,0 +1,76 @@
+[
+  {
+    "name": "producer-comment-ratio",
+    "exit": 0,
+    "log": "producer-comment-ratio.log"
+  },
+  {
+    "name": "dev2-comment-ratio",
+    "exit": 0,
+    "log": "dev2-comment-ratio.log"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+      "--require",
+      "0076"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "adr-lint.log"
+  },
+  {
+    "name": "dev2-doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/doc_impact.py",
+      "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+      "01d23393ebe5bfd63d8bcafc01859c3b146021d2",
+      "--json"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "dev2-doc-impact.log"
+  },
+  {
+    "name": "producer-doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/doc_impact.py",
+      "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+      "--json"
+    ],
+    "exit": 0,
+    "status": "passed",
+    "log": "producer-doc-impact.log"
+  },
+  {
+    "name": "number guards after fresh fetch",
+    "exit": 0,
+    "log": "number-guards.log"
+  },
+  {
+    "name": "task design check",
+    "exit": 0,
+    "log": "design-check.log"
+  },
+  {
+    "name": "dispatch records",
+    "exit": 0,
+    "log": "dispatch-records-final.log"
+  },
+  {
+    "name": "role triggers",
+    "exit": 0,
+    "log": "role-triggers.log"
+  }
+]

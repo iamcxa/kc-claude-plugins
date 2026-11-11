@@ -1,0 +1,47 @@
+[
+  {
+    "limit": "Filed tasks are not exhaustive scope",
+    "judgment": "retained",
+    "evidence": "Unchanged declared status and consumer meanings; reverse AC2 mutation fails."
+  },
+  {
+    "limit": "Bare PR number assumes workflow GitHub origin",
+    "judgment": "retained",
+    "evidence": "Exact ref tests include three origin forms and no-origin fallback; cannot infer foreign repository from a number."
+  },
+  {
+    "limit": "FO can omit a prose-only archive step",
+    "judgment": "retained",
+    "evidence": "Extension adds instruction only; no new enforcement hook or user message delivery claim."
+  },
+  {
+    "limit": "One workflow per observation",
+    "judgment": "retained",
+    "evidence": "All native commands name one --workflow-dir; no cross-workflow data collection."
+  },
+  {
+    "limit": "Story record is form and counted-field agreement, not truth or map membership",
+    "judgment": "retained",
+    "evidence": "Seed/default tests and release review duty unchanged; malformed/absent lines refused."
+  },
+  {
+    "limit": "30-second reader deadline under load",
+    "judgment": "observed",
+    "evidence": "initial-timeouts and progress-replay-* logs; both base and candidate have timed out. A baseline-equal failure does not establish successful candidate acceptance."
+  },
+  {
+    "limit": "AC-10 real adopter archive after rollout",
+    "judgment": "unverified future check",
+    "evidence": "No release/rollout performed; temporary task state is not a real FO archive message."
+  },
+  {
+    "limit": "CI cost per PR",
+    "judgment": "unmeasured",
+    "evidence": "Workflow bytes unchanged; no cost claim."
+  },
+  {
+    "limit": "Ubuntu hosted environment",
+    "judgment": "read evidence only",
+    "evidence": "Local macOS tests use pinned native CLI; exact-head hosted JSON records green Linux jobs independently."
+  }
+]

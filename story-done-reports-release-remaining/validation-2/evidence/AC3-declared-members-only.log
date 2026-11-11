@@ -1,0 +1,76 @@
+✖ filed membership counts undeclared tasks and formats completed task pull requests (3.3595ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 767.60825
+
+✖ failing tests:
+
+test at lib/progress.test.mjs:53:1
+✖ filed membership counts undeclared tasks and formats completed task pull requests (3.3595ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   done: 0,
+  +   prs: [],
+  +   tasks: 0
+  -   done: 8,
+  -   prs: [
+  -     {
+  -       ref: 'owner/repo#12',
+  -       task: 'task-0'
+  -     },
+  -     {
+  -       ref: 'owner/repo#12',
+  -       task: 'task-1'
+  -     },
+  -     {
+  -       ref: 'owner/repo#12',
+  -       task: 'task-2'
+  -     },
+  -     {
+  -       ref: 'team/project#12',
+  -       task: 'task-3'
+  -     },
+  -     {
+  -       ref: 'team/project#12',
+  -       task: 'task-4'
+  -     },
+  -     {
+  -       ref: 'local merge abcdef0',
+  -       task: 'task-5'
+  -     },
+  -     {
+  -       ref: 'custom ref',
+  -       task: 'task-6'
+  -     }
+  -   ],
+  -   tasks: 9
+    }
+  
+      at TestContext.<anonymous> (file:///private/tmp/story-release-validation-2/mutants/AC3-declared-members-only/lib/progress.test.mjs:60:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { tasks: 0, done: 0, prs: [] },
+    expected: {
+      tasks: 9,
+      done: 8,
+      prs: [
+        [Object], [Object],
+        [Object], [Object],
+        [Object], [Object],
+        [Object]
+      ]
+    },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,3561 @@
+{
+  "schema": "journey-progress/v1",
+  "journey": "spacedock-review",
+  "source": "/tmp/story-release-validation-2/replays/relay/docs/dev2",
+  "observedAt": "2026-11-11T07:16:50.628Z",
+  "diagnostic": null,
+  "orphans": [
+    {
+      "slug": "ci-only-pr-runtime-check",
+      "id": "ci-only-pr-runtime-check",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "decision-leg-split",
+      "id": "decision-leg-split",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "decision-leg-under-limit",
+      "id": "decision-leg-under-limit",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "document-display-name",
+      "id": "document-display-name",
+      "release": "",
+      "story": "read-artifacts"
+    },
+    {
+      "slug": "duplicate-annotation-id-decision",
+      "id": "duplicate-annotation-id-decision",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "identity-at-first-comment",
+      "id": "identity-at-first-comment",
+      "release": "",
+      "story": "entry-random-name"
+    },
+    {
+      "slug": "llms-covers-room-contract",
+      "id": "llms-covers-room-contract",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "pair-pages-favicon",
+      "id": "pair-pages-favicon",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "publish-admission",
+      "id": "publish-admission",
+      "release": "agent-front-door",
+      "story": "publish-without-binary"
+    },
+    {
+      "slug": "refused-decision-keeps-comments",
+      "id": "refused-decision-keeps-comments",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "room-phone-tray-spec-opens-tray",
+      "id": "room-phone-tray-spec-opens-tray",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "theme-switch-keeps-draft",
+      "id": "theme-switch-keeps-draft",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "revise-after-pairing-uses-paired-quota",
+      "id": "revise-after-pairing-uses-paired-quota",
+      "release": "",
+      "story": "revise-after-pairing-uses-paired-quota"
+    },
+    {
+      "slug": "reviewers-see-each-others-comments",
+      "id": "reviewers-see-each-others-comments",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "rr-pair-for-requester",
+      "id": "rr-pair-for-requester",
+      "release": "",
+      "story": "shared-agent-publishes-as-requester"
+    },
+    {
+      "slug": "ci-failure-evidence",
+      "id": "ci-failure-evidence",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "held-comments-survive-try-renewal",
+      "id": "held-comments-survive-try-renewal",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "owner-decides-before-sign-in",
+      "id": "owner-decides-before-sign-in",
+      "release": "",
+      "story": "decide-as-paired-owner"
+    },
+    {
+      "slug": "review-static-html-prototype",
+      "id": "review-static-html-prototype",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "try-page-current-install",
+      "id": "try-page-current-install",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "ci-design-review",
+      "id": "ci-design-review",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "pairing-copy-button-touch-target",
+      "id": "pairing-copy-button-touch-target",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "pairing-pages-assume-agent",
+      "id": "pairing-pages-assume-agent",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "remove-owner-link-require-current-client",
+      "id": "remove-owner-link-require-current-client",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "replaced-session-keeps-commenting",
+      "id": "replaced-session-keeps-commenting",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "sent-comment-edit-delete-relay",
+      "id": "sent-comment-edit-delete-relay",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "shared-host-credential-sandbox",
+      "id": "shared-host-credential-sandbox",
+      "release": "",
+      "story": ""
+    }
+  ],
+  "stories": [
+    {
+      "journey": "spacedock-review",
+      "release": "agent-front-door",
+      "story": "get-started-page",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 4,
+        "done": 3,
+        "prs": [
+          {
+            "task": "agent-front-door",
+            "ref": "spacedock-dev/subspace-relay#347"
+          },
+          {
+            "task": "front-door-flag",
+            "ref": "spacedock-dev/subspace-relay#353"
+          },
+          {
+            "task": "limit-observability",
+            "ref": "spacedock-dev/subspace-relay#364"
+          }
+        ]
+      },
+      "diagnostic": "Required mapping differs from readable task membership"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "agent-publishes",
+      "story": "install-publish-skill",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 3,
+        "done": 1,
+        "prs": [
+          {
+            "task": "spacedock-install-beta",
+            "ref": "spacedock-dev/subspace-relay#842"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "agent-front-door",
+      "story": "set-up-on-recommendation",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "agent-finds-service",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "publish-without-binary",
+      "status": "exists",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": [
+          {
+            "task": "account-publish-ceiling",
+            "ref": "spacedock-dev/subspace-relay#400"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "playground",
+      "story": "open-playground",
+      "status": "exists",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 2,
+        "done": 2,
+        "prs": [
+          {
+            "task": "try-auto-refresh",
+            "ref": "spacedock-dev/subspace-relay#418"
+          },
+          {
+            "task": "try-fixed-link",
+            "ref": "spacedock-dev/subspace-relay#411"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "playground",
+      "story": "try-fixed-address",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "playground",
+      "story": "try-address-stays",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "playground",
+      "story": "try-refreshes-itself",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "agent-publishes",
+      "story": "receive-as-link",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pairing",
+      "story": "auto-pair-from-link",
+      "status": "exists",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 3,
+        "done": 3,
+        "prs": [
+          {
+            "task": "owner-link-leak-safe",
+            "ref": "spacedock-dev/subspace-relay#410"
+          },
+          {
+            "task": "owner-link-sign-in-to-claim",
+            "ref": "spacedock-dev/subspace-relay#381"
+          },
+          {
+            "task": "room-modals-try-copy",
+            "ref": "spacedock-dev/subspace-relay#412"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pairing",
+      "story": "sign-in-to-pair",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pair-once",
+      "story": "cli-pairs-once",
+      "status": "exists",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": [
+          {
+            "task": "pair-once",
+            "ref": "spacedock-dev/subspace-relay#442"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pair-once",
+      "story": "every-link-mine-after-pairing",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pair-once",
+      "story": "unsigned-share-link-only",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pair-once",
+      "story": "sign-in-again-not-repair",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pair-once",
+      "story": "see-and-undo-pairing",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "comment-visibility",
+      "story": "my-agent-comments-are-mine",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pairing",
+      "story": "browser-agent-identity",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "judge-in-terminal",
+      "story": "artifact-beside-session",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "identify-review-material",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "first-local-later",
+      "story": "identify-needed-decision",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "first-local-later",
+      "story": "read-revised-material",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "choose-opening-behavior",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "open-local-review",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "understand-decision",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "first-local-later",
+      "story": "identify-material-version",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "story": "verify-web-bundle",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "show-app-version",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "compass-dovetail",
+      "story": "pending-reviews-across-projects",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "route-by-content",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-account",
+      "story": "inbox-home",
+      "status": "gap",
+      "requiredTasks": 1,
+      "doneTasks": 0,
+      "taskIds": [
+        "inbox-home"
+      ],
+      "members": {
+        "tasks": 1,
+        "done": 0,
+        "prs": []
+      }
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-account",
+      "story": "switch-any-account",
+      "status": "gap",
+      "requiredTasks": 1,
+      "doneTasks": 0,
+      "taskIds": [
+        "workos-signout"
+      ],
+      "members": {
+        "tasks": 1,
+        "done": 0,
+        "prs": []
+      }
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "profile-name",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "compass-dovetail",
+      "story": "briefing-names-its-session",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "compass-dovetail",
+      "story": "waiting-by-session",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "shared-agent",
+      "story": "shared-agent-publishes-as-requester",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "shared-agent",
+      "story": "removing-a-shared-agent-keeps-reviews-theirs",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "first-impression",
+      "story": "reads-like-a-page",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "first-impression",
+      "story": "headings-and-title-read-clearly",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "first-impression",
+      "story": "first-visit-explains-itself",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "render-as-written",
+      "story": "document-links-confirm",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "first-impression",
+      "story": "briefing-sent-time",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "read-artifacts",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "read-supported-formats",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "first-local-later",
+      "story": "follow-references",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "read-single-markdown",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "render-as-written",
+      "story": "keep-font-choice",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "render-as-written",
+      "story": "rich-document-visuals",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "render-as-written",
+      "story": "criticmarkup",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "agent-notes",
+      "story": "agent-notes-as-comments",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "story": "briefing-carries-design-pictures",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "briefing-images",
+      "story": "briefing-carries-an-image",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "briefing-images",
+      "story": "html-embeds-briefing-image",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "judge-in-terminal",
+      "story": "anchor-comment-tui",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "annotate-material",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "explain-decision",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "first-local-later",
+      "story": "recover-review-draft",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "comment-comfortably",
+      "story": "comment-by-keyboard",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "ask-instead",
+      "story": "ask-beside-artifact",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "ask-instead",
+      "story": "status-without-reasking",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "ask-instead",
+      "story": "reask-on-timer",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "share-document",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "who-published-it",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "confirm-owner-tui",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "confirm-owner-web",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "web-share",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "board-review",
+      "story": "share-board-snapshot",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "share-qr",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "revoke-and-close",
+      "status": "exists",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": [
+          {
+            "task": "revoke-ends-access",
+            "ref": "spacedock-dev/subspace-relay#388"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "choose-public-or-invite",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "invite-specific-reviewer",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "story": "env-overridable-daily-quota",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "comment-visibility",
+      "story": "reviewers-see-each-other-toggle",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "visibility",
+      "story": "public-by-default",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "visibility",
+      "story": "change-default-visibility",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "visibility",
+      "story": "visibility-settings-page",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "visibility",
+      "story": "private-end-to-end",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "cleanup-2-0a",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "publish-to-review-domain",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "story": "share-from-page",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "open-shared-link",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "know-comment-identity-web",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "open-shared-artifact-tui",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "know-comment-identity-tui",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "board-review",
+      "story": "open-board-web",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "one-link-only",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": null,
+      "story": "see-the-link-has-expired",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "sign-in-to-prove-email",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pairing",
+      "story": "first-screen-owner-or-anonymous",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pairing",
+      "story": "entry-random-name",
+      "status": "exists",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": [
+          {
+            "task": "entry-without-name-field",
+            "ref": "spacedock-dev/subspace-relay#401"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pairing",
+      "story": "name-follows-account",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "advisory-and-close",
+      "story": "see-briefing-closed",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "reviewer-sign-up",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "playground-own-copy",
+      "story": "playground-claim-owner",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "playground-own-copy",
+      "story": "playground-copy-briefing",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "see-who-published",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-account",
+      "story": "one-identity-entry",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "read-artifact-web",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "web-feedback",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "read-artifact-tui",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "terminal-feedback",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "arrive-reading",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "read-artifact-web-fast",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "keep-draft-on-switch",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "board-review",
+      "story": "navigate-board",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "board-review",
+      "story": "switch-board-pages",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "board-review",
+      "story": "comment-on-board",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "playground-own-copy",
+      "story": "playground-comment-and-decide",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "repeated-text-comment-lands",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "comment-across-browsers",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "render-as-written",
+      "story": "single-tilde-strike",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "render-as-written",
+      "story": "wide-reading-view",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "comment-comfortably",
+      "story": "comment-popup-on-select",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "comment-comfortably",
+      "story": "comment-box-grows",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "comment-comfortably",
+      "story": "panel-click-highlights",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "comment-comfortably",
+      "story": "in-page-errors-consistent",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "comment-comfortably",
+      "story": "comment-links-confirm",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "hover-shows-comment",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "static-prototype",
+      "story": "review-static-prototype",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "prototype-review",
+      "story": "review-prototype-together",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "agent-front-door",
+      "story": "agent-reviews-from-link",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 6,
+        "done": 5,
+        "prs": [
+          {
+            "task": "agent-review-identity",
+            "ref": "spacedock-dev/subspace-relay#342"
+          },
+          {
+            "task": "comment-admission",
+            "ref": "spacedock-dev/subspace-relay#355"
+          },
+          {
+            "task": "device-route-after-decision",
+            "ref": "spacedock-dev/subspace-relay#367"
+          },
+          {
+            "task": "device-route-room-gate",
+            "ref": "spacedock-dev/subspace-relay#360"
+          },
+          {
+            "task": "front-door-hardening",
+            "ref": "spacedock-dev/subspace-relay#377"
+          }
+        ]
+      },
+      "diagnostic": "Required mapping differs from readable task membership"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "agent-bound-to-me",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "signed-in-mark",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "upload-avatar",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "limits-by-standing",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "reviewer-direct-send",
+      "story": "reviewer-comment-sends-at-once",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "story": "prototype-comment-records-screen",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "reviewer-direct-send",
+      "story": "owner-decision-names-sent-comments",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "reviewer-direct-send",
+      "story": "leave-with-unsent-comment-asks-first",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "story": "edit-sent-comment",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "spacedock-review",
+      "story": "delete-sent-comment",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "confirm-sent-web",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "confirm-sent-tui",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "recommend-a-decision",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-mode",
+      "story": "owner-sees-all",
+      "status": "exists",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 4,
+        "done": 4,
+        "prs": [
+          {
+            "task": "owner-feedback-pages",
+            "ref": "spacedock-dev/subspace-relay#391"
+          },
+          {
+            "task": "owner-sees-all-feedback",
+            "ref": "spacedock-dev/subspace-relay#350"
+          },
+          {
+            "task": "owner-sees-all-feedback-page",
+            "ref": "spacedock-dev/subspace-relay#368"
+          },
+          {
+            "task": "owner-sees-all-feedback-room",
+            "ref": "spacedock-dev/subspace-relay#362"
+          }
+        ]
+      },
+      "diagnostic": "Required mapping differs from readable task membership"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-mode",
+      "story": "author-mark",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 2,
+        "done": 1,
+        "prs": [
+          {
+            "task": "identity-cannot-be-borrowed",
+            "ref": "spacedock-dev/subspace-relay#389"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-mode",
+      "story": "owner-keeps-name-and-comments",
+      "status": "exists",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": [
+          {
+            "task": "own-comments-follow-account",
+            "ref": "spacedock-dev/subspace-relay#398"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-mode",
+      "story": "web-choose-comments",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-mode",
+      "story": "others-highlights-in-author-colour",
+      "status": "exists",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": [
+          {
+            "task": "others-highlights-in-author-colour",
+            "ref": "spacedock-dev/subspace-relay#384"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "reopen-original",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion",
+      "story": "see-feedback",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "select-feedback-to-accept",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "return-to-original-decision",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "see-who-has-not-replied",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "notify-owner-comment",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "same-identity-across-rooms",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "claim-my-history",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "refresh-feedback-manually",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "web-read-feedback",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "board-review",
+      "story": "read-board-feedback-tui",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "my-briefings-list",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "second-opinion-later",
+      "story": "feedback-timeline",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "agent-threads",
+      "story": "reply-to-agent-note",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-decides",
+      "story": "decide-as-paired-owner",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-decides",
+      "story": "decision-to-agent-and-relay",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "pairing",
+      "story": "result-marks-owner",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-decides",
+      "story": "verdict-closes-the-round",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "judge-in-terminal",
+      "story": "verdict-returns-tui",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "judge-in-terminal",
+      "story": "binding-decision-tui",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "send-feedback-to-agent",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "approve-gate",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "revise-gate",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "web-parity",
+      "story": "hold-gate",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "first-local-later",
+      "story": "decide-again",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "scaffold-gates",
+      "story": "see-recorded-decision",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "first-local-later",
+      "story": "see-next-action",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "scaffold-gates",
+      "story": "gate-invokes-binding-review",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "playground",
+      "story": "playground-then-install",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-decides",
+      "story": "decide-on-reviewer-feedback",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "owner-account",
+      "story": "decision-names-account",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "briefing-continuity",
+      "story": "comments-refresh-and-notify",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "continuity-latest",
+      "story": "agent-revises-in-place",
+      "status": "exists",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 2,
+        "done": 2,
+        "prs": [
+          {
+            "task": "continuity-room-points-to-latest",
+            "ref": "spacedock-dev/subspace-relay#474"
+          },
+          {
+            "task": "rr-revise-follows-latest",
+            "ref": "spacedock-dev/subspace-relay#96"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "briefing-continuity",
+      "story": "see-what-moved",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "continuity-latest",
+      "story": "share-revision",
+      "status": "exists",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 1,
+        "done": 1,
+        "prs": [
+          {
+            "task": "continuity-earlier-comments-beside-latest",
+            "ref": "spacedock-dev/subspace-relay#476"
+          }
+        ]
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "continuity-live",
+      "story": "open-page-learns-new-version",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "continuity-live",
+      "story": "unsent-comment-on-new-version",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "continuity-re-anchor",
+      "story": "comment-follows-revision",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "briefing-continuity",
+      "story": "feedback-across-revisions",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "briefing-continuity",
+      "story": "answer-to-answer-diff",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "agent-threads",
+      "story": "agent-replies-after-publish",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "shared-agent",
+      "story": "revise-after-pairing-uses-paired-quota",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "briefing-continuity",
+      "story": "switch-and-roll-back-versions",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "spacedock-review",
+      "release": "evergreen",
+      "story": "artifact-stays-current",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    }
+  ],
+  "releases": [
+    {
+      "release": "judge-in-terminal",
+      "totalStories": 4,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 4
+      }
+    },
+    {
+      "release": "ask-instead",
+      "totalStories": 3,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 3
+      }
+    },
+    {
+      "release": "second-opinion",
+      "totalStories": 17,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 17
+      }
+    },
+    {
+      "release": "pairing",
+      "totalStories": 7,
+      "doneStories": 2,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 2,
+        "storiesOpen": 0,
+        "storiesEmpty": 5
+      }
+    },
+    {
+      "release": "pair-once",
+      "totalStories": 5,
+      "doneStories": 1,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 1,
+        "storiesOpen": 0,
+        "storiesEmpty": 4
+      }
+    },
+    {
+      "release": "owner-decides",
+      "totalStories": 4,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 4
+      }
+    },
+    {
+      "release": "owner-mode",
+      "totalStories": 5,
+      "doneStories": 3,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 3,
+        "storiesOpen": 1,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "continuity-latest",
+      "totalStories": 2,
+      "doneStories": 2,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "exists",
+      "acceptance": "pending delivery acceptance",
+      "members": {
+        "storiesDone": 2,
+        "storiesOpen": 0,
+        "storiesEmpty": 0
+      }
+    },
+    {
+      "release": "comment-visibility",
+      "totalStories": 2,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 2
+      }
+    },
+    {
+      "release": "reviewer-direct-send",
+      "totalStories": 3,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 3
+      }
+    },
+    {
+      "release": "playground",
+      "totalStories": 5,
+      "doneStories": 1,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 1,
+        "storiesOpen": 0,
+        "storiesEmpty": 4
+      }
+    },
+    {
+      "release": "static-prototype",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "continuity-live",
+      "totalStories": 2,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 2
+      }
+    },
+    {
+      "release": "continuity-re-anchor",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "briefing-continuity",
+      "totalStories": 5,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 5
+      }
+    },
+    {
+      "release": "owner-account",
+      "totalStories": 4,
+      "doneStories": 0,
+      "requiredTasks": 2,
+      "doneTasks": 0,
+      "status": "gap",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 2,
+        "storiesEmpty": 2
+      }
+    },
+    {
+      "release": "playground-own-copy",
+      "totalStories": 3,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 3
+      }
+    },
+    {
+      "release": "briefing-images",
+      "totalStories": 2,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 2
+      }
+    },
+    {
+      "release": "agent-publishes",
+      "totalStories": 2,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 1,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "agent-front-door",
+      "totalStories": 3,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 2,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "first-impression",
+      "totalStories": 4,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 4
+      }
+    },
+    {
+      "release": "render-as-written",
+      "totalStories": 6,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 6
+      }
+    },
+    {
+      "release": "comment-comfortably",
+      "totalStories": 6,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 6
+      }
+    },
+    {
+      "release": "agent-notes",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "agent-threads",
+      "totalStories": 2,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 2
+      }
+    },
+    {
+      "release": "visibility",
+      "totalStories": 4,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 4
+      }
+    },
+    {
+      "release": "advisory-and-close",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "web-parity",
+      "totalStories": 21,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 21
+      }
+    },
+    {
+      "release": "second-opinion-later",
+      "totalStories": 28,
+      "doneStories": 2,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 2,
+        "storiesOpen": 0,
+        "storiesEmpty": 26
+      }
+    },
+    {
+      "release": "first-local-later",
+      "totalStories": 7,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 7
+      }
+    },
+    {
+      "release": "board-review",
+      "totalStories": 6,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 6
+      }
+    },
+    {
+      "release": "prototype-review",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "scaffold-gates",
+      "totalStories": 2,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 2
+      }
+    },
+    {
+      "release": "compass-dovetail",
+      "totalStories": 3,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 3
+      }
+    },
+    {
+      "release": "evergreen",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "shared-agent",
+      "totalStories": 3,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 3
+      }
+    }
+  ]
+}
