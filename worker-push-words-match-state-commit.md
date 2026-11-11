@@ -43,6 +43,10 @@ gates:
                 id: briefing:worker-push-words-match-state-commit:ideation:attempt-2:revision-1
                 digest: sha256:82ee0d6cb2cff81861a8da7c2b22aaf6a226d6ef71069619a00831f3b6e197f1
                 room-ref: ./worker-push-words-match-state-commit/review/ideation/briefing-2
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-11T02:49:58.837359Z"
+                reason: The Captain answered with a question, 「為何是工人守則不是放到改放進派工單都帶的段落？你說這是目前唯一量過有效的做法？」 (host question dialog, 2026-11-11); FO changes its recommendation and binds a new question.
 started: 2026-11-11T01:19:15Z
 ---
 
