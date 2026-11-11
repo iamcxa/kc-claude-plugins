@@ -44,7 +44,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.38.1 x-release-please-version -->
+<!-- kc-dev-flow-2 0.39.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -65,7 +65,7 @@ Before admission and dispatch, FO holds unknown/mismatched profiles;
 SD does not enforce this rule. Preserve approved outcome and scope.
 New seeds require non-empty `Non-goals:`, `Budget:` and `Stop condition:` lines
 under `## Scope` or matching level-two sections. Replay counts do not enforce
-these on existing tasks. Use bold **AC-N** declarations with individual evidence clauses.
+these on existing tasks. Budgets start with `N cycles per stage`, `N implementation and M validation cycles`, or `at most N dispatches total` (`最多 N 次派工`); the first overrun holds for his amendment. Only messages with a named `Symptom:` count. Minutes are not counted. Default: keep results, report remaining work and stop adding, unless he decides otherwise. Use bold **AC-N** declarations with individual evidence clauses.
 
 ## Batch gates
 
@@ -85,7 +85,7 @@ Stage workers follow `<package>/references/model-roster.md`; absence retains REA
 
 `concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an
 FO fix authorized under Review-finding disposition step 3 are dispatched at once in the
-entity's own worktree, after the existing overlap check against running worktrees; they
+entity's own worktree, after the existing overlap check against running worktrees and the budget check; they
 do not wait for another entity's worker in the same stage. The validation recheck of
 that repair or fix does not wait for another entity's worker either, but it is
 dispatched only after the repair or fix has completed and committed its candidate, so
@@ -128,7 +128,7 @@ a `Visible change:` line: one sentence on what a user sees or operates
 differently, or `Visible change: none`.
 
 - **Gate content:** Show the selected variant/profile, proposed outcome, scope,
-  exclusions and evidence needed before the next declared stage starts, the
+  exclusions, Budget and evidence needed before the next declared stage starts, the
   `## FO alignment` need and reason, and the recorded `Surfaces:` and
   `Visible change:` lines on the five-stage route.
 - **Seed check:** On the five-stage route, before `gate prepare`, FO runs
@@ -392,6 +392,7 @@ Captain: 「<his words, verbatim>」 (where he said them)
 Asked: <the question or proposal he answered, verbatim, or the commit holding it>
 Supersedes: <acceptance-criterion ids, or none> <optional: "(no replacement: <why>)">
 Design: <optional: the design paragraph it overrides>
+Budget: <optional: new bound, verbatim from Asked: or Captain:>
 ```
 
 `Asked:` is required when his words do not name what they settle, such as 「同意第三點」. FO
