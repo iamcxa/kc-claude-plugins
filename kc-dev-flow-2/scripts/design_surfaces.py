@@ -1197,10 +1197,12 @@ def check_task(path, seed=False, notes=None):
     design = section(worth, re.compile(r"^## Design[ \t]*$", re.I))
     if not any(re.fullmatch(r"### Worth questions[ \t]*", line, re.I) for line in (design if design is not None else worth)):
         needed = design is not None
-        if not needed and text.lstrip("\ufeff\n").startswith("---\n"):
+        if text.lstrip("\ufeff\n").startswith("---\n"):
             try:
-                needed = worth_stage(path) == "ideation"
+                stage = worth_stage(path)
+                needed = stage == "ideation" or (needed and stage in (None, "", "backlog"))
             except (OSError, ValueError, subprocess.TimeoutExpired) as exc:
+                needed = False
                 errors.append(f"{path.name}: cannot read stage for Worth questions: {exc}")
         if needed:
             errors.append(f"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test")
