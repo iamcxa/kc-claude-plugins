@@ -1,0 +1,509 @@
+{
+ "facts": [
+  "states 18h",
+  "names no-show",
+  "no-show keeps deposit",
+  "ruling ADR with words",
+  "ADR 0003 superseded",
+  "architecture cites ruling",
+  "states 44h",
+  "idea kept out of architecture and ADRs",
+  "refactor left docs alone",
+  "waitlist with 25 min"
+ ],
+ "chains": {
+  "A-codex-r1": {
+   "reviewer": [
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0
+   ],
+   "reviewer_score": 5,
+   "script_score": 5,
+   "adrs_added": 6,
+   "arch_words_end": 350,
+   "own_file_and_map_row": false,
+   "elapsed_s": 935,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1015808,
+    "input_tokens": 1143363,
+    "output_tokens": 37055,
+    "reasoning_output_tokens": 17046
+   }
+  },
+  "A-codex-r2": {
+   "reviewer": [
+    0,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    0
+   ],
+   "reviewer_score": 6,
+   "script_score": 6,
+   "adrs_added": 5,
+   "arch_words_end": 419,
+   "own_file_and_map_row": false,
+   "elapsed_s": 852,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1086848,
+    "input_tokens": 1212401,
+    "output_tokens": 34675,
+    "reasoning_output_tokens": 15200
+   }
+  },
+  "B-codex-r1": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 10,
+   "script_score": 9,
+   "adrs_added": 5,
+   "arch_words_end": 963,
+   "own_file_and_map_row": false,
+   "elapsed_s": 1021,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1236480,
+    "input_tokens": 1354821,
+    "output_tokens": 39854,
+    "reasoning_output_tokens": 19473
+   }
+  },
+  "B-codex-r2": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 10,
+   "script_score": 9,
+   "adrs_added": 5,
+   "arch_words_end": 1007,
+   "own_file_and_map_row": false,
+   "elapsed_s": 1021,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1348864,
+    "input_tokens": 1501517,
+    "output_tokens": 39663,
+    "reasoning_output_tokens": 17577
+   }
+  },
+  "C-codex-r1": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 9,
+   "script_score": 9,
+   "adrs_added": 5,
+   "arch_words_end": 1181,
+   "own_file_and_map_row": true,
+   "elapsed_s": 920,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1336192,
+    "input_tokens": 1491337,
+    "output_tokens": 35542,
+    "reasoning_output_tokens": 15070
+   }
+  },
+  "C-codex-r2": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 9,
+   "script_score": 9,
+   "adrs_added": 5,
+   "arch_words_end": 1218,
+   "own_file_and_map_row": true,
+   "elapsed_s": 1081,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1758848,
+    "input_tokens": 1903130,
+    "output_tokens": 41605,
+    "reasoning_output_tokens": 19370
+   }
+  },
+  "A-claude-r1": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1
+   ],
+   "reviewer_score": 9,
+   "script_score": 9,
+   "adrs_added": 2,
+   "arch_words_end": 304,
+   "own_file_and_map_row": false,
+   "elapsed_s": 155,
+   "usage": {
+    "cache_creation_input_tokens": 99547,
+    "cache_read_input_tokens": 903791,
+    "input_tokens": 80,
+    "output_tokens": 15079
+   }
+  },
+  "B-claude-r1": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1
+   ],
+   "reviewer_score": 9,
+   "script_score": 8,
+   "adrs_added": 5,
+   "arch_words_end": 610,
+   "own_file_and_map_row": false,
+   "elapsed_s": 163,
+   "usage": {
+    "cache_creation_input_tokens": 87814,
+    "cache_read_input_tokens": 847020,
+    "input_tokens": 74,
+    "output_tokens": 16716
+   }
+  },
+  "C-claude-r1": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 10,
+   "script_score": 9,
+   "adrs_added": 5,
+   "arch_words_end": 741,
+   "own_file_and_map_row": true,
+   "elapsed_s": 182,
+   "usage": {
+    "cache_creation_input_tokens": 95341,
+    "cache_read_input_tokens": 1053993,
+    "input_tokens": 88,
+    "output_tokens": 18736
+   }
+  },
+  "D-codex-r1": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 10,
+   "script_score": 10,
+   "adrs_added": 1,
+   "arch_words_end": 1284,
+   "idea_in_later_md": true,
+   "own_file_and_map_row": true,
+   "elapsed_s": 1253,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1148032,
+    "input_tokens": 1330283,
+    "output_tokens": 35829,
+    "reasoning_output_tokens": 15763
+   }
+  },
+  "D-codex-r2": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 10,
+   "script_score": 10,
+   "adrs_added": 1,
+   "arch_words_end": 1197,
+   "idea_in_later_md": true,
+   "own_file_and_map_row": true,
+   "elapsed_s": 1264,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1169024,
+    "input_tokens": 1313017,
+    "output_tokens": 35419,
+    "reasoning_output_tokens": 16183
+   }
+  },
+  "E-codex-r1": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 10,
+   "script_score": 10,
+   "adrs_added": 1,
+   "arch_words_end": 835,
+   "idea_in_later_md": true,
+   "own_file_and_map_row": false,
+   "elapsed_s": 1108,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1023616,
+    "input_tokens": 1201913,
+    "output_tokens": 32826,
+    "reasoning_output_tokens": 15853
+   }
+  },
+  "E-codex-r2": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 10,
+   "script_score": 10,
+   "adrs_added": 1,
+   "arch_words_end": 820,
+   "idea_in_later_md": true,
+   "own_file_and_map_row": false,
+   "elapsed_s": 1138,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1064320,
+    "input_tokens": 1235008,
+    "output_tokens": 35105,
+    "reasoning_output_tokens": 16107
+   }
+  },
+  "D-claude-r1": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 10,
+   "script_score": 10,
+   "adrs_added": 1,
+   "arch_words_end": 660,
+   "idea_in_later_md": true,
+   "own_file_and_map_row": false,
+   "elapsed_s": 202,
+   "usage": {
+    "cache_creation_input_tokens": 86343,
+    "cache_read_input_tokens": 954999,
+    "input_tokens": 82,
+    "output_tokens": 13940
+   }
+  },
+  "D-claude-r2": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 10,
+   "script_score": 10,
+   "adrs_added": 1,
+   "arch_words_end": 836,
+   "idea_in_later_md": true,
+   "own_file_and_map_row": true,
+   "elapsed_s": 187,
+   "usage": {
+    "cache_creation_input_tokens": 86920,
+    "cache_read_input_tokens": 897724,
+    "input_tokens": 78,
+    "output_tokens": 15202
+   }
+  },
+  "E-claude-r1": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 10,
+   "script_score": 10,
+   "adrs_added": 1,
+   "arch_words_end": 576,
+   "idea_in_later_md": true,
+   "own_file_and_map_row": false,
+   "elapsed_s": 183,
+   "usage": {
+    "cache_creation_input_tokens": 85995,
+    "cache_read_input_tokens": 933332,
+    "input_tokens": 80,
+    "output_tokens": 13550
+   }
+  },
+  "E-claude-r2": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "reviewer_score": 10,
+   "script_score": 10,
+   "adrs_added": 1,
+   "arch_words_end": 620,
+   "idea_in_later_md": true,
+   "own_file_and_map_row": false,
+   "elapsed_s": 162,
+   "usage": {
+    "cache_creation_input_tokens": 84001,
+    "cache_read_input_tokens": 898954,
+    "input_tokens": 78,
+    "output_tokens": 13578
+   }
+  },
+  "A-claude-r2": {
+   "reviewer": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1
+   ],
+   "reviewer_score": 9,
+   "script_score": 9,
+   "adrs_added": 4,
+   "arch_words_end": 291,
+   "idea_in_later_md": false,
+   "own_file_and_map_row": false,
+   "elapsed_s": 197,
+   "usage": {
+    "cache_creation_input_tokens": 100366,
+    "cache_read_input_tokens": 910356,
+    "input_tokens": 80,
+    "output_tokens": 14858
+   }
+  }
+ },
+ "round2_reviewer_notes": [
+  "E-claude-r1: architecture sentence false about the code when more than one customer waits (code bug its tests miss)",
+  "D-claude-r1: waitlist folded into booking.md, no map row",
+  "D-codex-r1 and D-claude-r2: a sentence about 'the coordinator's task' inside an architecture document",
+  "Judge was a fresh-context Claude reviewer, not a different model family; Gemini could not be run"
+ ]
+}

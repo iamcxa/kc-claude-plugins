@@ -1,0 +1,432 @@
+{
+ "facts": [
+  "F1 window says 18, not 36",
+  "F2 no-show state named",
+  "F3 no-show keeps deposit",
+  "F4 a new ADR carries the owner's words",
+  "F5 ADR 0003 superseded by it",
+  "F6 architecture cites it",
+  "F7 reminder says 44, not 20",
+  "F8 SMS idea kept out",
+  "F9 refactor left architecture alone",
+  "F10 waitlist and its 25 minutes described"
+ ],
+ "chains": {
+  "A-claude-r1": {
+   "facts": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true
+   ],
+   "score": 9,
+   "own_step": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "adrs_added": 2,
+   "ruling_adr": 5,
+   "arch_files": [
+    "ARCHITECTURE.md"
+   ],
+   "stray_docs": [],
+   "harbor_club_still_mentioned": true,
+   "layered": {
+    "waitlist_has_own_file": false,
+    "map_row_for_waitlist": false
+   },
+   "arch_words": 304,
+   "tests_pass_at_end": true,
+   "steps_failed": [],
+   "elapsed_s": 155,
+   "usage": {
+    "cache_creation_input_tokens": 99547,
+    "cache_read_input_tokens": 903791,
+    "input_tokens": 80,
+    "output_tokens": 15079
+   }
+  },
+  "A-codex-r1": {
+   "facts": [
+    false,
+    true,
+    true,
+    true,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false
+   ],
+   "score": 5,
+   "own_step": [
+    false,
+    true,
+    true,
+    false,
+    true
+   ],
+   "adrs_added": 6,
+   "ruling_adr": 7,
+   "arch_files": [
+    "ARCHITECTURE.md"
+   ],
+   "stray_docs": [],
+   "harbor_club_still_mentioned": true,
+   "layered": {
+    "waitlist_has_own_file": false,
+    "map_row_for_waitlist": false
+   },
+   "arch_words": 350,
+   "tests_pass_at_end": true,
+   "steps_failed": [],
+   "elapsed_s": 935,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1015808,
+    "input_tokens": 1143363,
+    "output_tokens": 37055,
+    "reasoning_output_tokens": 17046
+   }
+  },
+  "A-codex-r2": {
+   "facts": [
+    false,
+    true,
+    true,
+    true,
+    false,
+    true,
+    false,
+    true,
+    true,
+    false
+   ],
+   "score": 6,
+   "own_step": [
+    false,
+    true,
+    true,
+    false,
+    true
+   ],
+   "adrs_added": 5,
+   "ruling_adr": 7,
+   "arch_files": [
+    "ARCHITECTURE.md"
+   ],
+   "stray_docs": [
+    "docs/backlog.md"
+   ],
+   "harbor_club_still_mentioned": true,
+   "layered": {
+    "waitlist_has_own_file": false,
+    "map_row_for_waitlist": false
+   },
+   "arch_words": 419,
+   "tests_pass_at_end": true,
+   "steps_failed": [],
+   "elapsed_s": 852,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1086848,
+    "input_tokens": 1212401,
+    "output_tokens": 34675,
+    "reasoning_output_tokens": 15200
+   }
+  },
+  "B-claude-r1": {
+   "facts": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    false,
+    true,
+    true
+   ],
+   "score": 8,
+   "own_step": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "adrs_added": 5,
+   "ruling_adr": 7,
+   "arch_files": [
+    "docs/architecture.md",
+    "docs/architecture/booking.md",
+    "docs/architecture/notifications.md"
+   ],
+   "stray_docs": [],
+   "harbor_club_still_mentioned": true,
+   "layered": {
+    "waitlist_has_own_file": false,
+    "map_row_for_waitlist": false
+   },
+   "arch_words": 610,
+   "tests_pass_at_end": true,
+   "steps_failed": [],
+   "elapsed_s": 163,
+   "usage": {
+    "cache_creation_input_tokens": 87814,
+    "cache_read_input_tokens": 847020,
+    "input_tokens": 74,
+    "output_tokens": 16716
+   }
+  },
+  "B-codex-r1": {
+   "facts": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "score": 9,
+   "own_step": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "adrs_added": 5,
+   "ruling_adr": 7,
+   "arch_files": [
+    "docs/architecture.md",
+    "docs/architecture/booking.md",
+    "docs/architecture/notifications.md"
+   ],
+   "stray_docs": [
+    "docs/backlog.md"
+   ],
+   "harbor_club_still_mentioned": true,
+   "layered": {
+    "waitlist_has_own_file": false,
+    "map_row_for_waitlist": false
+   },
+   "arch_words": 963,
+   "tests_pass_at_end": true,
+   "steps_failed": [],
+   "elapsed_s": 1021,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1236480,
+    "input_tokens": 1354821,
+    "output_tokens": 39854,
+    "reasoning_output_tokens": 19473
+   }
+  },
+  "B-codex-r2": {
+   "facts": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "score": 9,
+   "own_step": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "adrs_added": 5,
+   "ruling_adr": 7,
+   "arch_files": [
+    "docs/architecture.md",
+    "docs/architecture/booking.md",
+    "docs/architecture/notifications.md"
+   ],
+   "stray_docs": [
+    "docs/backlog.md"
+   ],
+   "harbor_club_still_mentioned": true,
+   "layered": {
+    "waitlist_has_own_file": false,
+    "map_row_for_waitlist": false
+   },
+   "arch_words": 1007,
+   "tests_pass_at_end": true,
+   "steps_failed": [],
+   "elapsed_s": 1021,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1348864,
+    "input_tokens": 1501517,
+    "output_tokens": 39663,
+    "reasoning_output_tokens": 17577
+   }
+  },
+  "C-claude-r1": {
+   "facts": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "score": 9,
+   "own_step": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "adrs_added": 5,
+   "ruling_adr": 7,
+   "arch_files": [
+    "docs/architecture.md",
+    "docs/architecture/booking.md",
+    "docs/architecture/notifications.md",
+    "docs/architecture/waitlist.md"
+   ],
+   "stray_docs": [],
+   "harbor_club_still_mentioned": true,
+   "layered": {
+    "waitlist_has_own_file": true,
+    "map_row_for_waitlist": true
+   },
+   "arch_words": 741,
+   "tests_pass_at_end": true,
+   "steps_failed": [],
+   "elapsed_s": 182,
+   "usage": {
+    "cache_creation_input_tokens": 95341,
+    "cache_read_input_tokens": 1053993,
+    "input_tokens": 88,
+    "output_tokens": 18736
+   }
+  },
+  "C-codex-r1": {
+   "facts": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "score": 9,
+   "own_step": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "adrs_added": 5,
+   "ruling_adr": 7,
+   "arch_files": [
+    "docs/architecture.md",
+    "docs/architecture/booking.md",
+    "docs/architecture/notifications.md",
+    "docs/architecture/waitlist.md"
+   ],
+   "stray_docs": [],
+   "harbor_club_still_mentioned": true,
+   "layered": {
+    "waitlist_has_own_file": true,
+    "map_row_for_waitlist": true
+   },
+   "arch_words": 1181,
+   "tests_pass_at_end": true,
+   "steps_failed": [],
+   "elapsed_s": 920,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1336192,
+    "input_tokens": 1491337,
+    "output_tokens": 35542,
+    "reasoning_output_tokens": 15070
+   }
+  },
+  "C-codex-r2": {
+   "facts": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "score": 9,
+   "own_step": [
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "adrs_added": 5,
+   "ruling_adr": 7,
+   "arch_files": [
+    "docs/architecture.md",
+    "docs/architecture/booking.md",
+    "docs/architecture/notifications.md",
+    "docs/architecture/waitlist.md"
+   ],
+   "stray_docs": [
+    "docs/backlog.md"
+   ],
+   "harbor_club_still_mentioned": true,
+   "layered": {
+    "waitlist_has_own_file": true,
+    "map_row_for_waitlist": true
+   },
+   "arch_words": 1218,
+   "tests_pass_at_end": true,
+   "steps_failed": [],
+   "elapsed_s": 1081,
+   "usage": {
+    "cache_write_input_tokens": 0,
+    "cached_input_tokens": 1758848,
+    "input_tokens": 1903130,
+    "output_tokens": 41605,
+    "reasoning_output_tokens": 19370
+   }
+  }
+ }
+}

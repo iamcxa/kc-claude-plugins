@@ -1,0 +1,4 @@
+a509896815ff1394  harness/world.py
+fd3669d94973eac5  harness/run.py
+128ebf172ce06c06  harness/score.py
+bb7ccb6b99c441f2  PREREG2.md
