@@ -217,11 +217,11 @@ Recommended order: after adr-required-statement and merge-guard-stops-unasked-me
 
 **AC-6** Search-found workflows missing from the list print as `unlisted: <repo> <path>` and do not change the exit code. A failed search prints `search: unavailable <message>`, not nothing. Evidence: fake `gh search code` fixtures, one success and one exit 1. Falsifier: silence on a failed search fails.
 
-**AC-7** The step and rules are written once each: maintain-flow § Observe adopters names the command, the list path, who moves the README and the pin and on whose word; root `CLAUDE.md` § Post-merge carries one pointer row; adoption.md § State laws check states the D1 ruling. Evidence: `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0, including its 12-word repeat check. Implementation reports per-moment word counts at base `e8664a72` and candidate, recounted by an independent copy. Falsifier: a lint failure, or a moment other than release and adoption whose count rises.
-
 **AC-8** A live run against the real list at the candidate. Evidence: the command, date and full output saved in the task's implementation folder. Two rows chosen by the validator match a by-hand `gh api` read of the same README and laws file. Falsifier: a row whose printed release line or pin differs from the hand read.
 
-**AC-9** The list exists at the D2 home with the rows he approves. Evidence: `git show origin/spacedock-state/dev2:.notes/adopters.md` (or the chosen path) lists them, and the AC-8 run reads that file. Falsifier: a row in the AC-8 output that is not in the file, or the reverse.
+**AC-10** Amended by Captain, amendment 1. The step and rules are written once each: maintain-flow § Observe adopters names `package_version.py rollout <list>`, a maintainer-supplied list outside any repository committed nowhere, who moves the README and pin and on whose word; root `CLAUDE.md` § Post-merge has one pointer; adoption.md § State laws check states the installation ruling. No package text names an adopter repository or supplies a list path inside a repository. Evidence: repository `lint-skills.py` exits 0 including its repeat check; implementation reports per-moment base/candidate word counts with an independent recount. Falsifier: lint fails, a non-release/non-adoption moment grows, or package text restores an in-repository list.
+
+**AC-11** Amended by Captain, amendment 1. The command takes the maintainer's local list path; it is committed nowhere, and no list file is added to the package or state branch. Evidence: the AC-8 run reads the FO-supplied local file, and fake-gh tests cover a missing and unreadable list returning non-zero. Falsifier: a missing list returns 0 or says nothing is owed, or the candidate adds a list to either repository.
 
 ## Number guards
 
@@ -233,6 +233,12 @@ ADR: 0075
 Captain: 「這個清單列在本地就好了，那是因為我是作者同時又是這些 repo 的維護者，放進去 dev2 repo 不是很怪嗎」 (host question dialog, 2026-11-11)
 Asked: 「採用 repo 的清單要列哪幾行？這份清單會放在這個 repo 公開的狀態分支上。我建議列設計提的 11 行：kc-claude-plugins、qnow、me-company、subspace-relay、subspace-web 各列 dev2 和 dev2-poc，subspace-v0 只列 dev2。我已核對這 11 行在各自的 main 上都有流程說明檔和狀態分支；另外搜尋到的兩個沒公開出現過的私有 repo 不列。」
 Supersedes: AC-7, AC-9
+
+Superseded text:
+
+**AC-7** The step and rules are written once each: maintain-flow § Observe adopters names the command, the list path, who moves the README and the pin and on whose word; root `CLAUDE.md` § Post-merge carries one pointer row; adoption.md § State laws check states the D1 ruling. Evidence: `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0, including its 12-word repeat check. Implementation reports per-moment word counts at base `e8664a72` and candidate, recounted by an independent copy. Falsifier: a lint failure, or a moment other than release and adoption whose count rises.
+
+**AC-9** The list exists at the D2 home with the rows he approves. Evidence: `git show origin/spacedock-state/dev2:.notes/adopters.md` (or the chosen path) lists them, and the AC-8 run reads that file. Falsifier: a row in the AC-8 output that is not in the file, or the reverse.
 
 ## Stage Report: ideation
 
