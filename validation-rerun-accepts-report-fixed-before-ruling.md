@@ -53,6 +53,17 @@ gates:
                 id: briefing:validation-rerun-accepts-report-fixed-before-ruling:validation:attempt-1:revision-1
                 digest: sha256:4eda0b2cee05d69eb6c216cb73fc5bf830d9fe464df2cf82e3ae55be4c406ade
                 room-ref: ./validation-rerun-accepts-report-fixed-before-ruling/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:validation-rerun-accepts-report-fixed-before-ruling:validation:1
+                briefing: briefing:validation-rerun-accepts-report-fixed-before-ruling:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-11T00:25:38.79522Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-11), answering 「決定：合併 #834（驗證報告在你裁示前被補改過、結論字眼沒變時，仍可再派驗證；裁示後才改或改了結論的照舊拒絕）嗎？建議合併。同意即接受：不用 PASSED 或 REJECTED 這兩個字就把結論反過來的改法擋不到；只在說明裡多寫或少寫一次這兩個字也會被擋；驗證留下一項延後風險（手寫的關卡紀錄可以騙過檢查，正常流程產生不出來）；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit 7d75d65ef317fc5c426eb7b0975d93a72d50acaa, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-10T16:15:50Z
 worktree: .worktrees/spacedock-ensign-validation-rerun-accepts-report-fixed-before-ruling
 pr: iamcxa/kc-claude-plugins#834
