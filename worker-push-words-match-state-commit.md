@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:worker-push-words-match-state-commit:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:worker-push-words-match-state-commit-backlog-1
+              briefing:
+                id: briefing:worker-push-words-match-state-commit:backlog:attempt-1:revision-1
+                digest: sha256:dc702b36756f0c9febd73862fb29bc675e8613609d26eecda819aa1778ccb149
+                room-ref: ./worker-push-words-match-state-commit/review/backlog/briefing-1
 ---
 
 ## Scope
