@@ -38,6 +38,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-11T02:20:09.930611Z"
                 reason: The Captain answered the six-design question with 「這次比較複雜，一題題過審」 (host question dialog, 2026-11-11); each design gets its own question.
+            - id: gate-attempt:denied-command-denies-only-that-command-ideation-2
+              briefing:
+                id: briefing:denied-command-denies-only-that-command:ideation:attempt-2:revision-1
+                digest: sha256:84f96d8e503f6c4770aca41474621b5dfcf997483518ab2f2266fe23d16feccb
+                room-ref: ./denied-command-denies-only-that-command/review/ideation/briefing-2
 started: 2026-11-11T01:19:20Z
 ---
 

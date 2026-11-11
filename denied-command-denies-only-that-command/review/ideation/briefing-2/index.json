@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:denied-command-denies-only-that-command:ideation:attempt-2:revision-1",
+  "question": "決定：要不要核准「拒絕一個指令不等於全停」的設計並開始實作。我建議照設計的建議核准：在每張派工單都帶的流程說明段落加一句話，說明某個指令被拒絕時不要停工、不要繞過，把其餘做完並在報告裡寫明被拒的那一步，流程說明檔多 33 字；另外在 Paseo 擴充加 21 字，讓我拒絕 Codex 工人時把理由另外傳給它，因為 Paseo 現在不會把理由帶過去；行為重放 10 次、上限 12 次。核准即接受這三項，其中第二項超出這張任務原本「只改給工人看的文字」的預算。",
+  "artifacts": [
+    {
+      "id": "artifact:denied-command-denies-only-that-command:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/fc9bb708652644aad4cf4dba787e898307664505/denied-command-denies-only-that-command.md",
+      "rev": "sha256:7f17ce8986379973a25657b1d779116bea56bebe2f388ca9da35b0e962cb65e3",
+      "mediaType": "text/markdown",
+      "summary": "Batch 21 ideation sitting, one design per question on the Captain's word. FO ran design_surfaces.py check: exit 0 (2026-11-11). The worker's report, not re-run by FO: that Paseo maps FO's deny to Codex's decline and sends no message, read from the Paseo and Codex sources; that Spacedock's ensign contract has no sentence on what a refusal covers; the word counts; and the replay plan. No criterion is verified against a candidate. Decisions D1 (where the sentence lives and the README raise), D2 (FO sends its reason to a Codex worker, beyond the task's Budget) and D3 (replay size) each carry a recommendation and what gets worse in the task file."
+    }
+  ]
+}
