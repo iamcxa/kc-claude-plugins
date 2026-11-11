@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:worker-push-words-match-state-commit:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:worker-push-words-match-state-commit-ideation-1
+              briefing:
+                id: briefing:worker-push-words-match-state-commit:ideation:attempt-1:revision-1
+                digest: sha256:ae33ca312207ad6707385f22aa39b91963feaa0613ba134c2163d7f26358bd40
+                room-ref: ./worker-push-words-match-state-commit/review/ideation/briefing-1
 started: 2026-11-11T01:19:15Z
 ---
 
