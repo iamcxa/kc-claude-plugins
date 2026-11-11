@@ -52,6 +52,14 @@ gates:
                 id: briefing:ideation-checks-external-prior-art:ideation:attempt-2:revision-1
                 digest: sha256:ace0bb97d9a681f384b1c1e71f216f3ca9ce32472d325d329e346cc26cbbba0b
                 room-ref: ./ideation-checks-external-prior-art/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ideation-checks-external-prior-art:ideation:2
+                briefing: briefing:ideation-checks-external-prior-art:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-11T03:07:57.793127Z"
+                decision: revise
+                reason: 'The Captain answered 「我覺得這裡有點跑掉，這一點其實跟已經有的先查上游原則是類似的，對吧？這裡需要加入的是上網查詢，但是比例是怎樣我還不知道，因為 qnow 跟 relay 都有遇到想做的事已經有 RFC 規範了，只要基於規範往下做就會比較容易，但是經常會先自己發明，直到我問才找規範，這樣就沒那麼有效率。所以換句話說，應該要查上游沒錯，要上網搜尋查規範也沒錯，或是就是先限縮第一階段只查 RFC，但 FO 可以再進一步建議上網搜尋」 (host question dialog, 2026-11-11), answering 「決定：要不要核准「設計階段先查現成的標準與做法」的設計並開始實作。我建議照設計的建議核准：三種做法先跑重放，由事先講好的規則決定出哪一種，優先採「只在要發明新機制時才查」，它沒通過就退到「每份設計寫一行」，兩種都沒通過就不開 PR；查的範圍是工人已知的加上這個 repo 自己用到的套件，不上網搜尋；動套件之前先把提案和重放計畫傳給 qnow 的 First Officer 確認。核准即接受這兩項，以及重放要跑 21 次 Codex 工人和 7 次審查員。」. Override: recommended approving the design with no web search; Captain chose sending it back so the check extends the existing check-upstream practice and looks up published specifications online; area: ideation prior art. Ask of the ideation worker: redesign from his words. The check is the existing look-at-what-exists practice carried one step outward to published specifications such as RFCs; a first stage may be limited to RFC lookup, with FO able to suggest a wider web search; how much searching each task gets is open and the design proposes it with its cost.'
 started: 2026-11-11T02:01:14Z
 ---
 
