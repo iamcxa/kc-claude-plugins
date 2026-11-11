@@ -54,6 +54,8 @@ class Github:
     def content(self, repo, path, ref):
         data = self.run("api", f"repos/{repo}/contents/{quote(path, safe='/')}?ref={quote(ref, safe='')}")
         try:
+            if not isinstance(data, dict) or data.get("encoding") != "base64":
+                raise Unreadable(f"content omitted for {path}")
             return base64.b64decode(data["content"]).decode("utf-8")
         except (KeyError, TypeError, ValueError, UnicodeError) as error:
             raise Unreadable(f"cannot decode {path}") from error
@@ -69,6 +71,24 @@ class Github:
             if ref != default:
                 text = self.content(repo, path, ref)
         return text
+
+    def search(self):
+        query = quote("x-release-please-version filename:README.md user:iamcxa user:spacedock-dev", safe="")
+        found = []
+        for page in range(1, 11):
+            data = self.run("api", f"search/code?q={query}&per_page=100&page={page}")
+            if data["incomplete_results"]:
+                raise Unreadable("code search returned incomplete results")
+            total = data["total_count"]
+            if total > 1000:
+                raise Unreadable("code search exceeds GitHub's 1000-result limit")
+            items = data["items"]
+            found.extend(items)
+            if len(found) >= total:
+                return found
+            if len(items) < 100:
+                raise Unreadable(f"code search stopped at {len(found)} of {total} results")
+        raise Unreadable("code search reached GitHub's 1000-result limit")
 
     def releases(self):
         refs = self.run("api", f"repos/{UPSTREAM}/git/matching-refs/tags/kc-dev-flow-2-v")
@@ -165,11 +185,10 @@ def rollout(listing):
             print(f"{repo} {directory} unreadable: {diagnostic(error)}")
             failed = True
     try:
-        found = gh.run("search", "code", "x-release-please-version", "--owner", "iamcxa", "--owner", "spacedock-dev",
-                       "--filename", "README.md", "--limit", "1000", "--json", "repository,path")
+        found = gh.search()
         seen = set(known)
         for item in found:
-            repo, path = item["repository"]["nameWithOwner"], item["path"]
+            repo, path = item["repository"]["full_name"], item["path"]
             if (repo, path) not in seen and path.endswith("/README.md"):
                 if MARK.search(gh.readme(repo, path.rsplit("/", 1)[0])):
                     print(f"unlisted: {repo} {path}")

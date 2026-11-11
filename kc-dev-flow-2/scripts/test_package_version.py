@@ -109,10 +109,21 @@ class RolloutTest(unittest.TestCase):
         data = {"encoding": "base64", "content": base64.b64encode((text or "").encode()).decode()}
         self.reply(["api", endpoint], data, error)
 
-    def search(self, data=None, error=None):
-        self.reply(["search", "code", "x-release-please-version", "--owner", "iamcxa",
-                    "--owner", "spacedock-dev", "--filename", "README.md", "--limit", "1000",
-                    "--json", "repository,path"], data, error)
+    def search(self, data=None, error=None, *, page=1, total=None, incomplete=False):
+        from urllib.parse import quote
+        cli = ["search", "code", "x-release-please-version", "--owner", "iamcxa",
+               "--owner", "spacedock-dev", "--filename", "README.md", "--limit", "1000",
+               "--json", "repository,path"]
+        if page == 1 or error:
+            self.reply(cli, data, error)
+        else:
+            self.responses[json.dumps(cli)]["data"].extend(data or [])
+        items = [{**item, "repository": {"full_name": item["repository"]["nameWithOwner"]}}
+                 for item in data or []]
+        query = quote("x-release-please-version filename:README.md user:iamcxa user:spacedock-dev", safe="")
+        self.reply(["api", f"search/code?q={query}&per_page=100&page={page}"],
+                   {"total_count": len(items) if total is None else total,
+                    "incomplete_results": incomplete, "items": items[:100]}, error)
 
     def row(self, name, version="0.38.0", pin=None, directory="docs/dev2", branch=None, trunk="main"):
         repo = f"fleet/{name}"
@@ -233,6 +244,68 @@ class RolloutTest(unittest.TestCase):
         self.assertIn('search: unavailable "search quota exceeded"', run.stdout)
         self.content(self.repo, self.workflow, self.latest, self.readme("0.38.1") + "Changed rule.\n")
         self.assertEqual(self.run_rollout().returncode, 1)
+
+    def test_search_reads_the_next_page_before_reporting_unlisted(self):
+        self.row("listed")
+        self.search([{"repository": {"nameWithOwner": "fleet/listed"},
+                      "path": "docs/dev2/README.md"}] * 100, total=101)
+        self.search([{"repository": {"nameWithOwner": "fleet/last"},
+                      "path": "docs/dev2/README.md"}], page=2, total=101)
+        self.reply(["api", "repos/fleet/last"], {"default_branch": "main"})
+        self.content("fleet/last", "docs/dev2/README.md", "main", self.readme("0.38.0"))
+        run = self.run_rollout()
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertIn("unlisted: fleet/last docs/dev2/README.md", run.stdout)
+        self.assertNotIn("search: unavailable", run.stdout)
+
+    def test_search_reports_timeout_or_result_cap_without_changing_debt_exit(self):
+        self.row("listed")
+        for incomplete, total, message in [(True, 1, "incomplete results"),
+                                            (False, 1001, "1000-result limit")]:
+            with self.subTest(incomplete=incomplete, total=total):
+                self.search([{"repository": {"nameWithOwner": "fleet/listed"},
+                              "path": "docs/dev2/README.md"}] * min(total, 1000),
+                            total=total, incomplete=incomplete)
+                run = self.run_rollout()
+                self.assertEqual(run.returncode, 0, run.stdout)
+                self.assertIn("search: unavailable", run.stdout)
+                self.assertIn(message, run.stdout)
+        self.content(self.repo, self.workflow, self.latest, self.readme("0.38.1") + "Changed rule.\n")
+        self.assertEqual(self.run_rollout().returncode, 1)
+
+    def test_search_missing_a_page_is_explicitly_unavailable(self):
+        self.row("listed")
+        self.search([{"repository": {"nameWithOwner": "fleet/listed"},
+                      "path": "docs/dev2/README.md"}] * 100, total=101)
+        self.search([], page=2, total=101)
+        run = self.run_rollout()
+        self.assertEqual(run.returncode, 0, run.stdout)
+        self.assertIn("search: unavailable", run.stdout)
+        self.assertIn("stopped at 100 of 101", run.stdout)
+
+    def omitted_content(self, path):
+        from urllib.parse import quote
+        for ref in (self.old, self.latest):
+            self.reply(["api", f"repos/{self.repo}/contents/{path}?ref={quote(ref, safe='')}"],
+                       {"type": "file", "encoding": "none", "content": "", "size": 14216605})
+
+    def test_omitted_workflow_contents_are_unreadable_not_equal(self):
+        self.row("one", pin=self.old)
+        self.omitted_content(self.workflow)
+        run = self.run_rollout()
+        self.assertEqual(run.returncode, 1, run.stdout)
+        self.assertIn("unreadable:", run.stdout)
+        self.assertIn("content omitted", run.stdout)
+        self.assertNotIn("no sync owed", run.stdout)
+
+    def test_omitted_laws_contents_are_unreadable_not_equal(self):
+        self.row("one", pin=self.old)
+        self.omitted_content(self.laws[0])
+        run = self.run_rollout()
+        self.assertEqual(run.returncode, 1, run.stdout)
+        self.assertIn("unreadable:", run.stdout)
+        self.assertIn("content omitted", run.stdout)
+        self.assertNotIn("no pin owed", run.stdout)
 
     def test_annotated_release_tag_resolves_to_its_commit(self):
         tags = self.responses[json.dumps(["api", f"repos/{self.repo}/git/matching-refs/tags/kc-dev-flow-2-v"])]["data"]
