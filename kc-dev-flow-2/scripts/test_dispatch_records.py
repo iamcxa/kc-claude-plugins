@@ -1493,6 +1493,128 @@ class LiveValidationRulingTests(unittest.TestCase):
 
 
 
+class RepairedRulingHistoryTests(unittest.TestCase):
+    setUp = LiveValidationRulingTests.setUp
+    git = LiveValidationRulingTests.git
+    save = LiveValidationRulingTests.save
+    commit = LiveValidationRulingTests.commit
+    cli = LiveValidationRulingTests.cli
+    assert_hold = LiveValidationRulingTests.assert_hold
+
+    def new_state(self, body=REPORT, native="", slug="task"):
+        LiveValidationRulingTests.new_state(self, body, native, slug)
+        self.record.write_text(self.record.read_text().replace(
+            "1. Independent", "1. Captain amendment 1. Independent"))
+
+    def test_repaired_amendment_after_report_clears(self):
+        self.save(REPORT + AMENDMENT.replace("## Captain amendments", "## Wrong section"))
+        self.commit("amendment outside its section after report")
+        self.save(REPORT + AMENDMENT)
+        self.commit("repair amendment placement")
+        self.assertEqual(self.cli(), (0, ""))
+
+    def test_ruling_then_later_heading_typo_repaired_clears(self):
+        self.save(REPORT + AMENDMENT)
+        self.commit("later ruling")
+        self.save(REPORT + AMENDMENT.replace("## Captain amendments", "## Wrong section"))
+        self.commit("heading typo")
+        self.save(REPORT + AMENDMENT)
+        self.commit("repair heading")
+        self.assertEqual(self.cli(), (0, ""))
+
+    def test_pre_report_broken_text_without_clearing_identity_clears(self):
+        for native in (False, True):
+            with self.subTest(native=native):
+                broken = AMENDMENT.replace("Amendment 1", "Amendment 9").replace(
+                    "## Captain amendments", "## Wrong section")
+                self.new_state("## Scope\nWork\n" + broken)
+                self.save("## Scope\nWork\n")
+                self.commit("repair before report")
+                self.save(REPORT)
+                self.commit("report after repair")
+                self.save(REPORT + ("" if native else AMENDMENT), native_ruling() if native else "")
+                self.commit("new ruling after report")
+                self.assertEqual(self.cli(), (0, ""))
+
+    def test_bad_quoted_gate_scalar_repaired_before_report_clears(self):
+        self.new_state("## Scope\nWork\n", native_ruling(slug="other", reason='""bad""'))
+        self.save("## Scope\nWork\n")
+        self.commit("repair gate scalar")
+        self.save(REPORT)
+        self.commit("report")
+        self.save(REPORT, native_ruling())
+        self.commit("later ruling with new identity")
+        self.assertEqual(self.cli(), (0, ""))
+
+    def test_pre_report_broken_text_carrying_clearing_identity_holds(self):
+        for native in (False, True):
+            with self.subTest(native=native):
+                broken = "" if native else AMENDMENT.replace("## Captain amendments", "## Wrong section")
+                self.new_state("## Scope\nWork\n" + broken,
+                               native_ruling(reason='""bad""') if native else "")
+                self.save("## Scope\nWork\n")
+                self.commit("remove broken record before report")
+                self.save(REPORT)
+                self.commit("report")
+                self.save(REPORT + ("" if native else AMENDMENT), native_ruling() if native else "")
+                self.commit("same identity reintroduced after report")
+                out = self.assert_hold(2)
+                self.assertIn("cannot verify validation ruling order:", out)
+                self.assertIn("Extra data" if native else "ambiguous-amendments", out)
+
+    def test_unrepaired_current_or_pinned_text_stays_held(self):
+        broken = REPORT + AMENDMENT.replace("## Captain amendments", "## Wrong section")
+        self.save(broken)
+        self.commit("still broken at pinned HEAD")
+        self.assertIn("ambiguous-amendments", self.assert_hold(2))
+        self.save(REPORT + AMENDMENT)
+        self.assertIn("ambiguous-amendments", self.assert_hold(2))
+
+    def test_repaired_history_without_later_ruling_needs_ruling(self):
+        self.save(REPORT + AMENDMENT.replace("## Captain amendments", "## Wrong section"))
+        self.commit("broken record after report")
+        self.save(REPORT)
+        self.commit("repair by removing record")
+        self.assertIn("needs a later Captain ruling for report", self.assert_hold(1))
+
+    def test_two_historical_task_paths_stay_held(self):
+        duplicate = self.record.parent.parent / "index.md"
+        duplicate.write_text(self.task.read_text())
+        self.commit("two task paths")
+        duplicate.unlink()
+        self.save(REPORT + AMENDMENT)
+        self.commit("remove duplicate and add later ruling")
+        self.assertIn("ambiguous-task-paths", self.assert_hold(2))
+
+    def test_historical_fence_hiding_report_stays_held(self):
+        self.save("```\n" + REPORT)
+        self.commit("unclosed fence hides report")
+        self.save(REPORT + AMENDMENT)
+        self.commit("repair fence and add later ruling")
+        self.assertIn("discontinuous-report-history", self.assert_hold(2))
+
+    def test_undecodable_historical_bytes_stay_held(self):
+        self.task.write_bytes(self.task.read_bytes() + b"\xff\n")
+        self.commit("undecodable bytes")
+        self.save(REPORT + AMENDMENT)
+        self.commit("repair bytes and add later ruling")
+        out = self.assert_hold(2)
+        self.assertIn("cannot verify validation ruling order:", out)
+        self.assertIn("decode", out)
+
+    def test_report_rewrite_requiring_unreadable_identities_stays_held(self):
+        original = REPORT + "\nREJECTED: choose scope.\n"
+        broken = AMENDMENT.replace("## Captain amendments", "## Wrong section")
+        for at_origin in (False, True):
+            with self.subTest(at_origin=at_origin):
+                self.new_state(original + (broken if at_origin else ""))
+                self.save(original.replace("choose", "decide") + ("" if at_origin else broken))
+                self.commit("correct report without changing verdict")
+                self.save(original.replace("choose", "decide") + AMENDMENT)
+                self.commit("repair record and add ruling")
+                self.assertIn("ambiguous-amendments", self.assert_hold(2))
+
+
 class SavedValidationRulingTests(unittest.TestCase):
     setUp = LiveValidationRulingTests.setUp
     new_state = LiveValidationRulingTests.new_state

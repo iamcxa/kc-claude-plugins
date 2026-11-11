@@ -43,6 +43,7 @@ it exits 2 for a record outside task/dispatch or without an adjacent task file, 
 committed native Captain validation resolution or Captain amendment exists (ADR 0045). It skips this predicate
 for non-git snapshots; pre-ruling corrections must preserve the ordered non-empty PASSED/REJECTED word list,
 and the ruling must follow the final text's first commit; missing or ambiguous required git history exits 2.
+For unchanged reports, unparsed Captain records hold only if they may carry the clearing ruling not strictly after the report.
 --newest runs that scan on the file added by the latest commit that adds a file under <slug>/dispatch/, read as it
 is on disk: exit 0 when it is clean or the task has no record, 1 when a name is found, 2 when git cannot read the state.
 --coverage checks presence for a declared ideation, implementation or validation stage after an unfenced report:
@@ -342,6 +343,16 @@ class RulingHistoryError(Exception):
     pass
 
 
+AMENDMENT_NUMBER = re.compile(r"^\s*### Amendment ([0-9]+)\b", re.I | re.M)
+
+
+def may_hold(snapshot, key):
+    kind, value = key
+    if kind == "amendment":
+        return value in {int(n) for n in AMENDMENT_NUMBER.findall(snapshot)}
+    return value is None or value in snapshot
+
+
 def validation_reports(text):
     _, body = split_task(text)
     clean = "\n".join(outside_fences(body))
@@ -423,7 +434,7 @@ def later_captain_ruling(root, task, text, selected):
     if len(reports) <= ordinal or reports[ordinal] != selected[-1]:
         raise RulingHistoryError("uncommitted-report")
     _, committed = captain_records(pinned, slug)
-    first, introduced, absent, versions = {}, [], [], []
+    first, introduced, absent, versions, unparsed = {}, [], [], [], {}
     commits = ruling_git(root, "log", "--full-history", "--reverse", "--topo-order", "--format=%H",
                          head, "--", *paths).splitlines()
     for commit in commits:
@@ -432,13 +443,16 @@ def later_captain_ruling(root, task, text, selected):
             absent.append(commit)
             continue
         reports = validation_reports(snapshot)
-        identities, _ = captain_records(snapshot, slug)
+        try:
+            identities, _ = captain_records(snapshot, slug)
+        except (RulingHistoryError, ValueError) as error:
+            identities, unparsed[commit] = None, (error, snapshot)
         if len(reports) > ordinal:
             introduced.append(commit)
             versions.append((commit, reports[ordinal], identities))
         else:
             absent.append(commit)
-        for key in identities:
+        for key in identities or ():
             first.setdefault(key, []).append(commit)
     if not introduced:
         raise RulingHistoryError("report-history-missing")
@@ -459,6 +473,11 @@ def later_captain_ruling(root, task, text, selected):
     report_commit = origins[0]
     if any(ancestor(report_commit, commit) for commit in absent):
         raise RulingHistoryError("discontinuous-report-history")
+    def parsed(commit, identities):
+        if identities is None:
+            raise unparsed[commit][0]
+        return identities
+
     stale = [(c, ids) for c, report, ids in versions if report != selected[-1]]
     if stale:
         final_commits = [c for c, report, _ in versions if report == selected[-1]]
@@ -473,18 +492,25 @@ def later_captain_ruling(root, task, text, selected):
                 settled.append(commit)
         if len(settled) != 1:
             raise RulingHistoryError("ambiguous-report-origin")
-        known = next(ids for c, _, ids in versions if c == report_commit)
-        settled_ids = next(ids for c, _, ids in versions if c == settled[0])
+        known = parsed(report_commit, next(ids for c, _, ids in versions if c == report_commit))
+        settled_ids = parsed(settled[0], next(ids for c, _, ids in versions if c == settled[0]))
         if settled_ids - known:
             raise RulingHistoryError(f"rewritten-report-after-ruling at {settled[0]}")
         for commit, identities in stale:
-            if identities - known or ancestor(settled[0], commit):
+            if ancestor(settled[0], commit) or parsed(commit, identities) - known:
                 raise RulingHistoryError(f"rewritten-report-after-ruling at {commit}")
         report_commit = settled[0]
+    blocked = None
     for key in current & committed:
         appearances = first.get(key, [])
         if appearances and all(c != report_commit and ancestor(report_commit, c) for c in appearances):
-            return report_commit, True
+            hiding = [c for c, (_, snapshot) in unparsed.items()
+                      if (c == report_commit or not ancestor(report_commit, c)) and may_hold(snapshot, key)]
+            if not hiding:
+                return report_commit, True
+            blocked = blocked or unparsed[hiding[0]][0]
+    if blocked:
+        raise blocked
     return report_commit, False
 
 
