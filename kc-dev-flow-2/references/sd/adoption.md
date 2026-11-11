@@ -118,10 +118,12 @@ run that says `cannot judge`. To audit old history once, run the same command by
 the root commit; it reports old violations and gates nothing. The run detects after the push; it does not stop
 `merge guard`, a dispatch or a push, and it adds no word to what FO reads.
 
-Roll it out once per adopter, on the Captain's word: FO copies the template to `.github/workflows/dev2-laws.yml`
-on the state branch with the branch name, trunk workflow directory and a package commit that a
-published `kc-dev-flow-2-vX.Y.Z` tag points at, and commits that one path with a path-scoped `git add` and
-`git commit -- <path>`, then pushes. A workflow whose state is inline in trunk has no state branch to trigger on.
+Install on the Captain's word, not by default (ADR 0075). FO copies the template to
+`.github/workflows/dev2-laws.yml` on the state branch with its branch name, trunk workflow directory
+and the published tag commit the merged README names; commit and push that one path with
+path-scoped staging and `git commit -- <path>`. After a README sync merges, its installed laws pin
+follows that tag when laws changed; it does not move ahead of the README. A workflow with inline
+state has no state branch to trigger on. The package release step is in maintain-flow § Observe adopters.
 
 Verified on a throwaway branch of this repository's state branch: GitHub runs a push workflow committed on that
 branch, hands it `github.event.before` and `github.event.after`, and runs one workflow per push. Not
