@@ -1,0 +1,10 @@
+{
+  "changed": [
+    "kc-dev-flow-2/scripts/test_design_surfaces.py"
+  ],
+  "exact_added_fixture_only": true,
+  "normalized_ast_equal": true,
+  "second_file_falsifier_rejected": true,
+  "changed_assertion_falsifier_rejected": true,
+  "checker_sha256": "19be172a565f34a2a43b6a2e8f98d4e6c5ece7370e97f0ab1a963f537c13fa46"
+}

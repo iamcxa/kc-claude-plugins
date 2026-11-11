@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+    "-B",
+    "-c",
+    "import sys;sys.path.insert(0,sys.argv[1]);import design_surfaces as ds;code=ds.main(['check',sys.argv[2]]);assert code==1, f'expected unreadable-stage refusal exit 1, got {code}'",
+    "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts",
+    "/tmp/validate-pr846-df6nwftd/direct/.spacedock-state/task.md"
+  ],
+  "exit": 1,
+  "expected": 1,
+  "assertion_catches_mutation": true
+}

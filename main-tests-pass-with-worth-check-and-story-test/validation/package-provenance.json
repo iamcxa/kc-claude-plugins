@@ -1,0 +1,24 @@
+{
+  "active_package": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1",
+  "dispatch_package": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1",
+  "version": "0.38.1",
+  "script_equality": {
+    "scripts/adr_lint.py": true,
+    "scripts/role_triggers.py": false,
+    "scripts/number_guards.py": true,
+    "scripts/comment_ratio.py": true,
+    "scripts/design_surfaces.py": false,
+    "scripts/dispatch_records.py": false,
+    "scripts/doc_impact.py": true
+  },
+  "active_matches_candidate": {
+    "scripts/adr_lint.py": true,
+    "scripts/role_triggers.py": true,
+    "scripts/number_guards.py": true,
+    "scripts/comment_ratio.py": true,
+    "scripts/design_surfaces.py": true,
+    "scripts/dispatch_records.py": true,
+    "scripts/doc_impact.py": true
+  },
+  "interpretation": "Installed copies share a version label but differ in bytes. Decisive behavior ran from candidate exports; active Codex package used for report checks. No installed-package rollout claim."
+}

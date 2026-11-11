@@ -1,0 +1,396 @@
+[
+  {
+    "name": "lint-skills",
+    "source_command": "python3 kc-dev-flow-2/scripts/lint-skills.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-01-lint-skills.log"
+  },
+  {
+    "name": "test_lint_skills",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_lint_skills.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-02-test_lint_skills.log"
+  },
+  {
+    "name": "test_design_surfaces",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-03-test_design_surfaces.log"
+  },
+  {
+    "name": "test_adr_doc_checks",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-04-test_adr_doc_checks.log"
+  },
+  {
+    "name": "test_poc_readme",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_poc_readme.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-05-test_poc_readme.log"
+  },
+  {
+    "name": "test_comment_ratio",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-06-test_comment_ratio.log"
+  },
+  {
+    "name": "test_number_guards",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_number_guards.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-07-test_number_guards.log"
+  },
+  {
+    "name": "test_codex_review",
+    "source_command": "python3 kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-08-test_codex_review.log"
+  },
+  {
+    "name": "test_roborev_gate",
+    "source_command": "python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-09-test_roborev_gate.log"
+  },
+  {
+    "name": "test_copilot_review",
+    "source_command": "python3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-10-test_copilot_review.log"
+  },
+  {
+    "name": "test_map_footprint",
+    "source_command": "python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-11-test_map_footprint.log"
+  },
+  {
+    "name": "test_release_acceptance",
+    "source_command": "python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-12-test_release_acceptance.log"
+  },
+  {
+    "name": "test_dispatch_records",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-13-test_dispatch_records.log"
+  },
+  {
+    "name": "test_delivery_gate",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-14-test_delivery_gate.log"
+  },
+  {
+    "name": "test_validation_security",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_validation_security.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-15-test_validation_security.log"
+  },
+  {
+    "name": "test_pr_watch",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_pr_watch.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-16-test_pr_watch.log"
+  },
+  {
+    "name": "test_replay_dispatch",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-17-test_replay_dispatch.log"
+  },
+  {
+    "name": "test_decision_ledger",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-18-test_decision_ledger.log"
+  },
+  {
+    "name": "test_package_version",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_package_version.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-19-test_package_version.log"
+  },
+  {
+    "name": "test_workflow_checkout",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-20-test_workflow_checkout.log"
+  },
+  {
+    "name": "test_observer_check",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_observer_check.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-21-test_observer_check.log"
+  },
+  {
+    "name": "test_merge_audit",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_merge_audit.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_merge_audit.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-22-test_merge_audit.log"
+  },
+  {
+    "name": "test_role_triggers",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_role_triggers.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-23-test_role_triggers.log"
+  },
+  {
+    "name": "test_laws_check",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_laws_check.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-24-test_laws_check.log"
+  },
+  {
+    "name": "test_learning",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_learning.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/usr/bin:/bin",
+    "native": false,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-25-test_learning.log"
+  },
+  {
+    "name": "test_dispatch_stage",
+    "source_command": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "native": true,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-26-test_dispatch_stage.log"
+  },
+  {
+    "name": "test_sd_dispatch",
+    "source_command": "python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root \"$GITHUB_WORKSPACE/.sd-plugin-root\"",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/tmp/validate-pr846-df6nwftd/sd-root"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "native": true,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-27-test_sd_dispatch.log"
+  },
+  {
+    "name": "test_observer_recovery",
+    "source_command": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "cwd": "/tmp/validate-pr846-df6nwftd/candidate",
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "native": true,
+    "exit": 0,
+    "status": "passed",
+    "log": "candidate-28-test_observer_recovery.log"
+  }
+]

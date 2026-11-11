@@ -1,0 +1,26 @@
+{
+  "verdict": "PASSED",
+  "head": "9b9be172c7cb2453ae74a79f10322344bf9ab32f",
+  "base": "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+  "merge_tree": "67b75a024aa3c39ef0e6bec8f2db764cf51ad584",
+  "workflow_runs": {
+    "candidate": {
+      "commands": 28,
+      "exit": 0
+    },
+    "merged": {
+      "commands": 28,
+      "exit": 0
+    }
+  },
+  "acceptance_script_exit": 0,
+  "adr_lint_exit": 0,
+  "findings": [],
+  "delivery_obligations": [
+    "FO runs acceptance script before the gate",
+    "FO refreshes current-main merge result before asking to merge",
+    "FO-owned RoboRev and delivery checks",
+    "Captain gate and merge ruling"
+  ],
+  "ci_cost_per_pr": "not measured; no trigger or job changes"
+}

@@ -1,0 +1,17 @@
+POC README matches the five-stage README without ideation
+--- derived
++++ /tmp/validate-pr846-df6nwftd/temp/tmpbt2uh97d/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 3.625s
+
+OK

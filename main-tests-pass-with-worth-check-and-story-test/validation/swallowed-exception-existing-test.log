@@ -1,0 +1,49 @@
+FFFF
+======================================================================
+FAIL: test_unreadable_native_stage_does_not_make_design_presentable (__main__.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 165, in test_unreadable_native_stage_does_not_make_design_presentable
+    result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/tmp/validate-pr846-df6nwftd/temp/dispatch-stage-6yn3weuq/code/docs/dev2/.spacedock-state/dispatch-fixture-663ffc961a5b48f6bf2c711697516609.md')], 'dispatch-fixture-663ffc961a5b48f6bf2c711697516609.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_unreadable_native_stage_does_not_make_design_presentable (__main__.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='not json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 165, in test_unreadable_native_stage_does_not_make_design_presentable
+    result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/tmp/validate-pr846-df6nwftd/temp/dispatch-stage-6yn3weuq/code/docs/dev2/.spacedock-state/dispatch-fixture-663ffc961a5b48f6bf2c711697516609.md')], 'dispatch-fixture-663ffc961a5b48f6bf2c711697516609.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_unreadable_native_stage_does_not_make_design_presentable (__main__.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='{"command": "read", "path": "/private/tmp/validate-pr846-df6nwftd/temp/dispatch-stage-6yn3weuq/code/docs/dev2/.spacedock-state/dispatch-fixture-663ffc961a5b48f6bf2c711697516609.md", "frontmatter": {"status": 1}}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 165, in test_unreadable_native_stage_does_not_make_design_presentable
+    result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/tmp/validate-pr846-df6nwftd/temp/dispatch-stage-6yn3weuq/code/docs/dev2/.spacedock-state/dispatch-fixture-663ffc961a5b48f6bf2c711697516609.md')], 'dispatch-fixture-663ffc961a5b48f6bf2c711697516609.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_unreadable_native_stage_does_not_make_design_presentable (__main__.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='{"command": "read", "path": "/another/task.md", "frontmatter": {"status": "done"}}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 165, in test_unreadable_native_stage_does_not_make_design_presentable
+    result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/tmp/validate-pr846-df6nwftd/temp/dispatch-stage-6yn3weuq/code/docs/dev2/.spacedock-state/dispatch-fixture-663ffc961a5b48f6bf2c711697516609.md')], 'dispatch-fixture-663ffc961a5b48f6bf2c711697516609.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.787s
+
+FAILED (failures=4)

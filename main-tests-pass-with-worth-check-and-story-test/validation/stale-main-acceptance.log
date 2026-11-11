@@ -1,0 +1,15 @@
++ set -euo pipefail
++ REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test
++ HEAD=9b9be172c7cb2453ae74a79f10322344bf9ab32f
++ BASE=0000000000000000000000000000000000000000
++ PACKAGE=/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1
+++ command -v python3
++ PYTHON=/Users/kent/.pyenv/shims/python3
++ SD=/Users/kent/.local/bin/spacedock
+++ git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test rev-parse HEAD
++ test 9b9be172c7cb2453ae74a79f10322344bf9ab32f = 9b9be172c7cb2453ae74a79f10322344bf9ab32f
++ git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test fetch origin main
+From https://github.com/iamcxa/kc-claude-plugins
+ * branch                main       -> FETCH_HEAD
+++ git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test rev-parse origin/main
++ test 571a7bd8a24ce08fac149fbcc91c4561610834c7 = 0000000000000000000000000000000000000000

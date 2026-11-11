@@ -1,0 +1,89 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+      "--require",
+      "0048",
+      "0076",
+      "0077"
+    ],
+    "exit": 0,
+    "log": "adr-lint.log"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/comment_ratio.py",
+      "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+      "9b9be172c7cb2453ae74a79f10322344bf9ab32f",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "log": "comment-ratio.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/doc_impact.py",
+      "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+      "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+    ],
+    "exit": 0,
+    "log": "doc-impact.log"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/main-tests-pass-with-worth-check-and-story-test.md"
+    ],
+    "exit": 0,
+    "log": "design-surfaces.log"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/main-tests-pass-with-worth-check-and-story-test"
+    ],
+    "exit": 0,
+    "log": "dispatch-records.log"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-main-tests-pass-with-worth-check-and-story-test",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/main-tests-pass-with-worth-check-and-story-test.md",
+      "--base",
+      "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+      "--head",
+      "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+    ],
+    "exit": 0,
+    "log": "number-guards-fresh.log"
+  }
+]

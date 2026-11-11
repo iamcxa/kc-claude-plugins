@@ -1,0 +1,18 @@
+{
+  "head": "9b9be172c7cb2453ae74a79f10322344bf9ab32f",
+  "main": "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+  "merge_parents": [
+    "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+    "9b9be172c7cb2453ae74a79f10322344bf9ab32f"
+  ],
+  "merge_tree": "67b75a024aa3c39ef0e6bec8f2db764cf51ad584",
+  "candidate_tree": "67b75a024aa3c39ef0e6bec8f2db764cf51ad584",
+  "scratch": "/tmp/validate-pr846-df6nwftd",
+  "python": "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+  "final_fetch_verified_utc": "2026-11-11T09:56:26.781457+00:00",
+  "export_integrity_after_tests": {
+    "candidate": "all archive member bytes unchanged",
+    "merged": "all archive member bytes unchanged"
+  },
+  "product_worktree_clean": true
+}

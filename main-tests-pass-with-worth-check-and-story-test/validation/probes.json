@@ -1,0 +1,293 @@
+[
+  {
+    "name": "resolver-absent",
+    "command": [
+      "/bin/bash",
+      "--noprofile",
+      "--norc",
+      "-c",
+      "command -v spacedock"
+    ],
+    "path": "/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 1,
+    "expected": 1,
+    "status": "passed",
+    "log": "resolver-absent.log"
+  },
+  {
+    "name": "candidate-story-absent",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/candidate/kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "JourneyStoryTests"
+    ],
+    "path": "/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "log": "candidate-story-absent.log"
+  },
+  {
+    "name": "merged-story-absent",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/merged/kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "JourneyStoryTests"
+    ],
+    "path": "/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "log": "merged-story-absent.log"
+  },
+  {
+    "name": "base-original-absent",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/base/kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows"
+    ],
+    "path": "/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 1,
+    "expected": 1,
+    "status": "passed",
+    "log": "base-original-absent.log"
+  },
+  {
+    "name": "removed-fixture-absent",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows"
+    ],
+    "path": "/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 1,
+    "expected": 1,
+    "status": "passed",
+    "log": "removed-fixture-absent.log"
+  },
+  {
+    "name": "resolver-present",
+    "command": [
+      "/bin/bash",
+      "--noprofile",
+      "--norc",
+      "-c",
+      "command -v spacedock"
+    ],
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "log": "resolver-present.log"
+  },
+  {
+    "name": "candidate-story-present",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/candidate/kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "JourneyStoryTests"
+    ],
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "log": "candidate-story-present.log"
+  },
+  {
+    "name": "candidate-full-present",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/candidate/kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "log": "candidate-full-present.log"
+  },
+  {
+    "name": "merged-story-present",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/merged/kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "JourneyStoryTests"
+    ],
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "log": "merged-story-present.log"
+  },
+  {
+    "name": "merged-full-present",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/merged/kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "log": "merged-full-present.log"
+  },
+  {
+    "name": "base-original-present",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/base/kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows"
+    ],
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 1,
+    "expected": 1,
+    "status": "passed",
+    "log": "base-original-present.log"
+  },
+  {
+    "name": "removed-fixture-present",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows"
+    ],
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 1,
+    "expected": 1,
+    "status": "passed",
+    "log": "removed-fixture-present.log"
+  },
+  {
+    "name": "native-worth-controls",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values",
+      "DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable"
+    ],
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "explicit_binary": "/tmp/validate-pr846-df6nwftd/sd-bin/spacedock",
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "log": "native-worth-controls.log"
+  },
+  {
+    "name": "direct-absent-missing",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/candidate/kc-dev-flow-2/scripts/design_surfaces.py",
+      "check",
+      "/tmp/validate-pr846-df6nwftd/direct/.spacedock-state/task.md"
+    ],
+    "path": "/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 1,
+    "expected": 1,
+    "status": "passed",
+    "log": "direct-absent-missing.log"
+  },
+  {
+    "name": "direct-absent-visible",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/candidate/kc-dev-flow-2/scripts/design_surfaces.py",
+      "check",
+      "/tmp/validate-pr846-df6nwftd/direct/.spacedock-state/task.md"
+    ],
+    "path": "/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "log": "direct-absent-visible.log"
+  },
+  {
+    "name": "direct-present-missing",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/candidate/kc-dev-flow-2/scripts/design_surfaces.py",
+      "check",
+      "/tmp/validate-pr846-df6nwftd/direct/.spacedock-state/task.md"
+    ],
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 1,
+    "expected": 1,
+    "status": "passed",
+    "log": "direct-present-missing.log"
+  },
+  {
+    "name": "direct-present-visible",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/candidate/kc-dev-flow-2/scripts/design_surfaces.py",
+      "check",
+      "/tmp/validate-pr846-df6nwftd/direct/.spacedock-state/task.md"
+    ],
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "log": "direct-present-visible.log"
+  },
+  {
+    "name": "swallowed-exception-direct",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/design_surfaces.py",
+      "check",
+      "/tmp/validate-pr846-df6nwftd/direct/.spacedock-state/task.md"
+    ],
+    "path": "/usr/bin:/bin",
+    "explicit_binary": null,
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "log": "swallowed-exception-direct.log"
+  },
+  {
+    "name": "swallowed-exception-existing-test",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/validate-pr846-df6nwftd/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable"
+    ],
+    "path": "/tmp/validate-pr846-df6nwftd/sd-bin:/usr/bin:/bin",
+    "explicit_binary": "/tmp/validate-pr846-df6nwftd/sd-bin/spacedock",
+    "exit": 1,
+    "expected": 1,
+    "status": "passed",
+    "log": "swallowed-exception-existing-test.log"
+  }
+]

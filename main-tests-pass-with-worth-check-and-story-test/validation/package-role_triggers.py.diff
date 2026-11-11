@@ -1,0 +1,159 @@
+--- active/scripts/role_triggers.py
++++ dispatch/scripts/role_triggers.py
+@@ -67,15 +67,9 @@
+ }
+ MECHANISM = "what single mechanism produces these findings, and what one change closes that class?"
+ UNRELATED = re.compile(r"^unrelated:(.*)$", re.I)
+-STEP_BACK = ("which Captain words does this serve; what breaks without it; "
+-             "which single premise would make the task unneeded, and what cheap test checks it now?")
++STEP_BACK = ("is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; "
++             "what breaks if this criterion or process is deleted?")
+ DIAGNOSIS_RECORD = re.compile(r"^(implementation|validation)-([1-9][0-9]*)(?:-message-([1-9][0-9]*))?\.md$")
+-STAGE_RECORD = re.compile(r"^(ideation|implementation|validation)-([1-9][0-9]*)(?:-message-([1-9][0-9]*))?\.md$")
+-NUMBERS = {word: n for n, word in enumerate("zero one two three four five six seven eight nine ten".split())}
+-NUMBER = r"(?:[0-9]+|one|two|three|four|five|six|seven|eight|nine|ten)"
+-MINUTES = re.compile(r"\bagent[- ]minutes\b|代理分鐘", re.I)
+-MINUTES_PREFIX = re.compile(r"^(?:[0-9]+[ \t]+(?:cumulative[ \t]+)?agent[- ]minutes|"
+-                            r"[0-9]+[ \t]*(?:累計)?代理分鐘)[ \t]*[;；,，、][ \t]*(.*)$", re.I)
+ 
+ 
+ class Unverifiable(Exception):
+@@ -156,84 +150,6 @@
+     return "\n".join(header)
+ 
+ 
+-# see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+-def budget_bound(value):
+-    def number(raw):
+-        return int(raw) if raw.isdigit() else NUMBERS[raw.lower()]
+-    minutes = MINUTES_PREFIX.match(value)
+-    value = minutes[1] if minutes else value
+-    total = re.match(rf"^(?:at most ({NUMBER}) dispatch(?:es)? total\b|"
+-                     r"最多[ \t]*([0-9]+)[ \t]*次派工(?=$|[，。、,;； \t]))", value, re.I)
+-    if total:
+-        return {"total": number(total[1] or total[2])}
+-    per_stage = re.match(rf"^({NUMBER}) cycles? per stage\b", value, re.I)
+-    if per_stage:
+-        return dict.fromkeys(("implementation", "validation"), number(per_stage[1]))
+-    split = re.match(rf"^({NUMBER}) implementation and ({NUMBER}) validation cycles?\b", value, re.I)
+-    return {"implementation": number(split[1]), "validation": number(split[2])} if split else None
+-
+-
+-def budget_text(text, amendments=True):
+-    section, entry, value = "", None, ""
+-    for line in outside_fences(re.sub(r"<!--.*?-->", "", text, flags=re.S)):
+-        heading = HEADING.match(line)
+-        if heading and len(heading[1]) <= 2:
+-            section, entry = line.strip().lower(), None
+-        elif heading and len(heading[1]) <= 3:
+-            entry = {} if AMENDMENTS_SECTION.match(section) and AMENDMENT.match(line) else None
+-        if line.lstrip().startswith(">") or line.startswith(("    ", "\t")):
+-            continue
+-        if section == "## budget" and not value and line.strip() and not heading:
+-            value = re.sub(r"^[-*] +", "", line.strip())
+-        found = re.match(r"^(?:[-*] )?Budget:[ \t]*(.*\S)[ \t]*$", line, re.I)
+-        if (section == "## scope" or section.startswith("## budget")) and found and not value:
+-            value = found[1]
+-        if amendments and entry is not None:
+-            field = re.match(r"^(Budget|Asked|Captain):[ \t]*(.*)$", line)
+-            if field:
+-                entry[field[1]] = field[2].strip()
+-            bound = entry.get("Budget", "")
+-            if bound and budget_bound(bound) and any(bound in entry.get(key, "") for key in ("Asked", "Captain")):
+-                value = bound
+-    return value
+-
+-
+-# see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+-def budget_dispatches(dispatches):
+-    return [(name, body) for name, body in dispatches if (record := STAGE_RECORD.fullmatch(name)) and (
+-        not record[3] or (symptom_name(body) and symptom_name(body) != "none"))]
+-
+-
+-def budget_status(text, dispatches, slug):
+-    value = budget_text(text)
+-    bound = budget_bound(value)
+-    spent = {stage: max((int(m[2]) for name, _ in dispatches
+-                        if (m := DIAGNOSIS_RECORD.fullmatch(name)) and m[1] == stage and not m[3]), default=0)
+-             for stage in ("implementation", "validation")}
+-    stages = [body for name, body in dispatches if STAGE_RECORD.fullmatch(name)]
+-    counted = budget_dispatches(dispatches)
+-    total = len(counted)
+-    admitted = bool(stages and re.search(r"^Budget:", dispatch_header(stages[0]), re.M))
+-    summary = [f"budget: Budget: {value or 'not recorded'}; spent implementation {spent['implementation']}, validation {spent['validation']}"
+-               + (f"; total dispatches {total}" if bound and "total" in bound else "")
+-               + ("" if bound else "; states no cycles")
+-               + ("; minutes not counted" if MINUTES.search(value) else "")] if value or admitted else []
+-    over = (["total"] if total > bound["total"] else []) if bound and "total" in bound else [
+-        stage for stage, count in spent.items() if bound and count > bound[stage]]
+-    if admitted and over:
+-        newest = counted[-1][0] if counted else ""
+-        record = newest if over == ["total"] else f"{over[0]}-{spent[over[0]]}.md"
+-        symptom = next((m[1] for name, body in reversed(dispatches)
+-                        if name == record
+-                        and (m := re.search(r"^Symptom:[ \t]*(.*)$", dispatch_header(body), re.M))), None)
+-        summary.insert(0, f"next: {slug} budget exceeded; hold for the Captain. Symptom: {symptom or 'none'}. "
+-                       f"Ask: {STEP_BACK} Record his new bound as Budget: verbatim from Asked: or Captain: "
+-                       "in a Captain amendment; or stop, record a known limit or split. "
+-                       "Default: keep the results, report the remaining work and stop adding, "
+-                       "unless the Captain replaces this outcome.")
+-    return bool(admitted and over), summary, bound
+-
+-
+ def symptom_name(text):
+     match = re.search(r"^Symptom:[ \t]*(.*)$", dispatch_header(text), re.M)
+     return " ".join(match[1].split()).casefold() if match else None
+@@ -262,16 +178,9 @@
+             code, paths = git(state, "ls-tree", "-r", "--name-only", rev, "--", f"{base}{slug}/dispatch/")
+             if code:
+                 raise Unverifiable(f"cannot read dispatch records for {slug} at {rev}")
+-            code, additions = git(state, "log", "--reverse", "--diff-filter=A", "--format=", "--name-only", rev,
+-                                  "--", f"{base}{slug}/dispatch/")
+-            if code:
+-                raise Unverifiable(f"cannot read first dispatch for {slug} at {rev}")
+-            order = {}
+-            for path in additions.splitlines():
+-                order.setdefault(path, len(order))
+             dispatches = []
+-            for path in sorted(paths.splitlines(), key=lambda name: order.get(name, len(order))):
+-                if STAGE_RECORD.fullmatch(Path(path).name):
++            for path in paths.splitlines():
++                if DIAGNOSIS_RECORD.fullmatch(Path(path).name):
+                     code, text = git(state, "show", f"{rev}:./{path}")
+                     if code:
+                         raise Unverifiable(f"cannot read {path} at {rev}")
+@@ -399,15 +308,10 @@
+     if pending is not None:
+         pending = Path(pending)
+         try:
+-            body = pending.read_text()
+-            if any(name == pending.name for name, _ in dispatches):
+-                dispatches = [(name, body if name == pending.name else saved) for name, saved in dispatches]
+-            else:
+-                dispatches.append((pending.name, body))
++            dispatches = [(name, body) for name, body in dispatches if name != pending.name] + [(pending.name, pending.read_text())]
+         except (OSError, UnicodeError) as error:
+             raise Unverifiable(f"cannot read pending dispatch record {pending}: {error}") from error
+     symptoms = symptom_rounds(dispatches)
+-    budget_held, budget_lines, bound = budget_status(text, dispatches, slug)
+     kept = list(alignment(lines))
+     front = re.match(r"---\n(.*?)\n---\n", text, re.S)
+     profile = FRONT_PROFILE.search(front.group(1)) if front else None
+@@ -468,13 +372,13 @@
+             owed += [hint(slug, "engineering-reviewer", h) for h in [misplaced(lines, "engineering-reviewer")] if h]
+     reminder = [f"next: {slug} has {failures} validations with a Material or Needs decision finding and "
+                 f"{len(replacements)} replacing amendments: before the next step, answer: {STEP_BACK}"] \
+-        if 2 in (failures, len(replacements)) and not stepped and not bound else []
+-    if not stepped and not bound:
++        if 2 in (failures, len(replacements)) and not stepped else []
++    if not stepped:
+         reminder += [f'next: {slug} has 2 {stage} dispatches on symptom "{symptom}": '
+                      f"before the next step, answer: {STEP_BACK}"
+                      for (stage, symptom), group in sorted(symptoms.items()) if len(group) == 2]
+-    if owed or reminder or budget_lines:
+-        return int(bool(owed) or budget_held), "\n".join(owed + reminder + budget_lines)
++    if owed or reminder:
++        return int(bool(owed)), "\n".join(owed + reminder)
+     return 0, f"role triggers: {seen} event(s) read at {rev}, each with a call or a waiver."
+ 
+ 

@@ -1,0 +1,14 @@
+{
+  "current_identity_accepted": true,
+  "stale_main_rejected": true,
+  "wrong_tree_rejected": true,
+  "wrong_head_rejected": true,
+  "hosted_run": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/42996427762",
+  "note": "Acceptance-evidence predicate, not a product enforcement mechanism. FO must refresh before merge ask.",
+  "real_stale_main_script": {
+    "log": "stale-main-acceptance.log",
+    "exit": 1,
+    "mutation": "BASE set to 40 zeros in an owned scratch copy; real origin/main stayed 571a7bd8a24ce08fac149fbcc91c4561610834c7",
+    "failed_before_export": true
+  }
+}

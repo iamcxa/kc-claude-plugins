@@ -1,0 +1,65 @@
+{
+  "input_sha256": {
+    "workflow": "bec0dd28dec096360263d828f7739bdc00f1059aecc391cb5fff6504261a1145",
+    "dev": "c47a9663ba2eedef98aa08cd3b7131326ba1ef9c848cb7c22c9a129fc2a66167",
+    "mod": "b2fc121dcc078d5fa990f9bb86485d71ee6bf53965350f39bf5dd75b333cfd1b",
+    "startup": "2113b0ca275b9cb3fc1c19528858ba7f48b0c3b36c8ec94848319588527cbf13",
+    "idle": "23d8eb439133699cf39be1d3232cb99b1bb3616ae8318c06d1e202ba2d3a5389",
+    "delivery": "f3364b543893e213ee8f84e9dd0388f60ccd512e0364b778017aa23000e429ad",
+    "extensions": "944c3e7d50849ab07f38dd4b26647cd665e86622c729f13418178771691fb43a",
+    "learn": "65de65a8476bd4f3dc82be7d59b579add301cd43536e2584fa7048b245c7bfbc",
+    "gate": "aca5e4e1a5c38bac7ba6c566c8e29951f5ecc93540abd1926d0d7dc8598cfd4d",
+    "present": "dd98858990e93de3cb0efeada11c719d1abba8517887ec3bb625a76d95655e2d"
+  },
+  "words": {
+    "workflow": 6008,
+    "dev": 801,
+    "mod": 48,
+    "startup": 365,
+    "idle": 100,
+    "delivery": 488,
+    "extensions": 224,
+    "learn": 280,
+    "gate": 969,
+    "present": 675
+  },
+  "outputs": {
+    "open": {
+      "exit": 0,
+      "stdout": [
+        "fact: o/r#7 OPEN draft=False checks=green",
+        "next: run `python3 /private/tmp/validate-pr846-df6nwftd/base/kc-dev-flow-2/scripts/pr_watch.py --state /tmp/validate-pr846-df6nwftd/temp/tmptkgjkwyp/watch.json wait` in the background, unless one is running.",
+        "next: when it exits, do the next: lines it prints."
+      ],
+      "words": 29
+    },
+    "merged": {
+      "exit": 0,
+      "stdout": [],
+      "words": 0
+    },
+    "archive": {
+      "exit": 0,
+      "stdout": [
+        "next: run kc-dev-flow-2:learn for some-task."
+      ],
+      "words": 5
+    },
+    "sitting": {
+      "exit": 0,
+      "stdout": [
+        "next: 4 gates await the Captain at validation (t0, t1, t2, t3); unless already presented, present them in one message and record each with his one answer. Name the merge order and each shared file from Batch overlap.",
+        "next: before asking, list each open decision of these tasks once, from their decision sections and the map's open questions on their journey-story, with its home, a plain sentence, your recommendation and what gets worse; then ask one at a time; a decision that blocks no worker waits for the next sitting."
+      ],
+      "words": 90
+    }
+  },
+  "totals": {
+    "startup": 7251,
+    "idle_open": 889,
+    "idle_merged": 860,
+    "archive": 333,
+    "merge_ask": 2446
+  },
+  "spacedock_documents": "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.28.0"
+}

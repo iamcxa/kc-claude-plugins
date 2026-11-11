@@ -1,0 +1,21 @@
+F
+======================================================================
+FAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (__main__.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-pr846-df6nwftd/base/kc-dev-flow-2/scripts/test_design_surfaces.py", line 368, in test_design_compares_story_record_to_counted_field_only_in_map_workflows
+    self.assertEqual(self.check("Story: inbox-home (owner-account)\n", "inbox-home", seed=False), [])
+AssertionError: Lists differ: ["task.md: design needs '### Worth questio[83 chars]est"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test"
+
++ []
+- ["task.md: design needs '### Worth questions': Captain words served, what "
+-  "breaks without each part, and the premise's cheap test"]
+
+----------------------------------------------------------------------
+Ran 1 test in 0.328s
+
+FAILED (failures=1)
