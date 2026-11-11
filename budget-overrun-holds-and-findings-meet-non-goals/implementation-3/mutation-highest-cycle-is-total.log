@@ -1,0 +1,16 @@
+test_total_cap_uses_record_count_not_the_highest_cycle_number (test_role_triggers.BudgetTest.test_total_cap_uses_record_count_not_the_highest_cycle_number) ... FAIL
+
+======================================================================
+FAIL: test_total_cap_uses_record_count_not_the_highest_cycle_number (test_role_triggers.BudgetTest.test_total_cap_uses_record_count_not_the_highest_cycle_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 830, in test_total_cap_uses_record_count_not_the_highest_cycle_number
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : next: some-task budget exceeded; hold for the Captain. Symptom: failure 4. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.
+budget: Budget: 最多 2 次派工，含一輪修正; spent implementation 9, validation 4; total dispatches 13
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.618s
+
+FAILED (failures=1)

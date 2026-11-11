@@ -594,3 +594,41 @@ This complete report supersedes all earlier implementation reports: candidate 5b
 ### Summary
 
 REJECTED: candidate 5bf7cf78866a2f0f6376c15b59fc400519c5ffeb fails AC-9 despite green existing suites and reproduced budget behavior. The six amendments and fixture-only permissions are satisfied; the historical-design refusal is a real, declared compatibility consequence, distinct from the two new false-pass findings. FO must disposition F1/F2 through the supported feedback route before any product repair or delivery; the validator changed only this task's report and evidence.
+
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (e8664a72b0f904e5dda3c391d52ab3abaca876b4) implementing the approved design and acceptance criteria in the task file; D1, D2 and D3 as recommended and approved at the ideation gate, with Captain amendments 1 and 2 already carried by the design; denied-command-denies-only-that-command is implemented in parallel and also changes kc-dev-flow-2/references/sd/workflow.md and the word budget steps, so keep your changes to the sections the design names and expect FO to ask for a merge of main later; story-done-reports-release-remaining has a local candidate that also changes kc-dev-flow-2/scripts/design_surfaces.py seed rules, in a different function; only the files the design names
+  Local repair 6da9a765ee04e1e2c7836517ba01f75b0ea91d73 on the assigned branch, parent 5bf7cf788, task base e8664a72b; existing Draft #841 is FO-bound. Product push/PR update remains FO-owned; no version or unrelated product changes. Prepared PR text at /tmp/impl-budget-overrun-holds-and-findings-meet-non-goals-pr.md and implementation-3/prepared-pr.md.
+- DONE: ADR 0077 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  ADR 0077 and its 0026 pointer remain as previously implemented; this round restores the existing missing-section requirement, adding no ruling. Installed 0.38.1 ADR lint at this candidate exits 0, 68 records (implementation-3/adr-at-commit.log).
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  All 28 local command final results pass: 27 first-run passes plus one same-version-root setup retry; original cache-path failure preserved. Twenty-four prior mutants and four repair mutants are caught as assertion failures, zero errors; exact tested bytes match commit (implementation-3/full-summary.json, mutations.json, repair-proof.json, identity-at-commit.json).
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/adr_lint.py docs/adr --since <base> --require 0077 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.38.1/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured
+  Four post-commit checks exit 0: workflow 6008/6008; comments 12/517=2.3%, max 5%; fresh state number fetch has no findings. Local commit only, CI cost not measured, CI definitions/triggers unchanged (implementation-3/required-checks.json and named logs).
+- DONE: Read validation-1 REJECTED on #841 head 5bf7cf78 and the FO-owned F1/F2 disposition
+  The task Feedback Cycles and validation-1/findings.json bind both failures to AC-9; dispatch/implementation-1-message-5.md authorized this repair only. The prior validation report and approved design remain unchanged.
+- DONE: F1 — status comments and quotes cannot skip the Worth requirement
+  Actual Spacedock --read identifies ideation for plain/commented/quoted values in flat and folder-form split-root tasks; missing Worth refuses and visible Worth passes without input mutation. The final test fails against exact 5bf7cf788, and restoring the raw stage read fails it (implementation-3/f1-red.log, focused-green.log, f1-base-export.log, restore-raw-stage.log).
+- DONE: F2 — HTML comments cannot supply the required Worth heading
+  The local Worth scan ignores closed/unclosed comments, distinguishes code-fence literals and ignores fences inside comments. Hidden headings refuse; real headings pass. Parent and HTML-blind reverse mutant fail the same test (implementation-3/f2-red.log, focused-green.log, f2-base-export.log, restore-comment-blind.log).
+- DONE: Repair both in the files the design names, each with a test that fails at 5bf7cf78 and passes after
+  Only design_surfaces.py, test_design_surfaces.py and test_dispatch_stage.py changed. Added two native-boundary tests and one HTML-comment test; every older test method/assertion remains unchanged. Missing/malformed/mismatched native reads refuse; suppressing those checks fails (implementation-3/scope-proof.json, repair-proof.json).
+- DONE: Before changing code, list every sibling stage read and required-section presence site, assessing the same hole
+  Pinned 18-site inventory was written before code edits, including legacy stage branches, FO/AC/amendment/Scope/report selectors, bounds and related labels; each has hole/control/limit and disposition (implementation-3/sibling-sites.json and sibling-sites.md, source 5bf7cf788).
+- DONE: Repair only sibling sites this task's new check uses and report the rest as findings for FO
+  Worth alone uses the native parsed status and local visible-line scan. All other functions and legacy status branches/main are unchanged; nine sibling probe results match before/after. Fifteen remaining entries distinguish exercised failures from source-only risks for FO (implementation-3/scope-proof.json, sibling-probes-after.json, sibling-findings.json).
+- DONE: Retained Budget criteria, amendments 3–6 and AC-9 acceptance proof
+  Budget/dispatch/seed functions are unchanged from validated 5bf7cf788; current full role/dispatch/consumer suites and 24 prior falsifiers pass. AC-9 now also covers both independent counterexamples; no new budget-history replay or old-design backfill is claimed. Prior AC-3/4/13 pinned replays remain in validation-1 and implementation-2.
+- DONE: Affected retained documents and historical compatibility evidence
+  All fourteen doc-impact entries have updated/unaffected reasons; four pinned corpora in both checker modes lose no earlier diagnostics, adding only approved Worth/fixed-Budget refusals. This task's pre-change missing heading remains a declared historical refusal (implementation-3/doc-impact-verdicts.jsonl, corpus-check.json).
+- DONE: Commit, update the PR text file and append a complete superseding implementation report
+  Committed 6da9a765ee04e1e2c7836517ba01f75b0ea91d73; PR title/body and all evidence saved under implementation-3/. This is the complete replacement implementation report; no product push or external PR write occurred.
+- SKIPPED: FO pushes, re-runs RoboRev and dispatches an independent validation recheck
+  FO-owned, not run by this worker; prior validation-1 remains REJECTED until a new independent result. Local binary/plugin test root 0.27.2/0.27.3 differs from CI's paired 0.27.2 pin, and the retry used the surviving Claude cache after the old Codex cache path disappeared.
+- SKIPPED: Repair legacy sibling findings outside this task's new check
+  Per dispatch scope: commented-stage security/design/built-screen checks, scope/reminder reads and other HTML-comment-blind selectors remain for FO disposition; their presence is reported, not silently repaired.
+
+### Summary
+
+This complete report supersedes all earlier implementation reports: candidate 6da9a765ee04e1e2c7836517ba01f75b0ea91d73 repairs the two owned AC-9 false passes with failing-then-passing tests and independent reverse mutations, while keeping sibling readers unchanged. The final 28 local command outcomes pass after the recorded setup-only retry; product push, RoboRev and independent validation recheck remain FO-owned, and the remaining sibling findings are explicitly returned for disposition.

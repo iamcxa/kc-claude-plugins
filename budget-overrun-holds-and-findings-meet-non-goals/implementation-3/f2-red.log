@@ -1,0 +1,32 @@
+FFF
+======================================================================
+FAIL: test_html_comments_cannot_supply_the_worth_heading (test_design_surfaces.WorthQuestionsTests.test_html_comments_cannot_supply_the_worth_heading) (heading='<!--\n### Worth questions\n-->')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 263, in test_html_comments_cannot_supply_the_worth_heading
+    self.assertTrue(any("Worth questions" in e for e in ds.check_task(path)))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_html_comments_cannot_supply_the_worth_heading (test_design_surfaces.WorthQuestionsTests.test_html_comments_cannot_supply_the_worth_heading) (heading='<!--\n### Worth questions\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 263, in test_html_comments_cannot_supply_the_worth_heading
+    self.assertTrue(any("Worth questions" in e for e in ds.check_task(path)))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_html_comments_cannot_supply_the_worth_heading (test_design_surfaces.WorthQuestionsTests.test_html_comments_cannot_supply_the_worth_heading) (heading='<!--\n```\n-->\n### Worth questions\nAsked, without, premise.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 269, in test_html_comments_cannot_supply_the_worth_heading
+    self.assertFalse(any("Worth questions" in e for e in ds.check_task(path)))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.044s
+
+FAILED (failures=3)

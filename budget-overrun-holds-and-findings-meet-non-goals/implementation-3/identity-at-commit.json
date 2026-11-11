@@ -1,0 +1,8 @@
+{
+  "base": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+  "head": "5bf7cf78866a2f0f6376c15b59fc400519c5ffeb",
+  "patch_sha256": "a21e4999a6e7597ce41eabd054964d022094bc9bbbd6c38f5053be30425df2af",
+  "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+  "candidate": "6da9a765ee04e1e2c7836517ba01f75b0ea91d73",
+  "committed_patch_matches_tested": true
+}

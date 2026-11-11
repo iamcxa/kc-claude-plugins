@@ -1,0 +1,1143 @@
+diff --git a/docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md b/docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md
+index 01a909b4b..f67f99c84 100644
+--- a/docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md
++++ b/docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-call-clears-them.md
+@@ -47,3 +47,5 @@ Clarified 2026-11-03 (Captain: 「照你建議」, answering 「決定：B 照
+ Amended 2026-11-09 (Captain: 「核准（建議）」, at the ideation gate of `role-call-asks-for-the-mechanism`, accepting every recommendation in its bound question, including 「婉拒審查要寫「unrelated: 某發現 + 它自己的原因」，至少兩項且原因不同；舊的退一步提醒維持現在被壓掉的位置，並修改決策紀錄（ADR）0026 那一句，代價是那些狀態下 FO 看不到三個退一步問題」): for a chief-engineer call owed by three failed validations or three dispatches of one stage on one symptom, `role_triggers.py` asks "what single mechanism produces these findings, and what one change closes that class?". Its decline template is `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: unrelated: <finding> <its own cause>; <finding> <its own cause>`. The `unrelated()` check accepts two or more semicolon-separated items after `unrelated:`, each a finding name followed by a cause of two or more words, with no two causes equal after whitespace normalization and casefolding; it checks form, not truth, so a well-formed false claim still clears the call. Existing date and model rules remain: failed validations have no date floor, while a dated third symptom record requires a call or reasoned decline dated no earlier than that record. Repair-pass, review-round and replacing-amendment events still accept plain declines and keep their previous questions. D1 replaces the 2026-11-02 sentence "Suppress a duplicate reminder only when an emitted owed-call line already carries the three questions": suppress it whenever an owed findings or amendment chief-engineer line is emitted, whatever question it carries, preserving the former reminder states. In those states FO sees the mechanism question without the three step-back questions. The step-back questions, trigger thresholds, dispatch reminder and workflow word budget are unchanged.
+ 
+ Amended 2026-11-09 (Captain: 「核准（建議）」, at the ideation gate of `a-worker-holds-while-a-role-call-is-owed`, accepting 「同一問題派第 3 次就擋，算進正在派的這次；欠工程審查員也擋，從第一次實作起算；上線時不給進行中任務豁免，約 8 張下次派工前要先補審查或寫理由；停手回報也算一輪修正」): the implementation and validation stage skills run `role_triggers.py` before work, including on resume or reuse, from the dispatch's `Package root:` or their own package root when absent. Exit 1 or 2 produces a committed hold report with every checklist item `FAILED`, the script output and package version in its Summary, before any code or check. `dispatch_stage.py` refuses those stages on the same exits before building and removes the record it just wrote; `--pending` counts that on-disk record, replacing a committed record of the same name, while task and other record bytes remain committed. Other stages do not gain this hold. This is the role check inside ADR 0070's write/check/build order; its separate version and checkout checks stay separate. D1 counts the dispatch being built, D2 includes engineering-reviewer from the first implementation, D3 gives in-flight tasks no exemption, and D4 counts a hold report as an implementation pass. The recommended option for each was accepted. Trigger thresholds and the workflow word budget stay unchanged; the 2026-10-22 merge hold remains the last backstop.
++
++Amended 2026-11-11: the advisory step-back reminder is suppressed for countable-cycle budgets; its three questions become the worth questions used by a budget hold and the replacing-amendment call. Chief-engineer and engineering-reviewer events and their clearing rules stay unchanged. See ADR 0077 for the Captain's words, the fixed forms and the transition.
+diff --git a/docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md b/docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+new file mode 100644
+index 000000000..9377d1561
+--- /dev/null
++++ b/docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+@@ -0,0 +1,83 @@
++# 0077. A task budget counts cycles and past it the question returns to the Captain
++
++Date: 2026-11-11
++
++## Status
++
++Accepted
++
++## Context
++
++The relay task comment-sent-when-added-relay ran six implementation cycles under
++"One cycle per stage." Its recorded implementation-2 at `42317d0c` preceded the
++four-repair-pass chief-engineer event at `d85ce152`. The approved design's replay
++found that the reload recovery was already in the accepted criteria: another
++finding-ownership rule would have accepted those repairs too. The Captain folded
++the first-principles task into the budget task, keeping prior-art research separate.
++
++## Decision
++
++**Words:** 「照建議核准（建議）」 — Captain, host question dialog, 2026-11-11,
++ideation gate attempt 2 of budget-overrun-holds-and-findings-meet-non-goals.
++
++**Asked:** 「決定：要不要核准「預算是什麼」（已併入第一性原理）的設計並開始實作。我建議照設計的建議核准：預算改用可數的輪數寫，新任務必須用這個寫法；每次實作與驗證派工顯示預算和已花幾輪，第一次超過就停下來，由我帶著三個「值不值得」的問題的答案來問你；同樣三題在每份設計裡必答，檢查會擋缺漏；原本的退一步提醒對這類任務取消，不另外加重大發現的規則。核准即接受這三項；它的代價是你會被問得比現在多。」
++
++The prior amendments were 「重寫，並把兩張原則任務拉進這批」 and
++「前兩張合併，查現成做法獨立（建議）」, both host question dialogs on 2026-11-11;
++their verbatim bound questions remain in the task's Captain amendments 1 and 2.
++
++**Words, Captain amendment 3:** 「加總次數和停止句，分鐘另談（建議）」 (host question dialog, 2026-11-11); before it he asked 「現在預算會長得像這樣，對嗎？『240 累計代理分鐘、最多 5 次派工，含一輪修正。並行代理各自計入，人工與平台等待另記；任一上限到達，就保留成果、回報剩餘工作並停止加碼。』」 (host question dialog, 2026-11-11)
++
++**Asked:** 「預算的寫法要不要照你的例子擴大？目前核准的設計只認「每階段幾輪」兩種寫法，實作工人已在做。我建議：這一張先加上「派工總次數上限」這種寫法，並把「到上限就保留成果、回報剩餘工作並停止加碼」當成停下來時的預設結果；「累計代理分鐘」因為現在沒有可靠的時間來源，另外記成一張要先查證的任務，不塞進這張。」
++
++**Words, Captain amendment 4:** 「兩處都同意（建議）」 (host question dialog, 2026-11-11)
++
++**Asked:** 「「預算」這張任務的實作停在兩處等更正，要不要都同意？一、第七項驗收條件把三個值不值得的問題寫成放進「待辦關卡」，更正為你核准的「設計關卡」，待辦關卡只呈現預算。二、允許多改兩個設計沒列的測試檔（pr_watch 和 delivery_gate 的測試），只更新 4 處還在比對舊版退一步提醒文字的預期值，產品程式不動。我建議兩處都同意。」
++
++**Words, Captain amendment 5:** 「只算修正的訊息（建議）」 (host question dialog, 2026-11-11)
++
++**Asked:** 「預算的「派工總次數上限」裡，我在同一個階段追加給工人的訊息要怎麼算？我建議：只有要工人回去修東西的訊息（紀錄上有寫問題名稱的）算一次派工，回答工人提問或轉達你裁示的訊息不算。以「發版鋪開」為例，這樣是 7 次；每則都算是 11 次，都不算是 2 次。」
++
++**Options considered:**
++- Hold at the first implementation or validation cycle past the countable bound;
++  require fixed cycle forms on new seeds; force the same worth questions at
++  ideation and the hold, replacing the advisory reminder for countable budgets
++  (chosen: D1, D2 and D3).
++- Print spent cycles without holding, or hold at cycle three: the first lets the
++  budget go unread; the second permits an extra unapproved cycle.
++- Parse free budget prose, or add a separate Material-finding event: the former
++  depends on phrases; the latter misses scope that already grew at ideation.
++
++**Recommended:** D1, D2 and D3 as the ideation gate recommended, plus the total-dispatch form, default hold outcome and gate/test corrections in Captain amendments 3 and 4, and the named-symptom message rule in amendment 5.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/role_triggers.py` — fixed bounds, amendment authority, budget hold and advisory suppression
++- `kc-dev-flow-2/scripts/dispatch_stage.py` — saved Budget header and forwarded budget output
++- `kc-dev-flow-2/scripts/design_surfaces.py` — countable seed bound and Worth questions section
++
++A budget states how many worker cycles the Captain considers worth the outcome.
++New seeds use `N cycles per stage` or `N implementation and M validation cycles`,
++with digits or English one to ten. The total-dispatch form is `at most N dispatches total` (singular `dispatch` too), or `最多 N 次派工` with digits. An explicit numeric agent-minutes clause may precede the countable part, separated by a comma or semicolon (Chinese punctuation too); minutes are printed as uncounted. Implementation and validation show the budget
++and highest plain dispatch number per stage, including the pending dispatch.
++The total-dispatch cap counts the saved ideation, implementation and validation stage records once. A follow-up message counts when its out-of-fence header names a symptom; normalized none, empty or absent headers do not name one and do not count. Body lines and fenced examples do not supply a header. Special-role records are excluded. `budget_dispatches` owns this counting rule; the pending overlay replaces an existing record of the same name, avoiding double counting. The first overrun holds until a Captain amendment's `Budget:` value covers it;
++that value must occur verbatim in that entry's `Asked:` or `Captain:` line.
++The default hold outcome is to keep the results, report the remaining work and stop adding, unless the Captain replaces it. A stop, known limit or split produces no further dispatch. A task whose first
++saved stage record has no Budget header is exempt from the budget hold. Other
++budget prose remains visible but uncounted.
++
++Each ideation design answers, per scope part: which Captain words it serves,
++what breaks without it, and which single premise would make it unneeded with a
++cheap test now. The ideation gate shows those answers; backlog shows the Budget. The budget hold brings the answers back to the Captain.
++For countable budgets the advisory step-back reminder is removed; existing
++chief-engineer and engineering-reviewer events and clearing rules remain.
++Their shared question text becomes the worth questions. No separate Material
++finding rule or self-answered record is added. This amends ADR 0026's reminder.
++
++## Consequences
++
++New budgets require a deliberate bound and can return more questions to the
++Captain. Checks establish a section and verbatim bound, not the truth or value
++of an answer. Agent minutes, days and lines of code are not counted; the original per-stage forms count implementation and validation cycles. Adopters
++receive the behavior when they update the package and workflow; old records
++remain exempt. Reopen if a supported dispatch route fails to show spent cycles
++or if countable fixed forms cannot express an approved outcome's bound.
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index 2157e7375..6b5e850ba 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -70,7 +70,7 @@ Before admission and dispatch, FO holds unknown/mismatched profiles;
+ SD does not enforce this rule. Preserve approved outcome and scope.
+ New seeds require non-empty `Non-goals:`, `Budget:` and `Stop condition:` lines
+ under `## Scope` or matching level-two sections. Replay counts do not enforce
+-these on existing tasks. Use bold **AC-N** declarations with individual evidence clauses.
++these on existing tasks. Budgets start with `N cycles per stage`, `N implementation and M validation cycles`, or `at most N dispatches total` (`最多 N 次派工`); the first overrun holds for his amendment. Only messages with a named `Symptom:` count. Minutes are not counted. Default: keep results, report remaining work and stop adding, unless he decides otherwise. Use bold **AC-N** declarations with individual evidence clauses.
+ 
+ ## Batch gates
+ 
+@@ -90,7 +90,7 @@ Stage workers follow `<package>/references/model-roster.md`; absence retains REA
+ 
+ `concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an
+ FO fix authorized under Review-finding disposition step 3 are dispatched at once in the
+-entity's own worktree, after the existing overlap check against running worktrees; they
++entity's own worktree, after the existing overlap check against running worktrees and the budget check; they
+ do not wait for another entity's worker in the same stage. The validation recheck of
+ that repair or fix does not wait for another entity's worker either, but it is
+ dispatched only after the repair or fix has completed and committed its candidate, so
+@@ -133,7 +133,7 @@ a `Visible change:` line: one sentence on what a user sees or operates
+ differently, or `Visible change: none`.
+ 
+ - **Gate content:** Show the selected variant/profile, proposed outcome, scope,
+-  exclusions and evidence needed before the next declared stage starts, the
++  exclusions, Budget and evidence needed before the next declared stage starts, the
+   `## FO alignment` need and reason, and the recorded `Surfaces:` and
+   `Visible change:` lines on the five-stage route.
+ - **Seed check:** On the five-stage route, before `gate prepare`, FO runs
+@@ -189,7 +189,7 @@ ADR draft live in the task file, and a draft carries no ADR number.
+ - **Outputs:** Current design definition and acceptance criteria with reproducible
+   evidence clauses; unresolved decisions identified for the user.
+ - **Gate content:** Present PRFAQ/Mermaid with matching actors, order, branches,
+-  approvals and stops, acceptance evidence/limits, and each recorded
++  approvals and stops, worth answers, acceptance evidence/limits, and each recorded
+   `Surfaces:` value's artifact. The gate is not presentable without the
+   artifact each recorded surface owes. Before `spacedock gate prepare`, FO runs
+   `python3 <package>/scripts/design_surfaces.py check <task>`, includes its
+@@ -432,6 +432,7 @@ Captain: 「<his words, verbatim>」 (where he said them)
+ Asked: <the question or proposal he answered, verbatim, or the commit holding it>
+ Supersedes: <acceptance-criterion ids, or none> <optional: "(no replacement: <why>)">
+ Design: <optional: the design paragraph it overrides>
++Budget: <optional: new bound, verbatim from Asked: or Captain:>
+ ```
+ 
+ `Asked:` is required when his words do not name what they settle, such as 「同意第三點」. FO
+diff --git a/kc-dev-flow-2/scripts/design_surfaces.py b/kc-dev-flow-2/scripts/design_surfaces.py
+index f8960866a..e4b03ef13 100644
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -15,6 +15,7 @@ import argparse
+ import difflib
+ import hashlib
+ import json
++import os
+ import re
+ import subprocess
+ import sys
+@@ -1000,6 +1001,8 @@ def scope_hold(task):
+ 
+ # see docs/adr/0041-seed-admission-enforces-required-fields.md
+ def check_seed_fields(name, text):
++    from role_triggers import budget_bound, budget_text
++
+     front = FRONTMATTER.match(text)
+     body = text[front.end():] if front else text
+     body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
+@@ -1035,7 +1038,60 @@ def check_seed_fields(name, text):
+                 value = re.sub(r"<[^>]*>", "", value).strip(" \t-'\"*")
+                 if value:
+                     found.add(label)
+-    return [f"{name}: missing required body field: {label}" for label, _ in fields if label not in found]
++    errors = [f"{name}: missing required body field: {label}" for label, _ in fields if label not in found]
++    # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
++    if "Budget" in found and not budget_bound(budget_text(body, amendments=False)):
++        errors.append(f"{name}: Budget must start with 'N cycles per stage', 'N implementation and M validation cycles', "
++                      "'at most N dispatches total' or '最多 N 次派工'; an explicit agent-minutes clause may precede it, but minutes are not counted")
++    return errors
++
++
++# see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
++def worth_lines(text):
++    from role_triggers import FENCE as marker_pattern
++
++    fence, comment = None, False
++    for line in text.splitlines():
++        marker = marker_pattern.match(line) if not comment else None
++        if fence:
++            if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence):
++                fence = None
++            continue
++        if marker:
++            fence = marker[1]
++            continue
++        visible = ""
++        while line:
++            if comment:
++                _, closed, line = line.partition("-->")
++                comment = not bool(closed)
++                if comment:
++                    break
++            else:
++                part, opened, line = line.partition("<!--")
++                visible += part
++                comment = bool(opened)
++        yield visible
++
++
++def worth_stage(path):
++    from dispatch_records import find_readme
++
++    path = path.resolve()
++    readme = find_readme(path)
++    workflow = readme.parent if readme else path.parent
++    done = subprocess.run([os.environ.get("SPACEDOCK_BIN") or "spacedock", "status", "--workflow-dir", str(workflow),
++                           "--read", str(path), "--json"], capture_output=True, text=True, timeout=30)
++    if done.returncode:
++        raise ValueError((done.stderr or done.stdout).strip() or f"Spacedock read exited {done.returncode}")
++    data = json.loads(done.stdout)
++    if not isinstance(data, dict):
++        raise ValueError("malformed Spacedock read")
++    fields = data.get("frontmatter")
++    if data.get("command") != "read" or data.get("path") != str(path) or not isinstance(fields, dict) \
++            or ("status" in fields and not isinstance(fields["status"], str)):
++        raise ValueError("malformed or mismatched Spacedock read")
++    return fields.get("status")
+ 
+ 
+ def check_task(path, seed=False, notes=None):
+@@ -1089,6 +1145,17 @@ def check_task(path, seed=False, notes=None):
+     front = FRONTMATTER.match(text)
+     profile, status = (FM_PROFILE.search(front.group(1)), FM_STATUS.search(front.group(1))) if front else (None, None)
+     plain = "\n".join(unfenced(lines))
++    worth = list(worth_lines(text))
++    design = section(worth, re.compile(r"^## Design[ \t]*$", re.I))
++    if not any(re.fullmatch(r"### Worth questions[ \t]*", line, re.I) for line in (design if design is not None else worth)):
++        needed = design is not None
++        if not needed and text.lstrip("\ufeff\n").startswith("---\n"):
++            try:
++                needed = worth_stage(path) == "ideation"
++            except (OSError, ValueError, subprocess.TimeoutExpired) as exc:
++                errors.append(f"{path.name}: cannot read stage for Worth questions: {exc}")
++        if needed:
++            errors.append(f"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test")
+     if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):
+         summary = check_security(path, plain, declared, errors)
+         if summary and notes is not None:
+diff --git a/kc-dev-flow-2/scripts/dispatch_stage.py b/kc-dev-flow-2/scripts/dispatch_stage.py
+index 8044fcb9e..26a0fd840 100644
+--- a/kc-dev-flow-2/scripts/dispatch_stage.py
++++ b/kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -12,7 +12,7 @@ import sys
+ 
+ from design_surfaces import task_folder
+ from number_guards import Misconfigured, frontmatter
+-from role_triggers import rank
++from role_triggers import budget_text, rank
+ 
+ SCRIPTS = Path(__file__).resolve().parent
+ 
+@@ -101,6 +101,9 @@ def check_task_scope(state, scope):
+ def record_text(args, number, dispatched, checklist, notes):
+     annotation = "workflow checkout" + (f", {args.note}" if args.note else "")
+     header = [f"# {args.stage}-{number}", f"Dispatched: {dispatched} ({annotation})", f"Model: {args.model}"]
++    # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
++    if not args.role:
++        header.append(f"Budget: {budget_text(args.entity_path.read_text()) or 'not recorded'}")
+     if args.roster:
+         header.append(f"Roster: {args.roster}")
+     header += [f"Candidate: {sha}" for sha in args.candidate]
+@@ -210,9 +213,10 @@ def main(argv=None):
+                                 str(folder.parent), folder.name, "--pending", str(path)], capture_output=True, text=True)
+         if roles.returncode:
+             remove_uncommitted(path, wrote)
+-            print(f"dispatch_stage: dispatch not built; {folder.name} owes a special-role call:", file=sys.stderr)
++            print(f"dispatch_stage: dispatch not built; {folder.name} budget or special-role check held:", file=sys.stderr)
+             sys.stderr.write(roles.stdout + roles.stderr)
+             return 1
++        sys.stderr.write("".join(line for line in roles.stdout.splitlines(keepends=True) if line.startswith("budget:")))
+     checks = [subprocess.run([sys.executable, "-B", str(SCRIPTS / "dispatch_records.py"), *map(str, flags)],
+                              capture_output=True, text=True)
+               for flags in ((task_folder(args.entity_path),), ("--names", "--strict", path))]
+diff --git a/kc-dev-flow-2/scripts/lint-skills.py b/kc-dev-flow-2/scripts/lint-skills.py
+index 3bf95eaec..d5fdf8761 100644
+--- a/kc-dev-flow-2/scripts/lint-skills.py
++++ b/kc-dev-flow-2/scripts/lint-skills.py
+@@ -72,6 +72,9 @@ WORKFLOW_BUDGET_STEPS = [
+     dict(delta=2, why="the Captain reason check also binds the task's open gate question",
+          captain='「核准（建議）」 (Captain, ideation gate of issue-815-fo-record-gaps, 2026-11-10), answering 「決定：第 20 批四張設計照下列建議進實作嗎？建議核准。(1) 關卡理由沒引用關卡問題：待辦、構想、驗證三種關卡都擋下，不再只是回報；這改掉 ADR 0062 只回報的做法，所以會寫一份新的決策紀錄，README 多 2 個字。(2) 特別角色派工紀錄：由腳本寫好、檢查、提交後才交給審查者；模型低於 opus 或 astra 就拒絕派；README 多 6 個字；完全手動、沒有紀錄的審查不在這張處理。(3) 修改驗收條件的檢查：做成第四條狀態規則，每次推送狀態後檢查，所以壞的提交要推上去後才會被標出；dev2 要真的用到它，得把狀態規則釘選的版本從 0.26.0 改到新版，那一步之後另外問你，這張要等一次推送印出這條規則的結果才收。(4) PR 說明的署名連結：只放行 Claude Code 自動加在最後的那一行署名，其他連結照樣要記成步驟。核准即接受上列每一項建議，包括 README 合計多 8 個字（5931 到 5939）；要改哪項直接說。」',
+          loaded="startup and resume of the First Officer, and before each Captain gate record"),
++    dict(delta=69, why="countable task budgets hold the first overrun, show gate-specific content and default to preserving results before stopping",
++         captain='「照建議核准（建議）」 (Captain, host question dialog, 2026-11-11), answering 「決定：要不要核准「預算是什麼」（已併入第一性原理）的設計並開始實作。我建議照設計的建議核准：預算改用可數的輪數寫，新任務必須用這個寫法；每次實作與驗證派工顯示預算和已花幾輪，第一次超過就停下來，由我帶著三個「值不值得」的問題的答案來問你；同樣三題在每份設計裡必答，檢查會擋缺漏；原本的退一步提醒對這類任務取消，不另外加重大發現的規則。核准即接受這三項；它的代價是你會被問得比現在多。」; Captain amendment 3 「加總次數和停止句，分鐘另談（建議）」, answering 「預算的寫法要不要照你的例子擴大？目前核准的設計只認「每階段幾輪」兩種寫法，實作工人已在做。我建議：這一張先加上「派工總次數上限」這種寫法，並把「到上限就保留成果、回報剩餘工作並停止加碼」當成停下來時的預設結果；「累計代理分鐘」因為現在沒有可靠的時間來源，另外記成一張要先查證的任務，不塞進這張。」; Captain amendment 4 「兩處都同意（建議）」, answering 「「預算」這張任務的實作停在兩處等更正，要不要都同意？一、第七項驗收條件把三個值不值得的問題寫成放進「待辦關卡」，更正為你核准的「設計關卡」，待辦關卡只呈現預算。二、允許多改兩個設計沒列的測試檔（pr_watch 和 delivery_gate 的測試），只更新 4 處還在比對舊版退一步提醒文字的預期值，產品程式不動。我建議兩處都同意。」; Captain amendment 5 「只算修正的訊息（建議）」, answering 「預算的「派工總次數上限」裡，我在同一個階段追加給工人的訊息要怎麼算？我建議：只有要工人回去修東西的訊息（紀錄上有寫問題名稱的）算一次派工，回答工人提問或轉達你裁示的訊息不算。以「發版鋪開」為例，這樣是 7 次；每則都算是 11 次，都不算是 2 次。」',
++         loaded="startup and resume of the First Officer, backlog admission, ideation gate preparation, repair dispatch and Captain amendment recording"),
+ ]
+ DUPLICATE_RUN = 12
+ # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
+diff --git a/kc-dev-flow-2/scripts/role_triggers.py b/kc-dev-flow-2/scripts/role_triggers.py
+index ed1c80299..7b88fa564 100644
+--- a/kc-dev-flow-2/scripts/role_triggers.py
++++ b/kc-dev-flow-2/scripts/role_triggers.py
+@@ -67,9 +67,15 @@ QUESTION = {
+ }
+ MECHANISM = "what single mechanism produces these findings, and what one change closes that class?"
+ UNRELATED = re.compile(r"^unrelated:(.*)$", re.I)
+-STEP_BACK = ("is what I am solving still the outcome first asked for; can this gap be tested now, or am I waiting; "
+-             "what breaks if this criterion or process is deleted?")
++STEP_BACK = ("which Captain words does this serve; what breaks without it; "
++             "which single premise would make the task unneeded, and what cheap test checks it now?")
+ DIAGNOSIS_RECORD = re.compile(r"^(implementation|validation)-([1-9][0-9]*)(?:-message-([1-9][0-9]*))?\.md$")
++STAGE_RECORD = re.compile(r"^(ideation|implementation|validation)-([1-9][0-9]*)(?:-message-([1-9][0-9]*))?\.md$")
++NUMBERS = {word: n for n, word in enumerate("zero one two three four five six seven eight nine ten".split())}
++NUMBER = r"(?:[0-9]+|one|two|three|four|five|six|seven|eight|nine|ten)"
++MINUTES = re.compile(r"\bagent[- ]minutes\b|代理分鐘", re.I)
++MINUTES_PREFIX = re.compile(r"^(?:[0-9]+[ \t]+(?:cumulative[ \t]+)?agent[- ]minutes|"
++                            r"[0-9]+[ \t]*(?:累計)?代理分鐘)[ \t]*[;；,，、][ \t]*(.*)$", re.I)
+ 
+ 
+ class Unverifiable(Exception):
+@@ -150,6 +156,84 @@ def dispatch_header(text):
+     return "\n".join(header)
+ 
+ 
++# see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
++def budget_bound(value):
++    def number(raw):
++        return int(raw) if raw.isdigit() else NUMBERS[raw.lower()]
++    minutes = MINUTES_PREFIX.match(value)
++    value = minutes[1] if minutes else value
++    total = re.match(rf"^(?:at most ({NUMBER}) dispatch(?:es)? total\b|"
++                     r"最多[ \t]*([0-9]+)[ \t]*次派工(?=$|[，。、,;； \t]))", value, re.I)
++    if total:
++        return {"total": number(total[1] or total[2])}
++    per_stage = re.match(rf"^({NUMBER}) cycles? per stage\b", value, re.I)
++    if per_stage:
++        return dict.fromkeys(("implementation", "validation"), number(per_stage[1]))
++    split = re.match(rf"^({NUMBER}) implementation and ({NUMBER}) validation cycles?\b", value, re.I)
++    return {"implementation": number(split[1]), "validation": number(split[2])} if split else None
++
++
++def budget_text(text, amendments=True):
++    section, entry, value = "", None, ""
++    for line in outside_fences(re.sub(r"<!--.*?-->", "", text, flags=re.S)):
++        heading = HEADING.match(line)
++        if heading and len(heading[1]) <= 2:
++            section, entry = line.strip().lower(), None
++        elif heading and len(heading[1]) <= 3:
++            entry = {} if AMENDMENTS_SECTION.match(section) and AMENDMENT.match(line) else None
++        if line.lstrip().startswith(">") or line.startswith(("    ", "\t")):
++            continue
++        if section == "## budget" and not value and line.strip() and not heading:
++            value = re.sub(r"^[-*] +", "", line.strip())
++        found = re.match(r"^(?:[-*] )?Budget:[ \t]*(.*\S)[ \t]*$", line, re.I)
++        if (section == "## scope" or section.startswith("## budget")) and found and not value:
++            value = found[1]
++        if amendments and entry is not None:
++            field = re.match(r"^(Budget|Asked|Captain):[ \t]*(.*)$", line)
++            if field:
++                entry[field[1]] = field[2].strip()
++            bound = entry.get("Budget", "")
++            if bound and budget_bound(bound) and any(bound in entry.get(key, "") for key in ("Asked", "Captain")):
++                value = bound
++    return value
++
++
++# see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
++def budget_dispatches(dispatches):
++    return [(name, body) for name, body in dispatches if (record := STAGE_RECORD.fullmatch(name)) and (
++        not record[3] or (symptom_name(body) and symptom_name(body) != "none"))]
++
++
++def budget_status(text, dispatches, slug):
++    value = budget_text(text)
++    bound = budget_bound(value)
++    spent = {stage: max((int(m[2]) for name, _ in dispatches
++                        if (m := DIAGNOSIS_RECORD.fullmatch(name)) and m[1] == stage and not m[3]), default=0)
++             for stage in ("implementation", "validation")}
++    stages = [body for name, body in dispatches if STAGE_RECORD.fullmatch(name)]
++    counted = budget_dispatches(dispatches)
++    total = len(counted)
++    admitted = bool(stages and re.search(r"^Budget:", dispatch_header(stages[0]), re.M))
++    summary = [f"budget: Budget: {value or 'not recorded'}; spent implementation {spent['implementation']}, validation {spent['validation']}"
++               + (f"; total dispatches {total}" if bound and "total" in bound else "")
++               + ("" if bound else "; states no cycles")
++               + ("; minutes not counted" if MINUTES.search(value) else "")] if value or admitted else []
++    over = (["total"] if total > bound["total"] else []) if bound and "total" in bound else [
++        stage for stage, count in spent.items() if bound and count > bound[stage]]
++    if admitted and over:
++        newest = counted[-1][0] if counted else ""
++        record = newest if over == ["total"] else f"{over[0]}-{spent[over[0]]}.md"
++        symptom = next((m[1] for name, body in reversed(dispatches)
++                        if name == record
++                        and (m := re.search(r"^Symptom:[ \t]*(.*)$", dispatch_header(body), re.M))), None)
++        summary.insert(0, f"next: {slug} budget exceeded; hold for the Captain. Symptom: {symptom or 'none'}. "
++                       f"Ask: {STEP_BACK} Record his new bound as Budget: verbatim from Asked: or Captain: "
++                       "in a Captain amendment; or stop, record a known limit or split. "
++                       "Default: keep the results, report the remaining work and stop adding, "
++                       "unless the Captain replaces this outcome.")
++    return bool(admitted and over), summary, bound
++
++
+ def symptom_name(text):
+     match = re.search(r"^Symptom:[ \t]*(.*)$", dispatch_header(text), re.M)
+     return " ".join(match[1].split()).casefold() if match else None
+@@ -178,9 +262,16 @@ def read_records(state, slug, rev):
+             code, paths = git(state, "ls-tree", "-r", "--name-only", rev, "--", f"{base}{slug}/dispatch/")
+             if code:
+                 raise Unverifiable(f"cannot read dispatch records for {slug} at {rev}")
++            code, additions = git(state, "log", "--reverse", "--diff-filter=A", "--format=", "--name-only", rev,
++                                  "--", f"{base}{slug}/dispatch/")
++            if code:
++                raise Unverifiable(f"cannot read first dispatch for {slug} at {rev}")
++            order = {}
++            for path in additions.splitlines():
++                order.setdefault(path, len(order))
+             dispatches = []
+-            for path in paths.splitlines():
+-                if DIAGNOSIS_RECORD.fullmatch(Path(path).name):
++            for path in sorted(paths.splitlines(), key=lambda name: order.get(name, len(order))):
++                if STAGE_RECORD.fullmatch(Path(path).name):
+                     code, text = git(state, "show", f"{rev}:./{path}")
+                     if code:
+                         raise Unverifiable(f"cannot read {path} at {rev}")
+@@ -308,10 +399,15 @@ def check(state, slug, rev, rounds=None, drift=None, pending=None):
+     if pending is not None:
+         pending = Path(pending)
+         try:
+-            dispatches = [(name, body) for name, body in dispatches if name != pending.name] + [(pending.name, pending.read_text())]
++            body = pending.read_text()
++            if any(name == pending.name for name, _ in dispatches):
++                dispatches = [(name, body if name == pending.name else saved) for name, saved in dispatches]
++            else:
++                dispatches.append((pending.name, body))
+         except (OSError, UnicodeError) as error:
+             raise Unverifiable(f"cannot read pending dispatch record {pending}: {error}") from error
+     symptoms = symptom_rounds(dispatches)
++    budget_held, budget_lines, bound = budget_status(text, dispatches, slug)
+     kept = list(alignment(lines))
+     front = re.match(r"---\n(.*?)\n---\n", text, re.S)
+     profile = FRONT_PROFILE.search(front.group(1)) if front else None
+@@ -372,13 +468,13 @@ def check(state, slug, rev, rounds=None, drift=None, pending=None):
+             owed += [hint(slug, "engineering-reviewer", h) for h in [misplaced(lines, "engineering-reviewer")] if h]
+     reminder = [f"next: {slug} has {failures} validations with a Material or Needs decision finding and "
+                 f"{len(replacements)} replacing amendments: before the next step, answer: {STEP_BACK}"] \
+-        if 2 in (failures, len(replacements)) and not stepped else []
+-    if not stepped:
++        if 2 in (failures, len(replacements)) and not stepped and not bound else []
++    if not stepped and not bound:
+         reminder += [f'next: {slug} has 2 {stage} dispatches on symptom "{symptom}": '
+                      f"before the next step, answer: {STEP_BACK}"
+                      for (stage, symptom), group in sorted(symptoms.items()) if len(group) == 2]
+-    if owed or reminder:
+-        return int(bool(owed)), "\n".join(owed + reminder)
++    if owed or reminder or budget_lines:
++        return int(bool(owed) or budget_held), "\n".join(owed + reminder + budget_lines)
+     return 0, f"role triggers: {seen} event(s) read at {rev}, each with a call or a waiver."
+ 
+ 
+diff --git a/kc-dev-flow-2/scripts/test_delivery_gate.py b/kc-dev-flow-2/scripts/test_delivery_gate.py
+index 51a3a1b3e..9edd29c77 100644
+--- a/kc-dev-flow-2/scripts/test_delivery_gate.py
++++ b/kc-dev-flow-2/scripts/test_delivery_gate.py
+@@ -2584,7 +2584,7 @@ class OwedRoleCallTests(unittest.TestCase):
+         text = ALIGNED + report * 2
+         result = run_check(task=text, setup=committed(text), roles=True)
+         self.assertEqual(result.code, 0, result.out)
+-        self.assertIn("before the next step, answer: is what I am solving still the outcome first asked for", result.out)
++        self.assertIn("before the next step, answer: which Captain words does this serve", result.out)
+         self.assertLess(result.out.index("before the next step"), result.out.index("record:"))
+         self.assertEqual(result.out.splitlines()[-1], gate.ASK)
+         broken = run_check(task=text, setup=committed(text), roles=True, facts=dict(isDraft=True))
+diff --git a/kc-dev-flow-2/scripts/test_design_surfaces.py b/kc-dev-flow-2/scripts/test_design_surfaces.py
+index 8e79c7579..0ae5f54ef 100644
+--- a/kc-dev-flow-2/scripts/test_design_surfaces.py
++++ b/kc-dev-flow-2/scripts/test_design_surfaces.py
+@@ -83,7 +83,7 @@ BASE = """# Design: seats remaining
+ ## Scope
+ 
+ Non-goals: migrations
+-Budget: one task
++Budget: one cycle per stage
+ Stop condition: upstream changes needed
+ 
+ ## FO alignment
+@@ -93,6 +93,9 @@ Visible change: a driver sees seats remaining per slot.
+ 
+ ## PRFAQ
+ 
++### Worth questions
++Asked: requested seats; without: no count; premise: seats vary, check one slot.
++
+ UI proposal: add a seats-remaining label to each slot row.
+ Preview: preview.html
+ 
+@@ -151,6 +154,9 @@ Superseded text:
+ FENCED_EXAMPLE = """
+ ## Design
+ 
++### Worth questions
++Asked: requested slice; without: outcome fails; premise: needed, check one use.
++
+ ```
+ ## Captain amendments
+ 
+@@ -246,6 +252,46 @@ class DesignSurfacesTests(unittest.TestCase):
+             self.assertEqual(ds.check_task(path), [])
+ 
+ 
++class WorthQuestionsTests(unittest.TestCase):
++    def test_html_comments_cannot_supply_the_worth_heading(self):
++        base = (BASE.split("## PRFAQ")[0] + "## Design\n\n{heading}\n"
++                "## Acceptance criteria\n**AC-1** bounded\n")
++        for heading in ("<!--\n### Worth questions\n-->", "<!--\n### Worth questions\n",
++                        "<!--\n```\n-->\n<!--\n### Worth questions\n-->"):
++            with self.subTest(heading=heading), tempfile.TemporaryDirectory() as d:
++                path = write_task(d, base.replace("{heading}", heading))
++                self.assertTrue(any("Worth questions" in e for e in ds.check_task(path)))
++        for heading in ("<!-- note -->\n### Worth questions\nAsked, without, premise.",
++                        "```html\n<!-- literal example\n```\n### Worth questions\nAsked, without, premise.",
++                        "<!--\n```\n-->\n### Worth questions\nAsked, without, premise."):
++            with self.subTest(heading=heading), tempfile.TemporaryDirectory() as d:
++                path = write_task(d, base.replace("{heading}", heading))
++                self.assertFalse(any("Worth questions" in e for e in ds.check_task(path)))
++
++    def test_design_without_worth_questions_is_refused_even_with_fenced_example(self):
++        for heading in ("", "```\n### Worth questions\n```\n"):
++            text = BASE.split("## PRFAQ")[0] + "## Design\n\n" + heading + "body\n\n## Acceptance criteria\n**AC-1** bounded\n"
++            with tempfile.TemporaryDirectory() as d:
++                path = write_task(d, text)
++                self.assertTrue(any("Worth questions" in e for e in ds.check_task(path)))
++                path.write_text(text.replace("## Design", "## Design\n### Worth questions\nAsked, without, premise."))
++                self.assertFalse(any("Worth questions" in e for e in ds.check_task(path)))
++
++    def test_total_dispatch_forms_are_countable_seeds_including_minutes(self):
++        for value in ("at most 5 dispatches total", "最多 5 次派工，含一輪修正",
++                      "240 累計代理分鐘、最多 5 次派工，含一輪修正"):
++            text = BASE.replace("Budget: one cycle per stage", "Budget: " + value)
++            with tempfile.TemporaryDirectory() as d:
++                self.assertEqual(ds.check_task(write_task(d, text), seed=True), [])
++
++    def test_new_seed_budget_needs_a_fixed_form_and_cannot_borrow_an_amendment(self):
++        for value in ("one package PR", "one round per stage"):
++            text = BASE.replace("Budget: one cycle per stage", "Budget: " + value)
++            text += "\n## Captain amendments\n### Amendment 1 — 2026-11-11, chat\nCaptain: 「two cycles per stage」\nBudget: two cycles per stage\n"
++            with tempfile.TemporaryDirectory() as d:
++                self.assertTrue(any("Budget must start" in e for e in ds.check_task(write_task(d, text), seed=True)))
++
++
+ class SeedModeTests(unittest.TestCase):
+     def test_each_seed_rule_refuses_and_exits_1(self):
+         cases = {
+@@ -295,7 +341,7 @@ class SeedModeTests(unittest.TestCase):
+ 
+ 
+ class SeedBoundsTests(unittest.TestCase):
+-    BOUNDS = "## Scope\n\nShip the bounded checker.\nNon-goals: migrations\nBudget: one task\nStop condition: new upstream hook needed\n"
++    BOUNDS = "## Scope\n\nShip the bounded checker.\nNon-goals: migrations\nBudget: one cycle per stage\nStop condition: new upstream hook needed\n"
+     ALIGNMENT = "## FO alignment\n\nSurfaces: none\nVisible change: none\n"
+ 
+     def check(self, text, folder=False, module=ds):
+@@ -320,32 +366,32 @@ class SeedBoundsTests(unittest.TestCase):
+ 
+     def test_dedicated_sections_and_scope_bullets_and_plural_forms(self):
+         for text in (
+-            "## Non-goals\nNo migrations.\n## Budget\nOne task.\n## Stop conditions\nNeeds upstream.\n",
+-            "## Scope\n- Non-goal: migrations\n* Budget: one task\n- Stop conditions: upstream change\n",
++            "## Non-goals\nNo migrations.\n## Budget\nOne cycle per stage.\n## Stop conditions\nNeeds upstream.\n",
++            "## Scope\n- Non-goal: migrations\n* Budget: one cycle per stage\n- Stop conditions: upstream change\n",
+         ):
+             self.assertEqual(self.check(text + self.ALIGNMENT), [])
+ 
+     def test_empty_placeholder_quote_report_and_fenced_impostors_are_refused(self):
+         for value in ("", "   ", "<approved bound>", "<approved> <bound>", "<!-- decide later -->"):
+-            text = self.BOUNDS.replace("Budget: one task", "Budget: " + value)
++            text = self.BOUNDS.replace("Budget: one cycle per stage", "Budget: " + value)
+             self.assertIn("task.md: missing required body field: Budget", self.check(text + self.ALIGNMENT))
+         for impostor in (
+-            "## Report\nBudget: one task\n",
+-            "# Report\nBudget: one task\n",
+-            "### Report\nBudget: one task\n",
+-            "> ## Budget\n> one task\n",
+-            "## Scope\n> Budget: one task\n",
+-            "## Scope\n" + "    Budget: one task\n",
+-            "## Scope\n" + "~~~markdown\nBudget: one task\n~~~\n",
+-            "## Scope\n" + "```markdown\nBudget: one task\n```\n",
+-            "## Budget\n~~~\none task\n~~~\n",
+-            "---\nnotes: |\n  ## Budget\n  one task\n---\n",
++            "## Report\nBudget: one cycle per stage\n",
++            "# Report\nBudget: one cycle per stage\n",
++            "### Report\nBudget: one cycle per stage\n",
++            "> ## Budget\n> one cycle per stage\n",
++            "## Scope\n> Budget: one cycle per stage\n",
++            "## Scope\n" + "    Budget: one cycle per stage\n",
++            "## Scope\n" + "~~~markdown\nBudget: one cycle per stage\n~~~\n",
++            "## Scope\n" + "```markdown\nBudget: one cycle per stage\n```\n",
++            "## Budget\n~~~\none cycle per stage\n~~~\n",
++            "---\nnotes: |\n  ## Budget\n  one cycle per stage\n---\n",
+         ):
+-            text = self.BOUNDS.replace("Budget: one task\n", "") + impostor + self.ALIGNMENT
++            text = self.BOUNDS.replace("Budget: one cycle per stage\n", "") + impostor + self.ALIGNMENT
+             self.assertIn("task.md: missing required body field: Budget", self.check(text), impostor)
+ 
+     def test_dedicated_bounds_reject_quotes_at_zero_to_three_spaces(self):
+-        values = {"Non-goals": "No migrations.", "Budget": "One task.",
++        values = {"Non-goals": "No migrations.", "Budget": "One cycle per stage.",
+                   "Stop condition": "Upstream change."}
+         for field in values:
+             for indent in range(4):
+@@ -360,7 +406,7 @@ class SeedBoundsTests(unittest.TestCase):
+                                              [f"{name}: missing required body field: {field}"])
+ 
+     def test_dedicated_bounds_accept_real_content_at_zero_to_three_spaces(self):
+-        values = {"Non-goals": "No migrations.", "Budget": "One task.",
++        values = {"Non-goals": "No migrations.", "Budget": "One cycle per stage.",
+                   "Stop condition": "Upstream change."}
+         for field in values:
+             for indent in range(4):
+@@ -372,7 +418,7 @@ class SeedBoundsTests(unittest.TestCase):
+                         self.assertEqual(self.check(body + self.ALIGNMENT, folder), [])
+ 
+     def test_slug_id_frontmatter_and_scope_are_not_new_requirements(self):
+-        text = "## Non-goals\nNo migration.\n## Budget\nOne task.\n## Stop condition\nUpstream needed.\n" + self.ALIGNMENT
++        text = "## Non-goals\nNo migration.\n## Budget\nOne cycle per stage.\n## Stop condition\nUpstream needed.\n" + self.ALIGNMENT
+         for front in ("", "---\ntitle: seed\nstatus: backlog\n---\n",
+                       "---\nid: task\ntitle: seed\nstatus: backlog\n---\n"):
+             self.assertEqual(self.check(front + text), [])
+@@ -401,8 +447,8 @@ class SeedBoundsTests(unittest.TestCase):
+ 
+     def test_fence_length_and_kind_keep_impostors_hidden(self):
+         for fence, short in (("````", "```"), ("~~~~", "~~~"), ("~~~", "```")):
+-            text = self.BOUNDS.replace("Budget: one task\n", "")
+-            text += f"## Scope\n{fence}\n{short}\nBudget: one task\n{fence}\n"
++            text = self.BOUNDS.replace("Budget: one cycle per stage\n", "")
++            text += f"## Scope\n{fence}\n{short}\nBudget: one cycle per stage\n{fence}\n"
+             self.assertIn("task.md: missing required body field: Budget", self.check(text + self.ALIGNMENT))
+ 
+ 
+@@ -723,6 +769,9 @@ Visible change: none
+ 
+ ## Design
+ 
++### Worth questions
++Asked: requested slice; without: outcome fails; premise: needed, check one use.
++
+ ### Security review
+ 
+ {review}
+@@ -1196,6 +1245,9 @@ Visible change: a person sees a panel.
+ 
+ ## Design
+ 
++### Worth questions
++Asked: requested slice; without: outcome fails; premise: needed, check one use.
++
+ UI proposal: a panel.
+ Preview: preview.html
+ 
+@@ -1505,7 +1557,7 @@ gates:
+ - Source: issue 1.
+ - Bite: the first thing.
+ - Non-goals: to be set at ideation.
+-- Budget: one task.
++- Budget: one cycle per stage.
+ - Stop condition: upstream change.
+ 
+ ## FO alignment
+@@ -1513,6 +1565,11 @@ gates:
+ Surfaces: none
+ Visible change: none
+ 
++## Design
++
++### Worth questions
++Asked: requested seats; without: no count; premise: seats vary, check one slot.
++
+ ## Acceptance criteria
+ 
+ **AC-1**: a driver sees seats.
+@@ -2135,6 +2192,9 @@ Visible change: a person sees a panel.
+ 
+ ## Design
+ 
++### Worth questions
++Asked: requested slice; without: outcome fails; premise: needed, check one use.
++
+ UI proposal: a panel.
+ Preview: preview.html
+ {review}
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_stage.py b/kc-dev-flow-2/scripts/test_dispatch_stage.py
+index 4074cca7e..13ca89373 100644
+--- a/kc-dev-flow-2/scripts/test_dispatch_stage.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_stage.py
+@@ -114,6 +114,94 @@ class DispatchStageTests(unittest.TestCase):
+                           "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                           "--spacedock", BINARY, *extra], expected)
+ 
++    def test_budget_line_and_spent_cycles_are_printed_before_build(self):
++        for value, suffix in (("One cycle per stage.", ""),):
++            with self.subTest(value=value):
++                self.entity.write_text(self.entity.read_text() + f"\n## Budget\n- {value}\n")
++                self.set_stage("implementation")
++                result = self.build("implementation", ("--symptom", "none"))
++                self.assertIn(f"budget: Budget: {value}; spent implementation 1, validation 0{suffix}", result.stderr)
++                self.assertIn(f"Budget: {value}\n", self.record("implementation").read_text())
++                self.assertTrue(Path(json.loads(result.stdout)["dispatch_file_path"]).is_file())
++
++    def test_uncountable_budget_stdout_is_forwarded(self):
++        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- at most 3 days\n")
++        self.set_stage("validation")
++        result = self.build("validation", ("--candidate", "a" * 40, "--symptom", "none"))
++        self.assertIn("budget: Budget: at most 3 days; spent implementation 0, validation 1; states no cycles", result.stderr)
++        self.assertIn("Budget: at most 3 days\n", self.record("validation").read_text())
++
++    def test_worth_requirement_uses_native_stage_for_yaml_status_values(self):
++        original = self.entity.read_text()
++        design = ("\n## PRFAQ\nA bounded CLI result.\n\n## Acceptance criteria\n"
++                  "**AC-1** Bounded result. Evidence: one CLI run.\n")
++        for path in (self.entity, self.folder / "index.md"):
++            path.parent.mkdir(exist_ok=True)
++            for status in ("ideation", "ideation # ready for review", "'ideation' # review", '"ideation" # review'):
++                with self.subTest(status=status, path=path.name):
++                    text = original.replace("status: ideation", "status: " + status) + design
++                    path.write_text(text)
++                    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
++                                        "--read", path, "--json"])
++                    self.assertEqual(json.loads(native.stdout)["frontmatter"]["status"], "ideation")
++                    checker = ROOT / "scripts/design_surfaces.py"
++                    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
++                    self.assertIn("design needs '### Worth questions'", refused.stdout)
++                    self.assertEqual(path.read_text(), text)
++                    path.write_text(text.replace("## PRFAQ\n", "## PRFAQ\n### Worth questions\nAsked, without, premise.\n"))
++                    self.call([sys.executable, "-B", checker, "check", path])
++
++    def test_unreadable_native_stage_does_not_make_design_presentable(self):
++        self.entity.write_text(self.entity.read_text().replace("status: ideation", "status: ideation # review")
++                               + "\n## PRFAQ\nresult\n## Acceptance criteria\n**AC-1** result\n")
++        binary = self.base / "unreadable-stage"
++        cases = (None, "not json", json.dumps({"command": "read", "path": str(self.entity), "frontmatter": {"status": 1}}),
++                 json.dumps({"command": "read", "path": "/another/task.md", "frontmatter": {"status": "done"}}))
++        for output in cases:
++            with self.subTest(output=output):
++                if output is not None:
++                    binary.write_text(f"#!{sys.executable}\nprint({output!r})\n")
++                    binary.chmod(0o755)
++                result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
++                                   expected=1, child_env={**self.env, "SPACEDOCK_BIN": str(binary)})
++                self.assertIn("cannot read stage for Worth questions", result.stdout)
++                self.assertNotIn("design surfaces presentable", result.stdout)
++
++    def test_budget_hold_removes_record_and_skips_build_until_amended(self):
++        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- One cycle per stage.\n")
++        self.set_stage("implementation")
++        self.build("implementation", ("--symptom", "none"))
++        held = self.build("implementation", ("--symptom", "failing contract", "--spacedock", self.spy), expected=1)
++        self.assertIn("budget exceeded; hold for the Captain", held.stderr)
++        self.assertIn("Symptom: failing contract", held.stderr)
++        self.assertEqual(held.stdout, "")
++        self.assertFalse(self.marker.exists())
++        self.assertFalse(self.record("implementation", 2).exists())
++        self.entity.write_text(self.entity.read_text() + "\n## Captain amendments\n"
++                               "### Amendment 1 — 2026-11-11, chat\nCaptain: 「approved」\n"
++                               "Asked: approve two cycles per stage\nBudget: two cycles per stage\nSupersedes: none\n")
++        self.commit_task()
++        self.checklist.write_text(self.checklist.read_text() + "Captain amendment 1\n")
++        resumed = self.build("implementation", ("--symptom", "failing contract", "--spacedock", self.spy))
++        self.assertTrue(self.marker.exists())
++        self.assertIn("spent implementation 2, validation 0", resumed.stderr)
++        self.assertIn("Budget: two cycles per stage\n", self.record("implementation", 2).read_text())
++
++    def test_total_cap_holds_before_build_and_keeps_existing_results(self):
++        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 240 累計代理分鐘、最多 1 次派工，含一輪修正\n")
++        self.set_stage("implementation")
++        first = self.build("implementation", ("--symptom", "none"))
++        self.assertIn("total dispatches 1", first.stderr)
++        self.assertIn("minutes not counted", first.stderr)
++        results = self.repo / "results.txt"
++        results.write_text("retained work")
++        held = self.build("implementation", ("--symptom", "new gap", "--spacedock", self.spy), expected=1)
++        self.assertIn("keep the results, report the remaining work and stop adding", held.stderr)
++        self.assertIn("unless the Captain replaces this outcome", held.stderr)
++        self.assertEqual(results.read_text(), "retained work")
++        self.assertFalse(self.marker.exists())
++        self.assertFalse(self.record("implementation", 2).exists())
++
+     def test_role_commits_complete_record_before_printing_exact_inputs(self):
+         dispatched = self.git(self.workflow, "rev-parse", "HEAD")
+         result = self.role(extra=("--roster", "fixture roster", "--note", "role fixture"))
+@@ -233,7 +321,8 @@ class DispatchStageTests(unittest.TestCase):
+         record = self.record(kind)
+         disk = record.read_bytes()
+         dispatched = self.git(self.workflow, "rev-parse", "HEAD")
+-        expected = (f"# {kind}-1\nDispatched: {dispatched} (workflow checkout)\nModel: opus\n\n"
++        expected = (f"# {kind}-1\nDispatched: {dispatched} (workflow checkout)\nModel: opus\n"
++                    + ("" if role else "Budget: not recorded\n") + "\n"
+                     "## Checklist\n").encode("utf-8") + checklist + b"\n## Scope notes\n" + notes
+         self.assertIn(checklist, disk)
+         self.assertIn(notes, disk)
+@@ -292,7 +381,7 @@ class DispatchStageTests(unittest.TestCase):
+         self.call([sys.executable, "-B", CHECKER, "--names", "--strict", record])
+         text = record.read_text()
+         self.assertIn(f"Dispatched: {dispatched} (workflow checkout, README fixture)", text)
+-        self.assertIn("Model: fixture-model\nRoster: fixture roster", text)
++        self.assertIn("Model: fixture-model\nBudget: not recorded\nRoster: fixture roster", text)
+         received = Path(envelope["dispatch_file_path"]).read_text()
+         for heading, source in (("Checklist", self.checklist), ("Scope notes", self.notes)):
+             section = text.split(f"## {heading}\n", 1)[1].split("\n## ", 1)[0]
+@@ -459,9 +548,8 @@ class DispatchStageTests(unittest.TestCase):
+         result = self.build("implementation", ("--symptom", "same failure", "--note", "second round",
+                                                 "--spacedock", observer), stderr_path=stderr_path)
+         marker = f'{self.record("implementation", 2)}:1: step back: 2 implementation dispatches name symptom "same failure";'
+-        questions = ("is what I am solving still the outcome first asked for",
+-                     "can this gap be tested now, or am I waiting",
+-                     "what breaks if this criterion or process is deleted?")
++        questions = ("which Captain words does this serve", "what breaks without it",
++                     "which single premise would make the task unneeded, and what cheap test checks it now?")
+         before_build = json.loads(observation.read_text())["stderr"]
+         for text in (marker, *questions):
+             self.assertEqual(result.stderr.count(text), 1, "successful check reminder was lost or duplicated")
+diff --git a/kc-dev-flow-2/scripts/test_pr_watch.py b/kc-dev-flow-2/scripts/test_pr_watch.py
+index 0a53154f2..dc6aec95c 100644
+--- a/kc-dev-flow-2/scripts/test_pr_watch.py
++++ b/kc-dev-flow-2/scripts/test_pr_watch.py
+@@ -753,7 +753,7 @@ class TasksTests(unittest.TestCase):
+         self.assertEqual(code, 0)
+         self.assertEqual(sum('next: diagnosis has 2 implementation dispatches on symptom "page freeze"' in line
+                              for line in lines), 1, lines)
+-        self.assertTrue(any("what breaks if this criterion or process is deleted?" in line for line in lines), lines)
++        self.assertTrue(any("what breaks without it" in line for line in lines), lines)
+ 
+     def setUp(self):
+         self.tmp = tempfile.TemporaryDirectory()
+@@ -1580,7 +1580,7 @@ class TasksTests(unittest.TestCase):
+         self.task("some-task", worktree=False, body=(report * 2).encode())
+         code, lines = self.tasks({})
+         self.assertEqual((code, len(lines)), (0, 1), lines)
+-        self.assertIn("before the next step, answer: is what I am solving still the outcome first asked for", lines[0])
++        self.assertIn("before the next step, answer: which Captain words does this serve", lines[0])
+         self.assertNotIn("dispatch kc-dev-flow-2:chief-engineer", lines[0])
+         (self.state / "_archive").mkdir()
+         self.git(self.state, "mv", "some-task.md", "_archive/some-task.md")
+@@ -1776,7 +1776,7 @@ class TasksTests(unittest.TestCase):
+ 
+     def backlog(self, slug, surfaces="none", visible="none", heading=True):
+         record = f"## FO alignment\n\nSurfaces: {surfaces}\nVisible change: {visible}\n" if heading else "## Scope\n\nnothing\n"
+-        record += "\n## Scope\nNon-goals: migrations\nBudget: one task\nStop condition: upstream change\n"
++        record += "\n## Scope\nNon-goals: migrations\nBudget: one cycle per stage\nStop condition: upstream change\n"
+         self.task(slug, status="backlog", worktree=False, body=record.encode())
+ 
+     def seed_lines(self, lines):
+@@ -1795,7 +1795,7 @@ class TasksTests(unittest.TestCase):
+         self.ideation_readme()
+         self.backlog("missing-budget")
+         task = self.state / "missing-budget.md"
+-        task.write_text(task.read_text().replace("Budget: one task\n", ""))
++        task.write_text(task.read_text().replace("Budget: one cycle per stage\n", ""))
+         before = task.read_bytes()
+         self.gates(("missing-budget", "backlog", "needs-preparation"))
+         code, lines = self.tasks({})
+diff --git a/kc-dev-flow-2/scripts/test_role_triggers.py b/kc-dev-flow-2/scripts/test_role_triggers.py
+index 9e9a1675b..e3f060160 100644
+--- a/kc-dev-flow-2/scripts/test_role_triggers.py
++++ b/kc-dev-flow-2/scripts/test_role_triggers.py
+@@ -352,8 +352,8 @@ def validations(*findings):
+ 
+ 
+ class StepBackTest(Fixture):
+-    questions = ("is what I am solving still the outcome first asked for", "can this gap be tested now, or am I waiting",
+-                 "what breaks if this criterion or process is deleted?")
++    questions = ("which Captain words does this serve", "what breaks without it",
++                 "which single premise would make the task unneeded, and what cheap test checks it now?")
+     failed = "- F1 Material: gap\n- F2 Needs decision: another gap"
+     amendments = [(n, f"2026-10-{15 + n}", "AC-1", "none") for n in (1, 2, 3, 4)]
+ 
+@@ -373,7 +373,7 @@ class StepBackTest(Fixture):
+                 if expected:
+                     self.assertEqual(len(out.splitlines()), 1)
+                     self.assert_questions(out)
+-                    self.assertEqual(len(out.split()), 51)
++                    self.assertEqual(len(out.split()), 46)
+ 
+     def test_fenced_findings_and_nonblocking_findings_do_not_count(self):
+         for finding in (f"```md\n{self.failed}\n```", "- F2 Deferred risk: later", "- F3 Polish: wording"):
+@@ -755,5 +755,202 @@ class SymptomRoundsTest(Fixture):
+                     self.assertIn(MECHANISM, out)
+ 
+ 
++class BudgetTest(Fixture):
++    def record(self, stage, number, header=True, commit=True):
++        path = self.state / f"{SLUG}/dispatch/{stage}-{number}.md"
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(f"# {stage}-{number}\nDispatched: 2026-11-11\n"
++                        + ("Budget: One cycle per stage.\n" if header else "")
++                        + f"Symptom: failure {number}\n## Checklist\nwork\n")
++        if commit:
++            self.put(self.body)
++        return path
++
++    def seed(self, value="One cycle per stage.", extra=""):
++        self.body = task() + f"\n## Budget\n- {value}\n" + extra
++        self.put(self.body)
++
++    def test_fixed_forms_are_narrow_and_case_insensitive(self):
++        from role_triggers import budget_bound, budget_text
++        for value, expected in (("ONE cycle per stage.", (1, 1)),
++                ("10 cycles per stage; bounded work", (10, 10)),
++                ("two implementation and three validation cycles", (2, 3)),
++                ("one implementation and 1 validation cycle.", (1, 1))):
++            self.assertEqual(tuple(budget_bound(value).values()), expected)
++        for value in ("one round per stage", "one package PR", "at most 3 days", "eleven cycles per stage",
++                      "one cycle per stagecoach", "one implementation and two validation cyclesextra"):
++            self.assertIsNone(budget_bound(value), value)
++        self.assertEqual(budget_text("## Budget and stop condition\nBudget: one cycle per stage.\n"),
++                         "one cycle per stage.")
++
++    def test_total_dispatch_cap_counts_stages_and_named_followups_once(self):
++        self.seed("at most 4 dispatches total")
++        self.record("ideation", 1)
++        self.record("implementation", 1)
++        self.record("validation", 1)
++        self.record("implementation", "1-message-1")
++        code, out = run(self.state, SLUG)
++        self.assertEqual(code, 0, out)
++        self.assertIn("total dispatches 4", out)
++        pending = self.record("implementation", 2, commit=False)
++        code, out = run(self.state, SLUG, "--pending", pending)
++        self.assertEqual(code, 1, out)
++        self.assertIn("budget exceeded", out)
++        self.assertIn("total dispatches 5", out)
++        self.put(self.body)
++        self.assertEqual(run(self.state, SLUG, "--pending", pending), run(self.state, SLUG))
++
++    def test_total_cap_counts_only_messages_with_a_named_header_symptom(self):
++        self.seed("at most 1 dispatch total")
++        self.record("implementation", 1)
++        message = self.record("implementation", "1-message-1", commit=False)
++        for body in ("Symptom: none\n## Checklist\nanswer\n",
++                     "Symptom:  NoNe  \n## Checklist\nanswer\n",
++                     "Symptom: \n## Checklist\nanswer\n",
++                     "## Checklist\nanswer without a header\n",
++                     "## Checklist\nSymptom: body text is not a header\n",
++                     "```\nSymptom: fenced example\n```\nSymptom: NoNe\n"):
++            message.write_text("Budget: at most 1 dispatch total\n" + body)
++            code, out = run(self.state, SLUG, "--pending", message)
++            self.assertEqual(code, 0, out)
++            self.assertIn("total dispatches 1", out)
++        message.write_text("Budget: at most 1 dispatch total\nSymptom: booking draft lost\n## Checklist\nrepair\n")
++        code, out = run(self.state, SLUG, "--pending", message)
++        self.assertEqual(code, 1, out)
++        self.assertIn("total dispatches 2", out)
++        self.assertIn("Symptom: booking draft lost", out)
++        message.write_text("Symptom: nonempty draft lost\n## Checklist\nrepair\n")
++        self.assertEqual(run(self.state, SLUG, "--pending", message)[0], 1)
++
++    def test_total_cap_uses_record_count_not_the_highest_cycle_number(self):
++        self.seed("最多 2 次派工，含一輪修正")
++        self.record("implementation", 9)
++        self.record("validation", 4)
++        code, out = run(self.state, SLUG)
++        self.assertEqual(code, 0, out)
++        self.assertIn("total dispatches 2", out)
++        self.record("validation", "4-message-1")
++        self.assertEqual(run(self.state, SLUG)[0], 1)
++
++    def test_total_cap_ignores_special_role_records_and_legacy_tasks_stay_exempt(self):
++        self.seed("at most one dispatch total")
++        self.record("implementation", 1, header=False)
++        self.record("chief-engineer", 1)
++        self.record("engineering-reviewer", 1)
++        self.record("implementation", 2)
++        code, out = run(self.state, SLUG)
++        self.assertEqual(code, 0, out)
++        self.assertIn("total dispatches 2", out)
++        self.assertNotIn("budget exceeded", out)
++
++    def test_countable_part_survives_an_explicit_minutes_clause(self):
++        for index, value in enumerate(("240 cumulative agent-minutes, at most 2 dispatches total",
++                      "240 累計代理分鐘、最多 2 次派工，含一輪修正",
++                      "at most 2 dispatches total; 240 agent-minutes")):
++            self.seed(value)
++            if index == 0:
++                self.record("implementation", 1)
++                self.record("validation", 1)
++            code, out = run(self.state, SLUG)
++            self.assertEqual(code, 0, out)
++            self.assertIn("Budget: " + value, out)
++            self.assertIn("total dispatches 2", out)
++            self.assertIn("minutes not counted", out)
++            pending = self.record("implementation", 2, commit=False)
++            self.assertEqual(run(self.state, SLUG, "--pending", pending)[0], 1)
++            pending.unlink()
++
++    def test_hold_states_the_preserve_report_stop_default_and_captain_override(self):
++        self.seed()
++        self.record("implementation", 2)
++        code, out = run(self.state, SLUG)
++        self.assertEqual(code, 1, out)
++        self.assertIn("keep the results, report the remaining work and stop adding", out)
++        self.assertIn("unless the Captain replaces this outcome", out)
++
++    def test_pending_overrun_holds_and_an_amendment_clears_it(self):
++        self.seed()
++        self.record("ideation", 1)
++        self.record("implementation", 1)
++        code, out = run(self.state, SLUG)
++        self.assertEqual(code, 0, out)
++        self.assertIn("Budget: One cycle per stage.; spent implementation 1, validation 0", out)
++        pending = self.record("implementation", 2, commit=False)
++        code, out = run(self.state, SLUG, "--pending", pending)
++        self.assertEqual(code, 1, out)
++        self.assertIn("budget exceeded; hold for the Captain", out)
++        self.assertIn("Symptom: failure 2", out)
++        for q in StepBackTest.questions:
++            self.assertIn(q, out)
++        self.assertEqual(run(self.state, SLUG)[0], 0)
++        self.put(self.body)
++        self.assertEqual(run(self.state, SLUG)[0], 1)
++        self.body += ("\n## Captain amendments\n### Amendment 1 — 2026-11-11, chat\n"
++                      "Captain: 「approved」\nAsked: approve two cycles per stage\n"
++                      "Budget: two cycles per stage\nSupersedes: none\n")
++        self.put(self.body)
++        self.assertEqual(run(self.state, SLUG)[0], 0)
++        self.assertIn("Budget: two cycles per stage; spent implementation 2", run(self.state, SLUG)[1])
++
++    def test_amendment_needs_the_same_entry_verbatim_words(self):
++        self.seed()
++        self.record("implementation", 2)
++        for fields in ("Asked: more work\nBudget: two cycles per stage", "Asked: TWO cycles per stage\nBudget: two cycles per stage",
++                       "Design: two cycles per stage\nBudget: two cycles per stage",
++                       "Asked: two cycles per stage\n```\nBudget: two cycles per stage\n```",
++                       "Asked: two cycles per stage\n### Amendment 2 — 2026-11-11, chat\nBudget: two cycles per stage"):
++            body = self.body + "\n## Captain amendments\n### Amendment 1 — 2026-11-11, chat\nCaptain: 「ok」\n" + fields
++            self.put(body)
++            self.assertEqual(run(self.state, SLUG)[0], 1, fields)
++        self.put(self.body + "\n## Captain amendments\n### Amendment 1 — 2026-11-11, chat\n"
++                 "Budget: two cycles per stage\nCaptain: 「two cycles per stage」\nSupersedes: none\n")
++        self.assertEqual(run(self.state, SLUG)[0], 0)
++
++    def test_old_first_stage_record_never_opts_in_with_later_headers(self):
++        self.seed()
++        self.record("ideation", 1, header=False)
++        self.record("implementation", 2)
++        code, out = run(self.state, SLUG)
++        self.assertEqual(code, 0, out)
++        self.assertIn("spent implementation 2", out)
++        self.assertNotIn("budget exceeded", out)
++
++    def test_stage_bounds_and_followups_are_independent(self):
++        self.seed("two implementation and one validation cycle")
++        self.record("implementation", 2)
++        self.record("validation", 1)
++        self.record("implementation", "2-message-9")
++        self.assertEqual(run(self.state, SLUG)[0], 0)
++        self.record("validation", 2)
++        self.assertEqual(run(self.state, SLUG)[0], 1)
++
++    def test_first_record_is_chronological_and_pending_keeps_its_slot(self):
++        self.seed()
++        first = self.record("implementation", 1, header=False)
++        self.record("ideation", 1)
++        self.record("implementation", 2)
++        self.assertEqual(run(self.state, SLUG)[0], 0)
++        self.assertEqual(run(self.state, SLUG, "--pending", first)[0], 0)
++
++    def test_uncountable_budget_prints_but_does_not_hold(self):
++        self.seed("at most 3 days")
++        self.record("implementation", 9)
++        code, out = run(self.state, SLUG)
++        self.assertEqual(code, 0, out)
++        self.assertIn("Budget: at most 3 days; spent implementation 9, validation 0; states no cycles", out)
++
++    def test_countable_budget_removes_advisory_but_preserves_role_calls(self):
++        self.seed("ten cycles per stage")
++        self.put(self.body + validations(StepBackTest.failed, StepBackTest.failed))
++        code, out = run(self.state, SLUG)
++        self.assertEqual(code, 0, out)
++        self.assertNotIn("before the next step", out)
++        self.put(self.body + validations(*([StepBackTest.failed] * 3)))
++        code, out = run(self.state, SLUG)
++        self.assertEqual(code, 1, out)
++        self.assertIn(MECHANISM, out)
++        self.assertNotIn("budget exceeded", out)
++
++
+ if __name__ == "__main__":
+     unittest.main()
+diff --git a/kc-dev-flow-2/scripts/test_sd_dispatch.py b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+index 8c4783ed4..33bc97e4e 100644
+--- a/kc-dev-flow-2/scripts/test_sd_dispatch.py
++++ b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+@@ -816,7 +816,7 @@ def exercise(base, binary, sd_root):
+         entity.write_text(template.replace("<task-id>", slug).replace("<selected-profile>", profile)
+                           .replace("<bounded outcome>", "Synthetic CLI fixture, not product acceptance")
+                           .replace("<exclusions>", "no migrations")
+-                          .replace("<approved bound>", "one fixture")
++                          .replace("<approved bound>", "one cycle per stage")
+                           .replace("<when to return to the Captain>", "upstream change needed")
+                           .replace("status: backlog", f"status: {stage}"))
+         run(["git", "-C", state, "add", "--", entity.name])
+@@ -986,12 +986,12 @@ def exercise(base, binary, sd_root):
+         assert all(f"missing required body field: {field}" in unfilled.stdout
+                    for field in ("Non-goals", "Budget", "Stop condition")), unfilled.stdout
+         template_seed.write_text((template + FO_RECORD).replace("<exclusions>", "migrations")
+-                                 .replace("<approved bound>", "one fixture")
++                                 .replace("<approved bound>", "one cycle per stage")
+                                  .replace("<when to return to the Captain>", "upstream change"))
+         run(["python3", "-B", checker, "check", "--seed", template_seed], repo)
+ 
+         def parity(body, extra=""):
+-            entity.write_text(header + body + report + extra)
++            entity.write_text(header + "\n## Design\n\n### Worth questions\nAsked: fixture request; without: count absent; premise: count varies, inspect one fixture.\n" + body + report + extra)
+             scanned = run([binary, "status", "--workflow-dir", repo, "--read", entity.stem, "--ac-scan", "--json"],
+                           repo, expected=None)
+             ids = [ac["id"] for ac in json.loads(scanned.stdout)["acs"]] if scanned.returncode == 0 else []
+@@ -1046,7 +1046,7 @@ def exercise(base, binary, sd_root):
+ 
+         backlog = run([binary, "dispatch", "show-stage-def", "--workflow-dir", repo, "--stage", "backlog"], repo).stdout
+         assert SEED_STEP in backlog, "backlog stage definition lacks the seed check"
+-        bounds = "\n## Scope\nNon-goals: migrations\nBudget: one fixture\nStop condition: upstream changes\n"
++        bounds = "\n## Scope\nNon-goals: migrations\nBudget: one cycle per stage\nStop condition: upstream changes\n"
+         checker = ROOT / "scripts/design_surfaces.py"
+         for folder in (False, True):
+             for stored in (False, True):
+@@ -1060,7 +1060,7 @@ def exercise(base, binary, sd_root):
+                 before = created.read_bytes()
+                 run(["python3", "-B", checker, "check", "--seed", created], repo)
+                 assert created.read_bytes() == before, "seed check mutated native task"
+-                created.write_text(created.read_text().replace("Budget: one fixture\n", ""))
++                created.write_text(created.read_text().replace("Budget: one cycle per stage\n", ""))
+                 missing = run(["python3", "-B", checker, "check", "--seed", created], repo, expected=1)
+                 assert "missing required body field: Budget" in missing.stdout, missing.stdout
+         bad = run([binary, "new", "--workflow-dir", repo, f"mismatch-{token}"],
+diff --git a/kc-dev-flow-2/skills/ideation/principles.md b/kc-dev-flow-2/skills/ideation/principles.md
+index 30780780a..3772a6761 100644
+--- a/kc-dev-flow-2/skills/ideation/principles.md
++++ b/kc-dev-flow-2/skills/ideation/principles.md
+@@ -14,6 +14,7 @@ Prefer the smallest working mechanism for the accepted goal. Before proposing an
+ existing-code capability change, apply the [bounded existing-code check](../implementation/principles.md#existing-code-capability-check);
+ use or repair what exists before adding a replacement. Record its conclusion in
+ the same design, with a proportional observation showing why the change is needed.
++In `### Worth questions`, answer per scope part: which Captain words it serves; what breaks without it; which single premise would make the task unneeded and what cheap test checks it now. Name parts serving no Captain words for him to keep or cut.
+ Use one PRFAQ with a future-facing proposition, short FAQ and acceptance evidence
+ plan. Mermaid must match the prose's actors, order, alternatives and stops.
+ When another task is live in the workflow, end the design with `### Batch overlap`: for each such task, the files, checks, tables and numbered records both would change, counting a shared index such as an ADR list, then a `Recommended order:` line; write `none` when none.

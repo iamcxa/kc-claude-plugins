@@ -1,0 +1,12 @@
+{
+  "tested_patch_unchanged": true,
+  "patch_sha256": "a21e4999a6e7597ce41eabd054964d022094bc9bbbd6c38f5053be30425df2af",
+  "original_root": "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3",
+  "original_failure": "expected root absent at invocation; argument validation exited 2; only Codex cache 0.28.0 was present",
+  "root": "/Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.3",
+  "version": "0.27.3",
+  "files": {
+    "mods/pr-merge.md": "162f152b4573f51eb7e745a557cd06bfe53ff3390cddd9947c1bc80bdab9991a",
+    ".claude-plugin/plugin.json": "42a155c8c6c654f8431d8dac9da8fe279ae55ab744a0a2dbef34eddb60d77ee4"
+  }
+}

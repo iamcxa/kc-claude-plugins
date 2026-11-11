@@ -1,0 +1,38 @@
+FFF
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation # ready for review')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 146, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", self.entity], expected=1)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0uagfr6u/code/docs/dev2/.spacedock-state/dispatch-fixture-3db47f47a4354f4b8910d6edd46f726c.md')], 'dispatch-fixture-3db47f47a4354f4b8910d6edd46f726c.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status="'ideation' # review")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 146, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", self.entity], expected=1)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0uagfr6u/code/docs/dev2/.spacedock-state/dispatch-fixture-3db47f47a4354f4b8910d6edd46f726c.md')], 'dispatch-fixture-3db47f47a4354f4b8910d6edd46f726c.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='"ideation" # review')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 146, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", self.entity], expected=1)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-0uagfr6u/code/docs/dev2/.spacedock-state/dispatch-fixture-3db47f47a4354f4b8910d6edd46f726c.md')], 'dispatch-fixture-3db47f47a4354f4b8910d6edd46f726c.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+----------------------------------------------------------------------
+Ran 1 test in 1.179s
+
+FAILED (failures=3)

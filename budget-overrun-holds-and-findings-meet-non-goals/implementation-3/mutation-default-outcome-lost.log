@@ -1,0 +1,14 @@
+test_hold_states_the_preserve_report_stop_default_and_captain_override (test_role_triggers.BudgetTest.test_hold_states_the_preserve_report_stop_default_and_captain_override) ... FAIL
+
+======================================================================
+FAIL: test_hold_states_the_preserve_report_stop_default_and_captain_override (test_role_triggers.BudgetTest.test_hold_states_the_preserve_report_stop_default_and_captain_override)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_role_triggers.py", line 868, in test_hold_states_the_preserve_report_stop_default_and_captain_override
+    self.assertIn("keep the results, report the remaining work and stop adding", out)
+AssertionError: 'keep the results, report the remaining work and stop adding' not found in 'next: some-task budget exceeded; hold for the Captain. Symptom: failure 2. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: hold, unless the Captain replaces this outcome.\nbudget: Budget: One cycle per stage.; spent implementation 2, validation 0\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.006s
+
+FAILED (failures=1)

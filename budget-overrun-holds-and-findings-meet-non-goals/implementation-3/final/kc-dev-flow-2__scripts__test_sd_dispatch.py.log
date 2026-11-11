@@ -1,0 +1,2 @@
+usage: test_sd_dispatch.py [-h] [--keep] --sd-plugin-root SD_PLUGIN_ROOT
+test_sd_dispatch.py: error: --sd-plugin-root must contain the activated mods/pr-merge.md

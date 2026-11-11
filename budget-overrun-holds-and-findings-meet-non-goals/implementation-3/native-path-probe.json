@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/Users/kent/.local/bin/spacedock",
+    "status",
+    "--workflow-dir",
+    "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpn4wrwixx",
+    "--read",
+    "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpn4wrwixx/task.md",
+    "--json"
+  ],
+  "exit": 0,
+  "stdout": "{\"command\":\"read\",\"path\":\"/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpn4wrwixx/task.md\",\"total_lines\":\"3\",\"frontmatter\":{\"status\":\"ideation\"},\"headings\":[]}\n",
+  "stderr": ""
+}

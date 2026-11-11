@@ -1,0 +1,34 @@
+{
+  "parent": "5bf7cf78866a2f0f6376c15b59fc400519c5ffeb",
+  "files": [
+    {
+      "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+      "changed_existing_functions": [
+        "check_task"
+      ],
+      "new_functions": [
+        "worth_lines",
+        "worth_stage"
+      ],
+      "other_functions_unchanged": true
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "changed_existing_functions": [],
+      "new_functions": [
+        "WorthQuestionsTests.test_html_comments_cannot_supply_the_worth_heading"
+      ],
+      "other_functions_unchanged": true
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "changed_existing_functions": [],
+      "new_functions": [
+        "DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values",
+        "DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable"
+      ],
+      "other_functions_unchanged": true
+    }
+  ],
+  "legacy_stage_branches_and_main_byte_identical": true
+}

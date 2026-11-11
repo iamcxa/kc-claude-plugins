@@ -1,0 +1,137 @@
+[
+  {
+    "severity": "medium",
+    "title": "FM_STATUS / scope_hold",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "F1: commented status becomes unknown and scope check is not run; reproduced; source 5bf7cf788 lines 49, 958\u2013960. report; do not change.",
+    "status": "open",
+    "evidence": "sibling-probes.json and sibling-probes-after.json",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "high",
+    "title": "check_task prod ideation security",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "F1: missing Security review passes with commented ideation; reproduced; source 5bf7cf788 lines 1097, 1107. report; leave legacy status variable.",
+    "status": "open",
+    "evidence": "sibling-probes.json and sibling-probes-after.json",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "high",
+    "title": "check_task UI ideation design review",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "F1: missing Design review passes with commented ideation; reproduced; source 5bf7cf788 lines 1097, 1111. report; leave legacy status variable.",
+    "status": "open",
+    "evidence": "sibling-probes.json and sibling-probes-after.json",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "high",
+    "title": "check_task UI validation built-screen review",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "F1: missing Built screen review passes with commented validation; reproduced; source 5bf7cf788 lines 1097, 1116. report; leave legacy status variable.",
+    "status": "open",
+    "evidence": "sibling-probes.json and sibling-probes-after.json",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "low",
+    "title": "main gate question reminder",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "F1: same exact-match stage read omits reminder for commented backlog/ideation; source confirmed; source 5bf7cf788 lines 1147\u20131149. report; do not change.",
+    "status": "open",
+    "evidence": "source inspection at pinned parent; full behavior not exercised",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "medium",
+    "title": "FO alignment section and split_fo",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "F2: complete commented FO block accepted; reproduced; source 5bf7cf788 lines 87\u201395, 1054\u20131058. report; do not change.",
+    "status": "open",
+    "evidence": "sibling-probes.json and sibling-probes-after.json",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "medium",
+    "title": "check_criteria required Acceptance criteria",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "F2: complete commented AC section accepted; reproduced; source 5bf7cf788 lines 181\u2013190, 1089. report; do not change.",
+    "status": "open",
+    "evidence": "sibling-probes.json and sibling-probes-after.json",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "low",
+    "title": "section generic selector and AC consumers",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "F2: caller-provided comment lines can supply/end a section; downstream amendment/criterion comparisons share it; source 5bf7cf788 lines 134\u2013139, 336, 382, 429. report; new Worth passes its own filtered lines only.",
+    "status": "open",
+    "evidence": "source inspection at pinned parent; full behavior not exercised",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "medium",
+    "title": "parse_amendments owner/required amendment region",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "F2: HTML-commented Captain amendments region yields an amendment record; reproduced; source 5bf7cf788 lines 229\u2013275. report; do not change.",
+    "status": "open",
+    "evidence": "sibling-probes.json and sibling-probes-after.json",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "low",
+    "title": "scope_lines required Scope contents",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "F2: fence-aware but HTML-comment-blind first Scope selector; source confirmed; source 5bf7cf788 lines 901\u2013912. report; do not change.",
+    "status": "open",
+    "evidence": "source inspection at pinned parent; full behavior not exercised",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "low",
+    "title": "validation_report latest Stage Report: validation",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "F2: HTML-comment-blind report boundary can select hidden validation report; source confirmed; source 5bf7cf788 lines 821\u2013825. report; do not change.",
+    "status": "open",
+    "evidence": "source inspection at pinned parent; full behavior not exercised",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "medium",
+    "title": "check_seed_fields required bounds sections",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "Closed HTML comments excluded already; unclosed HTML comment can supply all bounds; both reproduced; source 5bf7cf788 lines 1006\u20131040. report unterminated-comment hole; do not change seed reader.",
+    "status": "open",
+    "evidence": "sibling-probes.json and sibling-probes-after.json",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "low",
+    "title": "alignment_owes_result FO region",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "Shares split_fo/unfenced HTML-comment-blind selection; not the Worth consumer; source 5bf7cf788 lines 152\u2013154. report; do not change.",
+    "status": "open",
+    "evidence": "source inspection at pinned parent; full behavior not exercised",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "low",
+    "title": "check_ui/check_db required body records",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "Required labels/artifact checks are HTML-comment-blind body reads, not a stage read; source confirmed; source 5bf7cf788 lines 111\u2013131. report as related field-read risk, not repaired.",
+    "status": "open",
+    "evidence": "source inspection at pinned parent; full behavior not exercised",
+    "scope": "outside the new Worth check; FO disposition owed"
+  },
+  {
+    "severity": "medium",
+    "title": "check_security/check_design_review/check_built_screen required report labels",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "detail": "HTML-comment-blind body line reads; status bypasses reproduced separately; label-only hidden input risk source confirmed; source 5bf7cf788 lines 530, 755, 832. report; do not change.",
+    "status": "open",
+    "evidence": "sibling-probes.json and sibling-probes-after.json",
+    "scope": "outside the new Worth check; FO disposition owed"
+  }
+]

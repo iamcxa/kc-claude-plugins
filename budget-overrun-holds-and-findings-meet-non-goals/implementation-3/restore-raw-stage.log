@@ -1,0 +1,78 @@
+test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) ... 
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation # ready for review', path='dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md') ... FAIL
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status="'ideation' # review", path='dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md') ... FAIL
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='"ideation" # review', path='dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md') ... FAIL
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation # ready for review', path='index.md') ... FAIL
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status="'ideation' # review", path='index.md') ... FAIL
+  test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='"ideation" # review', path='index.md') ... FAIL
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation # ready for review', path='dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worth-mutant-5jrt7loi/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-8tib9i7n/code/docs/dev2/.spacedock-state/dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md')], 'dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status="'ideation' # review", path='dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worth-mutant-5jrt7loi/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-8tib9i7n/code/docs/dev2/.spacedock-state/dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md')], 'dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='"ideation" # review', path='dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worth-mutant-5jrt7loi/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-8tib9i7n/code/docs/dev2/.spacedock-state/dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md')], 'dispatch-fixture-0e1589282fd24b7db209049b1f125aa4.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation # ready for review', path='index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worth-mutant-5jrt7loi/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-8tib9i7n/code/docs/dev2/.spacedock-state/dispatch-fixture-0e1589282fd24b7db209049b1f125aa4/index.md')], 'index.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status="'ideation' # review", path='index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worth-mutant-5jrt7loi/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-8tib9i7n/code/docs/dev2/.spacedock-state/dispatch-fixture-0e1589282fd24b7db209049b1f125aa4/index.md')], 'index.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='"ideation" # review', path='index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 148, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    refused = self.call([sys.executable, "-B", checker, "check", path], expected=1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worth-mutant-5jrt7loi/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-8tib9i7n/code/docs/dev2/.spacedock-state/dispatch-fixture-0e1589282fd24b7db209049b1f125aa4/index.md')], 'index.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+----------------------------------------------------------------------
+Ran 1 test in 1.031s
+
+FAILED (failures=6)

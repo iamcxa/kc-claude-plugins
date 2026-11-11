@@ -1,0 +1,47 @@
+{
+  "baseline": "5bf7cf78866a2f0f6376c15b59fc400519c5ffeb",
+  "results": [
+    {
+      "name": "f1-base-export",
+      "status": "passed",
+      "assertion_failures": 6,
+      "errors": 0
+    },
+    {
+      "name": "f2-base-export",
+      "status": "passed",
+      "assertion_failures": 3,
+      "errors": 0
+    },
+    {
+      "name": "native-error-base-export",
+      "status": "passed",
+      "assertion_failures": 4,
+      "errors": 0
+    },
+    {
+      "name": "restore-raw-stage",
+      "status": "passed",
+      "assertion_failures": 6,
+      "errors": 0
+    },
+    {
+      "name": "restore-comment-blind",
+      "status": "passed",
+      "assertion_failures": 3,
+      "errors": 0
+    },
+    {
+      "name": "ignore-native-error",
+      "status": "passed",
+      "assertion_failures": 4,
+      "errors": 0
+    },
+    {
+      "name": "ignore-native-binding-and-type",
+      "status": "passed",
+      "assertion_failures": 2,
+      "errors": 0
+    }
+  ]
+}

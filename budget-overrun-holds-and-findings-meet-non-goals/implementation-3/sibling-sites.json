@@ -1,0 +1,115 @@
+{
+  "before_any_code_edit": true,
+  "source": "5bf7cf78866a2f0f6376c15b59fc400519c5ffeb",
+  "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+  "sites": [
+    {
+      "site": "FM_STATUS / scope_hold",
+      "lines": "49, 958\u2013960",
+      "assessment": "F1: commented status becomes unknown and scope check is not run; reproduced",
+      "disposition": "report; do not change"
+    },
+    {
+      "site": "check_task prod ideation security",
+      "lines": "1097, 1107",
+      "assessment": "F1: missing Security review passes with commented ideation; reproduced",
+      "disposition": "report; leave legacy status variable"
+    },
+    {
+      "site": "check_task UI ideation design review",
+      "lines": "1097, 1111",
+      "assessment": "F1: missing Design review passes with commented ideation; reproduced",
+      "disposition": "report; leave legacy status variable"
+    },
+    {
+      "site": "check_task UI validation built-screen review",
+      "lines": "1097, 1116",
+      "assessment": "F1: missing Built screen review passes with commented validation; reproduced",
+      "disposition": "report; leave legacy status variable"
+    },
+    {
+      "site": "main gate question reminder",
+      "lines": "1147\u20131149",
+      "assessment": "F1: same exact-match stage read omits reminder for commented backlog/ideation; source confirmed",
+      "disposition": "report; do not change"
+    },
+    {
+      "site": "check_task Worth stage predicate",
+      "lines": "1104",
+      "assessment": "F1: shares raw stage read; owned new check",
+      "disposition": "repair using native parsed single-file read, not another YAML regex"
+    },
+    {
+      "site": "check_task Worth Design/section presence",
+      "lines": "1102\u20131105",
+      "assessment": "F2: comments can supply required Worth heading and Design boundary; owned new check",
+      "disposition": "repair local visible-line scan; do not alter global readers"
+    },
+    {
+      "site": "FO alignment section and split_fo",
+      "lines": "87\u201395, 1054\u20131058",
+      "assessment": "F2: complete commented FO block accepted; reproduced",
+      "disposition": "report; do not change"
+    },
+    {
+      "site": "check_criteria required Acceptance criteria",
+      "lines": "181\u2013190, 1089",
+      "assessment": "F2: complete commented AC section accepted; reproduced",
+      "disposition": "report; do not change"
+    },
+    {
+      "site": "section generic selector and AC consumers",
+      "lines": "134\u2013139, 336, 382, 429",
+      "assessment": "F2: caller-provided comment lines can supply/end a section; downstream amendment/criterion comparisons share it",
+      "disposition": "report; new Worth passes its own filtered lines only"
+    },
+    {
+      "site": "parse_amendments owner/required amendment region",
+      "lines": "229\u2013275",
+      "assessment": "F2: HTML-commented Captain amendments region yields an amendment record; reproduced",
+      "disposition": "report; do not change"
+    },
+    {
+      "site": "scope_lines required Scope contents",
+      "lines": "901\u2013912",
+      "assessment": "F2: fence-aware but HTML-comment-blind first Scope selector; source confirmed",
+      "disposition": "report; do not change"
+    },
+    {
+      "site": "validation_report latest Stage Report: validation",
+      "lines": "821\u2013825",
+      "assessment": "F2: HTML-comment-blind report boundary can select hidden validation report; source confirmed",
+      "disposition": "report; do not change"
+    },
+    {
+      "site": "check_seed_fields required bounds sections",
+      "lines": "1006\u20131040",
+      "assessment": "Closed HTML comments excluded already; unclosed HTML comment can supply all bounds; both reproduced",
+      "disposition": "report unterminated-comment hole; do not change seed reader"
+    },
+    {
+      "site": "alignment_owes_result FO region",
+      "lines": "152\u2013154",
+      "assessment": "Shares split_fo/unfenced HTML-comment-blind selection; not the Worth consumer",
+      "disposition": "report; do not change"
+    },
+    {
+      "site": "check_ui/check_db required body records",
+      "lines": "111\u2013131",
+      "assessment": "Required labels/artifact checks are HTML-comment-blind body reads, not a stage read; source confirmed",
+      "disposition": "report as related field-read risk, not repaired"
+    },
+    {
+      "site": "check_security/check_design_review/check_built_screen required report labels",
+      "lines": "530, 755, 832",
+      "assessment": "HTML-comment-blind body line reads; status bypasses reproduced separately; label-only hidden input risk source confirmed",
+      "disposition": "report; do not change"
+    },
+    {
+      "site": "report_shape/design_report/decline_report required YAML root mappings",
+      "lines": "509, 594, 740",
+      "assessment": "External YAML report schema checks, not Markdown sections or task stage reads; HTML rendering is not their input contract",
+      "disposition": "not the same Markdown comment hole; out of this repair"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) ... 
+  test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output=None) ... FAIL
+  test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='not json') ... FAIL
+  test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='{"command": "read", "path": "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-hpn0ma7t/code/docs/dev2/.spacedock-state/dispatch-fixture-73a684e5937741b399fe12e9579f0316.md", "frontmatter": {"status": 1}}') ... FAIL
+  test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='{"command": "read", "path": "/another/task.md", "frontmatter": {"status": "done"}}') ... FAIL
+
+======================================================================
+FAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 165, in test_unreadable_native_stage_does_not_make_design_presentable
+    result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worth-mutant-bpaoimn4/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-hpn0ma7t/code/docs/dev2/.spacedock-state/dispatch-fixture-73a684e5937741b399fe12e9579f0316.md')], 'dispatch-fixture-73a684e5937741b399fe12e9579f0316.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='not json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 165, in test_unreadable_native_stage_does_not_make_design_presentable
+    result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worth-mutant-bpaoimn4/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-hpn0ma7t/code/docs/dev2/.spacedock-state/dispatch-fixture-73a684e5937741b399fe12e9579f0316.md')], 'dispatch-fixture-73a684e5937741b399fe12e9579f0316.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='{"command": "read", "path": "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-hpn0ma7t/code/docs/dev2/.spacedock-state/dispatch-fixture-73a684e5937741b399fe12e9579f0316.md", "frontmatter": {"status": 1}}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 165, in test_unreadable_native_stage_does_not_make_design_presentable
+    result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worth-mutant-bpaoimn4/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-hpn0ma7t/code/docs/dev2/.spacedock-state/dispatch-fixture-73a684e5937741b399fe12e9579f0316.md')], 'dispatch-fixture-73a684e5937741b399fe12e9579f0316.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+======================================================================
+FAIL: test_unreadable_native_stage_does_not_make_design_presentable (test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable) (output='{"command": "read", "path": "/another/task.md", "frontmatter": {"status": "done"}}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 165, in test_unreadable_native_stage_does_not_make_design_presentable
+    result = self.call([sys.executable, "-B", ROOT / "scripts/design_surfaces.py", "check", self.entity],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/worth-mutant-bpaoimn4/scripts/design_surfaces.py'), 'check', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dispatch-stage-hpn0ma7t/code/docs/dev2/.spacedock-state/dispatch-fixture-73a684e5937741b399fe12e9579f0316.md')], 'dispatch-fixture-73a684e5937741b399fe12e9579f0316.md: design surfaces presentable\nscope check not run: stage is unknown, not ideation\n', '')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.909s
+
+FAILED (failures=4)

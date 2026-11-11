@@ -1,0 +1,54 @@
+[
+  {
+    "name": "security",
+    "plain_errors": [
+      "task.md: a prod task needs a 'Security review:' line naming the saved report"
+    ],
+    "comment_errors": []
+  },
+  {
+    "name": "ui-design",
+    "plain_errors": [
+      "task.md: a ui task needs a 'Design review:' line naming the saved report"
+    ],
+    "comment_errors": []
+  },
+  {
+    "name": "built-screen",
+    "plain_errors": [
+      "task.md: built screen review not run: a ui task with a design review needs a 'Built screen review:' line or a quoted waiver"
+    ],
+    "comment_errors": []
+  },
+  {
+    "name": "hidden-FO",
+    "errors": []
+  },
+  {
+    "name": "hidden-AC",
+    "errors": []
+  },
+  {
+    "name": "scope-comment",
+    "result": [
+      "not run",
+      "stage is unknown, not ideation"
+    ]
+  },
+  {
+    "name": "hidden-seed-closed",
+    "errors": [
+      "task.md: missing required body field: Non-goals",
+      "task.md: missing required body field: Budget",
+      "task.md: missing required body field: Stop condition"
+    ]
+  },
+  {
+    "name": "hidden-seed-unclosed",
+    "errors": []
+  },
+  {
+    "name": "hidden-amendment",
+    "count": 1
+  }
+]

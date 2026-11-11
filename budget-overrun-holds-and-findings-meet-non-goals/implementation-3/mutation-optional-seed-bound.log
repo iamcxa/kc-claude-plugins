@@ -1,0 +1,14 @@
+test_new_seed_budget_needs_a_fixed_form_and_cannot_borrow_an_amendment (test_design_surfaces.WorthQuestionsTests.test_new_seed_budget_needs_a_fixed_form_and_cannot_borrow_an_amendment) ... FAIL
+
+======================================================================
+FAIL: test_new_seed_budget_needs_a_fixed_form_and_cannot_borrow_an_amendment (test_design_surfaces.WorthQuestionsTests.test_new_seed_budget_needs_a_fixed_form_and_cannot_borrow_an_amendment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-overrun-holds-and-findings-meet-non-goals/kc-dev-flow-2/scripts/test_design_surfaces.py", line 292, in test_new_seed_budget_needs_a_fixed_form_and_cannot_borrow_an_amendment
+    self.assertTrue(any("Budget must start" in e for e in ds.check_task(write_task(d, text), seed=True)))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (failures=1)
