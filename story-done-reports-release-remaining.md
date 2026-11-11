@@ -15,6 +15,17 @@ gates:
                 id: briefing:story-done-reports-release-remaining:backlog:attempt-1:revision-1
                 digest: sha256:bc068bffc4730bd93d2deb7690dcb9ecf6c545c3f8ed5c5f68a3b3849b8252ab
                 room-ref: ./story-done-reports-release-remaining/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:story-done-reports-release-remaining:backlog:1
+                briefing: briefing:story-done-reports-release-remaining:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-11T01:18:27.351416Z"
+                decision: approve
+                reason: 'The Captain chose 「五張都核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：第 21 批這五張要不要進設計階段。我建議五張都核准：故事做完回報切片進度、發版後鋪開到採用 repo 與法規檢查、超預算要停與重大發現先對照不做清單、工人收到的推送說明與狀態提交工具一致、拒絕一個指令不等於全停。核准代表接受每張任務檔寫的範圍、預算與停止條件，並各派一個設計工人；不代表接受任何設計或修法。前三張標了方向要先對齊，派工前我會各問你一題。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
