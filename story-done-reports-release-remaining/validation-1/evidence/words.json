@@ -1,0 +1,10 @@
+{
+  "before": 612,
+  "after": 713,
+  "maximum": 726,
+  "unchanged": [
+    "workflow.md",
+    "test_release_acceptance.py",
+    "consumer contract-versions.json"
+  ]
+}

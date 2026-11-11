@@ -1,0 +1,7 @@
+{
+  "command": "bash --noprofile --norc /tmp/validation-story-progress-20261111/acceptance.sh",
+  "exit": 0,
+  "log_lifetime_seconds": 62.13,
+  "covers": "report/ref/schema controls, story admission, idle reminder, integrated consumer, native relay archive control, required ADR",
+  "does_not_cover": "clean dependency installation, full historical replays, hosted second PR, release/rollout, AC-10 real archive"
+}

@@ -1,0 +1,8 @@
+relay 137 135 30 135
+qnow 163 163 11 163
+local 230 0 None 0
+Traceback (most recent call last):
+  File "/private/tmp/validation-story-progress-20261111/scripts/replay_seed.py", line 33, in <module>
+    assert [results[n]['idle_count'] for n in ['relay','qnow']]==[31,11]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

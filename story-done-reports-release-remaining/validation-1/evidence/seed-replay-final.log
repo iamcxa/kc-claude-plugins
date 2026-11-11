@@ -1,0 +1,8 @@
+relay 137 135 31 135
+qnow 164 164 11 164
+local 230 0 None 0
+Traceback (most recent call last):
+  File "/private/tmp/validation-story-progress-20261111/scripts/replay_seed.py", line 32, in <module>
+    assert [results[n]['story_refusals'] for n in results]==[135,163,0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

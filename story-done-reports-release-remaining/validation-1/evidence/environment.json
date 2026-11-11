@@ -1,0 +1,7 @@
+{
+  "node": "v24.18.0",
+  "python": "Python 3.11.14",
+  "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+  "dependency_root": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining/kc-journey-map/node_modules",
+  "candidate_lockfile_sha256": "584a7bef41cd7c38fef32b449c2f8af1608451568334c62b098688f6b53700d2"
+}

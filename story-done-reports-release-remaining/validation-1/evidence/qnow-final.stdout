@@ -1,0 +1,3633 @@
+{
+  "schema": "journey-progress/v1",
+  "journey": "qnow",
+  "source": "/private/tmp/validation-story-progress-20261111/replays/qnow/docs/dev2",
+  "observedAt": "2026-11-11T04:01:01.252Z",
+  "diagnostic": null,
+  "orphans": [
+    {
+      "slug": "booking-outcomes",
+      "id": "booking-outcomes",
+      "release": "r8",
+      "story": ""
+    },
+    {
+      "slug": "branch-hours-generate-starts",
+      "id": "branch-hours-generate-starts",
+      "release": "r14",
+      "story": ""
+    },
+    {
+      "slug": "cash-at-pickup",
+      "id": "cash-at-pickup",
+      "release": "r11",
+      "story": ""
+    },
+    {
+      "slug": "check-database-version",
+      "id": "check-database-version",
+      "release": "r12",
+      "story": ""
+    },
+    {
+      "slug": "database-version-check-pending",
+      "id": "database-version-check-pending",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "go-live-consent",
+      "id": "go-live-consent",
+      "release": "r12",
+      "story": ""
+    },
+    {
+      "slug": "journey-edits-after-merge",
+      "id": "journey-edits-after-merge",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "landing-page-and-trial-requests",
+      "id": "landing-page-and-trial-requests",
+      "release": "qnow-tw-landing",
+      "story": "request-trial-on-landing"
+    },
+    {
+      "slug": "landing-visual-polish",
+      "id": "landing-visual-polish",
+      "release": "qnow-tw-landing",
+      "story": "product-home-page"
+    },
+    {
+      "slug": "move-to-singapore-region",
+      "id": "move-to-singapore-region",
+      "release": "r12",
+      "story": ""
+    },
+    {
+      "slug": "office-browser-bundle-guard",
+      "id": "office-browser-bundle-guard",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "owner-sms-notices",
+      "id": "owner-sms-notices",
+      "release": "r10",
+      "story": ""
+    },
+    {
+      "slug": "production-operations",
+      "id": "production-operations",
+      "release": "r12",
+      "story": ""
+    },
+    {
+      "slug": "reception-holds-slot",
+      "id": "reception-holds-slot",
+      "release": "r7",
+      "story": ""
+    },
+    {
+      "slug": "schedule-settings-match-design",
+      "id": "schedule-settings-match-design",
+      "release": "r14",
+      "story": ""
+    },
+    {
+      "slug": "sms-confirm-cancel-in-flight-race",
+      "id": "sms-confirm-cancel-in-flight-race",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "vehicle-based-pricing",
+      "id": "vehicle-based-pricing",
+      "release": "r5",
+      "story": ""
+    },
+    {
+      "slug": "operator-secret-hardening",
+      "id": "operator-secret-hardening",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "product-analytics-posthog",
+      "id": "product-analytics-posthog",
+      "release": "r12",
+      "story": ""
+    },
+    {
+      "slug": "production-go-live",
+      "id": "production-go-live",
+      "release": "r12",
+      "story": ""
+    },
+    {
+      "slug": "office-action-audit-log",
+      "id": "office-action-audit-log",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "production-incident-agent",
+      "id": "production-incident-agent",
+      "release": "r12",
+      "story": ""
+    },
+    {
+      "slug": "schedule-settings-layout-polish",
+      "id": "schedule-settings-layout-polish",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "r14-round-1",
+      "id": "r14-round-1",
+      "release": "r14",
+      "story": ""
+    },
+    {
+      "slug": "agents-md-adr-pointer",
+      "id": "agents-md-adr-pointer",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "booking-month-preview",
+      "id": "booking-month-preview",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "consent-return-keeps-shop-code-native",
+      "id": "consent-return-keeps-shop-code-native",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "customer-cars-class-batched",
+      "id": "customer-cars-class-batched",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "date-exceptions-hours-and-ranges",
+      "id": "date-exceptions-hours-and-ranges",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "demo-shop-migration-test-under-load",
+      "id": "demo-shop-migration-test-under-load",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "first-consent-time-kept",
+      "id": "first-consent-time-kept",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "linked-car-keeps-manual-choice",
+      "id": "linked-car-keeps-manual-choice",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "linked-car-slots-ask-sign-in",
+      "id": "linked-car-slots-ask-sign-in",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "new-booking-options-load-failure",
+      "id": "new-booking-options-load-failure",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "new-car-survives-name-detour",
+      "id": "new-car-survives-name-detour",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "notice-shop-name-fallback",
+      "id": "notice-shop-name-fallback",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "notice-text-shorthand-ip",
+      "id": "notice-text-shorthand-ip",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "office-create-forms-block-double-submit",
+      "id": "office-create-forms-block-double-submit",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "office-email-sign-in-option",
+      "id": "office-email-sign-in-option",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "office-look-and-layout-redesign",
+      "id": "office-look-and-layout-redesign",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "office-outcome-notice-clears-on-reload",
+      "id": "office-outcome-notice-clears-on-reload",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "office-price-column-fits-1440",
+      "id": "office-price-column-fits-1440",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "office-r4-acceptance-followups",
+      "id": "office-r4-acceptance-followups",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "office-schedule-time-picker",
+      "id": "office-schedule-time-picker",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "office-sign-in-follows-refine-antd",
+      "id": "office-sign-in-follows-refine-antd",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "office-theme-switching",
+      "id": "office-theme-switching",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "onboarding-rerun-after-service-edits",
+      "id": "onboarding-rerun-after-service-edits",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "owner-app-offline-detection",
+      "id": "owner-app-offline-detection",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "owner-app-tab-icons-load",
+      "id": "owner-app-tab-icons-load",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "owner-payment-view-recovers-from-failed-poll",
+      "id": "owner-payment-view-recovers-from-failed-poll",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "owner-phone-change-affordance",
+      "id": "owner-phone-change-affordance",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "partner-shop-model-rules",
+      "id": "partner-shop-model-rules",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "price-table-reload-after-refused-activation",
+      "id": "price-table-reload-after-refused-activation",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "price-table-whole-edit",
+      "id": "price-table-whole-edit",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "production-database-restore",
+      "id": "production-database-restore",
+      "release": "r12",
+      "story": ""
+    },
+    {
+      "slug": "qnow-migration-history",
+      "id": "qnow-migration-history",
+      "release": "release-migration",
+      "story": "migration-preserve-history"
+    },
+    {
+      "slug": "r14-poc-flywheel",
+      "id": "r14-poc-flywheel",
+      "release": "r14",
+      "story": ""
+    },
+    {
+      "slug": "r14-user-manual-trial",
+      "id": "r14-user-manual-trial",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "r5-deferred-edge-cases",
+      "id": "r5-deferred-edge-cases",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "rebooking-link-foreign-car-returns-to-choice",
+      "id": "rebooking-link-foreign-car-returns-to-choice",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "self-serve-entry-code-issuance",
+      "id": "self-serve-entry-code-issuance",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "self-serve-trial-initial-shop-setup",
+      "id": "self-serve-trial-initial-shop-setup",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "self-serve-trial-payment-journey",
+      "id": "self-serve-trial-payment-journey",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "shop-customer-claim-create-race",
+      "id": "shop-customer-claim-create-race",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "shop-customer-create-signup-race",
+      "id": "shop-customer-create-signup-race",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "signature-accessible-alternative",
+      "id": "signature-accessible-alternative",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "signature-path-requires-a-line",
+      "id": "signature-path-requires-a-line",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "singapore-rollback-criterion",
+      "id": "singapore-rollback-criterion",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "staff-booking-any-start-time",
+      "id": "staff-booking-any-start-time",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "staff-booking-rechecks-closed-entry",
+      "id": "staff-booking-rechecks-closed-entry",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "staff-booking-replay-checks-stored-pricing",
+      "id": "staff-booking-replay-checks-stored-pricing",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "taiwan-holidays-preload",
+      "id": "taiwan-holidays-preload",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "tenant-console-and-self-serve-trial",
+      "id": "tenant-console-and-self-serve-trial",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "vehicle-rule-one-confirm-open",
+      "id": "vehicle-rule-one-confirm-open",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "vehicle-rule-warnings-follow-pricing-mode",
+      "id": "vehicle-rule-warnings-follow-pricing-mode",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "vehicle-size-classification-redesign",
+      "id": "vehicle-size-classification-redesign",
+      "release": "",
+      "story": ""
+    },
+    {
+      "slug": "void-paid-record",
+      "id": "void-paid-record",
+      "release": "",
+      "story": ""
+    }
+  ],
+  "stories": [
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "enter-by-shop-qr",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "pick-nearby-shop",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "enter-by-deep-link",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "reopen-returns-to-shop",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "two-shops-no-switcher",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "browse-before-login",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "public-seo-pages",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "sign-in-anytime",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "open-app-without-qr",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "browse-service-list",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r5",
+      "story": "price-by-vehicle-type",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r6",
+      "story": "combine-services-total",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r6",
+      "story": "see-added-service-on-timeline",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r13",
+      "story": "owner-approves-added-service-in-app",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "public-service-pricing-page",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "service-not-for-vehicle-type",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r5",
+      "story": "pick-saved-vehicle-price",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "pick-available-slot",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1-5",
+      "story": "slot-by-duration-capacity",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "slot-full-pick-another",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1-5",
+      "story": "closed-days-hide-slots",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "phone-otp-submit-booking",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r12",
+      "story": "privacy-notice-consent",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "signed-out-link-keeps-destination",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "new-customer-phone-only-signup",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r3",
+      "story": "owner-leaves-note",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r3",
+      "story": "new-customer-enters-name",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r3",
+      "story": "new-customer-adds-plate",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r3",
+      "story": "search-brand-model-or-add",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r3",
+      "story": "returning-customer-picks-saved-vehicle",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r5",
+      "story": "returning-customer-saved-vehicle-reprice",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "imported-customer-claims-profile",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r7",
+      "story": "shop-customer-claims-record-on-signup",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "resend-otp-limited",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "fill-intake-questionnaire",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r2",
+      "story": "price-change-confirm-before-submit",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r2",
+      "story": "no-duplicate-on-retry",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r2",
+      "story": "already-signed-in-never-stuck",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r10",
+      "story": "booking-confirmed-notice",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "day-before-reminder",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "reschedule-cancel-by-link",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r10",
+      "story": "shop-declines-with-reason",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r10",
+      "story": "shop-cancels-with-notice",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "line-oa-poc",
+      "story": "line-oa-delivery-poc",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r15",
+      "story": "line-first-sms-fallback",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r8",
+      "story": "see-decline-on-timeline",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r8",
+      "story": "pick-another-slot-prefilled",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r11",
+      "story": "timeline-through-paid",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r2",
+      "story": "booking-timeline",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r7",
+      "story": "see-staff-created-booking",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r10",
+      "story": "staff-booking-sends-confirmed-notice",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r10",
+      "story": "shop-customer-gets-booking-sms",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "see-shop-edit-on-timeline",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r9",
+      "story": "review-questionnaire-and-sign",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r9",
+      "story": "see-drop-off-record",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r13",
+      "story": "staff-records-condition",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "amend-on-site-and-resign",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "walk-in-booking-on-site",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "early-or-late-arrival",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r7",
+      "story": "overbook-walk-in",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "view-progress-anytime",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r10",
+      "story": "notify-finished-only",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r13",
+      "story": "view-work-photos",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "delay-new-eta",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "approve-extra-work",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "see-finish-photos-and-collect",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r11",
+      "story": "inspect-and-sign-completion",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r13",
+      "story": "dissatisfied-handled-on-site",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "someone-else-picks-up",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r11",
+      "story": "pay-final-amount",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r16",
+      "story": "pay-with-line-pay-at-pickup",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r11",
+      "story": "explain-price-difference",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r17",
+      "story": "redeem-prepaid-package",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r17",
+      "story": "redeem-points-or-voucher",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r17",
+      "story": "pay-from-stored-value",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "pay-online",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "get-receipt",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "rate-service",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "see-points-earned",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "one-tap-rebook",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "maintenance-reminder",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "sign-out",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "edit-own-vehicle",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r3",
+      "story": "confirm-own-profile",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "owner-app-knows-brand",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "bookings-split-by-brand",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "manage-own-vehicle-photos",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "owner-logs-maintenance",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "view-own-vehicle-history",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r2",
+      "story": "my-bookings-list",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r4",
+      "story": "bookings-tab-lists-visited-shops",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "share-name-and-vehicles-across-brands",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "provision-tenant-branch",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r12",
+      "story": "check-database-version-before-first-shop",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "import-legacy-data",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "data-probe",
+      "story": "probe-real-shop-data",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "preauthorise-first-manager",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "issue-shop-entry-code",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "tenant-console",
+      "story": "platform-lists-tenants",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "tenant-console",
+      "story": "platform-sets-tenant-plan",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "tenant-console",
+      "story": "platform-suspends-tenant",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "self-serve-trial",
+      "story": "apply-as-tenant-reviewed",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "self-serve-trial",
+      "story": "auto-approve-limited-trial",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "self-serve-trial",
+      "story": "plans-with-quotas",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "shop-subdomain",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "staging-separate-from-production",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r4",
+      "story": "onboard-through-operator-api",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r4",
+      "story": "add-branch-to-tenant",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "accept-on-uat-branch",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "dev-secrets-from-1password",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r12",
+      "story": "onboard-real-shop-on-production",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r12",
+      "story": "production-on-qnow-tw",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r12",
+      "story": "production-runs-in-singapore",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r12",
+      "story": "production-operations",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r3",
+      "story": "reset-uat-database",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "vehicle-source-8891",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "vehicle-catalog-stays-current",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "staff-phone-sign-in",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "first-sign-in-binds-role",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "unauthorised-phone-refused",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "office-shows-role-screens",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r4",
+      "story": "office-header-shows-phone",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "staff-sees-who-is-signed-in",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "office-sign-in-follows-refine-antd",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "office-system",
+      "story": "office-in-app-notifications",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "office-system",
+      "story": "office-usability-design",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "set-weekly-closed-days",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "set-date-exceptions",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r14",
+      "story": "set-capacity",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r14",
+      "story": "edit-slot-times",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r5",
+      "story": "edit-services-and-prices",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "change-display-name",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r14",
+      "story": "multi-bay-simultaneous-count",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "crud-interface-enhancement",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r5",
+      "story": "set-prices-by-vehicle-class",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r5",
+      "story": "manager-confirms-vehicle-class",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r14",
+      "story": "copy-prices-from-branch",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 1,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r13",
+      "story": "shop-defines-report-templates",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "preauthorise-staff-phone",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "change-staff-role",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r4",
+      "story": "one-person-several-branches",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r4",
+      "story": "accept-branch-invitation",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "brand-owner-manages-all-branches",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "revoke-staff",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "office-system",
+      "story": "office-new-booking-count",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "see-pending-bookings",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "confirm-booking",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "confirm-within-capacity",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "lapsed-pending-not-confirmable",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r8",
+      "story": "decline-with-reason",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r8",
+      "story": "shop-cancels-booking",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "see-confirmed-schedule",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r7",
+      "story": "hold-slot-for-phone-customer",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r7",
+      "story": "shop-creates-booking",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r7",
+      "story": "staff-books-car-at-table-price",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r7",
+      "story": "on-site-class-or-quote",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r1",
+      "story": "reception-sees-full-phone",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r6",
+      "story": "booking-lines-on-office-lists",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r3",
+      "story": "see-booking-vehicle",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r3",
+      "story": "see-booking-note",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "edit-booking-details",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "story": "staff-changes-owner-phone",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r6",
+      "story": "shop-adds-services-after-inspection",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "shop-views-vehicle-history",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "office-system",
+      "story": "port-procrud-features",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "office-system",
+      "story": "office-all-bookings-list",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "line-oa-chat",
+      "story": "line-oa-chat-with-owner",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "office-ai-agent",
+      "story": "office-agent-operates-components",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r9",
+      "story": "mark-car-arrived",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r9",
+      "story": "drop-off-checklist",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r9",
+      "story": "customer-signs-on-staff-device",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r9",
+      "story": "owner-signs-on-own-phone",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r9",
+      "story": "see-drop-off-record-in-office",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r13",
+      "story": "arrival-report",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r13",
+      "story": "pre-wash-report",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r13",
+      "story": "technician-reports-progress",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r13",
+      "story": "staff-self-check",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r13",
+      "story": "second-person-audit",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r8",
+      "story": "mark-car-done",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r11",
+      "story": "record-payment-at-pickup",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "record-card-at-counter",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r11",
+      "story": "pickup-signature-at-payment",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r11",
+      "story": "in-house-receipt-number",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "story": "staff-commission",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "Missing or duplicate explicit journey/release/story identity"
+    },
+    {
+      "journey": "qnow",
+      "release": "r17",
+      "story": "deduct-stored-value-at-pickup",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r17",
+      "story": "top-up-stored-value",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r17",
+      "story": "member-discount",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r11",
+      "story": "record-different-amount",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "receipt-poc",
+      "story": "receipt-einvoice-research",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    },
+    {
+      "journey": "qnow",
+      "release": "r16",
+      "story": "set-up-line-pay-merchant",
+      "status": "unverified",
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "taskIds": [],
+      "members": {
+        "tasks": 0,
+        "done": 0,
+        "prs": []
+      },
+      "diagnostic": "One confirmed complete mapping is required"
+    }
+  ],
+  "releases": [
+    {
+      "release": "r1",
+      "totalStories": 24,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 24
+      }
+    },
+    {
+      "release": "r1-5",
+      "totalStories": 2,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 2
+      }
+    },
+    {
+      "release": "r2",
+      "totalStories": 5,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 5
+      }
+    },
+    {
+      "release": "r3",
+      "totalStories": 9,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 9
+      }
+    },
+    {
+      "release": "r4",
+      "totalStories": 6,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 6
+      }
+    },
+    {
+      "release": "data-probe",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "r5",
+      "totalStories": 6,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 6
+      }
+    },
+    {
+      "release": "r7",
+      "totalStories": 7,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 7
+      }
+    },
+    {
+      "release": "r8",
+      "totalStories": 5,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 5
+      }
+    },
+    {
+      "release": "r10",
+      "totalStories": 6,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 6
+      }
+    },
+    {
+      "release": "r11",
+      "totalStories": 8,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 8
+      }
+    },
+    {
+      "release": "r12",
+      "totalStories": 6,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 6
+      }
+    },
+    {
+      "release": "tenant-console",
+      "totalStories": 3,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 3
+      }
+    },
+    {
+      "release": "self-serve-trial",
+      "totalStories": 3,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 3
+      }
+    },
+    {
+      "release": "office-system",
+      "totalStories": 5,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 5
+      }
+    },
+    {
+      "release": "r6",
+      "totalStories": 4,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 4
+      }
+    },
+    {
+      "release": "r9",
+      "totalStories": 7,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 7
+      }
+    },
+    {
+      "release": "r13",
+      "totalStories": 10,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 10
+      }
+    },
+    {
+      "release": "r14",
+      "totalStories": 4,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 1,
+        "storiesEmpty": 3
+      }
+    },
+    {
+      "release": "line-oa-poc",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "r15",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "line-oa-chat",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "receipt-poc",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    },
+    {
+      "release": "r16",
+      "totalStories": 2,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 2
+      }
+    },
+    {
+      "release": "r17",
+      "totalStories": 6,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 6
+      }
+    },
+    {
+      "release": "office-ai-agent",
+      "totalStories": 1,
+      "doneStories": 0,
+      "requiredTasks": 0,
+      "doneTasks": 0,
+      "status": "unverified",
+      "acceptance": "delivery acceptance not established",
+      "members": {
+        "storiesDone": 0,
+        "storiesOpen": 0,
+        "storiesEmpty": 1
+      }
+    }
+  ]
+}

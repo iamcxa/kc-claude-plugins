@@ -1,0 +1,66 @@
+FFFF
+======================================================================
+FAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (__main__.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows) (record='Story: inbox-home (owner-account)\n', story='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validation-story-progress-20261111/mutants/AC11-unlisted-workflows/scripts/test_design_surfaces.py", line 327, in test_design_compares_story_record_to_counted_field_only_in_map_workflows
+    self.assertEqual(self.check(record, story, extensions="[]", seed=False), [])
+AssertionError: Lists differ: ["task.md: 'Story:' names inbox-home but journey-story is (empty)"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: 'Story:' names inbox-home but journey-story is (empty)"
+
+- ["task.md: 'Story:' names inbox-home but journey-story is (empty)"]
++ []
+
+======================================================================
+FAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (__main__.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows) (record='Story: inbox-home (owner-account)\n', story='switch-any-account')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validation-story-progress-20261111/mutants/AC11-unlisted-workflows/scripts/test_design_surfaces.py", line 327, in test_design_compares_story_record_to_counted_field_only_in_map_workflows
+    self.assertEqual(self.check(record, story, extensions="[]", seed=False), [])
+AssertionError: Lists differ: ["task.md: 'Story:' names inbox-home but journey-story is switch-any-account"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: 'Story:' names inbox-home but journey-story is switch-any-account"
+
+- ["task.md: 'Story:' names inbox-home but journey-story is switch-any-account"]
++ []
+
+======================================================================
+FAIL: test_design_compares_story_record_to_counted_field_only_in_map_workflows (__main__.JourneyStoryTests.test_design_compares_story_record_to_counted_field_only_in_map_workflows) (record='Story: none: infra\n', story='inbox-home')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validation-story-progress-20261111/mutants/AC11-unlisted-workflows/scripts/test_design_surfaces.py", line 327, in test_design_compares_story_record_to_counted_field_only_in_map_workflows
+    self.assertEqual(self.check(record, story, extensions="[]", seed=False), [])
+AssertionError: Lists differ: ["task.md: 'Story:' names none: but journey-story is inbox-home"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: 'Story:' names none: but journey-story is inbox-home"
+
+- ["task.md: 'Story:' names none: but journey-story is inbox-home"]
++ []
+
+======================================================================
+FAIL: test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows (__main__.JourneyStoryTests.test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validation-story-progress-20261111/mutants/AC11-unlisted-workflows/scripts/test_design_surfaces.py", line 318, in test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows
+    self.assertEqual(self.check(extensions="[]", folder=folder), [])
+AssertionError: Lists differ: ["task.md: '## FO alignment' needs a 'Stor[40 chars]n>'"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"
+
++ []
+- ["task.md: '## FO alignment' needs a 'Story:' line naming a story or 'none: "
+-  "<reason>'"]
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.027s
+
+FAILED (failures=4)

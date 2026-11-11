@@ -1,0 +1,72 @@
+[
+  {
+    "name": "relay-final",
+    "exit": 1,
+    "seconds": 14.922
+  },
+  {
+    "name": "qnow-final",
+    "exit": 1,
+    "seconds": 4.592
+  },
+  {
+    "name": "relay-due-base",
+    "exit": 0,
+    "seconds": 15.594
+  },
+  {
+    "name": "relay-due-candidate",
+    "exit": 0,
+    "seconds": 15.711
+  },
+  {
+    "name": "qnow-due-base",
+    "exit": 0,
+    "seconds": 5.498
+  },
+  {
+    "name": "qnow-due-candidate",
+    "exit": 0,
+    "seconds": 5.557
+  },
+  {
+    "name": "AC1-before",
+    "exit": 0,
+    "seconds": 14.013
+  },
+  {
+    "name": "AC1-set",
+    "exit": 0,
+    "seconds": 0.111
+  },
+  {
+    "name": "AC1-after",
+    "exit": 0,
+    "seconds": 14.665
+  },
+  {
+    "name": "AC5-release-only",
+    "exit": 0,
+    "seconds": 4.397
+  },
+  {
+    "name": "qnow-listing",
+    "exit": 0,
+    "seconds": 1.878
+  },
+  {
+    "name": "AC6-short",
+    "exit": 0,
+    "seconds": 11.989
+  },
+  {
+    "name": "AC7-old-cli",
+    "exit": 2,
+    "seconds": 0.24
+  },
+  {
+    "name": "AC7-no-spacedock",
+    "exit": 1,
+    "seconds": 0.214
+  }
+]

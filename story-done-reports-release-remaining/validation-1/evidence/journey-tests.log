@@ -1,0 +1,39 @@
+✔ filed membership counts undeclared tasks and formats completed task pull requests (1.732416ms)
+✔ archive report uses filed counts without changing declarations, acceptance, or source bytes (1787.321416ms)
+✔ report separates release-only tasks and unknown stories and bounds lists (1909.496458ms)
+✔ real archived reader distinguishes task/story ratios, full identities, and reopening (329.16925ms)
+✔ an id-style: slug workflow reads tasks by slug and still refuses what it cannot identify (452.666709ms)
+✔ declaration fields a member had cleared do not count as a second declaration (108.997375ms)
+✔ real records refuse missing, partial, conflicting, duplicate, malformed, and short-ID scope (1854.690875ms)
+✔ actual partial page, missing CLI, and implicit or empty journey scope cannot complete (592.028916ms)
+✔ derived projections use three borders without entering story wording or source readback (110.851083ms)
+✖ actual refresh CLI draws to isolated canvas and native-compatible readback preserves bytes (738.4425ms)
+✔ a task naming this journey but a release and story the map does not hold is an orphan (0.607416ms)
+✔ the real reader lists orphans from the task listing and the refresh CLI exits 1 on them (668.423125ms)
+✔ a release-acceptance task with no journey fields is not an orphan; with a journey and release but no story it is (554.066041ms)
+✔ the table and version print and the recorded hash binds them (57.15025ms)
+✔ an edited table with an unchanged version exits 1 naming the schema (69.664167ms)
+✔ a bumped version with no recorded hash exits 1 (50.493459ms)
+✔ the printed history pointers name files that exist and a runnable command (223.838666ms)
+✔ release-walk prints its table and version, and an edited table with an unchanged version exits 1 (94.63925ms)
+✔ journey-progress registers its printed table and refuses an unversioned shape edit (95.712042ms)
+✔ the progress producer preserves the registered keys and acceptance meanings (921.908042ms)
+✔ the README and SKILL.md send a reader to the schema command, the CHANGELOG and the ADR, and say when (1.122708ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 20
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9362.406375
+
+✖ failing tests:
+
+test at producer/kc-journey-map/lib/progress.test.mjs:233:1
+✖ actual refresh CLI draws to isolated canvas and native-compatible readback preserves bytes (738.4425ms)
+  Error: Canvas exited 1
+      at ChildProcess.<anonymous> (file:///private/tmp/validation-story-progress-20261111/producer/kc-journey-map/lib/progress.test.mjs:242:65)
+      at Object.onceWrapper (node:events:631:26)
+      at ChildProcess.emit (node:events:509:28)
+      at ChildProcess._handle.onexit (node:internal/child_process:295:12)

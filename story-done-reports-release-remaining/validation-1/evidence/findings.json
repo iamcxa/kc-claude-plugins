@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "info",
+    "title": "Needs decision: the second head is absent from formal validation candidates",
+    "file": "dispatch/validation-1.md",
+    "line": 5,
+    "detail": "The delivery-gate parser recognizes only fd1caa475f85483cf5c4031a1e58656ff5d3eaff. The checklist explicitly authorizes validating fa485f008562f00ebf91deed19e58ea52bb4b4dc, but it is not a header Candidate line. ADR 0036 and delivery_gate.py require that line before a sibling can supply ADR 0076. FO owns the dispatch record and any later rebase validation.",
+    "fix": "FO records the sibling as a formal Candidate in the latest validation dispatch and arranges a recheck of any rebased head before a merge ask.",
+    "status": "open"
+  }
+]

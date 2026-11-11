@@ -1,0 +1,36 @@
+✖ archive report uses filed counts without changing declarations, acceptance, or source bytes (1015.794583ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1149.992542
+
+✖ failing tests:
+
+test at lib/progress.test.mjs:66:1
+✖ archive report uses filed counts without changing declarations, acceptance, or source bytes (1015.794583ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /declared: unverified/. Input:
+  
+  'journey progress: demo/R1 after a (done)\n' +
+    'story alpha: 2 of 2 filed tasks done; declared: exists\n' +
+    'pull requests: #7\n' +
+    'release R1: 2 of 2 stories have every filed task done; 0 in progress; 0 have no task; complete by filed tasks\n' +
+    'done: alpha (#7), beta (team/project#9)\n' +
+    'in progress: none\n' +
+    'canvas: not redrawn; draw it with kc-journey-progress\n'
+  
+      at TestContext.<anonymous> (file:///private/tmp/validation-story-progress-20261111/mutants/AC2-members-as-declared/lib/progress.test.mjs:83:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'journey progress: demo/R1 after a (done)\nstory alpha: 2 of 2 filed tasks done; declared: exists\npull requests: #7\nrelease R1: 2 of 2 stories have every filed task done; 0 in progress; 0 have no task; complete by filed tasks\ndone: alpha (#7), beta (team/project#9)\nin progress: none\ncanvas: not redrawn; draw it with kc-journey-progress\n',
+    expected: /declared: unverified/,
+    operator: 'match',
+    diff: 'simple'
+  }

@@ -1,0 +1,7 @@
+journey progress: spacedock-review/second-opinion-later after account-publish-ceiling (done)
+story publish-without-binary: 1 of 1 filed tasks done; declared: unverified
+pull requests: spacedock-dev/subspace-relay#400
+release second-opinion-later: 2 of 28 stories have every filed task done; 0 in progress; 26 have no task
+done: publish-without-binary (spacedock-dev/subspace-relay#400), revoke-and-close (spacedock-dev/subspace-relay#388)
+in progress: none
+canvas: not redrawn; draw it with kc-journey-progress
