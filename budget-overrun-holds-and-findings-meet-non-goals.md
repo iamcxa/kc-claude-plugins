@@ -104,6 +104,13 @@ Supersedes: none
 Captain: 「兩處都同意（建議）」 (host question dialog, 2026-11-11)
 Asked: 「「預算」這張任務的實作停在兩處等更正，要不要都同意？一、第七項驗收條件把三個值不值得的問題寫成放進「待辦關卡」，更正為你核准的「設計關卡」，待辦關卡只呈現預算。二、允許多改兩個設計沒列的測試檔（pr_watch 和 delivery_gate 的測試），只更新 4 處還在比對舊版退一步提醒文字的預期值，產品程式不動。我建議兩處都同意。」
 Supersedes: AC-7
+Superseded text:
+**AC-7** workflow.md states the two countable forms, the hold, the amendment `Budget:` line and the worth answers in backlog Gate content. `lint-skills.py` exits 0 with one `WORKFLOW_BUDGET_STEPS` raise carrying the Captain's quoted ruling and its loaded moments. The words-per-moment table is recounted at the candidate by an independent copy of the count. Evidence: the lint output and the recount. Falsifier: a README count off the budget.
+
+### Amendment 5 — 2026-11-11, host question dialog
+Captain: 「只算修正的訊息（建議）」 (host question dialog, 2026-11-11)
+Asked: 「預算的「派工總次數上限」裡，我在同一個階段追加給工人的訊息要怎麼算？我建議：只有要工人回去修東西的訊息（紀錄上有寫問題名稱的）算一次派工，回答工人提問或轉達你裁示的訊息不算。以「發版鋪開」為例，這樣是 7 次；每則都算是 11 次，都不算是 2 次。」
+Supersedes: none
 
 ## Design
 
@@ -302,9 +309,13 @@ Recommended order: the two validation-stage tasks that edit the README land firs
 
 **AC-9** The ideation principles ask the three worth questions per scope part in a `### Worth questions` section. `design_surfaces.py check` refuses an ideation design without that section and passes one with it. An amendment `Budget:` line counts only when its value appears verbatim in the same entry's `Asked:` or `Captain:` line. Evidence: `test_design_surfaces.py` cases for a missing and a present section; `test_role_triggers.py` cases for a matching and a non-matching amendment `Budget:`. Falsifier: a design with no section passes, or an FO-invented bound clears the hold.
 
-**AC-7** workflow.md states the two countable forms, the hold, the amendment `Budget:` line and the worth answers in backlog Gate content. `lint-skills.py` exits 0 with one `WORKFLOW_BUDGET_STEPS` raise carrying the Captain's quoted ruling and its loaded moments. The words-per-moment table is recounted at the candidate by an independent copy of the count. Evidence: the lint output and the recount. Falsifier: a README count off the budget.
+**AC-10** — Amended by Captain, amendment 4. workflow.md states the two countable forms, the hold, the amendment `Budget:` line and the worth answers in 設計關卡，待辦關卡只呈現預算. `lint-skills.py` exits 0 with one `WORKFLOW_BUDGET_STEPS` raise carrying the Captain's quoted ruling and its loaded moments. The words-per-moment table is recounted at the candidate by an independent copy of the count. Evidence: the lint output and the recount. Falsifier: a README count off the budget.
 
 **AC-8** The ADR above is written at its reserved number, with an amendment line on ADR 0026, and `adr_lint.py` passes. Evidence: `adr_lint.py docs/adr --since <base> --require <number>`.
+
+
+**AC-12** — Amended by Captain, amendment 3. A budget hold states its default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome. Existing results remain intact when the pending dispatch is removed. Evidence: the role hold fixture checks the stated default and replacement authority, and the real dispatch fixture keeps an existing results file unchanged while holding before build. Falsifier: removing the default or the Captain replacement clause fails the fixture.
+
 
 ## Needs decision
 
