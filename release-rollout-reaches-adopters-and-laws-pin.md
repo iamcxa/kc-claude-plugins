@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:release-rollout-reaches-adopters-and-laws-pin:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:release-rollout-reaches-adopters-and-laws-pin-ideation-1
+              briefing:
+                id: briefing:release-rollout-reaches-adopters-and-laws-pin:ideation:attempt-1:revision-1
+                digest: sha256:2f9cc11e111185b0124c21ec8458df91a9246850bfbea2042b4173166b034cd5
+                room-ref: ./release-rollout-reaches-adopters-and-laws-pin/review/ideation/briefing-1
 started: 2026-11-11T01:25:39Z
 ---
 
