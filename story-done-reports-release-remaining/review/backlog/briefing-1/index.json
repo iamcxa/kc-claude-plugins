@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:story-done-reports-release-remaining:backlog:attempt-1:revision-1",
+  "question": "決定：第 21 批這五張要不要進設計階段。我建議五張都核准：故事做完回報切片進度、發版後鋪開到採用 repo 與法規檢查、超預算要停與重大發現先對照不做清單、工人收到的推送說明與狀態提交工具一致、拒絕一個指令不等於全停。核准代表接受每張任務檔寫的範圍、預算與停止條件，並各派一個設計工人；不代表接受任何設計或修法。前三張標了方向要先對齊，派工前我會各問你一題。",
+  "artifacts": [
+    {
+      "id": "artifact:story-done-reports-release-remaining:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/26c54f70a75cdfd3b986a002e98ea9ede1837e29/story-done-reports-release-remaining.md",
+      "rev": "sha256:ba3dc8aae0ecdf833757635943d375c935dd2409c0ef4537eb70da4a1167ce01",
+      "mediaType": "text/markdown",
+      "summary": "Batch 21 backlog sitting, five seeds filed 2026-11-11 after the Captain chose the batch members in the host question dialog. This seed: story-done-reports-release-remaining. design_surfaces.py check --seed exit 0 (FO run 2026-11-11). Each seed names its source words, its bite with who observed it and whether FO re-ran it, non-goals, budget and stop condition. Ideation owes the replay or measurement its stop condition names. Three seeds record alignment as needed and FO asks the Captain before dispatching their ideation; two record it as not needed."
+    }
+  ]
+}

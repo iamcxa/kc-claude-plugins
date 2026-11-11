@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:story-done-reports-release-remaining:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:story-done-reports-release-remaining-backlog-1
+              briefing:
+                id: briefing:story-done-reports-release-remaining:backlog:attempt-1:revision-1
+                digest: sha256:bc068bffc4730bd93d2deb7690dcb9ecf6c545c3f8ed5c5f68a3b3849b8252ab
+                room-ref: ./story-done-reports-release-remaining/review/backlog/briefing-1
 ---
 
 ## Scope
