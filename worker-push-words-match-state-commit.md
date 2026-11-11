@@ -52,6 +52,17 @@ gates:
                 id: briefing:worker-push-words-match-state-commit:ideation:attempt-3:revision-1
                 digest: sha256:24b8db90e5af2f8fb97af8844ad8cb7dc95b308a105722453e486a276daaa7dd
                 room-ref: ./worker-push-words-match-state-commit/review/ideation/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-push-words-match-state-commit:ideation:3
+                briefing: briefing:worker-push-words-match-state-commit:ideation:attempt-3:revision-1
+                by: person:captain
+                at: "2026-11-11T02:50:58.236463Z"
+                decision: approve
+                reason: 'The Captain chose 「核准，放派工單都帶的段落（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要核准「工人收到的推送說明與狀態提交工具一致」的設計並開始實作，並把那句話放進每張派工單都帶的流程說明段落。我建議這樣核准：那是目前唯一量過有效的位置，First Officer 和工人都讀得到，也符合任務原本寫的停止條件。核准即接受流程說明檔多 38 字並提高它的字數上限；設計原本建議的「放工人守則、說明檔不加字」不採用。」. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-11T01:19:15Z
 ---
 
