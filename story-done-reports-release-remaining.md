@@ -3,7 +3,7 @@ title: When a story's task is archived, FO tells the Captain how much of the rel
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -66,7 +66,7 @@ gates:
                 reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要核准「故事做完回報切片進度」補完後的設計並開始實作。我建議核准：照你上次的要求，設計加了一步，有地圖擴充的流程裡每張任務在待辦關卡要寫一行「屬於哪個故事」或「不屬於任何故事加理由」，沒寫就擋；其他照原設計：每張有切片的任務歸檔時我在對話裡回報切片完成與剩餘的故事和每個完成故事的 PR，不自動重畫畫布，PR 連結只出現在回報裡，不做故事宣告、改列已建檔任務的計數。核准即接受這些，以及這一步上線當天 relay 有 31 張、qnow 有 11 張待辦任務會被點名要補那一行。」. Recommendation: followed. Before choosing he asked 「確認下如果沒有用故事地圖的使用者會怎樣」 and FO answered in chat from the design: the rule applies only where the workflow README lists journey-map.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-11T01:22:31Z
 ---
 
