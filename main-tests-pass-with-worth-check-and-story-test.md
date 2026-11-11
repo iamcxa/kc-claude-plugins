@@ -15,6 +15,17 @@ gates:
                 id: briefing:main-tests-pass-with-worth-check-and-story-test:backlog:attempt-1:revision-1
                 digest: sha256:f5f45e2c049769237934fa09f12e14bce71a10d6bcbc1f6e87cd3ff31a94024b
                 room-ref: ./main-tests-pass-with-worth-check-and-story-test/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:main-tests-pass-with-worth-check-and-story-test:backlog:1
+                briefing: briefing:main-tests-pass-with-worth-check-and-story-test:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-11T09:01:51.264926Z"
+                decision: approve
+                reason: 'The Captain chose 「核准（建議）」 (host question dialog, 2026-11-11), answering 「決定：要不要讓「修好 main 上壞掉的那一項測試」這張任務插隊進入設計階段。我建議核准。核准代表接受任務檔寫的範圍（只修造成這次失敗的地方，不動你在 #841 已接受不修的那四件事）、預算（設計、實作、驗證各一輪，一個 PR）與停止條件（PR 的測試全過，而且我在請你合併前，先在「合併進 main 之後的結果」上重跑同一組測試），並派一個設計工人查清楚錯在測試還是錯在檢查本身。不代表接受任何修法。」. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
