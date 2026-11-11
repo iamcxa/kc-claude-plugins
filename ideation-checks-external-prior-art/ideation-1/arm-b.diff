@@ -1,0 +1,10 @@
+--- a/kc-dev-flow-2/skills/ideation/principles.md	2026-11-11 08:50:09
++++ b/kc-dev-flow-2/skills/ideation/principles.md	2026-11-11 10:12:16
+@@ -14,6 +14,7 @@
+ existing-code capability change, apply the [bounded existing-code check](../implementation/principles.md#existing-code-capability-check);
+ use or repair what exists before adding a replacement. Record its conclusion in
+ the same design, with a proportional observation showing why the change is needed.
++Every design carries one `Prior art:` line: the standards, drafts, platform APIs or libraries it adopts, adapts or rejects, each with a reason, or `none known`.
+ Use one PRFAQ with a future-facing proposition, short FAQ and acceptance evidence
+ plan. Mermaid must match the prose's actors, order, alternatives and stops.
+ When another task is live in the workflow, end the design with `### Batch overlap`: for each such task, the files, checks, tables and numbered records both would change, counting a shared index such as an ADR list, then a `Recommended order:` line; write `none` when none.

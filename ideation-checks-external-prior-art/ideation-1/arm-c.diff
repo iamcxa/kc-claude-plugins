@@ -1,0 +1,11 @@
+--- a/kc-dev-flow-2/skills/engineering-reviewer/SKILL.md	2026-11-11 08:50:09
++++ b/kc-dev-flow-2/skills/engineering-reviewer/SKILL.md	2026-11-11 10:12:18
+@@ -35,7 +35,7 @@
+ 2. Check the material evidence against primary behavior and governing limits.
+ 3. Separate an observed defect from an unsupported possibility.
+ 4. Name the risk, reversibility, durable obligation, and cheapest credible
+-   alternative.
++   alternative, including a standard, draft or known library pattern the design reinvents.
+ 5. State what evidence would change the recommendation.
+ 
+ Do not manufacture dissent or require the author to disprove ungrounded
