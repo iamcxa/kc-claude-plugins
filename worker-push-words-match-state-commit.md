@@ -218,13 +218,12 @@ Recommended order: under the principles option, any order, except land this befo
 
 ## Acceptance criteria
 
-**AC-1** At the candidate, the sentence appears once in `kc-dev-flow-2/skills/implementation/principles.md` and once in `kc-dev-flow-2/skills/validation/principles.md`, right after each file's "Do not invoke local fallback, push the trunk" sentence. No other kc-dev-flow-2 file changes.
-- Evidence: `git diff --stat <base> <head> -- kc-dev-flow-2` lists exactly those two files, and `grep -c 'is part of your stage: report it as done' <file>` prints 1 for each.
-- Falsifier: a diff touching `references/sd/workflow.md`, the paseo extension or `replay_dispatch.py`, or a count other than 1.
-- If the Captain chooses the Dispatch-facts option, this criterion is rewritten before implementation.
+**AC-5** Amended by Captain, amendment 1. One `- **Pushes:**` bullet in `kc-dev-flow-2/references/sd/workflow.md` Dispatch facts contains the approved alternative wording. Only that file and `kc-dev-flow-2/scripts/lint-skills.py` change; neither stage principles file changes.
+- Evidence: compare the candidate diff with the base and build implementation and validation dispatches; each contains the bullet once.
+- Falsifier: remove or duplicate the bullet, move it outside Dispatch facts, or change a file beyond the two named paths; the check must fail.
 
-**AC-2** `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0 at the candidate, with `WORKFLOW_BUDGET_STEPS` unchanged.
-- Falsifier: moving the sentence into `references/sd/workflow.md` makes lint exit 1 with "exceeds the budget".
+**AC-6** Amended by Captain, amendment 1. `python3 -B kc-dev-flow-2/scripts/lint-skills.py` exits 0 with one appended `WORKFLOW_BUDGET_STEPS` raise of 38 words, from 5939 to 5977, quoting the Captain's ideation-gate words and the question he answered. The step names startup/resume and the worker-dispatch loading moment.
+- Falsifier: remove the raise, its Captain quote or its loading moment; lint must fail. A raise whose quotation differs from the gate record also fails the acceptance check.
 
 **AC-3** The sentence is true of Spacedock v0.27.2. Use a scratch split-root workflow whose state checkout is on its state branch and whose `origin` is a disposable bare repository.
 - `spacedock state commit <slug>` prints `Committed and pushed`.
@@ -279,3 +278,13 @@ Supersedes: AC-1, AC-2
 ### Summary
 
 Spacedock's `state commit` pushes the state branch by design. The package never tells a worker that this push is its own, so FO-written "Do not push" scope notes produced disclosure amendments in qnow (implementation and validation) and 4 follow-up clarifications here. The design adds one 43-word sentence beside the existing push rule in the implementation and validation principles, with no README growth. The Captain decides between that and a 38-word Dispatch-facts bullet. Choosing the principles option amends the stop condition's "the dispatch states it" to "the dispatch and the stage skill it loads". AC-4's replay is written to run against a disposable bare origin with rewritten workflow paths and a disclosed scratch harness, so no real remote is pushed.
+
+Superseded text:
+
+**AC-1** At the candidate, the sentence appears once in `kc-dev-flow-2/skills/implementation/principles.md` and once in `kc-dev-flow-2/skills/validation/principles.md`, right after each file's "Do not invoke local fallback, push the trunk" sentence. No other kc-dev-flow-2 file changes.
+- Evidence: `git diff --stat <base> <head> -- kc-dev-flow-2` lists exactly those two files, and `grep -c 'is part of your stage: report it as done' <file>` prints 1 for each.
+- Falsifier: a diff touching `references/sd/workflow.md`, the paseo extension or `replay_dispatch.py`, or a count other than 1.
+- If the Captain chooses the Dispatch-facts option, this criterion is rewritten before implementation.
+
+**AC-2** `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0 at the candidate, with `WORKFLOW_BUDGET_STEPS` unchanged.
+- Falsifier: moving the sentence into `references/sd/workflow.md` makes lint exit 1 with "exceeds the budget".
