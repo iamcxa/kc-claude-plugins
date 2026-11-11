@@ -88,7 +88,7 @@ gates:
                 state: pending
 started: 2026-11-11T01:19:20Z
 worktree: .worktrees/spacedock-ensign-denied-command-denies-only-that-command
-pr: iamcxa/kc-claude-plugins#842
+pr: pr-merge:842
 ---
 
 ## Scope
