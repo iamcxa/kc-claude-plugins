@@ -1,0 +1,16 @@
+{
+  "head": "01d23393ebe5bfd63d8bcafc01859c3b146021d2",
+  "parent": "e079d0c555fde855527a82c7a497a4d07e6e4c04",
+  "stacked_base": "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+  "local_commands": 28,
+  "passed": 28,
+  "failed": [],
+  "laws_test_source_and_fixture_unchanged": true,
+  "candidate_clean": true,
+  "product_branch_pushed_by_worker": false,
+  "pr_text": "/tmp/impl-story-done-reports-release-remaining-dev2-pr.md",
+  "remote_ci": "not run",
+  "roborev": "not run; FO-owned",
+  "independent_new_head_validation": "not run; FO-owned",
+  "ci_cost": "not measured; no workflow edits"
+}

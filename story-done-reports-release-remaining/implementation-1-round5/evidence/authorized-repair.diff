@@ -1,0 +1,21 @@
+diff --git a/kc-dev-flow-2/scripts/design_surfaces.py b/kc-dev-flow-2/scripts/design_surfaces.py
+index fd26d961e..cbced0ebb 100644
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -23,7 +23,6 @@ from pathlib import Path
+ 
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ import decision_ledger
+-from workflow_extensions import readme_extensions
+ 
+ KNOWN = {"ui", "db", "none"}
+ CAPTAIN_QUOTE = re.compile(r"「[^」]*\S[^」]*」")
+@@ -1041,6 +1040,8 @@ def check_seed_fields(name, text):
+ 
+ # see docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md
+ def check_story_record(path, text, seed):
++    from workflow_extensions import readme_extensions
++
+     try:
+         for parent in path.resolve().parents:
+             readme = parent / "README.md"

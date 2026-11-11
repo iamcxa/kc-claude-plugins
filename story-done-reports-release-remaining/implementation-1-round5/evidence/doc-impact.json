@@ -1,0 +1,24 @@
+[
+ {
+  "doc": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/design_surfaces.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/design_surfaces.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md",
+  "state": "updated",
+  "terms": [
+   "check_story_record",
+   "kc-dev-flow-2/scripts/design_surfaces.py"
+  ]
+ }
+]

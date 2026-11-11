@@ -1,0 +1,11 @@
+{
+  "regression_test": "ExitContractTest.test_check_exiting_1_with_no_stdout_exits_2",
+  "before_head": "e079d0c555fde855527a82c7a497a4d07e6e4c04",
+  "before_exit": 1,
+  "after_head": "01d23393ebe5bfd63d8bcafc01859c3b146021d2",
+  "after_exit": 0,
+  "story_tests": "JourneyStoryTests: seed and default checks",
+  "story_tests_exit": 0,
+  "test_source_unchanged": true,
+  "falsifier": "Restoring the module-top workflow_extensions import makes the unchanged copied-script laws test crash before the expected exit 2."
+}

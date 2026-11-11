@@ -1,0 +1,329 @@
+diff --git a/docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md b/docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md
+new file mode 100644
+index 000000000..265841707
+--- /dev/null
++++ b/docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md
+@@ -0,0 +1,53 @@
++# 0076. A journey workflow's new seed records its story or none
++
++Date: 2026-11-11
++
++## Status
++
++Accepted
++
++## Context
++
++The story-done-reports-release-remaining task adds filed-task progress after an
++archive. Without each admitted task recording its story or an explicit reason
++for having none, that count cannot show whether work was classified. The Captain
++returned the first design at ideation attempt 2, then approved the added step at
++attempt 3. The source is the task's ideation gate records of 2026-11-11.
++
++## Decision
++
++**Words:** 「退回補上「任務必須標故事」（建議）」 — Captain, 2026-11-11,
++ideation attempt 2, host question dialog.
++
++**Asked:** 「決定：要不要核准「故事做完回報切片進度」的設計並開始實作。我建議照設計的建議核准：每張有切片的任務歸檔時，我在對話裡回報這個切片完成與剩餘的故事和每個完成故事的 PR，不自動重畫畫布；PR 連結現算、只出現在回報裡，畫布和地圖檔不變；不做故事宣告，回報裡改列「已建檔任務」的計數。核准即接受這三項；要畫布上顯示 PR 或要做故事宣告，請選對應的選項。」
++
++The added step was accepted with 「核准（建議）」 at ideation attempt 3,
++answering the proposal that every task in a workflow listing journey-map records
++its story or none with a reason before the backlog gate, and a missing line holds
++that gate. Workflows without journey-map remain outside this rule.
++
++**Options considered:**
++- Use the existing seed check for the story line and the design check for its
++  agreement with journey-story (chosen).
++- Add prose without a check; FO could skip it unnoticed.
++- Add a separate extension command; the idle look would not run it.
++- Require the line in every workflow; workflows without a map have no reader.
++
++**Recommended:** The existing seed check, limited to journey-map workflows.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/design_surfaces.py` — check_story_record and its seed/design call
++
++In a workflow whose nearest workflow README lists journey-map, FO writes
++`Story: <story id> (<release id>)` or `Story: none: <reason>` under FO alignment.
++The seed check requires an unfenced, nonempty answer and a reason for none; both
++forms pass. The design check compares a recorded story with journey-story.
++Story membership is still the release review's decision. ADR 0041 otherwise stands.
++
++## Consequences
++
++The existing idle look names backlog tasks that still need preparation until
++FO supplies their lines. Archived tasks are not backfilled. Skipping the seed
++check bypasses the refusal; an unknown story can pass until release review.
++Filed counts do not establish exhaustive scope or delivery acceptance. Reopen if
++the supported admission path or the records it requires change.
+diff --git a/kc-dev-flow-2/extensions/journey-map/EXTENSION.md b/kc-dev-flow-2/extensions/journey-map/EXTENSION.md
+index 0c794b9cc..a9bddf43c 100644
+--- a/kc-dev-flow-2/extensions/journey-map/EXTENSION.md
++++ b/kc-dev-flow-2/extensions/journey-map/EXTENSION.md
+@@ -6,11 +6,14 @@ frontmatter, and only when the repository keeps a kc-journey-map file
+ under `docs/journey/`; with none, this extension has no step and FO writes no `journey-map not run` line for it.
+ 
+ - **Needs:** python3 for `<package>/extensions/journey-map/map_footprint.py`; for the fold and the counts, node and a
+-  kc-journey-map release that ships `lib/journey-fold.mjs`, `lib/journey-reconcile.mjs` and `lib/schemas.mjs`
++  kc-journey-map release that ships `lib/journey-fold.mjs`, `lib/journey-reconcile.mjs`, `lib/schemas.mjs` and `lib/journey-progress.mjs` with `--report`
+   (without one, `add`, `check` and `audit` still run and the fold is reported as not run). A task is a
+   journey task when its frontmatter has both `journey` and `journey-story`; any other task is
+-  outside this extension.
+-- **Joins:** FO, at three points on a journey task.
++  outside this extension, except the progress report and the story line.
++- **Joins:** FO, at five points on a journey task.
++  - Before a backlog gate, FO writes `Story: <story id> (<release id>)` or `Story: none:
++    <reason>` under `## FO alignment` on every task. The seed check refuses a missing line;
++    the design check compares it to `journey-story`. Both forms pass.
+   - Right after each `spacedock gate record` or recorded Captain amendment that answers a map
+     question, FO runs `python3 <package>/extensions/journey-map/map_footprint.py add <task file>
+     --question <id> --source gate-attempt:<id>|amendment:<n> --words '<his words>' --answer
+@@ -26,6 +29,11 @@ under `docs/journey/`; with none, this extension has no step and FO writes no `j
+     archive message states `journey-map fold: <PR url>`, `not needed: <reason>` or `not run:
+     <reason>`. The docs-only map pull request follows `## Delivery authority`; this extension
+     grants no push.
++  - Right after archiving a task that has `journey` and `journey-release`, FO runs `node
++    <kc-journey-map>/lib/journey-progress.mjs <journey file> --workflow-dir <dir> --report
++    <slug>` and puts its lines in the archive message to the Captain. A missing
++    kc-journey-map, one without `--report` (exit 2) or a failed read is `journey progress
++    not run: <reason>`.
+ - **Counts at release review:** FO runs `python3 <package>/extensions/journey-map/map_footprint.py
+   audit <workflow-dir> --since <date this repository listed the extension>` (`unrecorded` and
+   `invalid` must be 0) and `node <kc-journey-map>/lib/journey-reconcile.mjs <journey file>
+diff --git a/kc-dev-flow-2/extensions/release-acceptance/fixtures/journey-progress-v1.json b/kc-dev-flow-2/extensions/release-acceptance/fixtures/journey-progress-v1.json
+index 442a2b778..4699cb828 100644
+--- a/kc-dev-flow-2/extensions/release-acceptance/fixtures/journey-progress-v1.json
++++ b/kc-dev-flow-2/extensions/release-acceptance/fixtures/journey-progress-v1.json
+@@ -15,7 +15,12 @@
+       "doneTasks": 1,
+       "taskIds": [
+         "build-reserve-copy"
+-      ]
++      ],
++      "members": {
++        "tasks": 1,
++        "done": 1,
++        "prs": []
++      }
+     },
+     {
+       "journey": "book-pickup",
+@@ -26,7 +31,12 @@
+       "doneTasks": 1,
+       "taskIds": [
+         "build-choose-pickup-day"
+-      ]
++      ],
++      "members": {
++        "tasks": 1,
++        "done": 1,
++        "prs": []
++      }
+     },
+     {
+       "journey": "book-pickup",
+@@ -37,7 +47,12 @@
+       "doneTasks": 1,
+       "taskIds": [
+         "build-check-ready"
+-      ]
++      ],
++      "members": {
++        "tasks": 1,
++        "done": 1,
++        "prs": []
++      }
+     },
+     {
+       "journey": "book-pickup",
+@@ -48,7 +63,12 @@
+       "doneTasks": 1,
+       "taskIds": [
+         "build-receive-reminder"
+-      ]
++      ],
++      "members": {
++        "tasks": 1,
++        "done": 1,
++        "prs": []
++      }
+     },
+     {
+       "journey": "book-pickup",
+@@ -59,7 +79,12 @@
+       "doneTasks": 1,
+       "taskIds": [
+         "build-collect-book"
+-      ]
++      ],
++      "members": {
++        "tasks": 1,
++        "done": 1,
++        "prs": []
++      }
+     }
+   ],
+   "releases": [
+@@ -70,7 +95,12 @@
+       "requiredTasks": 3,
+       "doneTasks": 3,
+       "status": "exists",
+-      "acceptance": "pending delivery acceptance"
++      "acceptance": "pending delivery acceptance",
++      "members": {
++        "storiesDone": 3,
++        "storiesOpen": 0,
++        "storiesEmpty": 0
++      }
+     },
+     {
+       "release": "r2",
+@@ -79,7 +109,12 @@
+       "requiredTasks": 2,
+       "doneTasks": 2,
+       "status": "exists",
+-      "acceptance": "pending delivery acceptance"
++      "acceptance": "pending delivery acceptance",
++      "members": {
++        "storiesDone": 2,
++        "storiesOpen": 0,
++        "storiesEmpty": 0
++      }
+     }
+   ]
+ }
+diff --git a/kc-dev-flow-2/scripts/design_surfaces.py b/kc-dev-flow-2/scripts/design_surfaces.py
+index f8960866a..cbced0ebb 100644
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -1038,6 +1038,53 @@ def check_seed_fields(name, text):
+     return [f"{name}: missing required body field: {label}" for label, _ in fields if label not in found]
+ 
+ 
++# see docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md
++def check_story_record(path, text, seed):
++    from workflow_extensions import readme_extensions
++
++    try:
++        for parent in path.resolve().parents:
++            readme = parent / "README.md"
++            if not readme.is_file():
++                continue
++            front, _ = decision_ledger.split_task(readme.read_text())
++            if front is not None and any(re.match(r"^stages:", line) for line in front):
++                if "journey-map" not in readme_extensions(readme):
++                    return []
++                break
++        else:
++            return []
++    except (OSError, UnicodeError, ValueError) as error:
++        return [f"{path.name}: cannot read workflow story rule: {error}"]
++    plain, fence = [], None
++    for line in re.sub(r"<!--.*?-->", "", text, flags=re.S).splitlines():
++        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
++        if fence:
++            if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip():
++                fence = None
++        elif marker:
++            fence = marker[1]
++        else:
++            plain.append(line)
++    fo, _ = split_fo("\n".join(plain))
++    record = re.search(r"^Story:[ \t]*(.*)$", fo, re.M)
++    value = record[1].strip() if record else ""
++    named = value.split()[0] if value else ""
++    if not named or (named in ("none", "none:") and not re.match(r"^none:[ \t]*\S", value)):
++        return [f"{path.name}: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"] if seed else []
++    if seed:
++        return []
++    front, _ = decision_ledger.split_task(text)
++    stored = next((line.split(":", 1)[1] for line in front or [] if line.startswith("journey-story:")), "")
++    try:
++        story = decision_ledger.unquote(re.sub(r"[ \t]+#.*$", "", stored).strip())
++    except ValueError as error:
++        return [f"{path.name}: cannot read journey-story: {error}"]
++    if (named == "none:" and story) or (named != "none:" and named != story):
++        return [f"{path.name}: 'Story:' names {named} but journey-story is {story or '(empty)'}"]
++    return []
++
++
+ def check_task(path, seed=False, notes=None):
+     errors = []
+     try:
+@@ -1073,6 +1120,7 @@ def check_task(path, seed=False, notes=None):
+         if value.lower() == "none" and "ui" in surfaces:
+             errors.append(f"{path.name}: 'Visible change: none' contradicts 'ui' in 'Surfaces:'")
+ 
++    errors.extend(check_story_record(path, text, seed))
+     if seed:
+         return check_seed_fields(path.name, text) + errors
+     if "ui" in surfaces:
+diff --git a/kc-dev-flow-2/scripts/test_design_surfaces.py b/kc-dev-flow-2/scripts/test_design_surfaces.py
+index 8e79c7579..e54f215b2 100644
+--- a/kc-dev-flow-2/scripts/test_design_surfaces.py
++++ b/kc-dev-flow-2/scripts/test_design_surfaces.py
+@@ -294,6 +294,39 @@ class SeedModeTests(unittest.TestCase):
+ 
+ 
+ 
++class JourneyStoryTests(unittest.TestCase):
++    def check(self, record="", story="", extensions="[journey-map]", seed=True, folder=False):
++        with tempfile.TemporaryDirectory() as d:
++            root = Path(d)
++            (root / "README.md").write_text(f"---\nextensions: {extensions}\nstages:\n  states: []\n---\n")
++            path = root / ".spacedock-state" / ("task/index.md" if folder else "task.md")
++            path.parent.mkdir(parents=True)
++            (path.parent / "README.md").write_text("State checkout, not the workflow.\n")
++            text = (f"---\ntitle: Task\nstatus: ideation\njourney-story: {story}\n---\n"
++                    + SeedBoundsTests.BOUNDS + "## FO alignment\nSurfaces: none\nVisible change: none\n" + record
++                    + "\n## Acceptance criteria\n**AC-1**: a bounded result. Evidence: the real check.\n")
++            path.write_text(text)
++            return ds.check_task(path, seed=seed)
++
++    def test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows(self):
++        for folder in (False, True):
++            for record in ("", "Story:\n", "Story: none\n", "Story: none:\n", "```md\nStory: inbox-home (owner-account)\n```\n", "~~~md\nStory: none: infra\n~~~\n"):
++                with self.subTest(record=record, folder=folder):
++                    self.assertTrue(any("needs a 'Story:' line" in e for e in self.check(record, folder=folder)))
++            for record in ("Story: inbox-home (owner-account)\n", "Story: none: workflow maintenance\n"):
++                self.assertEqual(self.check(record, folder=folder), [])
++            self.assertEqual(self.check(extensions="[]", folder=folder), [])
++            self.assertEqual(self.check(extensions="\n  - 'journey-map' # enabled", record="Story: none: infra\n", folder=folder), [])
++
++    def test_design_compares_story_record_to_counted_field_only_in_map_workflows(self):
++        self.assertEqual(self.check("Story: inbox-home (owner-account)\n", "inbox-home", seed=False), [])
++        self.assertEqual(self.check("Story: none: infra\n", seed=False), [])
++        for record, story in (("Story: inbox-home (owner-account)\n", ""), ("Story: inbox-home (owner-account)\n", "switch-any-account"), ("Story: none: infra\n", "inbox-home")):
++            with self.subTest(record=record, story=story):
++                self.assertTrue(any("'Story:' names" in e for e in self.check(record, story, seed=False)))
++                self.assertEqual(self.check(record, story, extensions="[]", seed=False), [])
++
++
+ class SeedBoundsTests(unittest.TestCase):
+     BOUNDS = "## Scope\n\nShip the bounded checker.\nNon-goals: migrations\nBudget: one task\nStop condition: new upstream hook needed\n"
+     ALIGNMENT = "## FO alignment\n\nSurfaces: none\nVisible change: none\n"
+diff --git a/kc-dev-flow-2/scripts/test_pr_watch.py b/kc-dev-flow-2/scripts/test_pr_watch.py
+index 0a53154f2..6fe6d6b79 100644
+--- a/kc-dev-flow-2/scripts/test_pr_watch.py
++++ b/kc-dev-flow-2/scripts/test_pr_watch.py
+@@ -1805,6 +1805,19 @@ class TasksTests(unittest.TestCase):
+         self.assertIn("fix the reported seed fields and run", self.seed_lines(lines)[0])
+         self.assertEqual(task.read_bytes(), before)
+ 
++    def test_real_seed_subprocess_names_a_map_task_missing_its_story_record(self):
++        self.ideation_readme()
++        readme = self.workflow / "README.md"
++        readme.write_text(readme.read_text().replace("[roborev]", "[roborev, journey-map]"))
++        self.backlog("story-needed")
++        self.gates(("story-needed", "backlog", "needs-preparation"))
++        code, lines = self.tasks({})
++        self.assertEqual(code, 0, lines)
++        self.assertIn("(story-needed)", self.seed_lines(lines)[0])
++        task = self.state / "story-needed.md"
++        task.write_text(task.read_text().replace("## FO alignment\n", "## FO alignment\nStory: none: test\n"))
++        self.assertEqual(self.seed_lines(self.tasks({})[1]), [])
++
+     def test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not(self):
+         self.ideation_readme()
+         self.backlog("bad", visible="a change you can see")

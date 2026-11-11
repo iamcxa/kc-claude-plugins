@@ -1,0 +1,17 @@
+[
+  {
+    "doc": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+    "verdict": "unaffected",
+    "reason": "The three required seed bounds and seed-only call are unchanged; the Story helper remains a separate check."
+  },
+  {
+    "doc": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+    "verdict": "unaffected",
+    "reason": "Amendment comparison helpers remain importable without the Story-only dependency; their code and ADR are unchanged."
+  },
+  {
+    "doc": "docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md",
+    "verdict": "retained",
+    "reason": "The Story check still runs in seed and default modes; moving the import inside that check does not change the documented rule. ADR bytes equal the original dev2 commit."
+  }
+]

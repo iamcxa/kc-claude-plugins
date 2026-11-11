@@ -1,0 +1,9 @@
+{
+  "entity": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining.md",
+  "before_lines": 797,
+  "after_lines": 832,
+  "append_only": true,
+  "frontmatter_sha256_unchanged": "76979b64f6954581fc30cb3d7fae8fcbffa2cd65d85a849246341b39edffb233",
+  "report_sha256": "7f6486a48ec74374457f01f436e7fd4cff93511c2091ea9127e77079c07f33e0",
+  "state_head_before": "e3e7426631e897a7b7922bdf3541cf8c04a0762c"
+}

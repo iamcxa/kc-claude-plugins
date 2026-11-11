@@ -1,0 +1,74 @@
+{
+  "head": "01d23393ebe5bfd63d8bcafc01859c3b146021d2",
+  "parent": "e079d0c555fde855527a82c7a497a4d07e6e4c04",
+  "merge_parents": [
+    "fa485f008562f00ebf91deed19e58ea52bb4b4dc",
+    "fd1caa475f85483cf5c4031a1e58656ff5d3eaff"
+  ],
+  "branch": "spacedock-ensign/story-done-reports-release-remaining-dev2",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-story-done-reports-release-remaining-dev2",
+  "stacked_base": "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+  "producer_subtree_unchanged": true,
+  "repair_changes_only": [
+    "kc-dev-flow-2/scripts/design_surfaces.py"
+  ],
+  "repair_is_exact_import_relocation": true,
+  "stacked_paths": [
+    "docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md",
+    "kc-dev-flow-2/extensions/journey-map/EXTENSION.md",
+    "kc-dev-flow-2/extensions/release-acceptance/fixtures/journey-progress-v1.json",
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_pr_watch.py"
+  ],
+  "other_original_dev2_files_unchanged": [
+    "docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md",
+    "kc-dev-flow-2/extensions/journey-map/EXTENSION.md",
+    "kc-dev-flow-2/extensions/release-acceptance/fixtures/journey-progress-v1.json",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_pr_watch.py"
+  ],
+  "protected_files": [
+    {
+      "path": "kc-dev-flow-2/scripts/test_laws_check.py",
+      "sha256": "1e3c814d4aca71152ff883903c3a16cfcde97fc91123ddfd31d86932c303074b",
+      "unchanged_from_merge": true
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "sha256": "64ea6f026b466613de54c55b50f1ba8c810d2c2a20c1c5473c27ab4032bbbfae",
+      "unchanged_from_merge": true
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "sha256": "fc347525eb71b1f9387d4b9e5f842cfceb98c8c6cfe8e06992bcbfc8f678276c",
+      "unchanged_from_merge": true
+    },
+    {
+      "path": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "sha256": "fb1c14684962abce7176b793cf47c0f8b8d6cd36487f30b9e81b0d288a1ad886",
+      "unchanged_from_merge": true
+    },
+    {
+      "path": "kc-dev-flow-2/extensions/release-acceptance/fixtures/journey-progress-v1.json",
+      "sha256": "1f42b707e3764b952a11abf284ef56b0d70056eb495cffe01531c33e21645fd1",
+      "unchanged_from_merge": true
+    },
+    {
+      "path": "kc-dev-flow-2/extensions/release-acceptance/contract-versions.json",
+      "sha256": "69196d53642192adaa98c1dea428451085591db963a6d831c56529ea9605efce",
+      "unchanged_from_merge": true
+    },
+    {
+      "path": "kc-dev-flow-2/references/sd/workflow.md",
+      "sha256": "3edc33a3077a0b267859fc5fbe6c925a21818088afd6c62050164434c61d6dee",
+      "unchanged_from_merge": true
+    },
+    {
+      "path": ".github/workflows/kc-dev-flow-2-tests.yml",
+      "sha256": "9b31c17d3e3e3bab51be782a9b97e901a67b657f0e6cb907ebffe87b0373a802",
+      "unchanged_from_merge": true
+    }
+  ],
+  "working_tree_clean": true
+}

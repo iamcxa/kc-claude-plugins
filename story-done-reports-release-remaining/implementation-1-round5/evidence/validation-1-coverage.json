@@ -1,0 +1,56 @@
+{
+  "evidence_root": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/story-done-reports-release-remaining/validation-1/evidence",
+  "searched_files": 111,
+  "search_terms": [
+    "test_laws_check",
+    "laws_check.py",
+    "laws suite"
+  ],
+  "matching_files": [],
+  "recorded_test_results": [
+    {
+      "name": "Producer progress/schema suite",
+      "status": "passed",
+      "message": "20 tests passed in sandbox; the single canvas test passed on a permitted loopback rerun",
+      "file": "journey-tests.log"
+    },
+    {
+      "name": "Design surfaces suite",
+      "status": "passed",
+      "message": "222 tests, 4 existing conditional skips",
+      "file": "design-tests.log"
+    },
+    {
+      "name": "Idle-watch suite",
+      "status": "passed",
+      "message": "136 tests",
+      "file": "watch-tests.log"
+    },
+    {
+      "name": "Dispatch record suite",
+      "status": "passed",
+      "message": "125 tests, 1 existing conditional skip",
+      "file": "dispatch-tests.log"
+    },
+    {
+      "name": "Combined release-acceptance suite",
+      "status": "passed",
+      "message": "122 tests",
+      "file": "consumer-combined.log"
+    },
+    {
+      "name": "Dev2 alone before producer merge",
+      "status": "failed",
+      "message": "Expected ordering limit: 1 of 122 tests fails at the unchanged whole-document assertion",
+      "file": "consumer-dev2-alone.log"
+    },
+    {
+      "name": "Fresh-shell six-step acceptance script",
+      "status": "passed",
+      "message": "Exit 0; actual before/after reports and ADR lint in log",
+      "file": "acceptance-final.log"
+    }
+  ],
+  "record_sha256": "305831b40d7bdbf9a0cde5a2b85ef2604118fe944c1649da02928623478750bd",
+  "conclusion": "validation-1 passed the combined tree without reporting a laws-suite failure; its retained record contains no evidence that test_laws_check.py ran; this does not establish that it ran."
+}
