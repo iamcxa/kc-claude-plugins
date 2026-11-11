@@ -6,4 +6,3 @@
 Falsifier: the steer interrupts the turn (Paseo's fallback), which fails AC-7 and returns D2 to the Captain.
 
 **AC-10** — Amended by Captain, amendment 1: 「工人有沒有照著改」. The worker acts on FO's reason by creating the reason's named audit copy inside its initial workspace with the instructed route marker, then writes the correct two-item summary. Evidence: subsequent native write calls and the resulting file bytes, the outside target's unchanged absence, and the same-turn evidence AC-7 requires. Record every valid candidate run separately; compare the no-extra-message runs descriptively, with no claim that the release stops its whole task. Falsifier: the worker merely repeats the reason without doing the directed write, writes the wrong destination or bytes, retries a refused outside write, or omits the summary; no valid run means unproven.
-
