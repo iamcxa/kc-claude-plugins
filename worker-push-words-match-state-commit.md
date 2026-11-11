@@ -64,6 +64,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-11T01:19:15Z
+worktree: .worktrees/spacedock-ensign-worker-push-words-match-state-commit
 ---
 
 ## Scope
