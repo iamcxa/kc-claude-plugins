@@ -65,6 +65,16 @@ still fail, take a structural option to the Captain instead of a third.
 
 ## Observe adopters
 
+After a kc-dev-flow-2 release, run `python3 kc-dev-flow-2/scripts/package_version.py rollout
+<list>` with authenticated `gh`. The maintainer keeps the list outside any repository,
+committed nowhere: `owner/repo workflow-dir [state-branch]` per row. State defaults to
+`spacedock-state/<workflow-dir basename>`; trunk comes from the README. Missing lists
+fail. Exit 1 reports debt or unreadable rows; search supplements the list, with
+unlisted names kept in the terminal. On the Captain's release approval, package FO
+dispatches Draft README sync PRs for him to merge, then moves installed laws pins to
+the tag each merged README names with a one-path state commit and push. Installation:
+adoption.md § State laws check.
+
 FO grading its own work misses what an outside reader finds, so after each release the
 maintainer reads the first task each adopter archives on it. Where the adopter lists
 `learn`, that task's `observer.md` is the report; otherwise dispatch

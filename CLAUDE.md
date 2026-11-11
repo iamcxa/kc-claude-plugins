@@ -68,6 +68,7 @@ release-please owns versioning + tagging in the cloud, but it **cannot touch you
 |--------|-----|
 | Local install rsync (`~/.claude/plugins/local/<plugin>`) | Subagents read references from local install; stale local = agents see old state. |
 | Codex local install (`~/.codex/local-plugins/<plugin>`) | Codex CLI parallel of the above. See **Codex install conventions** below. |
+| kc-dev-flow-2 adopter rollout | After its release, follow `kc-dev-flow-2:maintain-flow` § Observe adopters for the report and Captain-directed sync. |
 
 Run `Skill: kc-plugin-forge:kc-plugin-release` from the main workspace
 (`$KC_WORKSPACE` on this machine; wherever you cloned `kc-claude-plugins`
