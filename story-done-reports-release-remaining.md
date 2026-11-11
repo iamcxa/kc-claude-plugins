@@ -68,6 +68,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-11T01:22:31Z
+worktree: .worktrees/spacedock-ensign-story-done-reports-release-remaining
 ---
 
 ## Scope
