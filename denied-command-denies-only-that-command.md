@@ -76,6 +76,7 @@ worktree: .worktrees/spacedock-ensign-denied-command-denies-only-that-command
 ## FO alignment
 
 Alignment: not needed before ideation; the Captain approved filing it and the outcome is one worker-facing rule.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-11: amendment 1 removes the README sentence and the criteria that prove it and keeps the one item the design already describes (D2); it adds nothing to the build.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
@@ -243,6 +244,13 @@ Before and after are the base counts. Each task in the batch that changes `refer
 Falsifier: the steer interrupts the turn (Paseo's fallback), which fails AC-7 and returns D2 to the Captain.
 
 **AC-8** — The secret guard keeps its exception. Evidence: the Secrets bullet is byte-identical at base and candidate (`git diff` of that bullet is empty). Not claimed: replay of a secret-guard refusal.
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-11, host question dialog
+Captain: 「縮成只傳理由（建議）」 (host question dialog, 2026-11-11)
+Asked: 「「拒絕一個指令不等於全停」這張任務要不要縮小範圍？qnow 的紀錄只找得到一次，而且是工人不知道被拒的理由而猜錯範圍，不是整個停工。我建議縮小：只保留「我拒絕 Codex 工人時把理由另外傳給它」這一項，拿掉「每張派工單加一句被拒不等於全停」那 33 字；驗證改成用我扮演拒絕方的重放，量理由有沒有送到、工人有沒有照著改。」
+Supersedes: AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-8
 
 ## Stage Report: ideation
 
