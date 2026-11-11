@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.39.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.39.0...kc-dev-flow-2-v0.39.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** require Worth questions before the design gate ([#849](https://github.com/iamcxa/kc-claude-plugins/issues/849)) ([83f6a04](https://github.com/iamcxa/kc-claude-plugins/commit/83f6a04c39caad4187314e1e6b290b256d815538))
+
 ## [0.39.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.38.1...kc-dev-flow-2-v0.39.0) (2026-11-11)
 
 
